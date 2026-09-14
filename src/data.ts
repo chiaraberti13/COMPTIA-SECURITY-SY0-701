@@ -10498,18 +10498,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 431,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: "Durante una sessione di intelligence sulle minacce informatiche, viene analizzato il profilo di un gruppo che prende di mira grandi aziende industriali non per fini di lucro, ma per protestare pubblicamente contro le loro politiche ambientali.",
-    question: "Quale delle seguenti motivazioni è tipica e comune tra gli Hacktivisti (attivisti informatici)?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Il responsabile amministrativo riceve una videochiamata dal direttore finanziario, che riconosce per volto e voce. Il direttore, apparentemente in aeroporto, chiede un bonifico urgente verso un nuovo fornitore e insiste perché la pratica resti riservata fino al suo rientro. La chiamata dura due minuti, l'immagine ha qualche scatto e il direttore non risponde mai alle domande dirette, ripetendo invece frasi generiche. Il vero direttore era in riunione altrove.",
+    question: "Quale tecnica è stata impiegata e quale controllo l'avrebbe fermata?",
     options: [
-      "A) Interruzione del servizio (Service disruption) come fine ultimo",
-      "B) Convinzioni politiche e ideologiche (Political beliefs)",
-      "C) Spionaggio industriale (Espionage)",
-      "D) Esfiltrazione di dati finanziari per arricchimento"
+      "A) Spear phishing via e-mail: serve un filtro antispam con analisi degli allegati",
+      "B) Deepfake in tempo reale: serve una verifica su un canale indipendente, definita in procedura",
+      "C) Watering hole: serve bloccare i siti di settore compromessi tramite filtro web",
+      "D) Credential stuffing: serve imporre l'autenticazione a più fattori sull'account del direttore"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Convinzioni politiche e ideologiche (Political beliefs)**.\n\n* **Perché è la corretta:** Gli **Hacktivisti** sono spinti principalmente da motivazioni ideologiche, etiche, sociali o politiche. Il loro scopo primario è attirare l'attenzione dell'opinione pubblica su comportamenti che considerano non etici o ingiusti compiuti da governi o multinazionali, promuovendo la propria causa tramite azioni dimostrative sul web.\n* **Analisi dei distrattori:**\n  * **A) L'interruzione del servizio** (es. attacchi DDoS o defacement) è spesso un *mezzo* utilizzato dagli hacktivisti per farsi sentire, ma non è la loro motivazione trainante profonda (che rimane di natura ideologica).\n  * **C) Lo spionaggio industriale** mira alla raccolta segreta di brevetti o dati competitivi a vantaggio di concorrenti commerciali o stati esteri, cosa estranea alla filosofia di protesta pubblica degli hacktivisti.\n  * **D) L'esfiltrazione di dati** può essere usata per esporre segreti dell'azienda (leak), ma il furto di dati finanziari per scopi di lucro directo è una prerogativa della criminalità organizzata."
+    explanation: "La risposta corretta è la **B) Deepfake in tempo reale**.\n\n* **Perché è la corretta:** Un **deepfake** è un contenuto audio o video **sintetico** che riproduce l'aspetto e la voce di una persona reale, e usato in tempo reale trasforma la videochiamata, che tutti considerano una prova d'identità, in un vettore d'attacco. Lo scenario contiene i segnali tipici: qualche **scatto nell'immagine**, perché la generazione in tempo reale è computazionalmente pesante; l'**incapacità di rispondere a domande dirette**, perché il modello riproduce un aspetto ma non la conoscenza della persona; e soprattutto la combinazione **urgenza più riservatezza**, che è la firma dell'ingegneria sociale in qualunque forma si presenti, perché serve a impedire la verifica. Ed è proprio la verifica il controllo che lo ferma: una **procedura scritta** che imponga di richiamare su un **canale indipendente**, il numero aziendale già in rubrica, prima di disporre qualunque pagamento fuori processo. Deve essere una procedura, non una buona abitudine, perché nel momento in cui il direttore finanziario preme per la riservatezza, al dipendente serve una regola su cui appoggiarsi.\n* **Analisi dei distrattori:**\n  * **A) Spear phishing via e-mail:** il canale è sbagliato. Qui non c'è alcuna e-mail né alcun allegato: l'attacco arriva in videochiamata, dove nessun filtro antispam ha voce.\n  * **C) Watering hole:** compromette un **sito** frequentato dalla categoria del bersaglio, per infettarne i visitatori. Nello scenario nessuno naviga né scarica nulla.\n  * **D) Credential stuffing:** è un attacco alle **credenziali**, e presuppone che l'attaccante voglia entrare in un account. Qui non viene compromesso alcun account: l'attaccante ottiene il bonifico convincendo una persona, e l'MFA del direttore non entra in gioco.\n\n* **Trappola d'esame:** ricorda che il deepfake non è una categoria a sé, ma un **potenziatore** dell'ingegneria sociale: rende credibile un vishing, un pretexting o una frode del tipo *business email compromise*, che ora si presenta anche in video. Gli indicatori da riconoscere sono sempre gli stessi: **urgenza**, **riservatezza richiesta**, **canale insolito** e **pressione sulla gerarchia**. E la contromisura è sempre la stessa, indipendentemente da quanto sia realistico il video: la **verifica fuori banda** su un canale che l'attaccante non controlla."
   },
   {
     id: 432,
@@ -11068,18 +11068,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 469,
-    topic: "Indicators of Malicious Activity",
+    topic: "Threat Vectors & Vulnerabilities",
     level: "ANALISI",
-    scenario: "Un attaccante tenta di accedere a un account indovinando rapidamente password comuni su più account, sperando di trovarne una che funzioni. Questa tecnica evita di attivare i blocchi degli account usando username diversi ad ogni tentativo.",
-    question: "Che tipo di attacco è questo?",
+    scenario: "Un attaccante sottrae il file delle password di un'applicazione: contiene soltanto gli hash, calcolati con SHA-256. In poche ore recupera in chiaro il 70% delle password, senza mai provarne una sul sistema, confrontando gli hash con un archivio precalcolato che aveva già pronto. Gli account con password molto lunghe e insolite restano invece intatti.",
+    question: "Quale tecnica ha usato l'attaccante e quale contromisura l'avrebbe resa inutile?",
     options: [
-      "A) Brute force attack",
-      "B) Password spraying",
-      "C) Rainbow table attack",
-      "D) Dictionary attack"
+      "A) Password spraying: poche password comuni provate su molti account. Serve il blocco dopo N tentativi",
+      "B) Rainbow table: hash precalcolati confrontati con quelli rubati. Serve un salt casuale per ogni utente",
+      "C) Forza bruta online: tentativi ripetuti sulla pagina di login. Serve un CAPTCHA dopo tre errori",
+      "D) Credential stuffing: credenziali rubate altrove riprovate qui. Serve l'autenticazione a più fattori"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Password spraying**.\n\n* **Perché è la corretta:** In un attacco di **Password spraying**, l'attaccante tenta di ottenere accesso provando un numero limitato di password comuni (come 'password123' o 'welcome') su molti account diversi. Usando username diversi ad ogni tentativo, l'attaccante evita di attivare i blocchi degli account, poiché i tentativi sono distribuiti su più account invece di concentrarsi su uno solo.\n* **Analisi dei distrattori:**\n  * **A) La Brute force** tende a colpire un singolo account con molti tentativi di password, rischiando di attivare blocchi; è l'opposto del password spraying.\n  * **C) Il Rainbow table attack** utilizza hash precalcolati per decifrare le password; non coinvolge il tentativo diretto di accesso a più account.\n  * **D) Il Dictionary attack** si concentra su un singolo account usando un elenco di possibili password; non distribuisce i tentativi su più account."
+    explanation: "La risposta corretta è la **B) Rainbow table**.\n\n* **Perché è la corretta:** Due dettagli dello scenario escludono tutto il resto. Il primo: l'attaccante **non prova mai una password sul sistema**, quindi l'attacco è **offline**, condotto sul file rubato, e nessun controllo sul login può accorgersene. Il secondo: usa un **archivio già pronto** di hash precalcolati. È esattamente una **rainbow table**, cioè una struttura che memorizza in forma compressa le corrispondenze fra password comuni e i loro hash, scambiando spazio di archiviazione con tempo di calcolo. Il confronto è immediato, il che spiega perché il 70% cada in poche ore. Spiega anche perché le password lunghe e insolite sopravvivano: non sono nella tabella, e per esserci qualcuno avrebbe dovuto precalcolarle. La contromisura è il **salt**: un valore casuale **diverso per ogni utente**, concatenato alla password prima dell'hash. Rende inutilizzabile qualunque tabella precalcolata, perché la stessa password produce un hash diverso per ogni utente e l'attaccante dovrebbe costruire una tabella nuova per ciascuno, cioè fare esattamente il lavoro che la tabella serviva a evitare.\n* **Analisi dei distrattori:**\n  * **A) Password spraying:** prova **poche password comuni su molti account**, ed è un attacco **online** pensato per non far scattare i blocchi. Qui non c'è alcun tentativo di accesso.\n  * **C) Forza bruta online:** genera tentativi ripetuti sulla pagina di login e lascia una scia evidente nei log. Lo scenario dice espressamente che nessuna password è stata provata sul sistema, e un CAPTCHA non ha alcuna presa su un file già rubato.\n  * **D) Credential stuffing:** riusa credenziali **già in chiaro**, rubate da un'altra violazione, provandole altrove. Qui l'attaccante parte da hash e deve ricavarne le password: il punto di partenza è opposto.\n\n* **Trappola d'esame:** classifica gli attacchi alle password secondo **dove** avvengono. **Online**, contro il sistema vivo: forza bruta, spraying, credential stuffing, e si contrastano con blocco degli account, limitazione dei tentativi e MFA · **Offline**, contro un file di hash rubato: dizionario, forza bruta offline, rainbow table, e si contrastano con **salt**, **key stretching** (bcrypt, scrypt, Argon2, PBKDF2) e password lunghe. Ricorda infine la divisione del lavoro fra le due difese offline: il **salt** annulla le tabelle precalcolate, il **key stretching** rende lento ogni singolo tentativo. Servono entrambe."
   },
   {
     id: 470,
@@ -11399,33 +11399,33 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 491,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale gruppo è PIÙ probabilmente in possesso dei finanziamenti e delle risorse per reclutare i migliori talenti, tra cui strateghi, designer, programmatori e hacker qualificati?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Il direttore generale di un gruppo industriale riceve una singola e-mail, scritta in un italiano impeccabile, che cita per nome due membri del consiglio e fa riferimento a un'operazione di acquisizione realmente in corso e nota solo a poche persone. Il messaggio lo invita ad approvare con urgenza, tramite un portale esterno, il documento riservato allegato. Nessun altro dipendente ha ricevuto messaggi simili.",
+    question: "Quale tecnica di ingegneria sociale descrive MEGLIO questo attacco?",
     options: [
-      "A) A security researcher",
-      "B) An independent black hat hacker",
-      "C) An open-source development community",
-      "D) A criminal syndicate"
+      "A) Phishing generico: un messaggio di massa inviato a molti destinatari nella speranza che qualcuno abbocchi",
+      "B) Smishing: l'inganno arriva tramite un messaggio di testo sul telefono del destinatario",
+      "C) Shoulder surfing: l'attaccante osserva direttamente le informazioni riservate del dirigente",
+      "D) Whaling: phishing mirato contro un dirigente di vertice, costruito su informazioni reali"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) A criminal syndicate (Un sindacato criminale)**.\n\n* **Perché è la corretta:** Le grandi organizzazioni criminali hanno i mezzi finanziari per assumere e mantenere un team di individui qualificati per operazioni cyber sofisticate, inclusi strateghi, designer, programmatori e hacker. Questa capacità di reclutamento su larga scala è caratteristica dei sindacati criminali organizzati.\n* **Analisi dei distrattori:**\n  * **A) Un ricercatore di sicurezza** opera tipicamente in modo indipendente o all'interno di istituzioni, concentrandosi sullo studio e la mitigazione delle minacce; non ha le risorse per reclutare team così ampi.\n  * **B) Un independent black hat hacker** opera da solo e potrebbe non avere le risorse sostanziali di un'organizzazione più grande.\n  * **C) Una community open-source** è un collettivo di programmatori e sviluppatori talentuosi, ma il loro intento principale è lo sviluppo collaborativo di software, non gli attacchi informatici."
+    explanation: "La risposta corretta è la **D) Whaling**.\n\n* **Perché è la corretta:** Il **whaling** è la forma più mirata di phishing: colpisce una **singola persona di vertice**, scelta per il potere decisionale che detiene, e per questo giustifica un lavoro di preparazione che il phishing di massa non potrebbe permettersi. Ogni dettaglio dello scenario è il prodotto di quella preparazione. Il messaggio è **unico**, non inviato a nessun altro, il che lo sottrae ai controlli statistici che individuano le campagne di massa. È scritto **senza errori**, perché il segnale d'allarme più noto è anche il primo che un attaccante serio elimina. E soprattutto cita **informazioni vere e riservate**, i nomi dei consiglieri e un'acquisizione in corso, raccolte con ricerca a fonti aperte o da una precedente compromissione: è questo che spegne il sospetto, perché nessuno immagina che un estraneo possa sapere. La contromisura non può essere il solo filtro, che un messaggio unico e ben scritto attraversa: serve una **procedura di verifica fuori banda** per ogni approvazione fuori processo, e la consapevolezza, nei dirigenti, di essere bersagli di valore.\n* **Analisi dei distrattori:**\n  * **A) Phishing generico:** è l'opposto per costruzione. Punta sul **volume**, con messaggi identici a migliaia di destinatari, spesso imprecisi e con errori, e per questo si contrasta bene con i filtri. Qui c'è un solo destinatario e un contenuto cucito su misura.\n  * **B) Smishing:** indica il **canale**, cioè l'SMS. Lo scenario parla esplicitamente di un'e-mail, quindi il canale è un altro.\n  * **C) Shoulder surfing:** richiede **presenza fisica**: l'attaccante guarda lo schermo o la tastiera della vittima. Qui non c'è alcun contatto diretto, e le informazioni riservate sono state raccolte prima, non osservate sul momento.\n\n* **Trappola d'esame:** tieni separati i due assi su cui le domande costruiscono i distrattori. Il **bersaglio**: phishing = chiunque, in massa · spear phishing = una persona o un gruppo specifico · whaling = un dirigente di vertice. Il **canale**: e-mail = phishing · SMS = smishing · voce = vishing · codice QR = quishing. I due assi si combinano liberamente, quindi esiste anche un whaling condotto per telefono. Il segnale che indica il whaling è sempre lo stesso: **un solo destinatario molto in alto** e **dettagli interni veri** che solo una ricerca mirata poteva procurare."
   },
   {
     id: 492,
     topic: "Threat Vectors & Vulnerabilities",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale vettore di minaccia si concentra sullo sfruttamento di vulnerabilità nei vendor di terze parti per ottenere accesso non autorizzato alla rete o ai dati di un target primario?",
+    level: "ANALISI",
+    scenario: "Nei log di un'applicazione web compaiono richieste come `GET /download?file=../../../../etc/passwd` e, in forma codificata, `%2e%2e%2f%2e%2e%2f`. L'applicazione riceve dall'utente il nome del file da scaricare e lo concatena direttamente al percorso della cartella dei documenti, senza alcun controllo. Alcune risposte hanno codice 200 e dimensione anomala.",
+    question: "Quale vulnerabilità viene sfruttata e come si corregge alla radice?",
     options: [
-      "A) Supply chain attack",
-      "B) Phishing attack",
-      "C) Ransomware",
-      "D) Distributed denial of service (DDoS)"
+      "A) Directory traversal: validare l'input e risolvere il percorso confinandolo in una cartella consentita",
+      "B) SQL injection: usare query parametrizzate al posto della concatenazione di stringhe",
+      "C) Cross-site scripting: codificare l'output prima di inserirlo nella pagina HTML",
+      "D) Buffer overflow: compilare l'applicazione con protezioni dello stack e ASLR attivi"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Supply chain attack (Attacco alla catena di approvvigionamento)**.\n\n* **Perché è la corretta:** Un **attacco Supply chain** prende di mira le vulnerabilità nella catena di approvvigionamento — come vendor o fornitori di terze parti — per infiltrarsi nell'organizzazione primaria. Prendendo di mira entità meno sicure nella catena, gli attaccanti trovano un percorso indiretto verso il loro obiettivo principale.\n* **Analisi dei distrattori:**\n  * **B) Un attacco Phishing** coinvolge l'invio di messaggi ingannevoli per indurre i destinatari a rivelare informazioni sensibili o a compiere azioni dannose; non prende di mira specificamente i vendor di terze parti.\n  * **C) Il Ransomware** è un software dannoso che blocca l'accesso a un sistema fino al pagamento di un riscatto; non è un vettore di minaccia focalizzato sui vendor.\n  * **D) Il DDoS** travolge un sistema, servizio o rete con traffico causandone la lentezza o l'indisponibilità; non riguarda lo sfruttamento di vendor di terze parti."
+    explanation: "La risposta corretta è la **A) Directory traversal**.\n\n* **Perché è la corretta:** La sequenza `../` significa \"cartella superiore\", e ripetuta consente di risalire il filesystem fino alla radice per poi scendere dove si vuole. È il **directory traversal** (o *path traversal*): l'applicazione si fida del nome di file che riceve e lo concatena a un percorso, così l'utente non sceglie più quale documento scaricare ma **quale file del server** leggere. I tre indizi dello scenario sono decisivi: la sequenza di risalita, la sua **versione codificata in percentuale**, che serve ad aggirare i filtri ingenui che cercano solo `../` in chiaro, e le risposte con codice 200 e dimensione anomala, che dicono che il server **ha davvero restituito** qualcosa di diverso dal previsto. La correzione alla radice è duplice: **validare l'input** con una lista di valori consentiti anziché cercare di vietare le sequenze pericolose, e **risolvere il percorso assoluto** verificando poi che risulti contenuto nella cartella ammessa, così che qualunque forma di codifica venga neutralizzata dopo la normalizzazione e non prima.\n* **Analisi dei distrattori:**\n  * **B) SQL injection:** attacca il **database**, iniettando frammenti di query in un campo che l'applicazione concatena in un'istruzione SQL. I segnali sarebbero apici, `OR 1=1` o `UNION SELECT`, non percorsi del filesystem.\n  * **C) Cross-site scripting:** inietta **script** nelle pagine per farli eseguire nel browser di altri utenti. Il bersaglio sarebbe il visitatore, non il server, e nei log si vedrebbero tag `<script>` o gestori di eventi, non `../`.\n  * **D) Buffer overflow:** sovrascrive **memoria adiacente** con un input sovradimensionato, e si manifesta con crash o esecuzione di codice. Qui l'input non è lungo: è **semanticamente** diverso da quello atteso, il che è un problema di validazione, non di gestione della memoria.\n\n* **Trappola d'esame:** riconosci ogni attacco per iniezione dal **carattere o dalla sequenza** che compare nell'input, perché è così che le domande te lo mostrano. `../` o `%2e%2e%2f` = directory traversal · apice singolo, `OR 1=1`, `UNION SELECT` = SQL injection · `<script>` o `onerror=` = cross-site scripting · `;`, `|` o `&&` seguiti da un comando = command injection. Il difetto di fondo è sempre lo stesso, **fidarsi dell'input dell'utente**, e la difesa di fondo pure: validare con liste di valori consentiti, mai con liste di sequenze vietate."
   },
   {
     id: 493,
@@ -11536,16 +11536,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 500,
     topic: "Threat Actors & Motivations",
     level: "ANALISI",
-    scenario: "Sarah è stata scavalcata per una promozione di nuovo. Ha lavorato duramente su un nuovo dispositivo perché il suo capo le aveva promesso una promozione e un aumento. Prende tutti i dati sul nuovo dispositivo e li pubblica su internet, sperando che qualcuno possa produrre il nuovo dispositivo prima della sua azienda, facendole perdere tutti i soldi investiti in R&S.",
-    question: "Qual è la motivazione principale di Sarah per condurre questa esfiltrazione di dati?",
+    scenario: "Un gruppo penetra nella rete di uno studio medico, copia le cartelle cliniche di alcuni pazienti noti e contatta la direzione: non chiede un riscatto per ripristinare i sistemi, che funzionano perfettamente e non sono stati cifrati, ma minaccia di pubblicare le cartelle se non riceve un pagamento. Nessun dato è stato distrutto e nessun servizio è stato interrotto.",
+    question: "Quale motivazione descrive MEGLIO questo attacco?",
     options: [
-      "A) Ethical Considerations",
-      "B) Blackmail",
-      "C) Revenge",
-      "D) Financial Gain"
+      "A) Vendetta: un ex dipendente colpisce l'organizzazione per un torto subito",
+      "B) Interruzione del servizio: l'obiettivo è rendere indisponibili i sistemi sanitari",
+      "C) Ricatto (blackmail): la minaccia di divulgare i dati è essa stessa la leva del pagamento",
+      "D) Spionaggio: i dati servono a un concorrente per ottenere un vantaggio commerciale"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Revenge (Vendetta)**.\n\n* **Perché è la corretta:** La **vendetta** è il desiderio di danneggiare o punire qualcuno che ha causato un danno o un'offesa. Sarah vuole rivelare i dati del dispositivo in modo che la sua azienda perda denaro, perché sente di non essere stata trattata equamente con la promessa di promozione non mantenuta.\n* **Analisi dei distrattori:**\n  * **A) Le considerazioni etiche** sarebbero la motivazione se Sarah ritenesse che il prodotto o la sua produzione fosse non etica; ma Sarah ha rubato e pubblicato i dati per danneggiare l'azienda, non per prevenire comportamenti non etici.\n  * **B) Il ricatto** implicherebbe chiedere qualcosa in cambio di non rivelare i dati; Sarah li ha pubblicati direttamente senza chiedere nulla.\n  * **D) Il guadagno finanziario** implicherebbe vendere i dati a un concorrente o monetizzarli direttamente; Sarah li ha pubblicati online senza tentare di venderli."
+    explanation: "La risposta corretta è la **C) Ricatto (blackmail)**.\n\n* **Perché è la corretta:** Lo scenario è costruito per isolare una motivazione sola, ed è la **minaccia di divulgazione** a farlo. L'attaccante non ha cifrato nulla, non ha distrutto nulla e non ha interrotto alcun servizio: il danno che promette è interamente **reputazionale e legale**, e riguarda ciò che accadrebbe se quei dati diventassero pubblici. Questo distingue il ricatto dal ransomware classico, dove la leva è l'**indisponibilità** dei sistemi. La scelta del bersaglio non è casuale: dati sanitari di pazienti noti massimizzano sia il danno reputazionale sia l'esposizione normativa, e proprio per questo la vittima è spinta a pagare anche quando i sistemi funzionano. È lo schema noto come **estorsione a doppia leva** quando si accompagna alla cifratura, e come **estorsione senza cifratura** quando, come qui, la sola esfiltrazione basta.\n* **Analisi dei distrattori:**\n  * **A) Vendetta:** muove chi vuole **danneggiare**, tipicamente un ex dipendente o un cliente insoddisfatto, e il suo tratto distintivo è l'**assenza di una richiesta economica**: si colpisce e basta. Qui invece esiste una richiesta precisa di pagamento, che è il fine dell'intera operazione.\n  * **B) Interruzione del servizio:** lo scenario la esclude due volte: i sistemi funzionano e nulla è stato cifrato. Chi punta all'indisponibilità rende i dati inaccessibili, non minaccia di renderli **troppo** accessibili.\n  * **D) Spionaggio:** mira a **ottenere e usare** informazioni restando il più possibile invisibile, perché il valore sta nel vantaggio che il bersaglio non sa di aver perduto. Farsi vivi con una richiesta di pagamento è l'opposto di questa logica.\n\n* **Trappola d'esame:** impara a riconoscere la motivazione dalla **richiesta**, non dalla tecnica. **Guadagno economico** = richiesta di pagamento, ransomware, frode · **Ricatto** = minaccia di divulgare, con i dati come leva anziché i sistemi · **Vendetta** = danno senza richiesta · **Spionaggio** = furto silenzioso e persistenza prolungata · **Disturbo o caos** = danno fine a sé stesso · **Motivazione etica o politica** = rivendicazione pubblica, tipica dell'hacktivismo. Nelle domande, la frase che rivela il ricatto è sempre la stessa: i sistemi restano funzionanti e la minaccia riguarda la **pubblicazione**."
   },
   {
     id: 501,
@@ -11564,18 +11564,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 502,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Actors & Motivations",
     level: "ANALISI",
-    scenario: "Fedson è un ethical hacker. È stato assunto da Gregory's Games per condurre una revisione della loro sicurezza. La scansione delle vulnerabilità del sistema ha rilevato che l'azienda sta usando un software molto vecchio che non è più supportato dal produttore.",
-    question: "Che tipo di vulnerabilità ha trovato Fedson?",
+    scenario: "Il sito di Gregory's Games subisce un attacco. L'analisi mostra che l'aggressore ha usato uno strumento automatico scaricato da un forum pubblico, con le impostazioni predefinite e senza mai modificarle; ha lasciato nei log la stringa di identificazione originale dello strumento; ha operato dal proprio indirizzo IP domestico; e ha poi rivendicato l'attacco su un canale di messaggistica pubblico, chiedendo apprezzamento ai coetanei.",
+    question: "Quale categoria di attore della minaccia descrive MEGLIO questo profilo?",
     options: [
-      "A) Hardware tampering",
-      "B) Hardware cloning",
-      "C) End-of-life",
-      "D) Firmware vulnerability"
+      "A) Minaccia interna, perché conosceva il funzionamento del sito",
+      "B) Attore sponsorizzato da uno Stato, per la persistenza dimostrata",
+      "C) Attaccante inesperto (unskilled attacker), che usa strumenti altrui senza comprenderli",
+      "D) Criminalità organizzata, per la struttura dell'operazione e il movente economico"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) End-of-life (Fine vita)**.\n\n* **Perché è la corretta:** **End-of-life** è un tipo di vulnerabilità che si verifica quando un produttore non supporta o aggiorna più il software. Può consentire a un attaccante di compromettere la sicurezza o la funzionalità del dispositivo, o usarlo come punto di accesso ad altri sistemi o reti.\n* **Analisi dei distrattori:**\n  * **A) L'Hardware tampering** è una vulnerabilità hardware in cui un attaccante può alterare fisicamente o danneggiare i dispositivi hardware; non è correlata al supporto software.\n  * **B) L'Hardware cloning** consiste nel creare copie non autorizzate di dispositivi hardware; non riguarda il supporto software.\n  * **D) La Firmware vulnerability** coinvolge la modifica o sostituzione del software che controlla le funzionalità di un dispositivo hardware; non riguarda il fine vita del software applicativo."
+    explanation: "La risposta corretta è la **C) Attaccante inesperto (unskilled attacker)**.\n\n* **Perché è la corretta:** Ogni elemento dello scenario punta a capacità basse e a un movente non economico. Lo **strumento preconfezionato usato con le impostazioni predefinite** dice che l'attaccante non sa costruire né adattare un exploit: si limita a eseguirlo. La **stringa di identificazione lasciata nei log** e l'uso del **proprio indirizzo IP** rivelano l'assenza di qualunque tecnica di occultamento, che è la prima cosa che un attaccante capace cura. La **rivendicazione pubblica in cerca di riconoscimento** completa il quadro: la motivazione non è il denaro né l'informazione, ma la **reputazione** presso i propri pari. È il profilo che CompTIA chiama *unskilled attacker*, un tempo *script kiddie*. Attenzione a non sottovalutarlo: il danno che provoca può essere serio, perché gli strumenti che esegue sono scritti da altri e sono efficaci; ciò che manca è la comprensione, non la potenza di fuoco.\n* **Analisi dei distrattori:**\n  * **A) Minaccia interna:** richiede un **accesso legittimo** all'organizzazione, come dipendente, fornitore o collaboratore. Nulla nello scenario indica un rapporto con Gregory's Games, e l'attacco arriva dall'esterno.\n  * **B) Attore sponsorizzato da uno Stato:** è il profilo opposto su ogni asse. Risorse elevate, exploit sviluppati internamente, occultamento meticoloso e permanenza silenziosa per mesi. Un attore di questo livello non lascia la firma dello strumento nei log né rivendica nulla in pubblico.\n  * **D) Criminalità organizzata:** opera come un'impresa, con divisione dei ruoli, infrastruttura affittata e un movente **economico** preciso. Qui non c'è alcuna richiesta di denaro, e la ricerca di applausi è incompatibile con un'organizzazione che vive di discrezione.\n\n* **Trappola d'esame:** valuta ogni attore su due assi indipendenti, **capacità** e **motivazione**, perché è così che le domande li distinguono. Attaccante inesperto = capacità bassa, motivazione reputazionale · Hacktivista = capacità media, motivazione ideologica, rivendicazione pubblica · Minaccia interna = capacità variabile ma **accesso già concesso**, motivazione spesso vendicativa o economica · Criminalità organizzata = capacità alta, motivazione economica · Attore statale = capacità altissima, motivazione geopolitica o di spionaggio, e persistenza prolungata. Gli indizi decisivi nelle domande sono sempre gli stessi: **sofisticazione degli strumenti**, **cura dell'occultamento** e **presenza o assenza di una richiesta economica**."
   },
   {
     id: 503,
@@ -11609,18 +11609,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 505,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Che tipo di attore di minacce è motivato da convinzioni politiche e prende spesso di mira organizzazioni con cui non è d'accordo?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "In un aeroporto, i passeggeri si collegano a una rete Wi-Fi aperta che espone lo stesso nome della rete ufficiale dello scalo e un segnale più forte. I dispositivi già configurati vi si agganciano da soli, senza che nessuno scelga nulla. Chi naviga verso siti aziendali riceve un avviso di certificato non valido, che molti ignorano. Il punto di accesso è un dispositivo portatile collocato in sala d'attesa da un estraneo.",
+    question: "Quale attacco è in corso e quale contromisura lo neutralizza dal lato del client?",
     options: [
-      "A) Nation-state Actors",
-      "B) Hacktivists",
-      "C) Insider Threats",
-      "D) Unskilled Attackers"
+      "A) Deautenticazione: l'attaccante espelle i client dalla rete legittima per interromperne il servizio",
+      "B) Evil twin: un access point che clona l'SSID legittimo. Serve una VPN e il rifiuto dei certificati non validi",
+      "C) Attacco a dizionario contro la passphrase del Wi-Fi aeroportuale, da allungare e ruotare",
+      "D) Avvelenamento della cache ARP fra i client collegati alla stessa rete dell'aeroporto"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Hacktivists**.\n\n* **Perché è la corretta:** Un **Hacktivist** è un attore di minacce motivato da convinzioni filosofiche o politiche che prende spesso di mira organizzazioni o governi con cui non è d'accordo. Gli hacktivisti possono usare metodi come defacement, denial-of-service o fuga di dati per raggiungere i loro obiettivi.\n* **Analisi dei distrattori:**\n  * **A) I Nation-state Actors** sono sponsorizzati da un governo e sono motivati dall'ottenere informazioni tramite spionaggio, condurre guerra o guadagnare influenza; non agiscono primariamente per convinzioni politiche personali ma per interessi statali.\n  * **C) Le Insider Threats** hanno accesso autorizzato ai sistemi e sono spesso motivate da vendetta, avidità o ideologia; non necessariamente prendono di mira organizzazioni per disaccordo politico.\n  * **D) Gli Unskilled Attackers** hanno poche o nessuna competenza tecnica e sono motivati da curiosità, noia o guadagno personale; non hanno tipicamente motivazioni politiche."
+    explanation: "La risposta corretta è la **B) Evil twin**.\n\n* **Perché è la corretta:** Un **evil twin** è un punto di accesso malevolo che **clona l'SSID** di una rete legittima per farsi scegliere al posto suo. Lo scenario ne contiene tutti i tratti. L'**SSID identico** e il **segnale più forte** sfruttano il modo in cui i dispositivi decidono: fra due reti con lo stesso nome preferiscono quella che ricevono meglio, e se il profilo è già memorizzato si connettono **senza chiedere nulla all'utente**. Una volta agganciato il client, l'attaccante è in posizione **on-path**: vede tutto il traffico in chiaro e può tentare di intercettare anche quello cifrato, ed è esattamente ciò che produce l'**avviso di certificato non valido**, il segnale più importante dell'intero scenario e quello che gli utenti ignorano più spesso. Dal lato del client la difesa è duplice: una **VPN sempre attiva**, che cifra il traffico end-to-end rendendo inutile la posizione dell'attaccante, e la regola non negoziabile di **non proseguire mai** davanti a un errore di certificato. Utile anche disattivare la connessione automatica alle reti aperte già note.\n* **Analisi dei distrattori:**\n  * **A) Deautenticazione:** è un attacco che **espelle** i client dalla rete legittima, e spesso viene usato **insieme** all'evil twin per accelerare l'aggancio al punto di accesso malevolo. Ma da solo produce una disconnessione, non un avviso di certificato né un'intercettazione.\n  * **C) Attacco a dizionario alla passphrase:** presuppone una rete **protetta da password** da indovinare. Lo scenario descrive una rete **aperta**: non c'è alcuna passphrase da attaccare.\n  * **D) Avvelenamento ARP:** falsifica la corrispondenza fra indirizzo IP e MAC **all'interno** di una rete a cui l'attaccante è già collegato. Qui non serve: l'attaccante **è** la rete, quindi vede il traffico senza bisogno di dirottarlo.\n\n* **Trappola d'esame:** distingui i due termini che le domande accostano di continuo. **Rogue AP** = un punto di accesso **non autorizzato** collegato alla rete aziendale, spesso installato in buona fede da un dipendente, e si contrasta con port security e 802.1X sulle prese di rete · **Evil twin** = un punto di accesso che **imita l'SSID** legittimo per ingannare i client, e non è necessariamente collegato alla rete aziendale. Il discriminante è sempre lo stesso: il rogue AP è un problema di **rete cablata**, l'evil twin di **inganno del client**."
   },
   {
     id: 506,
@@ -11759,18 +11759,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 515,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale delle seguenti motivazioni si riferisce all'atto di rubare informazioni da un sistema o una rete?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Nei giorni precedenti l'assemblea degli azionisti, decine di profili creati di recente diffondono la notizia che l'amministratore delegato di un'azienda quotata sia sotto indagine. La notizia è falsa e costruita ad arte, corredata da uno screenshot contraffatto di una testata reale, e viene rilanciata da account che sembrano indipendenti ma pubblicano gli stessi contenuti negli stessi minuti. Il titolo perde il 9% in due giorni.",
+    question: "Quale vettore d'attacco descrive MEGLIO questa campagna?",
     options: [
-      "A) Ethical motivations",
-      "B) Service disruption",
-      "C) Disruption/chaos",
-      "D) Data exfiltration"
+      "A) Phishing mirato, perché lo screenshot contraffatto imita una fonte autorevole",
+      "B) Attacco alla catena di fornitura, perché sfrutta la reputazione di una testata reale",
+      "C) Esfiltrazione di dati, perché informazioni riservate sull'amministratore sono state divulgate",
+      "D) Disinformazione, cioè diffusione deliberata di notizie false per ottenere un effetto"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Data exfiltration (Esfiltrazione di dati)**.\n\n* **Perché è la corretta:** La **Data exfiltration** (esfiltrazione di dati) si riferisce all'atto di rubare dati sensibili o riservati da un sistema o una rete. Può essere effettuata per guadagno finanziario, spionaggio, ricatto o altri scopi.\n* **Analisi dei distrattori:**\n  * **A) Le motivazioni etiche** spingono un attaccante a colpire un'organizzazione che agisce in modo ingiusto o scorretto; l'esfiltrazione di dati è meno probabile che questi attaccanti usino per 'punire' un'azienda rispetto al defacement o ad altre azioni.\n  * **B) La Service disruption** consiste nell'atto di compromettere o interrompere la disponibilità di un sistema o rete; può essere usata come forma di protesta, sabotaggio o diversione, non nel rubare dati.\n  * **C) Il Disruption/chaos** si riferisce all'atto di causare disordine o confusione in un sistema o rete; è più spesso fatto per divertimento, diversione o nichilismo, non per rubare dati specifici."
+    explanation: "La risposta corretta è la **D) Disinformazione**.\n\n* **Perché è la corretta:** Questa campagna non compromette alcun sistema: attacca la **percezione**, e CompTIA la classifica esplicitamente fra i **vettori umani**. Tre elementi la qualificano come disinformazione. La notizia è **falsa**, quindi non si tratta di un dato riservato divulgato. È **deliberata e coordinata**, come mostrano i profili creati di recente che pubblicano gli stessi contenuti in sincronia, il che esclude la circolazione spontanea di un errore. Ed è **strumentale**, perché il momento scelto, la vigilia dell'assemblea, e l'effetto ottenuto sul titolo indicano un obiettivo preciso. Vale la pena notare che nessun controllo tecnico tradizionale interviene qui: firewall, antivirus e cifratura non hanno alcuna presa, e la difesa passa per il monitoraggio del marchio, un canale ufficiale autorevole e una procedura di smentita rapida concordata in anticipo.\n* **Analisi dei distrattori:**\n  * **A) Phishing mirato:** punta a far compiere un'**azione** a una vittima precisa, tipicamente consegnare credenziali o disporre un pagamento. Qui non c'è alcun destinatario individuale né alcuna azione richiesta: il messaggio è pubblico e il bersaglio è l'opinione del mercato.\n  * **B) Attacco alla catena di fornitura:** compromette un **fornitore** per raggiungere il cliente attraverso un canale legittimo, come un aggiornamento software firmato. Imitare l'aspetto di una testata in uno screenshot non è compromettere quella testata: nessun fornitore è stato violato.\n  * **C) Esfiltrazione di dati:** presuppone che informazioni **vere e riservate** siano uscite dall'organizzazione. Lo scenario dice il contrario: la notizia è falsa, quindi non c'è alcun dato sottratto.\n\n* **Trappola d'esame:** distingui i due termini che le domande accostano di continuo, perché la differenza sta nell'**intenzione**, non nel contenuto. **Misinformation** = informazione errata diffusa **senza intento di ingannare**, per esempio chi rilancia in buona fede una notizia sbagliata · **Disinformation** = falsità **deliberata**, creata e diffusa per ottenere un effetto. Quando lo scenario nomina coordinamento, account creati di recente, tempistica scelta e un beneficio per chi la diffonde, sei davanti a disinformazione."
   },
   {
     id: 516,
@@ -11789,18 +11789,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 517,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Chi, tra i seguenti, rappresenta il vertice delle capacità, sfruttando potenzialmente sia mezzi digitali che non digitali per raggiungere i propri obiettivi?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Il collegamento internet di un'azienda viene saturato da 40 Gbit/s di traffico UDP. L'analisi mostra che i pacchetti provengono da migliaia di server DNS e NTP pubblici, tutti legittimi e mai compromessi, e che sono **risposte** a interrogazioni che l'azienda non ha mai inviato. Ogni risposta è decine di volte più grande della richiesta che l'ha generata.",
+    question: "Quale tecnica ha prodotto questo volume e quale contromisura riduce il fenomeno alla fonte?",
     options: [
-      "A) Grey hat hacker (agisce senza autorizzazione ma senza intento distruttivo)",
-      "B) Whistleblower (insider che denuncia illeciti dell'organizzazione)",
-      "C) Troll (disturbatore online privo di capacità tecniche)",
-      "D) APT sponsorizzata da uno Stato (Nation-state actor)"
+      "A) DDoS amplificato per riflessione: richieste con IP sorgente falsificato. Serve il filtraggio anti-spoofing sulle reti sorgenti",
+      "B) Attacco a forza bruta contro il firewall perimetrale, da contenere con il blocco degli indirizzi ripetuti",
+      "C) Esfiltrazione di dati verso l'esterno, da bloccare con regole di uscita più restrittive sul firewall",
+      "D) Avvelenamento della cache DNS aziendale, da correggere abilitando DNSSEC sui resolver interni"
     ],
-    answerIndex: 3,
-    explanation: "La risposta corretta è la **D) State-sponsored Advanced Persistent Threat (APT sponsorizzato da stati)**.\n\n* **Perché è la corretta:** Le **APT sponsorizzate dagli stati**, supportate da nazioni, non solo utilizzano strumenti cyber sofisticati, ma hanno anche potenziale accesso a risorse politiche o militari. Questo li posiziona al vertice delle capacità, potendo combinare cyber-operazioni con intelligence umana, risorse diplomatiche e capacità militari.\n* **Analisi dei distrattori:**\n  * **A) Un Grey hat hacker** opera tra intenzione etica e malevola, cercando spesso vulnerabilità ma non per scopi malevoli; non ha accesso alle risorse statali.\n  * **B) Un Whistleblower** espone informazioni riservate o classificate, spesso per ragioni etiche; non è un attore di minacce in senso tecnico.\n  * **C) Un Troll** causa disruption online, cercando spesso reazioni emotive; non ha capacità di alto livello né accesso a risorse non digitali."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) DDoS amplificato per riflessione**.\n\n* **Perché è la corretta:** Tre elementi dello scenario identificano un solo attacco. Primo, i pacchetti sono **risposte** a interrogazioni mai inviate: significa che qualcun altro le ha inviate **fingendo di essere l'azienda**, cioè falsificando l'indirizzo IP sorgente, e i server hanno risposto in buona fede alla vittima. Questa è la **riflessione**. Secondo, ogni risposta è **decine di volte più grande** della richiesta: questa è l'**amplificazione**, e spiega come un attaccante con banda modesta generi 40 Gbit/s. Terzo, le sorgenti sono **server legittimi e mai compromessi**, il che rende inutile bloccarle: sono vittime anch'esse, e l'elenco è praticamente infinito. È il motivo per cui UDP si presta all'attacco mentre TCP no: UDP non ha una stretta di mano, quindi nessuno verifica che il richiedente sia davvero chi dice. La contromisura **alla fonte** è il filtraggio anti-spoofing sulle reti da cui l'attacco parte, che gli operatori applicano secondo la **BCP 38** scartando i pacchetti con sorgente falsificata; lato vittima restano la mitigazione a monte presso l'operatore o un servizio di scrubbing, perché una volta che 40 Gbit/s sono arrivati al collegamento, filtrarli in casa non serve a nulla.\n* **Analisi dei distrattori:**\n  * **B) Forza bruta contro il firewall:** genererebbe **tentativi di autenticazione**, visibili come accessi falliti, non decine di gigabit di risposte UDP da server pubblici. E bloccare gli indirizzi ripetuti è impraticabile quando le sorgenti sono migliaia e legittime.\n  * **C) Esfiltrazione di dati:** è traffico **in uscita** che porta fuori informazioni. Qui il traffico è schiacciantemente **in entrata**, e l'obiettivo è la disponibilità, non la riservatezza.\n  * **D) Avvelenamento della cache DNS:** falsifica le **risposte** memorizzate da un resolver per dirottare gli utenti su server sbagliati. Il sintomo sarebbe la navigazione verso destinazioni errate, non la saturazione del collegamento, e DNSSEC non riduce di un bit il volume in arrivo.\n\n* **Trappola d'esame:** distingui i tre concetti che le domande accostano. **DDoS distribuito** = molte sorgenti, tipicamente una botnet, che colpiscono insieme · **Riflessione** = le sorgenti sono server **innocenti** che rispondono a richieste con IP falsificato · **Amplificazione** = la risposta è molto più grande della richiesta, il che moltiplica la banda dell'attaccante. I protocolli sfruttati sono sempre gli stessi, e vale la pena ricordarli perché ricorrono: **DNS**, **NTP** con il comando `monlist`, **memcached** e **SSDP**, tutti su UDP. Il segnale che rivela la riflessione è sempre quello dello scenario: **risposte a richieste che la vittima non ha mai inviato**."
   },
   {
     id: 518,
@@ -11834,18 +11834,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 520,
-    topic: "Indicators of Malicious Activity",
+    topic: "Threat Vectors & Vulnerabilities",
     level: "ANALISI",
-    scenario: "Barzun, un security engineer, sta testando un nuovo software e scopre una vulnerabilità che consente agli utenti di ottenere facilmente accesso root-level sui dispositivi che eseguono il software.",
-    question: "Quale dei seguenti tipi di application attack descrive MEGLIO questo problema?",
+    scenario: "Un fornitore di hosting condiviso assegna a ogni cliente una macchina virtuale sullo stesso host fisico. Durante un test autorizzato, Barzun parte da una macchina virtuale di prova con soli privilegi utente, sfrutta un difetto nel driver grafico paravirtualizzato dell'hypervisor e ottiene esecuzione di codice sull'host. Da lì può leggere la memoria delle macchine virtuali degli altri clienti.",
+    question: "Quale tipo di vulnerabilità è stata sfruttata?",
     options: [
-      "A) Privilege escalation",
-      "B) Replay",
-      "C) Injection",
-      "D) Buffer overflow"
+      "A) Fuga dalla macchina virtuale (VM escape): il codice supera il confine dell'hypervisor",
+      "B) Scalata dei privilegi locale: l'utente diventa amministratore della propria macchina virtuale",
+      "C) Proliferazione di macchine virtuali (VM sprawl): troppe istanze non censite sullo stesso host",
+      "D) Iniezione in memoria: codice eseguito dentro un processo legittimo della macchina virtuale"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Privilege escalation (Scalata dei privilegi)**.\n\n* **Perché è la corretta:** Un attacco di **Privilege escalation** è un tipo di application attack che consiste nello sfruttare una vulnerabilità o misconfiguration per ottenere privilegi o accesso più elevati di quelli previsti su un sistema o applicazione. In questo caso, la vulnerabilità consente agli utenti di ottenere facilmente accesso root-level (il massimo privilegio).\n* **Analisi dei distrattori:**\n  * **B) Un attacco Replay** cattura e ritrasmette dati validi (come token di autenticazione) per impersonare un utente legittimo; non riguarda l'ottenimento di privilegi superiori.\n  * **C) Un attacco Injection** inserisce codice o comandi dannosi in un'applicazione o database; non descrive specificamente l'ottenimento di root access tramite vulnerabilità del software.\n  * **D) Un attacco Buffer overflow** invia più dati del previsto a una funzione causando sovrascrittura della memoria; non è la descrizione più accurata per una vulnerabilità che concede root access facilmente."
+    explanation: "La risposta corretta è la **A) Fuga dalla macchina virtuale (VM escape)**.\n\n* **Perché è la corretta:** Il dettaglio decisivo è **dove finisce** l'attacco: non dentro la macchina virtuale di partenza, ma sull'**host** che la ospita. Una **VM escape** è esattamente questo, il superamento del confine di isolamento che l'hypervisor garantisce, ottenuto sfruttandone un difetto in uno dei punti in cui esso espone superficie verso gli ospiti, tipicamente i dispositivi emulati o paravirtualizzati come il driver grafico dello scenario. È la vulnerabilità più grave concepibile in un ambiente virtualizzato, per due ragioni. Primo, l'hypervisor è **l'unica cosa** che separa clienti diversi: caduto quello, cade ogni separazione. Secondo, in un hosting condiviso il danno è **multi-tenant**: l'attaccante raggiunge dati di organizzazioni che non hanno alcun rapporto con lui e che nulla avrebbero potuto fare per difendersi. Le contromisure sono aggiornare tempestivamente l'hypervisor, ridurne la superficie disattivando i dispositivi emulati non necessari e, per i carichi più sensibili, rinunciare alla condivisione usando host dedicati.\n* **Analisi dei distrattori:**\n  * **B) Scalata dei privilegi locale:** si ferma **dentro** la macchina virtuale: l'utente diventa amministratore di quella macchina, e nulla di più. È spesso il primo passo di una catena, ma da sola non attraversa alcun confine e non tocca gli altri clienti.\n  * **C) VM sprawl:** è un problema di **governance**, non un exploit: istanze create e mai dismesse, non censite e non aggiornate, che allargano la superficie d'attacco. Descrive un disordine, non il superamento di un isolamento.\n  * **D) Iniezione in memoria:** consiste nell'eseguire codice dentro un **processo legittimo**, ed è tipica degli attacchi fileless. Resta confinata al sistema operativo ospite: non ha nulla a che vedere con l'hypervisor.\n\n* **Trappola d'esame:** ricorda la gerarchia dei confini e quale vulnerabilità ne attraversa quale. **Fra processi** dello stesso sistema = scalata dei privilegi · **Fra container** sullo stesso kernel = container escape, favorita da privilegi eccessivi e socket del runtime montati · **Fra macchine virtuali** = VM escape, che richiede una vulnerabilità dell'hypervisor · **Fra tenant** dello stesso servizio cloud = difetto di isolamento multi-tenant. Il principio da portarsi all'esame è che più il confine attraversato è basso, più l'impatto è ampio: una VM escape in un hosting condiviso espone **tutti** i clienti insieme."
   },
   {
     id: 521,
@@ -11999,18 +11999,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 531,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti attori delle minacce è PIÙ probabilmente in possesso del budget e dei mezzi per sviluppare exploit unici sia per software che per hardware?",
+    topic: "Indicators of Malicious Activity",
+    level: "ANALISI",
+    scenario: "Il servizio assistenza riceve segnalazioni da un intero reparto: i portatili sono lentissimi, le ventole girano al massimo anche a riposo e la batteria dura metà del solito. Il monitoraggio mostra un processo con nome plausibile che tiene la CPU al 90% ma solo quando lo schermo è bloccato, e connessioni persistenti verso un host esterno su una porta insolita. Nessun file è stato cifrato e nessun dato risulta uscito.",
+    question: "Quale attività malevola spiegano MEGLIO questi indicatori?",
     options: [
-      "A) Nation-state actor",
-      "B) Distributed denial-of-service (DDoS) Attacker",
-      "C) Phishing scammer",
-      "D) Ransomware gang"
+      "A) Ransomware in fase di preparazione, prima della cifratura dei file",
+      "B) Cryptojacking: mining di criptovaluta abusivo a spese delle risorse aziendali",
+      "C) Esfiltrazione di dati verso un server controllato dall'attaccante",
+      "D) Attacco a negazione di servizio distribuito contro i portatili del reparto"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Nation-state actor (Attore nation-state)**.\n\n* **Perché è la corretta:** Con finanziamenti e risorse provenienti da agenzie governative, i **Nation-state actors** hanno i mezzi per sviluppare e dispiegare tecniche di cyber-attacco avanzate, incluso lo sviluppo di exploit zero-day personalizzati per software e hardware.\n* **Analisi dei distrattori:**\n  * **B) Un DDoS Attacker** è principalmente interessato a sovraccaricare un sistema con traffico; non necessariamente sviluppa exploit avanzati personalizzati.\n  * **C) Un Phishing scammer** si concentra su comunicazioni ingannevoli per indurre individui a fornire informazioni sensibili; il suo focus non è lo sviluppo di exploit sofisticati.\n  * **D) Una Ransomware gang** distribuisce ransomware per estorcere denaro, ma il suo focus è più sugli attacchi diffusi che su exploit specifici e sofisticati."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Cryptojacking**.\n\n* **Perché è la corretta:** Gli indicatori descrivono un consumo **di calcolo**, non di dati, ed è questo a identificare l'attacco. Il **cryptojacking** dirotta le risorse della vittima per generare criptovaluta a beneficio dell'attaccante, quindi il suo obiettivo non è rubare né distruggere ma **consumare**: da qui CPU al massimo, ventole al massimo, batteria che dura la metà e macchine lentissime. Due dettagli completano il quadro. L'attività **solo a schermo bloccato** è un accorgimento di evasione: il malware lavora quando nessuno guarda, così l'utente non collega il rallentamento a ciò che stava facendo. Le **connessioni persistenti verso un host esterno su porta insolita** sono il collegamento al *mining pool*, che deve restare aperto perché è lì che il lavoro viene consegnato. Infine, l'assenza di cifratura e di dati usciti non è un dettaglio secondario: è ciò che esclude tutte le altre ipotesi. Vale la pena notare il costo reale, che le domande sottovalutano: bolletta elettrica, usura dell'hardware e, soprattutto, un accesso non autorizzato già stabilito che domani può servire ad altro.\n* **Analisi dei distrattori:**\n  * **A) Ransomware in preparazione:** la fase precedente alla cifratura si riconosce da attività sul **filesystem** e sulle copie shadow, non da un carico costante di CPU. E un ransomware non ha alcun motivo di consumare il processore per giorni prima di agire: la sua logica è la sorpresa.\n  * **C) Esfiltrazione di dati:** produrrebbe traffico **in uscita voluminoso**, visibile come volume trasferito. Lo scenario dice esplicitamente che nessun dato risulta uscito, e le connessioni descritte sono persistenti ma leggere.\n  * **D) Negazione di servizio distribuita:** è un attacco che **satura un servizio dall'esterno**, tipicamente un sito o un collegamento di rete. Non ha senso applicato ai portatili di un reparto, e in ogni caso il carico verrebbe dalla rete, non da un processo locale.\n\n* **Trappola d'esame:** associa ogni categoria di malware alla **risorsa che consuma**, perché è da lì che le domande costruiscono gli indicatori. **Cryptojacking** = CPU o GPU al massimo, calore, batteria, con la macchina che resta utilizzabile · **Ransomware** = attività intensa sul filesystem, estensioni cambiate, richiesta di riscatto · **Esfiltrazione** = traffico in uscita anomalo per volume, orario o destinazione · **Botnet** = traffico in uscita verso un server di comando e controllo, con la macchina usata per colpire terzi. Quando lo scenario nomina insieme **lentezza, ventole e batteria** senza perdita di dati, la risposta è cryptojacking."
   },
   {
     id: 532,
