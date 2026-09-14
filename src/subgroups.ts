@@ -368,6 +368,9 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "InabilityToPatchConcept": "Metodologie di Vulnerability Assessment",
   "EaseOfDeploymentConcept": "Automazione e Orchestrazione di Sicurezza",
   "AutomationConcept": "Automazione e Orchestrazione di Sicurezza",
+  "GuardRailsAutomation": "Automazione e Orchestrazione di Sicurezza",
+  "TicketEscalationAutomation": "Automazione e Orchestrazione di Sicurezza",
+  "AutomationRisksConcept": "Automazione e Orchestrazione di Sicurezza",
   "ActiveReconnaissanceConcept": "Tecniche di Reconnaissance e Testing",
   "PassiveReconnaissanceConcept": "Tecniche di Reconnaissance e Testing",
   "VulnerabilityAssessmentConcept": "Tecniche di Reconnaissance e Testing",
@@ -543,6 +546,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   // Domain 5 - Topic 1 & 2
   "ExceptionRes": "Politiche di Sicurezza e Standard di Sviluppo",
   "ExemptionRes": "Politiche di Sicurezza e Standard di Sviluppo",
+  "PolicyMonitoringRevision": "Politiche di Sicurezza e Standard di Sviluppo",
 
   // Domain 5 - Topic 3
   "EnvironmentalVariablesRes": "Metodologie di Analisi del Rischio",
