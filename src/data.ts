@@ -2,7 +2,7 @@ import { TopicGroup, Question } from "./types";
 
 export const DOMAIN_1_TOPICS: TopicGroup[] = [
   {
-    title: "1. Fondamentali d'Esame",
+    title: "1. Fondamentali d'Esame (Obj 1.2)",
     description: "Principi e concetti cardine della sicurezza delle informazioni.",
     icon: "ShieldAlert",
     subtopics: [
@@ -39,7 +39,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "ZeroTrustIntro",
         definition: "Il framework di sicurezza moderno basato sul principio 'Never Trust, Always Verify'.",
         details: "Zero Trust elimina per sempre il concetto obsoleto di fiducia implicita basata semplicemente sul perimetro fisico di rete:\n* **Verifica Continua:** Ogni richiesta d'accesso deve essere esplicitamente autenticata, autorizzata e cifrata prima che l'accesso venga concesso, a prescindere che la richiesta provenga dall'interno o dall'esterno dell'ufficio.\n* **Least Privilege (Minimo Privilegio):** Limitare l'accesso degli utenti e dei sistemi esclusivamente al livello minimo necessario per svolgere la mansione attiva nel momento specifico.\n* **Assume Breach (Assumi la Compromissione):** Progettare, monitorare e difendere l'infrastruttura partendo dal presupposto che gli attaccanti si siano già infiltrati nella rete interna.\n\n* **Piccolo Esempio Concentrato:** Un dipendente si siede alla propria scrivania in ufficio e accende il PC aziendale. Nonostante sia collegato alla rete cablata interna, per accedere alla cartella condivisa del reparto finanziario deve superare una verifica MFA ed il sistema controlla che il suo sistema operativo abbia installato tutte le patch di sicurezza attive.",
-        examTip: "In Zero Trust, ogni richiesta di acesso deve essere autenticata, autorizzata e crittografata prima di concedere l'accesso."
+        examTip: "In Zero Trust, ogni richiesta di accesso deve essere autenticata, autorizzata e crittografata prima di concedere l'accesso."
       },
       {
         name: "Policy-driven access control",
@@ -72,7 +72,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "2. Security Controls",
+    title: "2. Security Controls (Obj 1.1)",
     description: "Categorie di controlli di sicurezza in base alla modalità di implementazione.",
     icon: "Lock",
     subtopics: [
@@ -80,7 +80,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         name: "Technical",
         checklistKey: "TechnicalControls",
         definition: "Controlli di sicurezza implementati tramite soluzioni hardware, software o firmware.",
-        details: "Chiamati anche controlli logici, utilizzano le tecnologie informatiche e di rete per far rispettare i requisiti di sicurezza dell'organizzazione:\n* **Firewall e IDS/IPS:** Filtri di rete e sistemi di blocco automatico delle minacce.\n* **Crittografia dei Dati:** Cifratura delle informazioni in transito (TLS) e a riposo (AES).\n* **Gestione Identità:** Sistemi di Single Sign-On (SSO), agenti di autenticazione a più fattori (MFA) e controllo degli accessi biometrico digitale.\n* **Agenti Endpoint:** Antivirus, antimalware ed Endpoint Detection and Response (EDR).\n\n* **Piccolo Esempio Concentrato:** L'attivazione di una regola su un firewall aziendale che rileva e blocca automaticamente il traffico non crittografato sulla porta TCP 80, forzando l'uso della porta HTTPS 443, rappresenta un controllo di tipo tecnico.",
+        details: "Chiamati anche controlli logici, utilizzano le tecnologie informatiche e di rete per far rispettare i requisiti di sicurezza dell'organizzazione:\n* **Firewall e IDS/IPS:** Filtri di rete, rilevamento delle intrusioni (IDS, che genera solo alert) e prevenzione delle intrusioni (IPS, che blocca attivamente il traffico in-line).\n* **Crittografia dei Dati:** Cifratura delle informazioni in transito (TLS) e a riposo (AES).\n* **Gestione Identità:** Sistemi di Single Sign-On (SSO), agenti di autenticazione a più fattori (MFA) e controllo degli accessi biometrico digitale.\n* **Agenti Endpoint:** Antivirus, antimalware ed Endpoint Detection and Response (EDR).\n\n* **Piccolo Esempio Concentrato:** L'attivazione di una regola su un firewall aziendale che rileva e blocca automaticamente il traffico non crittografato sulla porta TCP 80, forzando l'uso della porta HTTPS 443, rappresenta un controllo di tipo tecnico.",
         examTip: "Qualsiasi misura di sicurezza che agisce direttamente sui sistemi informatici ed è gestita da codice o dispositivi fisici di rete è un controllo tecnico."
       },
       {
@@ -107,7 +107,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "3. Control Types",
+    title: "3. Control Types (Obj 1.1)",
     description: "Classificazione funzionale dei controlli in base alla tempistica dell'azione.",
     icon: "CheckSquare",
     subtopics: [
@@ -156,7 +156,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "4. Change Management",
+    title: "4. Change Management (Obj 1.3)",
     description: "Processi standardizzati per introdurre modifiche in produzione senza interruzioni e falle.",
     icon: "TrendingUp",
     subtopics: [
@@ -172,7 +172,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "ImpactAnalysis",
         definition: "La valutazione sistematica dei potenziali rischi, interruzioni e dipendenze che un cambiamento potrebbe causare.",
         details: "Viene condotta nella fase preliminare della RFC per mappare gli effetti collaterali dell'aggiornamento:\n* **Interdipendenze Hardware/Software:** Analizzare quali sistemi, database, porte o applicazioni legacy dipendono dalla risorsa che stiamo modificando.\n* **Sicurezza e Conformità:** Valutare se l'introduzione della nuova versione altera i controlli di sicurezza attivi o compromette la conformità (es. HIPAA, GDPR).\n* **Downtime Operativo:** Stima del tempo di fuori servizio e dell'impatto sui clienti.\n\n* **Piccolo Esempio Concentrato:** Prima di aggiornare la versione di Java sul server di produzione dell'ERP aziendale, un sistemista simula l'aggiornamento in staging e scopre che il nuovo compilatore manda in blocco l'API delle spedizioni. L'installazione viene sospesa, prevenendo il blocco operativo delle consegne commerciali.",
-        examTip: "L'analis dell'impatto previene incidenti a catena dovuti alla mancata comprensione delle dipendenze dei sistemi."
+        examTip: "L'analisi dell'impatto previene incidenti a catena dovuti alla mancata comprensione delle dipendenze dei sistemi."
       },
       {
         name: "Backout Plan",
@@ -186,7 +186,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "MaintenanceWindow",
         definition: "Un intervallo di tempo prestabilito e concordato in cui è consentito eseguire modifiche o manutenzioni.",
         details: "Pianifica le attività a minor impatto per preservare i patti di disponibilità operativa (SLA):\n* **Pianificazione Intelligente:** Le manutenzioni vengono eseguite in orari in cui l'uso dei sistemi è minimo (es. di notte, nei weekend o durante le chiusure aziendali).\n* **Comunicazione Preventiva:** Avvisare i dipendenti e i clienti esterni con debito anticipo del possibile downtime o degrado delle performance.\n* **Massimizzazione SLA:** Permette di completare gli aggiornamenti senza impattare sull'indice di uptime aziendale contrattuale.\n\n* **Piccolo Esempio Concentrato:** Una piattaforma fintech stabilisce che tutti gli aggiornamenti dei server di transazione debbano avvenire esclusivamente all'interno della finestra di manutenzione concordata, ovvero la domenica mattina dalle 02:00 alle 05:00, minimizzando l'impatto sui commercianti.",
-        examTip: "Anche le patch di emergenza dovrebbero ideale essere coordinate, ma i cambi programmati regolari appartengono rigorosamente alle finestre di manutenzione."
+        examTip: "Anche le patch di emergenza dovrebbero idealmente essere coordinate con il processo di change management, mentre le modifiche programmate ordinarie vanno eseguite rigorosamente all'interno delle finestre di manutenzione approvate."
       },
       {
         name: "Version Control",
@@ -198,7 +198,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "5. Cryptography",
+    title: "5. Cryptography (Obj 1.4)",
     description: "Algoritmi, meccanismi crittografici e Infrastruttura a Chiave Pubblica (PKI).",
     icon: "Calculator",
     subtopics: [
@@ -270,7 +270,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "CertificatesConcept",
         definition: "Documenti digitali che legano in modo sicuro l'identità di un soggetto alla sua chiave pubblica tramite la firma di una CA fidata.",
         details: "Attestati digitali conformi allo standard X.509 che servono a prevenire attacchi di impersonificazione sul web:\n* **Elementi Interni:** Identità del possessore (Soggetto, CN, SAN), chiave pubblica del possessore, firma digitale della Certificate Authority, algoritmi di cifratura supportati e date di validità.\n* **Utilizzo:** Forniscono la certezza matematica che un determinato server o portale web appartenga effettivamente all'organizzazione legittima e non a un truffatore.\n\n* **Piccolo Esempio Concentrato:** Quando accedi al sito di un'istituzione governativa, il browser ispeziona il certificato digitale inviato dal server, verificando che l'URL digitato corrisponda esattamente al Common Name scritto nel certificato e che la firma della CA Let's Encrypt sia valida.",
-        examTip: "Un certificato scaduto o con un nome di dominio non corrispondente (Mismatched Name) provocherà un blocco immediato della connessione del client."
+        examTip: "Un certificato scaduto, revocato o con un nome di dominio non corrispondente (Mismatched Name) fa fallire la validazione: il browser interrompe l'handshake e mostra un avviso di sicurezza a tutta pagina. Attenzione: l'utente può in genere forzare il proseguimento (a meno di HSTS o certificate pinning), quindi non si tratta di un blocco tecnicamente inaggirabile."
       },
       {
         name: "Wildcard Certificates",
@@ -366,7 +366,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "6. Physical Security",
+    title: "6. Physical Security (Obj 1.2)",
     description: "Controlli fisici per proteggere strutture e asset tangibili.",
     icon: "Lock",
     subtopics: [
@@ -422,7 +422,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "7. Deception Technologies",
+    title: "7. Deception Technologies (Obj 1.2)",
     description: "Tecnologie basate sull'inganno per rilevare gli attaccanti precocemente.",
     icon: "Users",
     subtopics: [
@@ -445,7 +445,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "HoneyfileDeception",
         definition: "File fittizi dai nomi accattivanti contenenti informazioni fasulle, posizionati per rilevare accessi non autorizzati.",
         details: "Documenti esca posizionati in cartelle condivise o server di file aziendali:\n* **Nomi Accattivanti:** Denominati in modo da attrarre la curiosità di insider malintenzionati o hacker (es. `password_server.txt` o `bonus_stipendi_2026.xlsx`).\n* **Allarme Silenzioso:** Dotati di sensori o script software; se il file viene aperto, copiato o scaricato, genera all'istante un allarme ad altissima priorità nel SIEM indicando l'account compromesso.\n\n* **Piccolo Esempio Concentrato:** Un amministratore inserisce il file `progetti_segreti.docx` in una cartella accessibile del cloud aziendale. Il file contiene solo testo fittizio ma include un pixel tracciante web: quando un utente non autorizzato apre il file, il pixel invia una richiesta HTTP silenziosa che allerta immediatamente il team di sicurezza.",
-        examTip: "L'apertura di un honeyfile è un indicatore di compromissione (IoC) estremamente preciso poichè nessun utente legittimo ha motivo di aprirlo."
+        examTip: "L'apertura di un honeyfile è un indicatore di compromissione (IoC) estremamente preciso poiché nessun utente legittimo ha motivo di aprirlo."
       },
       {
         name: "Honeytoken",
@@ -457,7 +457,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "8. Identity & Access Control Models (Obj 1.3 & 3.3)",
+    title: "8. Identity & Access Control Models (Obj 4.6)",
     description: "Gestione delle identità, autenticazione multi-fattore, servizi di directory e modelli di autorizzazione d'accesso.",
     icon: "Users",
     subtopics: [
@@ -578,7 +578,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         checklistKey: "LDAPProtocol_New",
         definition: "Lightweight Directory Access Protocol: un protocollo standard aperto utilizzato per interrogare, autenticare e gestire le informazioni sugli utenti e sulle risorse in un database di directory centrale.",
         details: "Caratteristiche principali:\n* **Struttura Gerarchica:** Organizza gli oggetti (utenti, computer, stampanti, gruppi) in un albero logico composto da unità organizzative (OU), domini (DC) e nomi distinti (DN).\n* **Integrazione con Active Directory:** Microsoft Active Directory si basa su LDAP como protocollo principale per consentire ai server e ai client di cercare e autenticare le identità nel dominio.\n* **LDAPS (LDAP Secure):** La variante cifrata che utilizza TLS/SSL (porta standard TCP 636) per proteggere le credenziali e i dati trasmessi in chiaro (porta TCP 389) da attacchi di sniffing.",
-        examTip: "Per garantire la sicurezza delle query e delle credenziali utente trasmesse a un servizio di directory, disabilita l'LDAP in chiaro (porta 389) e implementa LDAPS (porta 636) cifrato con certificato SSL/TLS."
+        examTip: "Per garantire la sicurezza delle query e delle credenziali utente trasmesse a un servizio di directory, disabilita l'LDAP in chiaro (porta 389) e implementa LDAPS (porta TCP 636) cifrato con TLS, oppure StartTLS sulla porta 389. SSL è deprecato: all'esame la risposta corretta è sempre TLS."
       },
 
       {
@@ -790,7 +790,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "5. Social Engineering (Obj 2.4)",
+    title: "5. Social Engineering (Obj 2.2)",
     description: "Tecniche di manipolazione psicologica utilizzate per indurre le persone a compiere azioni o rivelare dati sensibili.",
     icon: "Users",
     subtopics: [
@@ -870,6 +870,20 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         definition: "Un'operazione coordinata di invio di e-mail fraudolente a un gruppo di utenti per scopi malevoli o di addestramento.",
         details: "Fasi e tipologie di campagne:\n* **Campagne Malevole:** Condotte da attaccanti esterni per raccogliere credenziali, installare malware o avviare attacchi ransomware su larga scala all'interno di un'organizzazione.\n* **Campagne di Simulazione (Simulated Phishing):** Strumento fondamentale di Security Awareness gestito dal team di sicurezza interno. Consente di misurare la vulnerabilità del personale, raccogliere statistiche (click-rate) e formare gli utenti che cadono nel tranello.",
         examTip: "Le campagne di simulazione di phishing (Phishing campaign) aiutano le aziende a identificare i dipendenti più vulnerabili e ad addestrarli in modo dinamico e interattivo."
+      },
+      {
+        name: "Business Email Compromise (BEC)",
+        checklistKey: "BECSocialEngineering",
+        definition: "Truffa mirata in cui l'attaccante impersona (o controlla realmente) la casella di posta di un dirigente o di un fornitore fidato per indurre un dipendente ad autorizzare un bonifico o a divulgare dati riservati.",
+        details: "Il **Business Email Compromise (BEC)** è la frode via e-mail economicamente più dannosa secondo l'FBI, ed è esplicitamente citata negli obiettivi SY0-701 (Obj 2.2 - Human vectors).\n* **Nessun malware:** Il BEC non usa allegati o link malevoli, quindi i filtri antivirus e i gateway anti-malware non lo intercettano. L'arma è esclusivamente la manipolazione psicologica (autorità + urgenza + riservatezza).\n* **Le tre varianti d'esame:**\n  1. **CEO fraud:** un'e-mail che sembra provenire dall'amministratore delegato chiede un bonifico urgente e 'confidenziale'.\n  2. **Vendor/Invoice fraud:** l'attaccante intercetta una corrispondenza reale con un fornitore e invia una fattura autentica con l'IBAN modificato.\n  3. **Account takeover:** l'attaccante entra davvero nella casella del dirigente (via phishing o credential stuffing) e scrive dal dominio legittimo, superando SPF, DKIM e DMARC.\n* **Tecniche di inganno del mittente:** spoofing del campo `From`, domini *lookalike* (`ranco.it` invece di `banco.it`), o semplice modifica del `Reply-To`.\n\n* **Piccolo Esempio Concentrato:** La contabile di un\'azienda riceve venerdì alle 17:50 un\'e-mail dal 'CEO' in viaggio: chiede un bonifico immediato di 48.000 € per chiudere un\'acquisizione riservata e raccomanda di non parlarne con nessuno fino a lunedì. Il dominio mittente è `azienda-spa.com` invece di `aziendaspa.com`. La procedura aziendale di *callback verification* (richiamare il richiedente su un numero già noto in rubrica, mai su quello indicato nell\'e-mail) blocca la truffa.",
+        examTip: "Il controllo più efficace contro il BEC NON è tecnologico ma procedurale: la verifica *out-of-band* (callback su un recapito già censito) e la doppia autorizzazione (dual control) per i pagamenti sopra una certa soglia. All\'esame, se lo scenario descrive una richiesta di pagamento urgente e riservata da parte di un dirigente e NON menziona né allegati né link, la risposta è Business Email Compromise, non phishing generico."
+      },
+      {
+        name: "Brand Impersonation",
+        checklistKey: "BrandImpersonationSE",
+        definition: "Attacco in cui l'aggressore riproduce fedelmente il marchio, il logo, i colori e il tono comunicativo di un'azienda nota per far apparire legittimo un messaggio, un sito o un'applicazione fraudolenta.",
+        details: "La **Brand Impersonation** sfrutta la fiducia che la vittima ripone in un marchio conosciuto, non in una persona specifica.\n* **Bersagli tipici:** banche, corrieri (avvisi di consegna), servizi cloud (Microsoft 365, Google), fornitori di energia e agenzie fiscali.\n* **Canali:** e-mail HTML clonate pixel per pixel, SMS (in combinazione con lo smishing), annunci sponsorizzati sui motori di ricerca che portano a portali di login contraffatti, app mobili fasulle negli store.\n* **Danno doppio:** la vittima perde le credenziali o il denaro, mentre il marchio impersonato subisce un danno reputazionale che non ha causato né può controllare direttamente.\n* **Contromisure lato azienda impersonata:** pubblicazione di record **DMARC** in policy `reject`, monitoraggio dei **Certificate Transparency log** e del typosquatting sui domini simili, servizi di *brand protection* e takedown.\n\n* **Piccolo Esempio Concentrato:** Un dipendente riceve un\'e-mail con il logo, il piè di pagina e i caratteri esatti del corriere aziendale: 'Pacco in giacenza, paga 2,90 € di dogana'. Il link porta a un sito identico all\'originale ospitato su `corriere-tracking-it.net`. Il pagamento serve solo a far digitare alla vittima i dati completi della carta di credito.",
+        examTip: "Distingui bene le tre 'impersonificazioni' d'esame: **Impersonation** = ci si finge una *persona* (il nuovo tecnico, un collega); **Brand impersonation** = ci si finge un *marchio/azienda*; **Typosquatting** = si registra un *dominio* con un refuso per intercettare chi sbaglia a digitare. Le tre tecniche vengono spesso combinate nello stesso attacco."
       }
     ]
   },
@@ -942,11 +956,11 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         examTip: "In un attacco Reflected DDoS, l'attaccante rimbalza ('riflette') il traffico d'attacco usando server intermediari innocenti tramite falsificazione dell'IP della vittima."
       },
       {
-        name: "SQL injection (SOL injection)",
+        name: "SQL Injection (SQLi)",
         checklistKey: "SQLi_New",
         definition: "Un attacco in cui comandi SQL malevoli vengono inseriti nei campi di input dell'applicazione per manipolare o estrarre dati dal database.",
         details: "Dettagli dell'attacco:\n* **Mancata Sanificazione:** Avviene quando l'applicazione concatena l'input dell'utente direttamente in una query SQL senza eseguire controlli.\n* **Effetti:** Consente all'attaccante di bypassare l'autenticazione, leggere dati riservati, modificarli, cancellarli, o persino eseguire comandi amministrativi sul server del database (tramite procedure memorizzate).\n* **Contromisura Principale:** Uso di query parametriche (Parameterized Queries / Prepared Statements) e sterilizzazione rigorosa degli input.",
-        examTip: "La difesa definitiva e più testata all'esame contro la SQL injection (SOL injection) è l'adozione sistematica di Prepared Statements (query parametriche)."
+        examTip: "La difesa definitiva e più testata all'esame contro la SQL Injection è l'adozione sistematica di Prepared Statements (query parametriche), che separano il codice SQL dai dati forniti dall'utente. La validazione dell'input è una difesa complementare, non sostitutiva; il WAF è un controllo compensativo che filtra i payload noti ma non elimina la vulnerabilità nel codice."
       }
     ]
   },
@@ -967,7 +981,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         checklistKey: "CVSSVuln",
         definition: "Common Vulnerability Scoring System: un framework standard per valutare e comunicare la gravità di una vulnerabilità.",
         details: "Il punteggio CVSS va da 0.0 a 10.0 (Critico):\n* **Metriche Principali:**\n  - *Base Metrics:* Caratteristiche intrinseche della falla (vettore d'attacco, complessità d'attacco, privilegi richiesti, interazione utente, impatto su C-I-A).\n  - *Temporal Metrics:* Como evolve la falla nel tempo (es. disponibilità di codice exploit pubblico, disponibilità di una patch ufficiale).\n  - *Environmental Metrics:* L'importanza del sistema colpito nell'infrastruttura reale dell'azienda.\n\n* **Piccolo Esempio Concentrato:** Uno scanner di vulnerabilità trova una falla CVSS v3 con punteggio `9.8` sul server Apache esposto sul web dell'azienda, forzando gli analisti ad attivarsi per un patching immediato fuori dall'orario lavorativo.",
-        examTip: "Un punteggio CVSS tra 9.0 e 10.0 indica una criticità critica d'esame che richiede immediato intervento (solitamente sfruttabile da remoto senza autenticazione)."
+        examTip: "Nella scala CVSS v3.x un punteggio da 9.0 a 10.0 ricade nella severità 'Critical' e richiede intervento immediato (tipicamente si tratta di falle sfruttabili da remoto, senza autenticazione e senza interazione dell'utente). Ricorda le fasce: 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Attenzione: il punteggio CVSS misura la gravità tecnica, NON il rischio aziendale; la priorità di remediation nasce dal CVSS combinato con la criticità dell'asset e con l'esposizione reale."
       },
       {
         name: "Zero-Day",
@@ -1077,7 +1091,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "10. Threat Intelligence (Obj 2.1 & 2.2)",
+    title: "10. Threat Intelligence (Obj 2.1, 2.2 & 4.3)",
     description: "Fonti di informazioni sulle minacce, OSINT, condivisione delle informazioni e intelligence sul dark web.",
     icon: "ShieldAlert",
     subtopics: [
@@ -1093,7 +1107,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         checklistKey: "OSINTRes",
         definition: "Open Source Intelligence: La metodologia di raccolta, analisi e correlazione di dati e informazioni sensibili o utili provenienti esclusivamente da fonti pubbliche, liberamente accessibili e legali.",
         details: "L'**OSINT** viene ampiamente utilizzata sia dagli hacker etici per la ricognizione passiva, sia dagli attaccanti per preparare attacchi mirati:\n* **Fonti Comuni:**\n  - *Social Network:* Profili LinkedIn, Facebook o Twitter per identificare i ruoli e l'organigramma dei dipendenti aziendali.\n  - *Database Pubblici:* Record DNS, database WHOIS, indirizzi IP registrati, registri delle camere di commercio.\n  - *Motori di Ricerca:* Google Dorking per scovare file sensibili indicizzati per errore, Shodan per mappare dispositivi IoT ed apparati esposti su internet.\n  - *Repository di Codice:* GitHub o GitLab per individuare password, chiavi API o commenti di debug lasciati accidentalmente dai programmatori.",
-        examTip: "L'OSINT si basa su fonti di pubblico dominio e non genera alcun traffico diretto verso i server del target, risultando del tutto invisibile ai sistemi di monitoraggio della vittima."
+        examTip: "L'OSINT si basa su fonti di pubblico dominio. Nella sua forma passiva (registri WHOIS, certificati pubblici, social, motori di ricerca) non genera traffico verso l'infrastruttura del target ed è quindi difficilmente rilevabile; attenzione però a non confonderla con la ricognizione attiva (scansione di porte, enumerazione di servizi), che invece tocca i sistemi della vittima e lascia tracce nei log."
       },
       {
         name: "Proprietary Intelligence",
@@ -1372,7 +1386,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "IDSSolutionConcept",
         definition: "Intrusion Detection System (IDS): Dispositivo o software di sicurezza passivo che monitora il traffico di rete o le attività di sistema alla ricerca di comportamenti dannosi o violazioni delle policy, generando avvisi (alert) per gli amministratori.",
         details: "Gli IDS si dividono principalmente in:\n* **NIDS (Network-based IDS):** Analizzano i pacchetti di rete che transitano su un segmento LAN (spesso tramite porte SPAN o TAP fisici) per identificare pattern di attacco.\n* **HIDS (Host-based IDS):** Installati sui singoli endpoint (server o workstation) per monitorare log locali, chiamate di sistema e modifiche ai file critici.\n* **Metodologie di rilevamento:**\n  - *Signature-based:* Confrontano il traffico con un database di firme note d'attacco.\n  - *Anomaly-based:* Rilevano deviazioni anomale rispetto a una baseline di comportamento precedentemente appresa tramite algoritmi statistici.\n\n* **Piccolo Esempio Concentrato:** Un amministratore riceve una notifica in tempo reale dal sistema **NIDS** della rete. L'IDS ha identificato un flusso continuo di pacchetti contenenti la firma nota di un tentativo di exploit SSH, consentendo al team di sicurezza di indagare tempestivamente sull'host di origine.",
-        examTip: "Un'IDS è uno strumento passivo (out-of-band) che rileva e notifica gli attacchi senza poterli bloccare direttamente, a differenza di un IPS che agisce in-line e blocca attivamente il traffico nocivo."
+        examTip: "Un IDS è uno strumento passivo (out-of-band) che rileva e notifica gli attacchi senza poterli bloccare direttamente, a differenza di un IPS che agisce in-line e blocca attivamente il traffico nocivo."
       },
       {
         name: "IPS",
@@ -1400,9 +1414,9 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
       {
         name: "TLS",
         checklistKey: "TLSNet",
-        definition: "Transport Layer Security: Il protocollo crittografico standardizzato a livello OSI Layer 4 che sostituisce lo storico e ormai insicuro SSL (Secure Sockets Layer).",
+        definition: "Transport Layer Security: Il protocollo crittografico che cifra e autentica le comunicazioni al di sopra del livello di trasporto (tra il Layer 4 e il Layer 7 del modello OSI, tradizionalmente collocato ai Layer 5-6), sostituendo lo storico e ormai insicuro SSL (Secure Sockets Layer).",
         details: "Caratteristiche e applicazioni:\n* **Funzionamento:** Cifra e protegge i dati in transito su reti non sicure stabilendo canali di comunicazione sicuri basati su crittografia asimmetrica per la fase di handshake e simmetrica per la trasmissione dei dati.\n* **HTTPS (porta 443):** Applicazione primaria di TLS applicata al protocollo web HTTP.\n* **Certificati digitali:** Utilizza certificati X.509 firmati da un'Autorità di Certificazione (CA) per garantire l'identità del server prima dell'instaurazione del canale protetto.\n\n* **Piccolo Esempio Concentrato:** Quando un utente accede al proprio portale di home banking, il browser stabilisce una sessione **TLS 1.3** contrassegnata dal lucchetto verde e dal protocollo HTTPS, cifrando la password e il codice OTP prima di trasmetterli su Internet.",
-        examTip: "SSL non deve più essere utilizzato a causa di gravi vulnerabilità (es. POODLE); l'esame richiede rigorosamente l'uso delle versioni TLS moderne (TLS 1.2 o TLS 1.3)."
+        examTip: "SSL non deve più essere utilizzato a causa di gravi vulnerabilità (es. POODLE); l'esame richiede rigorosamente l'uso delle versioni TLS moderne (TLS 1.2 o TLS 1.3). Attenzione alla trappola: TLS NON è un protocollo di Layer 4 (quello è TCP); TLS si appoggia a TCP e opera al di sopra di esso."
       },
       {
         name: "SSH",
@@ -1509,7 +1523,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "GCMPConcept",
         definition: "Galois/Counter Mode Protocol: Un protocollo di cifratura wireless avanzato utilizzato in WPA3 per garantire sia la riservatezza che l'integrità dei dati tramite la crittografia autenticata.",
         details: "Caratteristiche principali:\n* **Crittografia Autenticata (AEAD):** Fornisce contemporaneamente cifratura (tramite AES-GCM) e autenticazione dei dati in un unico passaggio computazionale.\n* **Parallelizzazione:** A differenza di CCMP (usato in WPA2) che è sequenziale, GCMP consente l'elaborazione parallela dei dati, offrendo throughput significativamente maggiori e minore latenza sui dispositivi moderni.\n* **Sicurezza robusta:** Riduce la vulnerabilità ad attacchi di replay e manipolazione fine dei pacchetti radio.",
-        examTip: "GCMP (basato su AES-GCM) is l'algoritmo di cifratura d'elezione per lo standard WPA3, offrendo migliori prestazioni e parallelizzazione rispetto al CCMP di WPA2."
+        examTip: "GCMP (basato su AES-GCM) è l'algoritmo di cifratura d'elezione per lo standard WPA3, offrendo migliori prestazioni e parallelizzazione rispetto al CCMP di WPA2."
       },
       {
         name: "SAE",
@@ -1635,12 +1649,12 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "Layer3SwitchConcept",
         definition: "Switch di Livello 3: Uno switch di rete avanzato che, oltre a inoltrare i frame a livello Layer 2 (MAC), è in grado di eseguire il routing dei pacchetti a livello Layer 3 (IP) tramite hardware dedicato (ASIC).",
         details: "Vantaggi del Layer 3 Switch:\n* **Prestazioni eccezionali:** Esegue il routing dei pacchetti IP a velocità vicine a quelle della commutazione fisica (wire-speed), riducendo drasticamente la latenza rispetto a un router tradizionale.\n* **Instradamento locale:** Ideale per gestire l'instradamento ad alta velocità tra diverse VLAN locali (Inter-VLAN routing) all'interno dello stesso data center o della stessa sede aziendale.\n* **Nessun collo di bottiglia:** Sostituisce l'architettura 'Router-on-a-stick' eliminando i colli di bottiglia sul collegamento fisico verso il router.",
-        examTip: "All'esame, lo Switch Layer 3 unisce la velocità di uno switch L2 con le capacità di routing logico IP di un router L3 per ottimizzare delle prestazioni della rete locale."
+        examTip: "All'esame, lo Switch Layer 3 unisce la velocità di uno switch L2 con le capacità di routing logico IP di un router L3 per ottimizzare le prestazioni della rete locale."
       },
       {
         name: "Inter-VLAN Routing",
         checklistKey: "InterVLANRoutingConcept",
-        definition: "Instradamento Inter-VLAN: Il processo logico che consente la comunicazione e il passaggio dei dati entre VLAN isolate differenti, che di base non potrebbero comunicare tra loro.",
+        definition: "Instradamento Inter-VLAN: Il processo logico che consente la comunicazione e il passaggio dei dati tra VLAN isolate differenti, che di base non potrebbero comunicare tra loro.",
         details: "Metodologie di implementazione:\n* **Router-on-a-stick:** Utilizza un router esterno collegato a uno switch tramite una singola porta fisica configurata como Trunk, suddividendo l'interfaccia fisica in sotto-interfacce logiche per ciascuna VLAN.\n* **Switch Layer 3 (SVI):** Configura delle interfacce virtuali (Switch Virtual Interfaces - SVI) sullo switch L3 che fungono da gateway predefiniti per ciascuna VLAN.\n* **Sicurezza:** Poiché il traffico deve essere instradato per passare da una VLAN all'altra, questo passaggio consente di applicare controlli di sicurezza rigorosi (ACL o regole di firewall) per decidere quale traffico consentire o bloccare.",
         examTip: "L'Inter-VLAN Routing permette di connettere VLAN separate; per garantire la sicurezza, tale traffico deve sempre essere filtrato tramite Access Control List (ACL) o reindirizzato verso un firewall di ispezione."
       },
@@ -1663,7 +1677,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "ControlPlaneConcept",
         definition: "Piano di Controllo: La componente intelligente della rete responsabile di determinare come e dove il traffico debba essere instradato, calcolando i percorsi e le tabelle di routing.",
         details: "Caratteristiche del Control Plane:\n* **Presa decisionale:** Definisce la topologia della rete scambiando messaggi e informazioni con gli altri apparati di rete locali o globali.\n* **Protocolli attivi:** Esegue algoritmi complessi e gestisce protocolli di routing dinamico come OSPF, BGP, RIP, STP.\n* **Centralizzazione in SDN:** Nelle reti tradizionali, ciascun apparato possiede il proprio Control Plane locale. Nell'SDN, il Control Plane viene estratto e centralizzato all'interno di un software chiamato **SDN Controller**, lasciando sugli switch fisici solo il semplice Data Plane.",
-        examTip: "Il Control Plane decide la rotta logica del traffico (crea le tabelle di routing), mentre le Data Plane la esegue materialmente inoltrando i pacchetti."
+        examTip: "Il Control Plane decide la rotta logica del traffico (crea le tabelle di routing), mentre il Data Plane la esegue materialmente inoltrando i pacchetti."
       },
       {
         name: "Management Plane",
@@ -1724,7 +1738,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "3. Firewalls (Obj 3.3)",
+    title: "3. Firewalls (Obj 3.2)",
     description: "Apparati per l'ispezione ed il filtraggio del traffico a vari livelli del modello OSI.",
     icon: "ShieldAlert",
     subtopics: [
@@ -1864,7 +1878,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "4. Data Security (Obj 3.2 & 3.3)",
+    title: "4. Data Security (Obj 3.3)",
     description: "Protezione delle informazioni digitali nei vari stati e tecniche di cifratura ed oscuramento.",
     icon: "FileText",
     subtopics: [
@@ -2291,7 +2305,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "6. Dispositivi Speciali & IoT (Obj 3.2)",
+    title: "6. Dispositivi Speciali & IoT (Obj 3.1)",
     description: "La sicurezza nei sistemi industriali, embedded, dispositivi speciali e reti dell'Internet of Things.",
     icon: "Activity",
     subtopics: [
@@ -2333,7 +2347,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "7. PBQ Dominio 3 Scenarios",
+    title: "7. PBQ Dominio 3 Scenarios (Obj 3.1-3.4)",
     description: "Scenari pratici e Performance-Based Questions sul Dominio 3.",
     icon: "GraduationCap",
     subtopics: [
@@ -2546,7 +2560,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "3. Vulnerability Management (Obj 4.2)",
+    title: "3. Vulnerability Management (Obj 4.3)",
     description: "Metodologie per identificare, classificare, valutare e mitigare le debolezze di sicurezza.",
     icon: "ShieldAlert",
     subtopics: [
@@ -2768,7 +2782,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         examTip: "Nmap è lo strumento standard assoluto per effettuare port scanning. Una sequenza fitta di tentativi di connessione respinti (RST) segnala un'attività di scansione intercettata dal firewall."
       },
       {
-        name: "Vulnerability Assessment",
+        name: "Vulnerability Assessment Lifecycle (Fasi)",
         checklistKey: "VulnerabilityAssessmentRes",
         definition: "Processo strutturato, periodico e non invasivo volto a identificare, quantificare e classificare per gravità le vulnerabilità note all'interno di un'infrastruttura informatica.",
         details: "Le fasi di un **Vulnerability Assessment** comprendono:\n1. **Asset Identification:** Censimento e catalogazione di tutti i sistemi e dispositivi presenti in rete.\n2. **Vulnerability Scanning:** Scansione tecnica automatizzata alla ricerca di falle software e misconfigurations.\n3. **Analysis & Triage:** Analisi manuale dei risultati per filtrare i falsi positivi e valutare la gravità reale nel contesto operativo.\n4. **Reporting:** Stesura di un rapporto finale contenente l'elenco prioritizzato delle debolezza trovate e le indicazioni operative per la loro risoluzione (Remediation).",
@@ -2784,7 +2798,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "4. Monitoring Tools (Obj 4.2)",
+    title: "4. Monitoring Tools (Obj 4.4)",
     description: "Sistemi, protocolli e agenti per analizzare flussi, centralizzare eventi e prevenire l'esfiltrazione di informazioni.",
     icon: "FileText",
     subtopics: [
@@ -2869,7 +2883,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         name: "Log Correlation",
         checklistKey: "LogCorrelationRes",
         definition: "Correlazione dei Log: L'applicazione di regole logiche complesse su flussi di log aggregati in tempo reale per accorpare eventi distinti e identificare attacchi coordinati.",
-        details: "La **Log Correlation**:\n* Consente di collegare eventi apparentemente banali o isolati (es. 5 login falliti sul server A, seguiti da un tentativo di acesso SSH sul server B dall'IP interno C).\n* Viene eseguita dal **Correlation Engine** del SIEM.\n* Aiuta a scartare i falsi positivi incrociando allarmi di rete (IDS) con evidenze sugli endpoint (log antivirus).",
+        details: "La **Log Correlation**:\n* Consente di collegare eventi apparentemente banali o isolati (es. 5 login falliti sul server A, seguiti da un tentativo di accesso SSH sul server B dall'IP interno C).\n* Viene eseguita dal **Correlation Engine** del SIEM.\n* Aiuta a scartare i falsi positivi incrociando allarmi di rete (IDS) con evidenze sugli endpoint (log antivirus).",
         examTip: "La correlazione logica in tempo reale è la funzionalità principale che distingue un SIEM da un semplice server di aggregazione log (es. Syslog server)."
       },
       {
@@ -2987,7 +3001,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "5. Log Analysis (Obj 4.2)",
+    title: "5. Log Analysis (Obj 4.9)",
     description: "Analisi tecnica e interpretazione forense dei registri generati da diversi dispositivi ed apparati difensivi.",
     icon: "Calculator",
     subtopics: [
@@ -3036,7 +3050,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "6. Incident Response (Obj 4.3)",
+    title: "6. Incident Response (Obj 4.8)",
     description: "Fasi strutturate del ciclo di vita della gestione degli incidenti di sicurezza per limitare i danni.",
     icon: "CheckSquare",
     subtopics: [
@@ -3123,11 +3137,25 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         definition: "Esercitazioni sul campo condotte in tempo reale su sistemi, reti e infrastrutture reali d'impresa, per testare la risposta immediata e sul campo a un attacco o incidente simulato.",
         details: "I **Live Drills** (esercitazioni dal vivo) rappresentano il livello più elevato e realistico di test. Richiedono l'attivazione immediata e pratica di procedure operative d'emergenza, piani di business continuity e risposte tecniche dirette nell'ambiente operativo reale, misurando con precisione i tempi di reazione reali dell'organizzazione.",
         examTip: "I Live Drills sono esercitazioni reali condotte 'live' su sistemi attivi, richiedendo risposte pratiche immediate in condizioni operative reali."
+      },
+      {
+        name: "Root Cause Analysis (RCA)",
+        checklistKey: "RootCauseAnalysisIR",
+        definition: "L'indagine strutturata che, dopo un incidente, risale alla causa primaria che lo ha reso possibile, invece di fermarsi al sintomo osservato.",
+        details: "La **Root Cause Analysis** è una voce esplicita degli obiettivi SY0-701 (Obj 4.8) e si colloca tra l'eradicazione e le *lessons learned*.\n* **Sintomo ≠ causa:** 'il server è stato cifrato dal ransomware' è il sintomo. La causa primaria può essere 'la VPN non aveva MFA e la credenziale era stata riusata da una violazione precedente'.\n* **Tecniche riconosciute:** i **5 Perché** (si chiede 'perché?' finché non si arriva a una causa sistemica), il diagramma di **Ishikawa** (causa-effetto, a lisca di pesce) e la *fault tree analysis*.\n* **Output atteso:** non un colpevole, ma un elenco di azioni correttive che impediscano il ripetersi dell'evento (una patch, un controllo mancante, una procedura da modificare).\n* **Cultura blameless:** se l'analisi cerca responsabilità individuali, il personale smette di segnalare gli incidenti e la visibilità dell'organizzazione peggiora.\n\n* **Piccolo Esempio Concentrato:** Un\'azienda subisce un\'esfiltrazione di dati. Perché? Un server web era vulnerabile. Perché? Non era stato applicato un aggiornamento pubblicato otto mesi prima. Perché? Quel server non compariva nell\'inventario degli asset. Perché? È stato creato in cloud da uno sviluppatore fuori dal processo di provisioning. **Causa primaria:** assenza di controlli di *guard rail* sul provisioning cloud, non 'il server non era patchato'.",
+        examTip: "All'esame, la Root Cause Analysis risponde alla domanda 'PERCHÉ è successo', mentre la digital forensics risponde a 'COSA è successo e chi lo ha fatto'. Una risposta all'incidente che ripristina i sistemi senza RCA garantisce che lo stesso incidente si ripeta: l'eradicazione rimuove il malware, la RCA rimuove la condizione che lo ha fatto entrare."
+      },
+      {
+        name: "Threat Hunting",
+        checklistKey: "ThreatHuntingIR",
+        definition: "La ricerca proattiva e guidata da ipotesi di attaccanti già presenti nell'ambiente, condotta senza attendere che un alert venga generato dagli strumenti di rilevamento.",
+        details: "Il **Threat Hunting** parte dal presupposto Zero Trust dell'*assume breach*: si dà per scontato che qualcuno sia già dentro e lo si va a cercare.\n* **Reattivo vs proattivo:** l'Incident Response classico parte da un alert; il threat hunting parte da un'**ipotesi** ('se un attaccante avesse compromesso un account di servizio, vedrei autenticazioni fuori orario verso i controller di dominio: verifichiamolo').\n* **Materia prima:** telemetria EDR, log di autenticazione, DNS, NetFlow e feed di threat intelligence; le ipotesi sono spesso costruite sulle TTP catalogate in **MITRE ATT&CK**.\n* **Perché serve:** individua le minacce che per definizione sfuggono al rilevamento basato su firme, cioè attacchi *fileless*, uso di strumenti legittimi di sistema (**living off the land**, es. PowerShell, WMI) e minacce persistenti avanzate (APT).\n* **Risultato duplice:** o conferma l'ipotesi e apre un incidente, oppure la smentisce e lascia comunque in eredità una nuova regola di rilevamento nel SIEM.\n\n* **Piccolo Esempio Concentrato:** Un analista formula l\'ipotesi che sia in corso un\'esfiltrazione lenta e interroga i log DNS alla ricerca di query anomale. Trova un host interno che ogni 30 secondi risolve sottodomini lunghi e casuali verso lo stesso dominio: è **DNS tunneling**, che nessun antivirus aveva segnalato perché non c\'è alcun file malevolo sul disco.",
+        examTip: "Non confondere i tre termini: il **monitoraggio** è passivo e attende gli alert; il **threat hunting** è proattivo, umano e guidato da ipotesi; il **penetration test** simula un attaccante esterno per trovare vulnerabilità. Se lo scenario d'esame dice 'cercare proattivamente segni di compromissione non rilevati dagli strumenti automatici', la risposta è threat hunting."
       }
     ]
   },
   {
-    title: "7. Digital Forensics (Obj 4.3)",
+    title: "7. Digital Forensics (Obj 4.8)",
     description: "Preservazione, acquisizione e analisi scientifica delle prove informatiche per garantirne l'ammissibilità in sede legale.",
     icon: "ShieldAlert",
     subtopics: [
@@ -3158,11 +3186,25 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         definition: "Stesura della relazione tecnica conclusiva dell'indagine forense, descrivendo metodologie applicate e prove rilevate.",
         details: "Il **Reporting (Rapporto Forense)**:\n* Deve documentare in maniera estremamente descrittiva, passo-passo, ogni singola azione eseguita, lo strumento software utilizzato (con relativa versione) e le evidenze scoperte.\n* Deve essere scritto in modo scientifico, obiettivo e del tutto impersonale.\n* Deve consentire a qualsiasi altro esperto del settore di replicare fedelmente l'analisi giungendo esattamente alle stesse conclusioni (Riproducibilità).",
         examTip: "La riproducibilità (reproducibility) da parte di terzi periti indipendenti è il requisito di qualità primario di una relazione tecnica forense accettabile in tribunale."
+      },
+      {
+        name: "Legal Hold",
+        checklistKey: "LegalHoldForensics",
+        definition: "L'obbligo formale, attivato quando un contenzioso è in corso o ragionevolmente prevedibile, di sospendere ogni cancellazione automatica e di preservare intatti tutti i dati potenzialmente rilevanti.",
+        details: "Il **Legal Hold** (o *litigation hold*) è il primo atto giuridico della catena forense e compare esplicitamente negli obiettivi SY0-701 (Obj 4.8).\n* **Chi lo attiva:** l'ufficio legale, non il team IT. L'IT lo esegue tecnicamente.\n* **Cosa comporta in pratica:** sospendere le policy di **data retention** e di rotazione automatica (e-mail, log, backup, chat), congelare gli snapshot e bloccare la riassegnazione o la formattazione dei dispositivi dei dipendenti coinvolti.\n* **Conflitto con altre policy:** il Legal Hold prevale temporaneamente sulla policy di conservazione e persino sulle richieste di cancellazione previste dal GDPR, che ammette la conservazione per l'accertamento o la difesa di un diritto in giudizio.\n* **Rischio in caso di violazione:** la distruzione di prove soggette a hold configura **spoliation of evidence**, con conseguenze processuali gravissime (sanzioni, inferenze sfavorevoli in giudizio) a prescindere dal merito della causa.\n\n* **Piccolo Esempio Concentrato:** Un ex dipendente avvia una causa di lavoro. L\'ufficio legale emette un legal hold: l\'IT disattiva immediatamente la regola che elimina le e-mail dopo 90 giorni per quella casella, blocca la cancellazione dei backup del periodo e impedisce che il portatile restituito venga riassegnato e reinstallato.",
+        examTip: "Sequenza d'esame da memorizzare: **Legal Hold** (congelo i dati) → **Acquisition** (copia bit-a-bit con write blocker) → **Chain of Custody** (traccio ogni passaggio) → **Preservation** (verifico gli hash) → **Analysis** → **Reporting**. Se lo scenario parla di una causa imminente e di log che stanno per essere sovrascritti automaticamente, la primissima azione corretta è il legal hold."
+      },
+      {
+        name: "E-Discovery",
+        checklistKey: "EDiscoveryForensics",
+        definition: "Il processo legale di individuazione, raccolta, selezione e consegna alla controparte o all'autorità giudiziaria delle informazioni in formato elettronico (ESI) rilevanti per un procedimento.",
+        details: "L'**E-Discovery** (Electronic Discovery) è la fase che trasforma i dati preservati in prove producibili in giudizio.\n* **Oggetto (ESI - Electronically Stored Information):** e-mail, documenti, messaggistica aziendale, database, log di sistema, contenuti cloud e relativi **metadati** (autore, data di creazione, cronologia delle modifiche), che hanno pieno valore probatorio.\n* **Fasi tipiche:** identificazione → preservazione (il legal hold) → raccolta → elaborazione e deduplica → revisione (inclusa la verifica del segreto professionale) → produzione alla controparte.\n* **Differenza chiave dalla forensics:** la digital forensics è un'indagine *tecnica* che ricostruisce un evento (spesso recuperando dati cancellati); l'e-discovery è un procedimento *legale* che seleziona e consegna dati esistenti e pertinenti, con criteri di proporzionalità e ammissibilità.\n* **Impatto sulla progettazione dei sistemi:** un'infrastruttura senza inventario, senza classificazione dei dati e senza log centralizzati rende l'e-discovery lentissimo e sproporzionatamente costoso.\n\n* **Piccolo Esempio Concentrato:** Un\'autorità antitrust chiede tutte le comunicazioni tra due reparti su un certo prodotto in un intervallo di 18 mesi. Il team estrae dalla piattaforma di e-discovery 400.000 e-mail, le deduplica, applica i filtri per parole chiave e le sottopone alla revisione dei legali, che escludono quelle coperte da segreto professionale prima della consegna.",
+        examTip: "Non confondere i due termini: **E-Discovery** = obbligo legale di *produrre* dati elettronici rilevanti per una causa; **Digital Forensics** = analisi tecnica per *ricostruire* cosa è accaduto. L'e-discovery è possibile soltanto se il legal hold ha già impedito la cancellazione automatica dei dati."
       }
     ]
   },
   {
-    title: "8. Automation (Obj 4.4)",
+    title: "8. Automation (Obj 4.7)",
     description: "Integrazione, sviluppo di script e orchestrazione di risposte difensive coordinate.",
     icon: "CheckSquare",
     subtopics: [
@@ -3192,7 +3234,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         checklistKey: "OrchestrationAutomation",
         definition: "Coordinamento centralizzato e automatizzato di molteplici strumenti di sicurezza e flussi di lavoro complessi tramite piattaforme SOAR.",
         details: "L'**Orchestration (Orchestrazione)** tramite SOAR (Security Orchestration, Automation, and Response):\n* Integra tecnologie differenti coordinandole all'interno di workflow automatici predefiniti chiamati **Playbooks**.\n* Consente di automatizzare risposte complesse in frazioni di secondo (es. se viene rilevato traffico C2, il playbook isola l'endpoint via EDR, sospende l'utente in Active Directory, notifica il manager su Slack, e apre un ticket di incident).",
-        examTip: "I sistemi SOAR collegano ed orchestrano strumenti eterogenei tramite Playbook preconfigurati, riducendo drasticamente l'MTTR (Mean Time to Respond) in presenza di incidenti."
+        examTip: "I sistemi SOAR collegano ed orchestrano strumenti eterogenei tramite Playbook preconfigurati, riducendo drasticamente il tempo medio di risposta agli incidenti (MTTR). Attenzione alla sigla: negli obiettivi CompTIA SY0-701 MTTR indica il *Mean Time To Repair*; nel gergo dei SOC la stessa sigla viene spesso usata per *Mean Time To Respond*. In entrambe le letture misura quanto tempo serve per chiudere il problema, non quanto tempo il sistema resta integro (che è l'MTBF)."
       },
       {
         name: "Ease of Deployment",
@@ -3211,7 +3253,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "9. PBQ Dominio 4 (Obj 4.2 / 4.3)",
+    title: "9. PBQ Dominio 4 (Obj 4.8 / 4.9)",
     description: "Scenari pratici e Performance-Based Questions sul triage dei log, investigazione ed isolamento degli host.",
     icon: "CheckSquare",
     subtopics: [
@@ -3263,7 +3305,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
 
 export const DOMAIN_5_TOPICS: TopicGroup[] = [
   {
-    title: "1. Governance",
+    title: "1. Governance (Obj 5.1)",
     description: "La struttura decisionale, il controllo organizzativo e l'allineamento degli obiettivi di sicurezza con la strategia di business.",
     icon: "ShieldAlert",
     subtopics: [
@@ -3298,7 +3340,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "2. Policies",
+    title: "2. Policies (Obj 5.1)",
     description: "Le fondamenta documentali della sicurezza: politiche, standard, procedure e la gestione del ciclo di vita e del cambiamento.",
     icon: "FileText",
     subtopics: [
@@ -3389,7 +3431,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "3. Risk Management",
+    title: "3. Risk Management (Obj 5.2)",
     description: "Metodologie per identificare, quantificare e documentare l'esposizione al rischio dell'organizzazione.",
     icon: "Calculator",
     subtopics: [
@@ -3524,7 +3566,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "4. Risk Responses",
+    title: "4. Risk Responses (Obj 5.2)",
     description: "Le quattro strategie fondamentali stabilite dalle best practice per gestire il rischio identificato.",
     icon: "TrendingUp",
     subtopics: [
@@ -3573,7 +3615,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "5. Compliance",
+    title: "5. Compliance (Obj 5.4)",
     description: "Il rispetto dei requisiti legali, la tutela della privacy e l'esercizio della responsabilità professionale.",
     icon: "Lock",
     subtopics: [
@@ -3629,7 +3671,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "6. Third Party Risk",
+    title: "6. Third Party Risk (Obj 5.3)",
     description: "La gestione e la mitigazione dei rischi derivanti da fornitori, partner commerciali e catene di fornitura.",
     icon: "Users",
     subtopics: [
@@ -3657,7 +3699,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "7. Agreements",
+    title: "7. Agreements (Obj 5.3)",
     description: "Tipologie di accordi formali e contratti che governano le relazioni operative e commerciali con terze parti.",
     icon: "Handshake",
     subtopics: [
@@ -3687,7 +3729,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         checklistKey: "MOA",
         definition: "Memorandum of Agreement: un accordo di cooperazione formale che stabilisce termini operativi concordati tra le organizzazioni.",
         details: "Rispetto all'MOU, il MOA definisce obblighi operativi e di cooperazione più precisi, pur potendo rimanere al di fuori di un formale e rigido contratto commerciale ad alto valore legale.",
-        examTip: "Il MOA descrive in modo dettagliato 'como' le organizzazioni coopereranno per raggiungere gli obiettivi definiti dall'intesa comune."
+        examTip: "Il MOA descrive in modo dettagliato 'come' le organizzazioni coopereranno per raggiungere gli obiettivi definiti dall'intesa comune."
       },
       {
         name: "BPA",
@@ -3713,7 +3755,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "8. Audits",
+    title: "8. Audits (Obj 5.5)",
     description: "Processi formali e indipendenti per valutare l'efficacia dei controlli di sicurezza e la postura difensiva dell'organizzazione.",
     icon: "CheckSquare",
     subtopics: [
@@ -3783,7 +3825,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "9. Security Awareness",
+    title: "9. Security Awareness (Obj 5.6)",
     description: "Il fattore umano come prima linea di difesa dell'organizzazione attraverso programmi continui di formazione ed esercitazione.",
     icon: "GraduationCap",
     subtopics: [
@@ -3818,7 +3860,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
     ]
   },
   {
-    title: "10. Secure Deconstruction & Disposal",
+    title: "10. Secure Deconstruction & Disposal (Obj 4.2)",
     description: "Metodologie per lo smaltimento sicuro dell'hardware, l'eliminazione dei dati sensibili e la distruzione fisica dei supporti.",
     icon: "CheckSquare",
     subtopics: [
@@ -3869,7 +3911,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         checklistKey: "DegaussingRes",
         definition: "Degaussing (Smagnetizzazione): L'applicazione di un campo magnetico potentissimo e controllato a un supporto magnetico per disallineare istantaneamente i suoi domini magnetici, cancellando permanentemente i dati e rendendo il dispositivo del tutto inutilizzabile.",
         details: "È estremamente efficace e rapido per dischi rigidi meccanici (HDD) e nastri magnetici. *Attenzione:* Il degaussing non ha alcun effetto sui supporti a stato solido (SSD, flash drive) che memorizzano i dati elettricamente.",
-        examTip: "La smagnetizzazione (Degaussing) funziona esclusivamente sui supporti de memorizzazione magnetici (HDD, nastri magnetici), distruggendo anche la testina e il firmware del disco rendendolo non riutilizzabile."
+        examTip: "La smagnetizzazione (Degaussing) funziona esclusivamente sui supporti di memorizzazione magnetici (HDD, nastri magnetici), distruggendo anche la testina e il firmware del disco rendendolo non riutilizzabile."
       },
       {
         name: "Certificate of Destruction",
@@ -6418,17 +6460,15 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     topic: "Network Security Devices",
     level: "APPLICAZIONE",
     scenario: "Sasha, amministratrice di rete presso Kelly's Technical Innovations, ha appena installato un Next Generation Firewall (NGFW) per sostituire il precedente firewall stateful tradizionale.",
-    question: "Quali dei seguenti miglioramenti offre un NGFW rispetto al firewall stateful precedente? (Scegli 3)",
+    question: "Quale capacità distingue in modo specifico l'NGFW dal firewall stateful che ha sostituito?",
     options: [
-      "A) Consapevolezza delle applicazioni per distinguere tra diversi tipi di traffico",
-      "B) Capacità di eseguire deep packet inspection e rilevamento delle intrusioni basato su firma",
-      "C) Migliorata consapevolezza degli stati di connessione sul traffico di livello 4",
-      "D) Aggiunta di funzioni multiple, tra cui firewall, prevenzione delle intrusioni, antivirus e altro",
-      "E) Maggiore attenzione al traffico HTTP per prevenire attacchi alle applicazioni web come XSS e SQL injection",
-      "F) Può essere integrato con vari altri prodotti di sicurezza"
+      "A) L'application awareness unita alla deep packet inspection, che consente di riconoscere e controllare le singole applicazioni indipendentemente da porta e protocollo",
+      "B) Il tracciamento dello stato delle connessioni TCP per consentire automaticamente il traffico di ritorno",
+      "C) L'ispezione esclusiva del traffico HTTP/HTTPS per bloccare SQL injection e Cross-Site Scripting",
+      "D) Il filtraggio dei pacchetti basato su indirizzo IP sorgente, IP destinazione e numero di porta"
     ],
     answerIndex: 0,
-    explanation: "Le risposte corrette sono la **A), B) e F)**.\n\n* **Perché sono le corrette:** Un **NGFW** offre: la **consapevolezza delle applicazioni (A)** per distinguere e controllare il traffico per applicazione; la capacità di **deep packet inspection e rilevamento delle intrusioni basato su firma (B)** per analizzare il contenuto dei pacchetti; la possibilità di **integrarsi con altri prodotti di sicurezza (F)** per una difesa coordinata.\n* **Analisi dei distrattori:**\n  * **C)** Il tracciamento degli stati di connessione e la consapevolezza del livello 4 erano già caratteristiche del firewall stateful sostituito.\n  * **D)** L'aggiunta di firewall, IPS, antivirus e altro descrive un **Unified Threat Management (UTM)**, non un NGFW base.\n  * **E)** La protezione focalizzata sul traffico HTTP contro XSS e SQL injection descrive un **Web Application Firewall (WAF)**, non un NGFW.\n\n*(ID Domanda: 65432c686491794aff7fb0c9)*"
+    explanation: "La risposta corretta è la **A) L'application awareness unita alla deep packet inspection**.\n\n* **Perché è la corretta:** Ciò che definisce un **Next-Generation Firewall (NGFW)** è la capacità di ispezionare il payload fino al **Layer 7** (Deep Packet Inspection) e di identificare l'**applicazione** che genera il traffico a prescindere dalla porta usata. Un NGFW distingue quindi, sulla stessa porta 443, Salesforce da un servizio di file sharing personale, e integra nativamente un motore IPS con firme. Il firewall stateful sostituito, fermandosi al Layer 4, vedeva soltanto 'traffico TCP verso la porta 443'.\n* **Analisi dei distrattori:**\n  * **B)** Il tracciamento dello stato delle connessioni (state table) è precisamente ciò che il firewall **stateful** già faceva: non è un miglioramento introdotto dall'NGFW, quindi non può essere l'elemento distintivo.\n  * **C)** L'ispezione focalizzata sul solo traffico HTTP/HTTPS per fermare SQLi e XSS descrive un **WAF (Web Application Firewall)**, un dispositivo specializzato posto davanti ai server web. L'NGFW protegge tutto il traffico di rete, non solo quello web.\n  * **D)** Il filtro su IP e porta è la funzione del **packet-filtering firewall stateless**, cioè la generazione ancora precedente allo stateful: è un sottoinsieme delle capacità dell'NGFW, non la sua novità.\n\n* **Trappola d'esame — NGFW vs UTM:** se lo scenario parla di un unico apparato 'all-in-one' che accorpa firewall, IPS, antivirus, antispam e filtro web (tipicamente per una PMI), la risposta è **UTM**. Se lo scenario insiste su riconoscimento applicativo, DPI e policy per utente/applicazione, la risposta è **NGFW**.\n\n*(Nota: quesito riscritto in formato a risposta singola per l'allenamento; l'esame reale può proporre item a scelta multipla.)*"
   },
   {
     id: 204,
@@ -6660,17 +6700,15 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     topic: "Wireless Security",
     level: "APPLICAZIONE",
     scenario: "Dopo una valutazione di sicurezza, a Jono è stato assegnato il compito di sostituire il suo access point domestico con uno che supporti WPA3, che il precedente non era in grado di gestire.",
-    question: "Quali delle seguenti affermazioni sono vere considerando gli standard WPA3? (Seleziona 4)",
+    question: "Quale miglioramento di sicurezza introdotto da WPA3-Personal risolve la debolezza principale di WPA2-Personal?",
     options: [
-      "A) Previene l'intercettazione, la contraffazione e la manomissione dei frame di gestione",
-      "B) Utilizza un accordo di chiave Diffie-Hellman",
-      "C) Fornisce crittografia dei dati individualizzata anche nelle reti aperte",
-      "D) È il protocollo di sicurezza wireless più recente e sicuro",
-      "E) Cifra il processo di autenticazione utilizzando TCP per una sicurezza migliorata",
-      "F) Utilizza un handshake a 4 vie per l'autenticazione iniziale e la validazione della chiave"
+      "A) SAE (Simultaneous Authentication of Equals), che sostituisce lo scambio PSK di WPA2 e neutralizza il cracking offline della passphrase",
+      "B) L'uso di TKIP al posto di RC4 per ruotare dinamicamente le chiavi di cifratura",
+      "C) La cifratura del processo di autenticazione tramite il protocollo TCP",
+      "D) La nascita dell'SSID (SSID cloaking), che impedisce agli attaccanti di individuare la rete"
     ],
     answerIndex: 0,
-    explanation: "Le risposte corrette sono **A), B), C) e D)**.\n\n* **Perché sono le corrette:** **WPA3** è il protocollo di sicurezza wireless più recente e sicuro (D); utilizza un accordo di chiave Diffie-Hellman tramite SAE (Simultaneous Authentication of Equals) (B); fornisce crittografia dei dati individualizzata anche nelle reti aperte tramite OWE (Opportunistic Wireless Encryption) (C); e previene l'intercettazione e la manomissione dei frame di gestione tramite MFP (Management Frame Protection) (A).\n* **Analisi dei distrattori:**\n  * **E)** WPA3 non cifra il processo di autenticazione usando TCP; TCP è un protocollo di trasporto, non di cifratura.\n  * **F)** L'handshake a 4 vie era una caratteristica di **WPA2** con PSK, che è stato sostituito dall'accordo SAE in WPA3.\n\n*(ID Domanda: 65262aa26f507d8e8ff08998)*"
+    explanation: "La risposta corretta è la **A) SAE (Simultaneous Authentication of Equals)**.\n\n* **Perché è la corretta:** La debolezza principale di **WPA2-Personal** è che un attaccante può catturare passivamente il 4-way handshake e poi provare offline, su GPU, miliardi di passphrase finché non trova quella giusta. **WPA3-Personal** sostituisce lo scambio della PSK con **SAE** (handshake *Dragonfly*), basato su uno scambio di chiavi Diffie-Hellman su curva ellittica: ogni tentativo di indovinare la password richiede una nuova interazione con l'access point, quindi il cracking offline diventa impraticabile. SAE fornisce inoltre la **Forward Secrecy**: una passphrase scoperta in futuro non permette di decifrare il traffico registrato in passato.\n* **Analisi dei distrattori:**\n  * **B)** È il contrario: **TKIP** è l'algoritmo introdotto da WPA (2003) come cerotto temporaneo su WEP, e proprio TKIP **si basa** su RC4. È deprecato e insicuro; WPA3 usa AES in modalità **GCMP**.\n  * **C)** TCP è un protocollo di **trasporto**, non di cifratura, e l'autenticazione Wi-Fi avviene al Layer 2, ben prima che esista una sessione TCP. L'affermazione è priva di senso tecnico.\n  * **D)** Nascondere l'SSID è **security through obscurity**: il nome della rete resta visibile nei frame di probe/association dei client, e qualsiasi sniffer passivo lo ricava in pochi secondi. Non è parte dello standard WPA3 e non protegge la passphrase.\n\n* **Trappola d'esame:** il **4-way handshake NON scompare** in WPA3-Personal. SAE sostituisce il modo in cui si ricava la **PMK** (la chiave master); il 4-way handshake continua a essere eseguito per derivare le chiavi di sessione **PTK**. Ciò che cambia è che la PMK non è più derivabile offline dalla sola passphrase.\n* **Da ricordare su WPA3:** SAE (Personal), crittografia a 192 bit + 802.1X (Enterprise), **MFP/PMF** obbligatoria contro i frame di deautenticazione falsificati, e **OWE** (Wi-Fi Enhanced Open) per cifrare anche le reti aperte senza password.\n\n*(Nota: quesito riscritto in formato a risposta singola per l'allenamento; l'esame reale può proporre item a scelta multipla.)*"
   },
   {
     id: 220,
@@ -7690,7 +7728,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
       "D) Un exposure factor si riferisce al tempo necessario per rilevare e rispondere a un incidente di sicurezza"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Un exposure factor aiuta le organizzazioni a valutare l'impatto monetario di una violazione della sicurezza**.\n\n* **Perché è la corretta:** L'**exposure factor (EF)** misura la proporzione del valore di un asset che andrebbe perso se una vulnerabilità venisse sfruttata. È essenziale per valutare l'impatto potenziale di vulnerabilità specifiche e priorizzare gli sforzi di remediation. Viene utilizzato in calcoli di risk management come l'Annualized Loss Expectancy (ALE).\n* **Analisi dei distrattori:**\n  * **A)** La probabilità che una vulnerabilità venga sfruttata è la likelihood/probability, non l'exposure factor.\n  * **B)** Il livello di vulnerabilità nell'infrastruttura di rete è valutato dalla vulnerability assessment, non dall'exposure factor.\n  * **D)** Il tempo per rilevare e rispondere è il Mean Time to Detect (MTTD) e il Mean Time to Respond (MTTR), non l'exposure factor.\n\n*(ID Domanda: 64bfde5578435ea1724a7eb5)*"
+    explanation: "La risposta corretta è la **C) Un exposure factor aiuta le organizzazioni a valutare l'impatto monetario di una violazione della sicurezza**.\n\n* **Perché è la corretta:** L'**exposure factor (EF)** misura la proporzione del valore di un asset che andrebbe perso se una vulnerabilità venisse sfruttata. È essenziale per valutare l'impatto potenziale di vulnerabilità specifiche e priorizzare gli sforzi di remediation. Viene utilizzato in calcoli di risk management come l'Annualized Loss Expectancy (ALE).\n* **Analisi dei distrattori:**\n  * **A)** La probabilità che una vulnerabilità venga sfruttata è la likelihood/probability, non l'exposure factor.\n  * **B)** Il livello di vulnerabilità nell'infrastruttura di rete è valutato dalla vulnerability assessment, non dall'exposure factor.\n  * **D)** Il tempo per rilevare e per rimettere in servizio è misurato dal Mean Time To Detect (MTTD) e dal Mean Time To Repair (MTTR), non dall'exposure factor.\n\n*(ID Domanda: 64bfde5578435ea1724a7eb5)*"
   },
   {
     id: 288,
@@ -7876,18 +7914,16 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 300,
     topic: "Network Security",
     level: "APPLICAZIONE",
-    scenario: "Jamario, tecnico di rete presso Kelly Innovations LLC, sta configurando un nuovo server. Vuole garantire che gli utenti possano accedere a pagine web non cifrate sul server e trasferire file da e verso di esso.",
-    question: "Quali delle seguenti porte deve garantire che siano aperte? (Seleziona DUE)",
+    scenario: "Jamario, tecnico di rete presso Kelly Innovations LLC, sta configurando un nuovo server. Vuole garantire che gli utenti possano accedere a pagine web NON cifrate ospitate sul server e, sulla stessa macchina, trasferire file tramite il protocollo FTP in chiaro.",
+    question: "Quale delle seguenti coppie di porte deve aprire sul firewall perimetrale per soddisfare ENTRAMBI i requisiti?",
     options: [
-      "A) Porta 22 (SSH)",
-      "B) Porta 25 (SMTP)",
-      "C) Porta 433 (NNTP)",
-      "D) Porta 21 (FTP)",
-      "E) Porta 80 (HTTP)",
-      "F) Porta 445 (SMB)"
+      "A) Porta 80 (HTTP) e porta 21 (FTP)",
+      "B) Porta 443 (HTTPS) e porta 22 (SFTP/SSH)",
+      "C) Porta 80 (HTTP) e porta 445 (SMB)",
+      "D) Porta 25 (SMTP) e porta 119 (NNTP)"
     ],
-    answerIndex: 3,
-    explanation: "Le risposte corrette sono la **D) Porta 21 (FTP)** e la **E) Porta 80 (HTTP)**.\n\n* **Perché sono le corrette:** La **porta 21** è usata per il File Transfer Protocol (FTP); aprire questa porta consente agli utenti di trasferire file da e verso il server. La **porta 80** è la porta standard per servire pagine web HTTP; aprire questa porta consente agli utenti di accedere alle pagine web sul server tramite browser.\n* **Analisi dei distrattori:**\n  * **A)** La porta 22 è per l'accesso SSH (shell sicura); lo scenario di Jamario non menziona la necessità di accesso remoto sicuro al server.\n  * **B)** La porta 25 è per SMTP (invio email); sarebbe necessaria se gli utenti dovessero inviare email attraverso il server.\n  * **C)** La porta 433 è per NNTP (Network News Transfer Protocol), non usata per accedere a siti web.\n  * **F)** La porta 445 è associata al protocollo SMB (Server Message Block), che abilita la condivisione di risorse di rete come file e stampanti.\n\n*(ID Domanda: 654320346491794aff7fb0aa)*"
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Porta 80 (HTTP) e porta 21 (FTP)**.\n\n* **Perché è la corretta:** La **porta TCP 80** è la porta standard di HTTP, il protocollo che serve pagine web **non cifrate**: aprirla soddisfa il primo requisito. La **porta TCP 21** è la porta di controllo di **FTP** (File Transfer Protocol), il protocollo di trasferimento file in chiaro citato nello scenario: aprirla soddisfa il secondo requisito.\n* **Analisi dei distrattori:**\n  * **B)** La porta 443 serve HTTPS, cioè traffico **cifrato** con TLS, e la porta 22 è quella di SSH/SFTP, anch'esso cifrato: entrambe contraddicono la richiesta esplicita di traffico in chiaro dello scenario.\n  * **C)** La porta 445 è associata a **SMB** (Server Message Block), usato per la condivisione di file e stampanti in reti Windows, non per il trasferimento FTP richiesto; esporla su Internet è inoltre una pratica gravemente insicura (è il vettore sfruttato da worm come WannaCry).\n  * **D)** La porta 25 è quella di **SMTP** (trasmissione e-mail tra server) e la porta 119 è quella di **NNTP** (newsgroup Usenet): nessuna delle due ha a che fare con la navigazione web o con il trasferimento file richiesti.\n\n* **Nota d'esame (trappola frequente):** non confondere la porta **119 (NNTP)** con la **443 (HTTPS)**: un refuso molto comune è scrivere '433', che non corrisponde ad alcun servizio standard d'esame. Memorizza la sequenza in chiaro → sicura: 21 FTP → 22 SFTP, 80 HTTP → 443 HTTPS, 389 LDAP → 636 LDAPS.\n\n*(Nota: quesito riscritto in formato a risposta singola per l'allenamento; l'esame reale può proporre item a scelta multipla.)*"
   },
   {
     id: 301,
@@ -9780,7 +9816,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
       "D) Implementation of GDPR-compliant data handling practices (Implementazione di pratiche di gestione dei dati conformi al GDPR)"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Implementation of GDPR-compliant data handling practices**.\n\n* **Perché è la corretta:** L'implementazione di pratiche di gestione dei dati conformi al **GDPR** garantisce l'aderenza agli standard di privacy dell'Unione Europea e rispetta i diritti dei dati dei clienti. Poiché il GDPR si applica a qualsiasi azienda che gestisce dati di cittadini UE (indipendentemente dalla sede), uno studio legale multinazionale ha quasi certamente interazioni con cittadini europei ed è quindi soggetto a queste normative.\n* **Analisi dei distrattori:**\n  * **A) I sistemi di storage su server locali** consentono lo storage interno dei dati ma mancano di meccanismi robusti di protezione internazionale dei dati.\n  * **B) Le piattaforme email cifrate** garantiscono comunicazioni email sicure ma non forniscono un approccio completo alla conformità nella gestione dei dati.\n  * **C) La certificazione ISO 27001** è uno standard internazionale per la gestione della sicurezza delle informazioni ma non ha un braccio esecutivo o sanzioni per la non conformità come il GDPR.\n\n* **Piccolo Esempio Concentrato:** Lo studio legale Martinez & Partners ha sedi a Milano, Madrid e New York. Per ogni cliente europeo, implementa pratiche GDPR: raccoglie solo i dati strettamente necessari (data minimization), ottiene consenso esplicito, garantisce il diritto all'oblio, notifica le violazioni entro 72 ore. Questo approccio omogeneo a livello globale evita sanzioni fino al 4% del fatturato annuo globale (massimo previsto dal GDPR Art. 83).\n\n*(ID Domanda: 652d64d836163d371aee5605)*"
+    explanation: "La risposta corretta è la **D) Implementation of GDPR-compliant data handling practices**.\n\n* **Perché è la corretta:** L'implementazione di pratiche di gestione dei dati conformi al **GDPR** garantisce l'aderenza agli standard di privacy dell'Unione Europea e rispetta i diritti dei dati dei clienti. Poiché il GDPR si applica a qualsiasi organizzazione che tratta dati personali di persone che si trovano nell'Unione Europea (a prescindere dalla cittadinanza dell'interessato e dalla sede dell'azienda), uno studio legale multinazionale ha quasi certamente interazioni con interessati situati nell'UE ed è quindi soggetto a queste normative.\n* **Analisi dei distrattori:**\n  * **A) I sistemi di storage su server locali** consentono lo storage interno dei dati ma mancano di meccanismi robusti di protezione internazionale dei dati.\n  * **B) Le piattaforme email cifrate** garantiscono comunicazioni email sicure ma non forniscono un approccio completo alla conformità nella gestione dei dati.\n  * **C) La certificazione ISO 27001** è uno standard internazionale per la gestione della sicurezza delle informazioni ma non ha un braccio esecutivo o sanzioni per la non conformità come il GDPR.\n\n* **Piccolo Esempio Concentrato:** Lo studio legale Martinez & Partners ha sedi a Milano, Madrid e New York. Per ogni cliente europeo, implementa pratiche GDPR: raccoglie solo i dati strettamente necessari (data minimization), ottiene consenso esplicito, garantisce il diritto all'oblio, notifica le violazioni entro 72 ore. Questo approccio omogeneo a livello globale evita sanzioni fino al 4% del fatturato annuo globale (massimo previsto dal GDPR Art. 83).\n\n*(ID Domanda: 652d64d836163d371aee5605)*"
   },
   {
     id: 571,
@@ -12561,7 +12597,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Stabilire la proprietà dei dati (Data ownership) e definire le finalità primarie del loro utilizzo"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Analizzare ed elaborare i dati per conto del Titolare del trattamento (Data Controller)**.\n\n* **Perché è la corretta:** Il **Data Processor (Responsabile del trattamento)** agisce su istruzione e per conto del **Data Controller (Titolare del trattamento)**. Ha il compito specifico di eseguire operazioni materiali o logiche sui dati (come archiviazione, analisi, elaborazione o manipolazione), seguendo rigorosamente le direttive ricevute.\n* **Analisi dei distrattori:**\n  * **A) La gestione del controllo degli accessi** ai dati è una responsabilità tecnica e procedurale solitamente condivisa, ma la definizione delle regole e dei permessi di acesso rimane un compito apicale del Data Controller (e del Data Owner), non l'attività principale del Data Processor.\n  * **B) Garantire la sicurezza fisica dei dispositivi** è importante per chiunque gestisca l'infrastruttura, ma non è il compito primario o distintivo del ruolo di Data Processor nel framework della privacy.\n  * **D) Stabilire la proprietà dei dati (Data ownership)** e determinare le finalità o i mezzi del trattamento sono prerogative esclusive del Data Controller o dei singoli Data Owner nominati.\n\n* **Piccolo Esempio Concentrato:** Un'università (Data Controller) assume una società esterna (Data Processor) per gestire le newsletter destinate agli studenti. L'università fornisce i database degli indirizzi email e stabilisce le regole d'invio. Connor, dipendente della società esterna, elabora materialmente l'invio delle newsletter seguendo solo le direttive dell'ateneo.\n\n*ID Domanda: 64b88d6388b3fb59a48a103e*"
+    explanation: "La risposta corretta è la **C) Analizzare ed elaborare i dati per conto del Titolare del trattamento (Data Controller)**.\n\n* **Perché è la corretta:** Il **Data Processor (Responsabile del trattamento)** agisce su istruzione e per conto del **Data Controller (Titolare del trattamento)**. Ha il compito specifico di eseguire operazioni materiali o logiche sui dati (come archiviazione, analisi, elaborazione o manipolazione), seguendo rigorosamente le direttive ricevute.\n* **Analisi dei distrattori:**\n  * **A) La gestione del controllo degli accessi** ai dati è una responsabilità tecnica e procedurale solitamente condivisa, ma la definizione delle regole e dei permessi di accesso rimane un compito apicale del Data Controller (e del Data Owner), non l'attività principale del Data Processor.\n  * **B) Garantire la sicurezza fisica dei dispositivi** è importante per chiunque gestisca l'infrastruttura, ma non è il compito primario o distintivo del ruolo di Data Processor nel framework della privacy.\n  * **D) Stabilire la proprietà dei dati (Data ownership)** e determinare le finalità o i mezzi del trattamento sono prerogative esclusive del Data Controller o dei singoli Data Owner nominati.\n\n* **Piccolo Esempio Concentrato:** Un'università (Data Controller) assume una società esterna (Data Processor) per gestire le newsletter destinate agli studenti. L'università fornisce i database degli indirizzi email e stabilisce le regole d'invio. Connor, dipendente della società esterna, elabora materialmente l'invio delle newsletter seguendo solo le direttive dell'ateneo.\n\n*ID Domanda: 64b88d6388b3fb59a48a103e*"
   },
   {
     id: 164,
@@ -13302,7 +13338,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 213,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "In un'architettura Zero Trust, le richieste di acesso non vengono mai considerate attendibili di default, ma devono essere costantemente verificate e applicate.",
+    scenario: "In un'architettura Zero Trust, le richieste di accesso non vengono mai considerate attendibili di default, ma devono essere costantemente verificate e applicate.",
     question: "Quale componente dell'architettura Zero Trust è responsabile di far rispettare concretamente le policy consentendo o negando l'accesso alle risorse?",
     options: [
       "A) Policy Engine",
