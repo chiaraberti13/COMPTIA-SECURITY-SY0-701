@@ -246,6 +246,26 @@ Questo progetto è un ausilio allo studio indipendente e a scopo educativo. **Co
 **Security+** sono marchi registrati di CompTIA, Inc.; questo progetto non è affiliato né
 approvato da CompTIA, e tali marchi appartengono ai rispettivi proprietari.
 
+## Nota sui contenuti didattici
+
+I materiali di studio di questa piattaforma (checklist, glossario, domande e spiegazioni)
+sono **note di studio personali e originali**, scritte per favorire la comprensione dei
+concetti. Non sono materiale ufficiale CompTIA, non riproducono domande dell'esame reale e
+non vanno intesi come "exam dump": superare l'esame richiede la comprensione autentica degli
+argomenti, non la memorizzazione di quesiti.
+
+I contenuti sono allineati agli **obiettivi ufficiali SY0-701** al meglio delle conoscenze
+di chi li ha redatti, ma possono contenere imprecisioni ed essere superati dagli
+aggiornamenti del programma d'esame. Verifica sempre sulle **fonti ufficiali CompTIA**:
+
+- gli obiettivi d'esame aggiornati e il loro numero di versione;
+- il costo del voucher, la durata e il numero di domande;
+- le politiche di rinnovo (CEU), retake e scadenza della certificazione;
+- le date e le modalità di erogazione (test center o proctoring online).
+
+In caso di divergenza fra queste note e la documentazione ufficiale CompTIA, **fa fede
+sempre la documentazione ufficiale**.
+
 ---
 
 <p align="center">

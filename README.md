@@ -246,6 +246,26 @@ This project is an independent, educational study aid. **CompTIA** and **Securit
 registered trademarks of CompTIA, Inc.; this project is not affiliated with or endorsed by
 CompTIA, and all such trademarks belong to their respective owners.
 
+## A note on the study content
+
+The study materials in this platform (checklists, glossary, questions and explanations) are
+**original, personal study notes** written to help build understanding of the concepts. They
+are not official CompTIA material, they do not reproduce real exam questions, and they are
+not intended as an "exam dump": passing the exam requires genuine understanding of the
+topics, not memorized items.
+
+The content is aligned with the **official SY0-701 objectives** to the best of the author's
+knowledge, but it may contain inaccuracies and may fall behind updates to the exam syllabus.
+Always verify against **official CompTIA sources**:
+
+- the current exam objectives and their version number;
+- voucher price, exam duration and number of questions;
+- renewal (CEU), retake and certification-expiry policies;
+- test dates and delivery options (test centre or online proctoring).
+
+Where these notes and CompTIA's official documentation disagree, **the official
+documentation always prevails**.
+
 ---
 
 <p align="center">
