@@ -10734,7 +10734,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Creating disorder/chaos"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Service disruption (Interruzione del servizio)**.\n\n* **Perché è la corretta:** Una **Service disruption** (interruzione del servizio) consiste nell'atto di compromettere o interrompere la disponibilità o la funzionalità di un sistema o rete. In questo esempio, lo Sterling (un Hacktivist) impedisce al sito web di funzionare per boicottare il commercio di pellicce, tipica azione dimostrativa degli hacktivisti.\n* **Analisi dei distrattori:**\n  * **B) La Data exfiltration** consiste nel sottrarre dati riservati da un sistema; Sterling non tenta di rubare informazioni.\n  * **C) L'Espionage** mira a ottenere informazioni segrete o riservate senza autorizzazione; non è pertinente all'interruzione del sito web.\n  * **D) Il Creating disorder/chaos** descrive azioni compiute principalmente per divertimento, diversione o nichilismo, non per una causa ideologica specifica come la protezione degli animali."
+    explanation: "La risposta corretta è la **A) Service disruption (Interruzione del servizio)**.\n\n* **Perché è la corretta:** Una **Service disruption** (interruzione del servizio) consiste nell'atto di compromettere o interrompere la disponibilità o la funzionalità di un sistema o rete. In questo esempio Sterling, un hacktivista, impedisce al sito web di funzionare per boicottare il commercio di pellicce, tipica azione dimostrativa degli hacktivisti.\n* **Analisi dei distrattori:**\n  * **B) La Data exfiltration** consiste nel sottrarre dati riservati da un sistema; Sterling non tenta di rubare informazioni.\n  * **C) L'Espionage** mira a ottenere informazioni segrete o riservate senza autorizzazione; non è pertinente all'interruzione del sito web.\n  * **D) Il Creating disorder/chaos** descrive azioni compiute principalmente per divertimento, diversione o nichilismo, non per una causa ideologica specifica come la protezione degli animali."
   },
   {
     id: 447,
@@ -10933,33 +10933,33 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 460,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale attributo di un attore delle minacce si riferisce alla sua capacità di sviluppare tecniche e strumenti di exploit unici?",
+    topic: "Indicators of Malicious Activity",
+    level: "ANALISI",
+    scenario: "In una notte, 340 macchine di una rete aziendale risultano infette. I log mostrano che ogni macchina infetta ha avviato scansioni verso l'intera sottorete e ha sfruttato una vulnerabilità di un servizio di condivisione file esposto, senza che alcun utente abbia aperto allegati o cliccato link: nella fascia oraria interessata nessuno era in ufficio. Il codice si è copiato da sé su ogni nuovo bersaglio.",
+    question: "Quale tipo di malware descrive MEGLIO questo comportamento?",
     options: [
-      "A) Funding",
-      "B) Resources",
-      "C) Sophistication",
-      "D) Capability"
+      "A) Trojan: si maschera da programma legittimo e viene eseguito dall'utente",
+      "B) Worm: si auto-replica e si propaga da solo sfruttando vulnerabilità di rete",
+      "C) Spyware: raccoglie di nascosto informazioni sull'attività dell'utente",
+      "D) Logic bomb: resta dormiente e si attiva al verificarsi di una condizione"
     ],
-    answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Capability (Capacità)**.\n\n* **Perché è la corretta:** La **Capability** riguarda la competenza di un attore di minacce nello sviluppare nuove tecniche di exploit e strumenti. Può spaziare dall'uso di tool comuni alla creazione di exploit zero-day; gli attori con le capacità più elevate possono anche impiegare strumenti non informatici, come risorse politiche o militari.\n* **Analisi dei distrattori:**\n  * **A) Il Funding** può aumentare le capacità procurando i mezzi per acquisire risorse, ma non denota specificamente l'expertise nello sviluppo di exploit unici.\n  * **B) Le Resources** si riferiscono agli strumenti e al personale disponibili; non descrivono direttamente la competenza nello sviluppo di exploit.\n  * **C) La Sophistication** riguarda il livello di complessità dei metodi e degli strumenti, ma non indica direttamente l'abilità nel creare nuovi exploit."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Worm**.\n\n* **Perché è la corretta:** Il tratto che identifica un **worm** è uno solo, ed è decisivo: **si propaga da sé, senza alcuna interazione umana**. Lo scenario lo dichiara esplicitamente due volte, dicendo che nessuno ha aperto allegati o cliccato link e che nella fascia oraria non c'era nessuno in ufficio. Gli altri elementi confermano il quadro: la **scansione della sottorete** è il worm che cerca nuovi bersagli, lo **sfruttamento di una vulnerabilità di un servizio esposto** è il modo in cui entra senza bisogno di una vittima che sbagli, e la **copia di sé** su ogni nuovo bersaglio è l'auto-replicazione. Da qui deriva anche la crescita esponenziale che spiega 340 macchine in una notte: ogni infetto diventa a sua volta un propagatore. Le contromisure che contano sono coerenti con questo meccanismo: applicare le patch al servizio vulnerabile, **segmentare** la rete perché la propagazione si fermi al confine del segmento, e disattivare i protocolli di condivisione non necessari.\n* **Analisi dei distrattori:**\n  * **A) Trojan:** richiede che sia **l'utente** a eseguirlo, ingannato dall'apparenza legittima del programma. Lo scenario esclude ogni interazione umana, e un trojan non si copia da solo sugli altri host.\n  * **C) Spyware:** ha per obiettivo la **raccolta silenziosa** di informazioni, quindi cerca di restare invisibile e non ha alcun interesse a infettare 340 macchine in una notte, che è il modo più rapido di farsi scoprire.\n  * **D) Logic bomb:** resta **dormiente** e si attiva a una condizione prestabilita, tipicamente una data o un evento. Può causare danni enormi in un istante, ma non si replica né si propaga verso altri sistemi.\n\n* **Trappola d'esame:** distingui i tre modi in cui il malware si diffonde, perché è su questo che le domande costruiscono i distrattori. **Virus** = si attacca a un file ospite e ha bisogno che **l'utente** lo esegua · **Worm** = si propaga **da solo** sfruttando la rete, senza interazione · **Trojan** = viene installato **dalla vittima**, ingannata dall'apparenza. Quando lo scenario dice espressamente che **nessun utente ha fatto nulla** e che la diffusione è stata rapida e di rete, la risposta è worm."
   },
   {
     id: 461,
     topic: "Threat Vectors & Vulnerabilities",
     level: "COMPRENSIONE",
     scenario: null,
-    question: "Qual è il termine per un tipo di porta di servizio aperta comunemente usata per i server di accesso remoto e che può essere sfruttata per eseguire attacchi on-path su computer Windows, ma non su computer con altri sistemi operativi?",
+    question: "Quale servizio di accesso remoto è associato alla porta TCP 3389 e, quando viene esposto direttamente su Internet, è uno dei vettori più sfruttati per attacchi di forza bruta sulle credenziali seguiti dalla distribuzione di ransomware?",
     options: [
-      "A) SSH",
-      "B) VNC",
-      "C) Telnet",
-      "D) RDP"
+      "A) SSH, sulla porta TCP 22",
+      "B) VNC, sulla porta TCP 5900",
+      "C) Telnet, sulla porta TCP 23",
+      "D) RDP, sulla porta TCP 3389"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) RDP (Remote Desktop Protocol)**.\n\n* **Perché è la corretta:** La porta **RDP** (porta 3389) è usata per l'accesso remoto al desktop ed è specifica dei sistemi Windows. Può essere sfruttata dagli attaccanti per eseguire screenshot, keylogging o delivery di malware, ed è esclusiva dell'ecosistema Windows.\n* **Analisi dei distrattori:**\n  * **A) SSH** (porta 22) è cross-platform (Linux, macOS, Windows) e viene sfruttata per attacchi on-path come session hijacking; non è specifica di Windows.\n  * **B) VNC** è usata per il controllo remoto del desktop, ma è cross-platform, non specifica di Windows.\n  * **C) Telnet** (porta 23) è usata per accedere a sistemi remoti senza cifratura; è cross-platform, non specifica di Windows."
+    explanation: "La risposta corretta è la **D) RDP, sulla porta TCP 3389**.\n\n* **Perché è la corretta:** **RDP** (Remote Desktop Protocol) ascolta sulla porta **TCP 3389** e fornisce una sessione desktop grafica completa sull'host remoto. È il vettore d'ingresso più ricorrente nelle campagne di ransomware per tre ragioni che si sommano: chi lo espone lo fa quasi sempre **senza MFA**, l'autenticazione è a sola password e quindi aggredibile con **forza bruta, password spraying o credential stuffing**, e una sessione riuscita consegna all'attaccante un desktop interattivo con i privilegi dell'utente, cioè tutto ciò che serve per muoversi lateralmente e cifrare i dati. Il servizio è nato in ambiente Windows ed è quello dove si incontra più spesso, ma **non è esclusivo di Windows**: esistono server RDP per Linux (xrdp) e client ufficiali per macOS, iOS e Android. Le mitigazioni corrette non sono \"cambiare sistema operativo\" ma togliere il servizio da Internet: accesso solo via **VPN** o gateway RDP, **MFA** obbligatoria, blocco degli account dopo N tentativi falliti e restrizione per indirizzo di origine.\n* **Analisi dei distrattori:**\n  * **A) SSH:** ascolta sulla **porta 22** e offre accesso remoto a riga di comando. È anch'esso bersaglio costante di forza bruta quando è esposto, ma la porta indicata nella domanda non è la sua, e con autenticazione a chiave pubblica la forza bruta sulle password diventa inutile.\n  * **B) VNC:** è un protocollo di controllo remoto del desktop, tipicamente sulla **porta 5900**. Condivide con RDP la superficie d'attacco — spesso è addirittura peggiore, perché alcune implementazioni non cifrano il traffico — ma non è il servizio della porta 3389.\n  * **C) Telnet:** ascolta sulla **porta 23** e trasmette comandi e credenziali **in chiaro**. È un protocollo legacy da sostituire con SSH, ma il suo problema principale è l'assenza di cifratura, non la porta indicata nella domanda.\n\n* **Trappola d'esame:** le porte dei servizi di accesso remoto vanno sapute a memoria, perché le domande le usano come unico elemento discriminante: **22 = SSH** (cifrato, riga di comando) · **23 = Telnet** (in chiaro, legacy) · **3389 = RDP** (desktop grafico) · **5900 = VNC** (desktop grafico, cifratura non garantita). Quando una domanda parla di un servizio di accesso remoto esposto e di credenziali forzate, la risposta è quasi sempre RDP."
   },
   {
     id: 462,
@@ -11205,17 +11205,17 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   {
     id: 478,
     topic: "Mitigation Techniques & Controls",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale tecnica di mitigazione prevede lo spegnimento di specifici punti di ingresso e uscita in un sistema per prevenire potenziali vulnerabilità o accessi non autorizzati?",
+    level: "ANALISI",
+    scenario: "Viene pubblicata una vulnerabilità critica, già sfruttata in rete, nel software di un portale esposto su Internet. La patch del fornitore esiste, ma il portale è integrato con il gestionale e la procedura aziendale impone due settimane di collaudo prima di aggiornare la produzione. La direzione non intende né saltare il collaudo né restare esposta per quindici giorni.",
+    question: "Quale mitigazione consente di ridurre subito il rischio senza rinunciare al collaudo?",
     options: [
-      "A) Segmentation",
-      "B) Monitoring",
-      "C) Disabling ports",
-      "D) Encryption"
+      "A) Cifrare il traffico verso il portale con TLS 1.3, rendendo l'exploit illeggibile in transito",
+      "B) Attendere la fine del collaudo: applicare una patch non collaudata è sempre il rischio maggiore",
+      "C) Una patch virtuale sul WAF o sull'IPS, che blocchi lo schema dell'exploit fino all'aggiornamento",
+      "D) Aumentare la frequenza dei backup del portale, per poter ripristinare rapidamente dopo un attacco"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Disabling ports (Disabilitazione delle porte)**.\n\n* **Perché è la corretta:** La **Disabilitazione delle porte** consiste nello spegnere specifici punti di comunicazione in un sistema per ridurre le potenziali vulnerabilità o bloccare gli accessi non autorizzati. Chiudendo le porte non necessarie si riduce la superficie di attacco.\n* **Analisi dei distrattori:**\n  * **A) La Segmentation** consiste nel dividere una rete in parti o segmenti diversi per migliorare sicurezza e prestazioni; non riguarda specificatamente lo spegnimento dei punti di comunicazione.\n  * **B) Il Monitoring** è l'osservazione continua di un sistema per garantirne funzionalità e sicurezza; non è direttamente correlato allo spegnimento dei punti di comunicazione.\n  * **D) L'Encryption** è il processo di conversione dei dati in un codice per impedire accessi non autorizzati; non riguarda lo spegnimento di punti di ingresso o uscita specifici."
+    explanation: "La risposta corretta è la **C) Una patch virtuale sul WAF o sull'IPS**.\n\n* **Perché è la corretta:** Lo scenario descrive la **finestra di esposizione**, cioè l'intervallo fra la disponibilità di una correzione e la sua applicazione, che nel caso di una vulnerabilità già sfruttata in rete è il momento di rischio massimo. La **patch virtuale** è il controllo compensativo pensato esattamente per questo: non corregge il software, ma inserisce davanti a esso una regola su **WAF** o **IPS** che riconosce e blocca lo schema della richiesta malevola prima che raggiunga l'applicazione. Il vantaggio pratico è che si attiva in minuti, non richiede di toccare il codice né di riavviare il portale, e quindi non interferisce con il collaudo, che prosegue nei suoi tempi. I limiti vanno conosciuti e dichiarati: è una difesa **sul perimetro**, quindi la vulnerabilità resta presente nel software, la regola può essere aggirata da varianti dell'exploit e va rimossa una volta applicata la patch vera, altrimenti si accumula debito di configurazione.\n* **Analisi dei distrattori:**\n  * **A) TLS 1.3:** protegge il traffico dall'**intercettazione** lungo il percorso, ed è sicuramente già attivo su un portale pubblico. Ma l'exploit non viene intercettato, viene **inviato** dall'attaccante: cifrarlo lo consegna all'applicazione esattamente come prima, con l'effetto collaterale di renderlo invisibile a chi ispeziona il traffico senza terminare il TLS.\n  * **B) Attendere il collaudo:** è la risposta che rinuncia a decidere. Il collaudo è giusto e va rispettato, ma lasciare quindici giorni di esposizione su una vulnerabilità **già sfruttata attivamente** non è prudenza: è accettazione implicita di un rischio elevato, per di più senza che nessuno la formalizzi.\n  * **D) Backup più frequenti:** riducono il tempo di **ripristino dopo** una compromissione, e vanno fatti comunque. Ma non impediscono l'attacco, e nel caso di un portale pubblico non evitano né la sottrazione dei dati né gli obblighi di notifica che ne conseguono.\n\n* **Trappola d'esame:** quando una patch esiste ma **non può essere applicata subito**, la risposta corretta non è mai aspettare passivamente né rinunciare al processo: è un **controllo compensativo** che riduce l'esposizione nel frattempo. Le forme che ricorrono nelle domande sono sempre le stesse: patch virtuale su WAF o IPS, **segmentazione** del sistema vulnerabile, disattivazione della funzionalità interessata, restrizione degli indirizzi ammessi e monitoraggio rafforzato. E ricorda che ogni controllo compensativo va **documentato e datato**, perché deve sparire quando la causa che lo giustifica sparisce."
   },
   {
     id: 479,
@@ -11882,15 +11882,15 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
     scenario: null,
-    question: "Quale termine si riferisce alla complessità dei metodi e delle operazioni di un attore delle minacce?",
+    question: "Un report di threat intelligence descrive un gruppo che sviluppa in proprio exploit per vulnerabilità mai divulgate, impiega malware scritto su misura per ogni bersaglio e mantiene l'accesso per mesi senza essere rilevato. Quale attributo dell'attore delle minacce viene descritto?",
     options: [
-      "A) Sophistication",
-      "B) Funding",
-      "C) Resources",
-      "D) Capability"
+      "A) Il livello di sofisticatezza e capacità",
+      "B) Le risorse e il finanziamento a disposizione",
+      "C) La posizione interna o esterna rispetto all'organizzazione",
+      "D) La motivazione che spinge il gruppo ad agire"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Sophistication (Sofisticatezza)**.\n\n* **Perché è la corretta:** La **Sophistication** (sofisticatezza) si riferisce alla complessità e all'avanzamento delle tattiche, tecniche e procedure di un attore delle minacce. I gruppi di attori di minacce più sofisticati possiedono strumenti di attacco personalizzati e hanno accesso a personale qualificato come strateghi e hacker.\n* **Analisi dei distrattori:**\n  * **B) Il Funding** è il supporto finanziario per gli attori delle minacce, che consente loro di acquisire risorse; non indica la complessità delle operazioni.\n  * **C) Le Resources** si riferiscono agli strumenti e al personale che un attore delle minacce può dispiegare; non indica la complessità dei loro metodi.\n  * **D) La Capability** riguarda la capacità di un attore delle minacce di sviluppare nuove tecniche di exploit e strumenti; non denota necessariamente la complessità dei loro metodi."
+    explanation: "La risposta corretta è la **A) Il livello di sofisticatezza e capacità**.\n\n* **Perché è la corretta:** Gli obiettivi d'esame elencano questo come **un unico attributo**, scritto proprio nella forma *level of sophistication/capability*: non sono due cose diverse da contrapporre, ma due facce della stessa misura. La **capacità** è ciò che il gruppo sa fare — sviluppare exploit propri anziché scaricarli, scrivere malware su misura anziché riusare kit già noti — e la **sofisticatezza** è quanto sono avanzate le tattiche, tecniche e procedure con cui lo fa. Tutti e tre gli indizi dello scenario misurano esattamente questo: exploit per vulnerabilità **mai divulgate** (quindi nessuna firma, nessuna patch, nessun rilevamento pronto), **malware su misura per ogni bersaglio** (quindi niente riuso di codice riconoscibile) e **mesi di persistenza non rilevata** (quindi capacità di operare in silenzio, non solo di entrare). È il profilo tipico di un attore statuale o di un gruppo APT, all'estremo opposto dello *script kiddie*, che usa strumenti altrui senza comprenderli.\n* **Analisi dei distrattori:**\n  * **B) Risorse e finanziamento:** è un attributo reale e distinto, e descrive **quanto** il gruppo può spendere in personale, infrastruttura e tempo. Spesso alimenta la sofisticatezza, ma non coincide con essa: lo scenario descrive che cosa il gruppo **sa fare**, non da dove arrivano i suoi fondi.\n  * **C) Interno o esterno:** distingue chi agisce **dall'interno** dell'organizzazione, sfruttando un accesso già concesso, da chi deve prima conquistarsi un punto d'ingresso. È una questione di posizione, non di abilità: anche un insider può essere del tutto inesperto.\n  * **D) Motivazione:** risponde al **perché** — guadagno economico, spionaggio, sabotaggio, ideologia, vendetta, guerra. Lo scenario non dice nulla sul movente: descrive solo il modo di operare.\n\n* **Trappola d'esame:** impara a memoria i tre attributi con cui l'obiettivo 2.1 caratterizza un attore delle minacce, perché le domande li usano come distrattori l'uno dell'altro: **interno o esterno** (dov'è) · **risorse e finanziamento** (quanto può spendere) · **livello di sofisticatezza e capacità** (che cosa sa fare). La **motivazione** è trattata a parte, ed è il *perché*. Se un'opzione ti propone \"capacità\" come alternativa contrapposta a \"sofisticatezza\", è una falsa distinzione: nel programma d'esame sono lo stesso attributo."
   },
   {
     id: 524,
