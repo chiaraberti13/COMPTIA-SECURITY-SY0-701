@@ -6444,7 +6444,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "La Dion Training dismette un lotto misto di supporti: venti hard disk magnetici tradizionali e quindici unità SSD, tutti contenenti dati di clienti. Il responsabile IT propone di passare l'intero lotto al degausser industriale già presente in azienda, per poi rivendere i supporti sul mercato dell'usato.",
     question: "Qual è il problema principale della proposta e come va corretta?",
     options: [
-      "A) Il degaussing non ha effetto sugli SSD, che memorizzano i dati in celle NAND: vanno distrutti fisicamente o sanificati con il secure erase del produttore",
+      "A) Il degaussing non ha effetto sugli SSD, che usano celle NAND: vanno distrutti o sanificati con il secure erase del produttore",
       "B) Il degaussing funziona su entrambi i tipi di supporto, ma sugli SSD il ciclo va ripetuto tre volte per risultare efficace",
       "C) Nessun problema tecnico: l'errore è solo la rivendita, perché il degaussing lascia sempre i supporti riutilizzabili",
       "D) Il degaussing è troppo aggressivo per gli hard disk magnetici e andrebbe sostituito da una singola sovrascrittura a zeri"
@@ -10992,16 +10992,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 464,
     topic: "Mitigation Techniques & Controls",
     level: "APPLICAZIONE",
-    scenario: "Sofia, una responsabile HR, richiede l'accesso al sistema di gestione delle buste paga dell'azienda per visualizzare i dati dei dipendenti. Il team IT le concede il permesso di visualizzare i dati, ma le impedisce di modificare i record o di accedere ad altre aree sensibili del sistema.",
-    question: "Quale principio viene applicato in questo caso?",
+    scenario: "Uno scanner rileva che il 30% delle workstation ha una versione del browser vulnerabile a un exploit già sfruttato attivamente in rete. L'azienda distribuisce l'aggiornamento tramite lo strumento di gestione centralizzata, ma alla riscansione 40 postazioni risultano ancora indietro: gli utenti rinviano il riavvio da settimane.",
+    question: "Quale tecnica di mitigazione risolve alla radice la parte residua del problema?",
     options: [
-      "A) Discretionary access control",
-      "B) Separation of duties",
-      "C) Least privilege",
-      "D) Job rotation"
+      "A) Application allow list: si autorizza l'esecuzione del solo browser, in qualunque versione sia installata",
+      "B) Segmentazione della rete: le 40 postazioni vengono spostate in una VLAN isolata e lasciate alla versione corrente",
+      "C) Configuration enforcement: la policy centralizzata impone aggiornamento e riavvio entro una scadenza, non li lascia all'utente",
+      "D) Formazione degli utenti: si spiega ai dipendenti l'importanza di riavviare il computer"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Least privilege (Minimo privilegio)**.\n\n* **Perché è la corretta:** Il principio del **Least privilege** garantisce che ogni utente abbia il minimo livello di accesso necessario per svolgere le proprie funzioni lavorative. Sofia può solo visualizzare i dati delle buste paga (necessario per il suo ruolo HR) ma non modificarli né accedere ad aree non pertinenti alle sue mansioni.\n* **Analisi dei distrattori:**\n  * **A) Il Discretionary access control (DAC)** è un modello in cui il proprietario della risorsa decide chi può accedervi; non descrive specificatamente la limitazione ai permessi minimi.\n  * **B) La Separation of duties** divide le responsabilità critiche tra più persone per prevenire frodi; in questo scenario Sofia non condivide responsabilità, ma si limita al suo ruolo.\n  * **D) La Job rotation** prevede la rotazione periodica dei dipendenti tra ruoli diversi; non è pertinente alla limitazione dei permessi di accesso."
+    explanation: "La risposta corretta è la **C) Configuration enforcement**.\n\n* **Perché è la corretta:** Il problema non è la mancanza della patch, che è già stata distribuita: è che la sua applicazione **dipende dalla volontà dell'utente**. Il **configuration enforcement** rimuove quella dipendenza: la piattaforma di gestione impone lo stato desiderato, applica l'aggiornamento e programma il riavvio entro una finestra definita, segnalando e correggendo le macchine non conformi. È la stessa logica delle **guard rail**: non chiedere agli utenti di fare la cosa giusta, ma fare in modo che sia il sistema a garantirla.\n* **Analisi dei distrattori:**\n  * **B) Segmentazione:** è un controllo **compensativo** valido quando la patch *non può* essere applicata (sistemi legacy, apparati certificati). Qui la patch esiste ed è distribuibile: isolare 40 postazioni lasciandole vulnerabili significa convivere indefinitamente con il rischio invece di eliminarlo.\n  * **A) Application allow list:** autorizza *quali* programmi possono girare, non *in quale versione*. Consentire il browser a prescindere dalla versione lascia intatta la vulnerabilità, perché l'eseguibile resta quello approvato.\n  * **D) Formazione:** utile in generale, ma qui il comportamento è già noto e persistente da settimane. Un controllo che dipende dalla diligenza quotidiana di centinaia di persone non è affidabile per chiudere una vulnerabilità sfruttata attivamente.\n\n* **Trappola d'esame:** quando lo scenario mostra che un controllo **esiste ma non viene applicato**, la risposta non è aggiungere un controllo diverso né formare gli utenti: è **imporne l'applicazione in modo automatico e verificabile**. La segmentazione entra in gioco solo quando la correzione è tecnicamente impossibile."
   },
   {
     id: 465,
@@ -11127,16 +11127,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 473,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti tipi di attori delle minacce ha più probabilità di avere accesso autorizzato ai sistemi che attaccano?",
+    scenario: "Un gruppo strutturato gestisce un servizio di ransomware-as-a-service: sviluppa il malware, affitta l'infrastruttura ad affiliati, gestisce un portale di negoziazione con le vittime e un servizio di assistenza per il pagamento in criptovaluta. Le somme incassate vengono riciclate attraverso mixer e società di comodo.",
+    question: "Quale categoria di attore delle minacce descrive questo gruppo?",
     options: [
-      "A) Organized crime organizations",
-      "B) Insider threat",
-      "C) Hacktivist",
-      "D) Unskilled Attackers"
+      "A) Attore sponsorizzato da uno Stato (nation-state)",
+      "B) Criminalità organizzata (organized crime)",
+      "C) Hacktivista",
+      "D) Attaccante inesperto (unskilled attacker)"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Insider threat (Minaccia interna)**.\n\n* **Perché è la corretta:** Un **Insider threat** è un tipo di attore di minacce interno a un'organizzazione che ha accesso autorizzato ad almeno una parte della rete, dei sistemi o dei dati dell'organizzazione. Le minacce interne sono spesso dipendenti attuali o ex dipendenti che abusano del loro accesso per diffondere informazioni, sabotare operazioni o collaborare con attori esterni.\n* **Analisi dei distrattori:**\n  * **A) Le organizzazioni criminali** sono attori di minacce esterni che violano l'organizzazione per ottenere denaro tramite riscatti o altri mezzi; non hanno accesso autorizzato ai sistemi che attaccano.\n  * **C) Un Hacktivist** non fa parte dell'organizzazione che attacca e non ha accesso autorizzato ad essa.\n  * **D) Gli Unskilled Attackers** (script kiddie) hanno poche o nessuna competenza tecnica e sono motivati da curiosità, noia o guadagno personale; non fanno parte dell'organizzazione target e non hanno accesso autorizzato."
+    explanation: "La risposta corretta è la **B) Criminalità organizzata**.\n\n* **Perché è la corretta:** Gli indizi decisivi sono la **struttura d'impresa** e la **motivazione economica**. Ruoli specializzati, un modello di affiliazione, un servizio clienti e il riciclaggio dei proventi descrivono un'organizzazione criminale che tratta il crimine informatico come attività redditizia. Dispone di risorse significative e di competenze reali, ma il suo fine ultimo resta il profitto.\n* **Analisi dei distrattori:**\n  * **A) Nation-state:** avrebbe risorse ancora superiori e capacità di persistenza pluriennale, ma la motivazione sarebbe **spionaggio, sabotaggio o vantaggio geopolitico**, non l'incasso di riscatti. Un attore statale evita il clamore; il ransomware lo cerca.\n  * **C) Hacktivista:** agisce per una **causa politica, sociale o etica**, tipicamente con defacement, fughe di documenti o DDoS dimostrativi, e rivendica pubblicamente l'azione. Non negozia riscatti né ricicla denaro.\n  * **D) Attaccante inesperto:** usa strumenti già pronti scritti da altri e non possiede le capacità per sviluppare malware, gestire un'infrastruttura di affiliazione o organizzare il riciclaggio. Semmai sarebbe un *cliente* di questo gruppo.\n\n* **Trappola d'esame:** classifica l'attore incrociando **capacità/risorse** e **motivazione**. Profitto + organizzazione = criminalità organizzata · Spionaggio o sabotaggio + risorse illimitate + persistenza = nation-state/APT · Causa ideologica + visibilità pubblica = hacktivista · Strumenti altrui + poca competenza = unskilled attacker."
   },
   {
     id: 474,
@@ -11215,18 +11215,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 479,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Chi, tra i seguenti, opera senza autorizzazioni preventive e può lanciare attacchi da posizioni remote?",
+    topic: "Indicators of Malicious Activity",
+    level: "ANALISI",
+    scenario: "Il portale e-commerce registra in un'ora 90.000 tentativi di login da migliaia di indirizzi IP diversi. Ogni coppia utente/password viene provata una sola volta, il tasso di successo è circa dell'1,8% e gli account che entrano appartengono a utenti registrati anni prima. Nessun account viene bloccato dalla policy di lockout.",
+    question: "Quale attacco descrive questo schema e qual è la mitigazione più efficace?",
     options: [
-      "A) Cybercriminal",
-      "B) Business partner",
-      "C) Internal threat actor",
-      "D) External threat actor"
+      "A) Attacco con rainbow table; mitigato aggiungendo un salt univoco a ogni password",
+      "B) Password spraying; mitigato abbassando la soglia di lockout a tre tentativi falliti",
+      "C) Attacco a dizionario; mitigato imponendo password di almeno sedici caratteri",
+      "D) Credential stuffing; mitigato principalmente dalla MFA, perché la password da sola non basta più"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) External threat actor (Attore di minaccia esterno)**.\n\n* **Perché è la corretta:** Gli **External threat actors** operano senza alcuna autorizzazione o accesso autorizzato al sistema e possono lanciare i loro attacchi praticamente da qualsiasi luogo remoto.\n* **Analisi dei distrattori:**\n  * **A) Un Cybercriminal** può essere un attore esterno, ma questo termine non specifica il metodo o la posizione relativa al target; è più ampio della definizione specifica di 'external threat actor'.\n  * **B) Un Business partner** ha tipicamente accesso autorizzato dovuto a sforzi collaborativi, rendendolo un attore interno.\n  * **C) Un Internal threat actor** ha ricevuto permessi o accesso all'interno di un sistema, come un dipendente o un appaltatore."
+    explanation: "La risposta corretta è la **D) Credential stuffing**.\n\n* **Perché è la corretta:** Nel **credential stuffing** l'attaccante non indovina nulla: riusa **coppie utente/password già trapelate** da violazioni di altri servizi, scommettendo sul riutilizzo delle credenziali. Tre indizi lo confermano: ogni coppia è provata **una sola volta** (quindi nessun account supera la soglia di lockout), il tasso di successo è **basso ma non nullo**, e gli account compromessi sono **vecchi**, con password mai cambiate. La mitigazione decisiva è la **MFA**: anche con la password corretta, manca il secondo fattore.\n* **Analisi dei distrattori:**\n  * **B) Password spraying:** prova **poche password molto comuni su moltissimi account**. Anch'esso aggira il lockout, ma le password provate sono *indovinate* ('Estate2025!'), non trapelate, e non spiegherebbe perché a cadere siano proprio gli account più vecchi. Abbassare la soglia di lockout non ferma nessuno dei due, perché entrambi fanno un solo tentativo per account, e per giunta espone a un DoS sugli account legittimi.\n  * **C) Attacco a dizionario:** prova **molte parole su un singolo account**, quindi genererebbe numerosi fallimenti concentrati e farebbe scattare il lockout. Allungare le password non protegge da credenziali già note e corrette.\n  * **A) Rainbow table:** serve a **invertire hash rubati offline**, non a effettuare login online. Il salt è la difesa giusta per quel problema, ma qui non c'è alcun furto di database né alcun hash da craccare.\n\n* **Trappola d'esame:** distingui i tre attacchi dal **rapporto fra password e account**. *Credential stuffing* = coppie reali trapelate, una per account, molti account · *Password spraying* = poche password comuni su molti account · *Brute force / dizionario* = molte password su pochi account. Solo il terzo viene fermato dal lockout."
   },
   {
     id: 480,
@@ -11441,17 +11441,17 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   {
     id: 494,
     topic: "Threat Vectors & Vulnerabilities",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale delle seguenti è una vulnerabilità hardware che riguarda l'uso di dispositivi o componenti non più supportati dal produttore, che possono portare a rischi di sicurezza senza patch?",
+    level: "ANALISI",
+    scenario: "Un software di gestione remota usato da migliaia di aziende rilascia un aggiornamento regolarmente firmato con il certificato del produttore e distribuito dai suoi canali ufficiali. Due settimane dopo l'installazione, in tutte le organizzazioni che lo hanno applicato compare una backdoor che contatta un server esterno. Chi non aveva ancora aggiornato non risulta compromesso.",
+    question: "Quale tipo di attacco si è verificato?",
     options: [
-      "A) Legacy vulnerability",
-      "B) Firmware vulnerability",
-      "C) End-of-life vulnerability",
-      "D) Supply Chain vulnerability"
+      "A) Typosquatting del dominio di distribuzione degli aggiornamenti",
+      "B) Attacco zero-day contro il software di gestione remota",
+      "C) Watering hole sul sito del produttore",
+      "D) Malicious update nella catena di fornitura software"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) End-of-life vulnerability (Vulnerabilità End-of-life)**.\n\n* **Perché è la corretta:** L'**End-of-life** si riferisce a hardware non più supportato dal produttore, che spesso porta a vulnerabilità senza patch e sfruttabili. Non ricevendo più aggiornamenti di sicurezza, questi dispositivi rimangono esposti a minacce note.\n* **Analisi dei distrattori:**\n  * **A) La Legacy vulnerability** denota sistemi o componenti hardware più vecchi ancora in uso, che possono essere vulnerabili, ma non significa necessariamente che siano non supportati o a fine vita.\n  * **B) Le Firmware vulnerabilities** sono correlate al software permanente programmato nella memoria di sola lettura dei dispositivi; non riguardano la discontinuazione del supporto hardware.\n  * **D) Le Supply Chain vulnerabilities** si riferiscono a vulnerabilità nella catena di approvvigionamento legate a fornitori di servizi di terze parti; non riguardano l'uso di componenti hardware non supportati."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Malicious update nella catena di fornitura**.\n\n* **Perché è la corretta:** Il dettaglio decisivo è che l'aggiornamento è **autentico**: firmato con il certificato legittimo e distribuito dai canali ufficiali. Significa che la compromissione è avvenuta **a monte**, dentro la pipeline di build del produttore o tramite il furto della sua chiave di firma. Il codice malevolo è quindi entrato **con la fiducia del fornitore**, superando antivirus, application allow list e diffidenza dell'utente. Il fatto che risultino colpite solo le organizzazioni che hanno aggiornato conferma che il vettore è l'aggiornamento stesso.\n* **Analisi dei distrattori:**\n  * **B) Zero-day:** è una vulnerabilità **non nota al produttore e priva di patch**, che l'attaccante sfrutta contro il software così com'è. Qui non è stata sfruttata alcuna falla: è stato consegnato codice malevolo attraverso un canale legittimo.\n  * **C) Watering hole:** compromette un **sito web frequentato** dalle vittime per servire un exploit durante la navigazione. Qui le vittime non hanno navigato: hanno installato un pacchetto firmato.\n  * **A) Typosquatting:** presuppone un **dominio simile** che inganna chi sbaglia a digitare. Gli aggiornamenti sono arrivati dal dominio corretto del produttore, non da un sosia.\n\n* **Trappola d'esame:** questo è il caso in cui **applicare tempestivamente le patch — la pratica corretta — ha aumentato il rischio**. La risposta non è smettere di aggiornare, ma introdurre controlli che reggano anche quando il fornitore è compromesso: rilasci a ondate progressive (*staged rollout*), ambiente di staging, **SBOM** per sapere cosa si installa davvero e monitoraggio comportamentale dopo l'aggiornamento."
   },
   {
     id: 495,
@@ -11485,18 +11485,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 497,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti attori delle minacce è più probabilmente motivato dalla vendetta?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Tre studi di ingegneria che lavorano su una stessa gara d'appalto vengono compromessi nello stesso periodo. L'analisi forense rileva che tutti e tre i team consultavano abitualmente il portale di un'associazione tecnica di settore, e che quel portale era stato violato e serviva un exploit del browser ai soli visitatori provenienti dagli indirizzi IP dei tre studi.",
+    question: "Quale tecnica d'attacco descrive questo scenario?",
     options: [
-      "A) Insider threat",
-      "B) Nation-state",
-      "C) Unskilled attacker",
-      "D) Ethical hacker"
+      "A) Phishing mirato (spear phishing)",
+      "B) Watering hole",
+      "C) Attacco alla catena di fornitura software",
+      "D) Typosquatting"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Insider threat (Minaccia interna)**.\n\n* **Perché è la corretta:** Un **Insider threat** è un attore di minacce che ha accesso legittimo ai sistemi o ai dati di un'organizzazione e lo abusa per scopi malevoli, tra cui la **vendetta**. È più probabile che sia motivato dalla vendetta se percepisce che l'organizzazione o un individuo al suo interno lo abbia trattato ingiustamente (licenziamento, mancata promozione, insulti).\n* **Analisi dei distrattori:**\n  * **B) Un Nation-state** agisce per conto di un governo con obiettivi strategici o tattici (spionaggio, sabotaggio, guerra); non è motivato da vendette personali.\n  * **C) Un Unskilled attacker** (script kiddie) ha poche o nessuna competenza tecnica ed è motivato da curiosità, noia o guadagno personale; non tipicamente dalla vendetta.\n  * **D) Un Ethical hacker** usa le competenze di hacking per scopi legittimi come testare la sicurezza dei sistemi; non è un attore di minacce e non è motivato dalla vendetta."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Watering hole**.\n\n* **Perché è la corretta:** L'attacco **watering hole** (letteralmente 'pozza d'acqua', come il predatore che aspetta le prede dove vanno a bere) non colpisce direttamente le vittime: compromette un **sito terzo legittimo** che il gruppo bersaglio frequenta abitualmente, e lo usa per servire l'exploit. Due elementi lo identificano con certezza nello scenario: il vettore è un sito **di fiducia e non aziendale**, e il filtraggio per indirizzo IP dimostra che il bersaglio era un **gruppo preciso**, non il pubblico generico.\n* **Analisi dei distrattori:**\n  * **A) Spear phishing:** anch'esso è mirato, ma il vettore è un **messaggio inviato alla vittima** (e-mail, chat). Qui non c'è alcun messaggio: le vittime sono state infettate visitando spontaneamente un sito che consultavano già.\n  * **C) Attacco alla catena di fornitura:** compromette un **prodotto o un aggiornamento software** che la vittima installa, come nel caso di un update avvelenato. Qui non è stato installato nulla: l'infezione è avvenuta durante la navigazione.\n  * **D) Typosquatting:** registra domini simili a quelli noti per intercettare chi sbaglia a digitare. Nello scenario le vittime hanno raggiunto il sito **corretto**, che era stato violato: nessun errore di battitura è coinvolto.\n\n* **Trappola d'esame:** il watering hole è particolarmente insidioso perché aggira la formazione anti-phishing (non c'è nessun messaggio sospetto da riconoscere) e sfrutta un sito che compare nelle allow list aziendali. Le contromisure efficaci sono tecniche: browser e plug-in aggiornati, isolamento della navigazione, EDR comportamentale e filtri di reputazione."
   },
   {
     id: 498,
@@ -11652,16 +11652,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 508,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Durante un audit di routine, Enrique, un cybersecurity specialist della Kelly Innovations LLC, nota che un modulo software specifico stava crashando inaspettatamente. Ispezionando ulteriormente, ha scoperto multiple richieste che contenevano stringhe di caratteri eccessivamente lunghe senza pattern discernibili. Queste stringhe, quando elaborate, sembravano interrompere la normale esecuzione dell'applicazione e causavano comportamenti imprevisti.",
-    question: "Quale dei seguenti descrive MEGLIO il tipo di attacco osservato da Enrique sull'applicazione software della Kelly Innovations LLC?",
+    scenario: "Un EDR segnala che il processo legittimo `explorer.exe` ha aperto una connessione verso un IP estero e sta eseguendo codice in un'area di memoria marcata come scrivibile ed eseguibile. Una scansione completa del disco non trova alcun file sospetto e l'antivirus a firme non rileva nulla. Dopo il riavvio l'anomalia scompare, salvo ripresentarsi dopo qualche ora.",
+    question: "Quale tecnica sta usando l'attaccante?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) Denial of service (DoS)",
-      "C) Buffer overflow",
-      "D) Parameter tampering"
+      "A) Memory injection in un processo legittimo, tipica degli attacchi fileless",
+      "B) Buffer overflow sullo stack del processo explorer.exe",
+      "C) Rootkit a livello di kernel con driver firmato malevolo",
+      "D) Attacco di forza bruta contro le credenziali locali dell'utente"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Buffer overflow**.\n\n* **Perché è la corretta:** Gli attacchi di **Buffer overflow** si verificano quando un'applicazione riceve più dati di quanti sia allocata a gestire, causando la sovrascrittura dei dati in eccesso nelle locazioni di memoria adiacenti. Questo può portare a crash dell'applicazione o potenzialmente consentire a un attaccante di eseguire codice arbitrario — esattamente come descritto nello scenario con le stringhe eccessivamente lunghe.\n* **Analisi dei distrattori:**\n  * **A) Il Cross-site scripting (XSS)** prevede l'incorporazione di script dannosi nel contenuto web; non riguarda l'overflow di buffer di memoria dell'applicazione.\n  * **B) Un attacco DoS** mira a rendere un sistema o risorsa di rete non disponibile sovraccaricandola di traffico; non opera tramite buffer overflow.\n  * **D) Il Parameter tampering** si concentra sull'alterare parametri esistenti dei dati per cambiare il comportamento atteso dell'applicazione; non causa direttamente overflow di memoria."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Memory injection**.\n\n* **Perché è la corretta:** La **memory injection** consiste nello scrivere ed eseguire codice **dentro lo spazio di memoria di un processo legittimo già in esecuzione**. È la base degli attacchi **fileless**, e ogni indizio dello scenario vi punta: nessun file sul disco (quindi l'antivirus a firme non ha nulla da analizzare), codice in esecuzione in memoria scrivibile ed eseguibile, traffico di rete che esce da un processo autorizzato (così il firewall applicativo non si insospettisce) e scomparsa al riavvio, perché la memoria si azzera. La ricomparsa periodica indica un meccanismo di persistenza altrove, tipicamente un'attività pianificata o una chiave di registro.\n* **Analisi dei distrattori:**\n  * **B) Buffer overflow:** è la **vulnerabilità** che consente di sovrascrivere memoria adiacente, spesso usata *per ottenere* l'esecuzione di codice. Ma lo scenario non descrive alcun input sovradimensionato né il crash tipico: descrive il *risultato*, cioè codice che gira in un processo sano.\n  * **C) Rootkit di kernel:** opererebbe a livello di sistema operativo nascondendo processi e file, e **sopravvivrebbe al riavvio** grazie a un driver caricato all'avvio. Qui l'anomalia sparisce riavviando, il che esclude la persistenza a livello kernel.\n  * **D) Forza bruta:** genererebbe numerosi **tentativi di autenticazione falliti** nei log. Nulla nello scenario riguarda le credenziali.\n\n* **Trappola d'esame:** quando lo scenario dice esplicitamente **nessun file sul disco** e **processo legittimo che si comporta in modo anomalo**, la risposta è fileless/memory injection e la contromisura corretta è un **EDR con analisi comportamentale**, non l'antivirus a firme. Tecniche correlate da riconoscere: DLL injection, process hollowing e living off the land con PowerShell o WMI."
   },
   {
     id: 509,
@@ -11742,16 +11742,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 514,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Al ritorno dalle vacanze, Vanessa nota che la sua workstation sembra più lenta del solito. Non solo le applicazioni erano lente, ma c'erano anche istanze in cui gli script apparivano e scomparivano momentaneamente dallo schermo. Preoccupata, ha eseguito il suo software antivirus, ma non ha rilevato alcun file dannoso. Il team di cybersecurity ha avviato un'analisi approfondita e ha trovato che il sistema eseguiva una serie di insoliti task da riga di comando ed era presente evidenza di query WMI non autorizzate. Nessun file associato è stato rilevato sul disco.",
-    question: "Quale dei seguenti tipi di malware è PIÙ probabilmente responsabile delle anomalie sulla workstation di Vanessa?",
+    scenario: "Su una LAN aziendale gli utenti segnalano rallentamenti e avvisi di certificato non valido su siti interni. Un analista esegue `arp -a` su più postazioni e trova che l'indirizzo MAC associato al gateway predefinito è lo stesso di una workstation del reparto marketing. Catturando il traffico, osserva un flusso continuo di risposte ARP non richieste.",
+    question: "Quale attacco è in corso e quale contromisura lo blocca strutturalmente?",
     options: [
-      "A) Rootkit",
-      "B) Ransomware",
-      "C) Fileless Malware",
-      "D) Adware"
+      "A) DNS poisoning della cache locale; bloccato dall'attivazione di DNSSEC sul resolver aziendale",
+      "B) Attacco DDoS amplificato; bloccato dal rate limiting sulle richieste in ingresso dal perimetro",
+      "C) ARP poisoning per un attacco on-path; bloccato da Dynamic ARP Inspection con DHCP snooping sugli switch",
+      "D) Evil twin sulla rete wireless; bloccato imponendo WPA3-Enterprise con autenticazione 802.1X"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Fileless Malware (Malware senza file)**.\n\n* **Perché è la corretta:** Il **Fileless Malware** è caratterizzato dalle sue tecniche di evasione, utilizzando processi e strumenti di sistema legittimi (come PowerShell e WMI) ed eseguendo direttamente in memoria senza scrivere file su disco. L'evidenza di task da riga di comando e query WMI non autorizzate, combinata con l'assenza di file sospetti, indica un'infezione da fileless malware.\n* **Analisi dei distrattori:**\n  * **A) Un Rootkit** mira a fornire accesso non autorizzato a un computer o alle sue aree software; i sintomi primari descritti da Vanessa non corrispondono ai tipici segni di un'infezione da rootkit.\n  * **B) Il Ransomware** blocca tipicamente file o sistemi e chiede un pagamento per il loro rilascio; Vanessa non ha menzionato alcuna cifratura o richiesta di riscatto.\n  * **D) L'Adware** si concentra principalmente sulla consegna di pubblicità indesiderate; non c'è indicazione che Vanessa fosse bombardata da annunci."
+    explanation: "La risposta corretta è la **C) ARP poisoning**.\n\n* **Perché è la corretta:** Gli indizi sono inequivocabili. Il protocollo **ARP non prevede alcuna autenticazione**: chiunque sulla LAN può annunciare 'l'IP del gateway corrisponde al mio MAC'. Trovare il **MAC del gateway associato a una workstation** e un flusso di **risposte ARP non richieste** (gratuitous ARP) significa che quella macchina si è interposta nel percorso: è un attacco **on-path**, e gli avvisi di certificato nascono proprio dal tentativo di intercettare il traffico TLS. La contromisura strutturale è la **Dynamic ARP Inspection**, che sugli switch valida le risposte ARP confrontandole con la tabella costruita dal **DHCP snooping** e scarta quelle incoerenti.\n* **Analisi dei distrattori:**\n  * **B) DDoS amplificato:** sfrutta servizi UDP esterni per rovesciare traffico sulla vittima. È un attacco alla **disponibilità proveniente dall'esterno**, mentre qui l'anomalia è interna alla LAN e riguarda l'intercettazione, non la saturazione.\n  * **A) DNS poisoning:** altererebbe la **risoluzione dei nomi**, non la mappatura IP-MAC. Il comando `arp -a` non mostrerebbe nulla di anomalo, e DNSSEC non ha alcun effetto sul protocollo ARP.\n  * **D) Evil twin:** riguarda il **wireless** e presuppone client che si associano a un AP fasullo. Lo scenario descrive una LAN cablata e una workstation interna.\n\n* **Trappola d'esame:** l'ARP poisoning è il tipico **precursore** di un attacco on-path. Gli avvisi di certificato sono un ottimo indicatore, perché segnalano che qualcuno sta terminando e riaprire le sessioni TLS. Contromisure d'esame: **Dynamic ARP Inspection + DHCP snooping**, segmentazione e, sui sistemi critici, voci ARP statiche."
   },
   {
     id: 515,
@@ -11802,16 +11802,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 518,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Una sera, Megan, una database administrator della Kelly Innovations LLC, è stata allertata di attività sospette sul sito web dell'azienda. Ha notato un volume insolitamente alto di ricerche, ma invece dei normali termini di ricerca, queste voci contenevano caratteri come '=', '%20' e 'OR'. Megan ha anche osservato che subito dopo queste strane ricerche, i log del server mostravano recuperi di database non pianificati che esponevano dettagli dei dipendenti.",
-    question: "Quale dei seguenti identifica MEGLIO il tipo di attacco testimoniato da Megan sul sito web della Kelly Innovations LLC?",
+    scenario: "Un'applicazione bancaria registra un bonifico eseguito due volte con lo stesso identico identificativo di transazione, dallo stesso IP, a distanza di sei ore dall'originale. L'utente dichiara di aver disposto un solo pagamento. I log mostrano che la seconda richiesta era byte per byte identica alla prima, firma inclusa.",
+    question: "Quale attacco è stato quasi certamente eseguito?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) SQL injection",
-      "C) Buffer overflow",
-      "D) Parameter tampering"
+      "A) SQL injection",
+      "B) Replay attack",
+      "C) Cross-site scripting",
+      "D) Attacco di forza bruta"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) SQL injection**.\n\n* **Perché è la corretta:** Una **SQL injection** è un tipo di attacco in cui un attaccante introduce istruzioni SQL dannose in un campo di input, con l'obiettivo di eseguire comandi arbitrari su un database. Caratteri come '=', '%20' e 'OR' sono frequentemente visti in questi attacchi. Se l'input non è adeguatamente sanificato, questo può portare ad accesso non autorizzato o manipolazione dei dati.\n* **Analisi dei distrattori:**\n  * **A) Il Cross-site scripting (XSS)** prevede l'incorporazione di script dannosi nelle pagine web; sebbene inietti codice, l'obiettivo e il comportamento dell'XSS differiscono significativamente dagli attacchi diretti al database come le SQL injection.\n  * **C) Il Buffer overflow** si verifica quando i dati eccedono la capacità del buffer; riguarda la memoria, non le query di database.\n  * **D) Il Parameter tampering** altera parametri esistenti per manipolare l'elaborazione dei dati dell'applicazione; pur coinvolgendo la modifica degli input, non corrisponde alle query di database osservate indicative di SQL injection."
+    explanation: "La risposta corretta è la **B) Replay attack**.\n\n* **Perché è la corretta:** In un **attacco replay** l'aggressore intercetta una comunicazione legittima e la **ritrasmette identica** in un momento successivo. Non ha bisogno di decifrarla né di alterarla: le basta che il server la riaccetti. L'indizio decisivo nello scenario è che la seconda richiesta è **identica byte per byte, firma compresa**: un attaccante che avesse modificato qualcosa avrebbe invalidato la firma, mentre un utente che dispone un secondo bonifico genererebbe un identificativo e una firma diversi.\n* **Analisi dei distrattori:**\n  * **A) SQL injection:** richiede l'inserimento di **comandi SQL nei campi di input** per manipolare il database. Qui non c'è alcun input anomalo: la richiesta è una transazione perfettamente valida, solo ripetuta.\n  * **C) Cross-site scripting:** inietta **script nel browser di altri utenti** per rubare sessioni o dati. Nulla nello scenario indica contenuto attivo servito a terzi.\n  * **D) Forza bruta:** tenta ripetutamente credenziali o chiavi diverse finché una funziona. Qui non ci sono tentativi falliti né variazione: c'è una sola richiesta valida, riproposta tale e quale.\n\n* **Trappola d'esame:** le difese contro il replay non sono la cifratura (il messaggio era già firmato e cifrato), ma i meccanismi che rendono **ogni messaggio utilizzabile una sola volta**: un **nonce** o un identificativo univoco per transazione, un **timestamp** con finestra di validità ristretta, numeri di sequenza e token di sessione a scadenza breve. Se lo scenario descrive una richiesta legittima *ripetuta identica*, la risposta è sempre replay."
   },
   {
     id: 519,
@@ -11906,32 +11906,32 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   {
     id: 525,
     topic: "Mitigation Techniques & Controls",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale tecnica di mitigazione prevede l'uso di strumenti come Nagios o Splunk per osservare e verificare continuamente il funzionamento di un sistema o una rete?",
+    level: "APPLICAZIONE",
+    scenario: "Un inventario rivela che in rete sono ancora attivi: un vecchio server FTP usato fino a due anni fa, tre stampanti con pannello web e credenziali di fabbrica, e il servizio Telnet abilitato su dodici switch. Nessuno di questi elementi serve più ai processi aziendali.",
+    question: "Quale combinazione di tecniche di mitigazione affronta correttamente la situazione?",
     options: [
-      "A) Hardening techniques",
-      "B) Segmentation",
-      "C) Patching",
-      "D) Monitoring"
+      "A) Formazione del personale sull'uso corretto di FTP e Telnet e sulle password complesse",
+      "B) Cifratura di tutto il traffico verso questi dispositivi, mantenendoli in servizio così come sono",
+      "C) Monitoraggio continuo dei log dei dispositivi, per intervenire tempestivamente in caso di attacco",
+      "D) Dismissione del superfluo e hardening del resto: credenziali di fabbrica cambiate, protocolli insicuri disabilitati"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Monitoring (Monitoraggio)**.\n\n* **Perché è la corretta:** Il **Monitoring** è l'osservazione e la verifica continua del funzionamento di un sistema o una rete, spesso tramite strumenti come Nagios (per il monitoraggio dell'infrastruttura) o Splunk (per l'analisi dei log e degli eventi di sicurezza), per garantirne funzionalità e sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Le Hardening techniques** proteggono un sistema attraverso molteplici metodi; non implicano necessariamente l'uso di Nagios o Splunk per l'osservazione continua.\n  * **B) La Segmentation** divide una rete in parti diverse per sicurezza e prestazioni; non usa specificatamente strumenti di osservazione come Nagios o Splunk.\n  * **C) Il Patching** aggiorna o corregge il software per risolvere vulnerabilità; non riguarda l'osservazione continua tramite strumenti specifici."
+    explanation: "La risposta corretta è la **D) Dismissione e hardening**.\n\n* **Perché è la corretta:** Lo scenario contiene due categorie distinte. Il server FTP **non serve più**: la mitigazione corretta non è proteggerlo, è **dismetterlo** (decommissioning), perché il modo più sicuro di gestire un servizio inutile è farlo sparire, riducendo la superficie d'attacco a zero. Stampanti e switch invece **servono ancora**: su di essi si applica l'**hardening**, cioè cambio delle credenziali predefinite, disabilitazione dei protocolli in chiaro (Telnet sostituito da SSH) e chiusura dei servizi superflui.\n* **Analisi dei distrattori:**\n  * **B)** Cifrare il canale non risolve nulla se le **credenziali di fabbrica** restano note pubblicamente: l'attaccante entra legittimamente attraverso un tunnel cifrato. E mantenere in servizio un sistema inutile conserva rischio senza alcun beneficio.\n  * **C) Il monitoraggio** è un controllo **investigativo**: permette di accorgersi dell'attacco, non di impedirlo. Utile in aggiunta, ma qui esistono rimedi definitivi e non ci sono ragioni per limitarsi a osservare.\n  * **A) La formazione** non ha effetto sul problema descritto, che è di **configurazione dei sistemi**, non di comportamento delle persone. Nessun dipendente può rendere sicuro Telnet sapendolo usare meglio.\n\n* **Trappola d'esame:** davanti a sistemi obsoleti o superflui, la gerarchia è netta. **Prima**: dismettere ciò che non serve · **poi**: irrobustire ciò che resta (credenziali, protocolli, servizi, patch) · **solo se nulla di ciò è possibile**: applicare controlli compensativi come segmentazione e monitoraggio rinforzato."
   },
   {
     id: 526,
     topic: "Threat Vectors & Vulnerabilities",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti è un tipo di attacco message-based che consiste nell'inviare chiamate vocali fraudolente per indurre i destinatari a rivelare informazioni sensibili o a eseguire determinate azioni?",
+    level: "ANALISI",
+    scenario: "Nella hall e negli ascensori di un'azienda compaiono adesivi con un codice QR e la scritta \"Inquadra per attivare il nuovo Wi-Fi ospiti\". Chi lo scansiona col telefono raggiunge una pagina che imita fedelmente il portale SSO aziendale e chiede credenziali e codice MFA. Il gateway di posta non ha registrato nulla di anomalo e nessun dipendente segnala SMS sospetti; i primi account compromessi appartengono a persone che hanno inquadrato il codice con il telefono personale.",
+    question: "Quale tecnica descrive l'attacco, e perché i controlli su e-mail e SMS non l'hanno intercettato?",
     options: [
-      "A) IM",
-      "B) Phishing",
-      "C) Vishing",
-      "D) Smishing"
+      "A) Quishing: il payload è dentro un codice QR su un supporto fisico, che non passa dal gateway di posta",
+      "B) Smishing: il messaggio raggiunge il telefono della vittima, quindi rientra nel phishing via SMS",
+      "C) Evil twin: un access point malevolo che duplica l'SSID aziendale per intercettare le credenziali",
+      "D) Shoulder surfing: l'osservazione diretta delle credenziali digitate in un'area comune"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Vishing (Voice Phishing)**.\n\n* **Perché è la corretta:** Il **Vishing** è un tipo di attacco message-based che consiste nell'inviare chiamate vocali fraudolente per indurre i destinatari a rivelare informazioni sensibili o a eseguire determinate azioni.\n* **Analisi dei distrattori:**\n  * **A) L'IM (Instant Messaging)** è un tipo di attacco message-based che utilizza messaggi istantanei fraudolenti per indurre i destinatari a rivelare informazioni; non usa chiamate vocali.\n  * **B) Il Phishing** è un tipo di attacco message-based che utilizza email fraudolente per indurre i destinatari a rivelare informazioni sensibili o cliccare su link dannosi; non usa chiamate vocali.\n  * **D) Lo Smishing** è un tipo di attacco message-based che utilizza messaggi di testo (SMS) fraudolenti per indurre i destinatari a rivelare informazioni sensibili; non usa chiamate vocali."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Quishing**.\n\n* **Perché è la corretta:** Il **quishing** (QR code phishing) nasconde l'URL malevolo dentro un **codice QR**, che per un sistema di sicurezza è solo un'immagine e per l'utente è illeggibile finché non lo ha già aperto. Qui il codice è stampato su un adesivo fisico: il link non passa mai da un canale ispezionabile, e questo spiega esattamente il silenzio dei controlli. Il gateway di posta non ha nulla da analizzare perché non c'è alcuna e-mail; il filtro SMS non vede nulla perché non c'è alcun messaggio; il proxy aziendale non blocca il dominio perché lo smartphone personale naviga sulla rete dell'operatore, fuori dal perimetro. La destinazione è il classico portale SSO clonato che raccoglie credenziali **e** codice MFA, per poterlo rigiocare in tempo reale.\n* **Analisi dei distrattori:**\n  * **B) Smishing:** è phishing veicolato da **SMS**. Il fatto che la vittima usi un telefono non basta a qualificarlo: lo scenario dice esplicitamente che nessuno ha ricevuto messaggi. Il canale è l'adesivo, non la messaggistica.\n  * **C) Evil twin:** è un **access point** malevolo che imita l'SSID legittimo per dirottare il traffico Wi-Fi. Qui non esiste alcun access point: il Wi-Fi è solo il pretesto scritto sull'adesivo, e la vittima finisce su un sito web attraverso la propria rete dati.\n  * **D) Shoulder surfing:** richiede che l'attaccante sia fisicamente presente a **osservare** la digitazione. In questo scenario le credenziali vengono consegnate volontariamente a un sito, senza alcun osservatore.\n\n* **Trappola d'esame:** il nome dell'attacco segue il **canale**, non il bersaglio né il dispositivo. Phishing = e-mail · Smishing = SMS · Vishing = voce/telefonata · Quishing = codice QR. Sono invece dimensioni diverse: **whaling** e **spear phishing** indicano *quanto è mirato* il bersaglio, e possono combinarsi con qualunque canale. Contromisura chiave per il quishing: una **app fotocamera o MDM che mostri l'URL completo prima di aprirlo** e la regola per cui nessun QR non censito va inquadrato su un dispositivo che accede a risorse aziendali."
   },
   {
     id: 527,
@@ -11950,33 +11950,33 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 528,
-    topic: "Threat Actors & Motivations",
-    level: "APPLICAZIONE",
-    scenario: "Sei un analista di sicurezza alla Dion Training e scopri che un dispositivo non autorizzato è stato connesso alla rete aziendale. Dalle indagini emerge che il dispositivo è stato aggiunto da una dipendente per giocare ai videogiochi durante le pause.",
-    question: "Con quale tipo di attore di minaccia hai a che fare?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Durante una site survey wireless, un analista rileva in magazzino un access point che trasmette l'SSID aziendale ma non compare nell'inventario, non è gestito dal controller centrale e accetta connessioni senza autenticazione 802.1X. Risulta collegato a una presa di rete dell'ufficio e configurato con le impostazioni di fabbrica.",
+    question: "Quale minaccia è stata individuata e qual è il controllo che l'avrebbe impedita?",
     options: [
-      "A) Shadow IT",
-      "B) Unskilled Actor",
-      "C) Insider Threat",
-      "D) Nation-state Actor"
+      "A) Attacco di deautenticazione; impedito dalla protezione dei frame di gestione (MFP)",
+      "B) Evil twin esterno; impedito dall'innalzamento della potenza di trasmissione degli AP legittimi",
+      "C) Rogue access point; impedito dalla port security e dall'autenticazione 802.1X sulle porte switch",
+      "D) Jamming del segnale radio; impedito dal passaggio alla banda 5 GHz"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Shadow IT**.\n\n* **Perché è la corretta:** Lo **Shadow IT** è un tipo di attore di minacce che risulta dall'uso di sistemi, dispositivi o software IT non autorizzati o non approvati all'interno di un'organizzazione. In questo caso, il dispositivo potrebbe introdurre rischi di sicurezza e problemi di conformità, ma la dipendente non aveva l'intenzione di danneggiare l'azienda — l'ha aggiunto per convenienza personale.\n* **Analisi dei distrattori:**\n  * **B) Un Unskilled Actor** manca di competenze tecniche e lancia attacchi semplici usando strumenti altrui; la dipendente non sta conducendo un attacco deliberato.\n  * **C) Un Insider Threat** ha accesso autorizzato e intende deliberatamente danneggiare l'azienda; la dipendente non ha intenzioni malevole.\n  * **D) Un Nation-state Actor** è sponsorizzato da un governo; non è pertinente a questo scenario."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Rogue access point**.\n\n* **Perché è la corretta:** Un **rogue AP** è un access point **non autorizzato collegato fisicamente alla rete aziendale**. Nello scenario tutti gli indizi convergono: è attaccato a una presa di rete interna, non è nell'inventario, non è gestito dal controller e ha le impostazioni di fabbrica. Il pericolo è che crea un ingresso nella rete interna che scavalca completamente i controlli perimetrali. La contromisura corretta agisce **sulla porta dello switch**: **port security** (limite di MAC per porta) e **802.1X** impediscono che un dispositivo non autorizzato ottenga connettività attaccandosi a una presa.\n* **Analisi dei distrattori:**\n  * **B) Evil twin:** è un AP fasullo che **imita l'SSID** per ingannare i client, ma tipicamente **non è collegato alla rete aziendale**: sta all'esterno e intercetta le connessioni. Qui il dispositivo è fisicamente sulla LAN, il che lo qualifica come rogue. Aumentare la potenza degli AP legittimi non è peraltro una contromisura valida.\n  * **A) Deautenticazione:** è un attacco che **espelle i client** inviando frame di gestione falsificati, per costringerli a riconnettersi altrove. Lo scenario non descrive alcuna disconnessione forzata.\n  * **D) Jamming:** è un disturbo radio che nega il servizio saturando il canale. Qui il problema non è l'assenza di servizio, ma la presenza di un servizio non autorizzato.\n\n* **Trappola d'esame:** la distinzione più chiesta è proprio **rogue AP contro evil twin**. *Rogue* = dispositivo non autorizzato **connesso alla tua rete**, spesso installato in buona fede da un dipendente per comodità · *Evil twin* = AP dell'attaccante che **clona il tuo SSID** per farsi connettere i client e intercettarne il traffico."
   },
   {
     id: 529,
     topic: "Indicators of Malicious Activity",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti attacchi web-based consiste nell'inserire script dannosi nelle pagine web che possono essere eseguiti dal browser di utenti ignari?",
+    level: "ANALISI",
+    scenario: "I dipendenti di una filiale digitano l'indirizzo corretto del portale bancario aziendale ma vengono portati su una copia contraffatta, senza alcun avviso di dominio errato nella barra degli indirizzi. Un tecnico verifica il resolver DNS della filiale e trova che il record del dominio bancario punta a un indirizzo IP non appartenente alla banca, con un TTL insolitamente lungo.",
+    question: "Quale attacco è stato eseguito e quale contromisura lo previene?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) Virtual machine (VM) escape",
-      "C) Firmware vulnerability",
-      "D) SQL Injection"
+      "A) DNS poisoning della cache del resolver; prevenuto da DNSSEC, che firma crittograficamente le risposte DNS",
+      "B) Typosquatting del dominio bancario; prevenuto registrando preventivamente i domini con errori di battitura",
+      "C) Cross-site scripting sul portale bancario; prevenuto dalla sterilizzazione dell'output lato server",
+      "D) Attacco on-path via ARP poisoning; prevenuto dalla Dynamic ARP Inspection sugli switch"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Cross-site scripting (XSS)**.\n\n* **Perché è la corretta:** Il **Cross-site scripting (XSS)** è un attacco web-based che consiste nell'inserire script dannosi nelle pagine web che vengono poi eseguiti dal browser degli utenti ignari. Può consentire a un attaccante di rubare cookie, token di sessione, credenziali o eseguire altre azioni per conto dell'utente.\n* **Analisi dei distrattori:**\n  * **B) La VM escape** è un tipo di attacco che consiste nel fuoriuscire da un ambiente virtualizzato per accedere al sistema host sottostante o ad altre VM; non riguarda l'inserimento di script nelle pagine web.\n  * **C) La Firmware vulnerability** è un tipo di software incorporato nei dispositivi hardware; non è un attacco web-based.\n  * **D) La SQL Injection** è un attacco web-based che inserisce istruzioni SQL dannose nei campi di input per manipolare i database; non riguarda l'esecuzione di script nel browser."
+    explanation: "La risposta corretta è la **A) DNS poisoning**.\n\n* **Perché è la corretta:** Nel **DNS poisoning** (o cache poisoning) l'attaccante inserisce un record falso nella cache di un resolver, così che la traduzione da nome a indirizzo IP restituisca il suo server. Gli indizi sono decisivi: gli utenti digitano il **dominio corretto** e la barra degli indirizzi non mostra nulla di strano, quindi l'inganno non è nel nome ma nella **risoluzione**; e il record nel resolver punta a un IP estraneo con **TTL lungo**, scelto per far sopravvivere l'avvelenamento il più possibile. **DNSSEC** è la contromisura strutturale, perché firma crittograficamente le risposte DNS e permette al resolver di rifiutare quelle contraffatte.\n* **Analisi dei distrattori:**\n  * **B) Typosquatting:** richiederebbe che l'utente **sbagli a digitare** e finisca su un dominio simile. Lo scenario dice esplicitamente che l'indirizzo digitato è corretto.\n  * **C) Cross-site scripting:** inietta script **dentro le pagine del sito legittimo**. Qui il sito legittimo non viene mai raggiunto: il traffico è dirottato prima, verso un server diverso.\n  * **D) ARP poisoning:** produce un effetto simile, ma agisce sulla mappatura **IP-MAC dentro la LAN** e si diagnostica con `arp -a`. Qui l'anomalia è stata trovata nel **record DNS del resolver**, che è un livello diverso.\n\n* **Trappola d'esame:** distingui i due avvelenamenti dal livello su cui agiscono. **ARP poisoning** = livello 2, mappatura IP↔MAC, si verifica con `arp -a`, si previene con Dynamic ARP Inspection · **DNS poisoning** = livello applicativo, mappatura nome↔IP, si verifica interrogando il resolver, si previene con DNSSEC. Un ottimo indicatore di entrambi resta l'avviso di certificato TLS, che compare quando il sito servito non corrisponde al nome richiesto."
   },
   {
     id: 530,
@@ -12010,18 +12010,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 532,
-    topic: "Indicators of Malicious Activity",
+    topic: "Threat Vectors & Vulnerabilities",
     level: "ANALISI",
-    scenario: "Dini sta investigando un incidente malware. L'attaccante sembra avere informazioni su tutto ciò che è stato digitato sul terminale e ha usato tali informazioni per scoprire i PIN degli utenti.",
-    question: "Quale dei seguenti tipi di malware è PIÙ probabilmente coinvolto in questo incidente?",
+    scenario: "Lunedì mattina il SOC di un'azienda manifatturiera rileva che tre workstation di reparti diversi hanno eseguito lo stesso binario dall'unità `E:` pochi minuti dopo l'inizio del turno. Il venerdì precedente alcune chiavette USB con l'etichetta scritta a mano \"Stipendi 2026 - Riservato\" erano state trovate nel parcheggio aziendale e diversi dipendenti le avevano collegate al PC per capire a chi restituirle. I log del gateway di posta e del firewall perimetrale non mostrano alcun transito di quel file.",
+    question: "Quale vettore d'attacco è stato sfruttato e quale controllo lo avrebbe neutralizzato alla radice?",
     options: [
-      "A) Trojan",
-      "B) Keylogger",
-      "C) Ransomware",
-      "D) Worm"
+      "A) Phishing via email con allegato malevolo: rafforzare il filtro anti-spam e il sandboxing degli allegati",
+      "B) Compromissione della supply chain software: verificare la firma digitale dei pacchetti e mantenere un SBOM",
+      "C) Supporti rimovibili (USB drop): disabilitare l'autorun e applicare una policy di device control che blocchi le unità USB non autorizzate",
+      "D) Movimento laterale via SMB da un host già compromesso: segmentare la rete e disattivare SMBv1"
     ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Keylogger**.\n\n* **Perché è la corretta:** Un **Keylogger** è un tipo di malware che registra i tasti premuti dall'utente e li invia a un server remoto, consentendo a un attaccante di catturare informazioni sensibili come password, numeri di carte di credito o PIN. La capacità dell'attaccante di conoscere tutto ciò che è stato digitato è il segnale distintivo di un keylogger.\n* **Analisi dei distrattori:**\n  * **A) Un Trojan** si maschera da programma legittimo ed esegue azioni dannose; non è specificamente progettato per registrare tutti i tasti.\n  * **C) Il Ransomware** cifra i dati e richiede un riscatto; non registra i tasti premuti.\n  * **D) Un Worm** si auto-replica e si diffonde ad altri sistemi; non è progettato per catturare informazioni digitate."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Supporti rimovibili (USB drop)**.\n\n* **Perché è la corretta:** Tre indizi convergono sullo stesso vettore. Primo, il binario è stato eseguito dall'unità `E:`, cioè da un dispositivo di archiviazione collegato localmente e non da una share di rete o dal disco di sistema. Secondo, né il gateway di posta né il firewall perimetrale hanno visto transitare quel file: il codice non è entrato dalla rete, è entrato *a mano*, portato fisicamente oltre il perimetro. Terzo, l'innesco è umano e ripetuto su reparti diversi, coerente con più persone che raccolgono chiavette diverse dello stesso lotto. È il classico **USB drop attack**: l'attaccante dissemina supporti rimovibili con un'etichetta studiata per stuzzicare la curiosità (o il senso di riservatezza violata) in un luogo frequentato dai dipendenti del bersaglio, e lascia che sia la vittima a trasportare il malware all'interno. Il controllo che lo neutralizza alla radice è il **device control**: una policy che impedisce il montaggio o l'esecuzione da unità di archiviazione USB non censite, affiancata dalla disabilitazione dell'autorun. È un controllo preventivo e tecnico, quindi funziona anche quando la formazione del personale fallisce - ed è ragionevole aspettarsi che prima o poi fallisca.\n* **Analisi dei distrattori:**\n  * **A) Phishing con allegato:** sarebbe il vettore più probabile in astratto, ma lo scenario lo esclude esplicitamente: i log del gateway di posta non mostrano il transito del file. Un controllo anti-spam non ha alcuna presa su un supporto che attraversa il perimetro dentro una tasca.\n  * **B) Supply chain software:** in un attacco alla supply chain il codice malevolo arriva attraverso un canale legittimo e atteso (un aggiornamento firmato, un pacchetto da repository ufficiale). Qui il binario non proviene da alcun fornitore né da un canale di distribuzione: firma del codice e SBOM non avrebbero intercettato nulla.\n  * **D) Movimento laterale via SMB:** il movimento laterale parte da un host già compromesso e si propaga verso gli altri attraverso la rete, lasciando traccia nelle connessioni SMB. Qui le tre esecuzioni sono quasi simultanee, su reparti diversi e tutte da un'unità locale: non c'è un paziente zero da cui la catena si propaga.\n* **Trappola d'esame:** CompTIA classifica i supporti rimovibili tra i **vettori umani (human vectors)**, non tra quelli puramente tecnici, perché l'attacco non sfrutta una vulnerabilità del software ma la curiosità della vittima. Quando lo scenario nega esplicitamente il transito via email o via rete, il vettore è quasi sempre fisico: supporto rimovibile, accesso non autorizzato ai locali, o un dispositivo malevolo lasciato in loco."
   },
   {
     id: 533,
