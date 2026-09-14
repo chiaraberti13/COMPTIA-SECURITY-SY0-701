@@ -865,7 +865,9 @@ export default function App() {
                               seenSubgroups.add(sg);
                               orderedUnits.push({
                                 type: "subgroup",
-                                name: sg,
+                                // `key` stays the canonical Italian name: it identifies the
+                                // unit in stored progress. Only the label is localized.
+                                name: localizeSubgroup(sg, lang),
                                 key: sg,
                                 subtopics: group.subtopics.filter(s => getSubgroupForSubtopic(s.checklistKey) === sg)
                               });
