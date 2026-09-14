@@ -4576,18 +4576,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 77,
-    topic: "Security Policies & Lifecycle",
+    topic: "Third-Party Risk & Assessments",
     level: "APPLICAZIONE",
-    scenario: "Rippled, un produttore di bevande, sta sviluppando un piano di disaster recovery per garantire il rapido ripristino di sistemi e processi critici in caso di interruzione. Stanno definendo una metrica specifica che rappresenta la quantità massima di tempo accettabile per ripristinare le normali attività aziendali.",
-    question: "Quale metrica stanno definendo?",
+    scenario: "Rippled interrompe il contratto con il fornitore che per cinque anni ha gestito il suo servizio di analisi dati. Il fornitore ha ancora copie dei dati dei clienti nei propri backup, alcune sue utenze risultano ancora attive nell'identity provider di Rippled, e due integrazioni applicative usano tuttora chiavi API emesse a suo nome. Il contratto è scaduto la settimana scorsa.",
+    question: "Quale attività della gestione del rischio di terze parti va eseguita ora?",
     options: [
-      "A) MTBF (Mean Time Between Failures)",
-      "B) MTTR (Mean Time to Repair)",
-      "C) RTO (Recovery Time Objective)",
-      "D) RPO (Recovery Point Objective)"
+      "A) Una due diligence sul fornitore, per documentarne l'affidabilità passata",
+      "B) Un questionario di valutazione della sicurezza, inviato al fornitore uscente",
+      "C) L'offboarding del fornitore, con revoca degli accessi e restituzione o distruzione dei dati",
+      "D) Un rinnovo tacito del contratto, in attesa di completare la migrazione tecnica"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) RTO (Recovery Time Objective)**.\n\n* **Perché è la corretta:** L'**RTO (Obiettivo del Tempo di Ripristino)** definisce il periodo di tempo massimo tollerabile entro il quale un sistema, un'applicazione o un processo aziendale interrotto deve essere ripristinato e reso nuovamente operativo prima di causare conseguenze inaccettabili per l'organizzazione.\n* **Analisi dei distrattori:**\n  * **A) MTBF** rappresenta il tempo medio di funzionamento corretto tra due guasti successivi (indicatore di affidabilità hardware/software).\n  * **B) MTTR** è il tempo medio richiesto per riparare o ripristinare un componente hardware rotto o difettoso.\n  * **D) RPO (Recovery Point Objective)** stabilisce la massima quantità di perdita di dati accettabile misurata nel tempo (es. quante ore o giorni di modifiche ai dati si è disposti a perdere prima di dover ricorrere al backup)."
+    explanation: "La risposta corretta è la **C) L'offboarding del fornitore**.\n\n* **Perché è la corretta:** L'**offboarding** è la fase conclusiva del ciclo di vita del rapporto con un fornitore, ed è quella che più spesso viene lasciata a metà: il contratto finisce, ma gli accessi restano. Lo scenario elenca tre esposizioni che sopravvivono alla firma e che l'offboarding chiude una per una. Le **utenze ancora attive** nell'identity provider vanno disattivate, perché un account di un fornitore che non lavora più per te non ha alcun controllo dietro di sé, né aziendale né contrattuale. Le **chiavi API** vanno revocate e ruotate, e le integrazioni ricostruite con credenziali proprie: sono credenziali a tutti gli effetti, e sfuggono ai controlli pensati per le persone. I **dati nei backup** del fornitore vanno restituiti o distrutti secondo quanto previsto dal contratto, con **certificato di distruzione** a supporto, perché la responsabilità verso gli interessati e verso il regolatore resta di Rippled anche dopo la fine del rapporto.\n* **Analisi dei distrattori:**\n  * **A) Due diligence:** è la verifica che si conduce **prima** di affidarsi a un fornitore, per accertarne solidità, controlli e conformità. Farla ora, a rapporto concluso, non rimuove un solo accesso.\n  * **B) Questionario di sicurezza:** è uno strumento di **selezione e di monitoraggio continuo** durante il rapporto. Chiedere a un fornitore uscente di compilarlo produce un documento, non la revoca delle sue credenziali.\n  * **D) Rinnovo tacito:** è la scorciatoia peggiore. Prolunga il rapporto senza una nuova valutazione del rischio e lascia in vita esattamente le esposizioni da chiudere, con l'aggravante di farlo senza una decisione consapevole.\n\n* **Trappola d'esame:** ricorda il ciclo di vita del rapporto con i fornitori nell'ordine in cui CompTIA lo presenta. **Due diligence e selezione** prima della firma · **Contratto**, con SLA, clausole di sicurezza e diritto di audit · **Monitoraggio continuo** durante il rapporto, non una valutazione una tantum · **Offboarding** alla fine, con revoca degli accessi, restituzione o distruzione dei dati e chiusura delle integrazioni. La fase dimenticata è quasi sempre l'ultima, ed è quella che lascia credenziali valide in mano a chi non ha più alcun motivo di averle."
   },
   {
     id: 78,
@@ -4756,18 +4756,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 89,
-    topic: "Security Policies & Lifecycle",
-    level: "RICORDO",
-    scenario: "Un responsabile della manutenzione infrastrutturale sta valutando l'affidabilità di alcuni dispositivi di rete critici per decidere i cicli di sostituzione preventiva dell'hardware.",
-    question: "Quale concetto rappresenta un'importante metrica di affidabilità nella gestione della manutenzione e indica il tempo medio che intercorre tra i guasti di un sistema?",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    level: "ANALISI",
+    scenario: "Un cliente importante chiede all'azienda una prova indipendente che i suoi controlli di sicurezza siano progettati correttamente e funzionino davvero nel tempo. Non accetta l'autovalutazione compilata dal team interno né la relazione dell'internal audit aziendale: vuole un giudizio emesso da una parte terza qualificata e indipendente, che possa mostrare ai propri revisori.",
+    question: "Che cosa deve procurarsi l'azienda per soddisfare questa richiesta?",
     options: [
-      "A) MTTR (Mean Time to Repair)",
-      "B) Risk assessment (Valutazione del rischio)",
-      "C) MTBF (Mean Time Between Failures)",
-      "D) FMEA (Failure Mode and Effects Analysis)"
+      "A) Una nuova autovalutazione, compilata con maggior dettaglio e firmata dal CISO",
+      "B) Una relazione dell'internal audit, approvata dal comitato per il rischio",
+      "C) Un'attestazione di terza parte, come un rapporto SOC 2 di tipo II",
+      "D) Un rapporto di penetration test, eseguito dal team di sicurezza interno"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) MTBF (Mean Time Between Failures)**.\n\n* **Perché è la corretta:** L'**MTBF (Tempo medio tra i guasti)** stima l'intervallo medio di tempo in cui un sistema o componente funziona correttamente prima di incorrere in un guasto, fungendo da indicatore chiave dell'affidabilità dell'hardware.\n* **Analisi dei distrattori:**\n  * **A) MTTR (Mean Time to Repair)** esprime il tempo medio richiesto per riparare o ripristinare un componente guasto.\n  * **B) Risk assessment** è l'intero processo di identificazione e valutazione dei rischi generali, non una metrica temporale specifica.\n  * **D) FMEA** è una metodologia proattiva usata per analizzare i possibili modi di guasto e i loro effetti, non una metrica quantitativa del tempo tra i guasti."
+    explanation: "La risposta corretta è la **C) Un'attestazione di terza parte, come un rapporto SOC 2 di tipo II**.\n\n* **Perché è la corretta:** La richiesta del cliente contiene due vincoli, e solo un'opzione li rispetta entrambi. Primo, **indipendenza**: il giudizio deve provenire da una parte terza qualificata, non da chi gestisce o supervisiona i controlli. Secondo, **efficacia operativa nel tempo**: non basta dimostrare che i controlli sono ben progettati, va dimostrato che hanno funzionato lungo un periodo. È esattamente la definizione di un rapporto **SOC 2 di tipo II**, emesso da un revisore indipendente al termine di un periodo di osservazione tipicamente compreso fra sei e dodici mesi, in cui il revisore raccoglie evidenze sul funzionamento reale dei controlli. È anche il documento che il cliente potrà a sua volta consegnare ai propri revisori, ed è la ragione per cui un'**attestazione** di questo tipo è diventata la valuta corrente nella valutazione dei fornitori.\n* **Analisi dei distrattori:**\n  * **A) Autovalutazione:** è compilata dall'organizzazione **su sé stessa**. Ha un valore reale come strumento interno di preparazione, ma non offre alcuna indipendenza, ed è precisamente ciò che il cliente ha già rifiutato.\n  * **B) Internal audit:** è indipendente **dalla linea operativa** e riporta al consiglio o al comitato per il rischio, il che lo rende molto più solido di un'autovalutazione. Resta però una funzione **interna all'organizzazione**: soddisfa la governance interna, non la richiesta di un giudizio esterno.\n  * **D) Penetration test interno:** verifica la resistenza tecnica dei sistemi a un attacco simulato, in un momento preciso. È un'altra cosa rispetto a un giudizio sulla **progettazione e sul funzionamento dell'insieme dei controlli**, e in più è condotto internamente, quindi manca ancora l'indipendenza.\n\n* **Trappola d'esame:** ordina le forme di verifica per **indipendenza crescente**. Autovalutazione, l'organizzazione valuta sé stessa · Internal audit, indipendente dalla linea ma interno all'azienda · Audit o attestazione **esterna**, condotta da una parte terza qualificata · Certificazione, come ISO 27001, rilasciata da un ente accreditato. Ricorda anche la differenza fra i due tipi di rapporto SOC 2: il **tipo I** fotografa la **progettazione** dei controlli in una data specifica, il **tipo II** ne verifica l'**efficacia operativa** lungo un periodo. Quando la domanda dice \"nel tempo\" o \"su un periodo\", la risposta è il tipo II."
   },
   {
     id: 90,
@@ -4861,18 +4861,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 96,
-    topic: "Agreements & Contracts",
-    level: "COMPRENSIONE",
-    scenario: "Due organizzazioni intendono avviare una collaborazione formale per definire i termini preliminari di una partnership e stabilire come cooperare su progetti o iniziative specifiche.",
-    question: "Quale tipo di accordo definisce i termini di una partnership tra due organizzazioni e il modo in cui collaboreranno su progetti o iniziative specifiche?",
+    topic: "Risk Management & Analysis",
+    level: "ANALISI",
+    scenario: "Un'azienda valuta il rischio legato a un gestionale legacy che non è più aggiornabile. Il costo di sostituirlo supera il valore dell'intero processo che serve; il fornitore non esiste più, quindi non c'è nessuno a cui girare la responsabilità; dismetterlo bloccherebbe la produzione. La direzione decide allora di mantenerlo, ma di isolarlo in un segmento di rete dedicato, raggiungibile solo da un jump server sorvegliato, e di attivare un monitoraggio specifico sui suoi accessi.",
+    question: "Quale strategia di trattamento del rischio ha applicato la direzione?",
     options: [
-      "A) SLA (Service Level Agreement)",
-      "B) MSA (Master Service Agreement)",
-      "C) MOU (Memorandum of Understanding)",
-      "D) BPA (Business Partnership Agreement)"
+      "A) Evitare il rischio (risk avoidance), rinunciando all'attività che lo genera",
+      "B) Trasferire il rischio (risk transfer), spostandone l'onere su una terza parte",
+      "C) Mitigare il rischio (risk mitigation), riducendone probabilità e impatto",
+      "D) Accettare il rischio (risk acceptance), riconoscendolo senza altre azioni"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) MOU (Memorandum of Understanding)**.\n\n* **Perché è la corretta:** Il **Memorandum of Understanding (MOU)** è un accordo formale preliminare che definisce le intenzioni reciproche e i principi di cooperazione tra due o più entità per collaborare su specifici progetti, agendo come base per futuri contratti legalmente vincolanti.\n* **Analisi dei distrattori:**\n  * **A) SLA** definisce le metriche prestazionali di erogazione di un servizio tecnico continuativo.\n  * **B) MSA** è un contratto quadro completo che stabilisce i termini generali regolanti tutte le future transazioni commerciali e contratti operativi di dettaglio.\n  * **D) BPA** è un accordo commerciale vincolante per partner commerciali che cooperano a scopo di lucro, ripartendo profitti, perdite e responsabilità legali."
+    explanation: "La risposta corretta è la **C) Mitigare il rischio (risk mitigation)**.\n\n* **Perché è la corretta:** La **mitigazione** consiste nel mantenere l'attività, e con essa una parte del rischio, ma nell'introdurre controlli che ne abbassano **probabilità** o **impatto**. È esattamente ciò che è stato fatto: il sistema vulnerabile resta in funzione, perché serve, ma la segmentazione di rete riduce drasticamente chi può raggiungerlo, il jump server sorvegliato rende l'accesso tracciabile e controllato, e il monitoraggio dedicato accorcia i tempi di rilevamento se qualcosa va storto. Nessuno di questi controlli elimina la vulnerabilità del gestionale, che resta lì: riducono la **probabilità** che venga raggiunta e l'**impatto** se ciò accadesse. Quando la vulnerabilità non è rimovibile, questa è la forma in cui si presentano i **controlli compensativi**.\n* **Analisi dei distrattori:**\n  * **A) Evitare il rischio:** significa **rinunciare all'attività** che lo genera, per esempio dismettendo il gestionale o abbandonando il processo che serve. Lo scenario lo esclude esplicitamente: fermarlo bloccherebbe la produzione. L'evitamento azzera il rischio, ma solo insieme al beneficio.\n  * **B) Trasferire il rischio:** sposta l'**onere economico** su una terza parte, tipicamente con una polizza assicurativa o una clausola contrattuale verso un fornitore. Qui il fornitore non esiste più e non è stata stipulata alcuna copertura. Ricorda inoltre che il trasferimento sposta il costo, mai la responsabilità finale verso i propri clienti e verso il regolatore.\n  * **D) Accettare il rischio:** vuol dire prenderne atto **senza introdurre alcun controllo aggiuntivo**, con una decisione formale e documentata di chi ne ha l'autorità. Sarebbe stata la risposta corretta se la direzione avesse deciso di lasciare il sistema com'era: ma qui sono stati messi in campo tre controlli.\n\n* **Trappola d'esame:** distingui le quattro strategie dalla domanda \"che cosa cambia dopo la decisione?\". **Evitare** = l'attività cessa · **Trasferire** = l'attività continua e il costo del danno passa ad altri · **Mitigare** = l'attività continua con nuovi controlli · **Accettare** = l'attività continua immutata, con una decisione consapevole e registrata. Due precisazioni che ricorrono spesso nelle domande: il rischio che resta dopo la mitigazione si chiama **rischio residuo** e va anch'esso accettato formalmente; e l'accettazione è valida solo se **documentata** da chi ha l'autorità, con una scadenza di revisione, altrimenti non è accettazione ma negligenza."
   },
   {
     id: 97,
@@ -5567,17 +5567,17 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   {
     id: 143,
     topic: "Risk Management & Analysis",
-    level: "APPLICAZIONE",
-    scenario: "River, project manager presso un'azienda tecnologica, ha il compito di tenere traccia di tutti i rischi potenziali relativi a una nuova implementazione software. Utilizza un documento strutturato che elenca i rischi identificati, il loro impatto potenziale, la probabilità e le strategie di mitigazione.",
-    question: "Quale documento sta utilizzando River per gestire questi rischi?",
+    level: "ANALISI",
+    scenario: "River, project manager in un'azienda tecnologica, deve rilasciare un software che non rispetta un requisito dello standard interno di cifratura: una libreria di terze parti impone un algoritmo più debole di quello previsto, e il fornitore ha annunciato l'adeguamento fra otto mesi. Bloccare il rilascio farebbe saltare un impegno contrattuale. River documenta la deviazione, la motivazione e i controlli aggiuntivi adottati, la fa approvare dal titolare del rischio e le assegna una scadenza di riesame.",
+    question: "Come si chiama lo strumento di gestione del rischio che River ha appena usato?",
     options: [
-      "A) Business Continuity Plan",
-      "B) Incident Response Plan",
-      "C) Playbook",
-      "D) Risk Register"
+      "A) Un trasferimento del rischio verso il fornitore della libreria di terze parti",
+      "B) Una business impact analysis, che quantifica l'effetto della deviazione",
+      "C) Un evitamento del rischio, perché il rilascio prosegue con controlli in più",
+      "D) Un'eccezione al requisito, con accettazione formale del rischio e scadenza"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Risk Register**.\n\n* **Perché è la corretta:** Un risk register viene utilizzato per identificare, documentare e tracciare i rischi potenziali, inclusi la loro probabilità, l'impatto e le strategie di mitigazione. Consente una gestione proattiva dei rischi nei progetti o nelle operazioni.\n* **Analisi dei distrattori:**\n  * **A) Un Business Continuity Plan** si concentra sul mantenimento delle operazioni aziendali essenziali durante un'interruzione, non sul tracciamento dettagliato dei singoli rischi.\n  * **B) Un Incident Response Plan** si concentra sulla gestione degli incidenti di sicurezza già verificatisi.\n  * **C) Un Playbook** si concentra su azioni di risposta specifiche a minacce particolari, non sul tracciamento strutturato dei rischi di un intero progetto."
+    explanation: "La risposta corretta è la **D) Un'eccezione al requisito, con accettazione formale del rischio**.\n\n* **Perché è la corretta:** Quando un requisito di sicurezza non può essere rispettato e la deviazione è consapevole, lo strumento corretto è l'**eccezione** (o *exemption*), cioè una deroga **formale, motivata, approvata e a termine**. Tutti e quattro gli attributi sono presenti nello scenario e nessuno è decorativo. La deviazione è **documentata**, quindi diventa visibile nel registro dei rischi invece di restare un fatto noto a tre persone. È **motivata**, con il vincolo tecnico e la data di adeguamento del fornitore messi per iscritto. È **approvata dal titolare del rischio**, cioè da chi ha l'autorità di assumerselo, e non dal team che ha fretta di rilasciare. Ed è **a termine**, con un riesame programmato: è questo che impedisce alla deroga temporanea di diventare, come accade quasi sempre senza scadenza, lo stato permanente delle cose.\n* **Analisi dei distrattori:**\n  * **A) Trasferimento del rischio:** sposterebbe l'**onere economico** del danno su una terza parte, tipicamente con una polizza o una clausola contrattuale. Qui non è stato stipulato nulla del genere: il fatto che la causa tecnica stia in una libreria altrui non sposta di un centimetro la responsabilità di River verso i propri clienti.\n  * **B) Business impact analysis:** è l'analisi che stabilisce quanto un'interruzione danneggerebbe i processi, e da cui derivano metriche come RTO e RPO. Serve a **misurare** un impatto, non a **autorizzare** una deviazione da uno standard.\n  * **C) Evitamento del rischio:** significa **non fare** l'attività rischiosa, quindi in questo caso non rilasciare finché la libreria non sarà adeguata. È l'opposto di ciò che è stato deciso: il rilascio prosegue.\n\n* **Trappola d'esame:** tieni distinti tre termini che le domande accostano spesso. **Accettazione del rischio** = decisione consapevole di convivere con un rischio, senza controlli aggiuntivi · **Eccezione o exemption** = deroga formale e a termine a un requisito, che richiede approvazione e riesame · **Rischio residuo** = ciò che resta dopo aver applicato i controlli, e che va a sua volta accettato formalmente. Il segnale che distingue un'eccezione gestita da una semplice violazione è sempre lo stesso: **approvazione da parte del titolare del rischio e una data di scadenza**. Senza questi due elementi non è un'eccezione, è un'inadempienza documentata."
   },
   {
     id: 144,
@@ -5806,18 +5806,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 159,
-    topic: "Risk Management & Analysis",
-    level: "APPLICAZIONE",
-    scenario: "Un'azienda opera in un settore regolamentato e sceglie di minimizzare i rischi per conformarsi a standard rigorosi, concentrandosi maggiormente sul mantenimento di operazioni stabili piuttosto che sul perseguimento di un'espansione rapida.",
-    question: "Quale propensione al rischio (risk appetite) descrive MEGLIO questo approccio?",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    level: "ANALISI",
+    scenario: "Un'azienda europea che vende online e gestisce direttamente i pagamenti con carta deve mettere ordine fra gli obblighi che la riguardano. Il consiglio chiede di distinguere ciò che è imposto da una legge, ciò che deriva da un contratto con il circuito dei pagamenti e ciò che l'azienda adotta volontariamente per dimostrare maturità ai clienti.",
+    question: "Quale delle seguenti classificazioni è corretta?",
     options: [
-      "A) Conservative (Conservativa)",
-      "B) Neutral (Neutrale)",
-      "C) Aggressive (Aggressiva)",
-      "D) Expansionary (Espansiva)"
+      "A) GDPR è un obbligo di legge, PCI DSS un obbligo contrattuale, ISO 27001 uno standard volontario certificabile",
+      "B) GDPR e PCI DSS sono entrambi leggi europee, mentre ISO 27001 è imposto dal regolatore bancario",
+      "C) PCI DSS è una legge sui pagamenti, GDPR una linea guida volontaria, ISO 27001 un obbligo contrattuale",
+      "D) Tutti e tre sono standard volontari: diventano obbligatori solo se citati in un contratto"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Conservative (Conservativa)**.\n\n* **Perché è la corretta:** L'approccio dell'azienda si allinea con una propensione al rischio conservativa, poiché privilegia la stabilità e la conformità rispetto all'espansione. Una propensione espansiva cercherebbe opportunità di crescita ad alto rischio, il che contraddice l'atteggiamento cauto dell'azienda.\n* **Analisi dei distrattori:**\n  * **D) Una propensione espansiva** cercherebbe opportunità di crescita ad alto rischio, il che contraddice l'atteggiamento cauto dell'azienda.\n  * **B) Una propensione neutrale** bilancerebbe crescita e stabilità.\n  * **C) Una propensione aggressiva** tenderebbe anch'essa verso strategie ad alto rischio e alto rendimento, a differenza dell'attenzione conservativa dell'azienda."
+    explanation: "La risposta corretta è la **A) GDPR legge, PCI DSS contratto, ISO 27001 standard volontario**.\n\n* **Perché è la corretta:** I tre riferimenti hanno **origini e meccanismi di sanzione diversi**, e confonderli è uno degli errori più frequenti. Il **GDPR** è un **regolamento dell'Unione europea**, quindi una norma di legge direttamente applicabile: chi lo viola risponde a un'autorità di controllo pubblica e rischia sanzioni amministrative che arrivano al 4% del fatturato annuo mondiale. Il **PCI DSS** non è una legge di nessuno Stato: è uno **standard contrattuale** imposto dai circuiti delle carte a chi vuole trattare dati di pagamento, e le conseguenze di un'inadempienza sono penali contrattuali, audit più stringenti e, nel caso estremo, la revoca della possibilità di accettare carte, che per un e-commerce equivale alla chiusura. L'**ISO 27001** è uno **standard internazionale volontario**: nessuno obbliga ad adottarlo, ma è **certificabile** da un ente accreditato, e la certificazione serve proprio a dimostrare a clienti e partner la maturità del proprio sistema di gestione della sicurezza delle informazioni.\n* **Analisi dei distrattori:**\n  * **B) GDPR e PCI DSS entrambe leggi europee:** è falso per il PCI DSS, che nasce da un consorzio privato di circuiti di pagamento ed è globale, non europeo. Ed è falso anche sulla seconda parte: nessun regolatore bancario impone ISO 27001 in generale.\n  * **C) PCI DSS legge, GDPR linea guida volontaria:** inverte esattamente i due riferimenti principali. Il GDPR è tutt'altro che volontario, ed è anzi il più vincolante dei tre per un'azienda europea.\n  * **D) Tutti volontari finché non citati in un contratto:** vale per gli standard, non per la legge. Un obbligo di legge si applica per il fatto stesso di rientrare nel suo ambito, indipendentemente da qualunque contratto.\n\n* **Trappola d'esame:** classifica ogni riferimento per **fonte dell'obbligo**, perché è questo che determina chi ti sanziona e come. **Legge o regolamento** = GDPR, HIPAA, SOX, con autorità pubbliche e sanzioni amministrative o penali · **Obbligo contrattuale** = PCI DSS, con penali e perdita della possibilità di operare · **Standard volontario certificabile** = ISO 27001 · **Framework volontario** = NIST Cybersecurity Framework, che offre una struttura di riferimento e non prevede certificazione. E ricorda la regola che vale per tutti: puoi esternalizzare l'esecuzione dei controlli, mai la **responsabilità** della conformità."
   },
   {
     id: 160,
@@ -6064,18 +6064,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 184,
-    topic: "Multi-Factor Authentication",
-    level: "COMPRENSIONE",
-    scenario: "Un dipendente viaggia frequentemente per motivi di lavoro in vari paesi. Il dipartimento di sicurezza dell'organizzazione desidera implementare una misura di autenticazione a più fattori (MFA) aggiuntiva, che analizzi e verifichi la sua posizione geografica effettiva (tramite geolocalizzazione IP o coordinate GPS) prima di consentirgli l'accesso ai sistemi aziendali riservati.",
-    question: "Quale fattore di autenticazione a più fattori (MFA) sta pianificando di utilizzare l'organizzazione in questo scenario?",
+    topic: "Identity & Access Control Models",
+    level: "ANALISI",
+    scenario: "Un ospedale deve applicare questa regola: un medico può aprire la cartella clinica solo se il paziente è ricoverato nel suo reparto, solo durante il proprio turno e solo da un terminale interno alla struttura. Con i ruoli attuali la regola non è esprimibile: creare un ruolo per ogni combinazione di reparto, turno e postazione produrrebbe centinaia di ruoli da mantenere.",
+    question: "Quale modello di controllo degli accessi consente di esprimere direttamente una regola di questo tipo?",
     options: [
-      "A) Qualcosa che sai (Something you know)",
-      "B) Qualcosa che sei (Something you are)",
-      "C) Un posto in cui ti trovi (Somewhere you are)",
-      "D) Qualcosa che possiedi (Something you have)"
+      "A) DAC, lasciando al proprietario della cartella la scelta di chi può aprirla",
+      "B) RBAC, creando un ruolo distinto per ogni combinazione di reparto e turno",
+      "C) ABAC, valutando gli attributi di utente, risorsa e contesto a ogni richiesta",
+      "D) MAC, assegnando etichette di classificazione a cartelle cliniche e utenti"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Un posto in cui ti trovi (Somewhere you are)**.\n\n* **Perché è la corretta:** Il fattore **Somewhere you are** (luogo in cui ti trovi) si basa sulla posizione fisica o geografica dell'utente nel momento in cui richiede l'autenticazione. Può essere validato tramite coordinate GPS del dispositivo mobile, indirizzo IP geolocalizzato o tramite l'uso di geofencing.\n* **Analisi dei distrattori:**\n  * **A) Something you know** riguarda informazioni di conoscenza esclusive, come password, PIN o risposte a domande di sicurezza.\n  * **B) Something you are** si riferisce a fattori biometrici innati dell'utente, come impronte digitali, scansione della retina o riconoscimento vocale.\n  * **D) Something you have** riguarda il possesso di un oggetto fisico o digitale, come token hardware, smart card o codici OTP generati da un'applicazione di autenticazione sullo smartphone."
+    explanation: "La risposta corretta è la **C) ABAC (Attribute-Based Access Control)**.\n\n* **Perché è la corretta:** L'**ABAC** non decide in base a *chi sei* una volta per tutte, ma valuta a **ogni singola richiesta** una policy che combina attributi di tre provenienze: attributi del **soggetto** (reparto di appartenenza, specializzazione, turno in corso), attributi della **risorsa** (reparto di ricovero del paziente, livello di riservatezza della cartella) e attributi del **contesto o ambiente** (ora, indirizzo IP di origine, postura del dispositivo). La regola dell'ospedale diventa così una policy sola, leggibile quasi come è stata scritta in italiano: *consenti se reparto-del-medico è uguale a reparto-del-paziente, e ora-corrente è dentro turno-del-medico, e rete-di-origine è interna*. È anche l'unico modello che si adatta da solo al cambiamento: se un medico viene trasferito di reparto, la sua autorizzazione cambia nell'istante in cui cambia l'attributo, senza che nessuno debba toccare i permessi.\n* **Analisi dei distrattori:**\n  * **A) DAC:** affida la decisione al **proprietario** della risorsa. In sanità è inaccettabile, perché l'accesso a un dato clinico non può dipendere dalla discrezionalità di un singolo, e in ogni caso non esprime alcuna condizione su turno o postazione.\n  * **B) RBAC:** è proprio il punto di partenza che lo scenario dichiara insufficiente. I ruoli sono statici e non conoscono il contesto: per rappresentare ogni combinazione di reparto, turno e postazione bisognerebbe moltiplicarli, cadendo nella cosiddetta **esplosione dei ruoli**, che rende l'insieme impossibile da mantenere e da verificare.\n  * **D) MAC:** si basa su **etichette di classificazione** fissate dal sistema e su livelli di autorizzazione, ed è tipico degli ambienti militari o governativi. È rigido per costruzione, e una classificazione non può esprimere \"solo durante il tuo turno\".\n\n* **Trappola d'esame:** riconosci ciascun modello dalla domanda a cui risponde. **DAC** = decide il proprietario, tipico dei permessi sui file · **MAC** = decide il sistema con etichette e livelli, ambienti ad alta classificazione · **RBAC** = decide il ruolo, che è il modello aziendale più diffuso · **Rule-based** = regole uguali per tutti, come una ACL di firewall · **ABAC** = decidono gli attributi valutati nel contesto, ed è il modello su cui poggia lo **Zero Trust**. Quando lo scenario nomina condizioni **dinamiche**, cioè orario, posizione, dispositivo o relazione fra utente e risorsa, la risposta è ABAC."
   },
   {
     id: 185,
@@ -6094,18 +6094,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 186,
-    topic: "Architecture Models & Shared Responsibility",
-    level: "COMPRENSIONE",
-    scenario: "Un'azienda di sviluppo software si trova in prossimità di una scadenza di consegna critica. Per rispettare le tempistiche imposte dal management, il team sceglie deliberatamente di ignorare alcune inefficienze note del sistema e di adottare scorciatoie architetturali provvisorie, consapevole che queste decisioni renderanno il sistema più fragile e vulnerabile e richiederanno costosi interventi correttivi futuri.",
-    question: "Quale dei seguenti termini descrive MEGLIO questa situazione in cui si preferisce il rilascio rapido a scapito della qualità e della sicurezza a lungo termine?",
+    topic: "Security Monitoring & Alerting",
+    level: "ANALISI",
+    scenario: "Il SIEM di un'azienda genera circa 4.000 alert al giorno. Il 96% proviene da tre regole che segnalano attività normali, come il backup notturno che apre centinaia di connessioni e uno strumento di gestione che si autentica in sequenza su tutti i server. Gli analisti hanno smesso di leggere quelle categorie, e in un incidente recente l'alert che segnalava l'esfiltrazione era rimasto in coda per undici ore.",
+    question: "Quale intervento affronta la causa reale del problema?",
     options: [
-      "A) Costo economico (Cost)",
-      "B) Singolo punto di vulnerabilità (Single point of failure)",
-      "C) Debito tecnico (Technical debt)",
-      "D) Complessità strutturale (Complexity)"
+      "A) Disattivare le tre regole rumorose, eliminando alla radice il volume in eccesso",
+      "B) Assumere altri analisti, così da smaltire tutti gli alert entro la giornata",
+      "C) Alert tuning: soglie, correlazione ed esclusioni mirate per le attività note",
+      "D) Archiviare gli alert più vecchi di 24 ore, mantenendo la coda sempre corta"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Debito tecnico (Technical debt)**.\n\n* **Perché è la corretta:** Il **Debito Tecnico** (Technical Debt) rappresenta il costo implicito e cumulativo dei futuri sforzi e del rework necessari per correggere scorciatoie, bug o scelte di progettazione non ottimali effettuate nel presente per motivi di budget, tempo o convenienza commerciale.\n* **Analisi dei distrattori:**\n  * **A) Il costo** descrive la spesa monetaria immediata o pianificata, ma non descrive specificamente il sovraccarico derivante dal rinvio intenzionale della correzione di difetti architetturali.\n  * **B) Un Single Point of Failure (SPOF)** è un singolo componente hardware, software o di rete il cui malfunzionamento causa l'interruzione dell'intero sistema, slegato dal concetto di scorciatoie di sviluppo.\n  * **D) La complessità** è una caratteristica strutturale del sistema (sistemi complessi e interconnessi), che può essere incrementata dal debito tecnico ma non ne costituisce la definizione principale."
+    explanation: "La risposta corretta è la **C) Alert tuning**.\n\n* **Perché è la corretta:** Il problema descritto ha un nome, **alert fatigue**: quando il rapporto fra segnale e rumore crolla, gli analisti smettono di fidarsi degli alert, e a quel punto un rilevamento che funziona perfettamente sul piano tecnico non produce alcuna reazione. L'**alert tuning** interviene esattamente lì, rendendo ogni regola più precisa invece che più silenziosa: si alzano o si contestualizzano le **soglie**, si aggiungono **esclusioni mirate** per le attività legittime e note (l'account di servizio del backup, entro la sua finestra oraria, verso le sue destinazioni abituali), si **correlano** più eventi in modo che a un singolo evento innocuo non corrisponda un alert, e si assegnano priorità in base alla criticità del bersaglio. L'obiettivo non è ridurre il numero di alert ma **aumentare la percentuale di alert che meritano di essere guardati**, così che la coda torni a essere leggibile e l'alert importante emerga.\n* **Analisi dei distrattori:**\n  * **A) Disattivare le tre regole:** è la scorciatoia che crea un punto cieco. Il backup notturno è anche uno dei comportamenti che un attaccante imita più volentieri, proprio perché sa che nessuno lo guarda: spegnere la regola significa garantirgli l'impunità su quel percorso. Il tuning esclude il *caso noto e legittimo*, non l'intera categoria di comportamento.\n  * **B) Assumere altri analisti:** scala il costo, non la qualità. Con il 96% di rumore, il doppio degli analisti passa il doppio del tempo su falsi positivi, e l'alert critico continua a nascondersi nella stessa proporzione. La reazione umana al rumore, cioè smettere di leggere, non si risolve con più persone che lo leggono.\n  * **D) Archiviare gli alert vecchi:** rende la coda più corta senza guardare nessuno di quegli alert. È cosmesi sul sintomo: l'incidente dello scenario era in coda da undici ore e sarebbe stato archiviato, non gestito.\n\n* **Trappola d'esame:** distingui i tre esiti sbagliati di un sistema di rilevamento. **Falso positivo** = alert su attività legittima, costa tempo e genera alert fatigue · **Falso negativo** = attacco reale non rilevato, il più pericoloso · **Alert fatigue** = l'effetto *umano* di troppi falsi positivi, cioè alert veri che vengono ignorati. La risposta corretta a un eccesso di alert è quasi sempre **tuning**, mai la disattivazione della regola: si riduce il rumore mantenendo la capacità di rilevare."
   },
   {
     id: 187,
@@ -6444,7 +6444,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "La Dion Training dismette un lotto misto di supporti: venti hard disk magnetici tradizionali e quindici unità SSD, tutti contenenti dati di clienti. Il responsabile IT propone di passare l'intero lotto al degausser industriale già presente in azienda, per poi rivendere i supporti sul mercato dell'usato.",
     question: "Qual è il problema principale della proposta e come va corretta?",
     options: [
-      "A) Il degaussing non ha effetto sugli SSD, che memorizzano i dati in celle NAND: vanno distrutti fisicamente o sanificati con il secure erase del produttore",
+      "A) Il degaussing non ha effetto sugli SSD, che usano celle NAND: vanno distrutti o sanificati con il secure erase del produttore",
       "B) Il degaussing funziona su entrambi i tipi di supporto, ma sugli SSD il ciclo va ripetuto tre volte per risultare efficace",
       "C) Nessun problema tecnico: l'errore è solo la rivendita, perché il degaussing lascia sempre i supporti riutilizzabili",
       "D) Il degaussing è troppo aggressivo per gli hard disk magnetici e andrebbe sostituito da una singola sovrascrittura a zeri"
@@ -6515,17 +6515,17 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   {
     id: 200,
     topic: "Email Security",
-    level: "COMPRENSIONE",
-    scenario: "Un amministratore della sicurezza vuole prevenire gli attacchi di email spoofing implementando uno standard che consenta ai server riceventi di verificare se il server mittente è autorizzato dal dominio a inviare email per suo conto.",
-    question: "Quale standard di sicurezza delle e-mail consente ai proprietari di un dominio di specificare quali server di posta sono autorizzati a inviare e-mail per loro conto?",
+    level: "ANALISI",
+    scenario: "Un'azienda ha pubblicato da mesi un record SPF corretto e firma tutta la posta in uscita con DKIM. Nonostante questo, i clienti continuano a ricevere messaggi fraudolenti che nel campo Da mostrano il dominio aziendale. L'analisi rivela che l'attaccante supera i controlli perché usa un proprio dominio, regolarmente autorizzato in SPF e firmato in DKIM, mentre falsifica soltanto l'indirizzo visibile all'utente. L'azienda non ha alcuna visibilità su chi invii posta a suo nome.",
+    question: "Quale standard aggiunge il controllo mancante e fornisce quella visibilità?",
     options: [
-      "A) SPF (Sender Policy Framework)",
-      "B) SMTP (Simple Mail Transfer Protocol)",
-      "C) DMARC (Domain-based Message Authentication, Reporting and Conformance)",
-      "D) DKIM (DomainKeys Identified Mail)"
+      "A) DMARC, che impone l'allineamento del dominio e pubblica una policy con reportistica",
+      "B) TLS opportunistico sul trasporto fra i server di posta mittente e destinatario",
+      "C) S/MIME, firmando digitalmente ogni messaggio inviato dai dipendenti",
+      "D) Un secondo record SPF, che elenchi anche i domini dei fornitori esterni"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) SPF (Sender Policy Framework)**.\n\n* **Perché è la corretta:** **SPF** aiuta a prevenire l'email spoofing consentendo ai proprietari di dominio di definire, tramite un record DNS TXT, quali server sono autorizzati a inviare email per loro conto. I server di posta riceventi verificano questo record per confermare la legittimità del mittente.\n* **Analisi dei distrattori:**\n  * **B)** SMTP è il protocollo utilizzato per l'invio delle email, ma non specifica né controlla le autorizzazioni dei server mittenti per un dominio.\n  * **C)** DMARC utilizza i risultati delle verifiche DKIM e SPF per determinare l'azione da intraprendere sui messaggi non conformi, ma non elenca direttamente i server autorizzati.\n  * **D)** DKIM fornisce un metodo per validare l'identità del dominio tramite autenticazione crittografica, ma non specifica quali server siano autorizzati a inviare email per conto del dominio."
+    explanation: "La risposta corretta è la **A) DMARC**.\n\n* **Perché è la corretta:** SPF e DKIM, presi da soli, hanno un buco preciso e lo scenario lo mostra all'opera. **SPF** verifica il dominio della busta (*MAIL FROM*), quello che l'utente non vede mai; **DKIM** verifica la firma del dominio che ha firmato il messaggio. Nessuno dei due guarda il campo **Da** visualizzato nel client di posta, che è esattamente ciò che l'attaccante falsifica. **DMARC** aggiunge il controllo mancante, l'**allineamento**: pretende che il dominio del campo Da coincida con il dominio validato da SPF o da DKIM. In questo modo il messaggio dell'attaccante, pur superando entrambi i controlli sul *proprio* dominio, fallisce l'allineamento e viene trattato secondo la **policy** pubblicata nel DNS, cioè `p=none` per osservare, `p=quarantine` per lo spam, `p=reject` per rifiutare. DMARC risponde anche alla seconda esigenza dichiarata, perché i **report aggregati** inviati dai destinatari mostrano chi sta inviando posta a nome del dominio, il che permette di censire i mittenti legittimi prima di passare a una policy restrittiva.\n* **Analisi dei distrattori:**\n  * **B) TLS opportunistico:** cifra il **trasporto** fra server, proteggendo il messaggio da intercettazione lungo il percorso. Non dice nulla sull'autenticità del mittente: un messaggio contraffatto viaggia cifrato altrettanto bene.\n  * **C) S/MIME:** autentica il **singolo mittente** con un certificato personale, ed è efficace ma su un piano diverso. Richiede certificati per ogni utente e la cooperazione del destinatario, e non protegge il dominio dall'uso abusivo da parte di terzi verso chiunque.\n  * **D) Un secondo record SPF:** è un errore tecnico, oltre che inutile. Un dominio deve avere **un solo** record SPF, e pubblicarne due fa fallire la valutazione con esito *permerror*, peggiorando la situazione invece di migliorarla.\n\n* **Trappola d'esame:** memorizza la divisione dei compiti fra i tre standard. **SPF** = quali server possono inviare per il dominio, controlla il MAIL FROM della busta · **DKIM** = firma crittografica che prova origine e integrità del messaggio · **DMARC** = allinea il campo Da visibile con SPF o DKIM, pubblica la policy e restituisce i report. La sequenza corretta di adozione è sempre la stessa: prima SPF e DKIM, poi DMARC in `p=none` per osservare, infine l'inasprimento a `quarantine` e `reject`."
   },
   {
     id: 201,
@@ -6784,18 +6784,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 218,
-    topic: "Multi-Factor Authentication",
-    level: "APPLICAZIONE",
-    scenario: "La Dion Training sta implementando una nuova applicazione per i dipendenti in remoto. Vuole garantire che gli utenti possano accedere in modo sicuro senza la necessità di un dispositivo fisico diverso dai loro smartphone. Il sistema genererebbe un codice numerico temporaneo sul dispositivo dell'utente, che verrebbe poi utilizzato come seconda forma di autenticazione.",
-    question: "Quale delle seguenti soluzioni soddisfa MEGLIO questo requisito?",
+    topic: "Identity & Access Management",
+    level: "ANALISI",
+    scenario: "Dion Training vuole che i dipendenti accedano a un'applicazione SaaS di terze parti usando le credenziali del proprio identity provider aziendale. Il requisito posto dalla sicurezza è che la password non venga mai trasmessa né conosciuta dal fornitore SaaS: quest'ultimo deve limitarsi a ricevere, da un provider di cui si fida, un'asserzione firmata che attesta l'identità dell'utente e i suoi attributi.",
+    question: "Quale standard è progettato specificamente per questo scambio fra identity provider e applicazione?",
     options: [
-      "A) Autenticazione basata sulla posizione di rete (Network location-based authentication)",
-      "B) Token di autenticazione software (Software authentication tokens)",
-      "C) Password statica (Static password)",
-      "D) Autenticazione biometrica (Biometric authentication)"
+      "A) LDAP, interrogando la directory aziendale per verificare le credenziali",
+      "B) SAML, con un'asserzione XML firmata scambiata fra identity e service provider",
+      "C) RADIUS, centralizzando autenticazione, autorizzazione e accounting",
+      "D) Kerberos, emettendo ticket validi all'interno del dominio aziendale"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Token di autenticazione software (Software authentication tokens)**.\n\n* **Perché è la corretta:** I **token di autenticazione software** generano codici sensibili al tempo su dispositivi come gli smartphone, fornendo un ulteriore livello di sicurezza senza la necessità di un dispositivo fisico separato oltre allo smartphone dell'utente. Questa soluzione (tipicamente implementata tramite app TOTP come Google Authenticator) soddisfa esattamente i requisiti descritti.\n* **Analisi dei distrattori:**\n  * **A)** L'autenticazione basata sulla posizione di rete valida gli utenti in base alla rete dalla quale si connettono, non genera codici numerici temporanei.\n  * **C)** Una password statica è un insieme fisso di caratteri e non fornisce la natura dinamica e temporanea della soluzione descritta.\n  * **D)** L'autenticazione biometrica utilizza caratteristiche biologiche uniche come impronte digitali o riconoscimento facciale, non genera codici numerici temporanei."
+    explanation: "La risposta corretta è la **B) SAML (Security Assertion Markup Language)**.\n\n* **Perché è la corretta:** **SAML** è lo standard nato esattamente per il **single sign-on federato verso applicazioni web di terze parti**. Il flusso corrisponde punto per punto al requisito: l'utente si autentica una sola volta presso l'**identity provider** aziendale, che è l'unico a vedere la password; l'IdP produce un'**asserzione** in XML **firmata digitalmente**, contenente l'identità dell'utente e gli attributi utili (gruppi, ruolo, reparto); il browser la consegna al **service provider**, cioè al SaaS, che ne verifica la firma con il certificato dell'IdP e concede l'accesso. Il fornitore SaaS non riceve mai la password e non deve custodirla, il che elimina in un colpo solo un'intera classe di rischio: una violazione del fornitore non espone credenziali aziendali. Allo stesso modo, quando l'azienda disattiva l'account nel proprio IdP, l'accesso al SaaS cessa immediatamente, senza dipendere da un processo del fornitore.\n* **Analisi dei distrattori:**\n  * **A) LDAP:** è un **protocollo di directory** per interrogare e gestire un archivio di identità, tipicamente sulla rete interna. Esporlo a un SaaS esterno significherebbe aprire la directory aziendale a Internet e, in molte configurazioni, trasmettere le credenziali per la verifica: esattamente ciò che il requisito vieta.\n  * **C) RADIUS:** centralizza autenticazione, autorizzazione e accounting soprattutto per **accessi di rete**, come 802.1X, VPN e apparati. Non è il meccanismo con cui un'applicazione web di terze parti riceve un'identità federata.\n  * **D) Kerberos:** fornisce single sign-on con ticket **all'interno di un dominio** fidato, tipicamente Active Directory su rete aziendale. Non è pensato per attraversare Internet verso un fornitore che non appartiene al dominio.\n\n* **Trappola d'esame:** distingui i due standard federativi che vengono più spesso confusi. **SAML** = **autenticazione** federata, asserzione XML, il classico SSO aziendale verso applicazioni web · **OAuth 2.0** = **autorizzazione** delegata, token di accesso, serve a consentire a un'applicazione di agire su una risorsa per conto tuo, non a dire chi sei · **OpenID Connect** = il livello di **identità** costruito sopra OAuth 2.0, con token JWT, tipico dell'accesso da app mobili e moderne. Regola pratica: se la domanda dice \"accedere a\", pensa a SAML o OIDC; se dice \"consentire a un'app di accedere ai miei dati su un altro servizio\", pensa a OAuth."
   },
   {
     id: 219,
@@ -7174,18 +7174,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 244,
-    topic: "Wireless Security",
-    level: "COMPRENSIONE",
-    scenario: "Un amministratore di rete responsabile della valutazione del protocollo di crittografia di un'azienda per i dispositivi wireless ha scoperto che l'azienda utilizza un protocollo di crittografia deprecato che rappresenta una significativa minaccia alla sicurezza.",
-    question: "Quale dei seguenti è il protocollo di crittografia PIÙ appropriato da raccomandare per l'upgrade?",
+    topic: "System & Device Hardening",
+    level: "APPLICAZIONE",
+    scenario: "Durante un'indagine emerge che l'attaccante non ha mai scritto un file eseguibile sul disco: ha usato PowerShell e strumenti già presenti nel sistema operativo per raccogliere credenziali e muoversi lateralmente. L'antivirus installato, basato su firme, non ha prodotto alcuna segnalazione, e il team non dispone di alcuna registrazione delle azioni compiute sugli endpoint nelle settimane precedenti.",
+    question: "Quale soluzione di sicurezza degli endpoint risponde MEGLIO a questa carenza?",
     options: [
-      "A) WEP",
-      "B) WPA",
-      "C) AES",
-      "D) TKIP"
+      "A) Un antivirus di un altro fornitore, con firme aggiornate più frequentemente",
+      "B) Una scansione completa del disco pianificata ogni notte su tutti gli endpoint",
+      "C) EDR, che registra il comportamento dei processi e consente indagine e risposta",
+      "D) Un firewall personale su ogni endpoint, che blocchi le connessioni in uscita"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) AES (Advanced Encryption Standard)**.\n\n* **Perché è la corretta:** **AES** è attualmente il protocollo di crittografia più sicuro e ampiamente adottato per le reti wireless. I suoi robusti algoritmi di crittografia e i test estensivi dimostrano la sua efficacia contro vari attacchi.\n* **Analisi dei distrattori:**\n  * **A)** **WEP** è un protocollo di crittografia obsoleto largamente sfruttato e altamente insicuro; la sua gestione delle chiavi debole lo rende vulnerabile e dovrebbe essere assolutamente evitato.\n  * **B)** **WPA** era un miglioramento rispetto a WEP, ma presenta vulnerabilità note soprattutto in modalità PSK (pre-shared key), rendendolo insufficiente per ambienti moderni.\n  * **D)** **TKIP** è stato introdotto come miglioramento rispetto a WEP, ma è ancora considerato debole e con vulnerabilità note; non è consigliabile quando sono disponibili alternative più sicure come AES."
+    explanation: "La risposta corretta è la **C) EDR (Endpoint Detection and Response)**.\n\n* **Perché è la corretta:** Lo scenario descrive una tecnica **living off the land**: nessun file malevolo sul disco, solo strumenti legittimi del sistema operativo usati in modo illegittimo. Un antivirus a firme è cieco per costruzione davanti a questo, perché confronta **file** con firme note e qui non esiste alcun file da confrontare. L'**EDR** cambia proprio l'oggetto dell'osservazione: registra in continuo il **comportamento** degli endpoint, cioè albero dei processi, riga di comando con cui ciascuno è stato avviato, connessioni di rete, modifiche al registro e accessi alla memoria, e segnala le **sequenze** anomale, come un processo di Office che avvia PowerShell che scarica ed esegue codice in memoria. Risolve inoltre la seconda carenza dichiarata, l'assenza di storico: la telemetria conservata permette di ricostruire a ritroso cosa è successo e, dalla stessa console, di isolare la macchina, terminare il processo e annullare le modifiche.\n* **Analisi dei distrattori:**\n  * **A) Un altro antivirus a firme:** cambia il fornitore, non il metodo. Il limite non è la qualità delle firme ma il fatto che qui **non c'è alcun file** da confrontare con esse.\n  * **B) Scansione notturna del disco:** ispeziona di nuovo il disco, cioè l'unico posto dove l'attaccante non ha lasciato nulla. Un attacco che vive in memoria scompare al riavvio senza lasciare traccia sul filesystem.\n  * **D) Firewall personale:** può limitare le connessioni in uscita ed è utile, ma non vede cosa accade *dentro* l'endpoint e non registra nulla. Inoltre l'attività descritta si nasconde dietro processi di sistema autorizzati, che il firewall lascia passare.\n\n* **Trappola d'esame:** tieni presente la progressione delle tecnologie di endpoint. **Antivirus** = confronto con firme di file noti, efficace solo sul malware già catalogato · **EDR** = telemetria comportamentale continua, rilevamento su sequenze, indagine e risposta sull'endpoint · **XDR** = la stessa logica estesa e correlata su endpoint, rete, posta e cloud. Quando lo scenario nomina **attacco fileless, living off the land, PowerShell** o dichiara che l'antivirus non ha rilevato nulla, la risposta è EDR o XDR, non un antivirus diverso."
   },
   {
     id: 245,
@@ -8314,18 +8314,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 320,
-    topic: "Multi-Factor Authentication",
-    level: "COMPRENSIONE",
-    scenario: "Mary è preoccupata per la sicurezza dei suoi account online. Legge di un dispositivo che può portare con sé, che quando inserito o toccato sul suo computer o telefono, fornisce un livello più elevato di garanzia di autenticazione.",
-    question: "Quale dei seguenti descrive MEGLIO quello che sta considerando?",
+    topic: "Vulnerability Management",
+    level: "ANALISI",
+    scenario: "Una scansione restituisce due risultati. Il primo è una vulnerabilità con punteggio CVSS base 9,8, presente su un server di collaudo isolato in una rete di laboratorio non raggiungibile da Internet e privo di dati reali. Il secondo ha punteggio base 6,5 e si trova sul portale clienti esposto su Internet, che tratta dati di pagamento, e per esso esiste già un exploit pubblico usato attivamente.",
+    question: "Su quale criterio va fondata la priorità di intervento?",
     options: [
-      "A) Certificati software (Software-based certificates)",
-      "B) Chiavi di sicurezza fisiche (Physical security keys)",
-      "C) Carte biometriche (Biometric cards)",
-      "D) Scanner di codici QR (QR code scanners)"
+      "A) Sul punteggio base CVSS più alto: va corretta per prima la vulnerabilità da 9,8",
+      "B) Sul rischio effettivo, combinando il punteggio con esposizione, dati trattati e sfruttamento in corso",
+      "C) Sull'ordine di comparsa nel rapporto di scansione, per non trascurare alcun risultato",
+      "D) Sul numero di sistemi colpiti da ciascuna delle due vulnerabilità rilevate"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Chiavi di sicurezza fisiche (Physical security keys)**.\n\n* **Perché è la corretta:** Le **chiavi di sicurezza fisiche** sono dispositivi hardware, spesso in forma di chiavette USB o dispositivi NFC, che forniscono una forte autenticazione a due fattori. Quando inserite o toccate su un computer o telefono, dimostrano fisicamente il possesso del dispositivo.\n* **Analisi dei distrattori:**\n  * **A)** I certificati software possono migliorare la sicurezza, ma sono certificati digitali memorizzati sui dispositivi, non chiavi fisiche.\n  * **C)** Le carte biometriche usano caratteristiche biologiche uniche di una persona per l'accesso, ma non vengono tipicamente inserite o toccate sui dispositivi nel modo descritto.\n  * **D)** I codici QR possono essere usati per l'autenticazione ma non coinvolgono l'inserimento o il tocco di un dispositivo."
+    explanation: "La risposta corretta è la **B) Sul rischio effettivo**.\n\n* **Perché è la corretta:** Il **punteggio base CVSS** misura le caratteristiche **intrinseche e immutabili** di una vulnerabilità, cioè quanto è difficile sfruttarla e quanto danno produrrebbe in astratto. Per costruzione **non sa nulla** del tuo ambiente: non sa se il sistema è esposto a Internet, che dati tratta, quanto è critico per l'attività, né se qualcuno lo stia già attaccando. Proprio per questo lo standard prevede altri due gruppi di metriche: quelle **temporali**, che riflettono la maturità del codice di sfruttamento e la disponibilità di una correzione, e quelle **ambientali**, che riponderano il punteggio in base alla criticità del bersaglio nel *tuo* contesto. Applicandole, i due risultati si invertono: il 9,8 sta su un sistema di laboratorio isolato e senza dati, quindi con esposizione e impatto prossimi allo zero; il 6,5 sta su un portale esposto, con dati di pagamento e un exploit già in uso, quindi con probabilità di sfruttamento altissima e impatto reale su riservatezza e conformità. Il secondo va corretto per primo.\n* **Analisi dei distrattori:**\n  * **A) Ordinare per punteggio base:** è l'errore più comune nella gestione delle vulnerabilità, e produce settimane di lavoro spese su sistemi che nessuno può raggiungere mentre il portale esposto resta aperto. Il punteggio base è un ingrediente della decisione, non la decisione.\n  * **C) Ordine di comparsa nel rapporto:** non è un criterio, è l'assenza di un criterio. L'ordine dello strumento dipende da come ha scansionato, non da quanto rischio corri.\n  * **D) Numero di sistemi colpiti:** conta, ma da solo inganna. Cinquanta stazioni di laboratorio con la stessa falla restano un rischio minore di un singolo portale che espone i dati di pagamento di tutti i clienti: pesa l'esposizione e il valore, non la quantità.\n\n* **Trappola d'esame:** ricorda la distinzione fra i tre gruppi di metriche CVSS, perché è la base di quasi tutte le domande sulla prioritizzazione. **Base** = caratteristiche intrinseche, non cambiano mai · **Temporale** = maturità dell'exploit e disponibilità della patch, cambia nel tempo · **Ambientale** = criticità e contesto nella *tua* organizzazione. E tieni separate le due sigle: **CVE** è l'**identificativo** univoco della singola vulnerabilità, **CVSS** è il **sistema di punteggio** che ne misura la gravità."
   },
   {
     id: 321,
@@ -8782,18 +8782,18 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 419,
-    topic: "Network Authentication Protocols",
-    level: "APPLICAZIONE",
-    scenario: "Kelly Innovations LLC deve autenticare in modo sicuro gli utenti remoti e ha la necessità di supportare molteplici metodi di autenticazione differenti.",
-    question: "Quale dei seguenti protocolli è il PIÙ indicato per soddisfare questo scenario?",
+    topic: "Virtualization, Containers & Cloud Technologies",
+    level: "ANALISI",
+    scenario: "Un team migra un'applicazione da macchine virtuali a container, facendoli girare tutti su un singolo host Linux. Dopo il rilascio, un penetration test dimostra che da un container compromesso è possibile leggere e modificare file del sistema operativo dell'host: i container vengono eseguiti come root e montano il socket del runtime. Il team obietta che \"i container isolano come le macchine virtuali\".",
+    question: "Quale affermazione descrive correttamente il confine di isolamento, e quale contromisura lo rafforza?",
     options: [
-      "A) SD-WAN (Software-Defined Wide Area Network)",
-      "B) IPsec (Internet Protocol Security)",
-      "C) EAP (Extensible Authentication Protocol)",
-      "D) ICMP (Internet Control Message Protocol)"
+      "A) I container isolano più delle VM perché ognuno ha il proprio kernel: qui la falla è solo nella rete",
+      "B) Container e macchine virtuali offrono lo stesso confine: cambia solo la dimensione dell'immagine",
+      "C) I container condividono il kernel dell'host: l'isolamento è logico. Vanno eseguiti senza root e senza socket del runtime",
+      "D) L'isolamento dipende dall'hypervisor sottostante: è sufficiente aggiornarlo per chiudere il problema"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) EAP (Extensible Authentication Protocol)**.\n\n* **Perché è la corretta:** **EAP** (Extensible Authentication Protocol) è un framework di autenticazione flessibile ed estensibile che supporta svariati metodi di verifica (es. password, token hardware, certificati digitali, smart card). È ampiamente utilizzato per gli accessi remoti e le reti aziendali proprio per la sua capacità di adattarsi a requisiti di sicurezza complessi.\n* **Analisi dei distrattori:**\n  * **A) SD-WAN** è un'architettura di rete geografica virtuale (Software-Defined) che ottimizza il routing del traffico di trasporto, non un protocollo per autenticare gli utenti remoti.\n  * **B) IPsec** assicura la riservatezza e l'integrità del traffico di rete tramite crittografia e incapsulamento (es. in tunnel VPN), ma non è focalizzato sulla gestione di svariati metodi di autenticazione utente flessibili come EAP.\n  * **D) ICMP** è un protocollo di servizio utilizzato per l'invio di messaggi di controllo e diagnostica di rete (es. ping, traceroute), privo di qualsiasi funzione di autenticazione.\n\n* **Piccolo Esempio Concentrato:** Un'azienda di consulenza introduce l'uso di chiavi di sicurezza fisiche FIDO2 USB per tutti i dipendenti. Avendo un'infrastruttura di rete basata su EAP, l'amministratore di rete può semplicemente configurare il server di autenticazione RADIUS per supportare EAP-TLS con le nuove chiavi hardware, senza dover cambiare o riconfigurare gli switch o gli access point Wi-Fi esistenti nell'edificio."
+    explanation: "La risposta corretta è la **C) I container condividono il kernel dell'host**.\n\n* **Perché è la corretta:** La differenza fra le due tecnologie sta tutta in **dove passa il confine**. Una **macchina virtuale** porta con sé il proprio kernel e viene isolata dall'**hypervisor**, con il supporto delle estensioni di virtualizzazione della CPU: uscirne richiede un *VM escape*, cioè una vulnerabilità dell'hypervisor, evento raro e di grande impatto. Un **container** invece condivide il **kernel dell'host** con tutti gli altri e viene isolato da meccanismi del kernel stesso (namespace, cgroup, capability, seccomp, AppArmor o SELinux). È un isolamento **logico**, più sottile, e due errori di configurazione bastano a farlo evaporare: eseguire il processo come **root** e montare il **socket del runtime**, che equivale a consegnare al container il pieno controllo del demone che governa tutti i container dell'host. Le contromisure sono esattamente queste: utente non privilegiato, nessun socket del runtime montato, filesystem in sola lettura, capability ridotte al minimo e profili seccomp.\n* **Analisi dei distrattori:**\n  * **A) Ogni container ha il proprio kernel:** è falso, ed è proprio l'inversione da evitare. Avere un kernel proprio è la caratteristica della macchina virtuale; il container ne è privo, ed è questa la ragione per cui è leggero e parte in un secondo.\n  * **B) Stesso confine, cambia solo la dimensione dell'immagine:** confonde un effetto collaterale con la sostanza. L'immagine è più piccola *perché* manca il sistema operativo completo, e proprio quell'assenza sposta il confine di sicurezza.\n  * **D) Basta aggiornare l'hypervisor:** in questo scenario l'hypervisor non è nemmeno in gioco. I container girano direttamente sul sistema operativo dell'host, e la fuga è avvenuta attraverso privilegi concessi in configurazione, non attraverso una vulnerabilità del livello di virtualizzazione.\n\n* **Trappola d'esame:** ricorda la gerarchia dei confini di isolamento, dal più forte al più debole. Host fisici separati · Macchine virtuali, isolate dall'hypervisor con supporto hardware · Container, isolati dal kernel condiviso · Processi sullo stesso sistema operativo. Quando lo scenario richiede il confine più robusto per carichi non fidati o a diverso livello di classificazione, la risposta è la macchina virtuale o l'host dedicato, non il container. E quando descrive un container **privilegiato** o con il socket del runtime montato, sta descrivendo una *fuga già preparata*, non un attacco sofisticato."
   },
   {
     id: 420,
@@ -8842,18 +8842,18 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 423,
-    topic: "Network Security Devices",
-    level: "APPLICAZIONE",
-    scenario: "Per migliorare la privacy dei propri utenti, Kelly Innovations LLC sta valutando un sistema che possa agire come intermediario per le richieste internet, nascondendo l'origine della richiesta al server di destinazione.",
-    question: "Quale soluzione si adatta MEGLIO a questo scopo?",
+    topic: "Cloud Resilience & Fault Tolerance",
+    level: "ANALISI",
+    scenario: "Kelly Innovations LLC ospita l'intero servizio presso un solo provider cloud, distribuito su tre zone di disponibilità della stessa regione proprio per tollerare i guasti. Un malfunzionamento del piano di controllo del provider rende però indisponibili tutte e tre le zone contemporaneamente per sei ore. Il management chiede quale cambiamento eviti il ripetersi di un'interruzione totale come questa.",
+    question: "Quale strategia di resilienza affronta MEGLIO questa specifica modalità di guasto?",
     options: [
-      "A) Server Proxy (Proxy server)",
-      "B) Router",
-      "C) IPS (Intrusion Prevention System)",
-      "D) Jump server"
+      "A) Multi-cloud: distribuire il servizio su provider diversi, con piani di controllo indipendenti",
+      "B) Aggiungere una quarta zona di disponibilità nella stessa regione dello stesso provider",
+      "C) Portare la frequenza dei backup da giornaliera a oraria, riducendo la perdita di dati",
+      "D) Passare a istanze di calcolo più potenti e ridondate nella regione attualmente in uso"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Server Proxy (Proxy server)**.\n\n* **Perché è la corretta:** Un **server proxy** si posiziona tra il client e il server di destinazione su internet. Inoltra le richieste del client a suo nome, mascherando l'indirizzo IP originale del client con il proprio, garantendo così anonimato e privacy.\n* **Analisi dei distrattori:**\n  * **B) Un router** instrada i pacchetti di dati tra reti diverse, ma non maschera intrinsecamente l'origine delle richieste a meno che non sia specificamente configurato con NAT complesso, e non opera come proxy applicativo.\n  * **C) Un IPS** monitora e blocca il traffico dannoso in transito, non funge da intermediario per proteggere l'anonimato della navigazione generale.\n  * **D) Un jump server** è un server blindato utilizzato dagli amministratori per connettersi in modo sicuro a una zona di rete protetta prima di eseguire attività di gestione, non serve a mascherare la navigazione internet ordinaria degli utenti.\n\n* **Piccolo Esempio Concentrato:** Un utente aziendale naviga su un blog tecnico da una postazione interna. La richiesta passa prima attraverso il server Proxy aziendale. Il proxy effettua la richiesta al blog usando il proprio indirizzo IP pubblico aziendale e restituisce la pagina all'utente. Per il server web del blog, l'IP privato del laptop dell'utente rimane completamente sconosciuto e invisibile, aumentando la riservatezza e consentendo al contempo al proxy di analizzare il traffico per escludere malware."
+    explanation: "La risposta corretta è la **A) Multi-cloud**.\n\n* **Perché è la corretta:** Il punto decisivo dello scenario è **cosa** si è guastato: non un server, non un datacenter, ma il **piano di controllo del provider**, cioè il livello che governa tutte le zone e tutte le regioni. Le tre zone di disponibilità erano progettate per tollerare guasti *indipendenti*, e infatti funzionano benissimo contro un incendio, un blackout o la perdita di un armadio. Ma qui la componente guasta era **condivisa da tutte e tre**, e una ridondanza che condivide un punto singolo di guasto non è ridondanza. L'unica strategia che elimina quella dipendenza è la **diversità di piattaforma** portata alle estreme conseguenze: **multi-cloud**, cioè distribuire il servizio su provider distinti, con piani di controllo, software e organizzazioni operative indipendenti, in modo che nessun guasto singolo possa portarli giù insieme.\n* **Analisi dei distrattori:**\n  * **B) Una quarta zona nella stessa regione:** aggiunge ridondanza esattamente lungo l'asse che ha già fallito. Se il piano di controllo governa tutte le zone della regione, la quarta cade insieme alle altre tre. Moltiplicare copie che dipendono dallo stesso componente non cambia la probabilità dell'evento.\n  * **C) Backup più frequenti:** riducono l'**RPO**, cioè quanti dati si perdono. Lo scenario non descrive una perdita di dati ma sei ore di **indisponibilità**: il problema è l'RTO, e un backup orario non accorcia di un minuto un disservizio del provider.\n  * **D) Istanze più potenti:** affronta un problema di **capacità**, che qui non esiste. Le macchine non erano sottodimensionate, erano irraggiungibili. Più CPU su una piattaforma ferma resta ferma.\n\n* **Trappola d'esame:** distingui i tre assi della resilienza, perché ciascuno protegge da una minaccia diversa. **Zone di disponibilità** = guasti locali, come alimentazione o hardware in un singolo sito · **Dispersione geografica**, cioè regioni distanti, = disastri regionali, terremoti, alluvioni, guasti di rete su vasta scala · **Diversità di piattaforma e multi-cloud** = guasti del *fornitore* nel suo complesso, bug software diffusi, problemi contrattuali o di conteggio consumi. Quando la domanda descrive un guasto che ha attraversato più zone o più regioni dello **stesso** provider, la risposta sta sull'asse della diversità, non su quello della quantità."
   },
   {
     id: 424,
@@ -8978,17 +8978,17 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   {
     id: 508,
     topic: "Cloud Resilience & Fault Tolerance",
-    level: "COMPRENSIONE",
-    scenario: "Prevenire i singoli punti di fallimento (SPOF) sulla rete richiede che il carico applicativo sia equamente partizionato tra molteplici istanze.",
-    question: "Quale delle seguenti pratiche si concentra sulla distribuzione del traffico di rete in entrata su più server per garantire che nessun singolo server venga sovraccaricato?",
+    level: "ANALISI",
+    scenario: "Il piano di continuità operativa di un'azienda prevede il ripristino dei servizi in un sito alternativo entro quattro ore. Durante il primo test reale emergono tre sorprese: l'hardware del sito secondario regge solo il 40% del carico di picco, le due sole persone addestrate alla procedura sono entrambe in ferie nello stesso periodo, e le licenze software disponibili nel sito alternativo coprono 50 utenti sui 400 da ripristinare.",
+    question: "Quale attività del piano di continuità è stata chiaramente trascurata?",
     options: [
-      "A) Mirroring dei dati (Data mirroring)",
-      "B) Clustering",
-      "C) Bilanciamento del carico (Load balancing)",
-      "D) Virtualizzazione (Virtualization)"
+      "A) Il mirroring dei dati fra il sito primario e quello alternativo",
+      "B) La cifratura dei backup conservati fuori sede",
+      "C) Il capacity planning su persone, tecnologia e infrastruttura",
+      "D) La dispersione geografica fra i due siti dell'azienda"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Bilanciamento del carico (Load balancing)**.\n\n* **Perché è la corretta:** Il **bilanciamento del carico (load balancing)** distribuisce in modo intelligente il traffico di rete o applicativo in entrata su una serie di server backend (server farm), garantendo un utilizzo ottimale delle risorse, tempi di risposta minimi e prevenendo che un singolo nodo diventi un collo di bottiglia o cada a causa di un sovraccarico.\n* **Analisi dei distrattori:**\n  * **A) Il mirroring dei dati** consiste nel replicare in tempo reale lo stato di un volume di archiviazione o di un database su un altro sistema per ridondanza, non c'entra con la distribuzione del traffico di rete attivo.\n  * **B) Il clustering** unisce più server per farli agire come un'unica entità al fine di garantire l'alta disponibilità o la potenza di calcolo, ma la pratica specifica di distribuzione del traffico esterno ai nodi è definita bilanciamento del carico.\n  * **D) La virtualizzazione** permette l'esecuzione di più sistemi operativi virtuali su un unico hardware fisico, senza gestire la distribuzione del traffico di rete esterno.\n\n* **Piccolo Esempio Concentrato:** Durante il Black Friday, un sito e-commerce riceve improvvisamente 100.000 richieste al secondo. Un dispositivo di Load Balancing (ad esempio un Application Load Balancer di AWS) intercetta tutte le connessioni in arrivo e le distribuisce in modo uniforme (es. con algoritmo Round Robin) su 10 server web uguali situati dietro di esso. In questo modo, nessun singolo server si blocca o subisce esaurimento delle risorse, garantendo la continuità del servizio per tutti i clienti."
+    explanation: "La risposta corretta è la **C) Il capacity planning**.\n\n* **Perché è la corretta:** I tre problemi emersi nel test sembrano scollegati, ma sono la stessa lacuna vista da tre angoli. Il **capacity planning** risponde a una domanda sola, \"quanto ne serve, di ciascuna risorsa, perché il piano funzioni davvero?\", e CompTIA la declina esplicitamente su tre dimensioni. **Persone**: due sole figure addestrate sono un punto singolo di guasto umano, e un piano che presuppone la presenza simultanea di entrambe non è un piano, è una scommessa; servono più persone formate, turni di reperibilità e procedure scritte da cui altri possano operare. **Tecnologia**: un sito alternativo dimensionato al 40% del picco non ripristina il servizio, lo ripristina degradato, e va deciso in anticipo, per iscritto, quali funzioni si sacrificano. **Infrastruttura**: le licenze sono capacità a tutti gli effetti, esattamente come i core e i gigabyte, e 50 licenze per 400 utenti fermano il ripristino con la stessa efficacia di un server spento.\n* **Analisi dei distrattori:**\n  * **A) Mirroring dei dati:** riguarda la **copia dei dati** fra i siti. Nel test non è emerso alcun problema di dati mancanti o non allineati: ciò che manca è la capacità di *elaborarli*.\n  * **B) Cifratura dei backup:** protegge la **riservatezza** delle copie fuori sede. È una buona pratica, ma non ha alcun rapporto con i tre fallimenti osservati, che riguardano tutti il dimensionamento.\n  * **D) Dispersione geografica:** serve a evitare che un unico disastro colpisca entrambi i siti. Qui il sito alternativo era raggiungibile e funzionante: il problema non era *dove* si trovava, ma *quanto* poteva reggere.\n\n* **Trappola d'esame:** il capacity planning è la voce del piano di continuità che si dimentica più spesso, perché le altre si vedono e questa no. Ricorda le tre dimensioni con cui CompTIA la presenta, **persone, tecnologia, infrastruttura**, e nota che nelle domande le licenze, le competenze del personale e i contratti di fornitura contano come capacità né più né meno dei server. Il corollario pratico è che un piano di continuità non collaudato con un test reale è solo un documento: quasi tutte le carenze di capacità emergono soltanto lì."
   },
   {
     id: 509,
@@ -9293,32 +9293,32 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   {
     id: 521,
     topic: "Architecture Models & Shared Responsibility",
-    level: "COMPRENSIONE",
-    scenario: "Kelly Innovations decide di gestire la propria infrastruttura IT all'interno della propria sede fisica, mantenendo il pieno controllo su hardware, software e dati.",
-    question: "Quale delle seguenti implicazioni di sicurezza è MAGGIORMENTE associata a questo approccio on-premise?",
+    level: "ANALISI",
+    scenario: "In uno stabilimento di Kelly Innovations i PLC che governano la linea di produzione dialogano con un protocollo industriale privo di autenticazione e cifratura, e girano su una piattaforma certificata dal costruttore, che revoca la garanzia e il supporto se vi si applicano patch non approvate. La finestra di fermo impianto concordata con la produzione è di quattro ore all'anno.",
+    question: "Quale approccio è il PIÙ appropriato per ridurre il rischio in questo ambiente?",
     options: [
-      "A) Rischi legati alla multi-tenancy (Multi-tenancy risks)",
-      "B) Dipendenza dalla disponibilità esterna delle patch (Dependence on external patch availability)",
-      "C) Maggiore responsabilità per la sicurezza fisica (Increased responsibility for physical security)",
-      "D) Trasferimento del rischio a fornitori terzi (Risk transference to third-party vendors)"
+      "A) Applicare subito tutte le patch del sistema operativo, accettando la perdita della garanzia",
+      "B) Sostituire il protocollo industriale con HTTPS su ogni PLC della linea di produzione",
+      "C) Segmentare la rete OT dietro controlli compensativi: firewall industriale, jump server, monitoraggio passivo",
+      "D) Spostare il controllo dei PLC in cloud, così da trasferire al fornitore la responsabilità"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Maggiore responsabilità per la sicurezza fisica (Increased responsibility for physical security)**.\n\n* **Perché è la corretta:** Con un'infrastruttura on-premise, l'organizzazione deve garantire autonomamente la sicurezza fisica dei propri server e apparecchiature contro furti, manomissioni e disastri. Non può delegare questa responsabilità a nessun provider esterno.\n* **Analisi dei distrattori:**\n  * **A) I rischi di multi-tenancy** riguardano ambienti cloud condivisi dove risorse sono distribuite tra più clienti, non infrastrutture on-premise a uso esclusivo.\n  * **B) La dipendenza dalla disponibilità esterna delle patch** è ridotta in ambienti on-premise, poiché l'organizzazione controlla direttamente quando e come applicare gli aggiornamenti, senza dipendere dai tempi di un provider.\n  * **D) Il trasferimento del rischio a terzi** è più tipico dei servizi cloud, dove il provider si assume responsabilità condivise su hardware e infrastruttura.\n\n* **Piccolo Esempio Concentrato:** Un'azienda farmaceutica che gestisce i propri server on-premise deve dotarsi di controlli di accesso biometrici alla sala server, telecamere a circuito chiuso 24/7, rack chiusi a chiave e sistemi antincendio automatici (es. Halon o FM-200). Ogni accesso fisico alla sala server deve essere registrato nei log di accesso. Se un dipendente malevolo ruba fisicamente un hard disk dal rack, è responsabilità esclusiva del team IT aziendale aver garantito (o mancato di garantire) la sicurezza fisica del dato."
+    explanation: "La risposta corretta è la **C) Segmentare la rete OT dietro controlli compensativi**.\n\n* **Perché è la corretta:** Questo scenario è il ritratto dell'**impossibilità di applicare le patch** (*inability to patch*), una delle considerazioni architetturali che CompTIA elenca esplicitamente. Tre vincoli si sommano e nessuno di essi è negoziabile dal reparto IT: la certificazione del costruttore, che rende la patch un atto che fa decadere il supporto proprio sull'impianto che produce fatturato; una finestra di fermo di quattro ore all'anno, che rende impraticabile qualunque ciclo di aggiornamento regolare; e un protocollo industriale nato quando la rete OT era fisicamente separata e l'autenticazione sembrava superflua. Quando la vulnerabilità **non può essere rimossa**, la strada corretta è **ridurre l'esposizione** con controlli compensativi: segmentare la rete OT da quella IT secondo il modello Purdue, ammettere il traffico solo attraverso un **jump server** sorvegliato in una zona demilitarizzata industriale, filtrare con un firewall che comprenda i protocolli industriali e sorvegliare con sensori **passivi**, che ascoltano senza iniettare pacchetti in una rete dove una scansione attiva può fermare la linea.\n* **Analisi dei distrattori:**\n  * **A) Patchare subito:** in ambiente OT la gerarchia delle priorità non è quella dell'IT. Qui la **disponibilità** e la sicurezza fisica delle persone vengono prima della riservatezza, e una patch non approvata può alterare i tempi di ciclo o bloccare l'impianto. Perdere garanzia e supporto del costruttore su un sistema che non si può fermare è un rimedio peggiore del male.\n  * **B) Sostituire il protocollo con HTTPS:** i PLC parlano protocolli industriali deterministici a bassa latenza e in larghissima parte non supportano nemmeno TLS. Non è una configurazione da cambiare, è una sostituzione dell'impianto: un progetto pluriennale, non una mitigazione.\n  * **D) Spostare i PLC in cloud:** il controllo di processo in tempo reale richiede latenze dell'ordine dei millisecondi e deve continuare a funzionare se la connettività cade. Inoltre il modello di responsabilità condivisa **non trasferisce la responsabilità**: si può esternalizzare l'esecuzione, mai la responsabilità finale sul rischio.\n\n* **Trappola d'esame:** nelle domande su **ICS, SCADA e sistemi embedded o RTOS** l'ordine delle priorità si rovescia rispetto all'IT: **disponibilità e sicurezza fisica prima di tutto**, riservatezza per ultima. Quando lo scenario nomina una certificazione del costruttore, un sistema legacy o una finestra di manutenzione minima, sta dichiarando che la patch non è la risposta: cerca **segmentazione, isolamento, monitoraggio passivo e controlli compensativi**."
   },
   {
     id: 522,
-    topic: "Secure Network Protocols",
-    level: "COMPRENSIONE",
-    scenario: "Kelly Innovations LLC sta implementando una rete wireless e necessita di un metodo di autenticazione flessibile che supporti meccanismi multipli per autenticare sia utenti cablati che wireless.",
-    question: "Quale protocollo si adatta MEGLIO a questi requisiti?",
+    topic: "Data Classification & Security",
+    level: "APPLICAZIONE",
+    scenario: "Il responsabile compliance di Kelly Innovations scopre due episodi nello stesso mese: un dipendente ha allegato a un messaggio inviato al proprio indirizzo personale un foglio di calcolo con 4.000 numeri di carta di credito, e un altro ha caricato il listino riservato su un servizio di file sharing pubblico. In entrambi i casi si trattava di utenti autorizzati ad accedere a quei dati, che li hanno semplicemente portati fuori.",
+    question: "Quale controllo risponde MEGLIO all'esigenza di riconoscere il contenuto sensibile e impedirne l'uscita, qualunque canale venga usato?",
     options: [
-      "A) EAP (Extensible Authentication Protocol)",
-      "B) LDAP (Lightweight Directory Access Protocol)",
-      "C) WPA3 (Wi-Fi Protected Access 3)",
-      "D) RADIUS (Remote Authentication Dial-In User Service)"
+      "A) DLP con ispezione del contenuto applicata a posta, traffico web e supporti rimovibili",
+      "B) Cifratura integrale del disco su tutti i portatili e i desktop aziendali",
+      "C) Classificazione dei dati, con etichette di riservatezza applicate a ogni documento",
+      "D) Un NGFW che blocchi l'accesso ai servizi di file sharing non approvati"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) EAP (Extensible Authentication Protocol)**.\n\n* **Perché è la corretta:** **EAP** fornisce un'interfaccia standard per integrare molteplici metodi di autenticazione (certificati, token OTP, smart card, ecc.). Può essere utilizzato in vari scenari di accesso alla rete, incluso il wireless, senza richiedere modifiche al meccanismo di autenticazione sottostante: è il framework di autenticazione più flessibile ed estensibile disponibile.\n* **Analisi dei distrattori:**\n  * **B) LDAP** è un protocollo per accedere a sistemi di directory su reti IP, usato principalmente per query su directory utente e autenticazione centralizzata, non per la flessibilità nell'integrazione di metodi di autenticazione wireless/cablata multipli.\n  * **C) WPA3** è un protocollo di sicurezza progettato per proteggere le reti wireless. Pur incorporando meccanismi di autenticazione avanzati (come SAE), non è estensibile quanto EAP nel supportare metodi multipli.\n  * **D) RADIUS** è un protocollo per trasportare informazioni di autenticazione, autorizzazione e configurazione tra un server di accesso alla rete e un server centrale. Può supportare EAP come uno dei suoi metodi, ma non è di per sé un metodo di autenticazione.\n\n* **Piccolo Esempio Concentrato:** Un'università implementa il network eduroam (utilizzato in tutto il mondo). Gli studenti si autenticano tramite EAP-TLS con certificati digitali X.509 emessi dall'ateneo, mentre il personale amministrativo usa EAP-PEAP con username/password. Lo stesso access point wireless supporta entrambi i metodi grazie a EAP, senza dover configurare reti separate per ogni tipo di credenziale."
+    explanation: "La risposta corretta è la **A) DLP (Data Loss Prevention)**.\n\n* **Perché è la corretta:** Il **DLP** è l'unico controllo dell'elenco che agisce sul **contenuto** anziché sul contenitore. Ispeziona i dati in uscita, riconosce gli schemi sensibili (numeri di carta con validazione Luhn, codici fiscali, marcatori di classificazione, impronte di documenti riservati) e applica una policy: blocca, mette in quarantena, cifra o notifica. Ed è l'unico a coprire **tutti i canali** nominati dallo scenario, perché si dispiega in tre punti complementari: sull'**endpoint** (chiavette USB, appunti, stampa), sulla **rete** (upload web, protocolli di posta) e nel **cloud** (servizi SaaS e di file sharing). Soprattutto, è progettato per il caso difficile che qui si è verificato due volte: un utente **autorizzato** che accede legittimamente al dato e poi lo porta fuori. Nessun controllo d'accesso può fermarlo, perché l'accesso era regolare.\n* **Analisi dei distrattori:**\n  * **B) Cifratura integrale del disco:** protegge i dati **a riposo** su un dispositivo perso o rubato. A sistema acceso e utente autenticato il disco è decifrato in modo trasparente: il foglio di calcolo si allega a un'e-mail esattamente come prima.\n  * **C) Classificazione dei dati:** è il **prerequisito** che rende efficace il DLP, non il controllo che blocca. Un'etichetta \"Riservato\" dichiara quanto vale un documento; da sola non impedisce a nessuno di allegarlo a un messaggio. Le due cose lavorano in coppia: la classificazione dice *cosa* proteggere, il DLP lo *impedisce*.\n  * **D) NGFW che blocca il file sharing:** copre metà del problema, e solo dalla rete aziendale. Non ha alcuna presa sull'e-mail verso un indirizzo personale, né sul portatile in trasferta, né su una chiavetta USB. Chiudere un canale alla volta è una corsa che si perde.\n\n* **Trappola d'esame:** associa ogni controllo allo **stato del dato** che protegge. Dati **a riposo** = cifratura del disco, controlli di accesso, tokenizzazione · Dati **in transito** = TLS, VPN, IPSec · Dati **in uso** = permessi, masking, enclave sicure · **Esfiltrazione attraverso i canali** = DLP. Quando lo scenario insiste sul fatto che l'autore è un utente **autorizzato**, i controlli d'accesso sono fuori gioco per costruzione e la risposta va cercata fra i controlli sul contenuto."
   },
   {
     id: 523,
@@ -9398,17 +9398,17 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   {
     id: 528,
     topic: "Network Security Devices",
-    level: "COMPRENSIONE",
-    scenario: "Dion Training Solutions sta valutando un aggiornamento del proprio firewall attuale per dotarsi di una soluzione in grado di rilevare e bloccare minacce avanzate, fornire funzioni aggiuntive come l'intrusion prevention e offrire una visibilità approfondita del traffico di rete.",
-    question: "Quale dei seguenti tipi di firewall è MEGLIO descritto da questi requisiti?",
+    level: "ANALISI",
+    scenario: "Un'azienda installa un nuovo IPS e, durante la fase pilota, lo collega a una porta SPAN dello switch di core. Dopo tre settimane il SOC osserva che l'IPS genera correttamente un alert per ogni exploit tentato verso i server, ma nessuno di quegli attacchi risulta mai effettivamente bloccato: i pacchetti malevoli raggiungono sempre la destinazione.",
+    question: "Qual è la causa del comportamento osservato e quale modifica lo risolve?",
     options: [
-      "A) NGFW (Next-Generation Firewall)",
-      "B) Proxy firewall",
-      "C) Stateful firewall",
-      "D) Packet-filtering firewall"
+      "A) È collegato in tap/monitor, quindi è passivo: riceve solo una copia del traffico. Va portato inline sul percorso dei pacchetti",
+      "B) È configurato in fail-closed: va impostato in fail-open perché possa intervenire sul traffico in transito",
+      "C) La porta SPAN è satura: basta aumentare la banda del collegamento perché il blocco torni a funzionare",
+      "D) Rileva solo firme note: va sostituito con un IDS basato su analisi comportamentale del traffico"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) NGFW (Next-Generation Firewall)**.\n\n* **Perché è la corretta:** Gli **NGFW (Next-Generation Firewall)** vanno oltre i firewall tradizionali incorporando funzionalità avanzate come intrusion prevention (IPS), application awareness, deep packet inspection (DPI) e intelligence sulle minacce. Forniscono visibilità avanzata e possono rilevare minacce sofisticate, rendendoli adatti alle sfide di sicurezza contemporanee.\n* **Analisi dei distrattori:**\n  * **B) Proxy firewall** agisce come intermediario per le richieste degli utenti verso altri server, filtrando al livello applicativo. Non fornisce intrinsecamente le capacità avanzate di threat detection degli NGFW.\n  * **C) Stateful firewall** tiene traccia dello stato delle connessioni attive e decide in base al contesto del traffico. Non offre però la visibilità approfondita e le funzioni avanzate tipiche di un NGFW.\n  * **D) Packet-filtering firewall** esamina i pacchetti e li permette o nega in base a regole su IP sorgente/destinazione, protocollo e numero di porta. Non include le funzionalità avanzate degli NGFW.\n\n* **Piccolo Esempio Concentrato:** Un'azienda sostituisce il vecchio firewall Cisco ASA (stateful) con un Palo Alto Networks PA-Series (NGFW). Il nuovo firewall identifica il traffico non solo per porta/protocollo, ma per applicazione specifica: blocca automaticamente Tor e applicazioni di file sharing P2P indipendentemente dalla porta utilizzata, scansiona il traffico HTTPS cifrato (SSL inspection) per individuare malware nascosti, e correla gli eventi con threat intelligence globale per bloccare IP di Command & Control noti."
+    explanation: "La risposta corretta è la **A) È collegato in tap/monitor, quindi è passivo**.\n\n* **Perché è la corretta:** Una porta **SPAN** (o un **network tap**) consegna al dispositivo una **copia** del traffico, mentre gli originali continuano indisturbati il loro percorso verso la destinazione. Un dispositivo collegato così è **passivo**: può analizzare, correlare e allertare, ma non ha alcun pacchetto *vero* fra le mani da poter scartare. È esattamente il quadro descritto, alert perfetti e zero blocchi, ed è anche la ragione per cui la distinzione **inline / attivo** contro **tap / passivo** conta più della sigla stampata sul dispositivo: lo stesso apparato si comporta da IPS o da IDS a seconda di come lo si cabla. Per bloccare davvero, l'IPS va inserito **inline**, cioè sul percorso fisico dei pacchetti, così che ogni frame debba attraversarlo prima di proseguire.\n* **Analisi dei distrattori:**\n  * **B) Fail-open / fail-closed:** descrive cosa succede al traffico **quando il dispositivo si guasta**, non cosa può fare quando funziona. Ed è il contrario: fail-open lascia passare tutto in caso di guasto, fail-closed interrompe. Qui il dispositivo funziona perfettamente, quindi la modalità di guasto non c'entra.\n  * **C) Porta SPAN satura:** una SPAN congestionata fa **perdere pacchetti**, quindi produrrebbe alert *mancanti* o parziali. Lo scenario dice il contrario: gli alert ci sono tutti. Più banda non trasformerà mai una copia in un originale.\n  * **D) Sostituirlo con un IDS:** andrebbe nella direzione sbagliata. Un **IDS** è per definizione un dispositivo di sola rilevazione: il problema qui è proprio che manca la capacità di bloccare, e passare a un IDS la renderebbe definitiva.\n\n* **Trappola d'esame:** IPS e IDS non si distinguono dal motore di analisi, che può essere identico, ma dal **posizionamento**. Inline (attivo) = il traffico lo attraversa, può scartare, introduce latenza ed è un potenziale punto singolo di guasto, quindi va progettato con bypass hardware e una scelta esplicita fra fail-open e fail-closed · Tap o SPAN (passivo) = riceve una copia, non può bloccare, non aggiunge latenza e non causa disservizi se si guasta. Una domanda che descrive **rilevazione senza blocco** punta quasi sempre al posizionamento passivo."
   },
   {
     id: 537,
@@ -9427,18 +9427,18 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 538,
-    topic: "Network Security Devices",
+    topic: "Infrastructure Segmentations & Topologies",
     level: "APPLICAZIONE",
-    scenario: "Global Star Computing ha subito diverse violazioni negli ultimi mesi. L'azienda vuole implementare un unico sistema software che integri molteplici protezioni tra cui filtraggio application-aware, tracciamento delle identità degli utenti e blocco degli utenti non autorizzati dall'accesso ai dati.",
-    question: "Quale delle seguenti opzioni è la PIÙ adatta a soddisfare questi requisiti?",
+    scenario: "Dopo il passaggio al lavoro ibrido, il 70% dei dipendenti di Global Star Computing lavora fuori sede e quasi tutte le applicazioni aziendali sono ormai SaaS. Tutto il traffico degli utenti remoti viene però ancora forzato in VPN fino al datacenter, ispezionato dal firewall perimetrale e poi rispedito su Internet verso il SaaS. La latenza è elevata, il concentratore VPN è al limite e il collegamento del datacenter è saturo. L'azienda vuole conservare ispezione e policy di sicurezza uniformi, ma senza far passare il traffico dal datacenter.",
+    question: "Quale architettura risponde MEGLIO a questa esigenza?",
     options: [
-      "A) SD-WAN",
-      "B) VPN",
-      "C) IPS (Intrusion Prevention System)",
-      "D) NGFW (Next-Generation Firewall)"
+      "A) Aumentare la banda del collegamento del datacenter e la capacità del concentratore VPN",
+      "B) Split tunneling generalizzato: il traffico verso il SaaS esce da Internet senza alcuna ispezione",
+      "C) Un secondo firewall perimetrale in alta disponibilità, affiancato al primo nel datacenter",
+      "D) SASE: lo stack di sicurezza erogato da PoP cloud vicini all'utente, senza passare dal datacenter"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) NGFW (Next-Generation Firewall)**.\n\n* **Perché è la corretta:** Un **NGFW (Next-Generation Firewall)** fornisce funzionalità di sicurezza avanzate e integrate: filtraggio a livello applicativo (application-aware filtering), tracciamento delle identità degli utenti tramite integrazione con directory (LDAP/AD), intrusion prevention e intelligence sulle minacce. È la soluzione più completa per affrontare le minacce sofisticate descritte nello scenario.\n* **Analisi dei distrattori:**\n  * **A) SD-WAN** ottimizza la connettività WAN su grandi distanze geografiche tramite software, ma non fornisce le funzionalità di sicurezza applicativa e tracciamento identità richieste.\n  * **B) VPN** crea connessioni sicure cifrate per il lavoro remoto, ma non include funzionalità di filtraggio applicativo o tracciamento identità avanzato.\n  * **C) IPS** previene accessi non autorizzati al sistema, ma non offre necessariamente il filtraggio application-aware o il tracciamento completo delle identità utente richiesti dallo scenario.\n\n* **Piccolo Esempio Concentrato:** Dopo che un dipendente ha inavvertitamente scaricato un trojan tramite un'applicazione di file-sharing mascherata da traffico HTTPS sulla porta 443, Global Star installa un Palo Alto PA-Series NGFW. Il NGFW identifica l'applicazione di file-sharing (non solo la porta), blocca automaticamente il download, correla l'evento con l'identità AD del dipendente (es. 'mario.rossi@azienda.com') e genera un alert per il SOC con tutti i dettagli dell'incidente."
+    explanation: "La risposta corretta è la **D) SASE (Secure Access Service Edge)**.\n\n* **Perché è la corretta:** Il problema descritto è il classico **hairpinning**: utente e applicazione stanno entrambi su Internet, ma il traffico viene costretto a un viaggio di andata e ritorno fino al datacenter solo per essere ispezionato. **SASE** rovescia la logica: invece di portare l'utente alla sicurezza, porta **la sicurezza all'utente**, erogandola da punti di presenza cloud distribuiti geograficamente. L'utente si connette al PoP più vicino, lì il traffico attraversa lo stack di sicurezza (secure web gateway, CASB, firewall as a service, accesso ZTNA alle applicazioni interne) e da lì raggiunge direttamente il SaaS. Il risultato è esattamente ciò che l'azienda chiede: policy centralizzate e ispezione integrale conservate, ma latenza e carico sul datacenter eliminati, perché il traffico non ci passa più.\n* **Analisi dei distrattori:**\n  * **A) Più banda e più capacità VPN:** compra tempo, non risolve. Il percorso resta geograficamente sbagliato: un utente e un servizio cloud che distano pochi millisecondi continuerebbero a dialogare attraverso un datacenter magari a mezzo continente di distanza, con un costo che cresce a ogni nuovo assunto.\n  * **B) Split tunneling generalizzato:** eliminerebbe davvero la latenza, ma al prezzo di rinunciare all'ispezione proprio sul traffico più importante. Lo scenario pone come vincolo esplicito il mantenimento delle policy di sicurezza: questa opzione le abbandona.\n  * **C) Secondo firewall in alta disponibilità:** aggiunge **ridondanza**, cioè protegge dal guasto di un apparato. Non riduce di un millisecondo il percorso del traffico né allevia la saturazione del collegamento, che è il vero collo di bottiglia.\n\n* **Trappola d'esame:** non confondere SASE con SD-WAN. **SD-WAN** ottimizza il **trasporto** fra le sedi, scegliendo dinamicamente il collegamento migliore, ma non porta con sé uno stack di sicurezza · **SASE** = SD-WAN **più** i servizi di sicurezza erogati dal cloud (SWG, CASB, ZTNA, FWaaS) come unica piattaforma. Regola pratica: se lo scenario chiede solo prestazioni e costo dei collegamenti, la risposta è SD-WAN; se chiede prestazioni **e** sicurezza uniforme per utenti distribuiti, è SASE."
   },
   {
     id: 539,
@@ -9548,17 +9548,17 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   {
     id: 546,
     topic: "Network Security Devices",
-    level: "COMPRENSIONE",
-    scenario: "Dion Training ha riscontrato frequenti minacce avanzate e sofisticate. L'azienda necessita di una soluzione firewall integrata che superi le capacità dei firewall tradizionali per affrontare efficacemente queste minacce.",
-    question: "Quale delle seguenti soluzioni soddisfa MEGLIO questa esigenza?",
+    level: "APPLICAZIONE",
+    scenario: "Un consulente esterno collega il proprio portatile alla presa di rete di una sala riunioni e ottiene immediatamente un indirizzo IP e l'accesso completo alla LAN di produzione. Dion Training vuole che nessun dispositivo riceva accesso prima di essere stato autenticato e verificato (antivirus aggiornato, patch di sicurezza applicate, disco cifrato), e che i dispositivi non conformi finiscano automaticamente in una rete isolata dove poter essere sistemati.",
+    question: "Quale soluzione soddisfa MEGLIO questi requisiti?",
     options: [
-      "A) Fail-closed system (Sistema a chiusura in caso di guasto)",
-      "B) SASE (Secure Access Service Edge)",
-      "C) NGFW (Next-Generation Firewall)",
-      "D) SSH (Secure Shell)"
+      "A) Un WAF davanti ai server applicativi ospitati nella LAN di produzione",
+      "B) Un jump server attraverso cui far transitare tutti gli accessi amministrativi",
+      "C) NAC con posture assessment e VLAN di quarantena per i dispositivi non conformi",
+      "D) Un IDS in modalità tap sul segmento di rete delle sale riunioni"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) NGFW (Next-Generation Firewall)**.\n\n* **Perché è la corretta:** Un **NGFW (Next-Generation Firewall)** integra molteplici funzioni di sicurezza in un'unica soluzione: intrusion prevention, application awareness, deep packet inspection e threat intelligence. Questo lo rende la scelta ideale contro minacce avanzate e sofisticate che i firewall tradizionali (basati solo su IP/porta) non sarebbero in grado di rilevare o bloccare.\n* **Analisi dei distrattori:**\n  * **A) Fail-closed system** è una modalità di guasto che blocca tutto il traffico in caso di malfunzionamento del dispositivo. Non è una soluzione firewall e non protegge contro minacce avanzate.\n  * **B) SASE** combina networking WAN e servizi di sicurezza di rete in un unico servizio cloud-based, ma il suo focus principale non è specificamente la protezione contro minacce avanzate con funzionalità firewall integrate.\n  * **D) SSH** è un protocollo per il login remoto sicuro e altri servizi di rete sicuri, non una soluzione firewall.\n\n* **Piccolo Esempio Concentrato:** Dion Training installa un firewall Cisco Firepower (NGFW) che, a differenza del vecchio firewall ASA, rileva automaticamente un attacco di esfiltrazione dati mascherato da traffico DNS legittimo (DNS tunneling). Il NGFW identifica l'anomalia grazie all'analisi comportamentale del traffico applicativo e blocca la sessione, generando un alert con tutti i dettagli dell'attacco."
+    explanation: "La risposta corretta è la **C) NAC (Network Access Control)**.\n\n* **Perché è la corretta:** Il **NAC** è l'unico controllo che agisce nel momento giusto, cioè **prima** che il dispositivo ottenga accesso alla rete. Lo scenario chiede tre cose e il NAC le copre tutte: **autenticare** il dispositivo o l'utente sulla porta (tipicamente via 802.1X), valutarne lo stato di salute con il **posture assessment** (antivirus aggiornato, livello di patch, cifratura del disco) e **rimediare** ai casi non conformi spostandoli in una **VLAN di quarantena** con accesso ai soli server di aggiornamento. La presa di rete della sala riunioni smette così di essere una porta aperta sulla LAN di produzione: diventa un punto di controllo che concede accesso solo a chi supera la verifica.\n* **Analisi dei distrattori:**\n  * **A) WAF:** protegge **le applicazioni web** dagli attacchi al loro traffico HTTP (SQL injection, XSS). Non ha alcuna voce in capitolo su chi può collegarsi alla rete: il portatile del consulente otterrebbe comunque il suo indirizzo IP e l'accesso a tutto ciò che non è un'applicazione web.\n  * **B) Jump server:** è un punto di passaggio obbligato e sorvegliato per gli **accessi amministrativi** ai sistemi sensibili. Regola come gli amministratori raggiungono i server, non chi può entrare in rete da una presa a muro.\n  * **D) IDS in tap:** è **passivo** per costruzione: riceve una copia del traffico e segnala, ma non impedisce a nessun dispositivo di collegarsi. Produrrebbe un ottimo verbale di ciò che il consulente ha fatto, dopo che l'ha fatto.\n\n* **Trappola d'esame:** distingui i due livelli. **802.1X** è il **meccanismo di autenticazione** sulla porta, che coinvolge supplicant, authenticator e server RADIUS e risponde alla domanda \"chi sei?\" · **NAC** è il **framework** che usa 802.1X e vi aggiunge la domanda \"sei in condizione di entrare?\", cioè posture assessment, quarantena e rimedio. Se lo scenario nomina **antivirus aggiornato, patch o conformità del dispositivo**, la risposta è NAC, non 802.1X da solo. Da ricordare anche la distinzione **agent-based** (client installato, verifica approfondita, adatto ai dispositivi aziendali) contro **agentless** (nessuna installazione, verifica più superficiale, adatto a ospiti e BYOD)."
   },
   {
     id: 547,
@@ -9638,17 +9638,17 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   {
     id: 552,
     topic: "Data Classification & Security",
-    level: "COMPRENSIONE",
-    scenario: "Il team di sicurezza sta analizzando diverse tecniche di offuscamento dei dati. Una tecnica specifica sostituisce le stringhe di dati con un singolo carattere come X o *, mantenendo invariata la struttura della stringa originale.",
-    question: "Quale delle seguenti tecniche di offuscamento descrive questa caratteristica?",
+    level: "APPLICAZIONE",
+    scenario: "Un e-commerce vuole smettere di conservare i numeri di carta di credito nel proprio database, per ridurre drasticamente il perimetro soggetto a PCI DSS. Deve però continuare a emettere rimborsi e ad addebitare gli abbonamenti ricorrenti sulla stessa carta. Il requisito posto dall'auditor è netto: il valore memorizzato non deve avere alcuna relazione matematica con il numero originale, che dovrà essere custodito esclusivamente dal fornitore di pagamento.",
+    question: "Quale tecnica di protezione dei dati soddisfa questi requisiti?",
     options: [
-      "A) Tokenization (Tokenizzazione)",
-      "B) Steganography (Steganografia)",
-      "C) Key stretching",
-      "D) Data Masking (Mascheramento dei dati)"
+      "A) Cifratura del campo con AES-256, conservando la chiave nel proprio HSM",
+      "B) Hashing del numero di carta con SHA-256 e un salt per ogni cliente",
+      "C) Data masking, memorizzando il numero con tutte le cifre sostituite da X",
+      "D) Tokenizzazione, con il numero reale conservato nel vault del fornitore"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Data Masking (Mascheramento dei dati)**.\n\n* **Perché è la corretta:** Il **Data Masking** è una tecnica di offuscamento che oscura i dati sostituendo i caratteri originali con un simbolo sostitutivo (come X o *), mantenendo però invariata la struttura della stringa (lunghezza, formato). Ad esempio, un numero di telefono a 10 cifre apparirà come 10 X.\n* **Analisi dei distrattori:**\n  * **A) La tokenizzazione** sostituisce i dati sensibili con un token che ha una struttura diversa dall'originale e che viene usato come riferimento al dato originale memorizzato altrove.\n  * **B) La steganografia** nasconde dati all'interno di altri media (immagini, audio, testo) in modo che la loro esistenza non sia percepibile.\n  * **C) Il Key stretching** è una tecnica usata per rendere le password più sicure allungandone il processo di hashing (es. bcrypt, PBKDF2), non una tecnica di offuscamento delle stringhe di dati.\n\n* **Piccolo Esempio Concentrato:** Un'applicazione di call center mostra ai consulenti i numeri di carta di credito dei clienti come `**** **** **** 4521` (data masking). La struttura originale (16 cifre in 4 gruppi da 4) rimane riconoscibile, ma solo le ultime 4 cifre sono visibili. Il consulente può verificare la carta del cliente senza vedere il numero completo, riducendo il rischio di furto di dati durante le chiamate."
+    explanation: "La risposta corretta è la **D) Tokenizzazione**.\n\n* **Perché è la corretta:** La **tokenizzazione** sostituisce il dato sensibile con un valore **casuale** che non lo contiene e non ne deriva: fra token e numero di carta non esiste alcun algoritmo, esiste solo una **corrispondenza registrata in un vault** custodito dal fornitore di pagamento. È esattamente il requisito dell'auditor. Chi ruba il database dell'e-commerce ottiene stringhe prive di valore, perché il token non è invertibile *in linea di principio*, non solo *in pratica*: non c'è chiave da rubare né algoritmo da attaccare, perché il segreto non sta nel token ma altrove. Allo stesso tempo il token resta **utilizzabile**: il commerciante lo invia al fornitore per rimborsi e addebiti ricorrenti, che risolve internamente la corrispondenza. Questa combinazione, dato inutile per l'attaccante ma ancora operativo per il processo, è la ragione per cui PCI DSS riconosce la tokenizzazione come modo per **togliere sistemi dal perimetro** dell'audit.\n* **Analisi dei distrattori:**\n  * **A) Cifratura con chiave propria:** è reversibile per costruzione, e la relazione matematica con l'originale esiste eccome. Soprattutto, chiave e dato cifrato restano entrambi in casa: i sistemi rimangono nel perimetro PCI DSS, con tutto l'onere di gestione, rotazione e custodia delle chiavi che ne consegue.\n  * **B) Hashing con salt:** è una funzione a **senso unico**: soddisfa il requisito di non reversibilità, ma distrugge l'operatività. Da un hash non si può emettere alcun rimborso, perché il numero di carta non è più recuperabile da nessuno, fornitore compreso.\n  * **C) Data masking:** è pensato per la **visualizzazione**, non per la conservazione. Serve a mostrare a un operatore le ultime quattro cifre; memorizzare il numero con tutte le cifre sostituite da X significa semplicemente perdere il dato, e con esso la possibilità di addebitare.\n\n* **Trappola d'esame:** tieni separate le quattro tecniche in base a **reversibilità** e **scopo**. Cifratura = reversibile con la chiave, protegge il dato conservandone il controllo · Hashing = irreversibile, per verifica e integrità, mai per dati che vanno riusati · Masking = irreversibile e parziale, per mostrare a schermo o per ambienti di test · Tokenizzazione = irreversibile senza il vault, il dato resta **usabile nel processo** ed è l'unica che riduce il perimetro di conformità. Quando una domanda chiede insieme \"nessuna relazione matematica con l'originale\" e \"deve continuare a funzionare per i pagamenti\", la risposta è tokenizzazione."
   },
   {
     id: 553,
@@ -9667,33 +9667,33 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 554,
-    topic: "Cloud Resilience & Fault Tolerance",
-    level: "COMPRENSIONE",
-    scenario: "Il responsabile dell'infrastruttura IT deve scegliere un dispositivo che garantisca la continuità operativa dei sistemi critici durante un'interruzione dell'alimentazione elettrica.",
-    question: "Quale dei seguenti dispositivi assicura il funzionamento ininterrotto durante un blackout della rete elettrica?",
+    topic: "Architecture Models & Shared Responsibility",
+    level: "ANALISI",
+    scenario: "Un'applicazione monolitica viene riscritta come insieme di microservizi, con la motivazione dichiarata di \"migliorare la sicurezza isolando i componenti\". Dopo il rilascio un incidente mostra però che il servizio catalogo, compromesso attraverso una libreria vulnerabile, ha potuto interrogare direttamente il database dei pagamenti: tutti i servizi girano con le stesse credenziali di database e nessuna policy di rete limita le comunicazioni fra loro.",
+    question: "Quale affermazione descrive correttamente il beneficio di sicurezza atteso dai microservizi e la ragione per cui qui non si è realizzato?",
     options: [
-      "A) Voltage regulator (Regolatore di tensione)",
-      "B) Onsite/offsite backups (Backup in loco/fuori sede)",
-      "C) UPS (Uninterruptible Power Supply)",
-      "D) Power strip (Multipresa)"
+      "A) I microservizi eliminano di per sé la superficie d'attacco: qui il problema è solo la libreria vulnerabile",
+      "B) I microservizi riducono il numero di vulnerabilità perché ogni base di codice è più piccola",
+      "C) I microservizi permettono di contenere il raggio d'azione, ma solo se ciascuno ha identità, credenziali e policy di rete proprie",
+      "D) I microservizi spostano la sicurezza sull'orchestratore: è sufficiente mantenerlo aggiornato"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) UPS (Uninterruptible Power Supply)**.\n\n* **Perché è la corretta:** Un **UPS (gruppo di continuità)** fornisce alimentazione di emergenza istantanea tramite batteria quando la sorgente di alimentazione principale viene a mancare, garantendo la continuità operativa dei dispositivi collegati durante un'interruzione della corrente.\n* **Analisi dei distrattori:**\n  * **A) Il regolatore di tensione** mantiene costante il livello di tensione erogata ai dispositivi proteggendo da fluttuazioni, ma non fornisce energia di backup durante un blackout completo.\n  * **B) I backup onsite/offsite** garantiscono la preservazione e il ripristino dei dati, ma non garantiscono l'alimentazione continua dei dispositivi durante un'interruzione di corrente.\n  * **D) La multipresa** consente di collegare più dispositivi a una sola presa elettrica e può offrire protezione dai picchi di tensione, ma non fornisce alcun tipo di alimentazione di backup durante un blackout.\n\n* **Piccolo Esempio Concentrato:** Un ospedale collega i server del sistema di triage del pronto soccorso a UPS APC Smart-UPS da 10kVA. Quando cade la corrente durante un temporale, l'UPS sostituisce istantaneamente l'alimentazione di rete con quella da batteria, mantenendo i server attivi per 15 minuti. In questo arco di tempo, i generatori diesel di backup si avviano e assumono il carico, garantendo la continuità del sistema senza alcuna interruzione per medici e infermieri."
+    explanation: "La risposta corretta è la **C) Contengono il raggio d'azione, ma solo con identità e policy separate**.\n\n* **Perché è la corretta:** Spezzare un monolite in microservizi crea la **possibilità** di contenere un incidente, non il contenimento. Il beneficio esiste solo se il confine logico viene accompagnato da confini reali su tre piani: un'**identità distinta** per ogni servizio, **credenziali separate** verso ogni archivio dati, con permessi ridotti allo stretto necessario, e **policy di rete** che consentano solo le comunicazioni previste dall'architettura, negando tutto il resto. In questo scenario nessuno dei tre esiste: credenziali di database condivise e nessuna segmentazione fra i servizi significano che il perimetro effettivo è rimasto uno solo, esattamente come nel monolite, con l'aggravante che adesso è esposto in molti più punti. Il risultato è il peggiore dei due mondi: la superficie d'attacco distribuita dei microservizi, senza il loro contenimento.\n* **Analisi dei distrattori:**\n  * **A) Eliminano la superficie d'attacco:** è il contrario. Passare a microservizi **aumenta** la superficie, perché introduce API di rete, service mesh, orchestratore, registri di immagini e traffico interno dove prima c'erano semplici chiamate di funzione in memoria.\n  * **B) Meno vulnerabilità perché il codice è più piccolo:** confonde la dimensione del singolo servizio con il totale. Il codice complessivo non diminuisce, si ridistribuisce, e ogni servizio porta con sé le proprie dipendenze: il numero di librerie da tenere aggiornate tipicamente cresce.\n  * **D) Basta aggiornare l'orchestratore:** l'orchestratore va senz'altro tenuto aggiornato, ma non decide al posto tuo chi può parlare con chi. Le policy di rete e le identità dei servizi sono configurazioni che qualcuno deve scrivere: un Kubernetes perfettamente aggiornato instrada allegramente il traffico che nessuno gli ha chiesto di bloccare.\n\n* **Trappola d'esame:** diffida delle opzioni che presentano una scelta architetturale come una misura di sicurezza in sé. Microservizi, cloud, container e serverless **ridistribuiscono** il rischio, non lo riducono automaticamente: il beneficio si concretizza solo con i controlli che li accompagnano, cioè privilegio minimo per servizio, segmentazione applicata di default in negazione, e identità di carico di lavoro al posto delle credenziali condivise. Quando lo scenario dice \"stesse credenziali per tutti i servizi\", sta descrivendo un monolite travestito."
   },
   {
     id: 555,
-    topic: "Cloud Resilience & Fault Tolerance",
-    level: "COMPRENSIONE",
-    scenario: "Durante un test di recovery, il team IT deve valutare quale approccio computazionale consenta di valutare simultaneamente più strategie di ripristino dopo una violazione della sicurezza.",
-    question: "Quale approccio computazionale consente di valutare simultaneamente più strategie di recovery dopo un breach?",
+    topic: "Business Continuity & Disaster Recovery",
+    level: "APPLICAZIONE",
+    scenario: "Un'azienda vuole collaudare il piano di disaster recovery con una prova che vada oltre la discussione a tavolino, ma senza interrompere il servizio ai clienti. Il piano approvato prevede di avviare davvero i sistemi del sito alternativo, alimentarli con lo stesso carico di lavoro reale della giornata e confrontare i risultati prodotti con quelli della produzione, che nel frattempo resta pienamente operativa e continua a servire gli utenti.",
+    question: "Quale tipo di test del piano di ripristino è stato descritto?",
     options: [
-      "A) Stream processing (Elaborazione in streaming)",
-      "B) Batch processing (Elaborazione batch)",
-      "C) Backup processing (Elaborazione di backup)",
-      "D) Parallel processing (Elaborazione parallela)"
+      "A) Tabletop exercise (esercizio a tavolino)",
+      "B) Simulation (simulazione di un evento)",
+      "C) Failover test (commutazione sul sito alternativo)",
+      "D) Parallel processing (test in parallelo)"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Parallel processing (Elaborazione parallela)**.\n\n* **Perché è la corretta:** L'**elaborazione parallela** consente di eseguire simultaneamente multiple strategie di recovery su diversi processori o sistemi, permettendo una valutazione più rapida e completa dell'efficacia di ciascuna strategia post-breach. Questo approccio riduce significativamente i tempi complessivi di analisi.\n* **Analisi dei distrattori:**\n  * **A) Lo stream processing** elabora i dati in tempo reale man mano che vengono ricevuti, ma è orientato al flusso continuo di dati, non alla valutazione simultanea di strategie multiple di recovery.\n  * **B) Il batch processing** esegue una serie di job tutti in una volta senza intervento manuale, ma non implica l'elaborazione simultanea su più fronti come il parallel processing.\n  * **C) Il backup processing** usa un sistema o un'applicazione secondaria per subentrare se il sistema primario fallisce, garantendo la continuità ma non simulando più strategie di recovery contemporaneamente.\n\n* **Piccolo Esempio Concentrato:** Dopo un attacco ransomware, il team di IR (Incident Response) usa un cluster Kubernetes con 8 nodi per testare in parallelo 4 diverse strategie di ripristino: (1) restore da backup S3, (2) rollback di snapshot VMware, (3) rebuild da IaC Terraform, (4) failover al sito DR. I 4 test girano simultaneamente in parallelo, riducendo il tempo di valutazione da 8 ore (sequenziale) a 2 ore (parallelo), minimizzando il downtime totale."
+    explanation: "La risposta corretta è la **D) Parallel processing (test in parallelo)**.\n\n* **Perché è la corretta:** Due elementi dello scenario, presi insieme, individuano un solo tipo di test. Il primo: i sistemi del sito alternativo vengono **realmente avviati** ed elaborano dati veri, quindi non si tratta di una prova teorica. Il secondo: la **produzione resta attiva** e continua a servire gli utenti, quindi non c'è stata alcuna commutazione. Questo è esattamente il **test in parallelo**: i due ambienti lavorano sullo stesso carico nello stesso momento, e il confronto fra i risultati dimostra che il sito alternativo produce output corretti. È il compromesso migliore fra fedeltà e rischio, perché verifica davvero capacità, dati e procedure senza mai mettere in gioco il servizio al cliente.\n* **Analisi dei distrattori:**\n  * **A) Tabletop exercise:** è una discussione guidata attorno a un tavolo, in cui i responsabili ripercorrono verbalmente uno scenario. Non si accende nulla. È economico e utile per far emergere lacune di ruoli e comunicazione, ma lo scenario dice chiaramente che i sistemi vengono avviati.\n  * **B) Simulation:** mette in scena un evento fittizio e fa reagire le persone secondo il piano, esercitando procedure e comunicazioni, spesso senza eseguire il ripristino tecnico completo. Manca l'elemento decisivo qui presente, cioè l'elaborazione del carico reale in parallelo.\n  * **C) Failover test:** commuta davvero il servizio sul sito alternativo, che diventa il sistema di produzione. È il test di massima fedeltà, ma anche l'unico che espone i clienti a un disservizio se qualcosa non funziona. Lo scenario lo esclude: la produzione non ha mai smesso di servire gli utenti.\n\n* **Trappola d'esame:** memorizza i quattro test in ordine di **fedeltà crescente e rischio crescente**. Tabletop, si parla soltanto · Simulation, si reagisce a un evento simulato · Parallel processing, il sito alternativo elabora davvero mentre la produzione continua · Failover, la produzione viene effettivamente commutata. Il discriminante fra gli ultimi due è sempre la stessa domanda: **la produzione ha continuato a servire gli utenti?** Se sì è un test in parallelo, se no è un failover."
   },
   {
     id: 556,
@@ -9742,18 +9742,18 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 559,
-    topic: "Cloud Resilience & Fault Tolerance",
-    level: "COMPRENSIONE",
-    scenario: "Il team IT deve valutare quale metodo computazionale consenta il test simultaneo di vari protocolli di ripristino per garantire un recupero rapido del sistema dopo un incidente di sicurezza.",
-    question: "Quale metodo computazionale consente il test simultaneo di vari protocolli di ripristino dopo un incidente di sicurezza?",
+    topic: "Data Classification & Security",
+    level: "APPLICAZIONE",
+    scenario: "Per ridurre i costi, il team infrastruttura di un'azienda europea propone di spostare i backup dei dati dei clienti su una regione cloud statunitense, dove lo spazio costa meno. L'ufficio legale blocca l'operazione: quei dati devono restare soggetti alla giurisdizione europea e devono essere archiviati e consultabili soltanto da paesi esplicitamente approvati.",
+    question: "Quale concetto esprime il vincolo posto dall'ufficio legale, e quale controllo tecnico lo attua?",
     options: [
-      "A) Failover systems (Sistemi di failover)",
-      "B) Parallel processing (Elaborazione parallela)",
-      "C) Continuous backup (Backup continuo)",
-      "D) Cluster computing (Calcolo a cluster)"
+      "A) Alta disponibilità, attuata con la replica sincrona dei backup fra i due continenti",
+      "B) Sovranità dei dati, attuata con restrizioni geografiche su archiviazione e accesso",
+      "C) Classificazione dei dati, attuata applicando etichette di riservatezza ai backup",
+      "D) Integrità dei dati, attuata verificando il checksum di ogni file di backup"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Parallel processing (Elaborazione parallela)**.\n\n* **Perché è la corretta:** L'**elaborazione parallela** sfrutta contemporaneamente molteplici risorse computazionali per valutare l'efficacia di vari protocolli di ripristino dopo una compromissione della sicurezza. Questo consente un'analisi più rapida e completa delle diverse strategie di recovery.\n* **Analisi dei distrattori:**\n  * **A) I sistemi di failover** forniscono una modalità operativa di standby che subentra in caso di guasto del sistema principale, ma non consentono intrinsecamente il test simultaneo di diversi protocolli di recovery.\n  * **C) Il backup continuo** salva periodicamente le modifiche ai dati per garantire l'integrità e minimizzare le perdite, ma non valuta più metodi di ripristino contemporaneamente.\n  * **D) Il cluster computing** migliora le prestazioni e la disponibilità combinando più server, ma il suo obiettivo principale non è il test simultaneo di diversi protocolli di recovery.\n\n* **Piccolo Esempio Concentrato:** Dopo un attacco ransomware, il team IR esegue in parallel processing 4 strategie di recovery su 4 nodi cloud separati: nodo 1 testa il restore dal backup S3, nodo 2 il rollback snapshot, nodo 3 il rebuild da IaC, nodo 4 il failover DR. In 2 ore invece di 8 sequenziali, il team identifica la strategia più veloce ed efficace."
+    explanation: "La risposta corretta è la **B) Sovranità dei dati (data sovereignty)**.\n\n* **Perché è la corretta:** La **sovranità dei dati** è il principio per cui i dati sono soggetti alle leggi del paese in cui si trovano **fisicamente**. È esattamente la ragione del blocco: spostare i backup negli Stati Uniti non cambia di chi sono i dati, ma cambia **quale ordinamento può pretenderli**, ed è un rischio che l'ufficio legale non può assumersi al posto dell'azienda. Il controllo tecnico corrispondente sono le **restrizioni geografiche** (*geographic restrictions* o *geofencing*), che agiscono su due piani distinti e vanno applicati entrambi: vincolare la **residenza dei dati**, scegliendo regioni cloud ammesse e impedendo con policy la creazione di risorse altrove, e vincolare la **provenienza degli accessi**, consentendo la consultazione solo da paesi approvati. Il secondo piano è quello che si dimentica più spesso, ma un backup archiviato correttamente a Francoforte e amministrato da una console raggiunta da un paese non ammesso viola lo stesso requisito.\n* **Analisi dei distrattori:**\n  * **A) Alta disponibilità:** riguarda la **continuità** del servizio, non la giurisdizione. Ed è controproducente qui: replicare i backup fra i due continenti aggraverebbe il problema, perché porterebbe comunque una copia dei dati fuori dalla giurisdizione ammessa.\n  * **C) Classificazione dei dati:** stabilisce **quanto** un dato è sensibile e chi può accedervi, ed è certamente un prerequisito. Ma un'etichetta \"Riservato\" non dice nulla su *dove* il dato può risiedere, che è il punto sollevato dall'ufficio legale.\n  * **D) Integrità dei dati:** garantisce che i backup non siano stati **alterati**. Un checksum perfetto su un file archiviato nella giurisdizione sbagliata resta una violazione perfettamente integra.\n\n* **Trappola d'esame:** non confondere i due termini vicini. **Data sovereignty** = quali leggi si applicano ai dati, in funzione di dove si trovano · **Data residency** = dove i dati sono fisicamente archiviati, che è la leva con cui si governa la prima. Nel cloud la scelta della **regione** è quindi una decisione di conformità prima ancora che di prestazioni o di costo, e il GDPR è il caso di scuola: le sue tutele seguono gli interessati **che si trovano nell'Unione europea**, indipendentemente dalla loro cittadinanza, e i trasferimenti verso paesi terzi richiedono una base giuridica specifica."
   },
   {
     id: 560,
@@ -10992,16 +10992,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 464,
     topic: "Mitigation Techniques & Controls",
     level: "APPLICAZIONE",
-    scenario: "Sofia, una responsabile HR, richiede l'accesso al sistema di gestione delle buste paga dell'azienda per visualizzare i dati dei dipendenti. Il team IT le concede il permesso di visualizzare i dati, ma le impedisce di modificare i record o di accedere ad altre aree sensibili del sistema.",
-    question: "Quale principio viene applicato in questo caso?",
+    scenario: "Uno scanner rileva che il 30% delle workstation ha una versione del browser vulnerabile a un exploit già sfruttato attivamente in rete. L'azienda distribuisce l'aggiornamento tramite lo strumento di gestione centralizzata, ma alla riscansione 40 postazioni risultano ancora indietro: gli utenti rinviano il riavvio da settimane.",
+    question: "Quale tecnica di mitigazione risolve alla radice la parte residua del problema?",
     options: [
-      "A) Discretionary access control",
-      "B) Separation of duties",
-      "C) Least privilege",
-      "D) Job rotation"
+      "A) Application allow list: si autorizza l'esecuzione del solo browser, in qualunque versione sia installata",
+      "B) Segmentazione della rete: le 40 postazioni vengono spostate in una VLAN isolata e lasciate alla versione corrente",
+      "C) Configuration enforcement: la policy centralizzata impone aggiornamento e riavvio entro una scadenza, non li lascia all'utente",
+      "D) Formazione degli utenti: si spiega ai dipendenti l'importanza di riavviare il computer"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Least privilege (Minimo privilegio)**.\n\n* **Perché è la corretta:** Il principio del **Least privilege** garantisce che ogni utente abbia il minimo livello di accesso necessario per svolgere le proprie funzioni lavorative. Sofia può solo visualizzare i dati delle buste paga (necessario per il suo ruolo HR) ma non modificarli né accedere ad aree non pertinenti alle sue mansioni.\n* **Analisi dei distrattori:**\n  * **A) Il Discretionary access control (DAC)** è un modello in cui il proprietario della risorsa decide chi può accedervi; non descrive specificatamente la limitazione ai permessi minimi.\n  * **B) La Separation of duties** divide le responsabilità critiche tra più persone per prevenire frodi; in questo scenario Sofia non condivide responsabilità, ma si limita al suo ruolo.\n  * **D) La Job rotation** prevede la rotazione periodica dei dipendenti tra ruoli diversi; non è pertinente alla limitazione dei permessi di accesso."
+    explanation: "La risposta corretta è la **C) Configuration enforcement**.\n\n* **Perché è la corretta:** Il problema non è la mancanza della patch, che è già stata distribuita: è che la sua applicazione **dipende dalla volontà dell'utente**. Il **configuration enforcement** rimuove quella dipendenza: la piattaforma di gestione impone lo stato desiderato, applica l'aggiornamento e programma il riavvio entro una finestra definita, segnalando e correggendo le macchine non conformi. È la stessa logica delle **guard rail**: non chiedere agli utenti di fare la cosa giusta, ma fare in modo che sia il sistema a garantirla.\n* **Analisi dei distrattori:**\n  * **B) Segmentazione:** è un controllo **compensativo** valido quando la patch *non può* essere applicata (sistemi legacy, apparati certificati). Qui la patch esiste ed è distribuibile: isolare 40 postazioni lasciandole vulnerabili significa convivere indefinitamente con il rischio invece di eliminarlo.\n  * **A) Application allow list:** autorizza *quali* programmi possono girare, non *in quale versione*. Consentire il browser a prescindere dalla versione lascia intatta la vulnerabilità, perché l'eseguibile resta quello approvato.\n  * **D) Formazione:** utile in generale, ma qui il comportamento è già noto e persistente da settimane. Un controllo che dipende dalla diligenza quotidiana di centinaia di persone non è affidabile per chiudere una vulnerabilità sfruttata attivamente.\n\n* **Trappola d'esame:** quando lo scenario mostra che un controllo **esiste ma non viene applicato**, la risposta non è aggiungere un controllo diverso né formare gli utenti: è **imporne l'applicazione in modo automatico e verificabile**. La segmentazione entra in gioco solo quando la correzione è tecnicamente impossibile."
   },
   {
     id: 465,
@@ -11127,16 +11127,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 473,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti tipi di attori delle minacce ha più probabilità di avere accesso autorizzato ai sistemi che attaccano?",
+    scenario: "Un gruppo strutturato gestisce un servizio di ransomware-as-a-service: sviluppa il malware, affitta l'infrastruttura ad affiliati, gestisce un portale di negoziazione con le vittime e un servizio di assistenza per il pagamento in criptovaluta. Le somme incassate vengono riciclate attraverso mixer e società di comodo.",
+    question: "Quale categoria di attore delle minacce descrive questo gruppo?",
     options: [
-      "A) Organized crime organizations",
-      "B) Insider threat",
-      "C) Hacktivist",
-      "D) Unskilled Attackers"
+      "A) Attore sponsorizzato da uno Stato (nation-state)",
+      "B) Criminalità organizzata (organized crime)",
+      "C) Hacktivista",
+      "D) Attaccante inesperto (unskilled attacker)"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Insider threat (Minaccia interna)**.\n\n* **Perché è la corretta:** Un **Insider threat** è un tipo di attore di minacce interno a un'organizzazione che ha accesso autorizzato ad almeno una parte della rete, dei sistemi o dei dati dell'organizzazione. Le minacce interne sono spesso dipendenti attuali o ex dipendenti che abusano del loro accesso per diffondere informazioni, sabotare operazioni o collaborare con attori esterni.\n* **Analisi dei distrattori:**\n  * **A) Le organizzazioni criminali** sono attori di minacce esterni che violano l'organizzazione per ottenere denaro tramite riscatti o altri mezzi; non hanno accesso autorizzato ai sistemi che attaccano.\n  * **C) Un Hacktivist** non fa parte dell'organizzazione che attacca e non ha accesso autorizzato ad essa.\n  * **D) Gli Unskilled Attackers** (script kiddie) hanno poche o nessuna competenza tecnica e sono motivati da curiosità, noia o guadagno personale; non fanno parte dell'organizzazione target e non hanno accesso autorizzato."
+    explanation: "La risposta corretta è la **B) Criminalità organizzata**.\n\n* **Perché è la corretta:** Gli indizi decisivi sono la **struttura d'impresa** e la **motivazione economica**. Ruoli specializzati, un modello di affiliazione, un servizio clienti e il riciclaggio dei proventi descrivono un'organizzazione criminale che tratta il crimine informatico come attività redditizia. Dispone di risorse significative e di competenze reali, ma il suo fine ultimo resta il profitto.\n* **Analisi dei distrattori:**\n  * **A) Nation-state:** avrebbe risorse ancora superiori e capacità di persistenza pluriennale, ma la motivazione sarebbe **spionaggio, sabotaggio o vantaggio geopolitico**, non l'incasso di riscatti. Un attore statale evita il clamore; il ransomware lo cerca.\n  * **C) Hacktivista:** agisce per una **causa politica, sociale o etica**, tipicamente con defacement, fughe di documenti o DDoS dimostrativi, e rivendica pubblicamente l'azione. Non negozia riscatti né ricicla denaro.\n  * **D) Attaccante inesperto:** usa strumenti già pronti scritti da altri e non possiede le capacità per sviluppare malware, gestire un'infrastruttura di affiliazione o organizzare il riciclaggio. Semmai sarebbe un *cliente* di questo gruppo.\n\n* **Trappola d'esame:** classifica l'attore incrociando **capacità/risorse** e **motivazione**. Profitto + organizzazione = criminalità organizzata · Spionaggio o sabotaggio + risorse illimitate + persistenza = nation-state/APT · Causa ideologica + visibilità pubblica = hacktivista · Strumenti altrui + poca competenza = unskilled attacker."
   },
   {
     id: 474,
@@ -11215,18 +11215,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 479,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Chi, tra i seguenti, opera senza autorizzazioni preventive e può lanciare attacchi da posizioni remote?",
+    topic: "Indicators of Malicious Activity",
+    level: "ANALISI",
+    scenario: "Il portale e-commerce registra in un'ora 90.000 tentativi di login da migliaia di indirizzi IP diversi. Ogni coppia utente/password viene provata una sola volta, il tasso di successo è circa dell'1,8% e gli account che entrano appartengono a utenti registrati anni prima. Nessun account viene bloccato dalla policy di lockout.",
+    question: "Quale attacco descrive questo schema e qual è la mitigazione più efficace?",
     options: [
-      "A) Cybercriminal",
-      "B) Business partner",
-      "C) Internal threat actor",
-      "D) External threat actor"
+      "A) Attacco con rainbow table; mitigato aggiungendo un salt univoco a ogni password",
+      "B) Password spraying; mitigato abbassando la soglia di lockout a tre tentativi falliti",
+      "C) Attacco a dizionario; mitigato imponendo password di almeno sedici caratteri",
+      "D) Credential stuffing; mitigato principalmente dalla MFA, perché la password da sola non basta più"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) External threat actor (Attore di minaccia esterno)**.\n\n* **Perché è la corretta:** Gli **External threat actors** operano senza alcuna autorizzazione o accesso autorizzato al sistema e possono lanciare i loro attacchi praticamente da qualsiasi luogo remoto.\n* **Analisi dei distrattori:**\n  * **A) Un Cybercriminal** può essere un attore esterno, ma questo termine non specifica il metodo o la posizione relativa al target; è più ampio della definizione specifica di 'external threat actor'.\n  * **B) Un Business partner** ha tipicamente accesso autorizzato dovuto a sforzi collaborativi, rendendolo un attore interno.\n  * **C) Un Internal threat actor** ha ricevuto permessi o accesso all'interno di un sistema, come un dipendente o un appaltatore."
+    explanation: "La risposta corretta è la **D) Credential stuffing**.\n\n* **Perché è la corretta:** Nel **credential stuffing** l'attaccante non indovina nulla: riusa **coppie utente/password già trapelate** da violazioni di altri servizi, scommettendo sul riutilizzo delle credenziali. Tre indizi lo confermano: ogni coppia è provata **una sola volta** (quindi nessun account supera la soglia di lockout), il tasso di successo è **basso ma non nullo**, e gli account compromessi sono **vecchi**, con password mai cambiate. La mitigazione decisiva è la **MFA**: anche con la password corretta, manca il secondo fattore.\n* **Analisi dei distrattori:**\n  * **B) Password spraying:** prova **poche password molto comuni su moltissimi account**. Anch'esso aggira il lockout, ma le password provate sono *indovinate* ('Estate2025!'), non trapelate, e non spiegherebbe perché a cadere siano proprio gli account più vecchi. Abbassare la soglia di lockout non ferma nessuno dei due, perché entrambi fanno un solo tentativo per account, e per giunta espone a un DoS sugli account legittimi.\n  * **C) Attacco a dizionario:** prova **molte parole su un singolo account**, quindi genererebbe numerosi fallimenti concentrati e farebbe scattare il lockout. Allungare le password non protegge da credenziali già note e corrette.\n  * **A) Rainbow table:** serve a **invertire hash rubati offline**, non a effettuare login online. Il salt è la difesa giusta per quel problema, ma qui non c'è alcun furto di database né alcun hash da craccare.\n\n* **Trappola d'esame:** distingui i tre attacchi dal **rapporto fra password e account**. *Credential stuffing* = coppie reali trapelate, una per account, molti account · *Password spraying* = poche password comuni su molti account · *Brute force / dizionario* = molte password su pochi account. Solo il terzo viene fermato dal lockout."
   },
   {
     id: 480,
@@ -11441,17 +11441,17 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   {
     id: 494,
     topic: "Threat Vectors & Vulnerabilities",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale delle seguenti è una vulnerabilità hardware che riguarda l'uso di dispositivi o componenti non più supportati dal produttore, che possono portare a rischi di sicurezza senza patch?",
+    level: "ANALISI",
+    scenario: "Un software di gestione remota usato da migliaia di aziende rilascia un aggiornamento regolarmente firmato con il certificato del produttore e distribuito dai suoi canali ufficiali. Due settimane dopo l'installazione, in tutte le organizzazioni che lo hanno applicato compare una backdoor che contatta un server esterno. Chi non aveva ancora aggiornato non risulta compromesso.",
+    question: "Quale tipo di attacco si è verificato?",
     options: [
-      "A) Legacy vulnerability",
-      "B) Firmware vulnerability",
-      "C) End-of-life vulnerability",
-      "D) Supply Chain vulnerability"
+      "A) Typosquatting del dominio di distribuzione degli aggiornamenti",
+      "B) Attacco zero-day contro il software di gestione remota",
+      "C) Watering hole sul sito del produttore",
+      "D) Malicious update nella catena di fornitura software"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) End-of-life vulnerability (Vulnerabilità End-of-life)**.\n\n* **Perché è la corretta:** L'**End-of-life** si riferisce a hardware non più supportato dal produttore, che spesso porta a vulnerabilità senza patch e sfruttabili. Non ricevendo più aggiornamenti di sicurezza, questi dispositivi rimangono esposti a minacce note.\n* **Analisi dei distrattori:**\n  * **A) La Legacy vulnerability** denota sistemi o componenti hardware più vecchi ancora in uso, che possono essere vulnerabili, ma non significa necessariamente che siano non supportati o a fine vita.\n  * **B) Le Firmware vulnerabilities** sono correlate al software permanente programmato nella memoria di sola lettura dei dispositivi; non riguardano la discontinuazione del supporto hardware.\n  * **D) Le Supply Chain vulnerabilities** si riferiscono a vulnerabilità nella catena di approvvigionamento legate a fornitori di servizi di terze parti; non riguardano l'uso di componenti hardware non supportati."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Malicious update nella catena di fornitura**.\n\n* **Perché è la corretta:** Il dettaglio decisivo è che l'aggiornamento è **autentico**: firmato con il certificato legittimo e distribuito dai canali ufficiali. Significa che la compromissione è avvenuta **a monte**, dentro la pipeline di build del produttore o tramite il furto della sua chiave di firma. Il codice malevolo è quindi entrato **con la fiducia del fornitore**, superando antivirus, application allow list e diffidenza dell'utente. Il fatto che risultino colpite solo le organizzazioni che hanno aggiornato conferma che il vettore è l'aggiornamento stesso.\n* **Analisi dei distrattori:**\n  * **B) Zero-day:** è una vulnerabilità **non nota al produttore e priva di patch**, che l'attaccante sfrutta contro il software così com'è. Qui non è stata sfruttata alcuna falla: è stato consegnato codice malevolo attraverso un canale legittimo.\n  * **C) Watering hole:** compromette un **sito web frequentato** dalle vittime per servire un exploit durante la navigazione. Qui le vittime non hanno navigato: hanno installato un pacchetto firmato.\n  * **A) Typosquatting:** presuppone un **dominio simile** che inganna chi sbaglia a digitare. Gli aggiornamenti sono arrivati dal dominio corretto del produttore, non da un sosia.\n\n* **Trappola d'esame:** questo è il caso in cui **applicare tempestivamente le patch — la pratica corretta — ha aumentato il rischio**. La risposta non è smettere di aggiornare, ma introdurre controlli che reggano anche quando il fornitore è compromesso: rilasci a ondate progressive (*staged rollout*), ambiente di staging, **SBOM** per sapere cosa si installa davvero e monitoraggio comportamentale dopo l'aggiornamento."
   },
   {
     id: 495,
@@ -11485,18 +11485,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 497,
-    topic: "Threat Actors & Motivations",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti attori delle minacce è più probabilmente motivato dalla vendetta?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Tre studi di ingegneria che lavorano su una stessa gara d'appalto vengono compromessi nello stesso periodo. L'analisi forense rileva che tutti e tre i team consultavano abitualmente il portale di un'associazione tecnica di settore, e che quel portale era stato violato e serviva un exploit del browser ai soli visitatori provenienti dagli indirizzi IP dei tre studi.",
+    question: "Quale tecnica d'attacco descrive questo scenario?",
     options: [
-      "A) Insider threat",
-      "B) Nation-state",
-      "C) Unskilled attacker",
-      "D) Ethical hacker"
+      "A) Phishing mirato (spear phishing)",
+      "B) Watering hole",
+      "C) Attacco alla catena di fornitura software",
+      "D) Typosquatting"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Insider threat (Minaccia interna)**.\n\n* **Perché è la corretta:** Un **Insider threat** è un attore di minacce che ha accesso legittimo ai sistemi o ai dati di un'organizzazione e lo abusa per scopi malevoli, tra cui la **vendetta**. È più probabile che sia motivato dalla vendetta se percepisce che l'organizzazione o un individuo al suo interno lo abbia trattato ingiustamente (licenziamento, mancata promozione, insulti).\n* **Analisi dei distrattori:**\n  * **B) Un Nation-state** agisce per conto di un governo con obiettivi strategici o tattici (spionaggio, sabotaggio, guerra); non è motivato da vendette personali.\n  * **C) Un Unskilled attacker** (script kiddie) ha poche o nessuna competenza tecnica ed è motivato da curiosità, noia o guadagno personale; non tipicamente dalla vendetta.\n  * **D) Un Ethical hacker** usa le competenze di hacking per scopi legittimi come testare la sicurezza dei sistemi; non è un attore di minacce e non è motivato dalla vendetta."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Watering hole**.\n\n* **Perché è la corretta:** L'attacco **watering hole** (letteralmente 'pozza d'acqua', come il predatore che aspetta le prede dove vanno a bere) non colpisce direttamente le vittime: compromette un **sito terzo legittimo** che il gruppo bersaglio frequenta abitualmente, e lo usa per servire l'exploit. Due elementi lo identificano con certezza nello scenario: il vettore è un sito **di fiducia e non aziendale**, e il filtraggio per indirizzo IP dimostra che il bersaglio era un **gruppo preciso**, non il pubblico generico.\n* **Analisi dei distrattori:**\n  * **A) Spear phishing:** anch'esso è mirato, ma il vettore è un **messaggio inviato alla vittima** (e-mail, chat). Qui non c'è alcun messaggio: le vittime sono state infettate visitando spontaneamente un sito che consultavano già.\n  * **C) Attacco alla catena di fornitura:** compromette un **prodotto o un aggiornamento software** che la vittima installa, come nel caso di un update avvelenato. Qui non è stato installato nulla: l'infezione è avvenuta durante la navigazione.\n  * **D) Typosquatting:** registra domini simili a quelli noti per intercettare chi sbaglia a digitare. Nello scenario le vittime hanno raggiunto il sito **corretto**, che era stato violato: nessun errore di battitura è coinvolto.\n\n* **Trappola d'esame:** il watering hole è particolarmente insidioso perché aggira la formazione anti-phishing (non c'è nessun messaggio sospetto da riconoscere) e sfrutta un sito che compare nelle allow list aziendali. Le contromisure efficaci sono tecniche: browser e plug-in aggiornati, isolamento della navigazione, EDR comportamentale e filtri di reputazione."
   },
   {
     id: 498,
@@ -11652,16 +11652,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 508,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Durante un audit di routine, Enrique, un cybersecurity specialist della Kelly Innovations LLC, nota che un modulo software specifico stava crashando inaspettatamente. Ispezionando ulteriormente, ha scoperto multiple richieste che contenevano stringhe di caratteri eccessivamente lunghe senza pattern discernibili. Queste stringhe, quando elaborate, sembravano interrompere la normale esecuzione dell'applicazione e causavano comportamenti imprevisti.",
-    question: "Quale dei seguenti descrive MEGLIO il tipo di attacco osservato da Enrique sull'applicazione software della Kelly Innovations LLC?",
+    scenario: "Un EDR segnala che il processo legittimo `explorer.exe` ha aperto una connessione verso un IP estero e sta eseguendo codice in un'area di memoria marcata come scrivibile ed eseguibile. Una scansione completa del disco non trova alcun file sospetto e l'antivirus a firme non rileva nulla. Dopo il riavvio l'anomalia scompare, salvo ripresentarsi dopo qualche ora.",
+    question: "Quale tecnica sta usando l'attaccante?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) Denial of service (DoS)",
-      "C) Buffer overflow",
-      "D) Parameter tampering"
+      "A) Memory injection in un processo legittimo, tipica degli attacchi fileless",
+      "B) Buffer overflow sullo stack del processo explorer.exe",
+      "C) Rootkit a livello di kernel con driver firmato malevolo",
+      "D) Attacco di forza bruta contro le credenziali locali dell'utente"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Buffer overflow**.\n\n* **Perché è la corretta:** Gli attacchi di **Buffer overflow** si verificano quando un'applicazione riceve più dati di quanti sia allocata a gestire, causando la sovrascrittura dei dati in eccesso nelle locazioni di memoria adiacenti. Questo può portare a crash dell'applicazione o potenzialmente consentire a un attaccante di eseguire codice arbitrario — esattamente come descritto nello scenario con le stringhe eccessivamente lunghe.\n* **Analisi dei distrattori:**\n  * **A) Il Cross-site scripting (XSS)** prevede l'incorporazione di script dannosi nel contenuto web; non riguarda l'overflow di buffer di memoria dell'applicazione.\n  * **B) Un attacco DoS** mira a rendere un sistema o risorsa di rete non disponibile sovraccaricandola di traffico; non opera tramite buffer overflow.\n  * **D) Il Parameter tampering** si concentra sull'alterare parametri esistenti dei dati per cambiare il comportamento atteso dell'applicazione; non causa direttamente overflow di memoria."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Memory injection**.\n\n* **Perché è la corretta:** La **memory injection** consiste nello scrivere ed eseguire codice **dentro lo spazio di memoria di un processo legittimo già in esecuzione**. È la base degli attacchi **fileless**, e ogni indizio dello scenario vi punta: nessun file sul disco (quindi l'antivirus a firme non ha nulla da analizzare), codice in esecuzione in memoria scrivibile ed eseguibile, traffico di rete che esce da un processo autorizzato (così il firewall applicativo non si insospettisce) e scomparsa al riavvio, perché la memoria si azzera. La ricomparsa periodica indica un meccanismo di persistenza altrove, tipicamente un'attività pianificata o una chiave di registro.\n* **Analisi dei distrattori:**\n  * **B) Buffer overflow:** è la **vulnerabilità** che consente di sovrascrivere memoria adiacente, spesso usata *per ottenere* l'esecuzione di codice. Ma lo scenario non descrive alcun input sovradimensionato né il crash tipico: descrive il *risultato*, cioè codice che gira in un processo sano.\n  * **C) Rootkit di kernel:** opererebbe a livello di sistema operativo nascondendo processi e file, e **sopravvivrebbe al riavvio** grazie a un driver caricato all'avvio. Qui l'anomalia sparisce riavviando, il che esclude la persistenza a livello kernel.\n  * **D) Forza bruta:** genererebbe numerosi **tentativi di autenticazione falliti** nei log. Nulla nello scenario riguarda le credenziali.\n\n* **Trappola d'esame:** quando lo scenario dice esplicitamente **nessun file sul disco** e **processo legittimo che si comporta in modo anomalo**, la risposta è fileless/memory injection e la contromisura corretta è un **EDR con analisi comportamentale**, non l'antivirus a firme. Tecniche correlate da riconoscere: DLL injection, process hollowing e living off the land con PowerShell o WMI."
   },
   {
     id: 509,
@@ -11742,16 +11742,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 514,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Al ritorno dalle vacanze, Vanessa nota che la sua workstation sembra più lenta del solito. Non solo le applicazioni erano lente, ma c'erano anche istanze in cui gli script apparivano e scomparivano momentaneamente dallo schermo. Preoccupata, ha eseguito il suo software antivirus, ma non ha rilevato alcun file dannoso. Il team di cybersecurity ha avviato un'analisi approfondita e ha trovato che il sistema eseguiva una serie di insoliti task da riga di comando ed era presente evidenza di query WMI non autorizzate. Nessun file associato è stato rilevato sul disco.",
-    question: "Quale dei seguenti tipi di malware è PIÙ probabilmente responsabile delle anomalie sulla workstation di Vanessa?",
+    scenario: "Su una LAN aziendale gli utenti segnalano rallentamenti e avvisi di certificato non valido su siti interni. Un analista esegue `arp -a` su più postazioni e trova che l'indirizzo MAC associato al gateway predefinito è lo stesso di una workstation del reparto marketing. Catturando il traffico, osserva un flusso continuo di risposte ARP non richieste.",
+    question: "Quale attacco è in corso e quale contromisura lo blocca strutturalmente?",
     options: [
-      "A) Rootkit",
-      "B) Ransomware",
-      "C) Fileless Malware",
-      "D) Adware"
+      "A) DNS poisoning della cache locale; bloccato dall'attivazione di DNSSEC sul resolver aziendale",
+      "B) Attacco DDoS amplificato; bloccato dal rate limiting sulle richieste in ingresso dal perimetro",
+      "C) ARP poisoning per un attacco on-path; bloccato da Dynamic ARP Inspection con DHCP snooping sugli switch",
+      "D) Evil twin sulla rete wireless; bloccato imponendo WPA3-Enterprise con autenticazione 802.1X"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Fileless Malware (Malware senza file)**.\n\n* **Perché è la corretta:** Il **Fileless Malware** è caratterizzato dalle sue tecniche di evasione, utilizzando processi e strumenti di sistema legittimi (come PowerShell e WMI) ed eseguendo direttamente in memoria senza scrivere file su disco. L'evidenza di task da riga di comando e query WMI non autorizzate, combinata con l'assenza di file sospetti, indica un'infezione da fileless malware.\n* **Analisi dei distrattori:**\n  * **A) Un Rootkit** mira a fornire accesso non autorizzato a un computer o alle sue aree software; i sintomi primari descritti da Vanessa non corrispondono ai tipici segni di un'infezione da rootkit.\n  * **B) Il Ransomware** blocca tipicamente file o sistemi e chiede un pagamento per il loro rilascio; Vanessa non ha menzionato alcuna cifratura o richiesta di riscatto.\n  * **D) L'Adware** si concentra principalmente sulla consegna di pubblicità indesiderate; non c'è indicazione che Vanessa fosse bombardata da annunci."
+    explanation: "La risposta corretta è la **C) ARP poisoning**.\n\n* **Perché è la corretta:** Gli indizi sono inequivocabili. Il protocollo **ARP non prevede alcuna autenticazione**: chiunque sulla LAN può annunciare 'l'IP del gateway corrisponde al mio MAC'. Trovare il **MAC del gateway associato a una workstation** e un flusso di **risposte ARP non richieste** (gratuitous ARP) significa che quella macchina si è interposta nel percorso: è un attacco **on-path**, e gli avvisi di certificato nascono proprio dal tentativo di intercettare il traffico TLS. La contromisura strutturale è la **Dynamic ARP Inspection**, che sugli switch valida le risposte ARP confrontandole con la tabella costruita dal **DHCP snooping** e scarta quelle incoerenti.\n* **Analisi dei distrattori:**\n  * **B) DDoS amplificato:** sfrutta servizi UDP esterni per rovesciare traffico sulla vittima. È un attacco alla **disponibilità proveniente dall'esterno**, mentre qui l'anomalia è interna alla LAN e riguarda l'intercettazione, non la saturazione.\n  * **A) DNS poisoning:** altererebbe la **risoluzione dei nomi**, non la mappatura IP-MAC. Il comando `arp -a` non mostrerebbe nulla di anomalo, e DNSSEC non ha alcun effetto sul protocollo ARP.\n  * **D) Evil twin:** riguarda il **wireless** e presuppone client che si associano a un AP fasullo. Lo scenario descrive una LAN cablata e una workstation interna.\n\n* **Trappola d'esame:** l'ARP poisoning è il tipico **precursore** di un attacco on-path. Gli avvisi di certificato sono un ottimo indicatore, perché segnalano che qualcuno sta terminando e riaprire le sessioni TLS. Contromisure d'esame: **Dynamic ARP Inspection + DHCP snooping**, segmentazione e, sui sistemi critici, voci ARP statiche."
   },
   {
     id: 515,
@@ -11802,16 +11802,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 518,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Una sera, Megan, una database administrator della Kelly Innovations LLC, è stata allertata di attività sospette sul sito web dell'azienda. Ha notato un volume insolitamente alto di ricerche, ma invece dei normali termini di ricerca, queste voci contenevano caratteri come '=', '%20' e 'OR'. Megan ha anche osservato che subito dopo queste strane ricerche, i log del server mostravano recuperi di database non pianificati che esponevano dettagli dei dipendenti.",
-    question: "Quale dei seguenti identifica MEGLIO il tipo di attacco testimoniato da Megan sul sito web della Kelly Innovations LLC?",
+    scenario: "Un'applicazione bancaria registra un bonifico eseguito due volte con lo stesso identico identificativo di transazione, dallo stesso IP, a distanza di sei ore dall'originale. L'utente dichiara di aver disposto un solo pagamento. I log mostrano che la seconda richiesta era byte per byte identica alla prima, firma inclusa.",
+    question: "Quale attacco è stato quasi certamente eseguito?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) SQL injection",
-      "C) Buffer overflow",
-      "D) Parameter tampering"
+      "A) SQL injection",
+      "B) Replay attack",
+      "C) Cross-site scripting",
+      "D) Attacco di forza bruta"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) SQL injection**.\n\n* **Perché è la corretta:** Una **SQL injection** è un tipo di attacco in cui un attaccante introduce istruzioni SQL dannose in un campo di input, con l'obiettivo di eseguire comandi arbitrari su un database. Caratteri come '=', '%20' e 'OR' sono frequentemente visti in questi attacchi. Se l'input non è adeguatamente sanificato, questo può portare ad accesso non autorizzato o manipolazione dei dati.\n* **Analisi dei distrattori:**\n  * **A) Il Cross-site scripting (XSS)** prevede l'incorporazione di script dannosi nelle pagine web; sebbene inietti codice, l'obiettivo e il comportamento dell'XSS differiscono significativamente dagli attacchi diretti al database come le SQL injection.\n  * **C) Il Buffer overflow** si verifica quando i dati eccedono la capacità del buffer; riguarda la memoria, non le query di database.\n  * **D) Il Parameter tampering** altera parametri esistenti per manipolare l'elaborazione dei dati dell'applicazione; pur coinvolgendo la modifica degli input, non corrisponde alle query di database osservate indicative di SQL injection."
+    explanation: "La risposta corretta è la **B) Replay attack**.\n\n* **Perché è la corretta:** In un **attacco replay** l'aggressore intercetta una comunicazione legittima e la **ritrasmette identica** in un momento successivo. Non ha bisogno di decifrarla né di alterarla: le basta che il server la riaccetti. L'indizio decisivo nello scenario è che la seconda richiesta è **identica byte per byte, firma compresa**: un attaccante che avesse modificato qualcosa avrebbe invalidato la firma, mentre un utente che dispone un secondo bonifico genererebbe un identificativo e una firma diversi.\n* **Analisi dei distrattori:**\n  * **A) SQL injection:** richiede l'inserimento di **comandi SQL nei campi di input** per manipolare il database. Qui non c'è alcun input anomalo: la richiesta è una transazione perfettamente valida, solo ripetuta.\n  * **C) Cross-site scripting:** inietta **script nel browser di altri utenti** per rubare sessioni o dati. Nulla nello scenario indica contenuto attivo servito a terzi.\n  * **D) Forza bruta:** tenta ripetutamente credenziali o chiavi diverse finché una funziona. Qui non ci sono tentativi falliti né variazione: c'è una sola richiesta valida, riproposta tale e quale.\n\n* **Trappola d'esame:** le difese contro il replay non sono la cifratura (il messaggio era già firmato e cifrato), ma i meccanismi che rendono **ogni messaggio utilizzabile una sola volta**: un **nonce** o un identificativo univoco per transazione, un **timestamp** con finestra di validità ristretta, numeri di sequenza e token di sessione a scadenza breve. Se lo scenario descrive una richiesta legittima *ripetuta identica*, la risposta è sempre replay."
   },
   {
     id: 519,
@@ -11906,32 +11906,32 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   {
     id: 525,
     topic: "Mitigation Techniques & Controls",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale tecnica di mitigazione prevede l'uso di strumenti come Nagios o Splunk per osservare e verificare continuamente il funzionamento di un sistema o una rete?",
+    level: "APPLICAZIONE",
+    scenario: "Un inventario rivela che in rete sono ancora attivi: un vecchio server FTP usato fino a due anni fa, tre stampanti con pannello web e credenziali di fabbrica, e il servizio Telnet abilitato su dodici switch. Nessuno di questi elementi serve più ai processi aziendali.",
+    question: "Quale combinazione di tecniche di mitigazione affronta correttamente la situazione?",
     options: [
-      "A) Hardening techniques",
-      "B) Segmentation",
-      "C) Patching",
-      "D) Monitoring"
+      "A) Formazione del personale sull'uso corretto di FTP e Telnet e sulle password complesse",
+      "B) Cifratura di tutto il traffico verso questi dispositivi, mantenendoli in servizio così come sono",
+      "C) Monitoraggio continuo dei log dei dispositivi, per intervenire tempestivamente in caso di attacco",
+      "D) Dismissione del superfluo e hardening del resto: credenziali di fabbrica cambiate, protocolli insicuri disabilitati"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Monitoring (Monitoraggio)**.\n\n* **Perché è la corretta:** Il **Monitoring** è l'osservazione e la verifica continua del funzionamento di un sistema o una rete, spesso tramite strumenti come Nagios (per il monitoraggio dell'infrastruttura) o Splunk (per l'analisi dei log e degli eventi di sicurezza), per garantirne funzionalità e sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Le Hardening techniques** proteggono un sistema attraverso molteplici metodi; non implicano necessariamente l'uso di Nagios o Splunk per l'osservazione continua.\n  * **B) La Segmentation** divide una rete in parti diverse per sicurezza e prestazioni; non usa specificatamente strumenti di osservazione come Nagios o Splunk.\n  * **C) Il Patching** aggiorna o corregge il software per risolvere vulnerabilità; non riguarda l'osservazione continua tramite strumenti specifici."
+    explanation: "La risposta corretta è la **D) Dismissione e hardening**.\n\n* **Perché è la corretta:** Lo scenario contiene due categorie distinte. Il server FTP **non serve più**: la mitigazione corretta non è proteggerlo, è **dismetterlo** (decommissioning), perché il modo più sicuro di gestire un servizio inutile è farlo sparire, riducendo la superficie d'attacco a zero. Stampanti e switch invece **servono ancora**: su di essi si applica l'**hardening**, cioè cambio delle credenziali predefinite, disabilitazione dei protocolli in chiaro (Telnet sostituito da SSH) e chiusura dei servizi superflui.\n* **Analisi dei distrattori:**\n  * **B)** Cifrare il canale non risolve nulla se le **credenziali di fabbrica** restano note pubblicamente: l'attaccante entra legittimamente attraverso un tunnel cifrato. E mantenere in servizio un sistema inutile conserva rischio senza alcun beneficio.\n  * **C) Il monitoraggio** è un controllo **investigativo**: permette di accorgersi dell'attacco, non di impedirlo. Utile in aggiunta, ma qui esistono rimedi definitivi e non ci sono ragioni per limitarsi a osservare.\n  * **A) La formazione** non ha effetto sul problema descritto, che è di **configurazione dei sistemi**, non di comportamento delle persone. Nessun dipendente può rendere sicuro Telnet sapendolo usare meglio.\n\n* **Trappola d'esame:** davanti a sistemi obsoleti o superflui, la gerarchia è netta. **Prima**: dismettere ciò che non serve · **poi**: irrobustire ciò che resta (credenziali, protocolli, servizi, patch) · **solo se nulla di ciò è possibile**: applicare controlli compensativi come segmentazione e monitoraggio rinforzato."
   },
   {
     id: 526,
     topic: "Threat Vectors & Vulnerabilities",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti è un tipo di attacco message-based che consiste nell'inviare chiamate vocali fraudolente per indurre i destinatari a rivelare informazioni sensibili o a eseguire determinate azioni?",
+    level: "ANALISI",
+    scenario: "Nella hall e negli ascensori di un'azienda compaiono adesivi con un codice QR e la scritta \"Inquadra per attivare il nuovo Wi-Fi ospiti\". Chi lo scansiona col telefono raggiunge una pagina che imita fedelmente il portale SSO aziendale e chiede credenziali e codice MFA. Il gateway di posta non ha registrato nulla di anomalo e nessun dipendente segnala SMS sospetti; i primi account compromessi appartengono a persone che hanno inquadrato il codice con il telefono personale.",
+    question: "Quale tecnica descrive l'attacco, e perché i controlli su e-mail e SMS non l'hanno intercettato?",
     options: [
-      "A) IM",
-      "B) Phishing",
-      "C) Vishing",
-      "D) Smishing"
+      "A) Quishing: il payload è dentro un codice QR su un supporto fisico, che non passa dal gateway di posta",
+      "B) Smishing: il messaggio raggiunge il telefono della vittima, quindi rientra nel phishing via SMS",
+      "C) Evil twin: un access point malevolo che duplica l'SSID aziendale per intercettare le credenziali",
+      "D) Shoulder surfing: l'osservazione diretta delle credenziali digitate in un'area comune"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Vishing (Voice Phishing)**.\n\n* **Perché è la corretta:** Il **Vishing** è un tipo di attacco message-based che consiste nell'inviare chiamate vocali fraudolente per indurre i destinatari a rivelare informazioni sensibili o a eseguire determinate azioni.\n* **Analisi dei distrattori:**\n  * **A) L'IM (Instant Messaging)** è un tipo di attacco message-based che utilizza messaggi istantanei fraudolenti per indurre i destinatari a rivelare informazioni; non usa chiamate vocali.\n  * **B) Il Phishing** è un tipo di attacco message-based che utilizza email fraudolente per indurre i destinatari a rivelare informazioni sensibili o cliccare su link dannosi; non usa chiamate vocali.\n  * **D) Lo Smishing** è un tipo di attacco message-based che utilizza messaggi di testo (SMS) fraudolenti per indurre i destinatari a rivelare informazioni sensibili; non usa chiamate vocali."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Quishing**.\n\n* **Perché è la corretta:** Il **quishing** (QR code phishing) nasconde l'URL malevolo dentro un **codice QR**, che per un sistema di sicurezza è solo un'immagine e per l'utente è illeggibile finché non lo ha già aperto. Qui il codice è stampato su un adesivo fisico: il link non passa mai da un canale ispezionabile, e questo spiega esattamente il silenzio dei controlli. Il gateway di posta non ha nulla da analizzare perché non c'è alcuna e-mail; il filtro SMS non vede nulla perché non c'è alcun messaggio; il proxy aziendale non blocca il dominio perché lo smartphone personale naviga sulla rete dell'operatore, fuori dal perimetro. La destinazione è il classico portale SSO clonato che raccoglie credenziali **e** codice MFA, per poterlo rigiocare in tempo reale.\n* **Analisi dei distrattori:**\n  * **B) Smishing:** è phishing veicolato da **SMS**. Il fatto che la vittima usi un telefono non basta a qualificarlo: lo scenario dice esplicitamente che nessuno ha ricevuto messaggi. Il canale è l'adesivo, non la messaggistica.\n  * **C) Evil twin:** è un **access point** malevolo che imita l'SSID legittimo per dirottare il traffico Wi-Fi. Qui non esiste alcun access point: il Wi-Fi è solo il pretesto scritto sull'adesivo, e la vittima finisce su un sito web attraverso la propria rete dati.\n  * **D) Shoulder surfing:** richiede che l'attaccante sia fisicamente presente a **osservare** la digitazione. In questo scenario le credenziali vengono consegnate volontariamente a un sito, senza alcun osservatore.\n\n* **Trappola d'esame:** il nome dell'attacco segue il **canale**, non il bersaglio né il dispositivo. Phishing = e-mail · Smishing = SMS · Vishing = voce/telefonata · Quishing = codice QR. Sono invece dimensioni diverse: **whaling** e **spear phishing** indicano *quanto è mirato* il bersaglio, e possono combinarsi con qualunque canale. Contromisura chiave per il quishing: una **app fotocamera o MDM che mostri l'URL completo prima di aprirlo** e la regola per cui nessun QR non censito va inquadrato su un dispositivo che accede a risorse aziendali."
   },
   {
     id: 527,
@@ -11950,33 +11950,33 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 528,
-    topic: "Threat Actors & Motivations",
-    level: "APPLICAZIONE",
-    scenario: "Sei un analista di sicurezza alla Dion Training e scopri che un dispositivo non autorizzato è stato connesso alla rete aziendale. Dalle indagini emerge che il dispositivo è stato aggiunto da una dipendente per giocare ai videogiochi durante le pause.",
-    question: "Con quale tipo di attore di minaccia hai a che fare?",
+    topic: "Threat Vectors & Vulnerabilities",
+    level: "ANALISI",
+    scenario: "Durante una site survey wireless, un analista rileva in magazzino un access point che trasmette l'SSID aziendale ma non compare nell'inventario, non è gestito dal controller centrale e accetta connessioni senza autenticazione 802.1X. Risulta collegato a una presa di rete dell'ufficio e configurato con le impostazioni di fabbrica.",
+    question: "Quale minaccia è stata individuata e qual è il controllo che l'avrebbe impedita?",
     options: [
-      "A) Shadow IT",
-      "B) Unskilled Actor",
-      "C) Insider Threat",
-      "D) Nation-state Actor"
+      "A) Attacco di deautenticazione; impedito dalla protezione dei frame di gestione (MFP)",
+      "B) Evil twin esterno; impedito dall'innalzamento della potenza di trasmissione degli AP legittimi",
+      "C) Rogue access point; impedito dalla port security e dall'autenticazione 802.1X sulle porte switch",
+      "D) Jamming del segnale radio; impedito dal passaggio alla banda 5 GHz"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Shadow IT**.\n\n* **Perché è la corretta:** Lo **Shadow IT** è un tipo di attore di minacce che risulta dall'uso di sistemi, dispositivi o software IT non autorizzati o non approvati all'interno di un'organizzazione. In questo caso, il dispositivo potrebbe introdurre rischi di sicurezza e problemi di conformità, ma la dipendente non aveva l'intenzione di danneggiare l'azienda — l'ha aggiunto per convenienza personale.\n* **Analisi dei distrattori:**\n  * **B) Un Unskilled Actor** manca di competenze tecniche e lancia attacchi semplici usando strumenti altrui; la dipendente non sta conducendo un attacco deliberato.\n  * **C) Un Insider Threat** ha accesso autorizzato e intende deliberatamente danneggiare l'azienda; la dipendente non ha intenzioni malevole.\n  * **D) Un Nation-state Actor** è sponsorizzato da un governo; non è pertinente a questo scenario."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Rogue access point**.\n\n* **Perché è la corretta:** Un **rogue AP** è un access point **non autorizzato collegato fisicamente alla rete aziendale**. Nello scenario tutti gli indizi convergono: è attaccato a una presa di rete interna, non è nell'inventario, non è gestito dal controller e ha le impostazioni di fabbrica. Il pericolo è che crea un ingresso nella rete interna che scavalca completamente i controlli perimetrali. La contromisura corretta agisce **sulla porta dello switch**: **port security** (limite di MAC per porta) e **802.1X** impediscono che un dispositivo non autorizzato ottenga connettività attaccandosi a una presa.\n* **Analisi dei distrattori:**\n  * **B) Evil twin:** è un AP fasullo che **imita l'SSID** per ingannare i client, ma tipicamente **non è collegato alla rete aziendale**: sta all'esterno e intercetta le connessioni. Qui il dispositivo è fisicamente sulla LAN, il che lo qualifica come rogue. Aumentare la potenza degli AP legittimi non è peraltro una contromisura valida.\n  * **A) Deautenticazione:** è un attacco che **espelle i client** inviando frame di gestione falsificati, per costringerli a riconnettersi altrove. Lo scenario non descrive alcuna disconnessione forzata.\n  * **D) Jamming:** è un disturbo radio che nega il servizio saturando il canale. Qui il problema non è l'assenza di servizio, ma la presenza di un servizio non autorizzato.\n\n* **Trappola d'esame:** la distinzione più chiesta è proprio **rogue AP contro evil twin**. *Rogue* = dispositivo non autorizzato **connesso alla tua rete**, spesso installato in buona fede da un dipendente per comodità · *Evil twin* = AP dell'attaccante che **clona il tuo SSID** per farsi connettere i client e intercettarne il traffico."
   },
   {
     id: 529,
     topic: "Indicators of Malicious Activity",
-    level: "COMPRENSIONE",
-    scenario: null,
-    question: "Quale dei seguenti attacchi web-based consiste nell'inserire script dannosi nelle pagine web che possono essere eseguiti dal browser di utenti ignari?",
+    level: "ANALISI",
+    scenario: "I dipendenti di una filiale digitano l'indirizzo corretto del portale bancario aziendale ma vengono portati su una copia contraffatta, senza alcun avviso di dominio errato nella barra degli indirizzi. Un tecnico verifica il resolver DNS della filiale e trova che il record del dominio bancario punta a un indirizzo IP non appartenente alla banca, con un TTL insolitamente lungo.",
+    question: "Quale attacco è stato eseguito e quale contromisura lo previene?",
     options: [
-      "A) Cross-site scripting (XSS)",
-      "B) Virtual machine (VM) escape",
-      "C) Firmware vulnerability",
-      "D) SQL Injection"
+      "A) DNS poisoning della cache del resolver; prevenuto da DNSSEC, che firma crittograficamente le risposte DNS",
+      "B) Typosquatting del dominio bancario; prevenuto registrando preventivamente i domini con errori di battitura",
+      "C) Cross-site scripting sul portale bancario; prevenuto dalla sterilizzazione dell'output lato server",
+      "D) Attacco on-path via ARP poisoning; prevenuto dalla Dynamic ARP Inspection sugli switch"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Cross-site scripting (XSS)**.\n\n* **Perché è la corretta:** Il **Cross-site scripting (XSS)** è un attacco web-based che consiste nell'inserire script dannosi nelle pagine web che vengono poi eseguiti dal browser degli utenti ignari. Può consentire a un attaccante di rubare cookie, token di sessione, credenziali o eseguire altre azioni per conto dell'utente.\n* **Analisi dei distrattori:**\n  * **B) La VM escape** è un tipo di attacco che consiste nel fuoriuscire da un ambiente virtualizzato per accedere al sistema host sottostante o ad altre VM; non riguarda l'inserimento di script nelle pagine web.\n  * **C) La Firmware vulnerability** è un tipo di software incorporato nei dispositivi hardware; non è un attacco web-based.\n  * **D) La SQL Injection** è un attacco web-based che inserisce istruzioni SQL dannose nei campi di input per manipolare i database; non riguarda l'esecuzione di script nel browser."
+    explanation: "La risposta corretta è la **A) DNS poisoning**.\n\n* **Perché è la corretta:** Nel **DNS poisoning** (o cache poisoning) l'attaccante inserisce un record falso nella cache di un resolver, così che la traduzione da nome a indirizzo IP restituisca il suo server. Gli indizi sono decisivi: gli utenti digitano il **dominio corretto** e la barra degli indirizzi non mostra nulla di strano, quindi l'inganno non è nel nome ma nella **risoluzione**; e il record nel resolver punta a un IP estraneo con **TTL lungo**, scelto per far sopravvivere l'avvelenamento il più possibile. **DNSSEC** è la contromisura strutturale, perché firma crittograficamente le risposte DNS e permette al resolver di rifiutare quelle contraffatte.\n* **Analisi dei distrattori:**\n  * **B) Typosquatting:** richiederebbe che l'utente **sbagli a digitare** e finisca su un dominio simile. Lo scenario dice esplicitamente che l'indirizzo digitato è corretto.\n  * **C) Cross-site scripting:** inietta script **dentro le pagine del sito legittimo**. Qui il sito legittimo non viene mai raggiunto: il traffico è dirottato prima, verso un server diverso.\n  * **D) ARP poisoning:** produce un effetto simile, ma agisce sulla mappatura **IP-MAC dentro la LAN** e si diagnostica con `arp -a`. Qui l'anomalia è stata trovata nel **record DNS del resolver**, che è un livello diverso.\n\n* **Trappola d'esame:** distingui i due avvelenamenti dal livello su cui agiscono. **ARP poisoning** = livello 2, mappatura IP↔MAC, si verifica con `arp -a`, si previene con Dynamic ARP Inspection · **DNS poisoning** = livello applicativo, mappatura nome↔IP, si verifica interrogando il resolver, si previene con DNSSEC. Un ottimo indicatore di entrambi resta l'avviso di certificato TLS, che compare quando il sito servito non corrisponde al nome richiesto."
   },
   {
     id: 530,
@@ -12010,18 +12010,18 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 532,
-    topic: "Indicators of Malicious Activity",
+    topic: "Threat Vectors & Vulnerabilities",
     level: "ANALISI",
-    scenario: "Dini sta investigando un incidente malware. L'attaccante sembra avere informazioni su tutto ciò che è stato digitato sul terminale e ha usato tali informazioni per scoprire i PIN degli utenti.",
-    question: "Quale dei seguenti tipi di malware è PIÙ probabilmente coinvolto in questo incidente?",
+    scenario: "Lunedì mattina il SOC di un'azienda manifatturiera rileva che tre workstation di reparti diversi hanno eseguito lo stesso binario dall'unità `E:` pochi minuti dopo l'inizio del turno. Il venerdì precedente alcune chiavette USB con l'etichetta scritta a mano \"Stipendi 2026 - Riservato\" erano state trovate nel parcheggio aziendale e diversi dipendenti le avevano collegate al PC per capire a chi restituirle. I log del gateway di posta e del firewall perimetrale non mostrano alcun transito di quel file.",
+    question: "Quale vettore d'attacco è stato sfruttato e quale controllo lo avrebbe neutralizzato alla radice?",
     options: [
-      "A) Trojan",
-      "B) Keylogger",
-      "C) Ransomware",
-      "D) Worm"
+      "A) Phishing via email con allegato malevolo: rafforzare il filtro anti-spam e il sandboxing degli allegati",
+      "B) Compromissione della supply chain software: verificare la firma digitale dei pacchetti e mantenere un SBOM",
+      "C) Supporti rimovibili (USB drop): disabilitare l'autorun e applicare una policy di device control che blocchi le unità USB non autorizzate",
+      "D) Movimento laterale via SMB da un host già compromesso: segmentare la rete e disattivare SMBv1"
     ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Keylogger**.\n\n* **Perché è la corretta:** Un **Keylogger** è un tipo di malware che registra i tasti premuti dall'utente e li invia a un server remoto, consentendo a un attaccante di catturare informazioni sensibili come password, numeri di carte di credito o PIN. La capacità dell'attaccante di conoscere tutto ciò che è stato digitato è il segnale distintivo di un keylogger.\n* **Analisi dei distrattori:**\n  * **A) Un Trojan** si maschera da programma legittimo ed esegue azioni dannose; non è specificamente progettato per registrare tutti i tasti.\n  * **C) Il Ransomware** cifra i dati e richiede un riscatto; non registra i tasti premuti.\n  * **D) Un Worm** si auto-replica e si diffonde ad altri sistemi; non è progettato per catturare informazioni digitate."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Supporti rimovibili (USB drop)**.\n\n* **Perché è la corretta:** Tre indizi convergono sullo stesso vettore. Primo, il binario è stato eseguito dall'unità `E:`, cioè da un dispositivo di archiviazione collegato localmente e non da una share di rete o dal disco di sistema. Secondo, né il gateway di posta né il firewall perimetrale hanno visto transitare quel file: il codice non è entrato dalla rete, è entrato *a mano*, portato fisicamente oltre il perimetro. Terzo, l'innesco è umano e ripetuto su reparti diversi, coerente con più persone che raccolgono chiavette diverse dello stesso lotto. È il classico **USB drop attack**: l'attaccante dissemina supporti rimovibili con un'etichetta studiata per stuzzicare la curiosità (o il senso di riservatezza violata) in un luogo frequentato dai dipendenti del bersaglio, e lascia che sia la vittima a trasportare il malware all'interno. Il controllo che lo neutralizza alla radice è il **device control**: una policy che impedisce il montaggio o l'esecuzione da unità di archiviazione USB non censite, affiancata dalla disabilitazione dell'autorun. È un controllo preventivo e tecnico, quindi funziona anche quando la formazione del personale fallisce - ed è ragionevole aspettarsi che prima o poi fallisca.\n* **Analisi dei distrattori:**\n  * **A) Phishing con allegato:** sarebbe il vettore più probabile in astratto, ma lo scenario lo esclude esplicitamente: i log del gateway di posta non mostrano il transito del file. Un controllo anti-spam non ha alcuna presa su un supporto che attraversa il perimetro dentro una tasca.\n  * **B) Supply chain software:** in un attacco alla supply chain il codice malevolo arriva attraverso un canale legittimo e atteso (un aggiornamento firmato, un pacchetto da repository ufficiale). Qui il binario non proviene da alcun fornitore né da un canale di distribuzione: firma del codice e SBOM non avrebbero intercettato nulla.\n  * **D) Movimento laterale via SMB:** il movimento laterale parte da un host già compromesso e si propaga verso gli altri attraverso la rete, lasciando traccia nelle connessioni SMB. Qui le tre esecuzioni sono quasi simultanee, su reparti diversi e tutte da un'unità locale: non c'è un paziente zero da cui la catena si propaga.\n* **Trappola d'esame:** CompTIA classifica i supporti rimovibili tra i **vettori umani (human vectors)**, non tra quelli puramente tecnici, perché l'attacco non sfrutta una vulnerabilità del software ma la curiosità della vittima. Quando lo scenario nega esplicitamente il transito via email o via rete, il vettore è quasi sempre fisico: supporto rimovibile, accesso non autorizzato ai locali, o un dispositivo malevolo lasciato in loco."
   },
   {
     id: 533,
@@ -13378,18 +13378,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 209,
-    topic: "Public Key Infrastructure",
-    level: "COMPRENSIONE",
-    scenario: "Le organizzazioni si affidano all'infrastruttura a chiave pubblica (PKI) per stabilire canali sicuri e convalidare l'identità di server o partner commerciali esterni.",
-    question: "Quale dei seguenti certificati viene emesso da un'autorità esterna riconosciuta e comporta intrinsecamente un livello di fiducia più elevato per gli utenti e i sistemi che non conoscono l'origine del certificato?",
+    topic: "Security Principles",
+    level: "APPLICAZIONE",
+    scenario: "In un'azienda lo stesso impiegato dell'ufficio acquisti può creare un nuovo fornitore nell'anagrafica, emettere un ordine a suo favore e approvare il pagamento della fattura. Un audit segnala la situazione come rischio grave di frode interna.",
+    question: "Quale principio di sicurezza è violato e quale contromisura lo ripristina?",
     options: [
-      "A) Certificato di terze parti (Third-party certificate)",
-      "B) Una CRL (Certificate Revocation List)",
-      "C) Chiave privata (Private key)",
-      "D) Chiave pubblica (Public key)"
+      "A) Minimo privilegio: all'impiegato vanno revocati tutti i permessi tranne la consultazione in sola lettura",
+      "B) Separazione dei compiti (separation of duties): creazione, ordine e approvazione del pagamento vanno assegnate a persone diverse",
+      "C) Need to know: all'impiegato va impedito di consultare l'anagrafica dei fornitori concorrenti",
+      "D) Rotazione delle mansioni: l'impiegato va spostato in un altro reparto ogni dodici mesi"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Certificato di terze parti (Third-party certificate)**.\n\n* **Perché è la corretta:** Un **certificato di terze parti (third-party certificate)** è firmato e validato da una Certificate Authority (CA) pubblica e riconosciuta a livello globale. Poiché i sistemi operativi e i browser integrano nativamente l'elenco delle CA attendibili, questo certificato è considerato immediatamente fiduciario da chiunque vi si colleghi, a differenza di un certificato autofirmato.\n* **Analisi dei distrattori:**\n  * **B) Una CRL** è un file contenente l'elenco dei certificati revocati dalla CA prima della loro naturale scadenza; non è un tipo di certificato digitale.\n  * **C) La chiave privata** è il segreto crittografico asimmetrico usato per decifrare o firmare i dati, non è un tipo di certificato.\n  * **D) La chiave pubblica** è la componente liberamente distribuibile usata per cifrare o verificare firme; sebbene sia contenuta all'interno di un certificato digitale, non rappresenta essa stessa un certificato emesso da una CA."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Separazione dei compiti**.\n\n* **Perché è la corretta:** La **separation of duties** impone che nessuna singola persona possa controllare da sola l'intero ciclo di un'operazione sensibile. Qui un solo impiegato crea il fornitore, ordina e paga: può quindi inventare un fornitore fittizio e liquidarsi denaro senza che nessuno debba approvare. Spezzando il ciclo fra persone diverse, la frode richiederebbe una collusione, che è molto più difficile e molto più rilevabile.\n* **Analisi dei distrattori:**\n  * **A) Il minimo privilegio** riguarda l'*ampiezza* dei permessi di una persona, non la *combinazione pericolosa* di più permessi tutti legittimi. Qui ciascuna delle tre funzioni è pertinente al ruolo dell'impiegato: il problema nasce dal fatto che le ha tutte e tre. Revocargli quasi tutto gli impedirebbe anche di lavorare.\n  * **C) Il need to know** limita l'accesso alle *informazioni* a quelle necessarie per il compito. Lo scenario non descrive un problema di visibilità dei dati, ma di autorità sulle transazioni.\n  * **D) La rotazione delle mansioni** è un controllo utile e complementare, perché rende più difficile mantenere una frode nel tempo e ne facilita la scoperta al cambio. Ma non impedisce la frode *oggi*: per dodici mesi l'impiegato conserverebbe l'intero ciclo nelle proprie mani.\n\n* **Trappola d'esame:** distingui i due principi che vengono sempre confusi. **Minimo privilegio** = *quanto* può fare una persona · **Separazione dei compiti** = *quali combinazioni* di poteri non devono mai stare insieme. Controlli affini che l'esame associa a questo tema: **dual control** (due persone per eseguire una singola azione critica), **ferie obbligatorie** e **job rotation**, pensati proprio per far emergere frodi che richiedono presenza continua."
   },
   {
     id: 210,
@@ -13438,18 +13438,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 213,
-    topic: "Identity & Access Control Models",
-    level: "COMPRENSIONE",
-    scenario: "In un'architettura Zero Trust, le richieste di accesso non vengono mai considerate attendibili di default, ma devono essere costantemente verificate e applicate.",
-    question: "Quale componente dell'architettura Zero Trust è responsabile di far rispettare concretamente le policy consentendo o negando l'accesso alle risorse?",
+    topic: "Zero Trust Architecture",
+    level: "ANALISI",
+    scenario: "Un dipendente chiede l'accesso a un'applicazione finanziaria. Il sistema Zero Trust raccoglie identità, stato di aggiornamento del portatile, posizione e punteggio di rischio, li confronta con le policy aziendali e conclude che l'accesso va concesso ma solo in sola lettura. Un secondo componente trasforma quella decisione in una configurazione operativa e ordina di aprire la sessione con quei limiti.",
+    question: "Quali componenti del Control Plane hanno svolto rispettivamente la valutazione e l'emissione della decisione?",
     options: [
-      "A) Policy Engine",
-      "B) Identity Provider",
-      "C) Policy Enforcement Point",
-      "D) Threat Scope Reducer"
+      "A) Policy Administrator per la valutazione, Threat Scope Reducer per l'emissione della decisione",
+      "B) Policy Enforcement Point per la valutazione, Policy Engine per l'emissione della decisione",
+      "C) Identity Provider per la valutazione, Policy Enforcement Point per l'emissione della decisione",
+      "D) Policy Engine per la valutazione, Policy Administrator per l'emissione della decisione"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Policy Enforcement Point**.\n\n* **Perché è la corretta:** Il **Policy Enforcement Point (PEP)** è il componente logico o fisico (es. un gateway, proxy, o firewall) incaricato di abilitare, monitorare e interrompere materialmente le connessioni tra un soggetto e una risorsa aziendale, applicando le decisioni stabilite dal Policy Decision Point.\n* **Analisi dei distrattori:**\n  * **A) Il Policy Engine** è la mente decisionale incaricata di valutare i criteri di sicurezza e stabilire se l'accesso debba essere concesso, ma non applica direttamente o materialmente la decisione sul traffico dati.\n  * **B) L'Identity Provider** gestisce i database delle identità degli utenti e la loro autenticazione iniziale, ma non si occupa del controllo continuo o dell'applicazione delle policy di accesso Zero Trust alle risorse.\n  * **D) Un 'Threat Scope Reducer'** non è un componente standard o definito all'interno delle architetture di riferimento Zero Trust (come NIST SP 800-207)."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Policy Engine per la valutazione, Policy Administrator per l'emissione**.\n\n* **Perché è la corretta:** Il modello NIST SP 800-207 separa tre ruoli distinti.\n  * Il **Policy Engine (PE)** è il componente che **decide**: incrocia segnali di identità, stato del dispositivo, contesto e telemetria delle minacce con le policy e produce un verdetto (consenti, nega, consenti con restrizioni).\n  * Il **Policy Administrator (PA)** **esegue amministrativamente** quel verdetto: genera credenziali o token di sessione e istruisce il punto di applicazione su cosa aprire e con quali limiti.\n  * Insieme PE e PA formano il **Control Plane**.\n* **Analisi dei distrattori:**\n  * **B)** Inverte i ruoli. Il **Policy Enforcement Point (PEP)** non valuta nulla: sta sul **Data Plane** ed è il punto in cui la sessione viene materialmente aperta o bloccata.\n  * **C)** L'**Identity Provider** fornisce *uno* dei segnali che il PE considera, cioè l'autenticazione dell'identità, ma non prende la decisione di accesso né ne valuta il contesto complessivo.\n  * **A)** Il **Threat Scope Reducer** non è un componente decisionale: è l'obiettivo architetturale di ridurre il raggio d'azione di una compromissione, che si ottiene con la microsegmentazione.\n\n* **Trappola d'esame:** memorizza la catena e il piano di appartenenza. **PE decide → PA emette (Control Plane) → PEP applica (Data Plane)**. Se la domanda chiede *chi valuta le policy* la risposta è il Policy Engine; se chiede *chi consente o blocca concretamente il traffico* è il Policy Enforcement Point."
   },
   {
     id: 214,
@@ -13483,18 +13483,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 216,
-    topic: "Change Management",
-    level: "COMPRENSIONE",
-    scenario: "Un'organizzazione desidera comprendere in che modo un cambiamento proposto ai propri sistemi possa influire su diverse aree aziendali prima di procedere con l'implementazione.",
-    question: "Qual è il nome del processo che consiste nell'analizzare e prevedere gli effetti di un cambiamento proposto, tenendo conto del suo impatto su diverse aree di un'organizzazione o di un sistema?",
+    topic: "Security Controls",
+    level: "ANALISI",
+    scenario: "Un ransomware cifra il file server di un'azienda. Il team interviene in sequenza: isola l'host dalla rete, ripristina i dati dai backup immutabili, reinstalla il sistema operativo da un'immagine certificata e infine applica la patch che chiudeva la vulnerabilità sfruttata.",
+    question: "A quale categoria funzionale appartengono il ripristino dei dati e la reinstallazione del sistema?",
     options: [
-      "A) Backout Plan",
-      "B) Impact Analysis",
-      "C) Approval Process",
-      "D) Version Control"
+      "A) Controlli investigativi (detective)",
+      "B) Controlli preventivi (preventive)",
+      "C) Controlli correttivi (corrective)",
+      "D) Controlli deterrenti (deterrent)"
     ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Impact Analysis**.\n\n* **Perché è la corretta:** L'**Impact Analysis** (analisi di impatto) è il processo che consiste nel valutare e prevedere le potenziali conseguenze di un cambiamento proposto, tenendo conto di vari aspetti di un'organizzazione o di un sistema, come l'infrastruttura IT, i processi di business e la sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Backout Plan** è la strategia che delinea i passaggi da seguire per annullare le modifiche qualora queste comportino complicazioni impreviste o non raggiungano i risultati desiderati.\n  * **C) Approval Process** è la procedura formalizzata che garantisce che le modifiche vengano esaminate e approvate prima della loro implementazione.\n  * **D) Version Control** è un sistema che registra le modifiche apportate a un file o a un insieme di file nel tempo, consentendo di richiamare versioni specifiche in un secondo momento.\n\n* **Piccolo Esempio Concentrato:** Prima di distribuire un aggiornamento critico al sistema di gestione degli ordini, il team IT conduce un'Impact Analysis e scopre che la modifica influenzerebbe negativamente l'integrazione con il sistema di fatturazione, decidendo quindi di posticipare il rilascio."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Controlli correttivi**.\n\n* **Perché è la corretta:** Un controllo **correttivo** interviene **dopo** che l'incidente si è verificato, per limitarne gli effetti e riportare i sistemi allo stato operativo. Il ripristino da backup e la reinstallazione da immagine certificata fanno esattamente questo: non impediscono l'attacco, ne riparano le conseguenze.\n* **Analisi dei distrattori:**\n  * **B) Preventivi:** nello scenario il controllo preventivo è la **patch applicata alla fine**, perché impedisce lo sfruttamento futuro di quella vulnerabilità. Il ripristino non previene nulla: l'evento è già accaduto.\n  * **A) Investigativi:** avrebbero rilevato l'attacco mentre avveniva (un EDR, un SIEM, il monitoraggio delle anomalie). Nello scenario il rilevamento c'è già stato; qui si sta rimediando.\n  * **D) Deterrenti:** agiscono sulla decisione dell'attaccante *prima* del tentativo (cartelli, banner legali, notorietà delle sanzioni). Il ransomware ha già colpito, non c'è nulla da scoraggiare.\n\n* **Nota d'esame — l'isolamento è un caso interessante:** isolare l'host dalla rete è un controllo tipicamente classificato come **correttivo** in quanto azione di contenimento dell'incidente in corso, ma alcuni testi lo leggono come preventivo perché *impedisce* la propagazione. Se la domanda propone entrambe le letture, scegli quella coerente con il momento descritto: se l'incidente è in corso e si sta limitando il danno, la risposta è correttivo.\n* **Schema temporale da memorizzare:** *prima* → direttivo, deterrente, preventivo · *durante* → investigativo · *dopo* → correttivo · *quando il controllo giusto non è applicabile* → compensativo."
   },
   {
     id: 217,
