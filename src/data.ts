@@ -7583,7 +7583,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 271,
     topic: "Vulnerability Management",
     level: "APPLICAZIONE",
-    scenario: "La Dion Training ha implementato correzioni per le vulnerabilità di buffer overflow nella propria applicazione. Per convalidare l'efficacia degli sforzi di remediation, quale approccio dovrebbe essere considerato?",
+    scenario: "La Dion Training ha implementato correzioni per le vulnerabilità di buffer overflow nella propria applicazione. Il team deve ora dimostrare, con evidenza verificabile, che le correzioni hanno davvero eliminato le vulnerabilità.",
     question: "Quale approccio è il MIGLIORE per validare che le correzioni ai buffer overflow siano state efficaci?",
     options: [
       "A) Abbonarsi a un feed di threat intelligence per aggiornamenti in tempo reale",
@@ -7931,13 +7931,13 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Un team di sicurezza deve conoscere il corretto ordine delle fasi nel processo di risposta agli incidenti.",
     question: "Quale delle seguenti rappresenta il corretto ordine delle fasi nel processo di risposta agli incidenti?",
     options: [
-      "A) Detection, Eradication, Containment, Preparation, Recovery",
-      "B) Preparation, Detection, Containment, Eradication, Recovery",
-      "C) Containment, Preparation, Detection, Eradication, Recovery",
-      "D) Preparation, Detection, Eradication, Containment, Recovery"
+      "A) Rilevamento, eradicazione, contenimento, preparazione, ripristino",
+      "B) Preparazione, rilevamento, contenimento, eradicazione, ripristino",
+      "C) Contenimento, preparazione, rilevamento, eradicazione, ripristino",
+      "D) Preparazione, rilevamento, eradicazione, contenimento, ripristino"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Preparation, Detection, Containment, Eradication, Recovery**.\n\n* **Perché è la corretta:** Il corretto ordine delle fasi nella risposta agli incidenti è:\n  1. **Preparation (Preparazione):** crea un piano efficiente di gestione degli incidenti\n  2. **Detection (Rilevamento):** identifica potenziali incidenti di sicurezza\n  3. **Containment (Contenimento):** previene la diffusione dell'incidente\n  4. **Eradication (Eradicazione):** elimina la causa dell'incidente\n  5. **Recovery (Ripristino):** ripristina i sistemi al loro stato normale\n* **Analisi dei distrattori:**\n  * **A)** Errato: la Preparation deve venire prima della Detection, non dopo.\n  * **C)** Errato: il Containment non può precedere la Preparation e la Detection.\n  * **D)** Errato: l'Eradication viene dopo il Containment, non prima."
+    explanation: "La risposta corretta è la **B) Preparazione, rilevamento, contenimento, eradicazione, ripristino**.\n\n* **Perché è la corretta:** Il corretto ordine delle fasi nella risposta agli incidenti è:\n  1. **Preparation (Preparazione):** crea un piano efficiente di gestione degli incidenti\n  2. **Detection (Rilevamento):** identifica potenziali incidenti di sicurezza\n  3. **Containment (Contenimento):** previene la diffusione dell'incidente\n  4. **Eradication (Eradicazione):** elimina la causa dell'incidente\n  5. **Recovery (Ripristino):** ripristina i sistemi al loro stato normale\n* **Analisi dei distrattori:**\n  * **A)** Errato: la preparazione deve venire prima del rilevamento, non dopo.\n  * **C)** Errato: il contenimento non può precedere preparazione e rilevamento.\n  * **D)** Errato: l'eradicazione viene dopo il contenimento, non prima."
   },
   {
     id: 295,
@@ -8108,7 +8108,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 306,
     topic: "Data Sanitization & Destruction",
     level: "APPLICAZIONE",
-    scenario: "Dopo un audit di sicurezza, la Kelly Innovations LLC ha deciso di dismettere alcuni vecchi hard disk contenenti dati sensibili. Sasha suggerisce di colpire i drive con un martello. Dato che questo non è il metodo più efficace, quale sarebbe il MIGLIORE metodo da utilizzare?",
+    scenario: "Dopo un audit di sicurezza, la Kelly Innovations LLC ha deciso di dismettere alcuni vecchi hard disk contenenti dati sensibili. Sasha suggerisce di colpire i drive con un martello, ma il responsabile osserva che un piatto ammaccato può ancora essere letto in laboratorio.",
     question: "Quale metodo di distruzione dei dati garantisce che i dati sull'hard disk siano completamente irrecuperabili?",
     options: [
       "A) Degaussing (smagnetizzazione del supporto)",
@@ -8876,8 +8876,8 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 501,
     topic: "ICS/OT Security",
     level: "ANALISI",
-    scenario: "Un produttore di droni impiega un sistema operativo in tempo reale (RTOS) per garantire l'esecuzione tempestiva dei task. Durante l'ottimizzazione per le prestazioni in tempo reale, quale delle seguenti preoccupazioni di sicurezza potrebbe sorgere?",
-    question: "Quale delle seguenti preoccupazioni di sicurezza potrebbe sorgere?",
+    scenario: "Un produttore di droni impiega un sistema operativo in tempo reale (RTOS) per garantire l'esecuzione tempestiva dei task. Per spremere le prestazioni, il team ha ridotto al minimo il codice caricato e disattivato tutto ciò che introduceva latenza non deterministica.",
+    question: "Quale preoccupazione di sicurezza nasce da queste scelte di ottimizzazione?",
     options: [
       "A) Accesso incontrollato al cloud (Uncontrolled cloud access)",
       "B) Mancanza di supporto per i protocolli legacy (Lack of legacy protocol support)",
@@ -8891,7 +8891,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 502,
     topic: "Architecture Models & Shared Responsibility",
     level: "COMPRENSIONE",
-    scenario: "Quale dei seguenti termini si riferisce alla fornitura di servizi informatici via Internet, come server, archiviazione, database, rete, software, analisi e intelligenza?",
+    scenario: "Un'azienda smette di acquistare server e comincia a consumare via Internet, pagandole a consumo, le stesse risorse che prima teneva in sede: capacità di calcolo, archiviazione, database, rete e servizi applicativi.",
     question: "Quale dei seguenti termini si riferisce alla fornitura di servizi informatici via Internet, come server, archiviazione, database, rete, software, analisi e intelligenza?",
     options: [
       "A) On-premises",
@@ -10017,7 +10017,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 577,
     topic: "Cloud Resilience & Fault Tolerance",
     level: "APPLICAZIONE",
-    scenario: "Enrique di Kelly Innovations LLC è preoccupato per gli attacchi ransomware dopo che un competitor è stato vittima di un attacco in cui tutti i dati sono stati esfiltrati e i backup infettati. Nell'elaborare una strategia di difesa multi-livello, qual è l'aspetto più vitale da considerare riguardo ai backup aziendali?",
+    scenario: "Enrique di Kelly Innovations LLC è preoccupato per gli attacchi ransomware dopo che un competitor è stato vittima di un attacco in cui tutti i dati sono stati esfiltrati e i backup infettati. Sta ora elaborando una strategia di difesa a più livelli e si concentra sui propri backup.",
     question: "Quale aspetto relativo ai backup aziendali è il più vitale da considerare nella difesa contro il ransomware?",
     options: [
       "A) Encrypting backups (Cifratura dei backup)",
@@ -11043,13 +11043,13 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     scenario: "I sistemi di un'azienda sono stati compromessi e dati sensibili sono stati rubati. Dalle indagini è emerso che la violazione è avvenuta tramite un Trojan installato sul cellulare di un dipendente. Il dipendente aveva aggirato i controlli di sicurezza MDM (Mobile Device Management) per installare un gioco non autorizzato, che ha introdotto il Trojan o ha consentito agli attaccanti di sfruttare la sicurezza indebolita del telefono.",
     question: "Quale delle seguenti è la causa PIÙ probabile di questa vulnerabilità?",
     options: [
-      "A) Misconfiguration of security settings",
-      "B) Buffer overflow on the mobile device",
-      "C) SQL injection in the mobile app",
-      "D) Insecure network configuration"
+      "A) Configurazione errata delle impostazioni di sicurezza (Misconfiguration)",
+      "B) Buffer overflow sul dispositivo mobile",
+      "C) SQL injection nell'applicazione mobile",
+      "D) Configurazione di rete non sicura"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Misconfiguration of security settings (Configurazione errata delle impostazioni di sicurezza)**.\n\n* **Perché è la corretta:** La causa più probabile è la **configurazione errata delle impostazioni di sicurezza**. Aggirando i controlli MDM, il dipendente ha alterato le impostazioni di sicurezza del dispositivo mobile, indebolendone le difese. Questa misconfiguration ha consentito l'installazione non autorizzata del gioco, introducendo il Trojan o esponendo il dispositivo a ulteriori sfruttamenti.\n* **Analisi dei distrattori:**\n  * **B) Il Buffer overflow** sul dispositivo mobile causerebbe potenzialmente crash o esecuzione di codice arbitrario, ma non è correlato all'aggiramento degli MDM.\n  * **C) La SQL injection** nella app mobile riguarda l'inserimento di codice SQL dannoso tramite input utente; non è pertinente all'installazione non autorizzata di app.\n  * **D) La Insecure network configuration** riguarda la configurazione errata dei dispositivi di rete (firewall, router); non descrive il problema specifico dell'aggiramento dei controlli MDM sul dispositivo."
+    explanation: "La risposta corretta è la **A) Configurazione errata delle impostazioni di sicurezza**.\n\n* **Perché è la corretta:** La causa più probabile è la **configurazione errata delle impostazioni di sicurezza**. Aggirando i controlli MDM, il dipendente ha alterato le impostazioni di sicurezza del dispositivo mobile, indebolendone le difese. Questa misconfiguration ha consentito l'installazione non autorizzata del gioco, introducendo il Trojan o esponendo il dispositivo a ulteriori sfruttamenti.\n* **Analisi dei distrattori:**\n  * **B) Il Buffer overflow** sul dispositivo mobile causerebbe potenzialmente crash o esecuzione di codice arbitrario, ma non è correlato all'aggiramento degli MDM.\n  * **C) La SQL injection** nella app mobile riguarda l'inserimento di codice SQL dannoso tramite input utente; non è pertinente all'installazione non autorizzata di app.\n  * **D) La Insecure network configuration** riguarda la configurazione errata dei dispositivi di rete (firewall, router); non descrive il problema specifico dell'aggiramento dei controlli MDM sul dispositivo."
   },
   {
     id: 468,
@@ -11824,13 +11824,13 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     scenario: null,
     question: "Quale delle seguenti tecniche di hardening può aiutare a prevenire attacchi buffer overflow su un sistema o dispositivo usando un software in grado di rilevare e prevenire qualsiasi tentativo di scrivere dati oltre lo spazio di memoria allocato di un programma?",
     options: [
-      "A) Isolation",
-      "B) Disabling ports and protocols",
-      "C) Host-based intrusion prevention system (HIPS)",
-      "D) Removal of unnecessary software"
+      "A) Isolamento (Isolation)",
+      "B) Disattivazione di porte e protocolli",
+      "C) Sistema di prevenzione delle intrusioni su host (HIPS)",
+      "D) Rimozione del software non necessario"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Host-based intrusion prevention system (HIPS)**.\n\n* **Perché è la corretta:** Un **HIPS (Host-based Intrusion Prevention System)** è una tecnica di hardening che aiuta a prevenire gli attacchi rilevando e prevenendo azioni non autorizzate come modifiche ai file e cambiamenti al registro. Poiché può rilevare e prevenire tentativi di scrittura di dati oltre i limiti della memoria allocata, può rilevare e prevenire un attacco buffer overflow.\n* **Analisi dei distrattori:**\n  * **A) L'Isolation** previene la diffusione del malware limitando interazione e comunicazione; non è specificamente progettata per rilevare o prevenire buffer overflow.\n  * **B) La Disabilitazione di porte e protocolli** è una tecnica di hardening che aiuta a ridurre l'esposizione ad attacchi potenziali chiudendo canali di rete non necessari; non previene il buffer overflow.\n  * **D) La Rimozione del software non necessario** riduce la superficie di attacco eliminando software inutilizzato; non previene direttamente il buffer overflow."
+    explanation: "La risposta corretta è la **C) Sistema di prevenzione delle intrusioni su host (HIPS)**.\n\n* **Perché è la corretta:** Un **HIPS (Host-based Intrusion Prevention System)** è una tecnica di hardening che aiuta a prevenire gli attacchi rilevando e prevenendo azioni non autorizzate come modifiche ai file e cambiamenti al registro. Poiché può rilevare e prevenire tentativi di scrittura di dati oltre i limiti della memoria allocata, può rilevare e prevenire un attacco buffer overflow.\n* **Analisi dei distrattori:**\n  * **A) L'Isolation** previene la diffusione del malware limitando interazione e comunicazione; non è specificamente progettata per rilevare o prevenire buffer overflow.\n  * **B) La Disabilitazione di porte e protocolli** è una tecnica di hardening che aiuta a ridurre l'esposizione ad attacchi potenziali chiudendo canali di rete non necessari; non previene il buffer overflow.\n  * **D) La Rimozione del software non necessario** riduce la superficie di attacco eliminando software inutilizzato; non previene direttamente il buffer overflow."
   },
   {
     id: 520,
@@ -12049,13 +12049,13 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     scenario: null,
     question: "Quale delle seguenti tecniche di hardening è PIÙ efficace nel prevenire il facile cracking delle password tramite l'uso di dizionari?",
     options: [
-      "A) Device Isolation",
-      "B) Disabling ports and protocols",
-      "C) Installation of endpoint protection",
-      "D) Default password changes"
+      "A) Isolamento del dispositivo (Device isolation)",
+      "B) Disattivazione di porte e protocolli",
+      "C) Installazione di una protezione degli endpoint",
+      "D) Cambio delle password predefinite"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Default password changes (Cambio delle password predefinite)**.\n\n* **Perché è la corretta:** Il **cambio delle password predefinite** è una tecnica di hardening che aiuta a prevenire alcuni attacchi alle password su sistemi e dispositivi. Le password di fabbrica (es. 'admin', 'password', '1234') sono spesso incluse nelle liste dei dizionari usate negli attacchi automatizzati; cambiarle con password forti e uniche rende inefficaci gli attacchi a dizionario.\n* **Analisi dei distrattori:**\n  * **A) Il Device Isolation** previene la diffusione del malware da un sistema all'altro; non impedisce specificamente il cracking delle password tramite dizionari.\n  * **B) La Disabilitazione di porte e protocolli** riduce l'esposizione ad attacchi potenziali chiudendo canali di rete non necessari; non impedisce il cracking delle password.\n  * **C) L'Installazione di endpoint protection** (antivirus, anti-malware) protegge da vulnerabilità note e può rilevare tentativi di cracking, ma il cambio delle password predefinite è più direttamente efficace contro gli attacchi a dizionario."
+    explanation: "La risposta corretta è la **D) Cambio delle password predefinite**.\n\n* **Perché è la corretta:** Il **cambio delle password predefinite** è una tecnica di hardening che aiuta a prevenire alcuni attacchi alle password su sistemi e dispositivi. Le password di fabbrica (es. 'admin', 'password', '1234') sono spesso incluse nelle liste dei dizionari usate negli attacchi automatizzati; cambiarle con password forti e uniche rende inefficaci gli attacchi a dizionario.\n* **Analisi dei distrattori:**\n  * **A) L'isolamento del dispositivo** previene la diffusione del malware da un sistema all'altro; non impedisce specificamente il cracking delle password tramite dizionari.\n  * **B) La Disabilitazione di porte e protocolli** riduce l'esposizione ad attacchi potenziali chiudendo canali di rete non necessari; non impedisce il cracking delle password.\n  * **C) L'Installazione di endpoint protection** (antivirus, anti-malware) protegge da vulnerabilità note e può rilevare tentativi di cracking, ma il cambio delle password predefinite è più direttamente efficace contro gli attacchi a dizionario."
   }
 ];
 
@@ -12538,7 +12538,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Steganografia"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Steganografia**.\n\n* **Perché è la corretta:** La **steganografia** nasconde l'**esistenza stessa** del messaggio, non il suo contenuto. I dati vengono incorporati dentro un file portante apparentemente innocuo (immagine, audio, video, documento), tipicamente alterando i bit meno significativi dei pixel: una modifica impercettibile all'occhio ma sufficiente a trasportare informazioni. E' proprio quello che descrive lo scenario, e la ragione per cui il file si apre normalmente.\n* **Analisi dei distrattori:**\n  * **B) La tokenizzazione** sostituisce un dato sensibile con un token privo di valore, conservando l'originale in un vault separato. E' un controllo **difensivo** applicato dall'organizzazione ai propri dati, non una tecnica per farli uscire di nascosto.\n  * **C) Il data masking** oscura parzialmente un dato per la visualizzazione (es. mostrare solo le ultime quattro cifre di una carta). Anch'esso è un controllo difensivo e non nasconde nulla dentro un altro file.\n  * **A) La cifratura asimmetrica** rende il contenuto illeggibile ma **dichiara la propria esistenza**: un file cifrato è palesemente cifrato e attira l'attenzione. La steganografia punta all'effetto opposto, cioè non destare alcun sospetto.\n\n* **Trappola d'esame:** distingui i due obiettivi. La **cifratura** nasconde *il significato* e si vede che c'è qualcosa; la **steganografia** nasconde *il fatto stesso* che ci sia qualcosa. Chi vuole esfiltrare dati aggirando un DLP basato su pattern preferisce la seconda, perché il DLP vede solo una fotografia."
+    explanation: "La risposta corretta è la **D) Steganografia**.\n\n* **Perché è la corretta:** La **steganografia** nasconde l'**esistenza stessa** del messaggio, non il suo contenuto. I dati vengono incorporati dentro un file portante apparentemente innocuo (immagine, audio, video, documento), tipicamente alterando i bit meno significativi dei pixel: una modifica impercettibile all'occhio ma sufficiente a trasportare informazioni. È proprio quello che descrive lo scenario, e la ragione per cui il file si apre normalmente.\n* **Analisi dei distrattori:**\n  * **B) La tokenizzazione** sostituisce un dato sensibile con un token privo di valore, conservando l'originale in un vault separato. È un controllo **difensivo** applicato dall'organizzazione ai propri dati, non una tecnica per farli uscire di nascosto.\n  * **C) Il data masking** oscura parzialmente un dato per la visualizzazione (es. mostrare solo le ultime quattro cifre di una carta). Anch'esso è un controllo difensivo e non nasconde nulla dentro un altro file.\n  * **A) La cifratura asimmetrica** rende il contenuto illeggibile ma **dichiara la propria esistenza**: un file cifrato è palesemente cifrato e attira l'attenzione. La steganografia punta all'effetto opposto, cioè non destare alcun sospetto.\n\n* **Trappola d'esame:** distingui i due obiettivi. La **cifratura** nasconde *il significato* e si vede che c'è qualcosa; la **steganografia** nasconde *il fatto stesso* che ci sia qualcosa. Chi vuole esfiltrare dati aggirando un DLP basato su pattern preferisce la seconda, perché il DLP vede solo una fotografia."
   },
   {
     id: 153,
@@ -13069,8 +13069,8 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 188,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "All'interno dell'infrastruttura di sicurezza Zero Trust di Dion Training, quale componente ha la responsabilità di definire e gestire le policy di sicurezza che regolano i controlli di accesso?",
-    question: "Quale componente è responsabile di questo compito?",
+    scenario: "Dion Training ha adottato un'architettura Zero Trust. Nel piano di controllo convivono più componenti: uno valuta ogni singola richiesta confrontandola con le regole, un altro scrive e mantiene quelle regole e comunica la decisione al punto che la applica sul traffico.",
+    question: "Quale componente ha la responsabilità di definire e gestire le policy di sicurezza che regolano i controlli di accesso?",
     options: [
       "A) Policy enforcement point (PEP)",
       "B) Server di autenticazione (Authentication server)",
@@ -13099,7 +13099,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 190,
     topic: "Security Controls",
     level: "APPLICAZIONE",
-    scenario: "Un'azienda implementa una policy che richiede ai dipendenti di esporre visibilmente i propri badge all'interno di una struttura, principalmente per ricordare le aspettative di sicurezza e scoraggiare potenziali accessi non autorizzati.",
+    scenario: "In un'azienda i dipendenti devono tenere il badge sempre in vista. Lo scopo dichiarato è uno solo: rendere immediatamente riconoscibile chi non lo porta, così che un estraneo sappia di essere notato e rinunci a entrare. Il badge in vista non apre alcuna porta e non registra alcun passaggio.",
     question: "Quale tipo di controllo caratterizza MEGLIO questa misura?",
     options: [
       "A) Controllo correttivo (Corrective Control)",
@@ -13160,8 +13160,8 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 194,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "Dion Training ha implementato un modello Zero Trust. Quale dei seguenti componenti del piano dati (data plane) è responsabile della verifica dell'utente o del dispositivo prima che questo interagisca con la rete?",
-    question: "Quale componente del data plane è responsabile di questa verifica?",
+    scenario: "Dion Training ha implementato un modello Zero Trust, in cui il piano di controllo prende le decisioni di accesso e il piano dati le esegue sul traffico reale.",
+    question: "Quale componente del piano dati applica la decisione, verificando utente e dispositivo prima che raggiungano la risorsa?",
     options: [
       "A) Policy Administrator",
       "B) Policy Engine",
@@ -13223,13 +13223,13 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     scenario: "Le misure di sicurezza informatica comprendono diversi tipi di controlli (preventivi, rilevativi, correttivi, direttivi, deterrenti, compensativi).",
     question: "Quale delle seguenti opzioni è un controllo correttivo (corrective control)?",
     options: [
-      "A) Implementing a Firewall",
-      "B) Security Awareness Training",
-      "C) Motion Sensor Lighting",
-      "D) Restoring Data from Backups"
+      "A) Installazione di un firewall (Implementing a firewall)",
+      "B) Formazione sulla consapevolezza (Security awareness training)",
+      "C) Illuminazione con sensore di movimento (Motion sensor lighting)",
+      "D) Ripristino dei dati dai backup (Restoring data from backups)"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Restoring Data from Backups**.\n\n* **Perché è la corretta:** Il **ripristino dei dati dai backup (Restoring Data from Backups)** è un controllo correttivo perché risponde direttamente a un incidente (come la perdita o la corruzione dei dati) per riportare il sistema o le informazioni al loro stato operativo integro precedente.\n* **Analisi dei distrattori:**\n  * **A) Implementing a Firewall** è un controllo preventivo, in quanto agisce come barriera per bloccare l'accesso non autorizzato prima che avvenga.\n  * **B) Security Awareness Training** è un controllo preventivo, mirato a istruire gli utenti per ridurre la probabilità che compiano azioni insicure.\n  * **C) Motion Sensor Lighting** è un controllo prevalentemente deterrente, mirato a scoraggiare accessi fisici non autorizzati."
+    explanation: "La risposta corretta è la **D) Ripristino dei dati dai backup**.\n\n* **Perché è la corretta:** Il **ripristino dei dati dai backup (Restoring Data from Backups)** è un controllo correttivo perché risponde direttamente a un incidente (come la perdita o la corruzione dei dati) per riportare il sistema o le informazioni al loro stato operativo integro precedente.\n* **Analisi dei distrattori:**\n  * **A) L'installazione di un firewall** è un controllo preventivo, in quanto agisce come barriera per bloccare l'accesso non autorizzato prima che avvenga.\n  * **B) La formazione sulla consapevolezza** è un controllo preventivo, mirato a istruire gli utenti per ridurre la probabilità che compiano azioni insicure.\n  * **C) L'illuminazione con sensore di movimento** è un controllo prevalentemente deterrente, mirato a scoraggiare accessi fisici non autorizzati."
   },
   {
     id: 199,
@@ -13238,13 +13238,13 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     scenario: "A seguito di un audit di conformità presso la GlobalTech Corp, è emerso che alcuni processi aziendali non sono più allineati con le policy e le procedure scritte dell'azienda. Emma, la responsabile della conformità (Chief Compliance Officer), sottolinea l'importanza di aggiornare regolarmente questi documenti.",
     question: "Qual è il motivo PIÙ importante per aggiornare periodicamente tali documenti e come influenzano la postura di sicurezza corrente dell'organizzazione?",
     options: [
-      "A) To keep the diagrams and specifications of each piece of equipment updated.",
-      "B) To ensure they remain relevant and compliant with evolving regulations.",
-      "C) To match them with recent modifications in business operations.",
-      "D) To develop new products and services."
+      "A) Per tenere aggiornati i diagrammi e le specifiche di ciascun apparato.",
+      "B) Per garantire che restino pertinenti e conformi a normative che cambiano.",
+      "C) Per allinearli alle recenti modifiche dei processi aziendali.",
+      "D) Per sviluppare nuovi prodotti e servizi."
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) To ensure they remain relevant and compliant with evolving regulations.**.\n\n* **Perché è la corretta:** Gli aggiornamenti regolari di policy e procedure assicurano che l'organizzazione rimanga allineata con i processi aziendali e con i continui cambiamenti normativi e legislativi. Se le policy non cambiano con l'evoluzione dei requisiti di conformità, l'azienda si espone a significativi rischi legali, finanziari e di sicurezza.\n* **Analisi dei distrattori:**\n  * **A) To keep the diagrams and specifications of each piece of equipment updated** fa riferimento a inventari tecnici e diagrammi di rete, non alla governance generale descritta dalle policy.\n  * **C) To match them with recent modifications in business operations** è utile per l'efficienza operativa, ma la motivazione primaria legata alla compliance e alla postura di sicurezza complessiva risiede nell'allineamento con le normative esterne.\n  * **D) To develop new products and services** non è lo scopo principale delle attività di audit e di aggiornamento della documentazione di sicurezza."
+    explanation: "La risposta corretta è la **B) Per garantire che restino pertinenti e conformi a normative che cambiano**.\n\n* **Perché è la corretta:** Gli aggiornamenti regolari di policy e procedure assicurano che l'organizzazione rimanga allineata con i processi aziendali e con i continui cambiamenti normativi e legislativi. Se le policy non cambiano con l'evoluzione dei requisiti di conformità, l'azienda si espone a significativi rischi legali, finanziari e di sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Tenere aggiornati diagrammi e specifiche degli apparati** fa riferimento a inventari tecnici e diagrammi di rete, non alla governance generale descritta dalle policy.\n  * **C) Allinearli alle modifiche dei processi aziendali** è utile per l'efficienza operativa, ma la motivazione primaria legata alla compliance e alla postura di sicurezza complessiva risiede nell'allineamento con le normative esterne.\n  * **D) Sviluppare nuovi prodotti e servizi** non è lo scopo principale delle attività di audit e di aggiornamento della documentazione di sicurezza."
   },
   {
     id: 200,
@@ -13253,13 +13253,13 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     scenario: "Un'azienda desidera garantire che i propri dipendenti utilizzino le risorse aziendali in modo corretto ed etico.",
     question: "Quale delle seguenti azioni rappresenta un esempio di controllo direttivo (directive control) che l'azienda potrebbe implementare per affrontare questa preoccupazione?",
     options: [
-      "A) Requiring that all employees read and sign an AUP",
-      "B) Reviewing log files for signs of unauthorized access",
-      "C) Implementing multi-factor authentication when single-factor authentication fails",
-      "D) Conducting regular security awareness training for employees"
+      "A) Far leggere e sottoscrivere a tutti i dipendenti una policy di uso accettabile (AUP)",
+      "B) Esaminare i file di log alla ricerca di segni di accesso non autorizzato",
+      "C) Imporre l'autenticazione a più fattori quando quella a fattore singolo fallisce",
+      "D) Condurre periodica formazione sulla consapevolezza di sicurezza per i dipendenti"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Requiring that all employees read and sign an AUP**.\n\n* **Perché è la corretta:** Una policy di utilizzo accettabile (**AUP - Acceptable Use Policy**) definisce le regole di comportamento sull'uso dei beni aziendali. Richiedere la firma e la lettura della AUP è un controllo direttivo (directive control) perché prescrive in modo esplicito le azioni e la condotta attese dai dipendenti.\n* **Analisi dei distrattori:**\n  * **B) Reviewing log files** è un controllo investigativo/rilevativo (detective), volto a identificare incidenti dopo il loro accadimento.\n  * **C) Implementing MFA** è un controllo tecnico/preventivo per bloccare accessi non autorizzati.\n  * **D) Conducting security awareness training** è un controllo preventivo finalizzato a istruire i dipendenti contro minacce future."
+    explanation: "La risposta corretta è la **A) Far leggere e sottoscrivere a tutti i dipendenti una AUP**.\n\n* **Perché è la corretta:** Una policy di utilizzo accettabile (**AUP - Acceptable Use Policy**) definisce le regole di comportamento sull'uso dei beni aziendali. Richiedere la firma e la lettura della AUP è un controllo direttivo (directive control) perché prescrive in modo esplicito le azioni e la condotta attese dai dipendenti.\n* **Analisi dei distrattori:**\n  * **B) Esaminare i file di log** è un controllo investigativo/rilevativo (detective), volto a identificare incidenti dopo il loro accadimento.\n  * **C) Imporre l'MFA** è un controllo tecnico/preventivo per bloccare accessi non autorizzati.\n  * **D) La formazione sulla consapevolezza** è un controllo preventivo finalizzato a istruire i dipendenti contro minacce future."
   },
   {
     id: 201,
@@ -13409,7 +13409,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Chiave simmetrica (Symmetric key)"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Chiave pubblica (Public key)**.\n\n* **Perché è la corretta:** Nella crittografia asimmetrica, la **chiave pubblica (public key)** può essere divulgata a chiunque in modo aperto. Viene utilizzata dai mittenti esterni per cifrare messaggi che solo la corrispondente chiave privata (segreta e gelosamente custodia dal destinatario) sarà in grado di decifrare.\n* **Analisi dei distrattori:**\n  * **A) Una chiave di hash (Hash key)** o un valore hash viene generato da una funzione unidirezionale per verificare l'integrità dei dati o mappare stringhe, non per cifrare e decifrare messaggi bidirezionali.\n  * **B) La firma digitale (Digital signature)** è uno schema matematico che attesta l'autenticità e l'integrità di un documento (firmato con chiave privata e verificato con chiave pubblica), non è una chiave di cifratura.\n  * **D) Una chiave simmetrica (Symmetric key)** deve rimanere assolutamente segreta e condivisa esclusivamente tra le due parti comunicanti; se venisse distribuita liberamente, chiunque potrebbe decifrare e alterare le comunicazioni."
+    explanation: "La risposta corretta è la **C) Chiave pubblica (Public key)**.\n\n* **Perché è la corretta:** Nella crittografia asimmetrica, la **chiave pubblica (public key)** può essere divulgata a chiunque in modo aperto. Viene utilizzata dai mittenti esterni per cifrare messaggi che solo la corrispondente chiave privata (segreta e gelosamente custodita dal destinatario) sarà in grado di decifrare.\n* **Analisi dei distrattori:**\n  * **A) Una chiave di hash (Hash key)** o un valore hash viene generato da una funzione unidirezionale per verificare l'integrità dei dati o mappare stringhe, non per cifrare e decifrare messaggi bidirezionali.\n  * **B) La firma digitale (Digital signature)** è uno schema matematico che attesta l'autenticità e l'integrità di un documento (firmato con chiave privata e verificato con chiave pubblica), non è una chiave di cifratura.\n  * **D) Una chiave simmetrica (Symmetric key)** deve rimanere assolutamente segreta e condivisa esclusivamente tra le due parti comunicanti; se venisse distribuita liberamente, chiunque potrebbe decifrare e alterare le comunicazioni."
   },
   {
     id: 211,

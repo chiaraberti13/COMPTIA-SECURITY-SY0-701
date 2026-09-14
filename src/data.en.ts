@@ -4280,7 +4280,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   188: {
     topic: "Identity & Access Control Models",
-    scenario: "Within Dion Training's Zero Trust security infrastructure, one component is responsible for defining and managing the security policies that govern access controls.",
+    scenario: "Dion Training has adopted a Zero Trust architecture. Several components coexist in the control plane: one evaluates each individual request against the rules, another writes and maintains those rules and communicates the decision to the point that enforces it on traffic.",
     question: "Which component is responsible for this task?",
     options: [
       "A) Policy enforcement point (PEP)",
@@ -4304,7 +4304,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   190: {
     topic: "Security Controls",
-    scenario: "A company implements a policy that requires employees to visibly display their badges within a facility, primarily to remind them of security expectations and discourage potential unauthorized access.",
+    scenario: "At a company, employees must keep their badge visible at all times. The stated purpose is a single one: to make anyone not wearing it immediately recognisable, so an outsider knows they will be noticed and thinks better of entering. A visible badge opens no door and records no passage.",
     question: "Which type of control BEST characterizes this measure?",
     options: [
       "A) Corrective Control",
@@ -4352,8 +4352,8 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   194: {
     topic: "Identity & Access Control Models",
-    scenario: "Dion Training has implemented a Zero Trust model. Which of the following data plane components is responsible for verifying the user or device before it interacts with the network?",
-    question: "Which data plane component is responsible for this verification?",
+    scenario: "Dion Training has implemented a Zero Trust model, in which the control plane makes access decisions and the data plane enforces them on real traffic.",
+    question: "Which data plane component enforces the decision, verifying the user and device before they reach the resource?",
     options: [
       "A) Policy Administrator",
       "B) Policy Engine",
@@ -6600,8 +6600,8 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   501: {
     topic: "ICS/OT Security",
-    scenario: "A drone manufacturer uses a real-time operating system (RTOS) to ensure the timely execution of tasks. During optimization for real-time performance, which of the following security concerns could arise?",
-    question: "Which of the following security concerns could arise?",
+    scenario: "A drone manufacturer uses a real-time operating system (RTOS) to ensure the timely execution of tasks. To squeeze out performance, the team minimised the code loaded and disabled everything introducing non-deterministic latency.",
+    question: "Which security concern arises from these optimisation choices?",
     options: [
       "A) Uncontrolled cloud access",
       "B) Lack of legacy protocol support",
@@ -6612,7 +6612,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   502: {
     topic: "Architecture Models & Shared Responsibility",
-    scenario: "Which of the following terms refers to the delivery of computing services over the Internet, such as servers, storage, databases, networking, software, analytics and intelligence?",
+    scenario: "A company stops buying servers and begins consuming over the internet, paying as it goes, the same resources it used to keep on site: compute, storage, databases, networking and application services.",
     question: "Which of the following terms refers to the delivery of computing services over the Internet, such as servers, storage, databases, networking, software, analytics and intelligence?",
     options: [
       "A) On-premises",
@@ -7512,7 +7512,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   577: {
     topic: "Cloud Resilience & Fault Tolerance",
-    scenario: "Enrique of Kelly Innovations LLC is worried about ransomware attacks after a competitor was the victim of an attack in which all the data was exfiltrated and the backups infected. In developing a multi-layered defense strategy, what is the most vital aspect to consider regarding corporate backups?",
+    scenario: "Enrique of Kelly Innovations LLC is worried about ransomware attacks after a competitor was the victim of an attack in which all the data was exfiltrated and the backups infected. He is now devising a multi-layered defence strategy and is focusing on the company's backups.",
     question: "Which aspect regarding corporate backups is the most vital to consider in defending against ransomware?",
     options: [
       "A) Encrypting backups",
@@ -8966,7 +8966,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   271: {
     topic: "Vulnerability Management",
-    scenario: "Dion Training has implemented fixes for the buffer overflow vulnerabilities in its application. To validate the effectiveness of the remediation efforts, which approach should be considered?",
+    scenario: "Dion Training has implemented fixes for the buffer overflow vulnerabilities in its application. The team must now demonstrate, with verifiable evidence, that the fixes genuinely removed the vulnerabilities.",
     question: "Which approach is the BEST to validate that the buffer overflow fixes were effective?",
     options: [
       "A) Subscribe to a threat intelligence feed for real-time updates",
@@ -9386,7 +9386,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   306: {
     topic: "Data Sanitization & Destruction",
-    scenario: "After a security audit, Kelly Innovations LLC decided to decommission some old hard disks containing sensitive data. Sasha suggests hitting the drives with a hammer. Since this is not the most effective method, what would be the BEST method to use?",
+    scenario: "After a security audit, Kelly Innovations LLC decided to decommission some old hard disks containing sensitive data. Sasha suggests hitting the drives with a hammer, but the manager points out that a dented platter can still be read in a laboratory.",
     question: "Which data-destruction method ensures that the data on the hard disk is completely unrecoverable?",
     options: [
       "A) Degaussing (demagnetizing the media)",
