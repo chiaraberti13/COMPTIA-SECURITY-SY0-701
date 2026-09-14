@@ -691,6 +691,7 @@ export const SUBGROUP_NAME_EN: Record<string, string> = {
   "Infrastruttura PKI": "PKI Infrastructure",
   "Ingegneria Sociale & Phishing": "Social Engineering & Phishing",
   "Metodologie di Analisi del Rischio": "Risk Analysis Methodologies",
+  "Tipi di Vulnerabilità": "Vulnerability Types",
   "Metodologie di Vulnerability Assessment": "Vulnerability Assessment Methodologies",
   "Misure di Sicurezza Fisica": "Physical Security Measures",
   "Modelli Architetturali Tradizionali": "Traditional Architecture Models",

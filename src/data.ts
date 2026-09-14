@@ -1003,6 +1003,62 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         definition: "La mancata segnalazione da parte degli strumenti di difesa di una vulnerabilità o di un attacco realmente esistente.",
         details: "Il pericolo più grave:\n* Lo scanner di vulnerabilità riporta che il sistema è sicuro, ma in realtà ospita una falla critica aperta. Questo lascia l'organizzazione esposta senza alcuna consapevolezza del rischio.\n* Tipico degli attacchi Zero-Day o di malware polimorfici.\n\n* **Piccolo Esempio Concentrato:** Un malware programmato per mutare la firma binaria scavalca silente le difese aziendali poiché il software antivirus locale non rileva alcuna corrispondenza e dichiara la workstation 'protetta e pulita'.",
         examTip: "I Falsi Negativi espongono l'azienda al massimo livello di rischio poiché creano un falso senso di sicurezza."
+      },
+      {
+        name: "Memory Injection",
+        checklistKey: "MemoryInjectionVuln",
+        definition: "Vulnerabilità che consente a un attaccante di scrivere ed eseguire codice arbitrario nello spazio di memoria di un processo legittimo già in esecuzione.",
+        details: "La **Memory Injection** sfrutta il fatto che un processo affidabile (es. `explorer.exe`, un browser, un servizio di sistema) ha già i permessi e la reputazione che servono all'attaccante.\n* **Perché è efficace:** il codice malevolo non risiede su disco come file eseguibile, quindi gli antivirus a firme non hanno nulla da analizzare. È la base degli attacchi **fileless**.\n* **Tecniche tipiche:** DLL injection, process hollowing (si avvia un processo legittimo sospeso e se ne sostituisce il contenuto), reflective loading.\n* **Beneficio per l'attaccante:** eredita i privilegi del processo ospite e aggira le regole di firewall applicativo e di application allow list, perché per il sistema sta girando un programma autorizzato.\n* **Difese:** EDR con analisi comportamentale della memoria, protezioni del sistema operativo come DEP e ASLR, e Control Flow Guard.\n\n* **Piccolo Esempio Concentrato:** Un malware inietta una DLL dentro il processo del browser dell\'utente. Il traffico verso il server di comando e controllo esce quindi dal browser, che è autorizzato a navigare: il firewall applicativo non vede nulla di anomalo perché il processo mittente è legittimo.",
+        examTip: "All'esame, se lo scenario descrive codice malevolo che gira dentro un processo legittimo senza alcun file sospetto sul disco, pensa a Memory Injection e attacco fileless. La contromisura corretta non è l'antivirus a firme, ma un EDR con analisi comportamentale."
+      },
+      {
+        name: "Buffer Overflow",
+        checklistKey: "BufferOverflowVuln",
+        definition: "Vulnerabilità che si verifica quando un programma scrive in un buffer più dati di quanti esso possa contenerne, sovrascrivendo le aree di memoria adiacenti.",
+        details: "Il **Buffer Overflow** è la vulnerabilità di memoria più classica e più esaminata.\n* **Causa radice:** l'assenza di un controllo sulla lunghezza dell'input, tipica dei linguaggi senza gestione automatica della memoria come C e C++ (funzioni come `strcpy` o `gets`).\n* **Dal crash all'esecuzione di codice:** sovrascrivendo l'indirizzo di ritorno nello stack, l'attaccante può dirottare il flusso di esecuzione verso il proprio codice (shellcode), ottenendo l'esecuzione di comandi con i privilegi del programma vulnerabile.\n* **Varianti d'esame:** *stack overflow* (sovrascrive lo stack e l'indirizzo di ritorno) e *heap overflow* (sovrascrive strutture allocate dinamicamente).\n* **Difese:** validazione della lunghezza dell'input, funzioni sicure (`strncpy`), e protezioni di sistema: **ASLR** (randomizza gli indirizzi di memoria), **DEP/NX** (impedisce l'esecuzione di codice nelle aree dati) e stack canary.\n\n* **Piccolo Esempio Concentrato:** Un servizio di rete alloca 64 byte per il nome utente. L\'attaccante ne invia 900, accuratamente costruiti: i byte in eccesso sovrascrivono l\'indirizzo di ritorno della funzione e lo fanno puntare al codice che l\'attaccante ha appena collocato in memoria, ottenendo una shell remota.",
+        examTip: "Ricorda la coppia di difese di sistema: **ASLR** rende imprevedibile *dove* si trova la memoria, **DEP/NX** impedisce l'esecuzione di codice *dove* ci sono solo dati. Entrambe non correggono il bug, lo rendono solo molto più difficile da sfruttare: la vera remediation resta la validazione dell'input nel codice."
+      },
+      {
+        name: "Race Condition (TOC/TOU)",
+        checklistKey: "RaceConditionVuln",
+        definition: "Vulnerabilità che nasce quando il comportamento corretto di un sistema dipende dall'ordine o dalla tempistica di eventi concorrenti, e un attaccante riesce a inserirsi tra il momento del controllo e quello dell'uso.",
+        details: "La forma d'esame è il **TOC/TOU** (*Time-of-Check to Time-of-Use*): il programma verifica una condizione e poi agisce, ma tra i due istanti esiste una finestra sfruttabile.\n* **Lo schema:** 1) il programma controlla che l'utente possa accedere al file A; 2) l'attaccante, in quella frazione di secondo, sostituisce A con un collegamento a un file riservato; 3) il programma agisce sul file sbagliato, credendo di aver già verificato i permessi.\n* **Dove si manifesta:** accessi al file system, transazioni bancarie, applicazione di codici sconto, incremento di contatori concorrenti.\n* **Difese:** operazioni **atomiche** (controllo e uso in un unico passo indivisibile), lock e mutex, transazioni di database con isolamento adeguato, uso di descrittori di file anziché di percorsi testuali.\n\n* **Piccolo Esempio Concentrato:** Un sito di e-commerce verifica che un buono sconto non sia ancora stato usato e poi lo marca come consumato. Inviando 50 richieste nello stesso millisecondo, l\'attaccante fa superare il controllo a tutte e 50 prima che la prima riesca a scrivere l\'aggiornamento: lo stesso buono viene applicato 50 volte.",
+        examTip: "Parole chiave da riconoscere all'esame: 'tra la verifica e l'utilizzo', 'richieste simultanee', 'condizione di gara'. La risposta corretta è Race Condition / TOC-TOU, e la contromisura è rendere l'operazione atomica, non aggiungere un secondo controllo."
+      },
+      {
+        name: "Malicious Update",
+        checklistKey: "MaliciousUpdateVuln",
+        definition: "Vulnerabilità della catena di fornitura software in cui un aggiornamento apparentemente legittimo e firmato veicola codice malevolo verso tutti i sistemi che lo installano.",
+        details: "Il **Malicious Update** ribalta un controllo di sicurezza in un vettore d'attacco: l'organizzazione viene compromessa proprio perché fa la cosa giusta, cioè aggiornare.\n* **Come avviene:** compromissione della pipeline di build del fornitore, furto del suo certificato di code signing, oppure dirottamento del canale di distribuzione (server di update non protetto da HTTPS, DNS hijacking).\n* **Perché è devastante:** l'aggiornamento arriva firmato e da una fonte fidata, quindi supera antivirus, application allow list e diffidenza dell'utente; inoltre colpisce simultaneamente tutti i clienti del fornitore.\n* **Difese:** verifica delle firme e degli hash pubblicati, aggiornamenti scaricati solo su canali cifrati, ambiente di staging prima della produzione, **SBOM** (Software Bill of Materials) per sapere cosa si sta realmente installando, e monitoraggio del comportamento post-aggiornamento.\n\n* **Piccolo Esempio Concentrato:** Un software di monitoraggio di rete usato da migliaia di aziende riceve un aggiornamento regolarmente firmato dal produttore. Al suo interno, inserita nella pipeline di compilazione compromessa, c\'è una backdoor che si attiva dopo due settimane: ogni organizzazione che ha applicato la patch risulta compromessa.",
+        examTip: "Non confondere: **Malicious update** = l'aggiornamento *ufficiale* è stato avvelenato a monte; **Trojan** = l'utente installa volontariamente un software che credeva innocuo. Il malicious update è il caso in cui patchare tempestivamente, pur essendo la pratica corretta, ha aumentato il rischio: per questo esistono gli anelli di rilascio graduali (staged rollout)."
+      },
+      {
+        name: "VM Escape & Resource Reuse",
+        checklistKey: "VMEscapeVuln",
+        definition: "Vulnerabilità della virtualizzazione: il VM Escape consente a un attaccante di uscire dalla macchina virtuale e raggiungere l'hypervisor o le altre VM; il Resource Reuse espone dati residui quando una risorsa viene riassegnata a un altro tenant.",
+        details: "Sono le due vulnerabilità specifiche degli ambienti virtualizzati e cloud multi-tenant citate dall'obiettivo 2.3.\n* **VM Escape:** sfruttando una falla dell'hypervisor, il codice che gira dentro una VM guest 'evade' e ottiene esecuzione sull'host. È l'attacco più grave possibile in un ambiente virtualizzato, perché annulla l'isolamento su cui si fonda l'intero modello cloud: da una singola VM di un cliente si arriva potenzialmente a tutte le altre sullo stesso host.\n* **Resource Reuse:** RAM, spazio disco o storage cloud vengono liberati da un tenant e riassegnati a un altro senza essere azzerati; il nuovo occupante può leggere i dati residui del precedente. È la versione cloud del problema dei supporti non sanificati.\n* **Difese:** patching tempestivo dell'hypervisor, riduzione al minimo degli strumenti di integrazione guest-host, isolamento su hardware dedicato per i carichi più sensibili, e cifratura dei dati a riposo con chiavi gestite dal cliente, che rende illeggibili i residui anche in caso di riuso della risorsa.\n\n* **Piccolo Esempio Concentrato:** Un attaccante affitta legittimamente una VM presso un provider cloud. Sfrutta una falla nel driver grafico virtualizzato dell\'hypervisor per eseguire codice sull\'host fisico, e da lì accede alla memoria delle macchine virtuali degli altri clienti che condividono lo stesso server.",
+        examTip: "All'esame, VM Escape è la minaccia che giustifica l'uso di **tenancy dedicata** invece di hardware condiviso per i carichi critici. Contro il Resource Reuse, la risposta corretta è la cifratura a riposo con chiavi controllate dal cliente: se i dati residui sono cifrati, per il tenant successivo restano rumore."
+      },
+      {
+        name: "Mobile Vulnerabilities (Jailbreaking & Sideloading)",
+        checklistKey: "MobileVulnVuln",
+        definition: "Vulnerabilità introdotte rimuovendo le restrizioni del sistema operativo mobile (jailbreaking su iOS, rooting su Android) o installando applicazioni al di fuori degli store ufficiali (sideloading).",
+        details: "Sono le due vulnerabilità mobile elencate esplicitamente dall'obiettivo 2.3.\n* **Jailbreaking / Rooting:** l'utente ottiene privilegi amministrativi sul dispositivo, disattivando il modello di sicurezza del produttore. Conseguenze: il *sandboxing* tra applicazioni salta, le app possono leggere i dati altrui, gli aggiornamenti ufficiali spesso smettono di funzionare e i controlli dell'MDM aziendale possono essere aggirati.\n* **Sideloading:** installazione di pacchetti (APK, IPA) scaricati da fonti non ufficiali, che non hanno superato i controlli automatici e manuali dello store. È il canale abituale di distribuzione di trojan bancari e spyware mobile.\n* **Rischio per l'azienda:** un dispositivo compromesso che accede alla posta e alle applicazioni aziendali trasforma un problema personale in una violazione aziendale, specialmente in contesti BYOD.\n* **Difese:** policy MDM che rilevano il jailbreak/root e bloccano l'accesso alle risorse aziendali (*attestation*), divieto di installazione da fonti sconosciute e contenitori di lavoro separati dal profilo personale.\n\n* **Piccolo Esempio Concentrato:** Un dipendente esegue il root del proprio telefono personale per installare un\'app a pagamento gratuitamente, scaricando l\'APK da un forum. L\'app contiene uno spyware che, non essendoci più il sandboxing, legge i token di sessione dell\'app di posta aziendale installata sullo stesso dispositivo.",
+        examTip: "Distingui i due termini: **Jailbreaking/Rooting** rimuove le restrizioni *del sistema operativo*; **Sideloading** installa app *fuori dallo store*, e non richiede necessariamente il root. Il controllo d'esame corretto è l'MDM con rilevamento del root e blocco condizionale dell'accesso, non la semplice formazione dell'utente."
+      },
+      {
+        name: "Misconfiguration",
+        checklistKey: "MisconfigurationVuln",
+        definition: "Vulnerabilità derivante da impostazioni di sicurezza errate, incomplete o lasciate ai valori predefiniti, anziché da un difetto del codice.",
+        details: "La **Misconfiguration** non richiede alcun bug software: il prodotto funziona esattamente come progettato, ma è stato configurato male.\n* **Casi tipici d'esame:** credenziali predefinite mai cambiate, bucket di storage cloud esposti pubblicamente, permessi di condivisione troppo ampi, servizi di debug o porte di gestione raggiungibili da Internet, cifratura disponibile ma non attivata, logging disabilitato.\n* **Perché è così frequente:** i sistemi vengono forniti con impostazioni orientate alla facilità d'uso, non alla sicurezza; inoltre la configurazione si degrada nel tempo (**configuration drift**) attraverso modifiche non tracciate.\n* **Difese:** **security baseline** e benchmark CIS, hardening documentato, Infrastructure as Code per rendere le configurazioni ripetibili e verificabili, scansioni di conformità automatizzate (SCAP) e change management.\n\n* **Piccolo Esempio Concentrato:** Un team di sviluppo crea un bucket di storage cloud per condividere dei file e imposta il permesso di lettura su 'chiunque con il link' per fare prima. Il bucket viene indicizzato e migliaia di documenti interni diventano consultabili pubblicamente. Nessun software era vulnerabile: lo era la configurazione.",
+        examTip: "Attenzione alla distinzione d'esame: se il problema si risolve applicando una **patch**, è una vulnerabilità del software; se si risolve **cambiando un'impostazione**, è una misconfiguration. Le misconfiguration sono tra le cause più comuni di violazione reale, e la contromisura corretta è la baseline di sicurezza con verifica continua, non l'aggiornamento."
+      },
+      {
+        name: "Legacy & End-of-Life Systems",
+        checklistKey: "LegacyEOLVuln",
+        definition: "Vulnerabilità strutturale dei sistemi hardware o software che non ricevono più aggiornamenti di sicurezza dal produttore perché hanno superato la data di fine supporto.",
+        details: "Un sistema **End-of-Life (EOL)** o **legacy** accumula vulnerabilità in modo permanente: ogni nuova falla scoperta resta aperta per sempre, perché nessuna patch verrà mai rilasciata.\n* **Terminologia da distinguere:** *End-of-Sale* (non più acquistabile), *End-of-Support / EOL* (niente più patch di sicurezza), *legacy* (tecnologia obsoleta ancora in produzione, talvolta ancora supportata).\n* **Perché restano in funzione:** applicativi gestionali che girano solo su quel sistema operativo, macchinari industriali e medicali certificati su una versione specifica, costo di migrazione elevato.\n* **Compensating control obbligatori** quando la dismissione non è possibile: **segmentazione** rigorosa in una VLAN isolata, regole di firewall che consentono solo i flussi indispensabili, rimozione dell'accesso a Internet, monitoraggio rinforzato e, dove disponibile, *virtual patching* tramite IPS.\n\n* **Piccolo Esempio Concentrato:** Un ospedale utilizza una TAC il cui software di controllo gira su un sistema operativo fuori supporto da anni e non aggiornabile senza invalidare la certificazione dell\'apparecchiatura. La macchina viene isolata in una VLAN dedicata, senza accesso a Internet, raggiungibile solo dalla postazione di refertazione tramite regole di firewall esplicite.",
+        examTip: "Negli scenari d'esame con un sistema critico non aggiornabile, la risposta non è mai 'applicare la patch' (non esiste) né 'accettare il rischio' senza altro: è **isolamento e segmentazione** come controllo compensativo, accompagnati da un piano di sostituzione documentato."
       }
     ]
   },
@@ -1983,7 +2039,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
       {
         name: "Fault Tolerance & High Availability",
         checklistKey: "FaultToleranceConcept",
-        definition: "La capacità di un sistema di continuer a funzionare correttamente anche in presenza di guasti hardware o software.",
+        definition: "La capacità di un sistema di continuare a funzionare correttamente anche in presenza di guasti hardware o software.",
         details: "I concetti chiave includono:\n* **Fault Tolerance (Tolleranza ai Guasti):** Proprietà che consente a un sistema di non interrompere l'erogazione dei servizi anche in caso di rottura di uno o più componenti (es. alimentatori ridondanti, controller RAID per dischi fissi, schede di rete in bonding/teaming).\n* **Active-Active:** Configurazione di clustering in cui tutti i nodi elaborano attivamente le richieste in parallelo, distribuendo il carico.\n* **Active-Passive:** Configurazione in cui un nodo primario gestisce il traffico e un nodo secondario (hot standby) subentra automaticamente in caso di guasto del primario (failover).\n* **Redundancy (Ridondanza):** Duplicazione di componenti critici per eliminare i Single Point of Failure (SPOF).",
         examTip: "Mentre l'alta disponibilità (High Availability) si concentra sulla minimizzazione dei tempi di fermo (downtime), la Fault Tolerance garantisce l'assenza totale di interruzione del servizio anche durante un guasto."
       },
@@ -2139,7 +2195,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "SharedStorageRes",
         definition: "Shared Storage (Archiviazione Condivisa): Un'architettura di memorizzazione centralizzata (es. SAN o NAS) accessibile contemporaneamente da più server di un cluster.",
         details: "Caratteristiche e vantaggi:\n* **Data Consistency:** Tutti i nodi del cluster leggono e scrivono sugli stessi identici volumi fisici, evitando la necessità di sincronizzare continui file di grandi dimensioni.\n* **Failover rapido:** Consente a un server passivo di assumere la proprietà dei dati di un server guasto in pochi millisecondi, poiché lo storage fisico non deve essere scollegato e ricollegato.\n* **Tecnologie:** Si avvale di reti dedicate come Storage Area Network (SAN) tramite Fibre Channel o iSCSI, oppure Network Attached Storage (NAS) tramite protocolli NFS/SMB.",
-        examTip: "Nelle configurazioni di Server Clustering ad Alta Disponibilità, lo Shared Storage (es. SAN) l'elemento abilitante che consente il failover istantaneo senza perdita di dati memorizzati."
+        examTip: "Nelle configurazioni di Server Clustering ad Alta Disponibilità, lo Shared Storage (es. SAN) è l'elemento abilitante che consente il failover istantaneo senza perdita di dati memorizzati."
       },
       {
         name: "Scalability",
@@ -2632,7 +2688,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         checklistKey: "PassiveReconnaissanceConcept",
         definition: "La raccolta di informazioni su un target condotta senza interagire direttamente o inviare traffico ai suoi sistemi e alla sua infrastruttura di rete.",
         details: "La ricognizione passiva (**Passive Reconnaissance**) si basa su fonti pubbliche, di terze parti o ad accesso libero per raccogliere informazioni sensibili senza allertare il target. Esempi principali includono:\n* **OSINT (Open Source Intelligence):** Ricerche su motori di ricerca pubblici o social network professionali (es. LinkedIn) per mappare l'organigramma o le tecnologie citate in annunci di lavoro.\n* **DNS Queries:** Interrogazione di record DNS pubblici (record MX, TXT, SPF, DKIM) e informazioni WHOIS.\n* **Shodan / Censys:** Consultazione di database e motori di ricerca di terze parti che indicizzano dispositivi IoT e server precedentemente scansionati.",
-        examTip: "La ricognizione passiva è del tutto invisibile ai sistemi di rilevamento del target (come IDS/IPS e firewall) poiché l'aggressore non invia alcun pacchetto direttamente all'infrastruttura della vittima."
+        examTip: "La ricognizione passiva non invia pacchetti all'infrastruttura della vittima, quindi non compare nei log di IDS/IPS e firewall del target: per questo è considerata non rilevabile dal punto di vista del difensore. Attenzione a non estendere l'idea oltre il suo limite: consultare risorse pubbliche di terze parti (WHOIS, motori di ricerca, social) può comunque lasciare tracce presso quei servizi, e basta una singola query diretta (es. una risoluzione DNS sul name server del target) per far scivolare l'attività nella ricognizione attiva."
       },
       {
         name: "Vulnerability Assessment",
@@ -2651,7 +2707,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
       {
         name: "White box",
         checklistKey: "WhiteBoxTesting",
-        definition: "Una metodologia di test o analisi in cui l'tester ha pieno accesso a tutte le informazioni interne del target, inclusi codice sorgente, diagrammi di rete, configurazioni e credenziali amministrative.",
+        definition: "Una metodologia di test o analisi in cui il tester ha pieno accesso a tutte le informazioni interne del target, inclusi codice sorgente, diagrammi di rete, configurazioni e credenziali amministrative.",
         details: "Nel test **White Box** (scatola bianca), l'analista ha una visibilità completa del sistema. Questo consente di eseguire revisioni approfondite del codice (static code analysis), verifiche minuziose delle configurazioni e di identificare falle logiche profonde in tempi ridotti, senza dover perdere tempo a cercare l'accesso o a mappare i sistemi.",
         examTip: "Il test White Box garantisce la massima copertura e profondità di analisi, ma non simula realisticamente le difficoltà e il percorso reale di un attaccante esterno."
       },
@@ -2667,7 +2723,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         checklistKey: "PassiveTestingConcept",
         definition: "Un approccio non invasivo e non intrusivo alla valutazione della sicurezza, che si limita ad osservare, ascoltare e analizzare le informazioni o il traffico di rete senza inviare pacchetti o interagire con i target.",
         details: "Le attività **Passive** includono la cattura silenziosa dei pacchetti di rete (sniffing) per analizzare le porte aperte o i protocolli vulnerabili in transito, e la ricognizione basata su fonti OSINT pubbliche. Non genera traffico anomalo sui sistemi bersaglio, riducendo a zero il rischio di causare instabilità o disservizi e di essere rilevati dai sistemi difensivi.",
-        examTip: "L'approccio Passive garantisce che nessuna informazione o pacchetto venga inviato direttamente al target, escludendo qualsiasi rischio di allertare il sistema di monitoraggio SOC o di interrompere i servizi di produzione."
+        examTip: "L'approccio Passive non invia alcun pacchetto direttamente al target: azzera quindi il rischio di interrompere i servizi di produzione ed è la scelta obbligata sui sistemi critici (ICS/SCADA, dispositivi medicali) dove una scansione attiva può provocare un blocco. Resta però un'analisi incompleta: non potendo interrogare i sistemi, non verifica versioni e configurazioni reali e produce più falsi negativi di una scansione autenticata."
       },
       {
         name: "Rules of Engagement (RoE)",
@@ -2702,7 +2758,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         checklistKey: "PivotingRes",
         definition: "Pivoting (o Tunneling): La tecnica che consiste nell'utilizzare un host già compromesso (chiamato Pivot) come intermediario logico per lanciare scansioni o attacchi contro altri sistemi interni situati in una rete isolata altrimenti inaccessibile.",
         details: "Il **Pivoting** consente di aggirare i firewall perimetrali ed esplorare le reti interne private:\n* **Funzionamento:** L'attaccante stabilisce un tunnel logico (spesso tramite un proxy SOCKS o port forwarding SSH) attraverso il computer violato. Tutto il traffico d'attacco generato dalla macchina dell'attaccante viene instradato attraverso l'host pivot, facendolo apparire come traffico legittimo originato dall'interno della rete.\n* **Esempio Classico:** Connettersi da Internet a un server Web esposto nella DMZ e usare quel server Web per scansionare e attaccare i database interni situati nella VLAN di backend protetta.\n\n* **Piccolo Esempio Concentrato:** Un hacker penetra in un computer aziendale connesso sia a Internet sia alla rete interna protetta dei terminali POS. Configura un proxy SOCKS sulla macchina violata (pivot) ed esegue una scansione di vulnerabilità contro i terminali POS direttamente dalla sua postazione remota su Internet, incanalando il traffico attraverso il PC compromesso.",
-        examTip: "Il Pivoting rappresenta il passaggio logico chiave in cui un host compromesso in una zona a bassa sicurezza viene usato come ponte/ponte radio per violare sistemi posizionati in zone ad alta sicurezza."
+        examTip: "Il Pivoting rappresenta il passaggio logico chiave in cui un host compromesso in una zona a bassa sicurezza viene usato come ponte per violare sistemi posizionati in zone ad alta sicurezza."
       },
       {
         name: "SAST",
@@ -2749,7 +2805,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
       {
         name: "False Negative",
         checklistKey: "FalseNegativeRes",
-        definition: "Falso Negativo: Il fallimento di uno strumento o controllo di sicurezza nel rilevare e segnalare una minaccia reale, una vulnerabilità esistente o un attacco in corso, classificando erroneamente l'evento como sicuro.",
+        definition: "Falso Negativo: Il fallimento di uno strumento o controllo di sicurezza nel rilevare e segnalare una minaccia reale, una vulnerabilità esistente o un attacco in corso, classificando erroneamente l'evento come sicuro.",
         details: "I **Falsi Negativi** rappresentano la situazione più pericolosa in assoluto nella cybersecurity:\n* **Pericolo:** L'organizzazione rimane convinta di essere protetta mentre un attaccante o un malware è attivamente penetrato nei sistemi senza generare alcun allarme.\n* **Causa:** Attacchi malware polimorfici, exploit zero-day non ancora associati a firme note, scansioni ultra-silenziose che eludono le soglie statistiche dell'IDS, o disattivazione accidentale di moduli di scansione.\n* **Mitigazione:** Implementazione della difesa in profondità (Defense in Depth), analisi comportamentale basata su intelligenza euristica ed esecuzione di costanti attività di Threat Hunting.\n\n* **Piccolo Esempio Concentrato:** Un dipendente scarica ed esegue un ransomware di nuovissima generazione (Zero-Day) sulla propria workstation. Poiché non esiste ancora una firma per questo file, l'antivirus statico locale non emette alcun allarme e permette l'esecuzione del payload: questo fallimento totale nel rilevamento costituisce un grave **Falso Negativo**.",
         examTip: "Un Falso Negativo è il mancato rilevamento di un attacco reale. È lo scenario peggiore per la sicurezza perché lascia l'attaccante libero di agire nell'ombra senza innescare alcuna contromisura difensiva."
       },
@@ -2772,7 +2828,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         checklistKey: "VulnerabilityScannerRes",
         definition: "Strumento software automatizzato progettato per analizzare host, server, reti o applicazioni per rilevare vulnerabilità note, impostazioni errate e patch mancanti.",
         details: "Un **Vulnerability Scanner**:\n* Confronta lo stato dell'host con un database costantemente aggiornato di firme di vulnerabilità (es. CVE).\n* Può eseguire scansioni **Credentialed** (con privilegi amministrativi, per ispezionare il registro, i file e le configurazioni interne riducendo i falsi positivi) o **Non-credentialed** (dall'esterno, cercando porte aperte ed esaminando i banner di servizio).\n* Genera report dettagliati classificando la severità delle falle tramite il punteggio CVSS.",
-        examTip: "Nessus, OpenVAS e Qualys sono esempi tipici di vulnerabilty scanner aziendali usati per mappare proattivamente le falle di sicurezza."
+        examTip: "Nessus, OpenVAS e Qualys sono esempi tipici di vulnerability scanner aziendali usati per mappare proattivamente le falle di sicurezza."
       },
       {
         name: "Port Scan",
@@ -4189,7 +4245,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 58,
-    topic: "Regulatory Frameworks",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "COMPRENSIONE",
     scenario: "Esaminando il panorama legislativo degli Stati Uniti in materia di privacy e protezione dei dati personali.",
     question: "Quale legge rappresenta un noto esempio di regolamento 'orizzontale' sui dati personali, molto simile nel suo approccio ad ampio spettro al GDPR europeo?",
@@ -4264,7 +4320,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 63,
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "COMPRENSIONE",
     scenario: "Nell'ambito del monitoraggio della conformità e della gestione delle responsabilità legali all'interno di un'azienda.",
     question: "A cosa si riferisce esattamente il concetto combinato di 'due diligence' e 'due care'?",
@@ -4354,7 +4410,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 69,
-    topic: "Business Continuity & Resilience Metrics",
+    topic: "Business Continuity & Disaster Recovery",
     level: "COMPRENSIONE",
     scenario: "Per misurare l'affidabilità e pianificare i cicli di manutenzione dei sistemi IT, i team di ingegneria della sicurezza monitorano diverse metriche temporali associate ai guasti.",
     question: "Quale metrica definisce il tempo medio di corretto funzionamento operativo di un sistema o componente hardware tra il verificarsi di due guasti consecutivi?",
@@ -4894,7 +4950,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 105,
-    topic: "Identity & Access Management (IAM)",
+    topic: "Identity & Access Management",
     level: "COMPRENSIONE",
     scenario: "Una media impresa desidera ristrutturare la gestione dei permessi sulle cartelle condivise e sui database aziendali. Invece di configurare manualmente gli accessi per ciascun singolo dipendente, l'amministratore di sistema decide di raggruppare i permessi in base alle mansioni dei reparti (es. 'Amministrazione', 'Sviluppo', 'Risorse Umane').",
     question: "Qual è un principio fondamentale alla base del controllo degli accessi basato sui ruoli (RBAC) che contribuisce a migliorare l'efficacia di una politica di sicurezza?",
@@ -4909,7 +4965,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 106,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "RICORDO",
     scenario: "La direzione di un'organizzazione monitora costantemente l'andamento del tasso di turnover dei dipendenti IT critici e il numero di tentativi di phishing bloccati mensilmente, utilizzandoli come segnali preventivi per anticipare un possibile aumento del rischio di incidenti informatici.",
     question: "Quale dei seguenti termini si riferisce a una metrica predittiva fondamentale che le organizzazioni monitorano per prevedere i rischi potenziali e il loro impatto sulle operazioni?",
@@ -4924,7 +4980,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 107,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "APPLICAZIONE",
     scenario: "Jeremy, il CEO di Hooli, desidera valutare con precisione l'impatto finanziario di specifici rischi legati all'infrastruttura IT aziendale. Ha ordinato al suo team di elencare i possibili incidenti, stimare la probabilità esatta del loro verificarsi e quantificare le conseguenze economiche, operative e di risorse in termini monetari per assegnare a ciascun evento un punteggio numerico oggettivo.",
     question: "Quale dei seguenti metodi di valutazione del rischio Jeremy ha ordinato di utilizzare al proprio team?",
@@ -4939,7 +4995,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 108,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "RICORDO",
     scenario: "A seguito della scoperta di una vulnerabilità zero-day critica ampiamente sfruttata nel software del server web aziendale, il CISO richiede un'immediata valutazione straordinaria dei rischi per determinare l'impatto potenziale di un attacco immediato prima della prossima sessione annuale pianificata.",
     question: "Quale dei seguenti termini descrive una valutazione del rischio condotta all'occorrenza, spesso in risposta a minacce nuove ed emergenti o a cambiamenti significativi all'interno dell'organizzazione?",
@@ -5359,7 +5415,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 136,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "APPLICAZIONE",
     scenario: "Un'organizzazione sta valutando la propria infrastruttura IT per determinare la probabilità di violazioni dei dati e l'impatto che tali violazioni avrebbero sulle proprie operazioni. Sarah è stata incaricata di stimare le conseguenze finanziarie e la probabilità di questi potenziali incidenti di sicurezza.",
     question: "Quale tipo di valutazione del rischio sta conducendo Sarah?",
@@ -5464,7 +5520,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 143,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "APPLICAZIONE",
     scenario: "River, project manager presso un'azienda tecnologica, ha il compito di tenere traccia di tutti i rischi potenziali relativi a una nuova implementazione software. Utilizza un documento strutturato che elenca i rischi identificati, il loro impatto potenziale, la probabilità e le strategie di mitigazione.",
     question: "Quale documento sta utilizzando River per gestire questi rischi?",
@@ -5524,7 +5580,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 147,
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "APPLICAZIONE",
     scenario: "Una società di servizi finanziari è tenuta a presentare regolarmente documentazione che dimostri l'aderenza agli standard di sicurezza normativi. Questa documentazione include i risultati degli audit, le valutazioni del rischio e le prove delle misure di protezione dei dati.",
     question: "Come viene chiamato questo processo?",
@@ -5584,7 +5640,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 151,
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "APPLICAZIONE",
     scenario: "Horizon Security, un'azienda di formazione in cybersecurity, ha subito una violazione dei dati a causa della negligenza di un fornitore. Questa violazione ha comportato una significativa perdita di informazioni sensibili sui clienti.",
     question: "Quale tipo di conseguenza è più probabile che Horizon debba affrontare immediatamente?",
@@ -5719,7 +5775,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 160,
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti termini si riferisce a una valutazione completa dei rischi all'interno di un'organizzazione che avviene in un momento specifico, spesso per valutare l'impatto dell'implementazione di un nuovo sistema o per ottenere una visione indipendente della maturità operativa?",
@@ -5767,7 +5823,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
 export const DOMAIN_4_QUESTIONS: Question[] = [
   {
     id: 11,
-    topic: "Vulnerability Scanning & Assessment",
+    topic: "Vulnerability Scanning",
     level: "ANALISI",
     scenario: "Un security analyst lavora in un'organizzazione finanziaria con budget stringente per le licenze di scansione e una limitata finestra temporale di manutenzione. Ha necessità di ottenere un quadro dettagliato dello stato delle patch di sicurezza, delle chiavi di registro di Windows non conformi e delle configurazioni software sui server interni adibiti alla conservazione di dati sensibili PCI-DSS.",
     question: "Quale tecnica di scansione delle vulnerabilità dovrebbe selezionare l'analista come PRIMA scelta per ottenere questi risultati ad alta fedeltà riducendo al minimo il rischio di falsi positivi e l'impatto prestazionale sulla rete?",
@@ -5782,7 +5838,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 12,
-    topic: "Packet Analysis & Flows",
+    topic: "Network Monitoring & Analysis",
     level: "ANALISI",
     scenario: "Durante un controllo di sicurezza preventivo su una rete industriale SCADA, un analista rileva nel monitoraggio dei flussi (NetFlow) picchi improvvisi e costanti di traffico UDP porta 53 verso un indirizzo IP sconosciuto situato all'estero. Sospettando una violazione o l'esfiltrazione attiva di codice proprietario di automazione dei macchinari tramite DNS Tunneling, l'analista desidera analizzare il contenuto dei pacchetti per validare l'ipotesi.",
     question: "Quale strumento o comando rappresenta la scelta corretta per raccogliere ed esaminare approfonditamente il payload di questa specifica comunicazione anomala?",
@@ -5797,7 +5853,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 13,
-    topic: "Log Management & Syslog",
+    topic: "Log Analysis",
     level: "COMPRENSIONE",
     scenario: "Il Security Operations Center (SOC) riceve molteplici alert provenienti da diversi punti dell'infrastruttura aziendale che segnalano un possibile attacco APT coordinato: un blocco di tentativi di autenticazione falliti su Active Directory, modifiche a regole di un firewall di frontiera, e la creazione di un account di servizio anomalo su un server Web. Tuttavia, durante il triage, l'analista non riesce a mappare la corretta sequenza temporale degli eventi nei log centralizzati del SIEM, poiché i timestamp mostrano scostamenti di vari minuti tra i dispositivi.",
     question: "Quale vulnerabilità infrastrutturale o mancanza operativa rappresenta la causa principale dell'impossibilità di ricostruire la timeline esatta dell'incidente?",
@@ -5812,7 +5868,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 14,
-    topic: "SIEM & SOAR Systems",
+    topic: "Security Monitoring & Alerting",
     level: "APPLICAZIONE",
     scenario: "Un ransomware di nuova generazione sta colpendo un'organizzazione di servizi sanitari. Il sistema EDR rileva la cifratura anomala e rapida di file PDF sul server principale del reparto di cardiologia alle ore 02:00 del mattino di domenica. Il team del SOC reperibile rileva la notifica ma ha tempi minimi di reazione di 45 minuti.",
     question: "Quale tecnologia e approccio strategico consente di automatizzare l'isolamento immediato del server e dell'IP sorgente riducendo a zero il tempo di reazione (MTTR)?",
@@ -5827,7 +5883,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 15,
-    topic: "Incident Response Phases",
+    topic: "Incident Response",
     level: "ANALISI",
     scenario: "Un analista del SOC identifica che una macchina operatore all'interno dell'ufficio contabilità è stata infettata da un Trojan bancario attivo che sta stabilendo una connessione persistente di Command and Control (C2) ed esfiltrando credenziali amministrative inserite in RAM. Per preservare le prove utili all'analisi forense e al contempo fermare l'esfiltrazione immediata dei dati sensibili aziendali, l'analista deve agire tempestivamente.",
     question: "Quale rappresenta la PRIMA e migliore azione di contenimento che l'analista dovrebbe compiere secondo le linee guida NIST?",
@@ -5842,7 +5898,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 16,
-    topic: "Containment & Eradication Strategies",
+    topic: "Incident Response",
     level: "ANALISI",
     scenario: "Un server Web aziendale linux che ospita un'applicazione transazionale sensibile è stato compromesso da hacker russi, i quali hanno sfruttato una vulnerabilità di tipo Command Injection per installare molteplici web shell offuscate nei percorsi del server e modificare alcuni binari di sistema (come 'ssh' e 'ls') per nascondere i propri processi. Il team di Incident Response si trova ora nella fase di Eradicazione.",
     question: "Quale delle seguenti azioni rappresenta la best practice ufficiale per garantire una completa ed affidabile eradicazione della minaccia prima del ripristino in produzione?",
@@ -5857,7 +5913,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 17,
-    topic: "Disaster Recovery Backup Strategy",
+    topic: "Backup & Recovery",
     level: "ANALISI",
     scenario: "Un'azienda operante nel trading algoritmico non può permettersi alcuna perdita finanziaria derivante dal downtime del proprio sistema di esecuzione degli ordini. La Business Impact Analysis (BIA) definisce un Recovery Time Objective (RTO) prossimo allo zero e un Recovery Point Objective (RPO) di pochi secondi. Il budget per la resilienza dell'infrastruttura non ha vincoli stringenti.",
     question: "Quale configurazione di sito alternativo di Disaster Recovery rappresenta la soluzione ideale per adempiere a questi requisiti operativi?",
@@ -5872,7 +5928,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 18,
-    topic: "Baselines & Configuration Drift",
+    topic: "Baselines & Configuration",
     level: "APPLICAZIONE",
     scenario: "Durante un audit periodico di conformità basato sullo standard CIS Benchmarks, l'auditor rileva che il 40% dei server Windows di produzione mostra vulnerabilità legate a servizi inutilizzati abilitati (es. SMBv1) e configurazioni di cifratura non sicure. Gli amministratori di sistema ammettono di aver modificato manualmente i server per risolvere problemi di compatibilità di applicazioni legacy nel corso dell'anno, bypassando il processo di approvazione centrale.",
     question: "Come viene definito questo fenomeno di progressivo allontanamento dei sistemi dallo stato originale blindato approvato e qual è il metodo migliore per mitigarlo?",
@@ -5932,7 +5988,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 182,
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
     scenario: "Il meccanismo di controllo degli accessi di un'organizzazione determina l'accesso alle risorse sensibili sulla base delle specifiche funzioni lavorative e delle mansioni degli utenti. Il sistema applica in modo rigido i permessi associati a queste responsabilità predefinite e i singoli dipendenti non hanno la facoltà di modificare o ignorare tali privilegi di accesso.",
     question: "Quale tipo di meccanismo di controllo degli accessi viene utilizzato in questo scenario?",
@@ -5947,7 +6003,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 183,
-    topic: "Switch Hardening",
+    topic: "System & Device Hardening",
     level: "APPLICAZIONE",
     scenario: "Due tecnici della sicurezza stanno collaborando per rafforzare la sicurezza degli switch di rete all'interno dell'infrastruttura aziendale, al fine di ridurre drasticamente la possibilità che dispositivi estranei o non autorizzati possano collegarsi fisicamente alla LAN.",
     question: "Quale delle seguenti tecniche rappresenta la scelta migliore (BEST) su cui dare priorità per raggiungere questo obiettivo?",
@@ -5992,7 +6048,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 186,
-    topic: "Security Architecture",
+    topic: "Architecture Models & Shared Responsibility",
     level: "COMPRENSIONE",
     scenario: "Un'azienda di sviluppo software si trova in prossimità di una scadenza di consegna critica. Per rispettare le tempistiche imposte dal management, il team sceglie deliberatamente di ignorare alcune inefficienze note del sistema e di adottare scorciatoie architetturali provvisorie, consapevole che queste decisioni renderanno il sistema più fragile e vulnerabile e richiederanno costosi interventi correttivi futuri.",
     question: "Quale dei seguenti termini descrive MEGLIO questa situazione in cui si preferisce il rilascio rapido a scapito della qualità e della sicurezza a lungo termine?",
@@ -6007,7 +6063,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 187,
-    topic: "User Behavior Analytics",
+    topic: "Security Monitoring & Alerting",
     level: "APPLICAZIONE",
     scenario: "Un analista della sicurezza informatica lavora in una grande azienda che ha recentemente subito svariati incidenti legati a minacce interne (insider threats) e account utente legittimi compromessi da attaccanti esterni. Per rafforzare le proprie difese, l'azienda decide di implementare soluzioni di analisi comportamentale degli utenti (User Behavior Analytics - UBA).",
     question: "Quale dei seguenti approcci rappresenta la modalità PIÙ efficace per implementare la tecnologia UBA nello scenario descritto?",
@@ -6067,7 +6123,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 401,
-    topic: "Prioritizzazione delle Vulnerabilità",
+    topic: "Vulnerability Management",
     level: "ANALISI",
     scenario: "Un professionista della sicurezza deve valutare una serie di vulnerabilità riscontrate sui sistemi aziendali e determinare l'ordine ottimale con cui affrontarle.",
     question: "Quale delle seguenti rappresenta la MIGLIORE azione che un professionista della sicurezza dovrebbe intraprendere per stabilire l'ordine in cui affrontare le vulnerabilità identificate, sulla base dell'impatto potenziale e della probabilità di sfruttamento?",
@@ -6082,7 +6138,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 402,
-    topic: "Sicurezza Cloud & Autenticazione",
+    topic: "Identity & Access Management",
     level: "APPLICAZIONE",
     scenario: "David sta fornendo consulenza sulle migliori pratiche di sicurezza cloud a un'azienda che ha recentemente riscontrato problemi legati ai login dei propri utenti.",
     question: "Quale misura è la più cruciale per proteggere l'organizzazione da tentativi di accesso non autorizzati?",
@@ -6097,7 +6153,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 403,
-    topic: "Network Security & Proxies",
+    topic: "Network Security Devices",
     level: "ANALISI",
     scenario: "In qualità di analista della sicurezza di un'azienda che ha recentemente subito diversi incidenti di sicurezza legati alla navigazione web, partecipi all'implementazione di una soluzione proxy centralizzata per mitigare i rischi futuri.",
     question: "Quale delle seguenti azioni rappresenta il modo PIÙ efficace per migliorare la sicurezza attraverso l'uso del proxy centralizzato nello scenario descritto?",
@@ -6112,7 +6168,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 404,
-    topic: "Federazione delle Identità",
+    topic: "Identity & Access Management",
     level: "COMPRENSIONE",
     scenario: "Dion Training Solutions ha stretto una partnership con diverse aziende più piccole. Hanno configurato un sistema che consente ai dipendenti di qualsiasi azienda partner di accedere alle risorse delle altre società senza richiedere un nome utente e una password separati.",
     question: "Quale dei seguenti concetti è descritto in questo scenario?",
@@ -6127,7 +6183,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 405,
-    topic: "Principi di Sicurezza & Controllo Accessi",
+    topic: "Security Principles",
     level: "COMPRENSIONE",
     scenario: "Jenny, una rappresentante di vendita appena assunta, ha ricevuto l'autorizzazione a visualizzare i record dei clienti ma non può modificarli, eliminarli o aggiungerne di nuovi. Solo i manager e il reparto IT hanno il permesso di modificare tali record per preservare l'integrità dei dati.",
     question: "Quale principio di sicurezza sta applicando l'organizzazione in questo caso?",
@@ -6142,7 +6198,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 406,
-    topic: "Sicurezza delle E-mail",
+    topic: "Email Security",
     level: "COMPRENSIONE",
     scenario: "Un amministratore di rete deve implementare misure di sicurezza contro lo spoofing delle e-mail e intende utilizzare firme crittografiche per consentire la verifica dei messaggi.",
     question: "Quale protocollo di sicurezza delle e-mail utilizza firme crittografiche per verificare l'autenticità del mittente di un messaggio?",
@@ -6157,7 +6213,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 407,
-    topic: "Eccezioni ed Esenzioni di Sicurezza",
+    topic: "Security Policies & Lifecycle",
     level: "COMPRENSIONE",
     scenario: "Durante una revisione delle politiche di sicurezza, sorge una discussione sull'uso e sulla gestione delle eccezioni e delle esenzioni per le vulnerabilità non sanabili immediatamente.",
     question: "Quale delle seguenti affermazioni descrive MEGLIO l'importanza delle eccezioni ed esenzioni (exceptions and exemptions) nella gestione delle vulnerabilità?",
@@ -6187,7 +6243,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 409,
-    topic: "Debito Tecnico in Sicurezza",
+    topic: "Technical Debt in Security",
     level: "COMPRENSIONE",
     scenario: "Durante lo sviluppo e la manutenzione di sistemi legacy, si discute dell'impatto sul lungo periodo delle decisioni provvisorie che accumulano debito tecnico.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza di considerare il debito tecnico (technical debt) nella sicurezza delle informazioni?",
@@ -6202,7 +6258,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 410,
-    topic: "Sistemi di Ticketing nelle Operazioni di Sicurezza",
+    topic: "Automation & Orchestration",
     level: "COMPRENSIONE",
     scenario: "In un Security Operations Center (SOC) si analizza l'efficacia dei flussi di lavoro supportati dall'apertura e gestione automatica dei ticket relativi agli incidenti.",
     question: "Quale delle seguenti affermazioni NON è vera riguardo al ruolo della creazione dei ticket (Ticket Creation) nel contesto dell'automazione per le operazioni di sicurezza?",
@@ -6217,7 +6273,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 411,
-    topic: "Distruzione Sicura dei Dati & Dismissione Asset",
+    topic: "Data Sanitization & Destruction",
     level: "APPLICAZIONE",
     scenario: "Reed sta per ricevere un nuovo computer dal suo datore di lavoro, Kelly Innovations LLC. Desidera rimuovere tutti i suoi dati personali dal vecchio computer, garantendo che siano assolutamente irrecuperabili.",
     question: "Quale dei seguenti metodi dovrebbe utilizzare per raggiungere questo obiettivo?",
@@ -6232,7 +6288,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 412,
-    topic: "DevSecOps & Integrazione Continua",
+    topic: "DevSecOps",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione intende migliorare la sicurezza e la qualità del proprio ciclo di vita del software introducendo pipeline automatizzate per gli sviluppatori.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza dell'integrazione continua (Continuous Integration - CI) per la sicurezza di un'organizzazione?",
@@ -6247,7 +6303,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 413,
-    topic: "Digital Forensics & Catena di Custodia",
+    topic: "Digital Forensics",
     level: "ANALISI",
     scenario: "Durante le indagini relative a un attacco informatico interno, un analista forense deve raccogliere prove digitali dai sistemi coinvolti in modo che siano utilizzabili in sede legale.",
     question: "Nel campo della digital forensics, quale attività è in assoluto la PIÙ essenziale per mantenere la catena di custodia (chain of custody) delle prove digitali?",
@@ -6262,7 +6318,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 414,
-    topic: "Sicurezza di Rete & Filtro Contenuti",
+    topic: "Web Content Filtering",
     level: "APPLICAZIONE",
     scenario: "Presso la Kelly Innovations LLC, Jamario ha segnalato di aver visualizzato accidentalmente immagini inappropriate mentre conduceva ricerche online sui concorrenti del settore.",
     question: "Per impedire ai dipendenti di accedere accidentalmente a tali media in futuro, quale delle seguenti soluzioni risulterebbe PIÙ efficace?",
@@ -6292,7 +6348,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 192,
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
     scenario: "Il meccanismo di controllo degli accessi di un'azienda determina l'accesso alle risorse in base alle mansioni lavorative degli utenti. Il sistema applica il controllo degli accessi sulla base di queste responsabilità predefinite e gli utenti non hanno la discrezionalità di modificare o ignorare i permessi di accesso.",
     question: "Quale tipo di meccanismo di controllo degli accessi viene utilizzato in questo scenario?",
@@ -6307,7 +6363,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 193,
-    topic: "Switch Hardening",
+    topic: "System & Device Hardening",
     level: "APPLICAZIONE",
     scenario: "Jason sta lavorando con David per migliorare la sicurezza degli switch presso la Dion Training.",
     question: "Quale tecnica sarebbe la MIGLIORE da privilegiare per raggiungere questo obiettivo?",
@@ -6367,7 +6423,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 197,
-    topic: "User Behavior Analytics",
+    topic: "Security Monitoring & Alerting",
     level: "APPLICAZIONE",
     scenario: "Sei un analista di cybersecurity per una grande azienda che ha subito diversi incidenti di sicurezza derivanti da minacce interne e account utente compromessi. L'organizzazione vuole migliorare la propria postura di sicurezza implementando la User Behavior Analytics (UBA).",
     question: "Quale dei seguenti approcci rappresenta il modo PIÙ efficace per implementare UBA nello scenario descritto?",
@@ -6562,7 +6618,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 210,
-    topic: "Personnel Security",
+    topic: "Personnel Security & Onboarding",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione vuole comprendere come la fidelizzazione dei dipendenti contribuisca alla sicurezza aziendale.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza della fidelizzazione dei dipendenti nella sicurezza di un'organizzazione?",
@@ -6592,7 +6648,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 212,
-    topic: "Packet Analysis & Flows",
+    topic: "Network Monitoring & Analysis",
     level: "ANALISI",
     scenario: "Come analista di sicurezza, stai esaminando le catture di pacchetti per un'indagine in corso su una violazione della rete.",
     question: "Quale delle seguenti informazioni NON è tipicamente registrata nelle catture di pacchetti?",
@@ -6652,7 +6708,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 216,
-    topic: "Vulnerability & Patch Management",
+    topic: "Vulnerability Management",
     level: "COMPRENSIONE",
     scenario: "Un team di sicurezza deve comprendere l'importanza del monitoraggio dei pacchetti software nel contesto della gestione delle vulnerabilità.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza del monitoraggio dei pacchetti software nel contesto della gestione delle vulnerabilità?",
@@ -6862,7 +6918,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 230,
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
     scenario: "Il meccanismo di controllo degli accessi della ABC Bank consente l'accesso solo durante l'orario lavorativo. Quando viene richiesto l'accesso, viene valutata l'ora del giorno: se la richiesta arriva durante l'orario lavorativo, viene concesso l'accesso; in caso contrario, viene negato.",
     question: "Quale tipo di meccanismo di controllo degli accessi viene utilizzato in questo scenario?",
@@ -6952,7 +7008,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 236,
-    topic: "Firewall Configuration",
+    topic: "Network Security Devices",
     level: "ANALISI",
     scenario: "Il New York Inquirer ha un'infrastruttura IT diversificata che include server, workstation e dispositivi IoT. Ha implementato un firewall per proteggere la rete interna dalle minacce esterne e vuole modificare le regole del firewall per migliorare la sicurezza.",
     question: "Quale modifica ai porte e protocolli del firewall NON è consigliata per migliorare la sicurezza?",
@@ -6997,7 +7053,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 239,
-    topic: "Data Archiving",
+    topic: "Data Retention & Archiving",
     level: "COMPRENSIONE",
     scenario: "Un team IT deve comprendere i limiti dell'archiviazione dei dati per gestire correttamente le aspettative.",
     question: "Quale delle seguenti affermazioni NON è vera riguardo all'importanza dell'archiviazione (archiving)?",
@@ -7027,7 +7083,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 241,
-    topic: "Mobile Device Management",
+    topic: "Mobile Device Security",
     level: "APPLICAZIONE",
     scenario: "Un'azienda consente ai propri dipendenti di utilizzare i loro dispositivi mobili personali per attività lavorative, come accedere alle email aziendali e ai documenti sensibili. Il dipartimento IT è preoccupato per i rischi di sicurezza per i dati aziendali in caso di smarrimento dei dispositivi.",
     question: "Quale aspetto di un MDM (Mobile Device Management) affronterebbe efficacemente questa preoccupazione?",
@@ -7147,7 +7203,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 249,
-    topic: "Vendor & Procurement Security",
+    topic: "Third-Party Risk & Assessments",
     level: "COMPRENSIONE",
     scenario: "Un responsabile degli acquisti deve valutare le implicazioni di sicurezza nel processo di procurement.",
     question: "Quale delle seguenti affermazioni NON è vera riguardo alle implicazioni di sicurezza nel processo di procurement?",
@@ -7192,7 +7248,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 252,
-    topic: "Data Retention",
+    topic: "Data Retention & Archiving",
     level: "COMPRENSIONE",
     scenario: "Un team di governance dei dati deve comprendere i principi corretti della data retention nel processo di dismissione.",
     question: "Quale delle seguenti affermazioni sulla data retention nel processo di dismissione NON è vera?",
@@ -7237,7 +7293,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 255,
-    topic: "Risk Management",
+    topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
     scenario: "Un team di gestione della vulnerabilità vuole capire il concetto di risk tolerance per prendere decisioni informate sulle risorse di mitigazione.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza della 'tolleranza al rischio' nel contesto della gestione delle vulnerabilità?",
@@ -7282,7 +7338,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 258,
-    topic: "Web Filtering & Reputation",
+    topic: "Web Content Filtering",
     level: "COMPRENSIONE",
     scenario: "Un team di sicurezza vuole comprendere il concetto di web reputation score per implementare policy di filtraggio web efficaci.",
     question: "Quale delle seguenti descrive MEGLIO il termine 'web reputation score'?",
@@ -7312,7 +7368,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 260,
-    topic: "OS Hardening",
+    topic: "System & Device Hardening",
     level: "APPLICAZIONE",
     scenario: "Sasha, amministratrice di sistema presso la Dion Training Solutions, vuole rafforzare la sicurezza dei propri server Linux limitando i processi ai privilegi minimi necessari e definendo il loro comportamento consentito.",
     question: "Quale funzionalità Linux dovrebbe MOLTO probabilmente implementare Sasha?",
@@ -7327,7 +7383,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 261,
-    topic: "Penetration Testing",
+    topic: "Security Assessment / Penetration Testing",
     level: "COMPRENSIONE",
     scenario: "Un manager di sicurezza vuole spiegare al proprio team l'importanza del penetration testing nel contesto della gestione delle vulnerabilità.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO l'importanza del penetration testing nel contesto della gestione delle vulnerabilità?",
@@ -7342,7 +7398,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 262,
-    topic: "Cybersecurity Insurance",
+    topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
     scenario: "Un responsabile della gestione del rischio vuole comprendere il ruolo dell'assicurazione nella gestione delle vulnerabilità.",
     question: "Quale delle seguenti afferma MEGLIO l'importanza dell'assicurazione nel contesto della gestione delle vulnerabilità?",
@@ -7702,7 +7758,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 286,
-    topic: "Network Segmentation",
+    topic: "Infrastructure Segmentations & Topologies",
     level: "COMPRENSIONE",
     scenario: "Sasha, ingegnera di rete presso Kelly Innovations LLC, sta presentando al consiglio i vantaggi delle screened subnet nella nuova configurazione dell'ufficio.",
     question: "Quale dei seguenti è un vantaggio primario del posizionare server accessibili da Internet (come i web server) su una screened subnet?",
@@ -7717,7 +7773,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 287,
-    topic: "Risk Management",
+    topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
     scenario: "Un risk manager vuole comprendere il concetto di exposure factor nel contesto della gestione delle vulnerabilità.",
     question: "Quale delle seguenti affermazioni spiega MEGLIO la funzione di un 'fattore di esposizione' (exposure factor) nel contesto della gestione delle vulnerabilità?",
@@ -7912,7 +7968,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 300,
-    topic: "Network Security",
+    topic: "Secure Network Protocols",
     level: "APPLICAZIONE",
     scenario: "Jamario, tecnico di rete presso Kelly Innovations LLC, sta configurando un nuovo server. Vuole garantire che gli utenti possano accedere a pagine web NON cifrate ospitate sul server e, sulla stessa macchina, trasferire file tramite il protocollo FTP in chiaro.",
     question: "Quale delle seguenti coppie di porte deve aprire sul firewall perimetrale per soddisfare ENTRAMBI i requisiti?",
@@ -7957,7 +8013,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 303,
-    topic: "Router Hardening",
+    topic: "System & Device Hardening",
     level: "APPLICAZIONE",
     scenario: "Enrique, amministratore di rete presso Kelly Innovations LLC, sta discutendo con Reed le strategie per proteggere ulteriormente i router dell'organizzazione.",
     question: "Quale dei seguenti sarebbe il MIGLIORE approccio per garantire la sicurezza dei loro router?",
@@ -7987,7 +8043,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 305,
-    topic: "OS Hardening",
+    topic: "System & Device Hardening",
     level: "APPLICAZIONE",
     scenario: "La Dion Training ha recentemente configurato un nuovo web server per la propria piattaforma di e-learning. Il team IT ha il compito di implementare misure di sicurezza per mitigare potenziali attacchi.",
     question: "Quale delle seguenti pratiche sarebbe PIÙ efficace per l'hardening del server?",
@@ -8350,7 +8406,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 22,
-    topic: "Zero Trust Architecture (ZTA)",
+    topic: "Zero Trust Architecture",
     level: "ANALISI",
     scenario: "Un'azienda sta implementando un'architettura Zero Trust (ZTA) secondo gli standard NIST SP 800-207. Un dipendente remoto tenta di accedere al server Git aziendale da una connessione Wi-Fi pubblica di un hotel. Il sistema valuta l'autenticazione a più fattori, lo stato delle patch sul portatile aziendale dell'utente, la provenienza geografica insolita e la presenza di un certificato client X.509 valido sul dispositivo prima di concedere l'accesso.",
     question: "Quale componente logico dell'architettura Zero Trust riceve ed elabora questa valutazione dinamica del contesto per autorizzare o negare la connessione?",
@@ -8395,7 +8451,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 25,
-    topic: "Cryptographic Concepts & Hashing",
+    topic: "Cryptography",
     level: "APPLICAZIONE",
     scenario: "Il dipartimento di sviluppo software sta progettando un database SQL per memorizzare le credenziali utente di un portale di e-commerce aziendale. L'architetto di sicurezza deve garantire che, in caso di violazione del database e furto della tabella utenti, gli attaccanti non possano risalire alle password in chiaro tramite attacchi a dizionario offline ad alta velocità (es. GPU-cracking).",
     question: "Quale rappresenta la tecnica e l'approccio di memorizzazione corretto e sicuro delle password?",
@@ -8410,7 +8466,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 26,
-    topic: "Public Key Infrastructure (PKI) & Revocation",
+    topic: "Public Key Infrastructure",
     level: "ANALISI",
     scenario: "Un utente interno tenta di connettersi ad un portale web aziendale sicuro. Durante l'handshake TLS, il browser dell'utente rileva che il certificato digitale X.509 presentato dal server web è stato revocato tre giorni ago dall'amministratore di sicurezza poiché la chiave privata corrispondente era stata accidentalmente esposta su GitHub. Il browser dell'utente blocca immediatamente la connessione.",
     question: "Attraverso quale metodo e protocollo a bassa latenza e ad alta efficienza il browser ha verificato in tempo reale lo stato di revoca del certificato senza gravare sulla Certificate Authority?",
@@ -8470,7 +8526,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 30,
-    topic: "Cryptographic Concepts & Hashing",
+    topic: "Cryptography",
     level: "ANALISI",
     scenario: "Un amministratore di sicurezza deve inviare una build firmware critica ad un sistema industriale SCADA remoto. È fondamentale che il sistema remoto verifichi con assoluta certezza due requisiti prima di installare il firmware: primo, che il file non sia stato alterato o corrotto durante la trasmissione (Integrità); secondo, che il firmware provenga effettivamente dall'amministratore autorizzato dell'azienda e non da un attaccante (Non-Ripudio e Autenticità).",
     question: "Quale meccanismo crittografico soddisfa contemporaneamente e nativamente entrambi i requisiti?",
@@ -8500,7 +8556,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 172,
-    topic: "On-Premise vs. Cloud Security",
+    topic: "Architecture Models & Shared Responsibility",
     level: "COMPRENSIONE",
     scenario: "La 'Kelly Innovations' decide di gestire la propria infrastruttura IT interamente all'interno della propria sede fisica (on-premise), mantenendo il controllo completo su hardware, software e dati aziendali.",
     question: "Quale delle seguenti implicazioni di sicurezza è associata in modo PIÙ diretto a questo approccio on-premise?",
@@ -8530,7 +8586,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 174,
-    topic: "Vulnerability & Patch Management",
+    topic: "Vulnerability Management",
     level: "COMPRENSIONE",
     scenario: "Un responsabile della sicurezza informatica deve valutare l'affidabilità a lungo termine di diversi software commerciali da installare sui server aziendali, assicurandosi che gli sviluppatori rilascino costantemente correzioni per le falle di sicurezza scoperte.",
     question: "Quale dei seguenti termini si riferisce alla capacità di ottenere e applicare tempestivamente aggiornamenti di sicurezza o correzioni (fix) per software o sistemi?",
@@ -8560,7 +8616,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 176,
-    topic: "Cloud Security Governance",
+    topic: "Governance, Boards & Committees",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione sta negoziando un contratto di servizio cloud (SaaS) e deve definire formalmente e con precisione quali controlli di sicurezza saranno gestiti dal provider e quali ricadranno sotto la diretta responsabilità dell'azienda cliente.",
     question: "Quale dei seguenti termini si riferisce al documento che definisce esplicitamente i compiti e le responsabilità che le diverse parti svolgono in un accordo di servizio cloud?",
@@ -8635,7 +8691,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 416,
-    topic: "Modello OSI & Filtro del Traffico",
+    topic: "OSI Model & Traffic Filtering",
     level: "APPLICAZIONE",
     scenario: "Dion Training Solutions necessita di un'apparecchiatura di rete in grado di filtrare il traffico in base a URL, intestazioni HTTP e funzionalità specifiche delle applicazioni web.",
     question: "A quale livello del modello OSI opererebbe principalmente questa apparecchiatura?",
@@ -8650,7 +8706,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 417,
-    topic: "Protezione dei Dati & Offuscamento",
+    topic: "Data Classification & Security",
     level: "APPLICAZIONE",
     scenario: "In un ambiente di non-produzione o di test, è necessario proteggere i dati sensibili per evitare l'esposizione accidentale o non autorizzata di informazioni reali.",
     question: "Quale delle seguenti tecniche sostituisce i dati sensibili con dati fittizi ma strutturalmente simili per proteggerli negli ambienti di test o sviluppo?",
@@ -8665,7 +8721,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 418,
-    topic: "Strategie di Backup & Ridondanza",
+    topic: "Backup & Recovery",
     level: "COMPRENSIONE",
     scenario: "Enrique presso la Dion Training è responsabile di garantire che i dati dei progetti aziendali siano protetti da potenziali perdite, specialmente considerando che l'ufficio si trova in una regione soggetta a disastri naturali.",
     question: "Quale metodo di backup offrirebbe la protezione più sicura mantenendo una copia dei dati fisicamente separata dalla sede aziendale?",
@@ -8680,7 +8736,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 419,
-    topic: "Protocolli di Autenticazione di Rete",
+    topic: "Network Authentication Protocols",
     level: "APPLICAZIONE",
     scenario: "Kelly Innovations LLC deve autenticare in modo sicuro gli utenti remoti e ha la necessità di supportare molteplici metodi di autenticazione differenti.",
     question: "Quale dei seguenti protocolli è il PIÙ indicato per soddisfare questo scenario?",
@@ -8695,7 +8751,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 420,
-    topic: "Sicurezza Finanziaria & Conformità Normativa",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "COMPRENSIONE",
     scenario: "Per proteggere i record finanziari dei clienti e aderire agli standard stabiliti per prevenire il riciclaggio di denaro e le frodi fiscali, una banca deve definire la sua strategia di sicurezza.",
     question: "Quale delle seguenti rappresenta la MIGLIORE strategia globale che una banca dovrebbe adottare?",
@@ -8710,7 +8766,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 421,
-    topic: "Modello OSI & Firewall a Filtraggio di Pacchetti",
+    topic: "OSI Model & Traffic Filtering",
     level: "APPLICAZIONE",
     scenario: "La Kelly Innovations LLC desidera implementare un'apparecchiatura di rete focalizzata sul filtraggio del traffico in base agli indirizzi IP (sorgente e destinazione) e ai numeri di porta.",
     question: "A quale livello del modello OSI opera principalmente questa apparecchiatura?",
@@ -8725,7 +8781,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 422,
-    topic: "Modelli di Architettura di Controllo",
+    topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione sta valutando quale modello di architettura adottare per la gestione centralizzata o distribuita dei propri sistemi informativi.",
     question: "Quale dei seguenti modelli di architettura prevede l'utilizzo di un singolo punto di controllo o di autorità per gestire un sistema o un servizio?",
@@ -8740,7 +8796,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 423,
-    topic: "Dispositivi di Intermediazione di Rete",
+    topic: "Network Security Devices",
     level: "APPLICAZIONE",
     scenario: "Per migliorare la privacy dei propri utenti, Kelly Innovations LLC sta valutando un sistema che possa agire come intermediario per le richieste internet, nascondendo l'origine della richiesta al server di destinazione.",
     question: "Quale soluzione si adatta MEGLIO a questo scopo?",
@@ -8755,7 +8811,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 424,
-    topic: "Strategie di Resilienza & Continuità",
+    topic: "Business Continuity & Disaster Recovery",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione desidera pianificare una strategia infrastrutturale ottimale per mitigare il rischio di interruzioni diffuse causate da un guasto localizzato nella propria infrastruttura.",
     question: "Quale delle seguenti strategie è la PIÙ efficace per raggiungere questo obiettivo?",
@@ -8770,7 +8826,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 501,
-    topic: "Sistemi Operativi Real-Time (RTOS) e Sicurezza",
+    topic: "ICS/OT Security",
     level: "ANALISI",
     scenario: "Un produttore di droni impiega un sistema operativo in tempo reale (RTOS) per garantire l'esecuzione tempestiva dei task. Durante l'ottimizzazione per le prestazioni in tempo reale, quale delle seguenti preoccupazioni di sicurezza potrebbe sorgere?",
     question: "Quale delle seguenti preoccupazioni di sicurezza potrebbe sorgere?",
@@ -8785,7 +8841,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 502,
-    topic: "On-Premise vs. Cloud Security",
+    topic: "Architecture Models & Shared Responsibility",
     level: "COMPRENSIONE",
     scenario: "Quale dei seguenti termini si riferisce alla fornitura di servizi informatici via Internet, come server, archiviazione, database, rete, software, analisi e intelligenza?",
     question: "Quale dei seguenti termini si riferisce alla fornitura di servizi informatici via Internet, come server, archiviazione, database, rete, software, analisi e intelligenza?",
@@ -8860,7 +8916,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 507,
-    topic: "Security Exercises & Methodologies",
+    topic: "Incident Response",
     level: "ANALISI",
     scenario: "La Data Core, una società di elaborazione dati, ha riunito il proprio team di sicurezza per un incontro in cui il Chief Operations Officer presenta uno scenario relativo a una vulnerabilità zero-day appena scoperta, a cui i loro sistemi sono particolarmente sensibili. Il team discute varie modalità per affrontare il problema, con l'emergere di due approcci principali concorrenti.",
     question: "Che tipo di esercitazione stanno eseguendo molto probabilmente?",
@@ -8920,7 +8976,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 511,
-    topic: "Secure Appliance Administration",
+    topic: "Secure Network Protocols",
     level: "APPLICAZIONE",
     scenario: "Croma Soft, una società di videogiochi, desidera ridurre la superficie d'attacco esposta al pubblico per i propri server aziendali. Spera di raggiungere questo obiettivo utilizzando un dispositivo in grado di gestire e inoltrare (relay) le richieste per conto dei server interni.",
     question: "Quale tipo di appliance di rete sarebbe PIÙ appropriato per questo scopo?",
@@ -8935,7 +8991,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 512,
-    topic: "Data Security Technologies",
+    topic: "Data Classification & Security",
     level: "COMPRENSIONE",
     scenario: "La protezione dei dati memorizzati su supporti di memorizzazione permanenti (come database, file di configurazione e supporti di archiviazione) rappresenta una priorità cruciale per prevenire accessi non autorizzati e furti di informazioni fisiche o logiche.",
     question: "Quale dei seguenti metodi garantisce MEGLIO la sicurezza dei dati a riposo (data at rest)?",
@@ -9010,7 +9066,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 517,
-    topic: "Data Security Technologies",
+    topic: "Data Classification & Security",
     level: "COMPRENSIONE",
     scenario: "Un'azienda desidera garantire sia l'integrità (assicurarsi che non vengano alterati o manomessi) sia la riservatezza dei file del proprio sistema operativo, sia durante il trasferimento in rete (in transit) sia durante la memorizzazione sul disco (at rest).",
     question: "Quale dei seguenti rappresenta l'approccio PIÙ efficace per proteggere questi file?",
@@ -9115,7 +9171,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 532,
-    topic: "Incident Response & Testing",
+    topic: "Incident Response",
     level: "ANALISI",
     scenario: "Morris ha organizzato un'esercitazione per il suo team di sicurezza per testare i nuovi piani di difesa. Ha diviso il team in due gruppi con esperienza e dimensioni simili: uno difende il sistema e l'altro tenta di violarlo. I gruppi competono tra loro e la squadra vincente riceverà un pranzo offerto dall'azienda.",
     question: "Quale tipo di esercitazione ha creato Morris?",
@@ -9280,7 +9336,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
   },
   {
     id: 527,
-    topic: "Physical & Environmental Security",
+    topic: "Physical Security Controls",
     level: "APPLICAZIONE",
     scenario: "Dion Training Solutions sta implementando un sistema di sicurezza per la propria struttura di ricerca, dove sono archiviati dati altamente sensibili. Se il sistema di controllo degli accessi fisici dovesse guastarsi, il team di sicurezza deve garantire che nessun personale non autorizzato possa accedere alla struttura, anche se questo comporta qualche inconveniente per il personale autorizzato.",
     question: "Quale modalità operativa dovrebbe essere adottata in caso di guasto del sistema di controllo degli accessi?",
@@ -10108,7 +10164,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 37,
-    topic: "Risk Assessment / Likelihood",
+    topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
     scenario: "Un esperto di cybersecurity sta valutando la sicurezza aziendale e, basandosi su recenti incidenti simili avvenuti nel settore, classifica la probabilità che si verifichi una violazione dei dati come 'alta'.",
     question: "Quale termine di valutazione del rischio sta utilizzando?",
@@ -11956,7 +12012,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
 export const DOMAIN_1_QUESTIONS: Question[] = [
   {
     id: 41,
-    topic: "Compliance & Auditing",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "APPLICAZIONE",
     scenario: "Un'azienda di servizi finanziari è tenuta a presentare regolarmente della documentazione formale che dimostri la sua piena aderenza agli standard di sicurezza normativi vigenti. Questa documentazione include i risultati degli audit, le valutazioni del rischio e le prove dell'efficacia delle misure di protezione dei dati implementate.",
     question: "Come viene chiamato questo processo?",
@@ -11971,7 +12027,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 42,
-    topic: "Control Functional Types",
+    topic: "Security Controls",
     level: "ANALISI",
     scenario: "L'amministratore di rete di una filiale remota deve installare un sistema operativo legacy essenziale per la diagnostica di vecchi macchinari industriali. Poiché il sistema operativo non riceve più patch dal produttore e presenta vulnerabilità critiche, l'amministratore configura il firewall locale per bloccare qualsiasi traffico in entrata e in uscita da quell'host verso internet, consentendo solo la connessione locale ad una workstation di controllo specifica.",
     question: "Quale tipologia funzionale di controllo di sicurezza rappresenta questa configurazione del firewall?",
@@ -12016,7 +12072,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 45,
-    topic: "AAA Framework & Zero Trust Intro",
+    topic: "Security Principles",
     level: "COMPRENSIONE",
     scenario: "Un auditor di sicurezza rileva che i log di audit e di accesso del server principale di produzione sono archiviati in un percorso di rete dove gli amministratori di rete hanno permessi completi di scrittura e cancellazione.",
     question: "Quale fase specifica del framework AAA viene gravemente compromessa se i log delle attività possono essere modificati o cancellati dagli stessi utenti di cui dovrebbero tracciare le azioni?",
@@ -12031,7 +12087,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 46,
-    topic: "Social Engineering & Awareness",
+    topic: "Social Engineering",
     level: "APPLICAZIONE",
     scenario: "L'istituto finanziario 'Rico Financials' ha introdotto un programma globale di formazione sulla sicurezza (Security Awareness). Durante una delle ultime sessioni didattiche, i dipendenti hanno analizzato nel dettaglio i rischi e i segnali associati ad attività dolose condotte da dipendenti attuali o ex dipendenti, o da partner commerciali fidati.",
     question: "Su quale minaccia specifica si concentra questa lezione?",
@@ -12046,7 +12102,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 47,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "Un ingegnere di sicurezza sta valutando un'applicazione proprietaria sviluppata da terzi. Nota che l'applicazione memorizza le chiavi API dei servizi cloud in chiaro all'interno di un file di configurazione, mascherandole semplicemente applicando un algoritmo XOR invertibile e codificando il risultato finale in formato Base64.",
     question: "Come deve essere valutato questo metodo di protezione secondo i principi crittografici di Domain 1?",
@@ -12061,7 +12117,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 48,
-    topic: "Security Standards",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "COMPRENSIONE",
     scenario: "Le organizzazioni adottano standard tecnologici diversi per assicurare che i dati siano protetti in base al loro stato (a riposo, in transito, in uso).",
     question: "Quale tipologia di standard definisce i metodi, i protocolli e gli algoritmi di controllo utilizzati specificamente per proteggere le informazioni durante il loro transito sulle reti?",
@@ -12076,7 +12132,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 49,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "Un sistemista junior riceve una richiesta di supporto urgente da parte del reparto vendite, che dichiara di non poter accedere a un nuovo database CRM a causa di un blocco di rete. Per risolvere rapidamente la situazione, il sistemista modifica manualmente una regola del firewall di produzione centrale, consentendo l'accesso da qualsiasi indirizzo IP della filiale. La connessione funziona, ma due giorni dopo l'azienda subisce un attacco proveniente da una sottorete non autorizzata che ha sfruttato quella stessa porta aperta.",
     question: "Quale fase critica del processo di Change Management è stata totalmente omessa e avrebbe evitato l'incidente?",
@@ -12091,7 +12147,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 50,
-    topic: "Security Consequences",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "APPLICAZIONE",
     scenario: "L'azienda 'Horizon Security', specializzata in formazione sulla sicurezza informatica, subisce una grave violazione dei dati (data breach) a causa della negligenza di un proprio fornitore terzo. L'incidente provoca la perdita di un ingente volume di informazioni sensibili riguardanti i clienti.",
     question: "Quale tipologia di conseguenza immediata è PIÙ probabile che Horizon debba affrontare?",
@@ -12106,7 +12162,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 131,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "ANALISI",
     scenario: "Un ingegnere di rete deve progettare una soluzione di crittografia simmetrica per un'applicazione industriale in tempo reale. L'applicazione trasmette flussi continui di telemetria in cui la lunghezza totale del pacchetto dati non è nota a priori e richiede una latenza minima, cifrando i dati un byte o un bit alla volta.",
     question: "Quale tipologia di cifratura simmetrica è la PIÙ adatta per soddisfare questi requisiti operativi?",
@@ -12121,7 +12177,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 132,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "La società 'Sweet as Thyme', un fornitore di aromi alimentari, desidera tracciare le spedizioni e i pagamenti della propria filiera produttiva. L'azienda decide di adottare una rete peer-to-peer decentralizzata basata su un registro distribuito e pubblico per garantire l'immutabilità, l'integrità e la trasparenza di tutte le transazioni commerciali.",
     question: "Come si chiama questa tecnologia di registro pubblico distribuito?",
@@ -12136,7 +12192,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 133,
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     level: "COMPRENSIONE",
     scenario: "In un'azienda che adotta il modello di sicurezza Zero Trust, l'amministratore di sistema deve configurare i componenti preposti a decidere se una richiesta di accesso alle risorse interne debba essere autorizzata o negata, basandosi su policy aziendali, analisi del rischio e verifica in tempo reale delle credenziali e dello stato del dispositivo.",
     question: "In quale piano architetturale (Plane) risiede il componente preposto a prendere queste decisioni di accesso nel modello Zero Trust?",
@@ -12151,7 +12207,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 134,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "RICORDO",
     scenario: "L'organizzazione internazionale 'Trust Us' offre servizi di sicurezza e fiduciari sul web. L'azienda si occupa di validare le identità di server e domini, emettere credenziali crittografiche digitali e firmare chiavi pubbliche associandole a entità specifiche per consentire comunicazioni cifrate sicure tramite HTTPS.",
     question: "Quale tipologia di organizzazione descrive meglio l'operato di 'Trust Us'?",
@@ -12166,7 +12222,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 135,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "Kevin, un analista di sistemi esperto presso un'azienda di servizi finanziari, riceve una richiesta di modifica per applicare un importante aggiornamento cumulativo al sistema ERP aziendale. Prima che la modifica venga approvata o implementata, Kevin analizza accuratamente come l'aggiornamento impatterà sulle prestazioni hardware dei server di produzione, sull'operatività quotidiana del personale e sulle integrazioni API attive.",
     question: "Quale termine del Change Management descrive MEGLIO la valutazione condotta da Kevin?",
@@ -12181,7 +12237,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 136,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "La società di e-learning 'Reason and Rhyme' desidera innalzare la sicurezza di archiviazione delle credenziali dei propri studenti. Anziché limitarsi ad applicare un algoritmo di hash standard una sola volta, l'azienda introduce un meccanismo di cifratura che esegue ricorsivamente migliaia di iterazioni matematiche di hashing, con lo scopo di rallentare notevolmente il calcolo di brute-force da parte di un attaccante esterno.",
     question: "Come viene chiamato questo metodo crittografico di protezione delle password?",
@@ -12196,7 +12252,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 137,
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     level: "COMPRENSIONE",
     scenario: "La tech company 'Novus Technologies' sta riprogettando la propria architettura di rete seguendo le linee guida del framework Zero Trust. Per gestire l'accesso dei dipendenti alle risorse aziendali in modo sicuro e flessibile, il team IT decide di implementare una soluzione sul piano di controllo che verifichi l'identità dell'utente, analizzi le sue mansioni attive e applichi dinamicamente policy di sicurezza precise.",
     question: "Quale componente o approccio dell'architettura Zero Trust descrive questa gestione centralizzata degli accessi sul piano di controllo?",
@@ -12211,7 +12267,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 138,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "COMPRENSIONE",
     scenario: "Durante l'installazione di una nuova applicazione software di contabilità aziendale su un server Linux centralizzato all'interno della 'Kelly Innovations LLC', l'installatore riceve un errore bloccante: l'applicazione non può essere avviata perché richiede l'installazione preventiva di una specifica libreria crittografica open source non presente nel sistema.",
     question: "Quale termine tecnico descrive MEGLIO la relazione bloccante tra l'applicazione di contabilità e la libreria mancante?",
@@ -12226,7 +12282,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 139,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "RICORDO",
     scenario: "Un'organizzazione finanziaria adotta una complessa infrastruttura a chiave pubblica (PKI) per crittografare tutti i documenti interni e i database confidenziali. Per prevenire la perdita irreversibile dei dati sensibili qualora i dipendenti smarrissero la propria chiave privata di decifratura, l'azienda decide di depositare in sicurezza una copia di backup di tutte le chiavi private presso un'entità terza fidata autorizzata al recupero.",
     question: "Quale componente o processo della PKI permette di depositare e recuperare le chiavi crittografiche tramite terze parti fidate?",
@@ -12241,7 +12297,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 140,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "APPLICAZIONE",
     scenario: "La scuola di formazione professionale 'Dion Training' vuole incrementare la fiducia e la sicurezza del proprio portale web per gli studenti esterni, eliminando i fastidiosi avvisi di sicurezza generati dai browser moderni quando gli utenti vi si collegano tramite HTTPS. A tal fine, l'azienda necessita di un certificato digitale firmato e convalidato da un'autorità di certificazione autorevole e riconosciuta a livello globale.",
     question: "Quale tipologia di certificato risponde meglio a questa esigenza organizzativa?",
@@ -12271,7 +12327,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 142,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "APPLICAZIONE",
     scenario: "Un utente decide di prenotare un appuntamento online per un taglio di capelli sul sito web del salone 'Dye My Darling'. Quando compila il modulo con i propri dati personali, questi vengono trasmessi al database aziendale sicuro e immediatamente associati a una stringa di caratteri casuale e non sensibile (denominata token) che sostituisce i dati reali. Il personale del salone visualizzerà solo questo identificativo fittizio per gestire le prenotazioni, riducendo l'esposizione dei dati dei clienti in caso di breccia informatica.",
     question: "Quale metodo di occultamento e protezione dei dati sensibili sta impiegando il sito web 'Dye My Darling'?",
@@ -12286,7 +12342,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 143,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "Un amministratore di rete deve implementare temporaneamente un certificato SSL/TLS per un server web interno utilizzato esclusivamente per condurre dei test diagnostici da parte del team di sviluppo software. Poiché il sistema non è esposto a utenti esterni e l'azienda desidera evitare i costi legati alle CA commerciali, l'amministratore decide di firmare il certificato usando la propria chiave privata di root locale.",
     question: "Quale tipologia di certificato viene emessa ed autofirmata da un'entità per uso locale?",
@@ -12301,7 +12357,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 144,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "ANALISI",
     scenario: "Carlos viene assunto come consulente di cybersecurity esterno presso Dion Training Solutions con l'incarico di mappare e mappare le falle e le vulnerabilità dell'infrastruttura del data center. Carlos richiede formalmente un diagramma aggiornato dell'architettura di rete e dei server fisici, ma il team di supporto tecnico gli fornisce una planimetria risalente a più di un anno prima.",
     question: "Perché l'utilizzo di questo vecchio diagramma architetturale è potenzialmente problematico per il compito assegnato a Carlos?",
@@ -12316,7 +12372,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 145,
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     level: "APPLICAZIONE",
     scenario: "Neville, un ingegnere di sicurezza esperto, suggerisce al management di creare e posizionare all'interno di una cartella di condivisione di rete molto in vista un documento fittizio intitolato 'password_amministrazione.xlsx'. Il documento contiene credenziali false appositamente progettate per far scattare un allarme di intrusione immediato qualora un attaccante decida di aprirlo o copiarlo.",
     question: "Che tipologia di risorsa esca ha suggerito di creare Neville?",
@@ -12331,7 +12387,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 146,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "APPLICAZIONE",
     scenario: "L'azienda finanziaria 'Kelly Innovations LLC' intende proteggere le proprie transazioni digitali contro qualsiasi rischio di falsificazione o alterazione retroattiva. I requisiti impongono che ogni record di transazione debba essere protetto tramite algoritmi crittografici a catena, in modo che il valore hash di ciascun blocco sia incorporato nel calcolo dell'hash del blocco successivo.",
     question: "Quale delle seguenti tecnologie si adatta perfettamente a questo scenario?",
@@ -12346,7 +12402,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 147,
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     level: "ANALISI",
     scenario: "Un cliente esterno desidera trasmettere un ordine sensibile altamente confidenziale alla sede centrale di 'Dion Training' utilizzando la crittografia asimmetrica, garantendo che solo e soltanto Dion Training sia in grado di decifrare e leggere il contenuto del messaggio.",
     question: "Quale chiave crittografica deve utilizzare il client per cifrare il messaggio in modo da garantirne la massima riservatezza?",
@@ -12361,7 +12417,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 148,
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     level: "APPLICAZIONE",
     scenario: "Un'organizzazione governativa intende implementare un sistema di controllo degli accessi altamente flessibile e dinamico che possa valutare in tempo reale il comportamento insolito degli utenti (es. orari di connessione anomali o spostamenti geografici impossibili nel tempo), richiedendo requisiti di autenticazione MFA aggiuntivi o bloccando l'accesso se il rischio calcolato supera la soglia consentita.",
     question: "Quale delle seguenti soluzioni e tecnologie risponde MEGLIO a questa esigenza?",
@@ -12391,7 +12447,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 150,
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     level: "COMPRENSIONE",
     scenario: "Un security engineer progetta l'inserimento di una macchina civetta apparentemente vulnerabile e priva di patch all'interno di una sottorete isolata dell'azienda, allo scopo di studiare le tecniche di hacking utilizzate dagli aggressori e catturare log preziosi senza esporre i server reali.",
     question: "Quale delle seguenti opzioni descrive MEGLIO la funzione primaria di un honeypot in un'architettura di rete?",
@@ -12406,7 +12462,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 151,
-    topic: "Symmetric Encryption",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "Un ingegnere di sicurezza deve selezionare un algoritmo di crittografia simmetrica per proteggere un flusso continuo di dati in tempo reale trasmesso su una connessione di rete, dove la lunghezza totale del messaggio non è predeterminata all'inizio della trasmissione.",
     question: "Quale tipo di crittografia simmetrica è la PIÙ adatta per scenari in cui la lunghezza totale del messaggio non è predeterminata e i dati vengono cifrati un singolo byte o bit alla volta?",
@@ -12481,7 +12537,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 156,
-    topic: "Cryptographic Methods",
+    topic: "Cryptography",
     level: "APPLICAZIONE",
     scenario: "L'azienda 'Reason and Rhyme', un servizio di tutoraggio online, vuole rafforzare la sicurezza delle password dei propri iscritti. Sebbene abbiano sempre utilizzato funzioni per convertire le password in sequenze di lunghezza fissa (hash), ora decidono di ripetere questo processo matematico migliaia di volte per aumentare la potenza di calcolo e il tempo necessari a un utente malintenzionato per decifrare i codici segreti tramite brute-force.",
     question: "Come viene chiamato questo metodo di rafforzamento?",
@@ -12511,7 +12567,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 158,
-    topic: "Software Management",
+    topic: "Asset Management",
     level: "COMPRENSIONE",
     scenario: "Durante l'installazione di una nuova applicazione software all'interno dei sistemi della 'Kelly Innovations LLC', il team IT rileva che un modulo specifico non si avvia e genera errori a meno che un altro pacchetto software specifico non sia già installato e configurato nel sistema operativo.",
     question: "Quale delle seguenti opzioni descrive MEGLIO questa situazione?",
@@ -12601,7 +12657,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 164,
-    topic: "Baselines & Configuration Drift",
+    topic: "Baselines & Configuration",
     level: "RICORDO",
     scenario: "Durante la pianificazione di un importante aggiornamento del sistema ERP aziendale, il team IT decide di condurre una simulazione e un test pilota controllati (trial run) in un ambiente di staging isolato prima di effettuare il rollout definitivo sulla produzione di tutta l'organizzazione.",
     question: "Quale delle seguenti pratiche evidenzia l'importanza di eseguire test preliminari e prove pilota sui cambiamenti significativi prima della loro completa implementazione?",
@@ -12781,7 +12837,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 176,
-    topic: "Infrastruttura PKI",
+    topic: "Public Key Infrastructure",
     level: "COMPRENSIONE",
     scenario: "Le organizzazioni utilizzano diversi tipi di certificati digitali all'interno della loro infrastruttura a chiave pubblica (PKI) in base alle specifiche esigenze di attendibilità, verifica e ambiente d'uso.",
     question: "Quale tra i seguenti tipi di certificati viene emesso da un'entità che utilizza la propria chiave privata ed è spesso utilizzato in ambienti interni o di test a causa della sua mancanza di fiducia intrinseca nei sistemi esterni?",
@@ -12871,7 +12927,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 182,
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     level: "APPLICAZIONE",
     scenario: "Le misure di sicurezza perimetrale mirano a proteggere le persone, l'infrastruttura tecnologica e gli edifici dagli attacchi fisici portati da malintenzionati o da incidenti stradali.",
     question: "Quale delle seguenti è una misura di sicurezza fisica solitamente impiegata all'esterno di edifici o aree sensibili per impedire fisicamente ai veicoli di causare danni alla proprietà o di aprirsi un varco non autorizzato?",
@@ -12901,7 +12957,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 184,
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     level: "COMPRENSIONE",
     scenario: "Un addetto alla sicurezza sta utilizzando un sistema che prevede l'uso di telecamere per monitorare le attività in una determinata area.",
     question: "Come è noto questo sistema?",
@@ -12916,7 +12972,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 185,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "È previsto il rilascio di un importante aggiornamento software nell'ambiente di produzione di un'azienda.",
     question: "Per garantire che eventuali problemi imprevisti o conflitti possano essere annullati riportando il sistema al precedente stato stabile, cosa dovrebbe aver predisposto il team IT?",
@@ -12976,7 +13032,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 189,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "Presso Kelly Innovations Corp., durante un audit di routine, Alex scopre che il database a supporto dell'applicazione CRM è corrotto. Informa immediatamente Kevin, l'amministratore senior del database, che decide di ripristinare il database dall'ultimo backup pulito, assicurando che il CRM torni operativo con una minima perdita di dati.",
     question: "Quale azione sta intraprendendo Kevin per risolvere il problema?",
@@ -13021,7 +13077,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 192,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "Presso Kelly Innovations Corp., Sarah nota che la loro applicazione aziendale principale, che tiene traccia degli ordini dei clienti, non aggiorna accuratamente i livelli di inventario. Un recente aggiornamento sembra aver introdotto un bug.",
     question: "Quale delle seguenti opzioni offrirebbe la soluzione MIGLIORE?",
@@ -13081,7 +13137,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 196,
-    topic: "Change Management Processes",
+    topic: "Change Management",
     level: "APPLICAZIONE",
     scenario: "Un'azienda sta effettuando l'aggiornamento della configurazione di un firewall di produzione come parte del proprio processo strutturato di change management.",
     question: "Quale implicazione tecnica ha la maggiore probabilità di verificarsi durante questo processo?",
@@ -13156,7 +13212,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 201,
-    topic: "Infrastruttura PKI",
+    topic: "Public Key Infrastructure",
     level: "COMPRENSIONE",
     scenario: "La gestione della crittografia a chiave pubblica su larga scala richiede una struttura organizzativa, tecnologica e procedurale standardizzata.",
     question: "Quale termine viene utilizzato per descrivere la creazione, distribuzione, memorizzazione e revoca dei certificati digitali?",
@@ -13171,7 +13227,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 202,
-    topic: "Infrastruttura PKI",
+    topic: "Public Key Infrastructure",
     level: "APPLICAZIONE",
     scenario: "Dion Training intende espandere i propri servizi online, lanciando molteplici sotto-domini per diversi corsi (ad esempio corsi.diontraining.com, labs.diontraining.com, test.diontraining.com). Desiderano un unico certificato digitale in grado di proteggere contemporaneamente tutti questi sotto-domini.",
     question: "Quale tipo di certificato dovrebbe prendere in considerazione Dion Training?",
@@ -13216,7 +13272,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 205,
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     level: "APPLICAZIONE",
     scenario: "Gerald, l'IT manager, sta implementando un sistema in cui i dipendenti devono possedere un dispositivo/gettone (token) per ottenere l'accesso ad alcune aree specifiche all'interno dell'edificio aziendale.",
     question: "Quale delle seguenti opzioni spiega meglio il tipo di sicurezza fisica che stanno implementando?",
@@ -13276,7 +13332,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 209,
-    topic: "Infrastruttura PKI",
+    topic: "Public Key Infrastructure",
     level: "COMPRENSIONE",
     scenario: "Le organizzazioni si affidano all'infrastruttura a chiave pubblica (PKI) per stabilire canali sicuri e convalidare l'identità di server o partner commerciali esterni.",
     question: "Quale dei seguenti certificati viene emesso da un'autorità esterna riconosciuta e comporta intrinsecamente un livello di fiducia più elevato per gli utenti e i sistemi che non conoscono l'origine del certificato?",
@@ -13366,7 +13422,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 215,
-    topic: "Cryptographic Concepts",
+    topic: "Cryptography",
     level: "COMPRENSIONE",
     scenario: "Un'organizzazione sta valutando l'adozione di algoritmi crittografici con chiavi di lunghezza maggiore per proteggere le comunicazioni sensibili all'interno di un ambiente sicuro.",
     question: "Qual è il principale vantaggio di sicurezza nell'utilizzare una chiave di lunghezza maggiore negli algoritmi di crittografia?",
