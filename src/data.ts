@@ -12435,16 +12435,16 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 146,
     topic: "Cryptography",
     level: "APPLICAZIONE",
-    scenario: "L'azienda finanziaria 'Kelly Innovations LLC' intende proteggere le proprie transazioni digitali contro qualsiasi rischio di falsificazione o alterazione retroattiva. I requisiti impongono che ogni record di transazione debba essere protetto tramite algoritmi crittografici a catena, in modo che il valore hash di ciascun blocco sia incorporato nel calcolo dell'hash del blocco successivo.",
-    question: "Quale delle seguenti tecnologie si adatta perfettamente a questo scenario?",
+    scenario: "Un'azienda distribuisce ai propri clienti un aggiornamento firmware scaricabile dal sito web. Il requisito è duplice: il cliente deve poter verificare che il file provenga davvero dall'azienda e che nessuno lo abbia alterato dopo la pubblicazione. L'azienda non vuole pero' che il contenuto del firmware sia segreto: deve restare leggibile e installabile da chiunque.",
+    question: "Quale meccanismo crittografico soddisfa esattamente questi requisiti?",
     options: [
-      "A) Public Key Infrastructure (Infrastruttura a chiave pubblica - PKI)",
-      "B) Blockchain",
-      "C) Digital Watermarking (Filigrana digitale)",
-      "D) Symmetric Encryption (Crittografia simmetrica)"
+      "A) Cifratura simmetrica del file con AES-256 e chiave distribuita ai clienti",
+      "B) Firma digitale: hash del file cifrato con la chiave privata dell'azienda",
+      "C) Hash SHA-256 del file pubblicato accanto al download sulla stessa pagina",
+      "D) Cifratura del file con la chiave pubblica di ciascun cliente registrato"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Blockchain**.\n\n* **Perché è la corretta:** La **Blockchain** è strutturata precisamente come una sequenza di blocchi di dati collegati in ordine cronologico. Ogni blocco contiene un gruppo di transazioni e include l'hash crittografico del blocco precedente. Questo collegamento sequenziale fa sì che qualsiasi minima modifica a una transazione passata rompa la catena di hash successivi, garantendo l'assoluta integrità dei dati storici.\n* **Analisi dei distrattori:**\n  * **A) Public Key Infrastructure (PKI)** gestisce le identità digitali e i certificati asimmetrici, ma non definisce un meccanismo di concatenazione crittografica cronologica di record finanziari.\n  * **C) Digital Watermarking (Filigrana digitale)** è una tecnologia per incorporare informazioni nascoste all'interno di file multimediali (es. immagini o audio) per scopi di copyright, non legata alla cronologia delle transazioni.\n  * **D) Symmetric Encryption (Crittografia simmetrica)** serve a cifrare un dato per preservarne la riservatezza usando una chiave segreta comune, ma non fornisce un'architettura di ledger distribuito concatenato tramite hashing.\n\n* **Piccolo Esempio Concentrato:** In un sistema di logistica portuale, ogni timbro doganale digitale contiene l'hash crittografico dell'approvazione del porto di partenza. Se un doganiere tenta di falsificare l'approvazione del porto d'origine, la catena crittografica si rompe evidenziando istantaneamente l'anomalia."
+    explanation: "La risposta corretta è la **B) Firma digitale**.\n\n* **Perché è la corretta:** La firma digitale fornisce **autenticità**, **integrità** e **non-ripudio** senza rendere segreto il contenuto. L'azienda calcola l'hash del firmware e lo cifra con la propria **chiave privata**; chiunque può decifrare quella firma con la **chiave pubblica** dell'azienda, ricalcolare l'hash del file scaricato e confrontare i due valori. Se coincidono, il file è autentico e integro. Il firmware in sè resta in chiaro, esattamente come richiesto.\n* **Analisi dei distrattori:**\n  * **A)** La cifratura simmetrica renderebbe il file **segreto**, che è l'opposto del requisito; inoltre una chiave condivisa con tutti i clienti non è più un segreto e non prova nulla sull'origine, perché chiunque la possieda può cifrare a nome dell'azienda.\n  * **C)** Un hash pubblicato accanto al download garantisce l'integrità solo se l'attaccante non può modificare la pagina. Ma chi riesce a sostituire il file sostituisce anche l'hash: senza una chiave privata a proteggerlo, l'hash da solo non prova **chi** ha pubblicato il file.\n  * **D)** Cifrare con la chiave pubblica di ogni cliente garantirebbe la riservatezza verso quel singolo cliente, sarebbe ingestibile su larga scala e non direbbe comunque nulla sull'autenticità del mittente.\n\n* **Trappola d'esame:** ricorda la regola delle chiavi. Per la **riservatezza** si cifra con la chiave **pubblica del destinatario**; per **firmare** si usa la chiave **privata del mittente**. Se lo scenario chiede di provare *chi ha prodotto* un file, la risposta è sempre la firma digitale; se chiede di renderlo *illeggibile*, è la cifratura."
   },
   {
     id: 147,
@@ -12510,106 +12510,106 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 151,
     topic: "Cryptography",
     level: "COMPRENSIONE",
-    scenario: "Un ingegnere di sicurezza deve selezionare un algoritmo di crittografia simmetrica per proteggere un flusso continuo di dati in tempo reale trasmesso su una connessione di rete, dove la lunghezza totale del messaggio non è predeterminata all'inizio della trasmissione.",
-    question: "Quale tipo di crittografia simmetrica è la PIÙ adatta per scenari in cui la lunghezza totale del messaggio non è predeterminata e i dati vengono cifrati un singolo byte o bit alla volta?",
+    scenario: "Durante un audit, un consulente rileva che un'applicazione interna protegge i dati con AES ma usando chiavi a 128 bit, e propone di passare a 256 bit. Il responsabile IT obietta che, essendo lo stesso algoritmo, la sicurezza non cambia.",
+    question: "Qual è l'effetto reale dell'aumento della lunghezza della chiave?",
     options: [
-      "A) Cifrario a blocchi (Block cipher)",
-      "B) Cifrario a flusso (Stream cipher)",
-      "C) Vettore di inizializzazione (IV)",
-      "D) AES256"
+      "A) La chiave più lunga cifra blocchi di dati più grandi, riducendo il numero di operazioni e quindi la superficie d'attacco",
+      "B) Nessuno: la robustezza dipende solo dall'algoritmo, quindi AES-128 e AES-256 sono equivalenti sul piano della sicurezza",
+      "C) Raddoppiando i bit della chiave lo spazio delle chiavi cresce in modo esponenziale, rendendo la ricerca esaustiva incomparabilmente più costosa",
+      "D) La chiave più lunga rende l'algoritmo resistente agli attacchi al canale laterale e agli errori di implementazione"
     ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Cifrario a flusso (Stream cipher)**.\n\n* **Perché è la corretta:** I **cifrari a flusso** (stream ciphers) cifrano il testo in chiaro un byte o un bit alla volta, rendendoli ideali per scenari in cui la lunghezza totale del messaggio non è nota o per flussi di dati continui in tempo reale. Combinano il testo in chiaro con un flusso di chiavi (keystream) generato in modo pseudo-casuale derivato dalla chiave simmetrica.\n* **Analisi dei distrattori:**\n  * **A) Cifrario a blocchi (Block cipher)** suddivide i dati in blocchi di dimensione fissa (es. 128 bit) prima di cifrarli, richiedendo il riempimento (padding) se l'ultimo blocco è incompleto.\n  * **C) Vettore di inizializzazione (IV)** è un valore di input casuale utilizzato per garantire l'unicità del testo cifrato risultante anche con testi in chiaro identici, ma non è una tipologia di crittografia a sé stante.\n  * **D) AES256** è un algoritmo simmetrico standard a 256 bit molto diffuso, ma si tratta specificamente di un cifrario a blocchi e non della categoria generale richiesta.\n\n* **Piccolo Esempio Concentrato:** Durante una telefonata crittografata su un'app di messaggistica o una sessione SSH, un cifrario a flusso cifra la voce o i pacchetti di controllo un bit alla volta non appena vengono catturati dal microfono, garantendo bassissima latenza senza dover attendere il riempimento di interi blocchi di memoria."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C)**.\n\n* **Perché è la corretta:** La lunghezza della chiave determina la dimensione dello **spazio delle chiavi**, cioè quante chiavi un attaccante dovrebbe provare in una ricerca esaustiva. Ogni bit aggiunto **raddoppia** quello spazio: AES-128 ha 2^128 chiavi possibili, AES-256 ne ha 2^256. Non è il doppio, è un numero incommensurabilmente più grande. È questa la ragione per cui AES-256 viene richiesto dove serve un margine di sicurezza a lungo termine.\n* **Analisi dei distrattori:**\n  * **B)** Confonde due cose distinte. L'algoritmo determina *come* si cifra e se esistono debolezze strutturali; la lunghezza della chiave determina *quanto* costa provarle tutte. A parità di algoritmo solido, una chiave più lunga è realmente più robusta contro il brute-force.\n  * **A)** Errore tecnico: in AES la **dimensione del blocco resta 128 bit** qualunque sia la lunghezza della chiave (128, 192 o 256). Cambia il numero di round interni, non la dimensione dei blocchi elaborati.\n  * **D)** Gli **attacchi al canale laterale** (analisi dei tempi, dei consumi elettrici, delle cache) aggirano del tutto la matematica: sfruttano difetti dell'implementazione fisica. Una chiave più lunga non offre alcuna protezione contro di essi, che si contrastano con implementazioni a tempo costante e hardware dedicato.\n\n* **Trappola d'esame:** non confondere lunghezza della chiave e robustezza dell'algoritmo. Una chiave a 4096 bit su un algoritmo rotto resta insicura; e le lunghezze non sono confrontabili tra famiglie diverse, perché una chiave RSA da 3072 bit offre all'incirca la stessa sicurezza di una chiave simmetrica da 128 bit o di una curva ellittica da 256 bit."
   },
   {
     id: 152,
-    topic: "Emerging Technologies",
-    level: "APPLICAZIONE",
-    scenario: "L'azienda 'Sweet as Thyme', un fornitore di aromi alimentari, desidera tracciare la propria catena di fornitura utilizzando una rete peer-to-peer decentralizzata che si affida a un registro pubblico condiviso e immutabile per garantire l'integrità delle transazioni e fornire una registrazione permanente di tutti gli scambi effettuati.",
-    question: "Come si chiama la tecnologia che stanno utilizzando?",
+    topic: "Cryptography",
+    level: "COMPRENSIONE",
+    scenario: "Durante un'indagine interna, il team di sicurezza scopre che un dipendente ha esfiltrato un elenco di clienti pubblicando sul profilo social aziendale alcune normali fotografie del team. I file immagine si aprono correttamente e appaiono del tutto ordinari, ma il loro peso è anomalo e un'analisi forense rivela dati aggiuntivi nascosti nei bit meno significativi dei pixel.",
+    question: "Quale tecnica di occultamento ha utilizzato il dipendente?",
     options: [
-      "A) Salting",
-      "B) Key Stretching",
-      "C) Blockchain",
-      "D) Firme digitali (Digital Signatures)"
+      "A) Cifratura asimmetrica",
+      "B) Tokenizzazione",
+      "C) Data masking",
+      "D) Steganografia"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Blockchain**.\n\n* **Perché è la corretta:** La **Blockchain** è una tecnologia basata su un registro pubblico distribuito (ledger) mantenuto da una rete peer-to-peer. Consente la verifica trasparente e pubblica di tutte le transazioni, garantendo l'integrità e l'immutabilità permanente dei dati registrati.\n* **Analisi dei distrattori:**\n  * **A) Salting** è una tecnica crittografica che consiste nell'aggiungere dati casuali (salt) alle password prima di effettuarne l'hashing per prevenire attacchi tramite tabelle precompilate (rainbow tables).\n  * **B) Key Stretching** è un metodo utilizzato per allungare i tempi di calcolo dell'hash di una password, rendendo gli attacchi di brute force molto più lenti e inefficaci.\n  * **D) Le firme digitali** servono a garantire l'autenticità e l'integrità di un singolo messaggio o documento, ma non costituiscono di per sé una rete di registri distribuiti per la verifica pubblica delle transazioni.\n\n* **Piccolo Esempio Concentrato:** Un'azienda vinicola registra ogni passaggio della bottiglia (dal raccolto della vigna, alla spedizione marittima, fino al distributore) su una blockchain pubblica. Poiché i blocchi sono legati crittograficamente, nessun distributore intermedio può falsificare la data o la temperatura di conservazione."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Steganografia**.\n\n* **Perché è la corretta:** La **steganografia** nasconde l'**esistenza stessa** del messaggio, non il suo contenuto. I dati vengono incorporati dentro un file portante apparentemente innocuo (immagine, audio, video, documento), tipicamente alterando i bit meno significativi dei pixel: una modifica impercettibile all'occhio ma sufficiente a trasportare informazioni. E' proprio quello che descrive lo scenario, e la ragione per cui il file si apre normalmente.\n* **Analisi dei distrattori:**\n  * **B) La tokenizzazione** sostituisce un dato sensibile con un token privo di valore, conservando l'originale in un vault separato. E' un controllo **difensivo** applicato dall'organizzazione ai propri dati, non una tecnica per farli uscire di nascosto.\n  * **C) Il data masking** oscura parzialmente un dato per la visualizzazione (es. mostrare solo le ultime quattro cifre di una carta). Anch'esso è un controllo difensivo e non nasconde nulla dentro un altro file.\n  * **A) La cifratura asimmetrica** rende il contenuto illeggibile ma **dichiara la propria esistenza**: un file cifrato è palesemente cifrato e attira l'attenzione. La steganografia punta all'effetto opposto, cioè non destare alcun sospetto.\n\n* **Trappola d'esame:** distingui i due obiettivi. La **cifratura** nasconde *il significato* e si vede che c'è qualcosa; la **steganografia** nasconde *il fatto stesso* che ci sia qualcosa. Chi vuole esfiltrare dati aggirando un DLP basato su pattern preferisce la seconda, perché il DLP vede solo una fotografia."
   },
   {
     id: 153,
     topic: "Zero Trust Architecture",
     level: "ANALISI",
-    scenario: "Un'azienda sta implementando un'architettura Zero Trust per proteggere le proprie risorse cloud. L'amministratore deve configurare la componente logica preposta a valutare le richieste d'accesso degli utenti, elaborandole in base a policy di sicurezza definite, verifica dell'identità del richiedente e telemetria delle minacce in tempo reale prima di concedere o negare l'accesso.",
-    question: "Nel modello Zero Trust, quale componente si concentra sul prendere decisioni su chi può accedere a quali risorse in base alle policy, alla verifica dell'identità e all'analisi delle minacce?",
+    scenario: "Un attaccante ottiene le credenziali VPN di un dipendente tramite phishing. Una volta dentro la rete aziendale si muove liberamente fra i server di reparto, accedendo a condivisioni e database senza incontrare ulteriori verifiche, perché l'infrastruttura considera affidabile qualunque host già collegato alla LAN interna.",
+    question: "Quale caratteristica architetturale ha reso possibile il movimento laterale, e cosa la elimina?",
     options: [
-      "A) Controllo degli accessi basato su policy (Policy-driven access control)",
-      "B) Zone di fiducia implicita (Implicit trust zones)",
-      "C) Piano di controllo (Control Plane)",
-      "D) Piano dati (Data Plane)"
+      "A) L'assenza di un firewall perimetrale; si elimina installando un NGFW sul confine con Internet",
+      "B) Le zone di fiducia implicita del modello perimetrale; si eliminano con verifica continua e microsegmentazione",
+      "C) L'uso della VPN al posto di una linea dedicata; si elimina sostituendo la VPN con un collegamento MPLS",
+      "D) La mancanza di cifratura sul traffico interno; si elimina abilitando TLS su tutte le connessioni della LAN"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Piano di controllo (Control Plane)**.\n\n* **Perché è la corretta:** Nell'architettura Zero Trust, il **Control Plane** (Piano di Controllo) funge da cervello decisionale. Ha il compito di ricevere e valutare le richieste di accesso analizzando l'identità, le policy, la telemetria delle minacce e il livello di rischio, autorizzando o negando dinamicamente la connessione.\n* **Analisi dei distrattori:**\n  * **A) Policy-driven access control** (Controllo degli accessi guidato da politiche) è una strategia o un criterio utilizzato dal Control Plane, ma non rappresenta l'intera componente infrastrutturale responsabile del processo decisionale complessivo.\n  * **B) Le zone di fiducia implicita (Implicit trust zones)** sono aree in cui la comunicazione è consentita senza ulteriori controlli, un concetto che la filosofia Zero Trust mira a ridurre al minimo, e non svolgono funzioni decisionali.\n  * **D) Il piano dati (Data Plane)** si occupa esclusivamente del trasporto effettivo dei pacchetti di dati una volta che l'accesso è stato convalidato e consentito dal Control Plane.\n\n* **Piccolo Esempio Concentrato:** Un dipendente richiede l'accesso a una cartella condivisa alle 3 del mattino da un IP insolito in Asia. Il Policy Engine e il Policy Administrator (componenti del Control Plane) analizzano la minaccia e negano l'accesso, ordinando al Data Plane di bloccare i pacchetti."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Le zone di fiducia implicita**.\n\n* **Perché è la corretta:** Il modello perimetrale classico ('castello e fossato') divide il mondo in esterno ostile e interno fidato. Una volta superato il perimetro, l'attaccante si trova in una **implicit trust zone**: l'infrastruttura non chiede più nulla, perché essere sulla LAN vale di per sé come autorizzazione. È esattamente ciò che descrive lo scenario. Zero Trust rimuove questo presupposto imponendo **verifica continua** di ogni singola richiesta e **microsegmentazione**, così che la compromissione di un host non apra automaticamente l'accesso agli altri.\n* **Analisi dei distrattori:**\n  * **A)** Il firewall perimetrale c'era e ha fatto il suo lavoro: l'attaccante non ha sfondato il confine, è **entrato dalla porta principale** con credenziali valide. Aggiungere un NGFW sul perimetro non cambia nulla per chi è già dentro.\n  * **C)** La VPN non è il difetto: ha cifrato e autenticato la connessione come doveva. Il problema è ciò che accade **dopo** l'autenticazione. Una linea MPLS dedicata riproporrebbe lo stesso identico modello di fiducia implicita.\n  * **D)** Cifrare il traffico interno protegge dall'intercettazione passiva, ma l'attaccante qui usa credenziali legittime: la cifratura proteggerebbe le sue sessioni esattamente come quelle di un utente autorizzato, senza impedirne alcuna.\n\n* **Trappola d'esame:** quando lo scenario descrive un attaccante che, entrato una volta, raggiunge liberamente altri sistemi, la parola chiave è **movimento laterale** e la causa è la fiducia implicita. La contromisura d'esame è sempre la coppia **microsegmentazione + verifica continua**, non un controllo aggiuntivo sul perimetro."
   },
   {
     id: 154,
     topic: "Public Key Infrastructure",
     level: "APPLICAZIONE",
-    scenario: "La società 'Trust Us' opera nel settore della cybersecurity come entità terza fidata. Essa emette e gestisce credenziali di sicurezza crittografiche e applica wrapper con firma digitale alle chiavi pubbliche per abilitare la cifratura dei messaggi e l'autenticazione web sicura.",
-    question: "Che tipo di entità o azienda è 'Trust Us'?",
+    scenario: "Un sistemista deve richiedere un certificato TLS per il nuovo portale aziendale. Genera sul server la coppia di chiavi, quindi prepara un file da inviare alla Certificate Authority contenente il nome del dominio, i dati dell'organizzazione e la chiave pubblica appena creata.",
+    question: "Come si chiama il file inviato alla CA, e cosa NON deve mai contenere?",
     options: [
-      "A) Root of Trust (Radice di fiducia)",
-      "B) Blockchain",
-      "C) Certificate Authority (Autorità di Certificazione - CA)",
-      "D) Registration Authority (Autorità di Registrazione - RA)"
+      "A) Certificato radice; non deve mai contenere il nome del dominio, aggiunto poi dalla CA",
+      "B) CRL (Certificate Revocation List); non deve mai contenere la chiave pubblica, che invia la CA",
+      "C) CSR (Certificate Signing Request); non deve mai contenere la chiave privata, che resta sul server",
+      "D) Certificato wildcard; non deve mai contenere i dati dell'organizzazione, che sono pubblici"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Certificate Authority (Autorità di Certificazione - CA)**.\n\n* **Perché è la corretta:** Una **Certificate Authority (CA)** è un'entità terza fidata responsabile dell'emissione, gestione e revoca dei certificati digitali. Applica una firma digitale alle chiavi pubbliche degli utenti o delle aziende per certificarne l'identità all'interno di una Public Key Infrastructure (PKI).\n* **Analisi dei distrattori:**\n  * **A) La Root of Trust (RoT)** è la sorgente primaria di fiducia in un sistema hardware o software (es. chip TPM o certificato radice self-signed), ma non rappresenta l'organizzazione o l'azienda che gestisce ed emette certificati a terzi.\n  * **B) Blockchain** è una tecnologia decentralizzata basata su registri distribuiti peer-to-peer per tracciare le transazioni, non un'autorità centralizzata di gestione delle chiavi.\n  * **D) La Registration Authority (RA)** verifica l'identità degli utenti che richiedono un certificato e inoltra la richiesta approvata alla CA, ma non ha il potere tecnico di firmare ed emettere il certificato finale.\n\n* **Piccolo Esempio Concentrato:** L'azienda Sweet as Thyme acquista un certificato SSL da DigiCert (una CA accreditata). DigiCert verifica l'identità dell'azienda e firma digitalmente la sua chiave pubblica. Da quel momento, tutti i browser riconoscono il sito come attendibile e sicuro tramite HTTPS."
+    explanation: "La risposta corretta è la **C) CSR (Certificate Signing Request)**.\n\n* **Perché è la corretta:** Il **CSR** è il blocco di testo codificato che il richiedente genera e invia alla CA. Contiene le informazioni identificative (Common Name, SAN, organizzazione, paese) e la **chiave pubblica**, ed è firmato con la chiave privata corrispondente per dimostrare che il richiedente la possiede davvero. La **chiave privata non lascia mai il server**: se finisse nel CSR, chiunque lo intercettasse potrebbe impersonare il sito, e il certificato andrebbe immediatamente revocato.\n* **Analisi dei distrattori:**\n  * **B) La CRL** è l'elenco dei certificati revocati che la CA **pubblica** perché i client lo consultino: viaggia nella direzione opposta e non ha nulla a che fare con la richiesta di emissione.\n  * **A) Il certificato radice** è il certificato autofirmato della CA, che sta alla base della catena di fiducia ed è preinstallato nei browser. Non è qualcosa che il richiedente invia.\n  * **D) Il certificato wildcard** è un tipo di certificato **emesso** (copre `*.dominio.it`), non il documento con cui lo si richiede; e i dati dell'organizzazione sono proprio ciò che la CA deve validare.\n\n* **Trappola d'esame:** memorizza il flusso completo: **genero la coppia di chiavi sul server → creo il CSR con la sola chiave pubblica → la CA valida l'identità → la CA firma ed emette il certificato → lo installo accanto alla chiave privata che non si è mai mossa**. Qualsiasi opzione d'esame in cui una chiave privata viene trasmessa, esportata o condivisa è sbagliata."
   },
   {
     id: 155,
     topic: "Change Management",
-    level: "ANALISI",
-    scenario: "Dopo che il reparto IT ha proposto l'installazione di un aggiornamento software critico sull'ERP aziendale, Kevin, un analista di sistemi, esamina in dettaglio i potenziali effetti collaterali di questa modifica sulle prestazioni del sistema, sulla produttività degli utenti e sui flussi di lavoro operativi aziendali.",
-    question: "Quale termine descrive MEGLIO la valutazione condotta da Kevin?",
+    level: "APPLICAZIONE",
+    scenario: "Il team infrastrutture deve applicare un aggiornamento del sistema di storage che richiede il riavvio dei controller e comporta circa 40 minuti di indisponibilità. Il servizio è usato dalla logistica, attiva dalle 6:00 alle 22:00 nei giorni feriali, e dal portale clienti, attivo 24 ore su 24 ma con traffico minimo fra le 2:00 e le 5:00 di domenica.",
+    question: "Quale elemento del processo di change management regola QUANDO eseguire l'intervento, e come va scelto?",
     options: [
-      "A) Processo di approvazione (Approval process)",
-      "B) Piano di ripristino / rollback (Backout plan)",
-      "C) Controllo di versione (Version control)",
-      "D) Analisi dell'impatto (Impact analysis)"
+      "A) Il controllo di versione, che registra data e ora dell'intervento e ne determina la pianificazione",
+      "B) Il piano di backout, che stabilisce l'orario di esecuzione in base al tempo necessario per annullare la modifica",
+      "C) L'analisi di impatto, che una volta completata autorizza automaticamente l'esecuzione immediata",
+      "D) La finestra di manutenzione, concordata con i titolari dei servizi nella fascia di minor impatto (domenica notte)"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Analisi dell'impatto (Impact analysis)**.\n\n* **Perché è la corretta:** L'**Analisi dell'impatto** (Impact Analysis) è una fase cruciale del Change Management in cui si studiano in anticipo le possibili conseguenze, sia positive che negative, di una modifica proposta sui sistemi informativi, sul personale e sui processi di business per prevenire interruzioni impreviste.\n* **Analisi dei distrattori:**\n  * **A) Il processo di approvazione** è la procedura formale in cui il Change Advisory Board (CAB) o un manager firmano per autorizzare la modifica, operazione svolta *dopo* aver analizzato l'impatto.\n  * **B) Il piano di ripristino o rollback (Backout plan)** descrive i passaggi tecnici necessari per annullare la modifica e tornare alla configurazione stabile precedente in caso di malfunzionamenti in produzione.\n  * **C) Il controllo di versione (Version control)** è un sistema che registra le modifiche apportate ai file nel tempo (es. Git), consentendo di risalire a versioni passate del codice o dei documenti.\n\n* **Piccolo Esempio Concentrato:** Kevin riceve la richiesta di aggiornare la versione di Java sull'ERP. Prima di procedere, esegue un'Analisi dell'Impatto scoprendo che l'aggiornamento romperebbe la compatibilità con un modulo legacy usato dal reparto contabilità per la fatturazione elettronica."
+    explanation: "La risposta corretta è la **D) La finestra di manutenzione**.\n\n* **Perché è la corretta:** La **maintenance window** è l'intervallo prestabilito e concordato con i titolari dei servizi in cui è consentito eseguire modifiche che comportano indisponibilità. Si sceglie incrociando le fasce operative di *tutti* i servizi coinvolti: qui la logistica esclude 6:00-22:00 nei feriali e il portale clienti indica le 2:00-5:00 di domenica come momento di minor traffico. Quarantacinque minuti di lavoro entrano comodamente in quella finestra.\n* **Analisi dei distrattori:**\n  * **B) Il piano di backout** definisce **come** tornare indietro se la modifica fallisce, ed è obbligatorio, ma non stabilisce quando eseguirla. Semmai è la finestra a dover essere abbastanza ampia da contenere anche l'eventuale rollback.\n  * **C) L'analisi di impatto** valuta rischi e dipendenze e alimenta la decisione del CAB, ma non autorizza nulla da sola né fissa un orario: è un input al processo di approvazione, non la sua conclusione.\n  * **A) Il controllo di versione** traccia le revisioni di codice e configurazioni. Documenta cosa è cambiato, non pianifica quando cambiarlo.\n\n* **Trappola d'esame:** la finestra di manutenzione va dimensionata sul **tempo dell'intervento più il tempo del rollback**, non solo sul primo. Una modifica di 40 minuti con un rollback da 30 richiede una finestra di almeno 70 minuti, altrimenti un imprevisto lascia il servizio giù oltre l'orario concordato."
   },
   {
     id: 156,
     topic: "Cryptography",
     level: "APPLICAZIONE",
-    scenario: "L'azienda 'Reason and Rhyme', un servizio di tutoraggio online, vuole rafforzare la sicurezza delle password dei propri iscritti. Sebbene abbiano sempre utilizzato funzioni per convertire le password in sequenze di lunghezza fissa (hash), ora decidono di ripetere questo processo matematico migliaia di volte per aumentare la potenza di calcolo e il tempo necessari a un utente malintenzionato per decifrare i codici segreti tramite brute-force.",
-    question: "Come viene chiamato questo metodo di rafforzamento?",
+    scenario: "Un'azienda cifra i dischi dei notebook aziendali con BitLocker. Il requisito è che la chiave di cifratura non sia mai conservata sul disco stesso e che il portatile si rifiuti di avviarsi se qualcuno smonta il disco per leggerlo altrove o altera il firmware di avvio.",
+    question: "Quale componente soddisfa questi requisiti?",
     options: [
-      "A) Hashing standard",
-      "B) Salting",
-      "C) Key Stretching",
-      "D) Firme digitali (Digital Signatures)"
+      "A) HSM (Hardware Security Module), l'appliance di rete che centralizza le chiavi per l'intera azienda",
+      "B) TPM (Trusted Platform Module), il chip sulla scheda madre che rilascia la chiave solo a configurazione integra",
+      "C) Key escrow, il deposito delle chiavi presso una terza parte fidata per il recupero d'emergenza",
+      "D) Salting, l'aggiunta di un valore casuale alla chiave prima di scriverla nel settore di avvio"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Key Stretching**.\n\n* **Perché è la corretta:** Il **Key Stretching** (come PBKDF2 o bcrypt) è una tecnica crittografica che consiste nel sottoporre una password o chiave a un processo ripetuto di hashing (es. migliaia di cicli) per renderlo volutamente lento dal punto di vista computazionale, ostacolando drasticamente gli attacchi di brute-force o dizionario.\n* **Analisi dei distrattori:**\n  * **A) Hashing standard** si limita a convertire l'input una sola volta, operazione istantanea che non rallenta a sufficienza i moderni sistemi di cracking basati su GPU.\n  * **B) Salting** consiste nell'aggiungere un valore casuale univoco alla password prima dell'hashing per evitare l'uso di rainbow table, ma di per sé non comporta la ripetizione iterativa del processo di hashing descritto nello scenario.\n  * **D) Le firme digitali** sono utilizzate per garantire l'autenticità e l'integrità del mittente di un file o messaggio, senza alcuna attinenza con la protezione del database delle password degli utenti.\n\n* **Piccolo Esempio Concentrato:** Quando un utente imposta una password su un sito, questa viene passata a un algoritmo come bcrypt che esegue l'hashing per 10.000 volte consecutive (Key Stretching). Se un hacker ruba il database, ogni tentativo di brute-force richiederà frazioni di secondo anziché nanosecondi, rendendo il cracking impossibile."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) TPM (Trusted Platform Module)**.\n\n* **Perché è la corretta:** Il **TPM** è un microchip saldato sulla scheda madre del singolo dispositivo. Custodisce la chiave di cifratura del disco al proprio interno e la rilascia **solo** se le misurazioni del firmware e della sequenza di avvio corrispondono a quelle attese. Ne discendono entrambi i requisiti: la chiave non sta sul disco, e spostando il disco su un'altra macchina non c'è alcun TPM che la fornisca, così i dati restano illeggibili. Se qualcuno manomette il firmware, le misurazioni cambiano e il TPM non rilascia la chiave.\n* **Analisi dei distrattori:**\n  * **A) L'HSM** svolge una funzione analoga ma su scala **enterprise**: è un'appliance dedicata che protegge le chiavi di CA, database e applicazioni per tutta l'organizzazione. È sovradimensionato e inadatto a legare una chiave a un singolo portatile.\n  * **C) Il key escrow** è la procedura con cui si conserva una copia di recupero della chiave presso un depositario fidato. Risolve il problema opposto, cioè come rientrare in possesso dei dati se la chiave va persa, ma non impedisce a nessuno di leggere il disco altrove.\n  * **D) Il salting** si applica all'hashing delle password per contrastare le rainbow table, non alla protezione delle chiavi di cifratura del disco; e scrivere alcunché nel settore di avvio contraddice il requisito.\n\n* **Trappola d'esame:** la coppia si distingue per la scala. **TPM = un dispositivo**, chip locale, legato a quella macchina; **HSM = tutta l'azienda**, appliance dedicata e certificata, spesso in cluster, usata per firmare certificati e proteggere chiavi di produzione."
   },
   {
     id: 157,
-    topic: "Zero Trust Architecture",
-    level: "COMPRENSIONE",
-    scenario: "Durante la pianificazione di una transizione verso la filosofia Zero Trust, il team di sicurezza deve configurare un meccanismo sul Control Plane che gestisca le autorizzazioni di accesso alle risorse aziendali basandosi in modo rigoroso su policy centralizzate, ruoli organizzativi e requisiti di conformità aziendali.",
-    question: "Quale delle seguenti opzioni è una componente dell'architettura Zero-Trust che gestisce l'accesso degli utenti in base ai loro ruoli e responsabilità sul Control Plane?",
+    topic: "Public Key Infrastructure",
+    level: "APPLICAZIONE",
+    scenario: "Una banca gestisce internamente la propria Certificate Authority, che firma migliaia di certificati al giorno per applicazioni e dipendenti. L'audit impone che la chiave privata della CA non esista mai in forma leggibile nella memoria di un server generico, che le operazioni di firma siano tracciate e che il dispositivo resista a tentativi di manomissione fisica cancellando le chiavi.",
+    question: "Quale soluzione soddisfa questi requisiti?",
     options: [
-      "A) Controllo degli accessi basato sui ruoli (Role-based access control - RBAC)",
-      "B) Principio del minimo privilegio (Least privilege)",
-      "C) Negazione implicita (Implicit deny)",
-      "D) Controllo degli accessi basato su policy (Policy-driven access control)"
+      "A) Key escrow presso una terza parte, che conserva la chiave privata della CA in cassaforte",
+      "B) TPM integrato nel server della CA, che lega la chiave a quella specifica scheda madre",
+      "C) HSM (Hardware Security Module) certificato, con la chiave generata e mai esportabile dal dispositivo",
+      "D) Cifratura della chiave privata con AES-256 e archiviazione su un volume protetto del server"
     ],
-    answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Controllo degli accessi basato su policy (Policy-driven access control)**.\n\n* **Perché è la corretta:** Nell'architettura Zero Trust, il **Controllo degli accessi guidato da policy** (Policy-driven access control) è il pilastro del Control Plane che regola dinamicamente l'accesso a livello granulare in base a requisiti e politiche aziendali ben definiti, convalidando le autorizzazioni d'accesso rispetto al contesto in tempo reale.\n* **Analisi dei distrattori:**\n  * **A) RBAC (Role-based access control)** assegna i permessi a ruoli predefiniti, ma è un modello di autorizzazione generico applicabile a qualsiasi sistema legacy, non specifico o esclusivo dell'architettura Zero Trust.\n  * **B) Il principio del minimo privilegio (Least privilege)** è una best practice generale di sicurezza che prevede di assegnare solo i permessi minimi necessari per svolgere una mansione.\n  * **C) La negazione implicita (Implicit deny)** è una regola di sicurezza di base (tutto ciò che non è esplicitamente consentito è vietato) che si applica comunemente a firewall e ACL tradizionali.\n\n* **Piccolo Esempio Concentrato:** In un ospedale che adotta lo Zero Trust, una regola aziendale stabilisce che i medici possono accedere alle cartelle cliniche solo se connessi dalla rete Wi-Fi del reparto. Se un medico tenta l'accesso da casa, il sistema basato su policy (Policy-driven Access Control) interviene negando l'autorizzazione."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) HSM (Hardware Security Module)**.\n\n* **Perché è la corretta:** L'**HSM** è un dispositivo hardware dedicato e certificato (tipicamente FIPS 140-2/140-3) che genera la chiave **al proprio interno** e non ne consente mai l'esportazione in chiaro. Le operazioni di firma avvengono dentro il dispositivo: il server invia l'hash da firmare e riceve la firma, senza che la chiave attraversi mai la memoria del sistema operativo. Gli HSM registrano ogni operazione e sono **tamper-resistant**: all'apertura fisica azzerano il materiale crittografico. Tutti e tre i requisiti dell'audit sono soddisfatti.\n* **Analisi dei distrattori:**\n  * **B) Il TPM** applica lo stesso principio ma è pensato per proteggere **un singolo dispositivo** (cifratura del disco, attestazione dell'avvio). Non regge il volume di firme di una CA aziendale, non offre prestazioni crittografiche da appliance e non ha le certificazioni richieste per una CA.\n  * **A) Il key escrow** aggrava il problema anziché risolverlo: creare una copia della chiave privata della CA e affidarla a terzi moltiplica i luoghi da cui può trapelare. Per una CA è una pratica da evitare.\n  * **D)** Cifrare la chiave con AES sposta solo il problema: per firmare bisogna decifrarla, e in quel momento la chiave **è in chiaro nella memoria del server**, cioè esattamente ciò che l'audit vieta. Inoltre serve custodire la chiave che protegge la chiave.\n\n* **Trappola d'esame:** quando lo scenario nomina una CA, alti volumi, cluster o certificazione FIPS, la risposta è **HSM**. Quando nomina un portatile, BitLocker, secure boot o attestazione di integrità di una macchina, la risposta è **TPM**."
   },
   {
     id: 158,
@@ -12915,91 +12915,91 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 178,
     topic: "Deception Technologies",
     level: "APPLICAZIONE",
-    scenario: "Neville, un ingegnere della sicurezza, suggerisce alla sua azienda di creare un finto documento che sembri contenere informazioni sensibili per attirare gli aggressori e rilevare tentativi di intrusione.",
-    question: "Quale delle seguenti opzioni Neville suggerisce di creare?",
+    scenario: "Una società teme che un fornitore rivenda il proprio archivio clienti. Per scoprirlo, inserisce nel database alcuni record di clienti inesistenti, ciascuno con un indirizzo e-mail e un numero di telefono univoci creati appositamente e monitorati. Se quei recapiti ricevono comunicazioni da terzi, la fuga è dimostrata e si risale a quale copia dell'archivio è stata diffusa.",
+    question: "Quale tecnologia d'inganno è stata impiegata?",
     options: [
       "A) Honeynet",
-      "B) Honeypot",
-      "C) Honeytoken",
-      "D) Honeyfile"
+      "B) Honeyfile",
+      "C) Honeypot",
+      "D) Honeytoken"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Honeyfile**.\n\n* **Perché è la corretta:** Un **honeyfile** è un file o set di file civetta fittizi (es. un file PDF intitolato 'Password_Aziendali.pdf') appositamente inseriti nei file server per rilevare accessi non autorizzati. Poiché nessun utente legittimo ha motivo di aprire quel file, qualsiasi tentativo di lettura o download genera un allarme immediato per il team di sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Una honeynet** è un'intera rete esca fittizia contenente molteplici honeypot per studiare comportamenti di attacco complessi.\n  * **B) Un honeypot** è un sistema informatico esca (es. un server o servizio web fittizio) per attirare attaccanti, non un singolo file.\n  * **C) Un honeytoken** è un frammento di dati esca (es. una credenziale fittizia o un indirizzo email trappola), non un documento di testo o file completo."
+    explanation: "La risposta corretta è la **D) Honeytoken**.\n\n* **Perché è la corretta:** Un **honeytoken** è un **dato** fittizio inserito fra dati reali: un record di database, una credenziale, una chiave API, un indirizzo e-mail. Non ha valore operativo e nessuno dovrebbe mai usarlo, quindi il suo utilizzo è la prova di un accesso o di una diffusione non autorizzata. Poiché ogni copia può contenere token diversi, funziona anche come **filigrana**: permette di capire *quale* copia è stata diffusa, esattamente come richiesto dallo scenario.\n* **Analisi dei distrattori:**\n  * **B) Un honeyfile** è un intero **file** civetta collocato sul filesystem (es. `password_amministrazione.xlsx`) che allerta quando viene aperto o copiato. Qui invece l'esca non è un file, sono singoli record dentro un database legittimo.\n  * **C) Un honeypot** è un **sistema** civetta completo, deliberatamente vulnerabile, che attira l'attaccante e ne registra le tecniche. Lo scenario non descrive alcuna macchina esca.\n  * **A) Una honeynet** è un'intera **rete** di honeypot, usata per studiare a lungo il comportamento degli aggressori. È il caso più ampio e non pertinente qui.\n\n* **Trappola d'esame:** memorizza la scala crescente. **Honeytoken = un dato** (record, credenziale, e-mail) · **Honeyfile = un file** · **Honeypot = un sistema** · **Honeynet = una rete**. Il vantaggio comune è l'altissima precisione: nessun utente legittimo ha motivo di toccarli, quindi l'allarme non genera praticamente falsi positivi."
   },
   {
     id: 179,
     topic: "Cryptography",
-    level: "APPLICAZIONE",
-    scenario: "Kelly Innovations LLC desidera adottare una tecnologia per garantire l'integrità e la trasparenza delle sue transazioni finanziarie. Cerca una soluzione in cui ogni record di transazione sia protetto tramite crittografia e il valore hash di un record venga utilizzato nel calcolo dell'hash del record successivo.",
-    question: "Quale delle seguenti tecnologie sarebbe la più adatta per soddisfare questo requisito?",
+    level: "COMPRENSIONE",
+    scenario: "Un produttore di dispositivi medicali deve garantire che il firmware caricato all'avvio non sia stato manomesso. La verifica non può appoggiarsi al sistema operativo, perché il malware potrebbe averlo già compromesso: serve un elemento che sia affidabile per costruzione e verificabile prima che qualunque software venga eseguito.",
+    question: "Su quale elemento deve poggiare questa catena di verifica?",
     options: [
-      "A) Infrastruttura a chiave pubblica (PKI)",
-      "B) Blockchain",
-      "C) Filigrana digitale (Digital watermarking)",
-      "D) Crittografia simmetrica"
+      "A) Un antivirus con analisi euristica avviato automaticamente all'accensione",
+      "B) Una Root of Trust hardware (es. chiave pubblica del produttore in un chip TPM o in ROM)",
+      "C) Un hash SHA-256 del firmware conservato in un file sul disco del dispositivo",
+      "D) Un certificato TLS installato nel dispositivo per autenticare il server di aggiornamento"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Blockchain**.\n\n* **Perché è la corretta:** La **blockchain** consiste in un registro distribuito e immutabile in cui i record transazionali (blocchi) sono incatenati crittograficamente: l'hash di ogni blocco include l'hash del blocco precedente. Modificare anche solo una singola transazione del passato invaliderebbe tutti i blocchi successivi, garantendo un'eccezionale integrità e trasparenza.\n* **Analisi dei distrattori:**\n  * **A) La PKI (Public Key Infrastructure)** gestisce i certificati digitali e le coppie di chiavi asimmetriche per l'attendibilità e la cifratura, ma non fornisce un registro transazionale incatenato di per sé.\n  * **C) La filigrana digitale (Digital watermarking)** inserisce dati identificativi all'interno di file multimediali per dimostrarne la proprietà intellettuale, non protegge record finanziari sequenziali.\n  * **D) La crittografia simmetrica** usa una chiave singola per cifrare e decifrare dati, ma non si occupa del concatenamento crittografico storico dei record."
+    explanation: "La risposta corretta è la **B) Una Root of Trust hardware**.\n\n* **Perché è la corretta:** La **Root of Trust** è il punto di partenza della catena di fiducia: un componente considerato affidabile *per costruzione*, non perché qualcun altro lo attesti. Tipicamente è una chiave pubblica del produttore memorizzata in modo immutabile in ROM o dentro un **TPM**. All'accensione, quel codice verifica la firma del bootloader, che a sua volta verifica il kernel, e così via: è il meccanismo del **Secure Boot**. Poiché la radice è hardware e non riscrivibile, resta valida anche se tutto il software sovrastante è compromesso.\n* **Analisi dei distrattori:**\n  * **A)** Un antivirus è software: gira *dopo* l'avvio e sopra il sistema operativo. Se il malware si è insediato a un livello più basso (bootkit, rootkit del firmware), può nascondersi proprio all'antivirus. Non può quindi fare da radice della fiducia.\n  * **C)** Un hash conservato in un file sul disco è modificabile esattamente come il firmware: chi altera l'uno altera l'altro. Un hash non protetto da una chiave e da un supporto immutabile non prova nulla.\n  * **D)** Un certificato TLS autentica il *canale* verso il server di aggiornamento e protegge il firmware in transito, ma non dice nulla sull'integrità del firmware **già installato** e in esecuzione sul dispositivo.\n\n* **Trappola d'esame:** ogni catena di fiducia deve terminare da qualche parte, e quel punto finale non può essere verificato da nient'altro: deve essere fidato per definizione. Se lo scenario chiede *chi verifica il verificatore*, la risposta è la Root of Trust, ancorata nell'hardware (TPM, HSM o ROM del produttore)."
   },
   {
     id: 180,
-    topic: "Cryptography",
-    level: "APPLICAZIONE",
-    scenario: "Quando invia un messaggio crittografato a Dion Training, un cliente desidera garantire che solo Dion Training possa decifrare e leggere il messaggio per preservarne la riservatezza.",
-    question: "Il cliente quale delle seguenti opzioni dovrebbe utilizzare per cifrare il messaggio?",
+    topic: "Public Key Infrastructure",
+    level: "ANALISI",
+    scenario: "La chiave privata di un certificato aziendale viene compromessa e la CA lo revoca immediatamente. Il team verifica però che alcuni client continuano ad accettare il certificato per ore. Indagando, scopre che quei client scaricano l'elenco dei certificati revocati una volta al giorno e lo tengono in cache.",
+    question: "Quale meccanismo elimina questa finestra di esposizione e come funziona?",
     options: [
-      "A) La chiave pubblica (Public key) di Dion Training",
-      "B) Il Key escrow",
-      "C) Un certificato jolly (Wildcard certificate)",
-      "D) La chiave privata (Private key) di Dion Training"
+      "A) Il certificate pinning, che vincola il client ad accettare soltanto quel preciso certificato revocato",
+      "B) Una CRL più corta, che riduce la dimensione del file e quindi il tempo di scaricamento dei client",
+      "C) OCSP, che interroga la CA in tempo reale sullo stato del singolo certificato anziché scaricare l'intero elenco",
+      "D) Un certificato wildcard, che sostituisce automaticamente il certificato revocato su tutti i sottodomini"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) La chiave pubblica (Public key) di Dion Training**.\n\n* **Perché è la corretta:** Nella crittografia asimmetrica, un mittente cifra un messaggio usando la **chiave pubblica del destinatario** (in questo caso, quella di Dion Training, che è liberamente accessibile a chiunque). Una volta cifrato, il messaggio può essere decifrato solo dalla corrispondente **chiave privata** che viene conservata in modo strettamente segreto esclusivamente dal legittimo destinatario (Dion Training).\n* **Analisi dei distrattori:**\n  * **B) Il Key escrow** è una pratica di memorizzazione sicura delle chiavi presso una terza parte per scopi di recupero, non un elemento di cifratura diretta.\n  * **C) Un certificato jolly (Wildcard)** è utilizzato per proteggere le comunicazioni web TLS di un dominio e dei suoi sottodomini, non per cifrare un messaggio asimmetrico privato specifico.\n  * **D) La chiave privata** di Dion Training non è posseduta né accessibile al cliente (mittente); se il cliente la possedesse, significherebbe che la chiave privata è compromessa, distruggendo la sicurezza del sistema."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) OCSP**.\n\n* **Perché è la corretta:** L'**OCSP** (Online Certificate Status Protocol) capovolge l'approccio della CRL. Invece di scaricare periodicamente l'intera lista dei certificati revocati e fidarsi della propria copia in cache, il client interroga un responder chiedendo lo stato di **quel singolo certificato** nel momento stesso dell'handshake, e riceve *good*, *revoked* o *unknown*. La revoca ha effetto immediato e la finestra di esposizione si chiude. L'**OCSP stapling** ne è l'evoluzione: è il server web ad allegare all'handshake una risposta OCSP recente e firmata dalla CA, evitando al client una connessione aggiuntiva e alla CA un carico elevato.\n* **Analisi dei distrattori:**\n  * **B)** Accorciare la CRL riduce la banda ma non tocca la causa del problema, che è l'**intervallo di aggiornamento e la cache**. Finché il client si fida di una copia scaricata ieri, un certificato revocato stamattina continuerà a essere accettato.\n  * **A) Il certificate pinning** vincola il client ad accettare solo un certificato o una CA specifici: serve a contrastare le CA compromesse, ma qui produrrebbe l'effetto opposto, cioè inchiodare il client proprio al certificato che vogliamo rifiutare.\n  * **D) Un certificato wildcard** copre più sottodomini con un unico certificato. Non ha alcuna relazione con la revoca e, anzi, amplifica il danno di una compromissione perché un'unica chiave protegge molti nomi.\n\n* **Trappola d'esame:** ricorda la contrapposizione. **CRL = elenco completo, scaricato periodicamente, verifica in cache e quindi ritardata** · **OCSP = interrogazione puntuale in tempo reale** · **OCSP stapling = la risposta la porta il server, riducendo latenza e carico sulla CA**."
   },
   {
     id: 181,
-    topic: "Identity & Access Control Models",
-    level: "APPLICAZIONE",
-    scenario: "Un'azienda desidera implementare un sistema di controllo degli accessi più flessibile che possa adattarsi dinamicamente al comportamento e al contesto mutevole degli utenti.",
-    question: "Quale delle seguenti tecnologie può aiutare l'azienda a raggiungere questo obiettivo?",
+    topic: "Cryptography",
+    level: "ANALISI",
+    scenario: "Un ospedale deve proteggere le cartelle cliniche su un database condiviso. Il requisito è duplice: se un portatile o un disco vengono rubati, i dati devono essere illeggibili; ma è necessario anche che un amministratore di sistema con accesso al server in funzione NON possa leggere in chiaro il campo contenente la diagnosi.",
+    question: "Quale combinazione di livelli di cifratura soddisfa entrambi i requisiti?",
     options: [
-      "A) Identità adattiva (Adaptive identity)",
-      "B) Zone di sicurezza (Security zones)",
-      "C) Controllo degli accessi obbligatorio (MAC - Mandatory Access Control)",
-      "D) Controllo degli accessi basato su policy (Policy-driven access control)"
+      "A) Full-disk encryption contro il furto fisico, più cifratura a livello di colonna/record per proteggere il campo dall'amministratore",
+      "B) Solo full-disk encryption, perché cifrando l'intero disco anche i singoli campi risultano protetti da qualsiasi utente",
+      "C) Solo cifratura a livello di file applicata alla cartella del database, sufficiente per entrambi gli scenari",
+      "D) Cifratura del canale con TLS fra applicazione e database, che protegge i dati sia a riposo sia in uso"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Identità adattiva (Adaptive identity)**.\n\n* **Perché è la corretta:** L'**identità adattiva (adaptive identity)** analizza il contesto in tempo reale (come la geolocalizzazione, l'orario di connessione, il dispositivo utilizzato, la velocità di spostamento e il comportamento storico dell'utente) per determinare dinamicamente i requisiti di autenticazione e i diritti di accesso. Se rileva un comportamento insolito (es. login da due nazioni diverse in 10 minuti), può richiedere fattori MFA aggiuntivi o bloccare la sessione.\n* **Analisi dei distrattori:**\n  * **B) Le zone di sicurezza (Security zones)** dividono le reti in segmenti logici a livello infrastrutturale, ma non gestiscono l'accesso adattivo basato sul comportamento degli utenti.\n  * **C) Il MAC (Mandatory Access Control)** è il modello di controllo degli accessi più rigido in assoluto, basato su etichette di sicurezza statiche e livelli di autorizzazione ministeriale/militare, non è affatto adattivo o flessibile.\n  * **D) Il controllo basato su policy (Policy-driven)** applica regole statiche basate su criteri definiti, ma non impara né si adatta autonomamente in base al variare dei comportamenti quotidiani degli utenti."
+    explanation: "La risposta corretta è la **A)**.\n\n* **Perché è la corretta:** I due requisiti riguardano minacce diverse e richiedono livelli diversi.\n  * La **full-disk encryption (FDE)** protegge i dati **a riposo contro il furto fisico**: se il disco viene rimosso e collegato altrove, senza la chiave (custodita nel TPM) è illeggibile.\n  * La FDE però non serve a nulla **a sistema acceso e sbloccato**: il sistema operativo decifra in modo trasparente, quindi chiunque abbia accesso al server vede i dati in chiaro. Per sottrarre la diagnosi anche all'amministratore serve la **cifratura a livello di colonna o di record**, in cui la chiave è gestita dall'applicazione e non dal DBA.\n* **Analisi dei distrattori:**\n  * **B)** È l'errore concettuale più comune: la FDE protegge dal furto del supporto, **non** dagli utenti del sistema in funzione. A macchina accesa non oppone alcuna barriera a un amministratore.\n  * **C)** La cifratura a livello di file protegge singoli file dagli altri utenti del sistema operativo, ma il motore del database deve poter leggere i propri file per funzionare: non offre alcuna granularità sul singolo campo.\n  * **D)** TLS protegge i dati **in transito** fra applicazione e database. Non è cifratura a riposo e non incide in alcun modo su ciò che un amministratore legge interrogando direttamente le tabelle.\n\n* **Trappola d'esame:** associa sempre il livello di cifratura alla minaccia. **Disco/volume → furto fisico del supporto** · **File/cartella → altri utenti del sistema operativo** · **Database, colonna o record → privilegi eccessivi degli amministratori e principio del minimo privilegio sui dati** · **TLS/IPSec → intercettazione in transito**."
   },
   {
     id: 182,
-    topic: "Physical Security Controls",
-    level: "APPLICAZIONE",
-    scenario: "Le misure di sicurezza perimetrale mirano a proteggere le persone, l'infrastruttura tecnologica e gli edifici dagli attacchi fisici portati da malintenzionati o da incidenti stradali.",
-    question: "Quale delle seguenti è una misura di sicurezza fisica solitamente impiegata all'esterno di edifici o aree sensibili per impedire fisicamente ai veicoli di causare danni alla proprietà o di aprirsi un varco non autorizzato?",
+    topic: "Security Controls",
+    level: "ANALISI",
+    scenario: "Dopo un furto di materiale dal magazzino, l'azienda adotta tre misure: un cartello che annuncia la videosorveglianza attiva, un tornello con badge all'ingresso e un sistema che registra e conserva per 90 giorni i filmati delle telecamere. Il responsabile chiede di classificare le tre misure per funzione.",
+    question: "Come vanno classificate rispettivamente il cartello, il tornello e la registrazione dei filmati?",
     options: [
-      "A) Punto di controllo di sicurezza (Security Checkpoint)",
-      "B) Sistema di rilevamento delle intrusioni (Intrusion Detection System)",
-      "C) Dissuasori stradali di protezione (Bollards)",
-      "D) Recinzione metallica (Wire Fencing)"
+      "A) Deterrente, preventivo, investigativo (detective)",
+      "B) Preventivo, deterrente, correttivo",
+      "C) Investigativo, correttivo, deterrente",
+      "D) Direttivo, compensativo, preventivo"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Dissuasori stradali di protezione (Bollards)**.\n\n* **Perché è la corretta:** I **dissuasori stradali (bollards)** sono robusti pilastri (in metallo o cemento armato), fissati o retrattili, progettati specificamente all'esterno delle strutture per arrestare la corsa di veicoli ostili che tentano un attacco d'impatto (ram-raiding) o accessi non autorizzati.\n* **Analisi dei distrattori:**\n  * **A) Un punto di controllo (Security Checkpoint)** serve a verificare i documenti ed eseguire controlli sui pedoni o sui veicoli autorizzati, ma da solo non costituisce una barriera fisica in grado di fermare un veicolo in corsa.\n  * **B) L'IDS (Intrusion Detection System)** rileva la presenza di intrusi tramite sensori elettronici o telecamere, ma è un sistema informativo e non blocca fisicamente alcun veicolo.\n  * **D) Una recinzione metallica (Wire Fencing)** delimita il confine pedonale e ostacola l'ingresso a piedi, ma non ha la resistenza strutturale necessaria per resistere all'impatto di un'autovettura o di un camion."
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Deterrente, preventivo, investigativo**.\n\n* **Perché è la corretta:** I tre controlli agiscono in momenti diversi rispetto all'evento.\n  * Il **cartello** non impedisce fisicamente nulla: agisce sulla psicologia del potenziale ladro, scoraggiandolo dal tentare. È quindi **deterrente**.\n  * Il **tornello con badge** blocca materialmente l'ingresso a chi non è autorizzato: impedisce l'evento *prima* che accada, ed è **preventivo**.\n  * La **registrazione dei filmati** non impedisce né scoraggia: serve a ricostruire l'accaduto *dopo*, quindi è **investigativo (detective)**.\n* **Analisi dei distrattori:**\n  * **B)** Inverte i primi due: un cartello non ha alcuna capacità di impedire l'accesso, e un tornello non si limita a scoraggiare, blocca. Inoltre la registrazione non è **correttiva**, perché non ripristina nulla.\n  * **C)** Assegna al tornello la funzione **correttiva**, che spetta invece alle misure che rimediano al danno dopo l'incidente (ripristino da backup, sostituzione dell'hardware, patch).\n  * **D)** Confonde le categorie: **direttivo** è un controllo documentale che prescrive comportamenti (una policy, una procedura), **compensativo** è la misura alternativa adottata quando il controllo primario non è applicabile.\n\n* **Trappola d'esame:** la stessa telecamera può ricadere in categorie diverse a seconda di come viene usata, ed è la domanda più frequente su questo argomento. **Ben visibile e segnalata → deterrente**; **che registra e consente di rivedere l'accaduto → investigativo**. Colloca sempre il controllo sull'asse temporale: *prima* (preventivo/deterrente/direttivo), *durante o dopo il rilevamento* (investigativo), *dopo* per rimediare (correttivo)."
   },
   {
     id: 183,
     topic: "Deception Technologies",
     level: "COMPRENSIONE",
-    scenario: "La tua azienda sta riprogettando la strategia di difesa in profondità per la rete interna aziendale, cercando di individuare precocemente le scansioni o gli attacchi condotti dai cybercriminali prima che colpiscano server critici.",
-    question: "Quale tra le seguenti opzioni descrive meglio lo scopo primario di un honeypot in un ambiente di rete?",
+    scenario: "Un centro di ricerca sulla sicurezza vuole studiare per mesi il comportamento di gruppi criminali organizzati: come effettuano la ricognizione, quali strumenti usano per il movimento laterale fra sistemi diversi, come stabiliscono la persistenza. Predispone quindi un intero segmento isolato con server web, database, controller di dominio e postazioni client simulati, tutti sorvegliati.",
+    question: "Quale tecnologia d'inganno corrisponde a questa configurazione?",
     options: [
-      "A) Rilevare e deviare i potenziali aggressori (To detect and divert potential attackers)",
-      "B) Bloccare l'accesso non autorizzato (To block unauthorized access)",
-      "C) Recuperare i dati persi dopo un attacco (To recover lost data after an attack)",
-      "D) Impedire l'esecuzione di malware (To prevent malware from executing)"
+      "A) Honeytoken",
+      "B) Honeypot",
+      "C) Honeyfile",
+      "D) Honeynet"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Rilevare e deviare i potenziali aggressori (To detect and divert potential attackers)**.\n\n* **Perché è la corretta:** Lo scopo primario di un **honeypot** (sistema esca fittizio) è quello di presentarsi come una risorsa vulnerabile e appetibile per indurre gli attaccanti a interagirvi. In questo modo si ottengono tre benefici: si rileva immediatamente la presenza dell'intruso, lo si devia dai server reali riducendo l'impatto complessivo dell'attacco, e si raccolgono dati preziosi sulle sue tattiche e strumenti.\n* **Analisi dei distrattori:**\n  * **B)** Un honeypot non blocca gli accessi (funzione tipica di firewall o IPS); al contrario, invita passivamente all'accesso per scopi di monitoraggio.\n  * **C)** Non ha funzioni di ripristino o backup dei dati di produzione.\n  * **D)** Non impedisce l'esecuzione di malware, anzi potrebbe permettere l'esecuzione in una sandbox isolata per poterne studiare il comportamento."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Honeynet**.\n\n* **Perché è la corretta:** Una **honeynet** è un'intera **rete** di sistemi esca, non un singolo host. Proprio perché contiene macchine di ruoli diversi che comunicano fra loro, consente di osservare ciò che un honeypot isolato non potrebbe mostrare: il **movimento laterale**, l'escalation dei privilegi da un sistema all'altro, le tecniche di persistenza e l'intera catena d'attacco. È lo strumento tipico della ricerca sulle minacce e della raccolta di intelligence su campagne prolungate.\n* **Analisi dei distrattori:**\n  * **B) Un honeypot** è un **singolo** sistema civetta. È perfetto per rilevare scansioni e tentativi di intrusione, ma essendo isolato non permette di studiare come l'attaccante si sposta fra host diversi, che è l'obiettivo dichiarato dello scenario.\n  * **C) Un honeyfile** è un singolo **file** esca che allerta quando viene aperto. Rileva l'accesso indebito a un documento, non l'intera catena d'attacco su più sistemi.\n  * **A) Un honeytoken** è un singolo **dato** esca (un record, una credenziale, un indirizzo e-mail) usato per rilevare esfiltrazioni o diffusioni non autorizzate.\n\n* **Trappola d'esame:** oltre alla scala (dato, file, sistema, rete), distingui lo **scopo**. Se lo scenario vuole *rilevare* un'intrusione, basta un honeypot o un honeyfile; se vuole *studiare a fondo* le tecniche di un avversario nel tempo, serve una honeynet. Attenzione inoltre alla regola operativa: un ambiente d'inganno va rigorosamente isolato dalla rete di produzione, altrimenti diventa esso stesso un trampolino per l'attaccante."
   },
   {
     id: 184,
