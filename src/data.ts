@@ -4576,18 +4576,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 77,
-    topic: "Security Policies & Lifecycle",
+    topic: "Third-Party Risk & Assessments",
     level: "APPLICAZIONE",
-    scenario: "Rippled, un produttore di bevande, sta sviluppando un piano di disaster recovery per garantire il rapido ripristino di sistemi e processi critici in caso di interruzione. Stanno definendo una metrica specifica che rappresenta la quantità massima di tempo accettabile per ripristinare le normali attività aziendali.",
-    question: "Quale metrica stanno definendo?",
+    scenario: "Rippled interrompe il contratto con il fornitore che per cinque anni ha gestito il suo servizio di analisi dati. Il fornitore ha ancora copie dei dati dei clienti nei propri backup, alcune sue utenze risultano ancora attive nell'identity provider di Rippled, e due integrazioni applicative usano tuttora chiavi API emesse a suo nome. Il contratto è scaduto la settimana scorsa.",
+    question: "Quale attività della gestione del rischio di terze parti va eseguita ora?",
     options: [
-      "A) MTBF (Mean Time Between Failures)",
-      "B) MTTR (Mean Time to Repair)",
-      "C) RTO (Recovery Time Objective)",
-      "D) RPO (Recovery Point Objective)"
+      "A) Una due diligence sul fornitore, per documentarne l'affidabilità passata",
+      "B) Un questionario di valutazione della sicurezza, inviato al fornitore uscente",
+      "C) L'offboarding del fornitore, con revoca degli accessi e restituzione o distruzione dei dati",
+      "D) Un rinnovo tacito del contratto, in attesa di completare la migrazione tecnica"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) RTO (Recovery Time Objective)**.\n\n* **Perché è la corretta:** L'**RTO (Obiettivo del Tempo di Ripristino)** definisce il periodo di tempo massimo tollerabile entro il quale un sistema, un'applicazione o un processo aziendale interrotto deve essere ripristinato e reso nuovamente operativo prima di causare conseguenze inaccettabili per l'organizzazione.\n* **Analisi dei distrattori:**\n  * **A) MTBF** rappresenta il tempo medio di funzionamento corretto tra due guasti successivi (indicatore di affidabilità hardware/software).\n  * **B) MTTR** è il tempo medio richiesto per riparare o ripristinare un componente hardware rotto o difettoso.\n  * **D) RPO (Recovery Point Objective)** stabilisce la massima quantità di perdita di dati accettabile misurata nel tempo (es. quante ore o giorni di modifiche ai dati si è disposti a perdere prima di dover ricorrere al backup)."
+    explanation: "La risposta corretta è la **C) L'offboarding del fornitore**.\n\n* **Perché è la corretta:** L'**offboarding** è la fase conclusiva del ciclo di vita del rapporto con un fornitore, ed è quella che più spesso viene lasciata a metà: il contratto finisce, ma gli accessi restano. Lo scenario elenca tre esposizioni che sopravvivono alla firma e che l'offboarding chiude una per una. Le **utenze ancora attive** nell'identity provider vanno disattivate, perché un account di un fornitore che non lavora più per te non ha alcun controllo dietro di sé, né aziendale né contrattuale. Le **chiavi API** vanno revocate e ruotate, e le integrazioni ricostruite con credenziali proprie: sono credenziali a tutti gli effetti, e sfuggono ai controlli pensati per le persone. I **dati nei backup** del fornitore vanno restituiti o distrutti secondo quanto previsto dal contratto, con **certificato di distruzione** a supporto, perché la responsabilità verso gli interessati e verso il regolatore resta di Rippled anche dopo la fine del rapporto.\n* **Analisi dei distrattori:**\n  * **A) Due diligence:** è la verifica che si conduce **prima** di affidarsi a un fornitore, per accertarne solidità, controlli e conformità. Farla ora, a rapporto concluso, non rimuove un solo accesso.\n  * **B) Questionario di sicurezza:** è uno strumento di **selezione e di monitoraggio continuo** durante il rapporto. Chiedere a un fornitore uscente di compilarlo produce un documento, non la revoca delle sue credenziali.\n  * **D) Rinnovo tacito:** è la scorciatoia peggiore. Prolunga il rapporto senza una nuova valutazione del rischio e lascia in vita esattamente le esposizioni da chiudere, con l'aggravante di farlo senza una decisione consapevole.\n\n* **Trappola d'esame:** ricorda il ciclo di vita del rapporto con i fornitori nell'ordine in cui CompTIA lo presenta. **Due diligence e selezione** prima della firma · **Contratto**, con SLA, clausole di sicurezza e diritto di audit · **Monitoraggio continuo** durante il rapporto, non una valutazione una tantum · **Offboarding** alla fine, con revoca degli accessi, restituzione o distruzione dei dati e chiusura delle integrazioni. La fase dimenticata è quasi sempre l'ultima, ed è quella che lascia credenziali valide in mano a chi non ha più alcun motivo di averle."
   },
   {
     id: 78,
@@ -4756,18 +4756,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 89,
-    topic: "Security Policies & Lifecycle",
-    level: "RICORDO",
-    scenario: "Un responsabile della manutenzione infrastrutturale sta valutando l'affidabilità di alcuni dispositivi di rete critici per decidere i cicli di sostituzione preventiva dell'hardware.",
-    question: "Quale concetto rappresenta un'importante metrica di affidabilità nella gestione della manutenzione e indica il tempo medio che intercorre tra i guasti di un sistema?",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    level: "ANALISI",
+    scenario: "Un cliente importante chiede all'azienda una prova indipendente che i suoi controlli di sicurezza siano progettati correttamente e funzionino davvero nel tempo. Non accetta l'autovalutazione compilata dal team interno né la relazione dell'internal audit aziendale: vuole un giudizio emesso da una parte terza qualificata e indipendente, che possa mostrare ai propri revisori.",
+    question: "Che cosa deve procurarsi l'azienda per soddisfare questa richiesta?",
     options: [
-      "A) MTTR (Mean Time to Repair)",
-      "B) Risk assessment (Valutazione del rischio)",
-      "C) MTBF (Mean Time Between Failures)",
-      "D) FMEA (Failure Mode and Effects Analysis)"
+      "A) Una nuova autovalutazione, compilata con maggior dettaglio e firmata dal CISO",
+      "B) Una relazione dell'internal audit, approvata dal comitato per il rischio",
+      "C) Un'attestazione di terza parte, come un rapporto SOC 2 di tipo II",
+      "D) Un rapporto di penetration test, eseguito dal team di sicurezza interno"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) MTBF (Mean Time Between Failures)**.\n\n* **Perché è la corretta:** L'**MTBF (Tempo medio tra i guasti)** stima l'intervallo medio di tempo in cui un sistema o componente funziona correttamente prima di incorrere in un guasto, fungendo da indicatore chiave dell'affidabilità dell'hardware.\n* **Analisi dei distrattori:**\n  * **A) MTTR (Mean Time to Repair)** esprime il tempo medio richiesto per riparare o ripristinare un componente guasto.\n  * **B) Risk assessment** è l'intero processo di identificazione e valutazione dei rischi generali, non una metrica temporale specifica.\n  * **D) FMEA** è una metodologia proattiva usata per analizzare i possibili modi di guasto e i loro effetti, non una metrica quantitativa del tempo tra i guasti."
+    explanation: "La risposta corretta è la **C) Un'attestazione di terza parte, come un rapporto SOC 2 di tipo II**.\n\n* **Perché è la corretta:** La richiesta del cliente contiene due vincoli, e solo un'opzione li rispetta entrambi. Primo, **indipendenza**: il giudizio deve provenire da una parte terza qualificata, non da chi gestisce o supervisiona i controlli. Secondo, **efficacia operativa nel tempo**: non basta dimostrare che i controlli sono ben progettati, va dimostrato che hanno funzionato lungo un periodo. È esattamente la definizione di un rapporto **SOC 2 di tipo II**, emesso da un revisore indipendente al termine di un periodo di osservazione tipicamente compreso fra sei e dodici mesi, in cui il revisore raccoglie evidenze sul funzionamento reale dei controlli. È anche il documento che il cliente potrà a sua volta consegnare ai propri revisori, ed è la ragione per cui un'**attestazione** di questo tipo è diventata la valuta corrente nella valutazione dei fornitori.\n* **Analisi dei distrattori:**\n  * **A) Autovalutazione:** è compilata dall'organizzazione **su sé stessa**. Ha un valore reale come strumento interno di preparazione, ma non offre alcuna indipendenza, ed è precisamente ciò che il cliente ha già rifiutato.\n  * **B) Internal audit:** è indipendente **dalla linea operativa** e riporta al consiglio o al comitato per il rischio, il che lo rende molto più solido di un'autovalutazione. Resta però una funzione **interna all'organizzazione**: soddisfa la governance interna, non la richiesta di un giudizio esterno.\n  * **D) Penetration test interno:** verifica la resistenza tecnica dei sistemi a un attacco simulato, in un momento preciso. È un'altra cosa rispetto a un giudizio sulla **progettazione e sul funzionamento dell'insieme dei controlli**, e in più è condotto internamente, quindi manca ancora l'indipendenza.\n\n* **Trappola d'esame:** ordina le forme di verifica per **indipendenza crescente**. Autovalutazione, l'organizzazione valuta sé stessa · Internal audit, indipendente dalla linea ma interno all'azienda · Audit o attestazione **esterna**, condotta da una parte terza qualificata · Certificazione, come ISO 27001, rilasciata da un ente accreditato. Ricorda anche la differenza fra i due tipi di rapporto SOC 2: il **tipo I** fotografa la **progettazione** dei controlli in una data specifica, il **tipo II** ne verifica l'**efficacia operativa** lungo un periodo. Quando la domanda dice \"nel tempo\" o \"su un periodo\", la risposta è il tipo II."
   },
   {
     id: 90,
@@ -4861,18 +4861,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 96,
-    topic: "Agreements & Contracts",
-    level: "COMPRENSIONE",
-    scenario: "Due organizzazioni intendono avviare una collaborazione formale per definire i termini preliminari di una partnership e stabilire come cooperare su progetti o iniziative specifiche.",
-    question: "Quale tipo di accordo definisce i termini di una partnership tra due organizzazioni e il modo in cui collaboreranno su progetti o iniziative specifiche?",
+    topic: "Risk Management & Analysis",
+    level: "ANALISI",
+    scenario: "Un'azienda valuta il rischio legato a un gestionale legacy che non è più aggiornabile. Il costo di sostituirlo supera il valore dell'intero processo che serve; il fornitore non esiste più, quindi non c'è nessuno a cui girare la responsabilità; dismetterlo bloccherebbe la produzione. La direzione decide allora di mantenerlo, ma di isolarlo in un segmento di rete dedicato, raggiungibile solo da un jump server sorvegliato, e di attivare un monitoraggio specifico sui suoi accessi.",
+    question: "Quale strategia di trattamento del rischio ha applicato la direzione?",
     options: [
-      "A) SLA (Service Level Agreement)",
-      "B) MSA (Master Service Agreement)",
-      "C) MOU (Memorandum of Understanding)",
-      "D) BPA (Business Partnership Agreement)"
+      "A) Evitare il rischio (risk avoidance), rinunciando all'attività che lo genera",
+      "B) Trasferire il rischio (risk transfer), spostandone l'onere su una terza parte",
+      "C) Mitigare il rischio (risk mitigation), riducendone probabilità e impatto",
+      "D) Accettare il rischio (risk acceptance), riconoscendolo senza altre azioni"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) MOU (Memorandum of Understanding)**.\n\n* **Perché è la corretta:** Il **Memorandum of Understanding (MOU)** è un accordo formale preliminare che definisce le intenzioni reciproche e i principi di cooperazione tra due o più entità per collaborare su specifici progetti, agendo come base per futuri contratti legalmente vincolanti.\n* **Analisi dei distrattori:**\n  * **A) SLA** definisce le metriche prestazionali di erogazione di un servizio tecnico continuativo.\n  * **B) MSA** è un contratto quadro completo che stabilisce i termini generali regolanti tutte le future transazioni commerciali e contratti operativi di dettaglio.\n  * **D) BPA** è un accordo commerciale vincolante per partner commerciali che cooperano a scopo di lucro, ripartendo profitti, perdite e responsabilità legali."
+    explanation: "La risposta corretta è la **C) Mitigare il rischio (risk mitigation)**.\n\n* **Perché è la corretta:** La **mitigazione** consiste nel mantenere l'attività, e con essa una parte del rischio, ma nell'introdurre controlli che ne abbassano **probabilità** o **impatto**. È esattamente ciò che è stato fatto: il sistema vulnerabile resta in funzione, perché serve, ma la segmentazione di rete riduce drasticamente chi può raggiungerlo, il jump server sorvegliato rende l'accesso tracciabile e controllato, e il monitoraggio dedicato accorcia i tempi di rilevamento se qualcosa va storto. Nessuno di questi controlli elimina la vulnerabilità del gestionale, che resta lì: riducono la **probabilità** che venga raggiunta e l'**impatto** se ciò accadesse. Quando la vulnerabilità non è rimovibile, questa è la forma in cui si presentano i **controlli compensativi**.\n* **Analisi dei distrattori:**\n  * **A) Evitare il rischio:** significa **rinunciare all'attività** che lo genera, per esempio dismettendo il gestionale o abbandonando il processo che serve. Lo scenario lo esclude esplicitamente: fermarlo bloccherebbe la produzione. L'evitamento azzera il rischio, ma solo insieme al beneficio.\n  * **B) Trasferire il rischio:** sposta l'**onere economico** su una terza parte, tipicamente con una polizza assicurativa o una clausola contrattuale verso un fornitore. Qui il fornitore non esiste più e non è stata stipulata alcuna copertura. Ricorda inoltre che il trasferimento sposta il costo, mai la responsabilità finale verso i propri clienti e verso il regolatore.\n  * **D) Accettare il rischio:** vuol dire prenderne atto **senza introdurre alcun controllo aggiuntivo**, con una decisione formale e documentata di chi ne ha l'autorità. Sarebbe stata la risposta corretta se la direzione avesse deciso di lasciare il sistema com'era: ma qui sono stati messi in campo tre controlli.\n\n* **Trappola d'esame:** distingui le quattro strategie dalla domanda \"che cosa cambia dopo la decisione?\". **Evitare** = l'attività cessa · **Trasferire** = l'attività continua e il costo del danno passa ad altri · **Mitigare** = l'attività continua con nuovi controlli · **Accettare** = l'attività continua immutata, con una decisione consapevole e registrata. Due precisazioni che ricorrono spesso nelle domande: il rischio che resta dopo la mitigazione si chiama **rischio residuo** e va anch'esso accettato formalmente; e l'accettazione è valida solo se **documentata** da chi ha l'autorità, con una scadenza di revisione, altrimenti non è accettazione ma negligenza."
   },
   {
     id: 97,
@@ -5567,17 +5567,17 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   {
     id: 143,
     topic: "Risk Management & Analysis",
-    level: "APPLICAZIONE",
-    scenario: "River, project manager presso un'azienda tecnologica, ha il compito di tenere traccia di tutti i rischi potenziali relativi a una nuova implementazione software. Utilizza un documento strutturato che elenca i rischi identificati, il loro impatto potenziale, la probabilità e le strategie di mitigazione.",
-    question: "Quale documento sta utilizzando River per gestire questi rischi?",
+    level: "ANALISI",
+    scenario: "River, project manager in un'azienda tecnologica, deve rilasciare un software che non rispetta un requisito dello standard interno di cifratura: una libreria di terze parti impone un algoritmo più debole di quello previsto, e il fornitore ha annunciato l'adeguamento fra otto mesi. Bloccare il rilascio farebbe saltare un impegno contrattuale. River documenta la deviazione, la motivazione e i controlli aggiuntivi adottati, la fa approvare dal titolare del rischio e le assegna una scadenza di riesame.",
+    question: "Come si chiama lo strumento di gestione del rischio che River ha appena usato?",
     options: [
-      "A) Business Continuity Plan",
-      "B) Incident Response Plan",
-      "C) Playbook",
-      "D) Risk Register"
+      "A) Un trasferimento del rischio verso il fornitore della libreria di terze parti",
+      "B) Una business impact analysis, che quantifica l'effetto della deviazione",
+      "C) Un evitamento del rischio, perché il rilascio prosegue con controlli in più",
+      "D) Un'eccezione al requisito, con accettazione formale del rischio e scadenza"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Risk Register**.\n\n* **Perché è la corretta:** Un risk register viene utilizzato per identificare, documentare e tracciare i rischi potenziali, inclusi la loro probabilità, l'impatto e le strategie di mitigazione. Consente una gestione proattiva dei rischi nei progetti o nelle operazioni.\n* **Analisi dei distrattori:**\n  * **A) Un Business Continuity Plan** si concentra sul mantenimento delle operazioni aziendali essenziali durante un'interruzione, non sul tracciamento dettagliato dei singoli rischi.\n  * **B) Un Incident Response Plan** si concentra sulla gestione degli incidenti di sicurezza già verificatisi.\n  * **C) Un Playbook** si concentra su azioni di risposta specifiche a minacce particolari, non sul tracciamento strutturato dei rischi di un intero progetto."
+    explanation: "La risposta corretta è la **D) Un'eccezione al requisito, con accettazione formale del rischio**.\n\n* **Perché è la corretta:** Quando un requisito di sicurezza non può essere rispettato e la deviazione è consapevole, lo strumento corretto è l'**eccezione** (o *exemption*), cioè una deroga **formale, motivata, approvata e a termine**. Tutti e quattro gli attributi sono presenti nello scenario e nessuno è decorativo. La deviazione è **documentata**, quindi diventa visibile nel registro dei rischi invece di restare un fatto noto a tre persone. È **motivata**, con il vincolo tecnico e la data di adeguamento del fornitore messi per iscritto. È **approvata dal titolare del rischio**, cioè da chi ha l'autorità di assumerselo, e non dal team che ha fretta di rilasciare. Ed è **a termine**, con un riesame programmato: è questo che impedisce alla deroga temporanea di diventare, come accade quasi sempre senza scadenza, lo stato permanente delle cose.\n* **Analisi dei distrattori:**\n  * **A) Trasferimento del rischio:** sposterebbe l'**onere economico** del danno su una terza parte, tipicamente con una polizza o una clausola contrattuale. Qui non è stato stipulato nulla del genere: il fatto che la causa tecnica stia in una libreria altrui non sposta di un centimetro la responsabilità di River verso i propri clienti.\n  * **B) Business impact analysis:** è l'analisi che stabilisce quanto un'interruzione danneggerebbe i processi, e da cui derivano metriche come RTO e RPO. Serve a **misurare** un impatto, non a **autorizzare** una deviazione da uno standard.\n  * **C) Evitamento del rischio:** significa **non fare** l'attività rischiosa, quindi in questo caso non rilasciare finché la libreria non sarà adeguata. È l'opposto di ciò che è stato deciso: il rilascio prosegue.\n\n* **Trappola d'esame:** tieni distinti tre termini che le domande accostano spesso. **Accettazione del rischio** = decisione consapevole di convivere con un rischio, senza controlli aggiuntivi · **Eccezione o exemption** = deroga formale e a termine a un requisito, che richiede approvazione e riesame · **Rischio residuo** = ciò che resta dopo aver applicato i controlli, e che va a sua volta accettato formalmente. Il segnale che distingue un'eccezione gestita da una semplice violazione è sempre lo stesso: **approvazione da parte del titolare del rischio e una data di scadenza**. Senza questi due elementi non è un'eccezione, è un'inadempienza documentata."
   },
   {
     id: 144,
@@ -5806,18 +5806,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 159,
-    topic: "Risk Management & Analysis",
-    level: "APPLICAZIONE",
-    scenario: "Un'azienda opera in un settore regolamentato e sceglie di minimizzare i rischi per conformarsi a standard rigorosi, concentrandosi maggiormente sul mantenimento di operazioni stabili piuttosto che sul perseguimento di un'espansione rapida.",
-    question: "Quale propensione al rischio (risk appetite) descrive MEGLIO questo approccio?",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
+    level: "ANALISI",
+    scenario: "Un'azienda europea che vende online e gestisce direttamente i pagamenti con carta deve mettere ordine fra gli obblighi che la riguardano. Il consiglio chiede di distinguere ciò che è imposto da una legge, ciò che deriva da un contratto con il circuito dei pagamenti e ciò che l'azienda adotta volontariamente per dimostrare maturità ai clienti.",
+    question: "Quale delle seguenti classificazioni è corretta?",
     options: [
-      "A) Conservative (Conservativa)",
-      "B) Neutral (Neutrale)",
-      "C) Aggressive (Aggressiva)",
-      "D) Expansionary (Espansiva)"
+      "A) GDPR è un obbligo di legge, PCI DSS un obbligo contrattuale, ISO 27001 uno standard volontario certificabile",
+      "B) GDPR e PCI DSS sono entrambi leggi europee, mentre ISO 27001 è imposto dal regolatore bancario",
+      "C) PCI DSS è una legge sui pagamenti, GDPR una linea guida volontaria, ISO 27001 un obbligo contrattuale",
+      "D) Tutti e tre sono standard volontari: diventano obbligatori solo se citati in un contratto"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Conservative (Conservativa)**.\n\n* **Perché è la corretta:** L'approccio dell'azienda si allinea con una propensione al rischio conservativa, poiché privilegia la stabilità e la conformità rispetto all'espansione. Una propensione espansiva cercherebbe opportunità di crescita ad alto rischio, il che contraddice l'atteggiamento cauto dell'azienda.\n* **Analisi dei distrattori:**\n  * **D) Una propensione espansiva** cercherebbe opportunità di crescita ad alto rischio, il che contraddice l'atteggiamento cauto dell'azienda.\n  * **B) Una propensione neutrale** bilancerebbe crescita e stabilità.\n  * **C) Una propensione aggressiva** tenderebbe anch'essa verso strategie ad alto rischio e alto rendimento, a differenza dell'attenzione conservativa dell'azienda."
+    explanation: "La risposta corretta è la **A) GDPR legge, PCI DSS contratto, ISO 27001 standard volontario**.\n\n* **Perché è la corretta:** I tre riferimenti hanno **origini e meccanismi di sanzione diversi**, e confonderli è uno degli errori più frequenti. Il **GDPR** è un **regolamento dell'Unione europea**, quindi una norma di legge direttamente applicabile: chi lo viola risponde a un'autorità di controllo pubblica e rischia sanzioni amministrative che arrivano al 4% del fatturato annuo mondiale. Il **PCI DSS** non è una legge di nessuno Stato: è uno **standard contrattuale** imposto dai circuiti delle carte a chi vuole trattare dati di pagamento, e le conseguenze di un'inadempienza sono penali contrattuali, audit più stringenti e, nel caso estremo, la revoca della possibilità di accettare carte, che per un e-commerce equivale alla chiusura. L'**ISO 27001** è uno **standard internazionale volontario**: nessuno obbliga ad adottarlo, ma è **certificabile** da un ente accreditato, e la certificazione serve proprio a dimostrare a clienti e partner la maturità del proprio sistema di gestione della sicurezza delle informazioni.\n* **Analisi dei distrattori:**\n  * **B) GDPR e PCI DSS entrambe leggi europee:** è falso per il PCI DSS, che nasce da un consorzio privato di circuiti di pagamento ed è globale, non europeo. Ed è falso anche sulla seconda parte: nessun regolatore bancario impone ISO 27001 in generale.\n  * **C) PCI DSS legge, GDPR linea guida volontaria:** inverte esattamente i due riferimenti principali. Il GDPR è tutt'altro che volontario, ed è anzi il più vincolante dei tre per un'azienda europea.\n  * **D) Tutti volontari finché non citati in un contratto:** vale per gli standard, non per la legge. Un obbligo di legge si applica per il fatto stesso di rientrare nel suo ambito, indipendentemente da qualunque contratto.\n\n* **Trappola d'esame:** classifica ogni riferimento per **fonte dell'obbligo**, perché è questo che determina chi ti sanziona e come. **Legge o regolamento** = GDPR, HIPAA, SOX, con autorità pubbliche e sanzioni amministrative o penali · **Obbligo contrattuale** = PCI DSS, con penali e perdita della possibilità di operare · **Standard volontario certificabile** = ISO 27001 · **Framework volontario** = NIST Cybersecurity Framework, che offre una struttura di riferimento e non prevede certificazione. E ricorda la regola che vale per tutti: puoi esternalizzare l'esecuzione dei controlli, mai la **responsabilità** della conformità."
   },
   {
     id: 160,
