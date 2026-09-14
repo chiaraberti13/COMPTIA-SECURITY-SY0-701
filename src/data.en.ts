@@ -40,36 +40,36 @@ export interface QuestionOverride {
 
 export const GROUP_EN: Record<string, GroupOverride> = {
   // Domain 1
-  "1. Fondamentali d'Esame": {
-    title: "1. Exam Fundamentals",
+  "1. Fondamentali d'Esame (Obj 1.2)": {
+    title: "1. Exam Fundamentals (Obj 1.2)",
     description: "Core principles and cornerstone concepts of information security.",
   },
-  "2. Security Controls": {
-    title: "2. Security Controls",
+  "2. Security Controls (Obj 1.1)": {
+    title: "2. Security Controls (Obj 1.1)",
     description: "Categories of security controls based on how they are implemented.",
   },
-  "3. Control Types": {
-    title: "3. Control Types",
+  "3. Control Types (Obj 1.1)": {
+    title: "3. Control Types (Obj 1.1)",
     description: "Functional classification of controls based on the timing of the action.",
   },
-  "4. Change Management": {
-    title: "4. Change Management",
+  "4. Change Management (Obj 1.3)": {
+    title: "4. Change Management (Obj 1.3)",
     description: "Standardized processes to introduce production changes without outages or gaps.",
   },
-  "5. Cryptography": {
-    title: "5. Cryptography",
+  "5. Cryptography (Obj 1.4)": {
+    title: "5. Cryptography (Obj 1.4)",
     description: "Algorithms, cryptographic mechanisms and Public Key Infrastructure (PKI).",
   },
-  "6. Physical Security": {
-    title: "6. Physical Security",
+  "6. Physical Security (Obj 1.2)": {
+    title: "6. Physical Security (Obj 1.2)",
     description: "Physical controls to protect facilities and tangible assets.",
   },
-  "7. Deception Technologies": {
-    title: "7. Deception Technologies",
+  "7. Deception Technologies (Obj 1.2)": {
+    title: "7. Deception Technologies (Obj 1.2)",
     description: "Deception-based technologies to detect attackers early.",
   },
-  "8. Identity & Access Control Models (Obj 1.3 & 3.3)": {
-    title: "8. Identity & Access Control Models (Obj 1.3 & 3.3)",
+  "8. Identity & Access Control Models (Obj 4.6)": {
+    title: "8. Identity & Access Control Models (Obj 4.6)",
     description: "Identity management, multi-factor authentication, directory services and access authorization models.",
   },
 
@@ -90,8 +90,8 @@ export const GROUP_EN: Record<string, GroupOverride> = {
     title: "4. Malware (Obj 2.4)",
     description: "The different types of malicious software designed to compromise systems and data.",
   },
-  "5. Social Engineering (Obj 2.4)": {
-    title: "5. Social Engineering (Obj 2.4)",
+  "5. Social Engineering (Obj 2.2)": {
+    title: "5. Social Engineering (Obj 2.2)",
     description: "Psychological manipulation techniques used to trick people into taking actions or revealing sensitive data.",
   },
   "6. Password Attacks (Obj 2.4)": {
@@ -110,8 +110,8 @@ export const GROUP_EN: Record<string, GroupOverride> = {
     title: "9. Mitigations (Obj 2.5)",
     description: "Techniques and countermeasures to reduce risk, shrink the attack surface and counter threats.",
   },
-  "10. Threat Intelligence (Obj 2.1 & 2.2)": {
-    title: "10. Threat Intelligence (Obj 2.1 & 2.2)",
+  "10. Threat Intelligence (Obj 2.1, 2.2 & 4.3)": {
+    title: "10. Threat Intelligence (Obj 2.1, 2.2 & 4.3)",
     description: "Threat information sources, OSINT, information sharing and dark web intelligence.",
   },
 
@@ -124,24 +124,24 @@ export const GROUP_EN: Record<string, GroupOverride> = {
     title: "2. Network Security (Obj 3.2)",
     description: "Network security architecture and protocols, encrypted tunneling and centralized access management.",
   },
-  "3. Firewalls (Obj 3.3)": {
-    title: "3. Firewalls (Obj 3.3)",
+  "3. Firewalls (Obj 3.2)": {
+    title: "3. Firewalls (Obj 3.2)",
     description: "Appliances for inspecting and filtering traffic at various layers of the OSI model.",
   },
-  "4. Data Security (Obj 3.2 & 3.3)": {
-    title: "4. Data Security (Obj 3.2 & 3.3)",
+  "4. Data Security (Obj 3.3)": {
+    title: "4. Data Security (Obj 3.3)",
     description: "Protecting digital information across its various states, and encryption and obfuscation techniques.",
   },
   "5. Resilience & Recovery (Obj 3.4)": {
     title: "5. Resilience & Recovery (Obj 3.4)",
     description: "Business continuity systems, load and power redundancy, backup methods and alternate sites.",
   },
-  "6. Dispositivi Speciali & IoT (Obj 3.2)": {
-    title: "6. Specialized Devices & IoT (Obj 3.2)",
+  "6. Dispositivi Speciali & IoT (Obj 3.1)": {
+    title: "6. Specialized Devices & IoT (Obj 3.1)",
     description: "Security in industrial, embedded and specialized systems and Internet of Things networks.",
   },
-  "7. PBQ Dominio 3 Scenarios": {
-    title: "7. Domain 3 PBQ Scenarios",
+  "7. PBQ Dominio 3 Scenarios (Obj 3.1-3.4)": {
+    title: "7. Domain 3 PBQ Scenarios (Obj 3.1-3.4)",
     description: "Practical scenarios and Performance-Based Questions on Domain 3.",
   },
 
@@ -154,74 +154,74 @@ export const GROUP_EN: Record<string, GroupOverride> = {
     title: "2. Mobile Security (Obj 4.1)",
     description: "Organizational provisioning models and centralized control tools for mobile devices.",
   },
-  "3. Vulnerability Management (Obj 4.2)": {
-    title: "3. Vulnerability Management (Obj 4.2)",
+  "3. Vulnerability Management (Obj 4.3)": {
+    title: "3. Vulnerability Management (Obj 4.3)",
     description: "Methods to identify, classify, assess and mitigate security weaknesses.",
   },
-  "4. Monitoring Tools (Obj 4.2)": {
-    title: "4. Monitoring Tools (Obj 4.2)",
+  "4. Monitoring Tools (Obj 4.4)": {
+    title: "4. Monitoring Tools (Obj 4.4)",
     description: "Systems, protocols and agents to analyze flows, centralize events and prevent information exfiltration.",
   },
-  "5. Log Analysis (Obj 4.2)": {
-    title: "5. Log Analysis (Obj 4.2)",
+  "5. Log Analysis (Obj 4.9)": {
+    title: "5. Log Analysis (Obj 4.9)",
     description: "Technical analysis and forensic interpretation of logs generated by various devices and defensive appliances.",
   },
-  "6. Incident Response (Obj 4.3)": {
-    title: "6. Incident Response (Obj 4.3)",
+  "6. Incident Response (Obj 4.8)": {
+    title: "6. Incident Response (Obj 4.8)",
     description: "Structured phases of the security incident management lifecycle to limit damage.",
   },
-  "7. Digital Forensics (Obj 4.3)": {
-    title: "7. Digital Forensics (Obj 4.3)",
+  "7. Digital Forensics (Obj 4.8)": {
+    title: "7. Digital Forensics (Obj 4.8)",
     description: "Preservation, acquisition and scientific analysis of digital evidence to ensure its legal admissibility.",
   },
-  "8. Automation (Obj 4.4)": {
-    title: "8. Automation (Obj 4.4)",
+  "8. Automation (Obj 4.7)": {
+    title: "8. Automation (Obj 4.7)",
     description: "Integration, scripting and orchestration of coordinated defensive responses.",
   },
-  "9. PBQ Dominio 4 (Obj 4.2 / 4.3)": {
-    title: "9. Domain 4 PBQ (Obj 4.2 / 4.3)",
+  "9. PBQ Dominio 4 (Obj 4.8 / 4.9)": {
+    title: "9. Domain 4 PBQ (Obj 4.8 / 4.9)",
     description: "Practical scenarios and Performance-Based Questions on log triage, investigation and host isolation.",
   },
 
   // Domain 5
-  "1. Governance": {
-    title: "1. Governance",
+  "1. Governance (Obj 5.1)": {
+    title: "1. Governance (Obj 5.1)",
     description: "The decision-making structure, organizational oversight and alignment of security goals with business strategy.",
   },
-  "2. Policies": {
-    title: "2. Policies",
+  "2. Policies (Obj 5.1)": {
+    title: "2. Policies (Obj 5.1)",
     description: "The documentary foundations of security: policies, standards, procedures and lifecycle and change management.",
   },
-  "3. Risk Management": {
-    title: "3. Risk Management",
+  "3. Risk Management (Obj 5.2)": {
+    title: "3. Risk Management (Obj 5.2)",
     description: "Methods to identify, quantify and document the organization's risk exposure.",
   },
-  "4. Risk Responses": {
-    title: "4. Risk Responses",
+  "4. Risk Responses (Obj 5.2)": {
+    title: "4. Risk Responses (Obj 5.2)",
     description: "The four fundamental strategies established by best practice to handle identified risk.",
   },
-  "5. Compliance": {
-    title: "5. Compliance",
+  "5. Compliance (Obj 5.4)": {
+    title: "5. Compliance (Obj 5.4)",
     description: "Meeting legal requirements, protecting privacy and exercising professional responsibility.",
   },
-  "6. Third Party Risk": {
-    title: "6. Third Party Risk",
+  "6. Third Party Risk (Obj 5.3)": {
+    title: "6. Third Party Risk (Obj 5.3)",
     description: "Managing and mitigating risks arising from vendors, business partners and supply chains.",
   },
-  "7. Agreements": {
-    title: "7. Agreements",
+  "7. Agreements (Obj 5.3)": {
+    title: "7. Agreements (Obj 5.3)",
     description: "Types of formal agreements and contracts governing operational and commercial relationships with third parties.",
   },
-  "8. Audits": {
-    title: "8. Audits",
+  "8. Audits (Obj 5.5)": {
+    title: "8. Audits (Obj 5.5)",
     description: "Formal, independent processes to evaluate the effectiveness of security controls and the organization's defensive posture.",
   },
-  "9. Security Awareness": {
-    title: "9. Security Awareness",
+  "9. Security Awareness (Obj 5.6)": {
+    title: "9. Security Awareness (Obj 5.6)",
     description: "The human factor as the organization's first line of defense through ongoing training and exercise programs.",
   },
-  "10. Secure Deconstruction & Disposal": {
-    title: "10. Secure Deconstruction & Disposal",
+  "10. Secure Deconstruction & Disposal (Obj 4.2)": {
+    title: "10. Secure Deconstruction & Disposal (Obj 4.2)",
     description: "Methods for the secure disposal of hardware, elimination of sensitive data and physical destruction of media.",
   },
 };
@@ -293,7 +293,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   TechnicalControls: {
     name: "Technical",
     definition: "Security controls implemented through hardware, software or firmware solutions.",
-    details: "Also called logical controls, they use IT and network technologies to enforce the organization's security requirements:\n* **Firewalls and IDS/IPS:** Network filters and systems that automatically block threats.\n* **Data Encryption:** Encryption of information in transit (TLS) and at rest (AES).\n* **Identity Management:** Single Sign-On (SSO) systems, multi-factor authentication (MFA) agents and digital biometric access control.\n* **Endpoint Agents:** Antivirus, antimalware and Endpoint Detection and Response (EDR).\n\n* **Focused Mini-Example:** Enabling a rule on a corporate firewall that automatically detects and blocks unencrypted traffic on TCP port 80, forcing the use of HTTPS port 443, is a technical control.",
+    details: "Also called logical controls, they use IT and network technologies to enforce the organization's security requirements:\n* **Firewalls and IDS/IPS:** Network filters, intrusion detection (IDS, which only raises alerts) and intrusion prevention (IPS, which actively blocks traffic in-line).\n* **Data Encryption:** Encryption of information in transit (TLS) and at rest (AES).\n* **Identity Management:** Single Sign-On (SSO) systems, multi-factor authentication (MFA) agents and digital biometric access control.\n* **Endpoint Agents:** Antivirus, antimalware and Endpoint Detection and Response (EDR).\n\n* **Focused Mini-Example:** Enabling a rule on a corporate firewall that automatically detects and blocks unencrypted traffic on TCP port 80, forcing the use of HTTPS port 443, is a technical control.",
     examTip: "Any security measure that acts directly on computer systems and is managed by code or physical network devices is a technical control.",
   },
   OperationalControls: {
@@ -376,7 +376,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Maintenance Window",
     definition: "A pre-established, agreed-upon time interval during which changes or maintenance are permitted.",
     details: "It schedules lower-impact activities to preserve operational availability agreements (SLA):\n* **Smart Scheduling:** Maintenance is carried out at times when system usage is minimal (e.g. at night, on weekends or during company closures).\n* **Advance Communication:** Warning employees and external customers well in advance of possible downtime or performance degradation.\n* **SLA Maximization:** It allows updates to be completed without impacting the contractual corporate uptime index.\n\n* **Focused Mini-Example:** A fintech platform establishes that all updates to the transaction servers must occur exclusively within the agreed maintenance window, namely Sunday morning from 02:00 to 05:00, minimizing the impact on merchants.",
-    examTip: "Even emergency patches should ideally be coordinated, but regularly scheduled changes belong strictly to maintenance windows.",
+    examTip: "Even emergency patches should ideally be coordinated through the change management process, while routine scheduled changes must be executed strictly inside approved maintenance windows.",
   },
   VersionControl: {
     name: "Version Control",
@@ -444,7 +444,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Certificates",
     definition: "Digital documents that securely bind a subject's identity to their public key through the signature of a trusted CA.",
     details: "Digital attestations conforming to the X.509 standard that serve to prevent impersonation attacks on the web:\n* **Internal Elements:** Identity of the holder (Subject, CN, SAN), holder's public key, digital signature of the Certificate Authority, supported encryption algorithms and validity dates.\n* **Use:** They provide mathematical certainty that a given server or web portal actually belongs to the legitimate organization and not to a fraudster.\n\n* **Focused Mini-Example:** When you access a government institution's site, the browser inspects the digital certificate sent by the server, verifying that the typed URL exactly matches the Common Name written in the certificate and that the Let's Encrypt CA signature is valid.",
-    examTip: "An expired certificate or one with a mismatched domain name (Mismatched Name) will cause an immediate block of the client's connection.",
+    examTip: "An expired or revoked certificate, or one with a mismatched domain name (Mismatched Name), fails validation: the browser interrupts the handshake and shows a full-page security warning. Note: the user can usually choose to proceed anyway (unless HSTS or certificate pinning is in place), so it is not a technically unbypassable block.",
   },
   WildcardCertificates: {
     name: "Wildcard Certificates",
@@ -695,8 +695,8 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   LDAPProtocol_New: {
     name: "LDAP",
     definition: "Lightweight Directory Access Protocol: an open standard protocol used to query, authenticate and manage information about users and resources in a central directory database.",
-    details: "Main characteristics:\n* **Hierarchical Structure:** It organizes objects (users, computers, printers, groups) in a logical tree made up of organizational units (OU), domains (DC) and distinguished names (DN).\n* **Integration with Active Directory:** Microsoft Active Directory relies on LDAP as its main protocol to allow servers and clients to search for and authenticate identities in the domain.\n* **LDAPS (LDAP Secure):** The encrypted variant that uses TLS/SSL (standard TCP port 636) to protect credentials and data transmitted in the clear (TCP port 389) from sniffing attacks.",
-    examTip: "To ensure the security of queries and user credentials transmitted to a directory service, disable cleartext LDAP (port 389) and implement LDAPS (port 636) encrypted with an SSL/TLS certificate.",
+    details: "Main characteristics:\n* **Hierarchical Structure:** It organizes objects (users, computers, printers, groups) in a logical tree made up of organizational units (OU), domains (DC) and distinguished names (DN).\n* **Integration with Active Directory:** Microsoft Active Directory relies on LDAP as its main protocol to allow servers and clients to search for and authenticate identities in the domain.\n* **LDAPS (LDAP Secure):** The encrypted variant that uses TLS (standard TCP port 636) to protect credentials and data transmitted in the clear (TCP port 389) from sniffing attacks.",
+    examTip: "To secure queries and user credentials sent to a directory service, disable cleartext LDAP (port 389) and implement LDAPS (TCP port 636) encrypted with TLS, or StartTLS on port 389. SSL is deprecated: on the exam the correct answer is always TLS.",
   },
   MFAConcept_New: {
     name: "MFA",
@@ -927,6 +927,18 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "Phases and types of campaigns:\n* **Malicious Campaigns:** Conducted by external attackers to gather credentials, install malware or launch large-scale ransomware attacks within an organization.\n* **Simulation Campaigns (Simulated Phishing):** A fundamental Security Awareness tool managed by the internal security team. It allows the vulnerability of the staff to be measured, statistics (click-rate) to be gathered and the users who fall for the trap to be trained.",
     examTip: "Simulated phishing campaigns help companies identify the most vulnerable employees and train them dynamically and interactively.",
   },
+  BECSocialEngineering: {
+    name: "Business Email Compromise (BEC)",
+    definition: "A targeted scam in which the attacker impersonates (or actually controls) the mailbox of an executive or a trusted supplier in order to trick an employee into authorizing a wire transfer or disclosing confidential data.",
+    details: "**Business Email Compromise (BEC)** is, according to the FBI, the most financially damaging email fraud, and it is explicitly listed in the SY0-701 objectives (Obj 2.2 - Human vectors).\n* **No malware:** BEC uses no malicious attachments or links, so antivirus engines and anti-malware gateways do not catch it. The only weapon is psychological manipulation (authority + urgency + secrecy).\n* **The three exam variants:**\n  1. **CEO fraud:** an email that appears to come from the chief executive requests an urgent and 'confidential' wire transfer.\n  2. **Vendor/Invoice fraud:** the attacker intercepts a genuine supplier thread and sends an authentic invoice with an altered bank account.\n  3. **Account takeover:** the attacker actually gets into the executive's mailbox (through phishing or credential stuffing) and writes from the legitimate domain, passing SPF, DKIM and DMARC.\n* **Sender deception techniques:** spoofing the `From` header, *lookalike* domains (`ranco.com` instead of `banco.com`), or simply altering `Reply-To`.\n\n* **Focused Mini-Example:** On Friday at 5:50 p.m. an accountant receives an email from the travelling 'CEO': it requests an immediate 48,000 EUR transfer to close a confidential acquisition and asks that nobody be told until Monday. The sender domain is `company-inc.com` instead of `companyinc.com`. The corporate *callback verification* procedure (calling the requester back on a number already on file, never on the one given in the email) stops the fraud.",
+    examTip: "The most effective control against BEC is procedural rather than technological: *out-of-band* verification (a callback to an already-recorded contact) and dual control on payments above a set threshold. On the exam, if the scenario describes an urgent, confidential payment request from an executive and mentions NO attachment and NO link, the answer is Business Email Compromise, not generic phishing.",
+  },
+  BrandImpersonationSE: {
+    name: "Brand Impersonation",
+    definition: "An attack in which the adversary faithfully reproduces the trademark, logo, colors and tone of voice of a well-known company to make a fraudulent message, site or application look legitimate.",
+    details: "**Brand impersonation** exploits the trust the victim places in a well-known brand, not in a specific person.\n* **Typical targets:** banks, parcel carriers (delivery notices), cloud services (Microsoft 365, Google), utility companies and tax agencies.\n* **Channels:** pixel-perfect cloned HTML emails, SMS (combined with smishing), sponsored search-engine ads leading to counterfeit login portals, fake mobile apps in the stores.\n* **Double damage:** the victim loses credentials or money, while the impersonated brand suffers reputational damage it neither caused nor can directly control.\n* **Countermeasures for the impersonated company:** publishing **DMARC** records with a `reject` policy, monitoring **Certificate Transparency logs** and typosquatted lookalike domains, and using brand-protection and takedown services.\n\n* **Focused Mini-Example:** An employee receives an email carrying the exact logo, footer and typeface of the corporate courier: 'Parcel on hold, pay 2.90 EUR in customs duty'. The link leads to a site identical to the original, hosted on `courier-tracking-uk.net`. The payment exists only to make the victim type in full credit-card details.",
+    examTip: "Tell the three exam 'impersonations' apart: **Impersonation** = pretending to be a *person* (the new technician, a colleague); **Brand impersonation** = pretending to be a *brand/company*; **Typosquatting** = registering a *domain* with a typo to catch users who mistype. The three techniques are often combined in the same attack.",
+  },
 
   /* ---- Group 6: Password Attacks ---- */
   BruteForceAtt: {
@@ -980,10 +992,10 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "In a Reflected DDoS attack, the attacker bounces ('reflects') the attack traffic using innocent intermediary servers through spoofing of the victim's IP.",
   },
   SQLi_New: {
-    name: "SQL injection",
+    name: "SQL Injection (SQLi)",
     definition: "An attack in which malicious SQL commands are inserted into the application's input fields to manipulate or extract data from the database.",
     details: "Details of the attack:\n* **Lack of Sanitization:** It occurs when the application concatenates the user's input directly into an SQL query without performing checks.\n* **Effects:** It allows the attacker to bypass authentication, read confidential data, modify it, delete it, or even run administrative commands on the database server (through stored procedures).\n* **Main Countermeasure:** Use of parameterized queries (Prepared Statements) and rigorous input sanitization.",
-    examTip: "The definitive and most-tested exam defense against SQL injection is the systematic adoption of Prepared Statements (parameterized queries).",
+    examTip: "The definitive and most-tested exam defense against SQL Injection is the systematic adoption of Prepared Statements (parameterized queries), which separate SQL code from user-supplied data. Input validation is a complementary defense, not a substitute; a WAF is a compensating control that filters known payloads but does not remove the vulnerability in the code.",
   },
 
   /* ---- Group 8: Vulnerabilities ---- */
@@ -997,7 +1009,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "CVSS",
     definition: "Common Vulnerability Scoring System: a standard framework for assessing and communicating the severity of a vulnerability.",
     details: "The CVSS score ranges from 0.0 to 10.0 (Critical):\n* **Main Metrics:**\n  - *Base Metrics:* Intrinsic characteristics of the flaw (attack vector, attack complexity, privileges required, user interaction, impact on C-I-A).\n  - *Temporal Metrics:* How the flaw evolves over time (e.g. availability of public exploit code, availability of an official patch).\n  - *Environmental Metrics:* The importance of the affected system in the company's real infrastructure.\n\n* **Focused Mini-Example:** A vulnerability scanner finds a CVSS v3 flaw with a score of `9.8` on the company's web-facing Apache server, forcing the analysts to act for immediate patching outside working hours.",
-    examTip: "A CVSS score between 9.0 and 10.0 indicates a critical severity on the exam that requires immediate action (usually remotely exploitable without authentication).",
+    examTip: "On the CVSS v3.x scale a score from 9.0 to 10.0 falls in the 'Critical' severity band and demands immediate action (typically flaws exploitable remotely, without authentication and without user interaction). Remember the bands: 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Note: the CVSS score measures technical severity, NOT business risk; remediation priority comes from CVSS combined with asset criticality and real exposure.",
   },
   ZeroDayVuln: {
     name: "Zero-Day",
@@ -1097,7 +1109,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "OSINT",
     definition: "Open Source Intelligence: the methodology of collecting, analyzing and correlating sensitive or useful data and information coming exclusively from public, freely accessible and legal sources.",
     details: "**OSINT** is widely used both by ethical hackers for passive reconnaissance and by attackers to prepare targeted attacks:\n* **Common Sources:**\n  - *Social Networks:* LinkedIn, Facebook or Twitter profiles to identify the roles and org chart of company employees.\n  - *Public Databases:* DNS records, WHOIS databases, registered IP addresses, chamber-of-commerce registries.\n  - *Search Engines:* Google Dorking to find sensitive files indexed by mistake, Shodan to map IoT devices and appliances exposed on the internet.\n  - *Code Repositories:* GitHub or GitLab to spot passwords, API keys or debug comments accidentally left by programmers.",
-    examTip: "OSINT relies on public-domain sources and generates no direct traffic toward the target's servers, making it completely invisible to the victim's monitoring systems.",
+    examTip: "OSINT relies on public-domain sources. In its passive form (WHOIS records, public certificates, social media, search engines) it generates no traffic toward the target's infrastructure and is therefore hard to detect; do not confuse it with active reconnaissance (port scanning, service enumeration), which does touch the victim's systems and leaves traces in the logs.",
   },
   ProprietaryIntelligenceRes: {
     name: "Proprietary Intelligence",
@@ -1348,9 +1360,9 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   TLSNet: {
     name: "TLS",
-    definition: "Transport Layer Security: the standardized cryptographic protocol at OSI Layer 4 that replaces the historic and now insecure SSL (Secure Sockets Layer).",
+    definition: "Transport Layer Security: the cryptographic protocol that encrypts and authenticates communications above the transport layer (between Layer 4 and Layer 7 of the OSI model, traditionally placed at Layers 5-6), replacing the historic and now insecure SSL (Secure Sockets Layer).",
     details: "Characteristics and applications:\n* **Operation:** It encrypts and protects data in transit over insecure networks by establishing secure communication channels based on asymmetric cryptography for the handshake phase and symmetric cryptography for data transmission.\n* **HTTPS (port 443):** The primary application of TLS applied to the HTTP web protocol.\n* **Digital certificates:** It uses X.509 certificates signed by a Certificate Authority (CA) to guarantee the server's identity before the protected channel is established.\n\n* **Focused Mini-Example:** When a user accesses their home-banking portal, the browser establishes a **TLS 1.3** session marked by the green padlock and the HTTPS protocol, encrypting the password and the OTP code before transmitting them over the Internet.",
-    examTip: "SSL must no longer be used due to serious vulnerabilities (e.g. POODLE); the exam strictly requires the use of modern TLS versions (TLS 1.2 or TLS 1.3).",
+    examTip: "SSL must no longer be used due to serious vulnerabilities (e.g. POODLE); the exam strictly requires the use of modern TLS versions (TLS 1.2 or TLS 1.3). Watch out for the trap: TLS is NOT a Layer 4 protocol (that is TCP); TLS runs on top of TCP.",
   },
   SSHNet: {
     name: "SSH",
@@ -2477,7 +2489,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "Nmap is the absolute standard tool for port scanning. A dense sequence of rejected connection attempts (RST) signals a scanning activity intercepted by the firewall.",
   },
   VulnerabilityAssessmentRes: {
-    name: "Vulnerability Assessment",
+    name: "Vulnerability Assessment Lifecycle (Phases)",
     definition: "Structured, periodic and non-invasive process aimed at identifying, quantifying and classifying by severity the known vulnerabilities within an IT infrastructure.",
     details: "The phases of a **Vulnerability Assessment** include:\n1. **Asset Identification:** Census and cataloging of all systems and devices present on the network.\n2. **Vulnerability Scanning:** Automated technical scan looking for software flaws and misconfigurations.\n3. **Analysis & Triage:** Manual analysis of the results to filter false positives and evaluate the real severity in the operational context.\n4. **Reporting:** Drafting a final report containing the prioritized list of the weaknesses found and the operational guidance for their resolution (Remediation).",
     examTip: "The Vulnerability Assessment is a purely diagnostic activity focused on detecting and cataloging flaws, without ever attempting to actively exploit them (exploitation), unlike the Penetration Test.",
@@ -2764,6 +2776,18 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "**Live Drills** represent the highest and most realistic level of testing. They require the immediate and practical activation of emergency operational procedures, business-continuity plans and direct technical responses in the real operational environment, precisely measuring the organization's real reaction times.",
     examTip: "Live Drills are real exercises conducted 'live' on active systems, requiring immediate practical responses under real operational conditions.",
   },
+  RootCauseAnalysisIR: {
+    name: "Root Cause Analysis (RCA)",
+    definition: "The structured investigation that, after an incident, traces back to the primary cause that made it possible, instead of stopping at the observed symptom.",
+    details: "**Root Cause Analysis** is an explicit item in the SY0-701 objectives (Obj 4.8) and sits between eradication and lessons learned.\n* **Symptom is not cause:** 'the server was encrypted by ransomware' is the symptom. The primary cause may be 'the VPN had no MFA and the credential had been reused from an earlier breach'.\n* **Recognized techniques:** the **5 Whys** (asking 'why?' until a systemic cause is reached), the **Ishikawa** (fishbone) cause-and-effect diagram, and fault tree analysis.\n* **Expected output:** not a culprit, but a list of corrective actions that prevent the event from recurring (a patch, a missing control, a procedure to change).\n* **Blameless culture:** if the analysis hunts for individual blame, staff stop reporting incidents and the organization's visibility gets worse.\n\n* **Focused Mini-Example:** A company suffers a data exfiltration. Why? A web server was vulnerable. Why? An update published eight months earlier had not been applied. Why? That server did not appear in the asset inventory. Why? It was created in the cloud by a developer outside the provisioning process. **Primary cause:** the absence of guard rails on cloud provisioning, not 'the server was unpatched'.",
+    examTip: "On the exam, Root Cause Analysis answers 'WHY did this happen', while digital forensics answers 'WHAT happened and who did it'. An incident response that restores systems without RCA guarantees the same incident will recur: eradication removes the malware, RCA removes the condition that let it in.",
+  },
+  ThreatHuntingIR: {
+    name: "Threat Hunting",
+    definition: "The proactive, hypothesis-driven search for adversaries already present in the environment, carried out without waiting for detection tools to raise an alert.",
+    details: "**Threat hunting** starts from the Zero Trust *assume breach* premise: take it for granted that someone is already inside, and go looking for them.\n* **Reactive vs proactive:** classic incident response starts from an alert; threat hunting starts from a **hypothesis** ('if an attacker had compromised a service account, I would see out-of-hours authentications against the domain controllers: let us check').\n* **Raw material:** EDR telemetry, authentication logs, DNS, NetFlow and threat intelligence feeds; hypotheses are often built on the TTPs catalogued in **MITRE ATT&CK**.\n* **Why it matters:** it finds the threats that by definition evade signature-based detection, namely *fileless* attacks, abuse of legitimate system tools (**living off the land**, e.g. PowerShell, WMI) and advanced persistent threats (APT).\n* **Two possible outcomes:** either the hypothesis is confirmed and an incident is opened, or it is disproved and still leaves behind a new detection rule in the SIEM.\n\n* **Focused Mini-Example:** An analyst hypothesizes that a slow exfiltration is under way and queries the DNS logs for anomalous lookups. They find an internal host resolving long, random subdomains of the same domain every 30 seconds: this is **DNS tunneling**, which no antivirus had flagged because there is no malicious file on disk.",
+    examTip: "Do not conflate the three terms: **monitoring** is passive and waits for alerts; **threat hunting** is proactive, human and hypothesis-driven; a **penetration test** simulates an external attacker to find vulnerabilities. If the exam scenario says 'proactively look for signs of compromise not caught by automated tools', the answer is threat hunting.",
+  },
   ChainOfCustody: {
     name: "Chain of Custody",
     definition: "Structured chronological document that formally records every transition, handling, movement and custody of a physical or digital piece of evidence.",
@@ -2788,6 +2812,18 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "**Forensic Reporting**:\n* Must document in an extremely descriptive, step-by-step manner every single action performed, the software tool used (with its version) and the evidence discovered.\n* Must be written in a scientific, objective and completely impersonal way.\n* Must allow any other expert in the field to faithfully replicate the analysis, reaching exactly the same conclusions (Reproducibility).",
     examTip: "Reproducibility by independent third-party experts is the primary quality requirement of a forensic technical report acceptable in court.",
   },
+  LegalHoldForensics: {
+    name: "Legal Hold",
+    definition: "The formal obligation, triggered when litigation is under way or reasonably anticipated, to suspend every automatic deletion and preserve all potentially relevant data intact.",
+    details: "**Legal hold** (or *litigation hold*) is the first legal act of the forensic chain and appears explicitly in the SY0-701 objectives (Obj 4.8).\n* **Who triggers it:** the legal department, not the IT team. IT carries it out technically.\n* **What it means in practice:** suspending **data retention** and automatic rotation policies (email, logs, backups, chat), freezing snapshots, and blocking the reassignment or reimaging of the devices of the employees involved.\n* **Conflict with other policies:** legal hold temporarily overrides the retention policy and even GDPR erasure requests, since the regulation allows retention for the establishment or defense of legal claims.\n* **Risk if breached:** destroying data under hold amounts to **spoliation of evidence**, with very serious procedural consequences (sanctions, adverse inference in court) regardless of the merits of the case.\n\n* **Focused Mini-Example:** A former employee files an employment lawsuit. Legal issues a legal hold: IT immediately disables the rule that deletes email after 90 days for that mailbox, blocks deletion of that period's backups, and prevents the returned laptop from being reassigned and reimaged.",
+    examTip: "Exam sequence to memorize: **Legal hold** (freeze the data) -> **Acquisition** (bit-for-bit copy with a write blocker) -> **Chain of custody** (log every handover) -> **Preservation** (verify hashes) -> **Analysis** -> **Reporting**. If the scenario mentions imminent litigation and logs about to be automatically overwritten, the very first correct action is the legal hold.",
+  },
+  EDiscoveryForensics: {
+    name: "E-Discovery",
+    definition: "The legal process of identifying, collecting, reviewing and producing to the opposing party or the court the electronically stored information (ESI) relevant to a proceeding.",
+    details: "**E-Discovery** (Electronic Discovery) is the stage that turns preserved data into evidence that can be produced in court.\n* **Scope (ESI - Electronically Stored Information):** email, documents, corporate messaging, databases, system logs, cloud content and their **metadata** (author, creation date, revision history), which carry full evidentiary weight.\n* **Typical phases:** identification -> preservation (the legal hold) -> collection -> processing and deduplication -> review (including privilege review) -> production to the opposing party.\n* **Key difference from forensics:** digital forensics is a *technical* investigation that reconstructs an event (often recovering deleted data); e-discovery is a *legal* procedure that selects and hands over existing, relevant data under proportionality and admissibility criteria.\n* **Impact on system design:** an infrastructure with no asset inventory, no data classification and no centralized logging makes e-discovery extremely slow and disproportionately expensive.\n\n* **Focused Mini-Example:** An antitrust authority requests every communication between two departments about a given product over an 18-month window. The team extracts 400,000 emails from the e-discovery platform, deduplicates them, applies keyword filters and submits them to the lawyers' review, who exclude privileged material before production.",
+    examTip: "Do not confuse the two terms: **E-Discovery** = the legal duty to *produce* electronic data relevant to a case; **Digital forensics** = the technical analysis to *reconstruct* what happened. E-discovery is only possible if a legal hold has already stopped the automatic deletion of the data.",
+  },
   ProvisioningAutomation: {
     name: "Provisioning",
     definition: "Automated and repeatable creation and configuration of IT infrastructure and protected resources through code.",
@@ -2810,7 +2846,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Orchestration",
     definition: "Centralized and automated coordination of multiple security tools and complex workflows through SOAR platforms.",
     details: "**Orchestration** through SOAR (Security Orchestration, Automation, and Response):\n* Integrates different technologies, coordinating them within predefined automatic workflows called **Playbooks**.\n* Allows automating complex responses in fractions of a second (e.g. if C2 traffic is detected, the playbook isolates the endpoint via EDR, suspends the user in Active Directory, notifies the manager on Slack, and opens an incident ticket).",
-    examTip: "SOAR systems connect and orchestrate heterogeneous tools through preconfigured Playbooks, drastically reducing the MTTR (Mean Time to Respond) in the presence of incidents.",
+    examTip: "SOAR systems connect and orchestrate heterogeneous tools through preconfigured Playbooks, drastically reducing the mean time to resolve incidents (MTTR). Watch the acronym: in the CompTIA SY0-701 objectives MTTR stands for *Mean Time To Repair*; in SOC jargon the same acronym is often used for *Mean Time To Respond*. Under either reading it measures how long it takes to close out the problem, not how long the system stays healthy (that is MTBF).",
   },
   EaseOfDeploymentConcept: {
     name: "Ease of Deployment",
@@ -7298,7 +7334,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
       "C) Obtaining an ISO 27001 certification",
       "D) Implementation of GDPR-compliant data handling practices",
     ],
-    explanation: "The correct answer is **D) Implementation of GDPR-compliant data handling practices**.\n\n* **Why it's correct:** Implementing **GDPR**-compliant data-handling practices ensures adherence to the European Union's privacy standards and respects the rights of customer data. Since the GDPR applies to any company that handles EU citizens' data (regardless of location), a multinational law firm almost certainly has interactions with European citizens and is therefore subject to these regulations.\n* **Analysis of the distractors:**\n  * **A) Local server storage systems** allow internal data storage but lack robust international data-protection mechanisms.\n  * **B) Encrypted email platforms** ensure secure email communications but do not provide a complete approach to data-handling compliance.\n  * **C) ISO 27001 certification** is an international standard for information security management but does not have an enforcement arm or penalties for non-compliance like the GDPR.\n\n* **Small Focused Example:** The law firm Martinez & Partners has offices in Milan, Madrid and New York. For each European client, it implements GDPR practices: it collects only the strictly necessary data (data minimization), obtains explicit consent, ensures the right to be forgotten, and notifies breaches within 72 hours. This globally uniform approach avoids fines of up to 4% of global annual revenue (the maximum provided by GDPR Art. 83).\n\n*(Question ID: 652d64d836163d371aee5605)*",
+    explanation: "The correct answer is **D) Implementation of GDPR-compliant data handling practices**.\n\n* **Why it's correct:** Implementing **GDPR**-compliant data-handling practices ensures adherence to the European Union's privacy standards and respects the rights of customer data. Since the GDPR applies to any organization that processes the personal data of people located in the European Union (regardless of the data subject's citizenship and of where the company is based), a multinational law firm almost certainly has interactions with data subjects located in the EU and is therefore subject to these regulations.\n* **Analysis of the distractors:**\n  * **A) Local server storage systems** allow internal data storage but lack robust international data-protection mechanisms.\n  * **B) Encrypted email platforms** ensure secure email communications but do not provide a complete approach to data-handling compliance.\n  * **C) ISO 27001 certification** is an international standard for information security management but does not have an enforcement arm or penalties for non-compliance like the GDPR.\n\n* **Small Focused Example:** The law firm Martinez & Partners has offices in Milan, Madrid and New York. For each European client, it implements GDPR practices: it collects only the strictly necessary data (data minimization), obtains explicit consent, ensures the right to be forgotten, and notifies breaches within 72 hours. This globally uniform approach avoids fines of up to 4% of global annual revenue (the maximum provided by GDPR Art. 83).\n\n*(Question ID: 652d64d836163d371aee5605)*",
   },
   571: {
     topic: "Architecture Models & Shared Responsibility",
@@ -8013,16 +8049,14 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   203: {
     topic: "Network Security Devices",
     scenario: "Sasha, a network administrator at Kelly's Technical Innovations, has just installed a Next Generation Firewall (NGFW) to replace the previous traditional stateful firewall.",
-    question: "Which of the following improvements does an NGFW offer over the previous stateful firewall? (Choose 3)",
+    question: "Which capability specifically distinguishes the NGFW from the stateful firewall it replaced?",
     options: [
-      "A) Application awareness to distinguish between different types of traffic",
-      "B) Ability to perform deep packet inspection and signature-based intrusion detection",
-      "C) Improved awareness of connection states on layer 4 traffic",
-      "D) Addition of multiple functions, including firewall, intrusion prevention, antivirus and more",
-      "E) Greater focus on HTTP traffic to prevent attacks on web applications such as XSS and SQL injection",
-      "F) It can be integrated with various other security products",
+      "A) Application awareness combined with deep packet inspection, which allows individual applications to be identified and controlled regardless of port and protocol",
+      "B) Tracking the state of TCP connections so that return traffic is automatically allowed",
+      "C) Inspecting HTTP/HTTPS traffic exclusively in order to block SQL injection and Cross-Site Scripting",
+      "D) Packet filtering based on source IP address, destination IP address and port number",
     ],
-    explanation: "The correct answers are **A), B) and F)**.\n\n* **Why they are correct:** An **NGFW** offers: **application awareness (A)** to distinguish and control traffic per application; the ability of **deep packet inspection and signature-based intrusion detection (B)** to analyze the packet content; the possibility of **integrating with other security products (F)** for a coordinated defense.\n* **Analysis of the distractors:**\n  * **C)** Tracking connection states and layer 4 awareness were already features of the replaced stateful firewall.\n  * **D)** The addition of firewall, IPS, antivirus and more describes a **Unified Threat Management (UTM)**, not a base NGFW.\n  * **E)** Protection focused on HTTP traffic against XSS and SQL injection describes a **Web Application Firewall (WAF)**, not an NGFW.\n\n*(Question ID: 65432c686491794aff7fb0c9)*",
+    explanation: "The correct answer is **A) Application awareness combined with deep packet inspection**.\n\n* **Why it's correct:** What defines a **Next-Generation Firewall (NGFW)** is its ability to inspect the payload up to **Layer 7** (Deep Packet Inspection) and to identify the **application** generating the traffic regardless of the port in use. An NGFW can therefore tell Salesforce apart from a personal file-sharing service on the very same port 443, and it natively integrates a signature-based IPS engine. The stateful firewall it replaced stopped at Layer 4 and only saw 'TCP traffic to port 443'.\n* **Analysis of the distractors:**\n  * **B)** Connection state tracking (the state table) is exactly what the **stateful** firewall already did: it is not an improvement introduced by the NGFW, so it cannot be the distinguishing element.\n  * **C)** Inspection focused solely on HTTP/HTTPS traffic to stop SQLi and XSS describes a **WAF (Web Application Firewall)**, a specialized appliance placed in front of web servers. An NGFW protects all network traffic, not just web traffic.\n  * **D)** Filtering on IP and port is the function of the **stateless packet-filtering firewall**, the generation before stateful: it is a subset of the NGFW's capabilities, not its innovation.\n\n* **Exam trap — NGFW vs UTM:** if the scenario describes a single 'all-in-one' appliance bundling firewall, IPS, antivirus, antispam and web filtering (typically for an SMB), the answer is **UTM**. If the scenario stresses application recognition, DPI and per-user/per-application policy, the answer is **NGFW**.\n\n*(Note: item rewritten in single-answer format for practice; the real exam may present multiple-response items.)*",
   },
   204: {
     topic: "Mitigation Techniques & Controls",
@@ -8207,16 +8241,14 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   219: {
     topic: "Wireless Security",
     scenario: "After a security assessment, Jono has been tasked with replacing his home access point with one that supports WPA3, which the previous one was unable to handle.",
-    question: "Which of the following statements are true considering the WPA3 standards? (Select 4)",
+    question: "Which security improvement introduced by WPA3-Personal fixes the main weakness of WPA2-Personal?",
     options: [
-      "A) It prevents the interception, forgery and tampering of management frames",
-      "B) It uses a Diffie-Hellman key agreement",
-      "C) It provides individualized data encryption even on open networks",
-      "D) It is the most recent and secure wireless security protocol",
-      "E) It encrypts the authentication process using TCP for improved security",
-      "F) It uses a 4-way handshake for the initial authentication and key validation",
+      "A) SAE (Simultaneous Authentication of Equals), which replaces the WPA2 PSK exchange and neutralizes offline passphrase cracking",
+      "B) Using TKIP instead of RC4 to dynamically rotate the encryption keys",
+      "C) Encrypting the authentication process through the TCP protocol",
+      "D) SSID cloaking, which prevents attackers from discovering the network",
     ],
-    explanation: "The correct answers are **A), B), C) and D)**.\n\n* **Why they are correct:** **WPA3** is the most recent and secure wireless security protocol (D); it uses a Diffie-Hellman key agreement through SAE (Simultaneous Authentication of Equals) (B); it provides individualized data encryption even on open networks through OWE (Opportunistic Wireless Encryption) (C); and it prevents the interception and tampering of management frames through MFP (Management Frame Protection) (A).\n* **Analysis of the distractors:**\n  * **E)** WPA3 does not encrypt the authentication process using TCP; TCP is a transport protocol, not an encryption one.\n  * **F)** The 4-way handshake was a feature of **WPA2** with PSK, which was replaced by the SAE agreement in WPA3.\n\n*(Question ID: 65262aa26f507d8e8ff08998)*",
+    explanation: "The correct answer is **A) SAE (Simultaneous Authentication of Equals)**.\n\n* **Why it's correct:** The main weakness of **WPA2-Personal** is that an attacker can passively capture the 4-way handshake and then try billions of passphrases offline on GPUs until the right one is found. **WPA3-Personal** replaces the PSK exchange with **SAE** (the *Dragonfly* handshake), based on an elliptic-curve Diffie-Hellman key exchange: every password guess requires a fresh interaction with the access point, which makes offline cracking impractical. SAE also provides **forward secrecy**: a passphrase discovered in the future does not allow previously recorded traffic to be decrypted.\n* **Analysis of the distractors:**\n  * **B)** It is the other way round: **TKIP** is the algorithm WPA introduced in 2003 as a temporary patch over WEP, and TKIP itself **is built on** RC4. It is deprecated and insecure; WPA3 uses AES in **GCMP** mode.\n  * **C)** TCP is a **transport** protocol, not an encryption one, and Wi-Fi authentication happens at Layer 2, well before any TCP session exists. The statement is technically meaningless.\n  * **D)** Hiding the SSID is **security through obscurity**: the network name still appears in client probe/association frames and any passive sniffer recovers it within seconds. It is not part of the WPA3 standard and does not protect the passphrase.\n\n* **Exam trap:** the **4-way handshake does NOT disappear** in WPA3-Personal. SAE replaces the way the **PMK** (the master key) is derived; the 4-way handshake is still performed to derive the **PTK** session keys. What changes is that the PMK can no longer be derived offline from the passphrase alone.\n* **WPA3 recap:** SAE (Personal), 192-bit cryptography + 802.1X (Enterprise), mandatory **MFP/PMF** against forged deauthentication frames, and **OWE** (Wi-Fi Enhanced Open) to encrypt open networks that have no password.\n\n*(Note: item rewritten in single-answer format for practice; the real exam may present multiple-response items.)*",
   },
   220: {
     topic: "Vulnerability Scanning",
@@ -9032,7 +9064,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
       "C) An exposure factor helps organizations evaluate the monetary impact of a security breach",
       "D) An exposure factor refers to the time needed to detect and respond to a security incident",
     ],
-    explanation: "The correct answer is **C) An exposure factor helps organizations evaluate the monetary impact of a security breach**.\n\n* **Why it's correct:** The **exposure factor (EF)** measures the proportion of an asset's value that would be lost if a vulnerability were exploited. It is essential for evaluating the potential impact of specific vulnerabilities and prioritizing remediation efforts. It is used in risk-management calculations such as the Annualized Loss Expectancy (ALE).\n* **Analysis of the distractors:**\n  * **A)** The probability that a vulnerability is exploited is the likelihood/probability, not the exposure factor.\n  * **B)** The level of vulnerability in the network infrastructure is evaluated by vulnerability assessment, not by the exposure factor.\n  * **D)** The time to detect and respond is the Mean Time to Detect (MTTD) and the Mean Time to Respond (MTTR), not the exposure factor.\n\n*(Question ID: 64bfde5578435ea1724a7eb5)*",
+    explanation: "The correct answer is **C) An exposure factor helps organizations evaluate the monetary impact of a security breach**.\n\n* **Why it's correct:** The **exposure factor (EF)** measures the proportion of an asset's value that would be lost if a vulnerability were exploited. It is essential for evaluating the potential impact of specific vulnerabilities and prioritizing remediation efforts. It is used in risk-management calculations such as the Annualized Loss Expectancy (ALE).\n* **Analysis of the distractors:**\n  * **A)** The probability that a vulnerability is exploited is the likelihood/probability, not the exposure factor.\n  * **B)** The level of vulnerability in the network infrastructure is evaluated by vulnerability assessment, not by the exposure factor.\n  * **D)** The time to detect and the time to restore service are measured by Mean Time To Detect (MTTD) and Mean Time To Repair (MTTR), not by the exposure factor.\n\n*(Question ID: 64bfde5578435ea1724a7eb5)*",
   },
   288: {
     topic: "Automation & Orchestration",
@@ -9180,17 +9212,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   300: {
     topic: "Network Security",
-    scenario: "Jamario, a network technician at Kelly Innovations LLC, is configuring a new server. He wants to ensure that users can access unencrypted web pages on the server and transfer files to and from it.",
-    question: "Which of the following ports must he ensure are open? (Select TWO)",
+    scenario: "Jamario, a network technician at Kelly Innovations LLC, is configuring a new server. He wants users to be able to reach UNENCRYPTED web pages hosted on the server and, on the same machine, transfer files using cleartext FTP.",
+    question: "Which of the following pairs of ports must he open on the perimeter firewall to meet BOTH requirements?",
     options: [
-      "A) Port 22 (SSH)",
-      "B) Port 25 (SMTP)",
-      "C) Port 433 (NNTP)",
-      "D) Port 21 (FTP)",
-      "E) Port 80 (HTTP)",
-      "F) Port 445 (SMB)",
+      "A) Port 80 (HTTP) and port 21 (FTP)",
+      "B) Port 443 (HTTPS) and port 22 (SFTP/SSH)",
+      "C) Port 80 (HTTP) and port 445 (SMB)",
+      "D) Port 25 (SMTP) and port 119 (NNTP)",
     ],
-    explanation: "The correct answers are **D) Port 21 (FTP)** and **E) Port 80 (HTTP)**.\n\n* **Why they are correct:** **Port 21** is used for the File Transfer Protocol (FTP); opening this port allows users to transfer files to and from the server. **Port 80** is the standard port for serving HTTP web pages; opening this port allows users to access the web pages on the server through a browser.\n* **Analysis of the distractors:**\n  * **A)** Port 22 is for SSH access (secure shell); Jamario's scenario does not mention the need for secure remote access to the server.\n  * **B)** Port 25 is for SMTP (sending email); it would be needed if users had to send emails through the server.\n  * **C)** Port 433 is for NNTP (Network News Transfer Protocol), not used for accessing websites.\n  * **F)** Port 445 is associated with the SMB (Server Message Block) protocol, which enables the sharing of network resources such as files and printers.\n\n*(Question ID: 654320346491794aff7fb0aa)*",
+    explanation: "The correct answer is **A) Port 80 (HTTP) and port 21 (FTP)**.\n\n* **Why it's correct:** **TCP port 80** is the standard HTTP port, the protocol that serves **unencrypted** web pages: opening it meets the first requirement. **TCP port 21** is the control port of **FTP** (File Transfer Protocol), the cleartext file-transfer protocol named in the scenario: opening it meets the second requirement.\n* **Analysis of the distractors:**\n  * **B)** Port 443 serves HTTPS, that is TLS-**encrypted** traffic, and port 22 is SSH/SFTP, also encrypted: both contradict the scenario's explicit requirement for cleartext traffic.\n  * **C)** Port 445 is associated with **SMB** (Server Message Block), used for Windows file and printer sharing, not for the FTP transfer that was requested; exposing it to the Internet is also a severely insecure practice (it is the vector exploited by worms such as WannaCry).\n  * **D)** Port 25 is **SMTP** (server-to-server email transmission) and port 119 is **NNTP** (Usenet newsgroups): neither has anything to do with the web browsing or file transfer that were requested.\n\n* **Exam note (common trap):** do not confuse port **119 (NNTP)** with **443 (HTTPS)**; a very common typo is writing '433', which maps to no standard exam service. Memorize the cleartext → secure pairs: 21 FTP → 22 SFTP, 80 HTTP → 443 HTTPS, 389 LDAP → 636 LDAPS.\n\n*(Note: item rewritten in single-answer format for practice; the real exam may present multiple-response items.)*",
   },
   301: {
     topic: "Baselines & Configuration",
