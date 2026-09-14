@@ -1029,6 +1029,54 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     details: "The most serious danger:\n* The vulnerability scanner reports that the system is secure, but in reality it hosts a critical open flaw. This leaves the organization exposed without any awareness of the risk.\n* Typical of Zero-Day attacks or polymorphic malware.\n\n* **Focused Mini-Example:** A malware programmed to mutate its binary signature silently bypasses the corporate defenses because the local antivirus software detects no match and declares the workstation 'protected and clean'.",
     examTip: "False Negatives expose the company to the maximum level of risk because they create a false sense of security.",
   },
+  MemoryInjectionVuln: {
+    name: "Memory Injection",
+    definition: "A vulnerability that lets an attacker write and execute arbitrary code inside the memory space of a legitimate, already-running process.",
+    details: "**Memory injection** exploits the fact that a trusted process (e.g. `explorer.exe`, a browser, a system service) already holds the permissions and the reputation the attacker needs.\n* **Why it works:** the malicious code never lands on disk as an executable file, so signature-based antivirus has nothing to scan. This is the foundation of **fileless** attacks.\n* **Typical techniques:** DLL injection, process hollowing (a legitimate process is started suspended and its contents replaced), reflective loading.\n* **Attacker benefit:** it inherits the host process's privileges and bypasses application firewall rules and application allow lists, because as far as the system is concerned an authorized program is running.\n* **Defenses:** EDR with behavioral memory analysis, operating-system protections such as DEP and ASLR, and Control Flow Guard.\n\n* **Focused Mini-Example:** Malware injects a DLL into the user's browser process. Traffic to the command-and-control server therefore leaves from the browser, which is allowed to browse: the application firewall sees nothing unusual because the sending process is legitimate.",
+    examTip: "On the exam, if the scenario describes malicious code running inside a legitimate process with no suspicious file on disk, think memory injection and fileless attack. The right countermeasure is not signature-based antivirus but an EDR with behavioral analysis.",
+  },
+  BufferOverflowVuln: {
+    name: "Buffer Overflow",
+    definition: "A vulnerability that occurs when a program writes more data into a buffer than it can hold, overwriting the adjacent memory areas.",
+    details: "**Buffer overflow** is the most classic and most heavily examined memory vulnerability.\n* **Root cause:** no length check on input, typical of languages without automatic memory management such as C and C++ (functions like `strcpy` or `gets`).\n* **From crash to code execution:** by overwriting the return address on the stack, the attacker can redirect execution to their own code (shellcode), gaining command execution with the privileges of the vulnerable program.\n* **Exam variants:** *stack overflow* (overwrites the stack and the return address) and *heap overflow* (overwrites dynamically allocated structures).\n* **Defenses:** input length validation, safe functions (`strncpy`), and system protections: **ASLR** (randomizes memory addresses), **DEP/NX** (prevents code execution in data areas) and stack canaries.\n\n* **Focused Mini-Example:** A network service allocates 64 bytes for a username. The attacker sends 900 carefully crafted bytes: the excess overwrites the function's return address and points it at code the attacker has just placed in memory, yielding a remote shell.",
+    examTip: "Remember the pair of system defenses: **ASLR** makes it unpredictable *where* memory lives, **DEP/NX** prevents execution *where* there should only be data. Neither fixes the bug, they only make it much harder to exploit: the real remediation is still input validation in the code.",
+  },
+  RaceConditionVuln: {
+    name: "Race Condition (TOC/TOU)",
+    definition: "A vulnerability that arises when a system's correct behavior depends on the order or timing of concurrent events, and an attacker manages to slip in between the moment of the check and the moment of use.",
+    details: "The exam form is **TOC/TOU** (*Time-of-Check to Time-of-Use*): the program verifies a condition and then acts, but an exploitable window exists between the two moments.\n* **The pattern:** 1) the program checks that the user may access file A; 2) in that fraction of a second the attacker replaces A with a link to a restricted file; 3) the program acts on the wrong file, believing it has already verified permissions.\n* **Where it shows up:** file system access, banking transactions, discount-code redemption, concurrent counter increments.\n* **Defenses:** **atomic** operations (check and use in a single indivisible step), locks and mutexes, database transactions with adequate isolation, and using file descriptors instead of textual paths.\n\n* **Focused Mini-Example:** An e-commerce site verifies that a discount voucher has not been used yet and then marks it as consumed. By sending 50 requests within the same millisecond, the attacker makes all 50 pass the check before the first one manages to write the update: the same voucher is applied 50 times.",
+    examTip: "Keywords to spot on the exam: 'between the check and the use', 'simultaneous requests', 'race'. The correct answer is race condition / TOC-TOU, and the countermeasure is making the operation atomic, not adding a second check.",
+  },
+  MaliciousUpdateVuln: {
+    name: "Malicious Update",
+    definition: "A software supply-chain vulnerability in which a seemingly legitimate, signed update delivers malicious code to every system that installs it.",
+    details: "A **malicious update** turns a security control into an attack vector: the organization is compromised precisely because it did the right thing, namely patch.\n* **How it happens:** compromise of the vendor's build pipeline, theft of its code-signing certificate, or hijacking of the distribution channel (update server not protected by HTTPS, DNS hijacking).\n* **Why it is devastating:** the update arrives signed and from a trusted source, so it passes antivirus, application allow lists and user suspicion; it also hits every one of the vendor's customers at once.\n* **Defenses:** verifying signatures and published hashes, downloading updates only over encrypted channels, a staging environment before production, an **SBOM** (Software Bill of Materials) so you know what you are actually installing, and post-update behavioral monitoring.\n\n* **Focused Mini-Example:** A network monitoring product used by thousands of companies ships an update properly signed by the vendor. Inside it, planted through the compromised build pipeline, is a backdoor that activates after two weeks: every organization that applied the patch is compromised.",
+    examTip: "Do not conflate them: **malicious update** = the *official* update was poisoned upstream; **Trojan** = the user willingly installs software they believed harmless. A malicious update is the case where patching promptly, though the correct practice, increased risk: hence staged rollout rings.",
+  },
+  VMEscapeVuln: {
+    name: "VM Escape & Resource Reuse",
+    definition: "Virtualization vulnerabilities: VM escape lets an attacker break out of a virtual machine and reach the hypervisor or the other VMs; resource reuse exposes residual data when a resource is reassigned to another tenant.",
+    details: "These are the two virtualization- and multi-tenant-cloud-specific vulnerabilities named by objective 2.3.\n* **VM escape:** by exploiting a hypervisor flaw, code running inside a guest VM 'escapes' and gains execution on the host. It is the most severe attack possible in a virtualized environment, because it destroys the isolation the entire cloud model rests on: from one customer's VM an attacker can potentially reach every other VM on the same host.\n* **Resource reuse:** RAM, disk space or cloud storage is released by one tenant and reassigned to another without being zeroed; the new occupant can read the previous one's residual data. It is the cloud version of the unsanitized-media problem.\n* **Defenses:** prompt hypervisor patching, minimizing guest-host integration tools, dedicated hardware isolation for the most sensitive workloads, and encryption at rest with customer-managed keys, which renders residual data unreadable even when a resource is reused.\n\n* **Focused Mini-Example:** An attacker legitimately rents a VM from a cloud provider. They exploit a flaw in the hypervisor's virtualized graphics driver to execute code on the physical host, and from there reach the memory of other customers' virtual machines sharing the same server.",
+    examTip: "On the exam, VM escape is the threat that justifies **dedicated tenancy** instead of shared hardware for critical workloads. Against resource reuse the correct answer is encryption at rest with customer-controlled keys: if residual data is encrypted, it is just noise to the next tenant.",
+  },
+  MobileVulnVuln: {
+    name: "Mobile Vulnerabilities (Jailbreaking & Sideloading)",
+    definition: "Vulnerabilities introduced by removing mobile operating-system restrictions (jailbreaking on iOS, rooting on Android) or by installing applications from outside the official stores (sideloading).",
+    details: "These are the two mobile vulnerabilities explicitly listed by objective 2.3.\n* **Jailbreaking / rooting:** the user gains administrative privileges over the device, switching off the vendor's security model. Consequences: inter-app *sandboxing* collapses, apps can read each other's data, official updates often stop working, and corporate MDM controls can be bypassed.\n* **Sideloading:** installing packages (APK, IPA) downloaded from unofficial sources that never went through the store's automated and manual vetting. It is the usual distribution channel for banking trojans and mobile spyware.\n* **Risk to the organization:** a compromised device that reaches corporate mail and applications turns a personal problem into a corporate breach, especially in BYOD settings.\n* **Defenses:** MDM policies that detect jailbreak/root and block access to corporate resources (*attestation*), banning installation from unknown sources, and work containers kept separate from the personal profile.\n\n* **Focused Mini-Example:** An employee roots their personal phone to get a paid app for free, downloading the APK from a forum. The app carries spyware which, with sandboxing gone, reads the session tokens of the corporate mail app installed on the same device.",
+    examTip: "Tell the two terms apart: **jailbreaking/rooting** removes *operating-system* restrictions; **sideloading** installs apps *outside the store* and does not necessarily require root. The correct exam control is MDM with root detection and conditional access blocking, not user training alone.",
+  },
+  MisconfigurationVuln: {
+    name: "Misconfiguration",
+    definition: "A vulnerability arising from wrong, incomplete or default security settings rather than from a defect in the code.",
+    details: "**Misconfiguration** requires no software bug at all: the product works exactly as designed, but it was set up badly.\n* **Typical exam cases:** default credentials never changed, publicly exposed cloud storage buckets, overly broad share permissions, debug services or management ports reachable from the Internet, encryption available but not switched on, logging disabled.\n* **Why it is so common:** systems ship with settings tuned for ease of use, not security; and configuration degrades over time (**configuration drift**) through untracked changes.\n* **Defenses:** **security baselines** and CIS benchmarks, documented hardening, Infrastructure as Code to make configurations repeatable and reviewable, automated compliance scanning (SCAP) and change management.\n\n* **Focused Mini-Example:** A development team creates a cloud storage bucket to share files and sets read permission to 'anyone with the link' to save time. The bucket gets indexed and thousands of internal documents become publicly readable. No software was vulnerable: the configuration was.",
+    examTip: "Mind the exam distinction: if the problem is fixed by applying a **patch**, it is a software vulnerability; if it is fixed by **changing a setting**, it is a misconfiguration. Misconfigurations are among the most common causes of real breaches, and the correct countermeasure is a security baseline with continuous verification, not an update.",
+  },
+  LegacyEOLVuln: {
+    name: "Legacy & End-of-Life Systems",
+    definition: "The structural vulnerability of hardware or software that no longer receives security updates from the vendor because it has passed its end-of-support date.",
+    details: "An **End-of-Life (EOL)** or **legacy** system accumulates vulnerabilities permanently: every newly discovered flaw stays open forever, because no patch will ever ship.\n* **Terminology to separate:** *End-of-Sale* (no longer purchasable), *End-of-Support / EOL* (no more security patches), *legacy* (obsolete technology still in production, sometimes still supported).\n* **Why they stay in service:** business applications that run only on that operating system, industrial and medical equipment certified against one specific version, high migration cost.\n* **Mandatory compensating controls** when decommissioning is not possible: strict **segmentation** into an isolated VLAN, firewall rules allowing only the indispensable flows, removal of Internet access, heightened monitoring and, where available, *virtual patching* through an IPS.\n\n* **Focused Mini-Example:** A hospital runs a CT scanner whose control software sits on an operating system that has been out of support for years and cannot be upgraded without voiding the equipment's certification. The machine is isolated in a dedicated VLAN with no Internet access, reachable only from the reporting workstation through explicit firewall rules.",
+    examTip: "In exam scenarios with a critical system that cannot be updated, the answer is never 'apply the patch' (none exists) nor 'accept the risk' on its own: it is **isolation and segmentation** as a compensating control, together with a documented replacement plan.",
+  },
 
   /* ---- Group 9: Mitigations ---- */
   ACLMiti: {
@@ -2360,7 +2408,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Passive reconnaissance",
     definition: "The gathering of information about a target conducted without directly interacting with or sending traffic to its systems and network infrastructure.",
     details: "**Passive Reconnaissance** relies on public, third-party or freely accessible sources to collect sensitive information without alerting the target. Main examples include:\n* **OSINT (Open Source Intelligence):** Searches on public search engines or professional social networks (e.g. LinkedIn) to map the org chart or the technologies cited in job postings.\n* **DNS Queries:** Querying public DNS records (MX, TXT, SPF, DKIM records) and WHOIS information.\n* **Shodan / Censys:** Consulting third-party databases and search engines that index previously scanned IoT devices and servers.",
-    examTip: "Passive reconnaissance is completely invisible to the target's detection systems (such as IDS/IPS and firewalls) since the attacker sends no packet directly to the victim's infrastructure.",
+    examTip: "Passive reconnaissance sends no packets to the victim's infrastructure, so it leaves nothing in the target's IDS/IPS and firewall logs: that is why it is considered undetectable from the defender's point of view. Do not stretch the idea past its limit: querying third-party public resources (WHOIS, search engines, social media) can still leave traces with those services, and a single direct query (e.g. a DNS lookup against the target's name server) is enough to turn the activity into active reconnaissance.",
   },
   VulnerabilityAssessmentConcept: {
     name: "Vulnerability Assessment",
@@ -2390,7 +2438,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Passive",
     definition: "A non-invasive and non-intrusive approach to security assessment, limited to observing, listening to and analyzing information or network traffic without sending packets or interacting with the targets.",
     details: "**Passive** activities include the silent capture of network packets (sniffing) to analyze open ports or vulnerable protocols in transit, and reconnaissance based on public OSINT sources. It does not generate anomalous traffic on the target systems, reducing to zero the risk of causing instability or disruptions and of being detected by defensive systems.",
-    examTip: "The Passive approach ensures that no information or packet is sent directly to the target, ruling out any risk of alerting the SOC monitoring system or interrupting production services.",
+    examTip: "The Passive approach sends no packets directly to the target: it therefore removes any risk of disrupting production services and is the mandatory choice on critical systems (ICS/SCADA, medical devices) where an active scan can cause an outage. It remains an incomplete assessment, though: unable to query the systems, it cannot verify real versions and configurations and yields more false negatives than a credentialed scan.",
   },
   RulesOfEngagementRes: {
     name: "Rules of Engagement (RoE)",
@@ -3386,7 +3434,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
 export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   1: {
   41: {
-    topic: "Compliance & Auditing",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "A financial services company is required to regularly submit formal documentation proving its full adherence to the applicable regulatory security standards. This documentation includes audit results, risk assessments and evidence of the effectiveness of the implemented data-protection measures.",
     question: "What is this process called?",
     options: [
@@ -3398,7 +3446,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Compliance Reporting**.\n\n* **Why it's correct:** **Compliance Reporting** consists of gathering and presenting structured evidence (such as audit results, configurations, logs, assessments) to demonstrate to a regulator or oversight body that the organization complies with certain legal requirements or industry standards (e.g. PCI DSS, GDPR).\n* **Analysis of the distractors:**\n  * **B) Incident Response** is the process aimed at detecting, containing and remediating an ongoing security breach, not the submission of ordinary compliance reports.\n  * **C) Risk Management** is the overall process of identifying, analyzing and responding to risks, which can inform compliance but is not the same as periodic regulatory reporting.\n  * **D) Configuration Management** concerns the traceability and control of the configuration state of corporate servers, networks and software to keep them secure and standardized.\n\n* **Focused Mini-Example:** A banking institution must submit a PCI DSS (QSA) compliance report every year proving that all credit-card transaction logs are encrypted and securely stored, avoiding multimillion-dollar penalties from the financial oversight body.\n\n*Question ID: 67224be6dbfc5a71d6d19c6a*",
   },
   42: {
-    topic: "Control Functional Types",
+    topic: "Security Controls",
     scenario: "The network administrator of a remote branch must install a legacy operating system essential for the diagnostics of old industrial machinery. Because the operating system no longer receives patches from the manufacturer and has critical vulnerabilities, the administrator configures the local firewall to block any inbound and outbound traffic from that host to the internet, allowing only the local connection to a specific control workstation.",
     question: "Which functional type of security control does this firewall configuration represent?",
     options: [
@@ -3434,7 +3482,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Non-Repudiation**. \n\n* **Why it's the BEST:** Non-repudiation prevents a user or sender from denying the authenticity of a signature or an action performed on a resource. In asymmetric cryptography, because only the legitimate owner possesses their own private key (kept in this case in the hardware smart token), a digital signature generated with that key irrefutably proves the origin of the message or transaction.\n* **Why the others are incorrect:**\n  * **A) Confidentiality** hides information from those who are not authorized but does not prove the origin of a specific action.\n  * **C) Two-factor authentication** verifies the user's identity at login, but the act of digitally signing the individual transaction specifically guarantees the non-repudiation of the transaction itself.\n  * **D) RBAC** defines which actions a user is authorized to perform based on their role; it does not provide mathematical evidence to prevent denial of the actions performed.\n\n* **Focused Mini-Example:** A financial trader sends a stock-purchase order signing it with their HSM private key. Later, when the stock's value collapses, the trader tries to disown the operation, but the asymmetric digital signature makes the action legally non-repudiable.",
   },
   45: {
-    topic: "AAA Framework & Zero Trust Intro",
+    topic: "Security Principles",
     scenario: "A security auditor finds that the audit and access logs of the main production server are stored in a network path where the network administrators have full write and delete permissions.",
     question: "Which specific phase of the AAA framework is severely compromised if the activity logs can be modified or deleted by the very users whose actions they should track?",
     options: [
@@ -3446,7 +3494,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Accounting**. \n\n* **Why it's the BEST:** The **Accounting** (Traceability/Audit) component requires not only the correct generation of activity logs but also the guarantee of their integrity and immutability. If the logs are accessible for writing or deletion by IT staff, an insider or an attacker with compromised IT credentials could delete or alter the evidence of their own actions (e.g. illicit transactions), destroying the reliability of the entire audit process.\n* **Why the others are incorrect:**\n  * **A) Authentication** concerns the verification of identity at login, which is assumed here to be working.\n  * **B) Authorization** defines the user's access rights, but the critical vulnerability concerns the protection of the integrity of the audit records (Accounting).\n  * **D) Encryption** is an enabling technical control, not a logical phase of the AAA framework.\n\n* **Focused Mini-Example:** If a database administrator has write access to the log files, they could delete a specific record to hide a diversion of funds. Protecting the logs in 'WORM' (Write Once, Read Many) mode ensures accounting and prevents alterations.",
   },
   46: {
-    topic: "Social Engineering & Awareness",
+    topic: "Social Engineering",
     scenario: "The financial institution 'Rico Financials' has introduced a global Security Awareness training program. During one of the latest teaching sessions, employees analyzed in detail the risks and signals associated with malicious activities carried out by current or former employees, or by trusted business partners.",
     question: "Which specific threat does this lesson focus on?",
     options: [
@@ -3458,7 +3506,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Insider threat**.\n\n* **Why it's correct:** Insider threat awareness aims to educate staff on the risks arising from individuals operating within the organization (employees, collaborators, administrators) who could cause harm (deliberate, such as sabotage or data theft, or unintentional, such as negligence).\n* **Analysis of the distractors:**\n  * **A) Phishing** focuses on recognizing deceptive emails coming from outside that aim to steal credentials, not on direct internal threats.\n  * **B) Reporting and monitoring** is a cross-cutting, procedural practice aimed at notifying generic security incidents, not a specific threat.\n  * **C) Anomalous behavior recognition** supports the identification of strange behaviors but represents a technical/operational detection method and not the threat category itself covered in the lesson.\n\n* **Focused Mini-Example:** A system administrator, disgruntled over a denied raise, downloads the entire corporate patent database onto a USB stick before resigning, planning to resell the intellectual property to a competitor.\n\n*Question ID: 64c353dd006636d14b206140*",
   },
   47: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "A security engineer is evaluating a proprietary application developed by a third party. They notice that the application stores the API keys of cloud services in cleartext inside a configuration file, merely masking them by applying an invertible XOR algorithm and encoding the final result in Base64 format.",
     question: "How should this protection method be assessed according to the cryptographic principles of Domain 1?",
     options: [
@@ -3470,7 +3518,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) It represents an obfuscation technique that provides no real confidentiality and is easily decipherable**. \n\n* **Why it's the BEST:** Obfuscation aims to make code or a file hard for a human to understand at a glance, but it relies on weak, standardized methods (such as Base64, XOR or character rotation) that are easily reversible without the need for a strong cryptographic secret. It provides no confidentiality and must never be used to protect credentials or secrets.\n* **Why the others are incorrect:**\n  * **A)** Simple XOR is not equivalent to asymmetric cryptography (which uses complex mathematical relationships between public/private key pairs).\n  * **C)** Hashing is one-way and non-invertible, whereas XOR combined with Base64 is fully invertible to recover the original keys.\n  * **D)** Obfuscation provides no mathematical mechanism (such as a hash or a MAC) to detect or prevent accidental modification of the data.\n\n* **Focused Mini-Example:** A developer encodes database passwords in Base64 format in the `config.ini` file. Any user with access to the file can instantly decode the passwords using a trivial command, because Base64 is mere obfuscation and not real encryption.",
   },
   48: {
-    topic: "Security Standards",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "Organizations adopt different technological standards to ensure that data is protected based on its state (at rest, in transit, in use).",
     question: "Which type of standard defines the methods, protocols and control algorithms used specifically to protect information during its transit over networks?",
     options: [
@@ -3482,7 +3530,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Encryption standard**.\n\n* **Why it's correct:** **Encryption standards** (such as the use of TLS for transit, or AES for data at rest) establish the mathematical algorithms and protocols needed to transform readable data into an encrypted, unintelligible format for anyone without the decryption key, ensuring confidentiality in transit.\n* **Analysis of the distractors:**\n  * **A) Physical security standard** refers to securing physical assets, technical rooms and data centers (e.g. fences, badges, guards), not network flows.\n  * **C) Access control standard** establishes the processes and rules for identifying, authenticating and authorizing users on systems (e.g. RBAC, ABAC), but does not deal with the encryption of transmission channels.\n  * **D) Password standard** defines specific complexity, expiration and length requirements for user credentials, not the protocols for data traffic.\n\n* **Focused Mini-Example:** To protect web transactions, the PCI DSS standard mandates the adoption of TLS 1.2 or higher with strong encryption algorithms such as AES-GCM, prohibiting deprecated and vulnerable protocols such as SSLv3.\n\n*Question ID: 64b758fd527f0f59c61e8213*",
   },
   49: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "A junior system administrator receives an urgent support request from the sales department, which states it cannot access a new CRM database due to a network block. To resolve the situation quickly, the administrator manually modifies a rule of the central production firewall, allowing access from any branch IP address. The connection works, but two days later the company suffers an attack coming from an unauthorized subnet that exploited that same open port.",
     question: "Which critical phase of the Change Management process was completely omitted and would have avoided the incident?",
     options: [
@@ -3494,7 +3542,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Impact Analysis and formal approval by the Change Advisory Board (CAB) or the security team**.\n\n* **Why it's correct:** The formal Change Management process requires that any change made to production systems (such as firewall rules) be preceded by an impact analysis to assess the associated potential security risks and must be formally approved by the CAB or the responsible team. Had the administrator followed this procedure, the hasty change would have been blocked or amended to avoid the indiscriminate opening of the port.\n* **Analysis of the distractors:**\n  * **A) Drafting the recovery plan** (Rollback Plan) allows returning to the previous configuration in case of problems while applying the change, but does not prevent the introduction of the flaw itself.\n  * **C) Notifying external users** is an informational and operational-courtesy measure, of no value for preventing technical vulnerabilities.\n  * **D) Running a vulnerability scan** detects existing flaws but does not replace the formal assessment and approval of the change before it is implemented.\n\n* **Focused Mini-Example:** A technician opens a TCP port in production without a formal ticket to test an application. The ticket is never recorded, the port stays open and forgotten, and three months later it is exploited by ransomware to infiltrate.",
   },
   50: {
-    topic: "Security Consequences",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "The company 'Horizon Security', specialized in cybersecurity training, suffers a serious data breach due to the negligence of one of its third-party suppliers. The incident causes the loss of a large volume of sensitive customer information.",
     question: "Which type of immediate consequence is Horizon MOST likely to face?",
     options: [
@@ -3506,7 +3554,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Reputational damage**.\n\n* **Why it's correct:** Because Horizon Security is a *cybersecurity training* company, suffering a data breach directly hits the credibility of its own core business. Customers might conclude that the company is not qualified to protect information, causing devastating and immediate damage to its image and reputation in the market.\n* **Analysis of the distractors:**\n  * **B) Sanctions** and **C) Loss of license** are extreme regulatory or legal measures applicable in highly regulated sectors or in cases of direct willful misconduct/gross negligence by the company itself; in this case, the primary fault lies with the negligence of the external supplier.\n  * **D) Fines** are imposed by regulatory authorities (e.g. the Data Protection Authority for a GDPR violation), but usually require investigations and formal proceedings that develop over time; the reputational impact and loss of customer trust, however, are instantaneous.\n\n* **Focused Mini-Example:** A renowned cryptographic consulting firm suffers the theft of its source code. Although there are no immediate monetary fines, the news alarms the financial partners, who terminate their contracts for fear of cascading vulnerabilities.\n\n*Question ID: 64c07b3d6eac6c96dcf007a1*",
   },
   131: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "A network engineer must design a symmetric encryption solution for a real-time industrial application. The application transmits continuous telemetry streams in which the total length of the data packet is not known in advance and requires minimal latency, encrypting the data one byte or bit at a time.",
     question: "Which type of symmetric encryption is the MOST suitable to meet these operational requirements?",
     options: [
@@ -3518,7 +3566,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Stream cipher**.\n\n* **Why it's correct:** **Stream ciphers** encrypt the plaintext one bit or byte at a time, unlike block ciphers. This makes them ideal for real-time transmission scenarios (such as audio/video streams or continuous industrial telemetry) where the total length of the message is not predetermined and latency must be kept to a minimum.\n* **Analysis of the distractors:**\n  * **A) Block cipher** encrypts data by dividing it into fixed-size blocks (e.g. 64 or 128 bits) and requires the use of padding algorithms if the message does not fit perfectly into the block size, introducing additional latency.\n  * **C) Initialization Vector (IV)** is not a type of symmetric encryption, but rather a random value used in combination with ciphers to ensure that identical plaintexts produce different ciphertexts.\n  * **D) AES-256** is a widely secure symmetric algorithm, but it is a block cipher (operating on 128-bit blocks with 256-bit keys), not a native stream cipher.\n\n* **Focused Mini-Example:** A military surveillance camera transmits a continuous video stream at 30 FPS. To protect the channel with near-zero latency, the encryption algorithm encrypts each single video bit as it leaves the sensor using a stream cipher.\n\n*Question ID: 6525878ba8b3b77bfb418cae*",
   },
   132: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "The company 'Sweet as Thyme', a food flavoring supplier, wants to track the shipments and payments of its production supply chain. The company decides to adopt a decentralized peer-to-peer network based on a distributed, public ledger to guarantee the immutability, integrity and transparency of all its commercial transactions.",
     question: "What is this distributed public ledger technology called?",
     options: [
@@ -3530,7 +3578,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Blockchain**.\n\n* **Why it's correct:** **Blockchain** is a distributed ledger technology based on a peer-to-peer network in which records (transactions) are grouped into cryptographically chained blocks. It provides a permanent, transparent and tamper-resistant record to guarantee the integrity of transactions without depending on a central trusted authority.\n* **Analysis of the distractors:**\n  * **A) Salting** is a cryptographic technique that consists of adding random data (salt) to a password before hashing it to protect it from dictionary or rainbow-table attacks.\n  * **B) Key Stretching** is a method to make password hashing more secure by performing it multiple times (e.g. with PBKDF2 or bcrypt) to increase the computational time needed to crack it.\n  * **D) Digital Signatures** are used to authenticate the origin and integrity of a single file or message, but do not represent a peer-to-peer network or a shared ledger of transactions.\n\n* **Focused Mini-Example:** A winery records every step of the bottle (from the grape harvest, to the sea shipment, to the distributor) on a public blockchain. Because the blocks are cryptographically linked, no intermediate distributor can falsify the date or storage temperature.\n\n*Question ID: 64c3dd9646cada5acd7b5a98*",
   },
   133: {
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     scenario: "In a company that adopts the Zero Trust security model, the system administrator must configure the components responsible for deciding whether a request to access internal resources should be authorized or denied, based on corporate policies, risk analysis and real-time verification of credentials and device state.",
     question: "In which architectural plane does the component responsible for making these access decisions reside in the Zero Trust model?",
     options: [
@@ -3542,7 +3590,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Control Plane**.\n\n* **Why it's correct:** In the Zero Trust model, the **Control Plane** is the logical area that contains the decision engines (such as the Policy Engine and the Policy Administrator). This plane evaluates access requests by analyzing security policies, user identity, device context and threat signals, deciding whether to establish or deny a connection.\n* **Analysis of the distractors:**\n  * **A) Policy-driven access control** is the philosophy or the applied access control mechanism, but it does not represent an architectural plane of the network infrastructure itself.\n  * **B) Implicit trust zones** are typical of the old perimeter models in which internal devices are considered inherently secure, a concept that Zero Trust aims to abolish entirely.\n  * **D) Data Plane** is the operational layer responsible for the routing, transport and actual forwarding of users' data packets once the session has been authorized by the Control Plane.\n\n* **Focused Mini-Example:** An employee requests access to a shared folder at 3 a.m. from an unusual IP in Asia. The Policy Engine and the Policy Administrator (components of the Control Plane) analyze the threat and deny access, ordering the Data Plane to block the packets.\n\n*Question ID: 65245f47db866f2dfdab26cf*",
   },
   134: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "The international organization 'Trust Us' offers security and trust services on the web. The company validates the identities of servers and domains, issues digital cryptographic credentials and signs public keys by associating them with specific entities to enable secure encrypted communications over HTTPS.",
     question: "Which type of organization best describes the work of 'Trust Us'?",
     options: [
@@ -3554,7 +3602,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Certificate Authority (CA)**.\n\n* **Why it's correct:** A **Certificate Authority (CA)** is a trusted third-party entity responsible for issuing, signing, managing and revoking digital certificates. It attests to the association between a public key and the identity of the certificate owner by means of its own digital signature.\n* **Analysis of the distractors:**\n  * **A) Root of Trust** refers to an inherently trusted hardware or software cryptographic source on which the security of an entire operating system or device rests, not to a commercial organization that issues digital credentials on the web.\n  * **B) Blockchain** is a distributed ledger technology, not an organization tasked with issuing and validating SSL/TLS certificates.\n  * **D) Registration Authority (RA)** is an auxiliary entity that assists the CA by verifying the identity of applicants, but does not have the authority to directly sign and issue the final digital certificates.\n\n* **Focused Mini-Example:** When you connect to `https://google.com`, a recognized third-party CA (such as DigiCert or Google Trust Services) digitally guarantees that the public key used actually belongs to Google LLC, preventing Man-in-the-Middle attacks.\n\n*Question ID: 64c3df3bec55f15597b20773*",
   },
   135: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "Kevin, an experienced systems analyst at a financial services company, receives a change request to apply a major cumulative update to the corporate ERP system. Before the change is approved or implemented, Kevin carefully analyzes how the update will impact the hardware performance of the production servers, the daily operations of the staff and the active API integrations.",
     question: "Which Change Management term BEST describes the assessment conducted by Kevin?",
     options: [
@@ -3566,7 +3614,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Impact analysis**.\n\n* **Why it's correct:** **Impact analysis** is the critical phase of Change Management in which all the potential side effects, associated risks and operational repercussions that a proposed change could cause to the IT infrastructure, business processes and security of the organization are systematically studied.\n* **Analysis of the distractors:**\n  * **A) Approval process** is the subsequent phase conducted by the Change Advisory Board (CAB) to formally approve or reject the change based on the data that emerged from the impact analysis.\n  * **B) Backout plan** (Rollback plan) is the planning of the technical actions to be taken to restore the systems to their original state should the implemented change cause blocking anomalies.\n  * **C) Version control** is the practice of tracking and managing the revisions of code or configuration files, unrelated to the overall operational impact assessment of a release.\n\n* **Focused Mini-Example:** Before installing a critical patch on the ERP server, the analyst simulates the update in a pre-production environment, discovering that the new version crashes the shipping API. The installation is suspended, saving the company from an order block.\n\n*Question ID: 64c137e23837c7dbc550d89a*",
   },
   136: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "The e-learning company 'Reason and Rhyme' wants to raise the storage security of its students' credentials. Instead of merely applying a standard hash algorithm once, the company introduces an encryption mechanism that recursively performs thousands of mathematical hashing iterations, with the aim of significantly slowing down the brute-force computation by an external attacker.",
     question: "What is this cryptographic method of password protection called?",
     options: [
@@ -3578,7 +3626,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Key Stretching**.\n\n* **Why it's correct:** **Key Stretching** is a technique that consists of repeatedly and recursively running a hash or encryption algorithm (e.g. PBKDF2, bcrypt, scrypt) on a password for a high number of iterations. This process deliberately increases the computational time needed to verify each password, making brute-force or dictionary attacks incredibly slow and resource-costly for attackers.\n* **Analysis of the distractors:**\n  * **A) Hashing** is the standard single-pass conversion of a string into a fixed-length sequence, without the iterative application aimed at intentionally slowing down cracking attempts.\n  * **B) Salting** is the addition of a unique random string before the hashing process to prevent identical passwords from having identical hashes, countering the use of rainbow tables.\n  * **D) Digital Signatures** ensure the authenticity and non-repudiation of messages; they have no bearing on the cryptographic hardening of stored passwords.\n\n* **Focused Mini-Example:** Instead of saving the password `Sun123` by applying a simple instant MD5 hash, the system uses the bcrypt algorithm configured with 12,000 iterations. This forces the server to take 100 milliseconds to verify the login, making high-speed GPU brute-force attacks impractical.\n\n*Question ID: 64c3dd26cecaf5b2df5d3111*",
   },
   137: {
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     scenario: "The tech company 'Novus Technologies' is redesigning its network architecture following the guidelines of the Zero Trust framework. To manage employees' access to corporate resources securely and flexibly, the IT team decides to implement a control-plane solution that verifies the user's identity, analyzes their active job functions and dynamically applies precise security policies.",
     question: "Which component or approach of the Zero Trust architecture describes this centralized access management on the control plane?",
     options: [
@@ -3590,7 +3638,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Policy-driven access control**.\n\n* **Why it's correct:** In the Zero Trust architecture, **Policy-driven access control** is the pillar of the Control Plane that makes access decisions by examining a set of corporate rules and policies (e.g. user identity, device state, time, department requirements) before granting access to sensitive resources.\n* **Analysis of the distractors:**\n  * **A) Role-based access control (RBAC)** is a classic access control method based exclusively on membership in static groups or job roles, not representing the entire adaptive, dynamic system driven by complex policies of the Control Plane in Zero Trust.\n  * **B) Least privilege** is the general security principle of granting users only the permissions strictly necessary to perform their tasks, not the software module that evaluates access rules.\n  * **C) Implicit deny** is a network configuration principle (if a connection is not explicitly allowed, it is blocked), unrelated to the adaptive logic of policy management.\n\n* **Focused Mini-Example:** In a company, access to sensitive customer data simultaneously requires that the user be an authorized account manager, connect through the corporate VPN and use a device with up-to-date antivirus: this adaptive, multi-factor control is driven by policies.\n\n*Question ID: 6523910e707b96d3205a83a2*",
   },
   138: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "During the installation of a new corporate accounting software application on a centralized Linux server at 'Kelly Innovations LLC', the installer receives a blocking error: the application cannot be started because it requires the prior installation of a specific open-source cryptographic library not present in the system.",
     question: "Which technical term BEST describes the blocking relationship between the accounting application and the missing library?",
     options: [
@@ -3602,7 +3650,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Software dependency**.\n\n* **Why it's correct:** A **software dependency** occurs when a given application or module requires the existence, installation or prior execution of another software resource (library, package, framework or service) in order to function correctly and complete its execution.\n* **Analysis of the distractors:**\n  * **A) Running a legacy application** refers to the operational use of obsolete or no-longer-supported systems or software, but does not express a blocking prerequisite between packages.\n  * **B) Compatibility issue** refers to the inability or difficulty of two or more pieces of software or hardware to function correctly in the same environment, whereas in this scenario the accounting application would work perfectly if the library were present.\n  * **C) Unrestricted user access** concerns users' operational privileges on system files, not the functional interdependencies of the code.\n\n* **Focused Mini-Example:** To start the accounting application, the Linux operating system requires the presence of the `openssl-devel` package. If this software dependency is not installed first via `apt-get` or `yum`, the application will refuse to start, throwing a blocking error.\n\n*Question ID: 6524d5e09eb2e17ced10c45f*",
   },
   139: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "A financial organization adopts a complex public key infrastructure (PKI) to encrypt all internal documents and confidential databases. To prevent the irreversible loss of sensitive data should employees lose their own private decryption key, the company decides to securely deposit a backup copy of all private keys with a trusted third party authorized for recovery.",
     question: "Which PKI component or process allows cryptographic keys to be deposited and recovered through trusted third parties?",
     options: [
@@ -3614,7 +3662,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Key Escrow**.\n\n* **Why it's correct:** **Key Escrow** is an arrangement or process in which a trusted third party securely stores and safeguards encryption keys (usually private keys). This mechanism makes it possible to recover the keys and decrypt data in emergency scenarios, such as the accidental loss of credentials by the legitimate user or legal requests for data access.\n* **Analysis of the distractors:**\n  * **A) Public Key Infrastructure (PKI)** is the entire organizational, technical and procedural framework that governs asymmetric cryptography, not the single process of fiduciary backup storage of keys.\n  * **B) Key Exchange** is the cryptographic protocol used to securely negotiate or transmit symmetric keys between two communicating parties (e.g. Diffie-Hellman).\n  * **D) Key Generation** is the preliminary mathematical phase of creating a cryptographic key pair (public and private).\n\n* **Focused Mini-Example:** An engineer tasked with signing a company's software releases loses their hardware private key. Thanks to Key Escrow, the CEO and the legal auditor can recover a protected copy of the key from the corporate digital vault so as not to interrupt the releases.\n\n*Question ID: 64c27848281353282d57ef4*",
   },
   140: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "The professional training school 'Dion Training' wants to increase the trust and security of its web portal for external students, eliminating the annoying security warnings generated by modern browsers when users connect to it over HTTPS. To this end, the company needs a digital certificate signed and validated by an authoritative, globally recognized certificate authority.",
     question: "Which type of certificate best meets this organizational need?",
     options: [
@@ -3638,7 +3686,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Risk assessments**.\n\n* **Why it's correct:** **Risk assessments** are a classic managerial (or administrative) security control. They define the formal processes, policies and methodologies approved by corporate governance to examine and quantify the organization's risks, guiding investments and general policies.\n* **Analysis of the distractors:**\n  * **A) Security guards** represent a physical security control that protects the physical access to servers and corporate facilities.\n  * **B) Intrusion detection system (IDS)** is a technical (or logical) security control implemented through software or hardware to detect malicious traffic on the network.\n  * **C) Firewall** is another technical security control tasked with filtering network traffic based on predefined rules.\n\n* **Focused Mini-Example:** Before launching a new generative AI model, Lexicon conducts a formal Risk Assessment to map the prompt-injection attack vectors and evaluate the risk of the model's weights leaking, estimating the reputational impact in case of a breach.\n\n*Question ID: 64bd55d28ecaa950633d569c*",
   },
   142: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "A user decides to book an online appointment for a haircut on the website of the salon 'Dye My Darling'. When they fill out the form with their personal data, this is transmitted to the secure corporate database and immediately associated with a random, non-sensitive string of characters (called a token) that replaces the real data. The salon staff will see only this fictitious identifier to manage bookings, reducing the exposure of customer data in the event of a data breach.",
     question: "Which method of concealing and protecting sensitive data is the 'Dye My Darling' website using?",
     options: [
@@ -3650,7 +3698,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Tokenization**.\n\n* **Why it's correct:** **Tokenization** consists of replacing a piece of sensitive data (such as personal or financial data) with a non-sensitive equivalent called a 'token'. The original sensitive data is removed from the system and stored separately in a secure centralized database (the 'token vault'), while in the local operating system only the token, which has no independent value, is used.\n* **Analysis of the distractors:**\n  * **A) Steganography** consists of hiding the very existence of a message or file by concealing it inside another innocuous file (e.g. text hidden in the pixels of an image).\n  * **B) Encryption** mathematically transforms plaintext into ciphertext readable only by those who possess the correct decryption key, but does not involve the systematic replacement of the data with a token recorded in an external archive.\n  * **D) Data Masking** consists of partially hiding portions of the data for display purposes (e.g. showing a credit card as ****-****-****-1234), but the original value nonetheless remains stored within the same application database.\n\n* **Focused Mini-Example:** When you enter your credit card into a ride-hailing app, the real number is stored in a certified digital vault and replaced in the local application with a unique random token. The app uses only the token to charge for rides, reducing exposure in the event of a data breach.\n\n*Question ID: 64c3d5eececaf5b2df5d307*",
   },
   143: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "A network administrator must temporarily implement an SSL/TLS certificate for an internal web server used exclusively to conduct diagnostic tests by the software development team. Because the system is not exposed to external users and the company wants to avoid the costs of commercial CAs, the administrator decides to sign the certificate using their own local root private key.",
     question: "Which type of certificate is issued and self-signed by an entity for local use?",
     options: [
@@ -3662,7 +3710,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Self-signed certificate**.\n\n* **Why it's correct:** A **self-signed certificate** is a digital certificate signed directly by the creating subject that owns it, without going through a trusted third-party Certificate Authority (CA). Although it provides channel encryption, it has no native trustworthiness in external computers' browsers, which will display a security error. It is ideal for closed development and test environments.\n* **Analysis of the distractors:**\n  * **A) Extended validation certificate (EV)** is a commercial certificate with very high public trust that requires strict, rigorous legal checks on the company's identity by the issuing CA.\n  * **C) CSR (Certificate Signing Request)** is solely the file sent to request the signing of a certificate; it does not constitute a finished certificate operable on the server.\n  * **D) Root certificate** is the main certificate held by a trusted CA and used to sign all the subordinate certificates of the PKI.\n\n* **Focused Mini-Example:** A developer configures a local web server `https://localhost:8080` to test a payment module. Because it is an internal test, they generate a self-signed certificate. The browser will show a security warning (which is ignored by proceeding), but the communication channel will remain encrypted and secure.\n\n*Question ID: 6524e5389e22f124a23e7938*",
   },
   144: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "Carlos is hired as an external cybersecurity consultant at Dion Training Solutions with the task of mapping the flaws and vulnerabilities of the data center infrastructure. Carlos formally requests an up-to-date diagram of the network architecture and physical servers, but the technical support team provides him with a floor plan dating back more than a year.",
     question: "Why is the use of this old architecture diagram potentially problematic for Carlos's assigned task?",
     options: [
@@ -3674,7 +3722,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) It might not reflect the current topology and servers, leading to overlooking critical vulnerabilities introduced recently.**\n\n* **Why it's correct:** Data center infrastructures are extremely dynamic; over the course of a year new servers are regularly installed, new firewall ports are opened and routing flows are modified. Conducting a vulnerability assessment based on an obsolete diagram will lead Carlos to ignore the presence of new hosts or network changes that could harbor critical, uncatalogued flaws.\n* **Analysis of the distractors:**\n  * **B) It would show an excessive number of technical details** is incorrect because Carlos, as a security expert, needs precisely all the possible technical details of the architecture in order to analyze it accurately.\n  * **C) It would contain an outdated list of employees** is incorrect because network architecture diagrams describe devices, protocols and physical/logical interconnection topologies, not personnel records and rosters.\n  * **D) It would show only the old expansion plans** is incorrect because the diagram describes the state of the past active infrastructure, not future commercial development plans.\n\n* **Focused Mini-Example:** During a security inspection, an auditor detects a critical RDP vulnerability on a staging server. This specific server had been introduced three months earlier for a marketing department pilot test, but was absent from the year-old network architecture provided to the auditor.\n\n*Question ID: 64c15363528e3065c1379718*",
   },
   145: {
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     scenario: "Neville, an experienced security engineer, suggests to management that a fictitious document titled 'admin_passwords.xlsx' be created and placed in a highly visible network share folder. The document contains fake credentials specifically designed to trigger an immediate intrusion alarm should an attacker decide to open or copy it.",
     question: "What type of decoy resource did Neville suggest creating?",
     options: [
@@ -3686,7 +3734,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Honeyfile**.\n\n* **Why it's correct:** A **Honeyfile** is a decoy file or document specifically placed within corporate systems to attract the attention of possible intruders or cyber attackers. Because no legitimate user or process has any operational reason to access this file, any attempt to read, copy or modify it instantly generates a very high-priority security alert.\n* **Analysis of the distractors:**\n  * **A) Honeynet** is an entire fictitious decoy network containing multiple simulated hosts and systems to confuse and study attackers over time.\n  * **B) Honeypot** is a single decoy host, computer or service connected to the network to attract active attacks.\n  * **C) Honeytoken** refers to specific decoy records or data fragments (e.g. a fake SQL record or a decoy email address to detect spam) rather than an entire structured file stored on the filesystem as in this scenario.\n\n* **Focused Mini-Example:** A network administrator places a spreadsheet named `executive_salaries_2026.xlsx` in an open shared folder. The file contains fictitious data but is protected by a software sensor; if a curious employee or a hacker opens it, an immediate notification is sent to the SOC team.\n\n*Question ID: 64c04411e9668a02c0dfe0b*",
   },
   146: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "The financial company 'Kelly Innovations LLC' intends to protect its digital transactions against any risk of forgery or retroactive alteration. The requirements mandate that each transaction record be protected through chained cryptographic algorithms, so that the hash value of each block is incorporated into the computation of the hash of the next block.",
     question: "Which of the following technologies fits this scenario perfectly?",
     options: [
@@ -3698,7 +3746,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Blockchain**.\n\n* **Why it's correct:** **Blockchain** is structured precisely as a sequence of data blocks linked in chronological order. Each block contains a group of transactions and includes the cryptographic hash of the previous block. This sequential linking means that any minimal modification to a past transaction breaks the chain of subsequent hashes, guaranteeing the absolute integrity of the historical data.\n* **Analysis of the distractors:**\n  * **A) Public Key Infrastructure (PKI)** manages digital identities and asymmetric certificates, but does not define a mechanism of chronological cryptographic chaining of financial records.\n  * **C) Digital Watermarking** is a technology for embedding hidden information inside multimedia files (e.g. images or audio) for copyright purposes, unrelated to the history of transactions.\n  * **D) Symmetric Encryption** serves to encrypt a piece of data to preserve its confidentiality using a shared secret key, but does not provide a distributed ledger architecture chained through hashing.\n\n* **Focused Mini-Example:** In a port logistics system, each digital customs stamp contains the cryptographic hash of the departure port's approval. If a customs officer tries to falsify the origin port's approval, the cryptographic chain breaks, instantly highlighting the anomaly.\n\n*Question ID: 6524cca4c4116404f67d29d*",
   },
   147: {
-    topic: "Cryptographic Foundations",
+    topic: "Cryptography",
     scenario: "An external client wants to transmit a highly confidential sensitive order to the headquarters of 'Dion Training' using asymmetric cryptography, ensuring that only and exclusively Dion Training is able to decrypt and read the content of the message.",
     question: "Which cryptographic key must the client use to encrypt the message so as to guarantee its maximum confidentiality?",
     options: [
@@ -3710,7 +3758,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Dion Training's public key**.\n\n* **Why it's correct:** In asymmetric cryptography, to guarantee the **confidentiality** of a communication, the sender must always encrypt the message using the **recipient's public key** (in this case Dion Training's). Because a message encrypted with the public key can be decrypted exclusively through the corresponding secret, uniquely paired private key, and only Dion Training possesses that private key, no one else will be able to decrypt the message.\n* **Analysis of the distractors:**\n  * **B) The client's private key** must not be used for encryption if the goal is confidentiality: if the client encrypted with their own private key, anyone could decrypt it using the client's public key (which is in the public domain), guaranteeing only authenticity and non-repudiation (digital signature) but no confidentiality.\n  * **C) The escrow key** is not an operational key used in direct encryption flows, but rather a backup procedure for private keys.\n  * **D) The wildcard certificate** is used to protect web domains and HTTPS connections; it does not represent the asymmetric key to encrypt a text message.\n\n* **Focused Mini-Example:** If Alice wants to send her confidential bank IBAN to Dion Training, she encrypts it using Dion Training's public key. Only the academy, through its exclusive private key, will be able to decrypt and read that IBAN.\n\n*Question ID: 65257f22f1de9bff7fa68806*",
   },
   148: {
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     scenario: "A government organization intends to implement a highly flexible and dynamic access control system that can evaluate in real time the unusual behavior of users (e.g. anomalous connection times or geographically impossible movements in time), requiring additional MFA authentication or blocking access if the calculated risk exceeds the allowed threshold.",
     question: "Which of the following solutions and technologies BEST meets this need?",
     options: [
@@ -3734,7 +3782,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Bollards**.\n\n* **Why it's correct:** Street **bollards** are short, sturdy steel or concrete posts, solidly anchored underground, strategically positioned outside buildings to block and stop the physical impact of vehicles and vans, protecting the structures from ramming or accidental vehicle collisions.\n* **Analysis of the distractors:**\n  * **A) Security checkpoint** is a station for identifying and verifying drivers, but by itself it does not constitute a high-mechanical-strength barrier against ramming.\n  * **B) Intrusion Detection System** is a digital network logical control, ineffective against cars and physical land-based threats.\n  * **D) Wire fencing** delimits the corporate boundaries and slows down pedestrians, but has no stopping resistance against the impact mass of a motor vehicle.\n\n* **Focused Mini-Example:** At the main vehicle entrance of a bank data center, sturdy steel posts buried three meters deep are installed. If a hostile vehicle attempts an attack by ramming the perimeter, the bollards absorb the impact, destroying the vehicle but keeping the building intact.\n\n*Question ID: 65245928ae19f8bdaee92dc6*",
   },
   150: {
-    topic: "Zero Trust Framework",
+    topic: "Zero Trust Architecture",
     scenario: "A security engineer designs the placement of a seemingly vulnerable, unpatched decoy machine inside an isolated subnet of the company, in order to study the hacking techniques used by attackers and capture valuable logs without exposing the real servers.",
     question: "Which of the following options BEST describes the primary function of a honeypot in a network architecture?",
     options: [
@@ -3746,7 +3794,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) To detect and divert potential attackers**.\n\n* **Why it's correct:** The fundamental purpose of a **honeypot** is to act as an appealing decoy within the network to attract and divert the attackers' activities away from the real production resources. This allows security teams to detect intrusions promptly and gather detailed telemetry on the attacker's techniques and tools.\n* **Analysis of the distractors:**\n  * **B) To block access** is the task of active prevention and filtering systems, such as Firewalls, IPS or EDR, whereas the honeypot on the contrary deliberately invites the connection.\n  * **C) To recover data** is the function of backup and disaster recovery procedures, not of network decoys.\n  * **D) To prevent malware from executing** is handled by antivirus, anti-malware software and EDR through signatures or local behavioral analysis.\n\n* **Focused Mini-Example:** A seemingly vulnerable, obsolete server with no real valuable data is placed within the corporate perimeter. Any attempt to scan or exploit this machine (honeypot) makes it possible to immediately identify and isolate the attacker's IP address on the LAN.\n\n*Question ID: 6720ff1fe8b5ca200ac63846*",
   },
   151: {
-    topic: "Symmetric Encryption",
+    topic: "Cryptography",
     scenario: "A security engineer must select a symmetric encryption algorithm to protect a continuous stream of real-time data transmitted over a network connection, where the total length of the message is not predetermined at the start of the transmission.",
     question: "Which type of symmetric encryption is the MOST suitable for scenarios in which the total length of the message is not predetermined and the data is encrypted a single byte or bit at a time?",
     options: [
@@ -3806,7 +3854,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Impact analysis**.\n\n* **Why it's correct:** **Impact Analysis** is a crucial phase of Change Management in which the possible consequences, both positive and negative, of a proposed change on information systems, personnel and business processes are studied in advance to prevent unexpected disruptions.\n* **Analysis of the distractors:**\n  * **A) The approval process** is the formal procedure in which the Change Advisory Board (CAB) or a manager signs off to authorize the change, an operation carried out *after* analyzing the impact.\n  * **B) The backout plan (rollback plan)** describes the technical steps needed to undo the change and return to the previous stable configuration in case of malfunctions in production.\n  * **C) Version control** is a system that records the changes made to files over time (e.g. Git), allowing past versions of code or documents to be traced.\n\n* **Focused Mini-Example:** Kevin receives the request to update the version of Java on the ERP. Before proceeding, he performs an Impact Analysis, discovering that the update would break compatibility with a legacy module used by the accounting department for electronic invoicing.\n\n*Question ID: 64c137e23837c7dbc550d89a*",
   },
   156: {
-    topic: "Cryptographic Methods",
+    topic: "Cryptography",
     scenario: "The company 'Reason and Rhyme', an online tutoring service, wants to strengthen the security of its members' passwords. Although they have always used functions to convert passwords into fixed-length sequences (hashes), they now decide to repeat this mathematical process thousands of times to increase the computing power and time needed for a malicious user to crack the secret codes through brute-force.",
     question: "What is this strengthening method called?",
     options: [
@@ -3830,7 +3878,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Policy-driven access control**.\n\n* **Why it's correct:** In the Zero Trust architecture, **Policy-driven access control** is the pillar of the Control Plane that dynamically regulates access at a granular level based on well-defined corporate requirements and policies, validating access authorizations against the real-time context.\n* **Analysis of the distractors:**\n  * **A) RBAC (Role-based access control)** assigns permissions to predefined roles, but it is a generic authorization model applicable to any legacy system, not specific or exclusive to the Zero Trust architecture.\n  * **B) The least-privilege principle** is a general security best practice that provides for assigning only the minimum permissions needed to perform a task.\n  * **C) Implicit deny** is a basic security rule (everything not explicitly allowed is forbidden) commonly applied to traditional firewalls and ACLs.\n\n* **Focused Mini-Example:** In a hospital adopting Zero Trust, a corporate rule establishes that doctors can access clinical records only if connected from the department's Wi-Fi network. If a doctor attempts access from home, the policy-based system (Policy-driven Access Control) intervenes by denying authorization.\n\n*Question ID: 6523910e707b96d3205a83a2*",
   },
   158: {
-    topic: "Software Management",
+    topic: "Asset Management",
     scenario: "During the installation of a new software application within the systems of 'Kelly Innovations LLC', the IT team finds that a specific module does not start and generates errors unless another specific software package is already installed and configured in the operating system.",
     question: "Which of the following options BEST describes this situation?",
     options: [
@@ -3902,7 +3950,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Analyze and process the data on behalf of the Data Controller**.\n\n* **Why it's correct:** The **Data Processor** acts on the instructions of and on behalf of the **Data Controller**. Its specific task is to carry out material or logical operations on the data (such as storage, analysis, processing or manipulation), strictly following the directives received.\n* **Analysis of the distractors:**\n  * **A) Managing access control** to data is a technical and procedural responsibility usually shared, but the definition of access rules and permissions remains a top-level task of the Data Controller (and the Data Owner), not the primary activity of the Data Processor.\n  * **B) Guaranteeing the physical security of devices** is important for anyone who manages the infrastructure, but it is not the primary or distinctive task of the Data Processor role in the privacy framework.\n  * **D) Establishing data ownership** and determining the purposes or means of processing are exclusive prerogatives of the Data Controller or the individual appointed Data Owners.\n\n* **Focused Mini-Example:** A university (Data Controller) hires an external company (Data Processor) to manage the newsletters intended for students. The university provides the email address databases and establishes the sending rules. Connor, an employee of the external company, materially processes the sending of the newsletters following only the university's directives.\n\n*Question ID: 64b88d6388b3fb59a48a103e*",
   },
   164: {
-    topic: "Baselines & Configuration Drift",
+    topic: "Baselines & Configuration",
     scenario: "While planning a major update of the corporate ERP system, the IT team decides to conduct a controlled simulation and pilot test (trial run) in an isolated staging environment before performing the final rollout to production across the entire organization.",
     question: "Which of the following practices highlights the importance of performing preliminary tests and pilot runs on significant changes before their full implementation?",
     options: [
@@ -4046,7 +4094,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Tokenization**.\n\n* **Why it's correct:** **Tokenization** replaces a piece of sensitive data (e.g. a customer code, a card number) with a non-sensitive substitute value (token), storing the correspondence in a secure external database. If a local computer is compromised, the attacker sees only the tokens, useless without access to the mapping database.\n* **Analysis of the distractors:**\n  * **A) Steganography** hides the very existence of a message or file by inserting it inside another host file (e.g. text within an image); it does not use a database of symbol correspondences.\n  * **B) Encryption** transforms the data through a mathematical algorithm and a key; it does not produce a fixed, reduced set of symbols referenced in a database.\n  * **D) Data Masking** covers or hides only some characters of a field (such as showing only '**** **** **** 1234' for a credit card), maintaining the overall structure but not replacing the entire piece of data with a token registered in a database.\n\n*Question ID: 64c3d5eececafb5b2df5d307*",
   },
   176: {
-    topic: "PKI Infrastructure",
+    topic: "Public Key Infrastructure",
     scenario: "Organizations use different types of digital certificates within their public key infrastructure (PKI) based on their specific needs for trust, verification and usage environment.",
     question: "Which of the following types of certificates is issued by an entity that uses its own private key and is often used in internal or test environments due to its lack of intrinsic trust in external systems?",
     options: [
@@ -4118,7 +4166,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Adaptive identity**.\n\n* **Why it's correct:** **Adaptive identity** analyzes the context in real time (such as geolocation, connection time, device used, movement speed and the user's historical behavior) to dynamically determine the authentication requirements and access rights. If it detects unusual behavior (e.g. logins from two different countries within 10 minutes), it can request additional MFA factors or block the session.\n* **Analysis of the distractors:**\n  * **B) Security zones** divide networks into logical segments at the infrastructure level, but they do not manage adaptive access based on user behavior.\n  * **C) MAC (Mandatory Access Control)** is the most rigid access control model of all, based on static security labels and ministerial/military authorization levels; it is not adaptive or flexible at all.\n  * **D) Policy-driven control** applies static rules based on defined criteria, but does not learn or autonomously adapt to the changing daily behaviors of users.\n\n*Question ID: 64c03b8a3a8522a3b5997a5a*",
   },
   182: {
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     scenario: "Perimeter security measures aim to protect people, technological infrastructure and buildings from physical attacks carried out by malicious individuals or from vehicle incidents.",
     question: "Which of the following is a physical security measure usually employed outside buildings or sensitive areas to physically prevent vehicles from causing damage to the property or forcing an unauthorized breach?",
     options: [
@@ -4142,7 +4190,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) To detect and divert potential attackers**.\n\n* **Why it's correct:** The primary purpose of a **honeypot** (a fictitious decoy system) is to present itself as a vulnerable and appealing resource to induce attackers to interact with it. This yields three benefits: the presence of the intruder is detected immediately, they are diverted from the real servers reducing the overall impact of the attack, and valuable data on their tactics and tools is gathered.\n* **Analysis of the distractors:**\n  * **B)** A honeypot does not block access (a function typical of firewalls or IPS); on the contrary, it passively invites access for monitoring purposes.\n  * **C)** It has no functions for restoring or backing up production data.\n  * **D)** It does not prevent malware from executing; in fact it might allow execution in an isolated sandbox in order to study its behavior.\n\n*Question ID: 6720ff1fe8b5ca200ac63846*",
   },
   184: {
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     scenario: "A security officer is using a system that involves the use of cameras to monitor activities in a given area.",
     question: "What is this system known as?",
     options: [
@@ -4154,7 +4202,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Video surveillance**.\n\n* **Why it's correct:** **Video surveillance** (CCTV) involves the specific use of cameras to visually monitor and record activities in a given geographic or internal area.\n* **Analysis of the distractors:**\n  * **A) The access badge** is a card used for physical authentication at access points; it does not use cameras for continuous monitoring.\n  * **B) Sensors** detect noises, movements or the opening of fixtures, but do not provide direct video evidence unless integrated with a camera system.\n  * **D) Lighting** serves to illuminate dark areas to act as a deterrent or support visibility, but by itself it does not constitute camera-based monitoring.\n\n*Question ID: 64c3e5d7ba219e04cab0e4eb*",
   },
   185: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "A major software update is scheduled to be released into a company's production environment.",
     question: "To ensure that any unforeseen problems or conflicts can be undone by returning the system to its previous stable state, what should the IT team have prepared?",
     options: [
@@ -4202,7 +4250,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Policy administrator (PA)**.\n\n* **Why it's correct:** In the Zero Trust architecture, the **Policy Administrator (PA)** is the component that writes, defines, updates and manages the access policies used by the Policy Engine to determine whether or not to grant access to a resource.\n* **Analysis of the distractors:**\n  * **A) The Policy Enforcement Point (PEP)** is the physical or logical component (e.g. a gateway, a firewall, a proxy) that materially applies the decision made by the Policy Decision Point (PDP).\n  * **B) An authentication server** validates user credentials to ascertain their identity, but does not deal with the definition and management of the entire set of Zero Trust dynamic access control policies.\n  * **C) The client host** is the end device from which the user requests access; it has no centralized policy-management or policy-definition tasks.\n\n*Question ID: 64c040363a8522a3b5997a5f*",
   },
   189: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "At Kelly Innovations Corp., during a routine audit, Alex discovers that the database supporting the CRM application is corrupted. He immediately informs Kevin, the senior database administrator, who decides to restore the database from the last clean backup, ensuring that the CRM returns to operation with minimal data loss.",
     question: "What action is Kevin taking to resolve the problem?",
     options: [
@@ -4238,7 +4286,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Asymmetric encryption**.\n\n* **Why it's correct:** **Asymmetric encryption** (or public-key cryptography) uses a pair of mathematically related keys: a public key (used to encrypt) and a private key (used to decrypt, kept secret by the recipient).\n* **Analysis of the distractors:**\n  * **B) Key exchange** is the process/protocol for securely sharing cryptographic keys, not a standalone encryption method.\n  * **C) Communication encryption** refers to the general protection of data in transit, which can use both symmetric and asymmetric algorithms.\n  * **D) Symmetric encryption** uses a single shared secret key for both encryption and decryption.\n\n*Question ID: 64c281b7216b8641ab101dd*",
   },
   192: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "At Kelly Innovations Corp., Sarah notices that their main business application, which tracks customer orders, is not accurately updating inventory levels. A recent update appears to have introduced a bug.",
     question: "Which of the following options would offer the BEST solution?",
     options: [
@@ -4286,7 +4334,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Non-repudiation**.\n\n* **Why it's correct:** **Non-repudiation** ensures that the sender or recipient of a message cannot deny having respectively sent or received that message, typically through the use of cryptographic evidence (such as digital signatures and asymmetric keys).\n* **Analysis of the distractors:**\n  * **A) Authorization** establishes which actions, rights or functions are permitted to a user or system, but does not prevent the contestation of a message's sending.\n  * **C) Accounting** involves the monitoring and recording of user activities for auditing, traceability or billing purposes.\n  * **D) Confidentiality** ensures that information is not disclosed or made available to unauthorized parties.\n\n*Question ID: 652458d8ae19f8bdaee92dc1*",
   },
   196: {
-    topic: "Change Management Processes",
+    topic: "Change Management",
     scenario: "A company is updating the configuration of a production firewall as part of its structured change management process.",
     question: "Which technical implication is most likely to occur during this process?",
     options: [
@@ -4346,7 +4394,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Requiring that all employees read and sign an AUP**.\n\n* **Why it's correct:** An Acceptable Use Policy (**AUP**) defines the rules of behavior regarding the use of company assets. Requiring the reading and signing of the AUP is a directive control because it explicitly prescribes the actions and conduct expected from employees.\n* **Analysis of the distractors:**\n  * **B) Reviewing log files** is a detective control, aimed at identifying incidents after they occur.\n  * **C) Implementing MFA** is a technical/preventive control to block unauthorized access.\n  * **D) Conducting security awareness training** is a preventive control aimed at educating employees against future threats.\n\n*Question ID: 64bd7a6b79a4c3d4894757ca*",
   },
   201: {
-    topic: "PKI Infrastructure",
+    topic: "Public Key Infrastructure",
     scenario: "Managing public-key cryptography at scale requires a standardized organizational, technological and procedural structure.",
     question: "Which term is used to describe the creation, distribution, storage and revocation of digital certificates?",
     options: [
@@ -4358,7 +4406,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Public Key Infrastructure**.\n\n* **Why it's correct:** The **Public Key Infrastructure (PKI)** is the set of roles, policies, processes, hardware and software needed to manage the entire lifecycle of digital certificates and cryptographic keys (including creation, distribution, storage and revocation).\n* **Analysis of the distractors:**\n  * **A) Key Generation** is only the first phase of generating the cryptographic key pair.\n  * **C) Key Exchange** is the protocol by which two parties securely exchange symmetric keys.\n  * **D) Key Escrow** is the entrusting of a copy of the decryption keys to a trusted third party for emergency recovery purposes.\n\n*Question ID: 64c27a4e765533fcb52d9f36*",
   },
   202: {
-    topic: "PKI Infrastructure",
+    topic: "Public Key Infrastructure",
     scenario: "Dion Training intends to expand its online services, launching multiple subdomains for different courses (for example courses.diontraining.com, labs.diontraining.com, test.diontraining.com). They want a single digital certificate capable of protecting all these subdomains simultaneously.",
     question: "Which type of certificate should Dion Training consider?",
     options: [
@@ -4394,7 +4442,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Database encryption**.\n\n* **Why it's correct:** Technologies such as Transparent Data Encryption (TDE) in databases offer the ability to encrypt entire databases transparently. This is ideal for Dion Training, because it allows the entire collection of student records to be encrypted and decrypted extremely efficiently during normal database operations and queries.\n* **Analysis of the distractors:**\n  * **A) Partition encryption** encrypts specific partitions on a hard disk, but it is neither optimized nor specifically structured for the performance and operational needs of a DBMS.\n  * **B) Record-level encryption** encrypts each record within the database individually. Although it offers granular control, it introduces significant performance overhead (inefficiency) when querying or scanning large amounts of records.\n  * **D) Volume encryption** secures an entire virtual/physical volume or drive, protecting data at rest against the physical theft of the disks, but does not provide the specific flexibility and efficiency required for the queries and internal operations of the active database.\n\n*Question ID: 6525840ad7819dc1960699bd*",
   },
   205: {
-    topic: "Physical Security",
+    topic: "Physical Security Controls",
     scenario: "Gerald, the IT manager, is implementing a system in which employees must possess a device/token to gain access to certain specific areas within the corporate building.",
     question: "Which of the following options best explains the type of physical security they are implementing?",
     options: [
@@ -4442,7 +4490,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Allow list**.\n\n* **Why it's correct:** An **allow list** (or whitelist) is an explicit list of entities (e.g. IP addresses, applications or domains) that are granted access. By default, all subjects not expressly present in the list are rejected through an implicit deny rule.\n* **Analysis of the distractors:**\n  * **B) An approval process** is a formal organizational procedure to verify and authorize changes before their implementation; it is not an access control list.\n  * **C) A backout plan** describes the steps to undo a failed change in production and return to the previous stable state.\n  * **D) Restricted activities** are specific actions that cannot be performed for corporate security or regulatory reasons; they do not describe an 'implicit deny' access logic.\n\n*Question ID: 65242355f624fd072bce9dd1*",
   },
   209: {
-    topic: "PKI Infrastructure",
+    topic: "Public Key Infrastructure",
     scenario: "Organizations rely on public key infrastructure (PKI) to establish secure channels and validate the identity of servers or external business partners.",
     question: "Which of the following certificates is issued by a recognized external authority and inherently carries a higher level of trust for users and systems that do not know the origin of the certificate?",
     options: [
@@ -4514,7 +4562,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Data Plane**.\n\n* **Why it's correct:** The **Data Plane** within the Zero Trust model oversees the actual transport of the data. Once the Control Plane has granted access, the Data Plane is responsible for ensuring that the data is transmitted efficiently and correctly reaches the intended destination.\n* **Analysis of the distractors:**\n  * **A) Adaptive identity** uses dynamic security decisions based on user behavior and context, supporting the Control Plane in its decisions but without managing the transport of data.\n  * **C) Control Plane** deals with deciding whether to grant access by analyzing policies, identity and threat signals, but does not manage the transmission of data once the decision has been made.\n  * **D) Threat scope reduction** concerns limiting the potential damage zones within a network, to ensure that a breach in one area does not compromise the entire system, but it does not specifically focus on the transmission of data.\n\n* **Focused Mini-Example:** After the Control Plane approves an employee's access to a file server, the Data Plane routes and transmits the data packets containing the requested document, ensuring that they arrive intact and smoothly at the user's device.\n\n*Question ID: 65245f9aad40d9f61ab27775*",
   },
   215: {
-    topic: "Cryptographic Concepts",
+    topic: "Cryptography",
     scenario: "An organization is considering the adoption of cryptographic algorithms with longer key lengths to protect sensitive communications within a secure environment.",
     question: "What is the main security advantage of using a longer key length in encryption algorithms?",
     options: [
@@ -4722,7 +4770,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Shadow IT**.\n\n* **Why it's correct:** The term **Shadow IT** refers to the use of devices, software, services or applications within an organization without the explicit approval or control of the IT or security department. In this scenario, the independent purchase of the file-sharing service to overcome corporate limits fits this definition perfectly, introducing risks of sensitive-data leakage because the service is unmonitored.\n* **Analysis of the distractors:**\n  * **A) Social Engineering** describes psychological manipulations aimed at convincing people to perform actions or reveal secrets, which does not apply to the spontaneous use of unauthorized software.\n  * **C) Trojan Horse** is malware disguised as legitimate software to infect a computer, not a legitimate cloud service used spontaneously by employees.\n  * **D) Man-in-the-Middle (MitM)** is a network attack in which a malicious actor secretly intercepts the communication between two parties.",
   },
   37: {
-    topic: "Risk Assessment / Likelihood",
+    topic: "Risk Management & Analysis",
     scenario: "A cybersecurity expert is assessing corporate security and, based on recent similar incidents that occurred in the sector, classifies the probability of a data breach occurring as 'high'.",
     question: "Which risk-assessment term is being used?",
     options: [
@@ -6161,7 +6209,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Private Cloud hosted in Dedicated Host (Single-Tenant) mode**.\n\n* **Why it's the BEST:** Using dedicated hosts (Single-Tenant) in a private or public cloud environment lets the organization have exclusive use of the underlying physical hardware, satisfying compliance restrictions against data co-tenancy (multi-tenancy) and the risks of hypervisor side-channel attacks, while retaining the elasticity and automation typical of cloud APIs.\n* **Analysis of the distractors:**\n  * **A) Multi-tenant Public Cloud** means sharing the same physical server with other customers (tenants), violating the dedicated-hardware isolation requirement.\n  * **C) Co-location** requires the company to manually manage and maintain the physical hardware, losing the automated elasticity and on-demand advantages of the cloud.\n  * **D) Edge Computing** distributes computation close to end devices, not suited to centralizing a high-availability banking SaaS platform.\n\n* **Small Focused Example:** An investment bank migrating its sensitive databases to AWS chooses EC2 Dedicated Hosts. This way, the underlying physical hardware does not host other companies' virtual machines. This prevents CPU vulnerabilities (such as Spectre or Meltdown) or hypervisor escape bugs from allowing a malicious (multi-tenant) tenant on the same hardware to illicitly read the banking database's memory.",
   },
   22: {
-    topic: "Zero Trust Architecture (ZTA)",
+    topic: "Zero Trust Architecture",
     scenario: "A company is implementing a Zero Trust architecture (ZTA) according to the NIST SP 800-207 standards. A remote employee tries to access the corporate Git server from a hotel's public Wi-Fi connection. The system evaluates multi-factor authentication, the patch status of the user's corporate laptop, the unusual geographic origin and the presence of a valid X.509 client certificate on the device before granting access.",
     question: "Which logical component of the Zero Trust architecture receives and processes this dynamic context evaluation to authorize or deny the connection?",
     options: [
@@ -6197,7 +6245,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) SNMPv3 with the 'authPriv' security levels**.\n\n* **Why it's the BEST:** SNMPv3 is the only version of SNMP that introduces strong cryptographic authentication and packet encryption through the 'authPriv' (Authentication and Privacy) security level. This prevents both unauthorized reading of telemetry data and the injection of false configuration commands, eliminating the intrinsic vulnerabilities of SNMPv1 and SNMPv2.\n* **Analysis of the distractors:**\n  * **B)** While an IPsec VPN can encrypt transit, implementing and managing individual IPsec tunnels to hundreds of local switches/routers just for monitoring would be extremely complex and inefficient compared to natively enabling SNMPv3.\n  * **C)** Complex community strings in SNMPv2c are still transmitted in cleartext on the network and can be intercepted with a simple sniffer (e.g. Wireshark).\n  * **D) Telnet** is not a standard monitoring protocol, does not natively encrypt, and using SSL on top of it is not a standard market solution.\n\n* **Small Focused Example:** An analyst intercepts monitoring network traffic. If the company uses SNMPv2c, the analyst will see the authentication string (community string, e.g. `company_read`) pass in cleartext inside the UDP packet. They could then send forged packets to reconfigure the switch. By migrating to SNMPv3 with `authPriv` mode, the string and telemetry data travel fully encrypted with AES, rendering any sniffing and device-manipulation attempt ineffective.",
   },
   25: {
-    topic: "Cryptographic Concepts & Hashing",
+    topic: "Cryptography",
     scenario: "The software development department is designing a SQL database to store user credentials for a corporate e-commerce portal. The security architect must ensure that, in the event of a database breach and theft of the user table, attackers cannot recover the plaintext passwords through high-speed offline dictionary attacks (e.g. GPU cracking).",
     question: "Which represents the correct and secure password storage technique and approach?",
     options: [
@@ -6209,7 +6257,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Store passwords by applying a slow hashing algorithm (e.g. bcrypt or Argon2) combined with a unique 'salt' randomly generated for each user**.\n\n* **Why it's the BEST:** Using a slow, 'key-stretching' hashing algorithm (e.g. bcrypt, PBKDF2, Argon2) artificially raises the computational cost to compute each hash, drastically slowing offline brute-force attacks run via GPU. Adding a 'salt' (a unique random value stored alongside the hash) defeats the effectiveness of pre-computed tables (Rainbow Tables) and ensures identical passwords produce completely different hashes in the database.\n* **Analysis of the distractors:**\n  * **A) Reversible encryption** (like AES) exposes the risk of total password compromise if an attacker obtains both the database and the cryptographic key.\n  * **B) SHA-256** is an extremely fast algorithm, designed for large-scale data integrity. An attacker can compute billions of SHA-256 hashes per second with GPUs, making the offline brute-force attack very fast if not protected by a slowdown and salting mechanism.\n  * **C) Cleartext passwords** represent a catastrophic violation of OWASP and GDPR guidelines, unacceptable in any production scenario.\n\n* **Small Focused Example:** An e-commerce application uses Argon2id to store passwords. When a user sets the password `123456`, the system generates a random salt (e.g. `f83j2`) and computes the hash with a cost factor requiring 0.5 seconds of CPU computation. If an attacker steals the database, they cannot use precompiled tables (Rainbow Tables) because each user has a different salt, and they are slowed to just 2 attempts per second per CPU core, making it mathematically impossible to guess passwords through large-scale brute-force attacks.",
   },
   26: {
-    topic: "Public Key Infrastructure (PKI) & Revocation",
+    topic: "Public Key Infrastructure",
     scenario: "An internal user tries to connect to a secure corporate web portal. During the TLS handshake, the user's browser detects that the X.509 digital certificate presented by the web server was revoked three days ago by the security administrator because the corresponding private key had been accidentally exposed on GitHub. The user's browser immediately blocks the connection.",
     question: "Through which low-latency, high-efficiency method and protocol did the browser verify the certificate's revocation status in real time without burdening the Certificate Authority?",
     options: [
@@ -6257,7 +6305,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) IPsec (or SSL/TLS) client-to-site VPN tunnel with two-factor authentication (MFA) and AES-256 encryption**.\n\n* **Why it's the BEST:** Using an encrypted VPN (Virtual Private Network) (IPsec or SSL/TLS) creates a protected end-to-end channel that encrypts all corporate data traffic at the network level before sending it over untrusted channels (like the public Internet). Integrating strong encryption (AES-256) ensures information confidentiality, two-factor authentication (MFA) prevents unauthorized access in case of password theft, and the cryptographic packet signatures ensure integrity, preventing MitM attacks.\n* **Analysis of the distractors:**\n  * **A), C) and D)** Using cleartext protocols like Telnet, FTP or unencrypted HTTP transmits all sensitive information and access credentials in cleartext on the network, allowing anyone monitoring the transit to intercept and modify the data or steal the access.\n\n* **Small Focused Example:** A salesperson works from an airport's public Wi-Fi. Without a VPN, a malicious user in the same room could start an ARP spoofing attack to intercept and read the data sent to the corporate server. By activating the IPsec AES-256 VPN tunnel, the entire data flow is enclosed in ESP packets encrypted at the source on the laptop; the attacker at the airport will see only undecipherable cryptographic noise pass by.",
   },
   30: {
-    topic: "Cryptographic Concepts & Hashing",
+    topic: "Cryptography",
     scenario: "A security administrator must send a critical firmware build to a remote industrial SCADA system. It is essential that the remote system verify with absolute certainty two requirements before installing the firmware: first, that the file has not been altered or corrupted during transmission (Integrity); second, that the firmware actually comes from the company's authorized administrator and not from an attacker (Non-Repudiation and Authenticity).",
     question: "Which cryptographic mechanism simultaneously and natively satisfies both requirements?",
     options: [
@@ -6281,7 +6329,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Continuous backups**.\n\n* **Why it's correct:** **Continuous backups** (or real-time backups) allow near-instant saving of modified data, ensuring minimal data loss (RPO close to zero) during a failure, which is essential for high-volume transactional systems.\n* **Analysis of the distractors:**\n  * **A) Weekly full backups** involve saving the entire database once a week, risking the loss of up to a full week of transactions in case of an error.\n  * **C) Differential backups** save data modified since the last full backup (often performed at intervals of a few days or weekly), leading to potential data loss of several days.\n  * **D) Daily incremental backups** capture only the changes made since the last backup, usually at the end of the day, which would still expose the company to the loss of a full day of financial transactions.\n\n* **Small Focused Example:** An online-banking system records thousands of wire transfers per minute. If an incremental backup is configured every night at midnight, a hardware failure at 11:00 PM would cause the irreversible loss of 23 hours of customers' financial transactions. Using continuous backups (Continuous Data Protection - CDP), every single write to the database is immediately mirrored and saved to the secondary disaster-recovery site, reducing the RPO (Recovery Point Objective) to a few seconds.\n\n*Question ID: 652df3dc7586daa9b0968db2*",
   },
   172: {
-    topic: "On-Premise vs. Cloud Security",
+    topic: "Architecture Models & Shared Responsibility",
     scenario: "'Kelly Innovations' decides to manage its IT infrastructure entirely within its own physical premises (on-premise), keeping full control over corporate hardware, software and data.",
     question: "Which of the following security implications is MOST directly associated with this on-premise approach?",
     options: [
@@ -6305,7 +6353,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) EAP (Extensible Authentication Protocol)**.\n\n* **Why it's correct:** **EAP** provides a standard framework and interface to integrate different authentication methods (e.g. certificates, tokens, credentials). It can be used in various network-access scenarios, including Wi-Fi and wired Ethernet, offering great flexibility without having to modify the underlying network hardware.\n* **Analysis of the distractors:**\n  * **B) LDAP** is a query protocol for directory services used to interrogate user databases (e.g. Active Directory), but it is not a flexible wireless network authentication protocol.\n  * **C) WPA3** is the Wi-Fi security standard for protecting the transmission medium (radio encryption), and although it uses authentication mechanisms, it lacks the multi-protocol flexibility and extensibility of EAP.\n  * **D) RADIUS** is an AAA (Authentication, Authorization, Accounting) protocol that transports information between a network access server and a central server. Although it supports and transports EAP packets, it is not itself a flexible authentication method.\n\n* **Small Focused Example:** A university wants to allow corporate Wi-Fi access both to students via username/password (EAP-PEAP) and to faculty via a cryptographic certificate pre-installed on their institutional laptops (EAP-TLS). Instead of configuring two separate networks, the administrator implements WPA3 Enterprise by enabling the EAP framework, delegating the dynamic authentication of the different credentials to a centralized RADIUS server.\n\n*Question ID: 652c7abaa67f751703997ca7*",
   },
   174: {
-    topic: "Vulnerability & Patch Management",
+    topic: "Vulnerability Management",
     scenario: "An information-security manager must evaluate the long-term reliability of several commercial software products to install on corporate servers, ensuring that the developers consistently release fixes for discovered security flaws.",
     question: "Which of the following terms refers to the ability to obtain and promptly apply security updates or fixes for software or systems?",
     options: [
@@ -6329,7 +6377,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Ease of Recovery**.\n\n* **Why it's correct:** **Ease of Recovery** determines how quickly and efficiently a cloud infrastructure can be brought back to its optimal operating state following a security incident, a power outage or a system crash.\n* **Analysis of the distractors:**\n  * **B) Patch availability** is essential to resolve security vulnerabilities in the code, but it does not by itself measure the speed of data and server recovery after a disaster has already occurred.\n  * **C) Microservices** are a software architectural style that increases modularity, but they do not by default ensure data recovery or business continuity in case of catastrophic infrastructure failure.\n  * **D) Ease of deployment** evaluates how simple and automated it is to install and configure new systems or updates, but does not specifically focus on post-disaster recovery or disaster-recovery procedures.\n\n* **Small Focused Example:** A PostgreSQL cloud database is encrypted by ransomware introduced through breached credentials. Thanks to a resilient cloud architecture based on Point-in-Time Recovery (PITR) and immutable snapshots replicated in multi-region mode, the administrator can restore the database to the intact state of one minute before the attack with just a few clicks, completing the 'recovery' procedure in under 10 minutes.\n\n*Question ID: 65170f2af4240bff7735dcfa*",
   },
   176: {
-    topic: "Cloud Security Governance",
+    topic: "Governance, Boards & Committees",
     scenario: "An organization is negotiating a cloud (SaaS) service contract and must formally and precisely define which security controls will be managed by the provider and which will fall under the direct responsibility of the client company.",
     question: "Which of the following terms refers to the document that explicitly defines the tasks and responsibilities that the different parties carry out in a cloud service agreement?",
     options: [
@@ -6401,7 +6449,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Layer 7**.\n\n* **Why it's correct:** **Layer 7** (or application layer) deals with end-user-oriented services. Appliances operating at this layer (such as Web Application Firewalls - WAFs) can make complex filtering decisions based on application-specific elements like URLs, HTTP headers and web content.\n* **Analysis of the distractors:**\n  * **A) Layer 3 devices** (network layer) deal with IP addressing and routing, not application criteria like URLs or HTTP headers.\n  * **B) Layer 5** (session layer) manages connections between applications, but does not focus on filtering based on specific HTTP content.\n  * **D) Layer 6** (presentation layer) is responsible for the translation, formatting and encryption of data between the application and transport layers, not for application-traffic filtering.\n\n* **Small Focused Example:** A user tries to perform a Cross-Site Scripting (XSS) attack by inserting the tag `<script>alert(1)</script>` in a web form. A traditional Layer 3 or 4 firewall (based only on ports and IPs) will detect nothing and allow the packet. A Web Application Firewall (WAF) operating at Layer 7 (Application) instead inspects the HTTP header and payload, recognizes the malicious JavaScript code and blocks the HTTP request by sending a 403 Forbidden error.\n\n*(Question ID: 652c85133b1d2556f6cb6b7f)*",
   },
   417: {
-    topic: "Data Protection & Obfuscation",
+    topic: "Data Classification & Security",
     scenario: "In a non-production or test environment, sensitive data must be protected to avoid accidental or unauthorized exposure of real information.",
     question: "Which of the following techniques replaces sensitive data with fictitious but structurally similar data to protect it in test or development environments?",
     options: [
@@ -6413,7 +6461,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Masking**.\n\n* **Why it's correct:** **Data Masking** uses fictitious but structurally similar data (e.g. replacing a real tax code with a fake but formally valid one) to protect sensitive information, making the environment safe for developers and testers without compromising the application logic.\n* **Analysis of the distractors:**\n  * **B) Hashing** transforms data into a non-invertible fixed-length string; it does not generate structurally similar fictitious data for interactive use in tests.\n  * **C) Segmentation** consists of dividing a network into smaller segments to control traffic and improve security; it has no relationship to modifying data.\n  * **D) Encryption** converts data into an unreadable format through cryptographic keys, but does not maintain the readable fictitious structure needed for many kinds of application testing.\n\n* **Small Focused Example:** A team of developers must test a new billing feature that analyzes credit card numbers. Instead of using real production data (exposing the company to GDPR fines), the test database undergoes a Data Masking process: all customers' credit cards are replaced with generated strings like `4111 1111 1111 1111` (numbers valid for the Luhn algorithm but fake) and cardholder names are replaced with `Fictitious User 1`. Developers can test the app realistically without ever seeing real customer information.\n\n*(Question ID: 64c189d3eb612b1be38074ff)*",
   },
   418: {
-    topic: "Backup & Redundancy Strategies",
+    topic: "Backup & Recovery",
     scenario: "Enrique at Dion Training is responsible for ensuring that corporate project data is protected from potential loss, especially considering that the office is located in a region prone to natural disasters.",
     question: "Which backup method would offer the most secure protection by keeping a copy of the data physically separate from the company premises?",
     options: [
@@ -6437,7 +6485,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) EAP (Extensible Authentication Protocol)**.\n\n* **Why it's correct:** **EAP** (Extensible Authentication Protocol) is a flexible, extensible authentication framework that supports various verification methods (e.g. passwords, hardware tokens, digital certificates, smart cards). It is widely used for remote access and corporate networks precisely for its ability to adapt to complex security requirements.\n* **Analysis of the distractors:**\n  * **A) SD-WAN** is a virtual wide-area network architecture (Software-Defined) that optimizes transport-traffic routing, not a protocol to authenticate remote users.\n  * **B) IPsec** ensures the confidentiality and integrity of network traffic through encryption and encapsulation (e.g. in VPN tunnels), but is not focused on managing various flexible user-authentication methods like EAP.\n  * **D) ICMP** is a service protocol used to send network control and diagnostic messages (e.g. ping, traceroute), lacking any authentication function.\n\n* **Small Focused Example:** A consulting firm introduces the use of physical FIDO2 USB security keys for all employees. Having a network infrastructure based on EAP, the network administrator can simply configure the RADIUS authentication server to support EAP-TLS with the new hardware keys, without having to change or reconfigure the existing switches or Wi-Fi access points in the building.\n\n*(Question ID: 64c16de0fbaff7327d208b4a)*",
   },
   420: {
-    topic: "Financial Security & Regulatory Compliance",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "To protect customers' financial records and adhere to the standards established to prevent money laundering and tax fraud, a bank must define its security strategy.",
     question: "Which of the following represents the BEST overall strategy a bank should adopt?",
     options: [
@@ -6449,7 +6497,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Strict adherence to AML/KYC regulations and secure data storage**.\n\n* **Why it's correct:** Compliance with **AML (Anti-Money Laundering)** and **KYC (Know Your Customer)** regulations ensures adherence to the legal and financial requirements to prevent illicit transactions and scams, while secure data storage protects the confidentiality of sensitive customer information against potential breaches.\n* **Analysis of the distractors:**\n  * **A) Multi-factor authentication (MFA)** hardens access to user credentials, but does not fully and directly address the specific banking regulatory needs of money-laundering prevention.\n  * **C) Regular, encrypted backups** ensure resilience and recovery in case of disasters or ransomware, but do not prevent fraudulent activities or money laundering.\n  * **D) IDS and continuous monitoring** detect technical threats on the network, but do not provide the legal identity verification and financial compliance required by AML/KYC regulations.\n\n* **Small Focused Example:** Before opening an online checking account, a digital bank requires the customer to upload a photo of their ID and a real-time video selfie (KYC process). This check cross-references the data with international sanctions and anti-money-laundering (AML) lists. Once approved, the customer's profile is saved in an encrypted-at-rest database to ensure its legal compliance and protect it from identity theft.\n\n*(Question ID: 652d69b293b3c17be3400943)*",
   },
   421: {
-    topic: "OSI Model & Packet-Filtering Firewalls",
+    topic: "OSI Model & Traffic Filtering",
     scenario: "Kelly Innovations LLC wants to implement a network appliance focused on filtering traffic based on IP addresses (source and destination) and port numbers.",
     question: "At which layer of the OSI model does this appliance primarily operate?",
     options: [
@@ -6461,7 +6509,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Layer 4**.\n\n* **Why it's correct:** **Layer 4** (transport layer) manages protocols like TCP and UDP and deals directly with logical port numbers to establish end-to-end connections. Traditional firewalls that check source/destination ports and track connection state operate at this layer.\n* **Analysis of the distractors:**\n  * **A) Layer 5** (session layer) establishes, maintains and terminates communication sessions between applications on different hosts; it does not handle port and IP filtering.\n  * **B) Layer 3** (network layer) focuses on IP addressing and routing (e.g. routers), but does not analyze transport ports for advanced filtering.\n  * **C) Layer 2** (data-link layer) operates with physical frames and MAC addresses (e.g. switches), without visibility into the traffic's ports or IP addresses.\n\n* **Small Focused Example:** A network administrator installs a stateful border firewall. They configure a rule that reads: *'Allow inbound traffic only to IP 192.168.1.50 on TCP port 443 (HTTPS)'*. The firewall will analyze the packet's TCP header (Layer 4) to check the port number (443) and the state of the SYN flag to track the connection before allowing the packet through.\n\n*(Question ID: 652c848c3b1d2556f6cb6b7a)*",
   },
   422: {
-    topic: "Control Architecture Models",
+    topic: "Identity & Access Control Models",
     scenario: "An organization is evaluating which architecture model to adopt for the centralized or distributed management of its information systems.",
     question: "Which of the following architecture models involves the use of a single point of control or authority to manage a system or service?",
     options: [
@@ -6473,7 +6521,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Centralized**.\n\n* **Why it's correct:** A **centralized** model concentrates all control and operational decisions in a single node or central authority, offering simplicity of management, consistency and ease of policy enforcement, although it presents the risk of a Single Point of Failure.\n* **Analysis of the distractors:**\n  * **A) A responsibility matrix** is a governance document (e.g. RACI) that defines who does what, not a system architecture model.\n  * **B) On-premises** indicates where the infrastructure is physically hosted (on company premises), but does not define whether its logical management is centralized or decentralized.\n  * **C) A decentralized model** distributes control and authority among multiple independent points or nodes, increasing fault tolerance but raising complexity.\n\n* **Small Focused Example:** A company adopts a central MDM (Mobile Device Management) system (e.g. Microsoft Intune) to manage all employees' corporate phones. When the administrator wants to enforce a new password policy (minimum 8 characters), they configure it on the central MDM console. All remote devices distributed around the world instantly receive the update from that single authoritative source.\n\n*(Question ID: 64c050ab622fbc04cdbf2532)*",
   },
   423: {
-    topic: "Network Intermediary Devices",
+    topic: "Network Security Devices",
     scenario: "To improve its users' privacy, Kelly Innovations LLC is evaluating a system that can act as an intermediary for Internet requests, hiding the request's origin from the destination server.",
     question: "Which solution BEST fits this purpose?",
     options: [
@@ -6485,7 +6533,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Proxy server**.\n\n* **Why it's correct:** A **proxy server** positions itself between the client and the destination server on the Internet. It forwards the client's requests on its behalf, masking the client's original IP address with its own, thus ensuring anonymity and privacy.\n* **Analysis of the distractors:**\n  * **B) A router** routes data packets between different networks, but does not intrinsically mask the origin of requests unless specifically configured with complex NAT, and does not operate as an application proxy.\n  * **C) An IPS** monitors and blocks malicious traffic in transit; it does not act as an intermediary to protect the anonymity of general browsing.\n  * **D) A jump server** is a hardened server used by administrators to securely connect to a protected network zone before performing management activities; it does not serve to mask users' ordinary Internet browsing.\n\n* **Small Focused Example:** A corporate user browses a technical blog from an internal workstation. The request first passes through the corporate Proxy server. The proxy makes the request to the blog using its own corporate public IP address and returns the page to the user. To the blog's web server, the user's laptop private IP remains completely unknown and invisible, increasing confidentiality while also allowing the proxy to analyze the traffic to exclude malware.\n\n*(Question ID: 652c75a274644bf66062a2f2)*",
   },
   424: {
-    topic: "Resilience & Continuity Strategies",
+    topic: "Business Continuity & Disaster Recovery",
     scenario: "An organization wants to plan an optimal infrastructure strategy to mitigate the risk of widespread outages caused by a localized failure in its infrastructure.",
     question: "Which of the following strategies is the MOST effective to achieve this goal?",
     options: [
@@ -6497,7 +6545,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Infrastructure diversification**.\n\n* **Why it's correct:** **Infrastructure diversification** distributes resources, data and applications across different cloud providers, data centers, platforms and geographic locations. This ensures that if a single component or an entire local data center suffers a service outage or a security incident, business operations can continue without total stoppages.\n* **Analysis of the distractors:**\n  * **B) Geographic restrictions** determine where data can be stored or from where it can be accessed for legal compliance, but do not by themselves introduce diversification for fault tolerance.\n  * **C) Permission restrictions** regulate access to resources based on users' roles (Identity and Access Management), without affecting hardware or server redundancy.\n  * **D) Data masking** is a technique to hide sensitive information in test databases, entirely unrelated to mitigating physical infrastructure outages.\n\n* **Small Focused Example:** An e-commerce company hosts its web application on AWS, but configures a secondary database synchronized in real time on Microsoft Azure (multi-cloud strategy). If a serious anomaly shuts down the entire primary AWS region, an automatic failover system (DNS) instantly redirects users to the secondary server running on Azure, avoiding service downtime and financial losses.\n\n*(Question ID: 652ee4f0a5199fdd13f637ec)*",
   },
   501: {
-    topic: "Real-Time Operating Systems (RTOS) and Security",
+    topic: "ICS/OT Security",
     scenario: "A drone manufacturer uses a real-time operating system (RTOS) to ensure the timely execution of tasks. During optimization for real-time performance, which of the following security concerns could arise?",
     question: "Which of the following security concerns could arise?",
     options: [
@@ -6509,7 +6557,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Inadequate buffer overflow protections**.\n\n* **Why it's correct:** RTOS (Real-Time Operating Systems) prioritize performance and strict timing determinism, often at the expense of complex security controls such as advanced buffer-overflow protections (for example, ASLR or stack canaries), which could introduce latency or unpredictability in task execution. This can make embedded systems more vulnerable to this kind of exploit.\n* **Analysis of the distractors:**\n  * **A) Uncontrolled cloud access** is not a security problem directly or intrinsically related to the use of an RTOS.\n  * **B) Lack of legacy protocol support** does not represent a direct security threat or concern tied to the RTOS's real-time performance.\n  * **D) Overhead from virtualization** is not correct because RTOSs are designed to be extremely lightweight and efficient and generally do not use virtualization layers.\n\n* **Small Focused Example:** In a drone's flight-control system firmware (RTOS), developers disable stack-canary protection and address-space layout randomization (ASLR) to save precious CPU microseconds during trajectory computation. A remote attacker, by sending malformed telemetry data packets longer than expected, manages to overwrite the serial port's buffer memory, executing arbitrary code that shuts off the motors in flight.\n\n*(Question ID: 652c438f6000c2244d013a0d)*",
   },
   502: {
-    topic: "On-Premise vs. Cloud Security",
+    topic: "Architecture Models & Shared Responsibility",
     scenario: "Which of the following terms refers to the delivery of computing services over the Internet, such as servers, storage, databases, networking, software, analytics and intelligence?",
     question: "Which of the following terms refers to the delivery of computing services over the Internet, such as servers, storage, databases, networking, software, analytics and intelligence?",
     options: [
@@ -6569,7 +6617,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Encryption during transmission**.\n\n* **Why it's correct:** When transmitting sensitive data to external service providers through public channels (Internet), the main risk is data interception (On-path/MitM attacks). Implementing strong encryption during transit (through secure protocols such as TLS or HTTPS) is the most critical aspect to protect the confidentiality and integrity of the information.\n* **Analysis of the distractors:**\n  * **A) Virtualization isolation** concerns the separation of virtual-machine resources on the same physical hardware, but does not address network risks during the active shipping of data to third parties.\n  * **C) Access control policies** are important for governing who has access to resources, but do not protect data from physical interception while it travels over the external network.\n  * **D) Endpoint security** protects the devices and servers connected to the network, but does not ensure the security of the data traffic in transit between them.\n\n* **Small Focused Example:** A locally hosted billing application must send transaction data to an external provider for payment processing. The security architect insists that the connection use HTTPS with mandatory TLS 1.3 encryption and PFS (Perfect Forward Secrecy) cipher suites. This way, even if an attacker intercepted all the network packets on the border router, they would see only incomprehensible binary streams without being able to steal the customers' card data.\n\n*(Question ID: 65171dfb50fd765762f8e252)*",
   },
   507: {
-    topic: "Security Exercises & Methodologies",
+    topic: "Incident Response",
     scenario: "Data Core, a data-processing company, has gathered its security team for a meeting in which the Chief Operations Officer presents a scenario relating to a just-discovered zero-day vulnerability to which their systems are particularly sensitive. The team discusses various ways to address the problem, with two main competing approaches emerging.",
     question: "What type of exercise are they most likely performing?",
     options: [
@@ -6617,7 +6665,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Regulated**.\n\n* **Why it's correct:** **Regulated data** is information subject to specific laws, standards or regulations (such as GDPR, HIPAA, PCI-DSS) that impose precise obligations for protection, retention and compliance. Labeling this data as 'Regulated' ensures it is handled according to the applicable legal compliance requirements.\n* **Analysis of the distractors:**\n  * **A) Secret** and **C) Confidential** are classification levels based on sensitivity and the potential negative impact in case of unauthorized disclosure, but do not necessarily indicate that the data is governed by specific external regulations.\n  * **B) Data at rest** describes the physical state of data stored on a storage medium (hard disk, NAS, cloud storage), not a compliance classification.\n\n* **Small Focused Example:** At a travel agency, the IT manager assigns the 'Regulated' label to all databases that store customers' credit card numbers (PCI-DSS data) and passport numbers (personal data under GDPR). This marking automatically activates advanced encryption policies and mandates the automatic deletion of the data after 12 months, ensuring the company successfully passes the annual compliance audits.\n\n*(Question ID: 64c196c9ecb41e3664cf3e58)*",
   },
   511: {
-    topic: "Secure Appliance Administration",
+    topic: "Secure Network Protocols",
     scenario: "Croma Soft, a video-game company, wants to reduce the publicly exposed attack surface for its corporate servers. It hopes to achieve this by using a device able to manage and relay requests on behalf of the internal servers.",
     question: "Which type of network appliance would be MOST appropriate for this purpose?",
     options: [
@@ -6629,7 +6677,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Proxy server**.\n\n* **Why it's correct:** A **proxy server** (in particular a reverse proxy) sits between external clients on the Internet and the company's backend servers, intercepting and handling incoming requests and then forwarding them to the appropriate servers. This masks the identity, the real IP addresses and the internal structure of the backend servers, significantly reducing the publicly exposed attack surface.\n* **Analysis of the distractors:**\n  * **A) A load balancer** distributes incoming traffic across multiple servers to optimize performance and high availability, but its primary purpose is not to act as a protective relay to mask internal servers in order to reduce the attack surface.\n  * **C) An IDS (Intrusion Detection System)** monitors network traffic looking for malicious activity and issues alerts, but does not act as an intermediary to manage and forward server requests.\n  * **D) A Jump server** is used as a secure bridge (bastion host) to allow administrators to connect to other servers or networks in separate security zones for maintenance activities, but is not designed to manage and forward external public application traffic requests.\n\n*(Question ID: 64c16da16ab51895b912b830)*",
   },
   512: {
-    topic: "Data Security Technologies",
+    topic: "Data Classification & Security",
     scenario: "Protecting data stored on permanent storage media (such as databases, configuration files and storage media) is a crucial priority to prevent unauthorized access and theft of physical or logical information.",
     question: "Which of the following methods BEST ensures the security of data at rest?",
     options: [
@@ -6689,7 +6737,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) IEEE 802.1X standard**.\n\n* **Why it's correct:** The **802.1X** standard is the Port-Based Network Access Control protocol. When a device connects to a switch's physical port (or to a Wi-Fi access point), the protocol requires authentication (usually interfacing with a RADIUS server) before unlocking the port and allowing data traffic to transit toward the corporate network.\n* **Analysis of the distractors:**\n  * **A) Fail-closed** indicates a behavior in which, if a control system or firewall encounters an error or stops working, it blocks all connections by default to ensure maximum security, but does not describe a port-based authentication system.\n  * **C) Fail-open** indicates that, in case of a failure, the system allows all traffic through to ensure service continuity at the expense of security.\n  * **D) An IDS (Intrusion Detection System)** analyzes network traffic looking for malicious patterns or anomalies, but does not block the physical or logical access of ports during the device's initial connection phase.\n\n*(Question ID: 64c16bdc6ab51895b912b82b)*",
   },
   517: {
-    topic: "Data Security Technologies",
+    topic: "Data Classification & Security",
     scenario: "A company wants to ensure both the integrity (making sure they are not altered or tampered with) and the confidentiality of its operating-system files, both during network transfer (in transit) and during storage on disk (at rest).",
     question: "Which of the following represents the MOST effective approach to protect these files?",
     options: [
@@ -6773,7 +6821,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Port security**.\n\n* **Why it's correct:** **Port security** is a feature of managed network switches that allows limiting which devices can connect to a network based on their unique physical MAC addresses. The switch can be configured to allow only specific MAC addresses on each physical port, automatically blocking any unauthorized device that tries to connect.\n* **Analysis of the distractors:**\n  * **A) Fail-open** is a failure mode that allows traffic to continue flowing in case of a malfunction of the security device, not a control mechanism based on physical addresses.\n  * **B) The jump server** provides secure access to devices in separate security zones for administrative activities; it does not control network connectivity based on MAC addresses.\n  * **D) TLS** is a cryptographic protocol for the security of communications in transit; it does not control access based on the physical identity of the hardware.\n\n* **Small Focused Example:** A network administrator configures port security on all switches on the office floor. Each switch port is programmed to accept only one specific MAC address (that of the corporate laptop assigned to that workstation). If an employee connects an unauthorized personal laptop or a hub to that port, the switch automatically disables the port (shutdown mode) and generates a security-violation log, preventing access to the corporate network.\n\n*(Question ID: 64c1738a6ab51895b912b853)*",
   },
   532: {
-    topic: "Incident Response & Testing",
+    topic: "Incident Response",
     scenario: "Morris has organized an exercise for his security team to test the new defense plans. He divided the team into two groups of similar experience and size: one defends the system and the other attempts to breach it. The groups compete against each other and the winning team will receive a lunch offered by the company.",
     question: "Which type of exercise did Morris create?",
     options: [
@@ -6905,7 +6953,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) UTM (Unified Threat Management)**.\n\n* **Why it's correct:** A **UTM (Unified Threat Management)** device consolidates multiple security features into a single appliance: intrusion detection/prevention, firewall, content filtering, anti-malware gateway and VPN. It provides complete protection by unifying tools that would otherwise require separate devices.\n* **Analysis of the distractors:**\n  * **A) VPN gateway** allows users to connect securely to a private network over the Internet, but does not include other security functions such as antivirus or intrusion prevention.\n  * **B) Firewall** is designed specifically to block unauthorized access while allowing legitimate communications. On its own, it typically does not include full antivirus or VPN features.\n  * **C) IPS (Intrusion Prevention System)** can detect and prevent network attacks in real time, but does not offer the broad spectrum of antivirus-gateway and VPN features that characterize a UTM.\n\n* **Small Focused Example:** An SMB with 50 employees installs a Fortinet FortiGate (UTM) at the network edge. In a single device it obtains: a stateful firewall, an IPS that blocks exploits in real time, web filtering that prevents access to malicious sites, an antivirus gateway that scans incoming emails and an SSL VPN client for remote-working employees. Without a UTM, it would need 4-5 separate appliances to manage and maintain.\n\n*(Question ID: 652c79f0c7a7b1e22ed067c1)*",
   },
   527: {
-    topic: "Physical & Environmental Security",
+    topic: "Physical Security Controls",
     scenario: "Dion Training Solutions is implementing a security system for its research facility, where highly sensitive data is stored. If the physical access-control system were to fail, the security team must ensure that no unauthorized personnel can access the facility, even if this causes some inconvenience for authorized personnel.",
     question: "Which operating mode should be adopted in case of a failure of the access-control system?",
     options: [
@@ -7495,7 +7543,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   4: {
   11: {
-    topic: "Vulnerability Scanning & Assessment",
+    topic: "Vulnerability Scanning",
     scenario: "A security analyst works in a financial organization with a tight budget for scanning licenses and a limited maintenance time window. They need to obtain a detailed picture of the security patch status, the non-compliant Windows registry keys and the software configurations on the internal servers used to store sensitive PCI-DSS data.",
     question: "Which vulnerability scanning technique should the analyst select as the FIRST choice to obtain these high-fidelity results while minimizing the risk of false positives and the performance impact on the network?",
     options: [
@@ -7507,7 +7555,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Credentialed vulnerability scan**.\n\n* **Why it's the BEST:** An authenticated (credentialed) scan connects directly to the host at the local level (using APIs, SSH or administration protocols such as WMI) and examines the actual file system, the registries and the internal patch status. This eliminates the need to infer the vulnerability status only through external banners, ensuring an extremely low false-positive rate and avoiding flooding the network with active exploit packets.\n* **Why the others are not correct:**\n  * **A)** Non-credentialed scans analyze the exterior of the servers and are unable to verify deep registry keys or the status of local patches not associated with exposed ports.\n  * **B)** Passive scanning merely collects traffic and does not have acceptable precision for formal PCI-DSS patch-management audits.\n  * **D)** Banner grabbing only detects the software version externally declared by the network services (which could be wrong or deliberately obscured), producing high false positives.",
   },
   12: {
-    topic: "Packet Analysis & Flows",
+    topic: "Network Monitoring & Analysis",
     scenario: "During a preventive security check on an industrial SCADA network, an analyst detects in the flow monitoring (NetFlow) sudden and constant spikes of UDP port 53 traffic toward an unknown IP address located abroad. Suspecting a breach or the active exfiltration of proprietary machinery-automation code through DNS Tunneling, the analyst wants to analyze the packet content to validate the hypothesis.",
     question: "Which tool or command represents the correct choice to collect and thoroughly examine the payload of this specific anomalous communication?",
     options: [
@@ -7519,7 +7567,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) tcpdump -i eth0 -w suspect_traffic.pcap**.\n\n* **Why it's the BEST:** To detect and prove a DNS Tunneling attack, it is essential to examine the internal structure of the payload (e.g. unusual hexadecimal strings encoded within DNS TXT queries or very long subdomains). `tcpdump` allows capturing the actual packets (Full Packet Capture) at the network-interface level and writing them to a PCAP file that can later be analyzed with Wireshark.\n* **Why the others are not correct:**\n  * **B) Netstat** only shows the active connections and open sockets on the local system at that moment; it does not allow recording or capturing historical packets.\n  * **C) Nmap** serves for active port scanning and reconnaissance, not for capturing or inspecting the payload of the traffic in transit.\n  * **D) `ipconfig /displaydns`** only shows the host's local DNS cache, giving no visibility into the exfiltrated data or the complete queries sent over the network.",
   },
   13: {
-    topic: "Log Management & Syslog",
+    topic: "Log Analysis",
     scenario: "The Security Operations Center (SOC) receives multiple alerts coming from different points of the corporate infrastructure that signal a possible coordinated APT attack: a block of failed authentication attempts on Active Directory, changes to a border firewall's rules, and the creation of an anomalous service account on a Web server. However, during triage, the analyst is unable to map the correct chronological sequence of events in the SIEM's centralized logs, because the timestamps show deviations of several minutes between the devices.",
     question: "Which infrastructure vulnerability or operational shortcoming represents the main cause of the inability to reconstruct the incident's exact timeline?",
     options: [
@@ -7531,7 +7579,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Failure to configure and synchronize the NTP (Network Time Protocol) protocol on the network devices**.\n\n* **Why it's the BEST:** Time synchronization through the NTP protocol is a mandatory requirement for forensic logging and event correlation. If devices have misaligned internal clocks, the SIEM's time-window-based correlation rules will fail, preventing the correct sequential reconstruction of the attackers' actions.\n* **Why the others are not correct:**\n  * **B)** Using cleartext Syslog (UDP 514) exposes the risk of interception or tampering of the logs in transit, but does not alter the internal timestamps if the devices are synchronized.\n  * **C)** The absence of automatic correlation prevents proactive alerts, but would not prevent a manual search of the time sequence if the timestamps were correct.\n  * **D)** A Debug level (7) exponentially increases the log verbosity, exhausting storage, but does not cause time offsets.",
   },
   14: {
-    topic: "SIEM & SOAR Systems",
+    topic: "Security Monitoring & Alerting",
     scenario: "A next-generation ransomware is hitting a healthcare-services organization. The EDR system detects the anomalous and rapid encryption of PDF files on the main server of the cardiology department at 02:00 in the morning on Sunday. The on-call SOC team detects the notification but has a minimum reaction time of 45 minutes.",
     question: "Which technology and strategic approach allows automating the immediate isolation of the server and the source IP, reducing the reaction time (MTTR) to zero?",
     options: [
@@ -7543,7 +7591,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) A SOAR platform with the activation of an automatic host-containment playbook**.\n\n* **Why it's the BEST:** SOAR (Security Orchestration, Automation, and Response) responds exactly to the need to orchestrate automatic incident responses without human latency. Through pre-authorized 'Playbooks', the SOAR can interface with the firewall or the cloud hypervisor to instantly isolate the infected server or block the compromised user account the very moment the EDR detects the ransomware.\n* **Why the others are not correct:**\n  * **A) A SIEM** sends email notifications but still requires the manual analysis and intervention of the on-call operators (a 45-minute latency unacceptable for the speed of ransomware).\n  * **C) A passive IDS** merely observes the traffic and generates diagnostic logs; it has no active or automated ability to block or contain attacks.\n  * **D) Deactivating Active Directory** would cause an internal operational disaster for the entire hospital, blocking PC access for all the medical staff on duty, violating the principle of proportionality of the response.",
   },
   15: {
-    topic: "Incident Response Phases",
+    topic: "Incident Response",
     scenario: "A SOC analyst identifies that an operator machine within the accounting office has been infected by an active banking Trojan that is establishing a persistent Command and Control (C2) connection and exfiltrating administrative credentials entered in RAM. To preserve the evidence useful for forensic analysis while stopping the immediate exfiltration of sensitive corporate data, the analyst must act promptly.",
     question: "Which represents the FIRST and best containment action the analyst should take according to NIST guidelines?",
     options: [
@@ -7555,7 +7603,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Disconnect the Ethernet network cable or disable the wireless network card to logically isolate the host while preserving the volatile memory**.\n\n* **Why it's the BEST:** This action achieves immediate containment (interrupting the C2 channel and stopping the active exfiltration of sensitive data) without altering or destroying the content of the RAM memory. According to the forensic order of volatility, the RAM contains ephemeral evidence (active sessions, typed credentials, Trojan payload not written to disk) that would be lost if the computer were turned off.\n* **Why the others are not correct:**\n  * **A) Hardware shutdown** immediately zeroes the RAM, destroying all the volatile traces essential for the subsequent investigation.\n  * **C) The local antivirus** could cause instability, overwrite system files and log records, and does not guarantee the immediate removal of the active network connections.\n  * **D) Starting the forensic inspection** directly on the compromised host before isolating it allows the attacker to continue exfiltrating data for the entire duration of the examination.",
   },
   16: {
-    topic: "Containment & Eradication Strategies",
+    topic: "Incident Response",
     scenario: "A corporate Linux Web server hosting a sensitive transactional application has been compromised by attackers, who exploited a Command Injection vulnerability to install multiple obfuscated web shells in the server's paths and modify some system binaries (such as 'ssh' and 'ls') to hide their own processes. The Incident Response team is now in the Eradication phase.",
     question: "Which of the following actions represents the official best practice to ensure a complete and reliable eradication of the threat before restoring to production?",
     options: [
@@ -7567,7 +7615,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Completely rebuild the web server by re-imaging the operating system starting from a certified and patched Golden Image...**.\n\n* **Why it's the BEST:** When an attacker modifies native operating-system binaries (rootkit/tampering) and installs multiple persistent backdoors (obfuscated web shells), it is impossible to ensure that a partial or automated disinfection has removed every access trace. The best practice for total eradication requires razing the compromised system to the ground (wipe) and reinstalling it from scratch from secure and immutable sources (Golden Images / CI-CD pipeline), restoring the validated source code of the database and the application.\n* **Why the others are not correct:**\n  * **A) and C)** A manual cleanup or one via a scanner is inherently doomed against determined attackers who may have created malicious cronjobs or scattered invisible files with forged timestamps (timestomping).\n  * **D)** This action refers to the study phase (honeypot or sandbox) and does not achieve the eradication needed to bring the e-commerce Web server back into production.",
   },
   17: {
-    topic: "Disaster Recovery Backup Strategy",
+    topic: "Backup & Recovery",
     scenario: "A company operating in algorithmic trading cannot afford any financial loss resulting from the downtime of its order-execution system. The Business Impact Analysis (BIA) defines a Recovery Time Objective (RTO) close to zero and a Recovery Point Objective (RPO) of a few seconds. The budget for infrastructure resilience has no strict constraints.",
     question: "Which Disaster Recovery alternate-site configuration represents the ideal solution to fulfill these operational requirements?",
     options: [
@@ -7579,7 +7627,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Hot Site configured in active-active mode with synchronous real-time data replication**.\n\n* **Why it's the BEST:** To satisfy an RTO (recovery time) of zero and an RPO (maximum data loss) of a few seconds, the organization needs a redundant Hot Site. The active-active configuration with real-time synchronization ensures that both sites (primary and secondary) process transactions simultaneously. If the main site fails, the traffic is instantly redirected to the second site without any perceptible interruption or information loss.\n* **Why the others are not correct:**\n  * **A) A Cold Site** requires days to source, install and configure the hardware, resulting in an RTO of 48+ hours, absolutely intolerable.\n  * **B) A Warm Site** reduces the times to a few hours (RTO), but the data restoration based on the previous day's backup entails an RPO of 24 hours (catastrophic data loss for algorithmic trading).\n  * **D) The mobile unit** has long activation times and does not offer the real-time redundancy technological guarantees required.",
   },
   18: {
-    topic: "Baselines & Configuration Drift",
+    topic: "Baselines & Configuration",
     scenario: "During a periodic compliance audit based on the CIS Benchmarks standard, the auditor finds that 40% of the production Windows servers show vulnerabilities related to enabled unused services (e.g. SMBv1) and insecure encryption configurations. The system administrators admit to having manually modified the servers to resolve legacy application-compatibility problems over the course of the year, bypassing the central approval process.",
     question: "How is this phenomenon of progressive drift of systems away from the original approved hardened state defined, and what is the best method to mitigate it?",
     options: [
@@ -7627,7 +7675,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Netflow is a network tool that provides visibility into network traffic and helps identify potential security threats**.\n\n* **Why it's correct:** Netflow is a network-status monitoring protocol and tool that collects IP flow information (metadata about traffic sessions, such as IP addresses, ports, protocols and byte volumes) without inspecting the internal content of the individual packets. It helps understand communication patterns and spot anomalous or suspicious behaviors.\n* **Analysis of the distractors:**\n  * **A)** Netflow does not deal with encrypting data or ensuring secure transmission; it is solely a telemetry and monitoring tool.\n  * **B)** Netflow is not a standalone physical device or an access-filtering hardware appliance.\n  * **C)** Netflow does not act as an active firewall and has no native ability to actively block individual packets or directly mitigate attacks in real time.",
   },
   182: {
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     scenario: "An organization's access-control mechanism determines access to sensitive resources based on users' specific job functions and duties. The system rigidly enforces the permissions associated with these predefined responsibilities and individual employees do not have the ability to modify or override these access privileges.",
     question: "Which type of access-control mechanism is used in this scenario?",
     options: [
@@ -7639,7 +7687,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Role-Based Access Control (RBAC)**.\n\n* **Why it's correct:** In the **Role-Based Access Control (RBAC)** model, access permissions are directly tied to predefined corporate roles or job functions, and not to individuals. Users inherit the permissions of the role to which they are assigned and do not have the discretion to alter them.\n* **Analysis of the distractors:**\n  * **B) Rule-Based Access Control** applies global rules or algorithmic criteria applied to all users indiscriminately (e.g. allowing access only during certain time slots or from specific IP addresses).\n  * **C) Attribute-Based Access Control (ABAC)** is a more flexible model that evaluates dynamic attributes of the subject, object and environment in real time to determine access.\n  * **D) Discretionary Access Control (DAC)** allows the resource owner to autonomously and at their discretion decide who can access and with which privileges, offering maximum flexibility but the least central security.",
   },
   183: {
-    topic: "Switch Hardening",
+    topic: "System & Device Hardening",
     scenario: "Two security technicians are collaborating to strengthen the security of the network switches within the corporate infrastructure, in order to drastically reduce the possibility that foreign or unauthorized devices can physically connect to the LAN.",
     question: "Which of the following techniques represents the BEST choice to prioritize to achieve this goal?",
     options: [
@@ -7675,7 +7723,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Sanitization**.\n\n* **Why it's correct:** **Sanitization** comprises technical processes (such as repeated overwriting, degaussing or physical destruction of the media) aimed at removing the data irreversibly, ensuring that it cannot be recovered in any way in the future.\n* **Analysis of the distractors:**\n  * **A) Inventory** consists of surveying and keeping track of all the physical and software devices owned by the organization, but does not concern data destruction.\n  * **B) Enumeration** is an active reconnaissance phase in which a user or attacker tries to map accounts, shares or active network resources.\n  * **C) Assignment** refers to the formal allocation of physical assets or logical permissions to specific users or departments.",
   },
   186: {
-    topic: "Security Architecture",
+    topic: "Architecture Models & Shared Responsibility",
     scenario: "A software development company is close to a critical delivery deadline. To meet the timelines imposed by management, the team deliberately chooses to ignore some known system inefficiencies and to adopt temporary architectural shortcuts, aware that these decisions will make the system more fragile and vulnerable and will require costly corrective interventions in the future.",
     question: "Which of the following terms BEST describes this situation in which rapid release is preferred at the expense of long-term quality and security?",
     options: [
@@ -7687,7 +7735,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Technical debt**.\n\n* **Why it's correct:** **Technical Debt** represents the implicit and cumulative cost of the future efforts and rework needed to fix shortcuts, bugs or non-optimal design choices made in the present for reasons of budget, time or commercial convenience.\n* **Analysis of the distractors:**\n  * **A) Cost** describes the immediate or planned monetary expenditure, but does not specifically describe the overhead resulting from the intentional postponement of fixing architectural defects.\n  * **B) A Single Point of Failure (SPOF)** is a single hardware, software or network component whose malfunction causes the interruption of the entire system, unrelated to the concept of development shortcuts.\n  * **D) Complexity** is a structural characteristic of the system (complex and interconnected systems), which can be increased by technical debt but does not constitute its main definition.",
   },
   187: {
-    topic: "User Behavior Analytics",
+    topic: "Security Monitoring & Alerting",
     scenario: "A cybersecurity analyst works in a large company that has recently suffered several incidents related to insider threats and legitimate user accounts compromised by external attackers. To strengthen its defenses, the company decides to implement User Behavior Analytics (UBA) solutions.",
     question: "Which of the following approaches represents the MOST effective way to implement UBA technology in the described scenario?",
     options: [
@@ -7735,7 +7783,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) SPF (Sender Policy Framework)**.\n\n* **Why it's correct:** **SPF** (Sender Policy Framework) is a DNS TXT record that explicitly lists all the IP addresses and mail servers authorized to send emails on behalf of the domain in question. Receiving servers check this record to decide whether to block or classify as spam the emails coming from unauthorized addresses.\n* **Analysis of the distractors:**\n  * **B) SMTP** is the standard application-level protocol used for the physical transmission and routing of emails, but does not in itself implement security or authentication controls to prevent spoofing.\n  * **C) DMARC** is a policy framework that tells receiving servers how to behave (e.g. reject or quarantine) with emails that fail the SPF and/or DKIM checks, but does not directly define the list of authorized servers.\n  * **D) DKIM** adds a cryptographic digital signature to the email header to prove that the email actually comes from the declared domain and has not been altered in transit, but does not manage the IP list of authorized sending servers.",
   },
   401: {
-    topic: "Vulnerability Prioritization",
+    topic: "Vulnerability Management",
     scenario: "A security professional must evaluate a series of vulnerabilities found on corporate systems and determine the optimal order in which to address them.",
     question: "Which of the following represents the BEST action a security professional should take to establish the order in which to address the identified vulnerabilities, based on the potential impact and the probability of exploitation?",
     options: [
@@ -7747,7 +7795,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Vulnerability prioritization**.\n\n* **Why it's correct:** Vulnerability prioritization consists of evaluating the severity, ease of exploitation and potential impact of the detected security flaws to establish the order in which to resolve them. This ensures that critical risks are managed first, optimizing the allocation of corporate resources.\n* **Analysis of the distractors:**\n  * **A) Threat intelligence gathering** is the collection of information about external threats from various sources, which provides context but does not define an internal remediation sequence.\n  * **B) False positive assessment** serves to identify and discard the erroneous reports of scanning tools, but does not order the real vulnerabilities by risk level.\n  * **C) Dynamic analysis** is a technique to test software at runtime to find bugs, but does not serve to order or prioritize the vulnerabilities among themselves.\n\n*(Question ID: 6541c8b181573933758874d4)*",
   },
   402: {
-    topic: "Cloud Security & Authentication",
+    topic: "Identity & Access Management",
     scenario: "David is providing consultancy on cloud security best practices to a company that has recently encountered problems related to its users' logins.",
     question: "Which measure is the most crucial to protect the organization from unauthorized access attempts?",
     options: [
@@ -7759,7 +7807,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Implement MFA and use conditional authentication for risky accesses**.\n\n* **Why it's correct:** Multi-factor authentication (MFA) combined with conditional authentication controls (e.g. blocking or requiring additional verifications for accesses from unusual locations or unknown devices) enormously strengthens the defenses against unauthorized login attempts, especially in cloud environments.\n* **Analysis of the distractors:**\n  * **A) Leaving the default settings** on the cloud provider's firewall is risky, since the default configurations often do not fit the company's specific security needs.\n  * **B) Relying exclusively on the CSP's IAM** offers basic user management, but more advanced or third-party solutions may be needed to meet complex requirements.\n  * **C) Allowing programmatic access without unique secret keys** represents a serious weakness that compromises the entire security chain and accountability.\n\n*(Question ID: 652f3f86fd8d99be42f4c0f4)*",
   },
   403: {
-    topic: "Network Security & Proxies",
+    topic: "Network Security Devices",
     scenario: "As the security analyst of a company that has recently suffered several security incidents related to web browsing, you participate in the implementation of a centralized proxy solution to mitigate future risks.",
     question: "Which of the following actions represents the MOST effective way to improve security through the use of the centralized proxy in the described scenario?",
     options: [
@@ -7771,7 +7819,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Implement SSL inspection to monitor and control encrypted web traffic**.\n\n* **Why it's correct:** **SSL inspection** (or TLS interception) allows a centralized proxy to decrypt and inspect the HTTPS traffic in transit. This offers the visibility needed to detect and block threats hidden within encrypted channels, preventing external attacks and the unauthorized exfiltration of data.\n* **Analysis of the distractors:**\n  * **B) Allowing unlimited access** to internal resources bypasses basic security principles (e.g. Least Privilege) and drastically increases the risk of lateral movements in case of compromise.\n  * **C) Allowing the installation of extensions** in browsers, although from trusted sources, introduces risks of additional vulnerabilities or data leakage that escape the proxy's control.\n  * **D) Enforcing the use of HTTP** (unencrypted) instead of HTTPS for compatibility reasons is extremely insecure since it exposes data in cleartext to eavesdropping and Man-in-the-Middle attacks.\n\n*(Question ID: 64c124458261794c6e7a2622)*",
   },
   404: {
-    topic: "Identity Federation",
+    topic: "Identity & Access Management",
     scenario: "Dion Training Solutions has entered into a partnership with several smaller companies. They have configured a system that allows employees of any partner company to access the resources of the other companies without requiring a separate username and password.",
     question: "Which of the following concepts is described in this scenario?",
     options: [
@@ -7783,7 +7831,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Federation**.\n\n* **Why it's correct:** An **identity federation** allows different organizations to securely share their users' digital identities, allowing them to perform Single Sign-On (SSO) to access the resources of external partners using their own original corporate credentials.\n* **Analysis of the distractors:**\n  * **A) RBAC** is a model in which permissions are assigned based on the roles held within a single organization, not for sharing identities between different companies.\n  * **B) Access delegation** occurs when a single user grants another user the authorization to act or access resources on their behalf.\n  * **D) Centralized access management** refers to the administration of accesses from a single point within a company, but does not intrinsically imply the sharing of inter-company identities.\n\n*(Question ID: 65446336d47086123082fb09)*",
   },
   405: {
-    topic: "Security Principles & Access Control",
+    topic: "Security Principles",
     scenario: "Jenny, a newly hired sales representative, has been authorized to view customer records but cannot modify, delete or add new ones. Only managers and the IT department have permission to modify these records to preserve data integrity.",
     question: "Which security principle is the organization applying in this case?",
     options: [
@@ -7807,7 +7855,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) DKIM (DomainKeys Identified Mail)**.\n\n* **Why it's correct:** **DKIM** allows the sending server to affix a cryptographic digital signature to the headers of the sent emails. The receiving server can verify this signature by consulting the sender's public key published in the domain's DNS records, thus ensuring that the email actually comes from the declared domain and has not been altered in transit.\n* **Analysis of the distractors:**\n  * **A) SPF** is a DNS record that lists the IP addresses authorized to send emails on behalf of a domain; it does not use cryptographic signatures for the individual messages.\n  * **B) An MTA** is a software component (e.g. Postfix, Exchange) responsible for the transfer and routing of emails, not a cryptographic security protocol.\n  * **D) DMARC** relies on SPF and DKIM to establish the reception policies (e.g. rejecting or quarantining emails that fail the checks), but does not directly generate or apply the cryptographic signatures on the messages.\n\n*(Question ID: 654338a2f3d6fa9edaff4307)*",
   },
   407: {
-    topic: "Security Exceptions and Exemptions",
+    topic: "Security Policies & Lifecycle",
     scenario: "During a review of the security policies, a discussion arises about the use and management of exceptions and exemptions for vulnerabilities that cannot be fixed immediately.",
     question: "Which of the following statements BEST describes the importance of exceptions and exemptions in vulnerability management?",
     options: [
@@ -7843,7 +7891,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Technical debt can increase the complexity of security problems in the long term, making automation and orchestration more difficult**.\n\n* **Why it's correct:** If not addressed, **technical debt** (that is, the adoption of quick, temporary or obsolete solutions) accumulates over time, introducing latent vulnerabilities and considerably increasing architectural complexity. This complexity makes it extremely difficult to implement smooth security automation and orchestration (SOAR) processes.\n* **Analysis of the distractors:**\n  * **B) Eliminating the need for human intervention** is an extreme and imprecise statement: although it facilitates automation, the human factor remains essential in managing complex security.\n  * **C) Prioritizing investments solely based on cost** is a purely financial approach, whereas managing security technical debt requires an assessment based on the overall reduction of business risk and vulnerability.\n  * **D) Applying exclusively to non-security-related systems** is incorrect: technical debt directly affects security infrastructure as well (e.g. legacy firewall rules, obsolete antivirus agents), weakening the overall protective posture.\n\n*(Question ID: 64c01bd1fc7efb8983f27094)*",
   },
   410: {
-    topic: "Ticketing Systems in Security Operations",
+    topic: "Automation & Orchestration",
     scenario: "In a Security Operations Center (SOC), the effectiveness of the workflows supported by the automatic opening and management of incident-related tickets is analyzed.",
     question: "Which of the following statements is NOT true regarding the role of Ticket Creation in the context of automation for security operations?",
     options: [
@@ -7855,7 +7903,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Ticket creation fosters greater cohesion of the security team and makes internal team collaboration more effective**.\n\n* **Why it's correct:** Although ticketing systems are fundamental for managing, tracking and ordering workloads, tasks and incidents, their primary purpose is operational and for audit. They do not have the goal or the direct effect of promoting the team's psychological cohesion or the interpersonal affinity between the members of the security department.\n* **Analysis of the distractors:**\n  * **A) Enabling accountability and measuring performance** is one of the key functions of ticketing, allowing response and resolution times to be quantified.\n  * **C) Facilitating communication and coordination** is true, since tickets create a centralized and structured record visible to all the teams involved.\n  * **D) Allowing the tracking and management of requests and bugs** describes exactly the core of the operational activity supported by ticketing systems.\n\n*(Question ID: 64c1a2f5f8db29bea1becee7)*",
   },
   411: {
-    topic: "Secure Data Destruction & Asset Decommissioning",
+    topic: "Data Sanitization & Destruction",
     scenario: "Reed is about to receive a new computer from his employer, Kelly Innovations LLC. He wants to remove all his personal data from the old computer, ensuring it is absolutely unrecoverable.",
     question: "Which of the following methods should he use to achieve this goal?",
     options: [
@@ -7867,7 +7915,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Secure erase**.\n\n* **Why it's correct:** **Secure erase** involves the repeated overwriting of the hard disk's memory sectors with random data patterns or zeros, rendering the previously stored data physically unrecoverable even through advanced laboratory techniques. It represents the reference standard for the secure destruction of data before decommissioning a device.\n* **Analysis of the distractors:**\n  * **A) System restore** brings the operating system back to a previous state but does not ensure the deep or secure elimination of the personal user files from the disk.\n  * **B) Emptying the recycle bin** simply removes the logical pointers to the files from the operating system, leaving the data physically intact on the disk sectors, where it can be easily recovered with data-recovery software.\n  * **C) Disk defragmentation** serves to reorganize the fragments of the files to optimize the read/write performance of magnetic disks, without destroying or securely erasing any information.\n\n*(Question ID: 651ee8d6642153cd5e7a3cbb)*",
   },
   412: {
-    topic: "DevSecOps & Continuous Integration",
+    topic: "DevSecOps",
     scenario: "An organization intends to improve the security and quality of its software lifecycle by introducing automated pipelines for developers.",
     question: "Which of the following statements BEST explains the importance of Continuous Integration (CI) for an organization's security?",
     options: [
@@ -7879,7 +7927,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Continuous integration makes collaboration between security teams and software developers easier**.\n\n* **Why it's correct:** **Continuous integration (CI)** promotes smooth collaboration between developers and security teams (DevSecOps approach) by constantly integrating code changes into a shared repository. This allows the automatic execution of security tests (SAST/DAST) at an early stage of development, identifying and resolving vulnerabilities promptly before release to production.\n* **Analysis of the distractors:**\n  * **A) Automating updates and patches** describes Patch Management or continuous deployment (CD) systems, not specifically the source-code integration phase.\n  * **C) Generating encrypted backups** is a responsibility of disaster-recovery policies and backup systems, unrelated to Continuous Integration pipelines.\n  * **D) Allowing real-time network monitoring** is the typical function of IDS/IPS or SIEM consoles, and has no relevance to software development managed through CI pipelines.\n\n*(Question ID: 64c0141e19bb0459f332e373)*",
   },
   413: {
-    topic: "Digital Forensics & Chain of Custody",
+    topic: "Digital Forensics",
     scenario: "During investigations related to an internal cyber attack, a forensic analyst must collect digital evidence from the systems involved so that it is usable in a legal setting.",
     question: "In the field of digital forensics, which activity is by far the MOST essential to maintain the chain of custody of digital evidence?",
     options: [
@@ -7891,7 +7939,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Documenting in detail everyone who took charge of, handled or examined the evidence**.\n\n* **Why it's correct:** The **chain of custody** is a formal chronological and documentary record that tracks every single person who collected, handled, transferred or analyzed a piece of evidence from the moment of seizure until its presentation in court. Without this rigorous documentation attesting to who had access to the evidence, it risks being declared inadmissible in judgment.\n* **Analysis of the distractors:**\n  * **A) Drafting a summary of the findings** is an analytical final-reporting activity of forensics, but does not define or ensure the chain of custody.\n  * **B) Isolating the storage system from the network** is a fundamental evidence-preservation measure to avoid alterations or remote access, but does not document the chain of custodians of the physical/digital evidence.\n  * **C) Using cryptographic hashes** serves to verify data integrity (proving that the forensic copy has not been altered), which supports the forensic process but is distinct from the human-accountability record represented by the chain of custody.\n\n*(Question ID: 6543f0377082bd446863b558)*",
   },
   414: {
-    topic: "Network Security & Content Filtering",
+    topic: "Web Content Filtering",
     scenario: "At Kelly Innovations LLC, Jamario reported having accidentally viewed inappropriate images while conducting online research on the industry's competitors.",
     question: "To prevent employees from accidentally accessing such media in the future, which of the following solutions would be MOST effective?",
     options: [
@@ -7915,7 +7963,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Netflow is a network tool that provides visibility into network traffic and helps identify potential security threats**.\n\n* **Why it's correct:** Netflow is a network monitoring and analysis tool that provides visibility into the traffic, allowing administrators to understand and analyze the data flow. It helps identify potential security threats and anomalous behaviors.\n* **Analysis of the distractors:**\n  * **B)** Netflow is not a security hardware appliance, but a software telemetry and network-traffic monitoring tool.\n  * **C)** Netflow is not a firewall and does not have the ability to actively block malicious packets.\n  * **D)** Netflow is not an encryption or secure-transmission protocol: it merely collects metadata about the traffic flows.\n\n*(Question ID: 64bffec2c1d8f2a7e6236195)*",
   },
   192: {
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     scenario: "A company's access-control mechanism determines access to resources based on users' job duties. The system enforces access control based on these predefined responsibilities and users do not have the discretion to modify or override the access permissions.",
     question: "Which type of access-control mechanism is used in this scenario?",
     options: [
@@ -7927,7 +7975,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Role-based**.\n\n* **Why it's correct:** **Role-Based Access Control (RBAC)** determines access to resources based on the user's job role or duty, with permissions assigned to these predefined roles for structured management. Users cannot autonomously modify their own permissions.\n* **Analysis of the distractors:**\n  * **B)** Rule-based control is broader and covers various mechanisms, but does not have the specific focus on the job role typical of RBAC.\n  * **C)** Attribute-based control (ABAC) uses dynamic attributes such as geographic location and time, unlike the simpler role-based structure of RBAC.\n  * **D)** Discretionary control (DAC) allows users to autonomously manage the permissions on their own resources, unlike RBAC where permissions are managed centrally.\n\n*(Question ID: 64c13e0259b059a712065d06)*",
   },
   193: {
-    topic: "Switch Hardening",
+    topic: "System & Device Hardening",
     scenario: "Jason is working with David to improve the security of the switches at Dion Training.",
     question: "Which technique would be the BEST to prioritize to achieve this goal?",
     options: [
@@ -7975,7 +8023,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Technical debt**.\n\n* **Why it's correct:** **Technical debt** represents the future cost of fixing shortcuts or non-optimal solutions adopted in the present. It accumulates when known inefficiencies are not addressed due to various constraints, such as time, and leads to security vulnerabilities and greater complexity in the long term.\n* **Analysis of the distractors:**\n  * **A)** Cost generally refers to the financial considerations of a decision, not to the implications of postponing system improvements.\n  * **B)** A single point of failure indicates a component whose failure can compromise the entire system, a concept distinct from technical debt.\n  * **D)** Complexity can be a result of technical debt, but mainly indicates the intrinsic complexity of a system or process.\n\n*(Question ID: 6543cb47bda4108fb39c780f)*",
   },
   197: {
-    topic: "User Behavior Analytics",
+    topic: "Security Monitoring & Alerting",
     scenario: "You are a cybersecurity analyst for a large company that has suffered several security incidents resulting from insider threats and compromised user accounts. The organization wants to improve its security posture by implementing User Behavior Analytics (UBA).",
     question: "Which of the following approaches represents the MOST effective way to implement UBA in the described scenario?",
     options: [
@@ -8131,7 +8179,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Sanitization involves erasing data so as to make it unrecoverable; destruction is the total physical demolition of the asset**.\n\n* **Why it's correct:** **Sanitization** involves the permanent erasure or de-identification of data on a device so that it cannot be recovered, potentially allowing the device to be reused. **Destruction** is the physical demolition of the asset itself (e.g. shredding, incineration), ensuring that no data can be extracted.\n* **Analysis of the distractors:**\n  * **A)** Sanitization and destruction are distinct processes with different purposes.\n  * **B)** Neither sanitization nor destruction concern the internal redistribution of assets.\n  * **D)** Physically damaging the asset is destruction, not sanitization.\n\n*(Question ID: 64c1938ddd32557d54e4c0e6)*",
   },
   210: {
-    topic: "Personnel Security",
+    topic: "Personnel Security & Onboarding",
     scenario: "An organization wants to understand how employee retention contributes to corporate security.",
     question: "Which of the following statements BEST explains the importance of employee retention in an organization's security?",
     options: [
@@ -8155,7 +8203,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Maintaining standard levels of environmental variables is not necessary in most data center environments**.\n\n* **Why it's correct (the statement that is NOT true):** The maintenance and monitoring of environmental variables are instead **very important** to ensure an efficient data center environment. High-standard HVAC systems that keep temperature and humidity constant, together with continuous power, contribute to operational efficiency and asset longevity.\n* **Analysis of the distractors (all true):**\n  * **A)** Understanding the environmental variables does effectively help determine the specific requirements of different hardware and software.\n  * **C)** Factors such as stable power and efficient cooling systems are fundamental to preventing hardware failures and maximizing asset lifespan.\n  * **D)** Temperature and humidity can significantly affect the performance, efficiency and lifecycle of hardware assets in a data center.\n\n*(Question ID: 64c19a0c1e0c5b8b7971dad8)*",
   },
   212: {
-    topic: "Packet Analysis & Flows",
+    topic: "Network Monitoring & Analysis",
     scenario: "As a security analyst, you are examining packet captures for an ongoing investigation into a network breach.",
     question: "Which of the following pieces of information is NOT typically recorded in packet captures?",
     options: [
@@ -8203,7 +8251,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Data destruction certification**.\n\n* **Why it's correct:** A **data destruction certification** is a formal document that attests that specific data-sanitization processes have been followed, ensuring that the data on the devices has been securely and irreversibly removed. It provides the documented proof required by the organization.\n* **Analysis of the distractors:**\n  * **A)** An HCL provides a list of hardware devices known to be compatible with specific software or operating systems and does not concern data-destruction processes.\n  * **B)** An asset inventory report provides a register of all an organization's assets but does not attest to the secure removal of data from those assets.\n  * **D)** An SLA outlines the expected service level between provider and customer but does not confirm the data-destruction process.\n\n*(Question ID: 64be9b294a0dd75c4bddfc38)*",
   },
   216: {
-    topic: "Vulnerability & Patch Management",
+    topic: "Vulnerability Management",
     scenario: "A security team must understand the importance of monitoring software packages in the context of vulnerability management.",
     question: "Which of the following statements BEST explains the importance of monitoring software packages in the context of vulnerability management?",
     options: [
@@ -8371,7 +8419,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Inventory management is a one-time process, requiring few updates after initialization**.\n\n* **Why it's correct (the statement that is NOT true):** Inventory management is **not** a one-time process. It requires constant updates and monitoring to maintain accuracy and effectiveness, since assets change continuously (purchases, decommissioning, configuration changes).\n* **Analysis of the distractors (all true):**\n  * **A)** An accurate inventory does effectively help identify unauthorized devices on the network.\n  * **C)** An updated inventory supports asset management by monitoring lifecycles.\n  * **D)** Inventory practices include tracking physical location, configuration and authorized users, among other things.\n\n*(Question ID: 64c190c68a3754c97798b032)*",
   },
   230: {
-    topic: "Access Control Mechanisms",
+    topic: "Identity & Access Control Models",
     scenario: "ABC Bank's access-control mechanism allows access only during business hours. When access is requested, the time of day is evaluated: if the request arrives during business hours, access is granted; otherwise, it is denied.",
     question: "Which type of access-control mechanism is used in this scenario?",
     options: [
@@ -8443,7 +8491,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Generating and documenting cryptographic hashes of the digital evidence to verify its integrity**.\n\n* **Why it's correct:** The use of **cryptographic hashes** (such as MD5 or SHA-256) ensures that the digital evidence remains unaltered, preserving its original state for analysis and potential presentation in court. Any modification to the data would produce a different hash, detecting the tampering.\n* **Analysis of the distractors:**\n  * **A)** Keyword searches in electronic documents are more associated with the e-discovery process, not preservation.\n  * **C)** Drafting summaries and presenting to stakeholders are part of the reporting phase, not preservation.\n  * **D)** Documenting tools and methodologies is more closely tied to the acquisition phase of an investigation.\n\n*(Question ID: 6543ef5ba69e5671c3827c5a)*",
   },
   236: {
-    topic: "Firewall Configuration",
+    topic: "Network Security Devices",
     scenario: "The New York Inquirer has a diverse IT infrastructure that includes servers, workstations and IoT devices. It has implemented a firewall to protect the internal network from external threats and wants to modify the firewall rules to improve security.",
     question: "Which change to the firewall ports and protocols is NOT recommended to improve security?",
     options: [
@@ -8479,7 +8527,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Guard rails focus mainly on basic security for server rooms and server systems**.\n\n* **Why it's correct (the statement that is NOT true):** In this context, guard rails do **not** mainly concern the physical security of server rooms. They are rather parameters or rules defined in automation workflows to ensure that these workflows remain within the designed scope and maintain operational security.\n* **Analysis of the distractors (all true):**\n  * **B)** Guard rails function as boundaries that keep automation workflows within the defined parameters.\n  * **C)** Guard rails enforce policies that help prevent errors or deviations in automated processes.\n  * **D)** Guard rails contribute to automation security by preventing unintended actions that could cause disruptions or security risks.\n\n*(Question ID: 64c1a204f35deb7523e71f4c)*",
   },
   239: {
-    topic: "Data Archiving",
+    topic: "Data Retention & Archiving",
     scenario: "An IT team must understand the limits of data archiving to correctly manage expectations.",
     question: "Which of the following statements is NOT true regarding the importance of archiving?",
     options: [
@@ -8503,7 +8551,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) SNMP ensures secure communications between software applications and allows security analysts to monitor these communications**.\n\n* **Why it's correct (the statement that is NOT true):** The main purpose of **SNMP (Simple Network Management Protocol)** is the management and monitoring of network devices, not the monitoring of communications between software applications. SNMP is not designed to ensure secure communications between applications.\n* **Analysis of the distractors (all true):**\n  * **B)** SNMP does effectively help collect data from network devices to maintain their functionality and security.\n  * **C)** SNMP allows network administrators to monitor performance, resolve problems and plan growth.\n  * **D)** SNMP makes it possible to manage network performance, control configurations and store data about network components.\n\n*(Question ID: 64c19ec41dbd2f0d7852a7ba)*",
   },
   241: {
-    topic: "Mobile Device Management",
+    topic: "Mobile Device Security",
     scenario: "A company allows its employees to use their personal mobile devices for work activities, such as accessing corporate email and sensitive documents. The IT department is worried about the security risks to corporate data in case the devices are lost.",
     question: "Which aspect of an MDM (Mobile Device Management) would effectively address this concern?",
     options: [
@@ -8599,7 +8647,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Records of failed and successful system and user authentications**.\n\n* **Why it's correct:** The **authentication logs** can provide key evidence of unauthorized access attempts, the timing of the event and potential insider threats. They can identify when and possibly how the breach occurred, making them valuable information for investigating a breach.\n* **Analysis of the distractors:**\n  * **B)** The number of users added over the year provides general information about server usage, but is not directly relevant to investigating a specific security breach.\n  * **C)** Free storage space is a system performance metric important for management, but does not provide valuable information for a specific breach investigation.\n  * **D)** Patch-management details are important for verifying vulnerabilities, but alone would not provide concrete details about the specific breach.\n\n*(Question ID: 64c170c9fbaff7327d208b68)*",
   },
   249: {
-    topic: "Vendor & Procurement Security",
+    topic: "Third-Party Risk & Assessments",
     scenario: "A procurement manager must evaluate the security implications in the procurement process.",
     question: "Which of the following statements is NOT true regarding the security implications in the procurement process?",
     options: [
@@ -8635,7 +8683,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Alerting provides real-time notifications of security incidents and potential threats**.\n\n* **Why it's correct:** **Alerting** is fundamental for providing real-time notifications of security incidents and potential threats. These timely alerts allow security teams to respond promptly and implement mitigation measures, reducing the impact of breaches.\n* **Analysis of the distractors:**\n  * **B)** Monitoring user activities and detecting suspicious behaviors more precisely describes the function of **User Behavior Analytics (UBA)** or **monitoring**, not alerting.\n  * **C)** Evaluating network traffic and identifying breaches describes network-traffic analysis or packet analysis, not specifically alerting.\n  * **D)** Constant monitoring of networks to prevent unauthorized access describes **network monitoring** or the function of an IPS/firewall, not alerting itself.\n\n*(Question ID: 64c00419ce8cf0ea6a17dee9)*",
   },
   252: {
-    topic: "Data Retention",
+    topic: "Data Retention & Archiving",
     scenario: "A data-governance team must understand the correct principles of data retention in the decommissioning process.",
     question: "Which of the following statements about data retention in the decommissioning process is NOT true?",
     options: [
@@ -8671,7 +8719,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Authenticated internal scan**.\n\n* **Why it's correct:** An **authenticated internal scan** provides the most complete and accurate results because the scanner has access inside the network (complete visibility) and uses valid credentials to authenticate to the target systems, thus being able to analyze configurations, missing patches and vulnerabilities that would not be visible from the outside or without credentials.\n* **Analysis of the distractors:**\n  * **A)** An unauthenticated external scan simulates the perspective of an external attacker and provides limited information about the external attack surface.\n  * **C)** An unauthenticated internal scan has network visibility but cannot deeply analyze the systems without credentials.\n  * **D)** An authenticated external scan uses credentials but is limited to the external visibility of the network.\n\n*(Question ID: 64b98a261faf349088211185)*",
   },
   255: {
-    topic: "Risk Management",
+    topic: "Risk Management & Analysis",
     scenario: "A vulnerability-management team wants to understand the concept of risk tolerance to make informed decisions about mitigation resources.",
     question: "Which of the following statements BEST explains the importance of 'risk tolerance' in the context of vulnerability management?",
     options: [
@@ -8707,7 +8755,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Open ports on the destination device**.\n\n* **Why it's correct:** Firewall logs typically do **not** contain information about the open ports on the destination device. Firewalls focus on network information: they show the port used by the traffic toward the destination, but do not scan or record all the open ports on the device.\n* **Analysis of the distractors:**\n  * **A)** The destination port is fundamental data captured in firewall logs, providing information about the services the traffic accesses.\n  * **B)** The source IP address is critical for determining the origin of the traffic and identifying potential malicious actors.\n  * **D)** Timestamps are a critical component of firewall log entries, providing context and sequence to the recorded events.\n\n*(Question ID: 64c1a5a43c0620e9baa77d37)*",
   },
   258: {
-    topic: "Web Filtering & Reputation",
+    topic: "Web Content Filtering",
     scenario: "A security team wants to understand the concept of web reputation score to implement effective web-filtering policies.",
     question: "Which of the following BEST describes the term 'web reputation score'?",
     options: [
@@ -8731,7 +8779,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Compensating controls provide alternative security measures when the primary controls are not feasible or effective**.\n\n* **Why it's correct:** **Compensating controls** are designed to provide alternative security measures when the primary controls cannot be deployed or are not effective. They help mitigate the risks posed by vulnerabilities and improve the overall security posture when the ideal solutions are not applicable.\n* **Analysis of the distractors:**\n  * **A)** Compensating controls are not designed to avoid mitigating vulnerabilities; on the contrary, they are implemented as additional protections when the main controls are missing or ineffective.\n  * **C)** Slowing down system performance would be counterproductive; compensating controls do not have this goal.\n  * **D)** Although they may add layers of difficulty, their primary goal is not complexity but effective alternative security.\n\n*(Question ID: 64c197e66bd44bdb096b83b3)*",
   },
   260: {
-    topic: "OS Hardening",
+    topic: "System & Device Hardening",
     scenario: "Sasha, a system administrator at Dion Training Solutions, wants to strengthen the security of its Linux servers by limiting processes to the minimum necessary privileges and defining their allowed behavior.",
     question: "Which Linux feature should Sasha MOST likely implement?",
     options: [
@@ -8743,7 +8791,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) SELinux (Security-Enhanced Linux)**.\n\n* **Why it's correct:** **SELinux** is a Linux kernel security module that provides a mechanism to support access-control policies, ensuring that processes have only the necessary permissions through MAC (Mandatory Access Control) policies, implementing the principle of least privilege.\n* **Analysis of the distractors:**\n  * **B)** A chroot environment limits a process's view of the filesystem, but does not offer the same granular, policy-based control as SELinux.\n  * **C)** Filesystem quotas manage disk-usage limits, not the behaviors or privileges of processes.\n  * **D)** SSH key authentication improves remote-access security, but does not provide granular control over processes.\n\n*(Question ID: 65433662cec496671af8991a)*",
   },
   261: {
-    topic: "Penetration Testing",
+    topic: "Security Assessment / Penetration Testing",
     scenario: "A security manager wants to explain to their team the importance of penetration testing in the context of vulnerability management.",
     question: "Which of the following statements BEST explains the importance of penetration testing in the context of vulnerability management?",
     options: [
@@ -8755,7 +8803,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Penetration testing includes conducting cyber-attack simulations on systems and applications to identify and address security vulnerabilities**.\n\n* **Why it's correct:** **Penetration testing** involves simulating cyber attacks on systems and applications to identify security weaknesses. By performing these simulated attacks, organizations can proactively address potential threats and strengthen their security posture.\n* **Analysis of the distractors:**\n  * **A)** Monitoring network traffic to detect intrusions describes the function of an IDS/IPS.\n  * **B)** Installing patches and security updates describes patch management.\n  * **C)** Backups and recovery procedures concern business continuity and disaster recovery.\n\n*(Question ID: 64bfd80178435ea1724a7ea6)*",
   },
   262: {
-    topic: "Cybersecurity Insurance",
+    topic: "Risk Management & Analysis",
     scenario: "A risk-management manager wants to understand the role of insurance in vulnerability management.",
     question: "Which of the following BEST states the importance of insurance in the context of vulnerability management?",
     options: [
@@ -9043,7 +9091,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) RTOS (Real-Time Operating System)**.\n\n* **Why it's correct:** An **RTOS** is a specialized operating system designed to manage real-time applications with strict timing requirements. For critical-infrastructure devices, where timely and predictable responses are fundamental, an RTOS can improve security by ensuring that the embedded systems operate efficiently and safely, minimizing vulnerabilities.\n* **Analysis of the distractors:**\n  * **B)** Antivirus software is designed to detect and remove malware from general-purpose computers; embedded systems typically have different specialized operating systems.\n  * **C)** Network firewalls are essential for protecting network communications, but they focus on network-level security and might not directly address the issues within the embedded systems.\n  * **D)** Biometric authentication can improve security in certain scenarios, but is typically used to control user access and might not directly address the security of the computational resources in embedded systems.\n\n*(Question ID: 64ba7c44269feb19bcf9f696)*",
   },
   286: {
-    topic: "Network Segmentation",
+    topic: "Infrastructure Segmentations & Topologies",
     scenario: "Sasha, a network engineer at Kelly Innovations LLC, is presenting to the board the advantages of screened subnets in the new office configuration.",
     question: "Which of the following is a primary advantage of placing Internet-accessible servers (such as web servers) on a screened subnet?",
     options: [
@@ -9055,7 +9103,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) If compromised, it prevents access to the internal network**.\n\n* **Why it's correct:** By placing externally accessible servers in a **screened subnet** (DMZ), even if they are compromised, the attacker does not gain immediate access to the sensitive internal network. This provides an additional layer of security that isolates the public services from the private corporate network.\n* **Analysis of the distractors:**\n  * **A)** Screened subnets do not provide automatic backups; backup solutions are implemented separately.\n  * **B)** Servers in a screened subnet are subject to specific firewall rules to manage inbound and outbound traffic; they do not bypass the firewall.\n  * **C)** Network design can affect performance, but the main purpose of a screened subnet is security, not performance improvement.\n\n*(Question ID: 654322fb6491794aff7fb0b5)*",
   },
   287: {
-    topic: "Risk Management",
+    topic: "Risk Management & Analysis",
     scenario: "A risk manager wants to understand the concept of exposure factor in the context of vulnerability management.",
     question: "Which of the following statements BEST explains the function of an 'exposure factor' in the context of vulnerability management?",
     options: [
@@ -9211,7 +9259,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Attestation is a process in which data owners periodically review, validate and confirm the access rights of all users**.\n\n* **Why it's correct:** In the context of IAM, **attestation** refers to a periodic review process in which data owners or managers validate and confirm the access rights of all users. It helps ensure that users have the appropriate permissions needed for their roles and that any unnecessary or inappropriate access is promptly revoked.\n* **Analysis of the distractors:**\n  * **A)** External audits by regulatory agencies are separate from the internal attestation process and evaluate regulatory compliance, not specifically the accuracy of users' access rights.\n  * **B)** Biometric authentication is an identity-verification method, not the purpose of attestation.\n  * **C)** Acknowledging acceptance of the security policies is a security-awareness process, not the specific attestation of access rights.\n\n*(Question ID: 64c1584ae86d2721bec33f97)*",
   },
   300: {
-    topic: "Network Security",
+    topic: "Secure Network Protocols",
     scenario: "Jamario, a network technician at Kelly Innovations LLC, is configuring a new server. He wants users to be able to reach UNENCRYPTED web pages hosted on the server and, on the same machine, transfer files using cleartext FTP.",
     question: "Which of the following pairs of ports must he open on the perimeter firewall to meet BOTH requirements?",
     options: [
@@ -9247,7 +9295,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Availability of qualified personnel**.\n\n* **Why it's correct:** Having team members with the skills needed to manage, troubleshoot and update the tool is fundamental to ensuring its ongoing supportability and secure operations. Without qualified personnel, even the best tool becomes unusable or vulnerable.\n* **Analysis of the distractors:**\n  * **A)** Market popularity can suggest the tool's effectiveness, but does not directly guarantee supportability in a specific organizational environment.\n  * **B)** The vendor's market presence can provide information about the tool's reliability, but does not directly address internal supportability.\n  * **D)** Integration capabilities can improve the tool's functionality, but do not mainly address ongoing-support considerations.\n\n*(Question ID: 6543ceb1939f54c93a842db0)*",
   },
   303: {
-    topic: "Router Hardening",
+    topic: "System & Device Hardening",
     scenario: "Enrique, a network administrator at Kelly Innovations LLC, is discussing with Reed the strategies to further protect the organization's routers.",
     question: "Which of the following would be the BEST approach to ensure the security of their routers?",
     options: [
@@ -9271,7 +9319,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Alternative measures to mitigate risk when standard controls are not feasible**.\n\n* **Why it's correct:** **Compensating controls** are security measures put in place as alternatives to the recommended primary controls that, for some reason, cannot be implemented. They are not universally mandatory for all companies, but are situational.\n* **Analysis of the distractors:**\n  * **A)** Standard regulations are mandatory compliance requirements, not optional compensating controls.\n  * **B)** Primary tools for risk management and vulnerability assessment are proactive approaches but do not specifically refer to compensating controls.\n  * **C)** Software patches and updates are direct solutions to vulnerabilities, not alternative measures.\n\n*(Question ID: 6541d539088ddf36014e3776)*",
   },
   305: {
-    topic: "OS Hardening",
+    topic: "System & Device Hardening",
     scenario: "Dion Training has recently configured a new web server for its e-learning platform. The IT team is tasked with implementing security measures to mitigate potential attacks.",
     question: "Which of the following practices would be MOST effective for hardening the server?",
     options: [
@@ -9753,7 +9801,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Implement automation playbooks to constantly apply and verify the settings**.\n\n* **Why it's correct:** The use of playbooks and Infrastructure as Code (IaC) or Configuration Management tools (such as Ansible, Puppet or dedicated GPOs) allows defining the desired secure state (baseline), applying it in an automated way to thousands of workstations, and instantly detecting or correcting any deviations (drift) by restoring the authorized settings.\n* **Analysis of the distractors:**\n  * **A) Windows Update** is fundamental for security patches, but does not handle applying or monitoring the compliance of complex configurations or local corporate policies (e.g. USB disabling, password rules).\n  * **C) A monthly manual check** is extremely inefficient, prone to human error, and leaves huge time windows in which the systems can remain vulnerable or non-compliant.\n  * **D) Traditional antivirus** detects known malicious software (malware), but does not check the compliance or deviations of legitimate system configuration settings (e.g. folder permissions, disabling of insecure services).",
   },
   58: {
-    topic: "Regulatory Frameworks",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "Examining the legislative landscape of the United States regarding privacy and the protection of personal data.",
     question: "Which law represents a well-known example of a 'horizontal' personal-data regulation, very similar in its broad-spectrum approach to the European GDPR?",
     options: [
@@ -9813,7 +9861,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Due diligence**.\n\n* **Why it's correct:** Due diligence involves a thorough evaluation and examination of a potential third-party supplier (including finances, reputation, compliance and security posture) before signing a contract, to ensure that it meets the required standards and does not introduce unacceptable risks.\n* **Analysis of the distractors:**\n  * **A) Service-level agreement (SLA)** establishes the continuous performance metrics and availability agreed upon once the service is already active.\n  * **C) Supply chain analysis** focuses on the path and integrity of the hardware/software components along the entire supply chain, not on the financial and historical health of the cloud supplier itself.\n  * **D) Non-disclosure agreement (NDA)** is a legal agreement to protect the confidential information shared, not a thorough evaluation and control procedure.",
   },
   63: {
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "Within the framework of compliance monitoring and the management of legal responsibilities within a company.",
     question: "What exactly does the combined concept of 'due diligence' and 'due care' refer to?",
     options: [
@@ -9885,7 +9933,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) $1,500**.\n\n* **Why it's correct (OBJ: 5.2):** The ALE (Annualized Loss Expectancy) is calculated by multiplying the SLE (Single Loss Expectancy) by the ARO (Annualized Rate of Occurrence). With an SLE of $15,000 and an ARO of 0.1, the ALE equals **$1,500** ($15,000 * 0.1 = $1,500). This value represents the estimated annual financial loss the organization expects to incur due to these operational failures.\n* **Analysis of the distractors:**\n  * **A) $150** is incorrect because it results from a mathematical error (e.g. mistakenly multiplying by 0.01).\n  * **C) $15,000** is incorrect because it represents the cost of a single loss (SLE), not the annualized loss weighted on a yearly basis (ARO = 0.1).\n  * **D) $150,000** is incorrect because it results from an erroneous multiplication (e.g. multiplying by 10 instead of by 0.1).\n\n* **Small Focused Example:** If a company has a server that fails on average once every 10 years (ARO = 0.1) and each failure costs $15,000 (SLE), the planned annual cost (ALE) is $1,500. Consequently, it makes no economic sense to invest more than $1,500 per year to implement a security control to eliminate this risk.\n\n*Question ID: 654977b94823b276876bb39f*"
   },
   69: {
-    topic: "Business Continuity & Resilience Metrics",
+    topic: "Business Continuity & Disaster Recovery",
     scenario: "To measure reliability and plan maintenance cycles of IT systems, security engineering teams monitor various time metrics associated with failures.",
     question: "Which metric defines the average operational uptime of a system or hardware component between the occurrence of two consecutive failures?",
     options: [
@@ -10317,7 +10365,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) National legal implications**.\n\n* **Why it's correct:** **National legal implications** comprise the set of laws and regulations issued at the state/national level that outline the mandatory requirements and jurisdictional boundaries for privacy protection and data sovereignty within that country.\n* **Analysis of the distractors:**\n  * **A) Consent management** is only a technical/administrative process for recording user preferences, not the sovereign legislative source.\n  * **B) The GDPR** is a specific and very important example of a European Union regulation, but the question describes the general concept of government laws at the national level (which can include the CCPA in the US, the LGPD in Brazil, etc.).\n  * **C) Data encryption** is a technological protection measure, not a regulatory or legal framework."
   },
   105: {
-    topic: "Identity & Access Management (IAM)",
+    topic: "Identity & Access Management",
     scenario: "A medium-sized enterprise wants to restructure the management of permissions on shared folders and corporate databases. Instead of manually configuring access for each individual employee, the system administrator decides to group permissions based on department duties (e.g. 'Administration', 'Development', 'Human Resources').",
     question: "What is a fundamental principle underlying role-based access control (RBAC) that helps improve the effectiveness of a security policy?",
     options: [
@@ -10329,7 +10377,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Assigning permissions to job functions (duties) rather than to individual users**.\n\n* **Why it's correct:** Role-based access control (**RBAC**) is based on the principle of associating permissions with specific professional profiles or corporate roles (e.g. accountant, engineer) and subsequently assigning users to those roles. This greatly simplifies access management, reduces human errors and ensures correct application of the principle of least privilege.\n* **Analysis of the distractors:**\n  * **B)** Temporary expiration is part of Just-In-Time (JIT) or ad-hoc controls, it is not the structural foundation of RBAC.\n  * **C)** Represents a 'permissive by default' approach that violates the basics of modern security.\n  * **D)** Seniority of service does not necessarily correspond to the real operational needs and job functions of an employee."
   },
   106: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     scenario: "The management of an organization constantly monitors the trend in the turnover rate of critical IT employees and the number of phishing attempts blocked monthly, using them as preventive signals to anticipate a possible increase in the risk of cyber incidents.",
     question: "Which of the following terms refers to a fundamental predictive metric that organizations monitor to predict potential risks and their impact on operations?",
     options: [
@@ -10341,7 +10389,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Key risk indicators (KRI)**.\n\n* **Why it's correct:** **Key Risk Indicators (KRI)** are predictive metrics (leading indicators) used as early-warning systems to signal variations in exposure to a risk. They enable management to take proactive mitigation actions before the risk materializes into an actual incident.\n* **Analysis of the distractors:**\n  * **A) Risk parameters** are static variables used in formal evaluation calculations.\n  * **B) Risk metrics** measure current exposure or losses, but do not intrinsically have a predictive or preventive early-warning nature.\n  * **D) Risk threshold** represents the maximum level of tolerable risk that the company is willing to accept (linked to risk appetite), not a preventive monitoring metric."
   },
   107: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     scenario: "Jeremy, the CEO of Hooli, wants to accurately evaluate the financial impact of specific risks related to the corporate IT infrastructure. He has ordered his team to list the possible incidents, estimate the exact probability of their occurrence and quantify the economic, operational and resource consequences in monetary terms in order to assign each event an objective numerical score.",
     question: "Which of the following risk assessment methods has Jeremy ordered his team to use?",
     options: [
@@ -10353,7 +10401,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Quantitative risk analysis**.\n\n* **Why it's correct:** **Quantitative risk analysis** is based on the use of real numerical and financial data to measure the probability and economic impact of a risk. It allows objective values expressed in currency (e.g. Euros) to be calculated to support decisions based on the cost-benefit of controls.\n* **Analysis of the distractors:**\n  * **A) The SLE** is only a specific component of the analysis (the cost of a single incident, calculated as Asset Value * Exposure Factor), not the entire methodological process.\n  * **B) Qualitative analysis** uses subjective evaluations and descriptive labels such as 'High', 'Medium' or 'Low' without resorting to monetary figures and rigorous mathematical formulas.\n  * **C) The ALE** is a specific metric resulting from quantitative analysis (SLE * ARO, annual rate of occurrence) to estimate the annual cost of risk, not the global evaluation method described."
   },
   108: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     scenario: "Following the discovery of a widely exploited critical zero-day vulnerability in the corporate web server software, the CISO requests an immediate extraordinary risk assessment to determine the potential impact of an immediate attack before the next scheduled annual session.",
     question: "Which of the following terms describes a risk assessment conducted as needed, often in response to new and emerging threats or significant changes within the organization?",
     options: [
@@ -10687,7 +10735,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Mitigate**.\n\n* **Why it's correct:** Mitigating risk means implementing measures or controls to reduce the potential impact or probability that the risk event will occur. In the scenario, the company adopts concrete measures to reduce the damage caused by a pandemic, demonstrating a mitigation approach.\n* **Analysis of the distractors:**\n  * **C) Accepting the risk** would mean that the organization recognizes the risk without taking any specific action to mitigate it, whereas in the scenario concrete measures are adopted.\n  * **D) Transferring the risk** involves shifting the financial burden of potential losses to third parties, such as an insurance company; there is no mention of this in the scenario.\n  * **B) Avoiding the risk** involves the total elimination of the risk by abstaining from the risky activity; if the company were avoiding the risk, it would probably close the business, since avoiding implies not undertaking the risky activity at all."
   },
   136: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     scenario: "An organization is evaluating its IT infrastructure to determine the probability of data breaches and the impact those breaches would have on its operations. Sarah has been tasked with estimating the financial consequences and the probability of these potential security incidents.",
     question: "Which type of risk assessment is Sarah conducting?",
     options: [
@@ -10767,7 +10815,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **C) Risk threshold**.\n\n* **Why it's correct:** The risk threshold is the acceptable risk limit that an organization establishes and which, once exceeded, triggers a response to bring the risk back to an acceptable level.\n* **Analysis of the distractors:**\n  * **A) Risk limit** is not a term commonly used within risk management to define a predefined level of acceptable risk.\n  * **D) Risk tolerance** refers more broadly to the willingness of an organization or an individual to take on risk, not to the specific predefined level that triggers an action.\n  * **B) Risk level** refers to the severity or high/low ranking of the risk, not to the predefined level of acceptance."
   },
   143: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     scenario: "River, a project manager at a technology company, is tasked with keeping track of all potential risks related to a new software implementation. He uses a structured document that lists the identified risks, their potential impact, probability and mitigation strategies.",
     question: "Which document is River using to manage these risks?",
     options: [
@@ -10814,7 +10862,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **D) Likelihood**.\n\n* **Why it's correct:** Likelihood is used in qualitative risk analysis to subjectively describe how probable a risk event is, often expressed with terms such as 'low', 'medium' or 'high'.\n* **Analysis of the distractors:**\n  * **C) A confidence level** could influence the use of the term 'high' in different contexts, but does not specifically refer to the qualitative measure of risk probability.\n  * **B) A risk rating** incorporates both probability and impact to provide an overall score to the risk, but is not the term used to express solely the probability of occurrence.\n  * **A) The exposure factor (EF)** is the fraction of an asset's value at risk in the event of a security incident."
   },
   147: {
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "A financial services company is required to regularly submit documentation demonstrating adherence to regulatory security standards. This documentation includes audit results, risk assessments and evidence of data protection measures.",
     question: "What is this process called?",
     options: [
@@ -10860,7 +10908,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **B) Encryption standard**.\n\n* **Why it's correct:** The encryption standard defines the methods and protocols for encrypting sensitive data in order to protect it from unauthorized access. Encryption transforms data into an unreadable format using cryptographic algorithms, decipherable only with the appropriate key. These standards are used to protect data in transit.\n* **Analysis of the distractors:**\n  * **C) The access control standard** defines the rules and procedures for managing user access to systems, applications and data.\n  * **D) The password standard** outlines the requirements and best practices for creating and managing passwords.\n  * **A) The physical security standard** outlines the measures to protect physical assets, facilities and equipment from unauthorized access, theft and damage."
   },
   151: {
-    topic: "Compliance Monitoring",
+    topic: "Compliance, Privacy, Due Diligence & Due Care",
     scenario: "Horizon Security, a cybersecurity training company, has suffered a data breach due to a vendor's negligence. This breach resulted in a significant loss of sensitive customer information.",
     question: "Which type of consequence is Horizon most likely to face immediately?",
     options: [
@@ -10964,7 +11012,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     explanation: "The correct answer is **A) Conservative**.\n\n* **Why it's correct:** The company's approach aligns with a conservative risk appetite, since it prioritizes stability and compliance over expansion. An expansionary appetite would seek high-risk growth opportunities, which contradicts the company's cautious attitude.\n* **Analysis of the distractors:**\n  * **D) An expansionary appetite** would seek high-risk growth opportunities, which contradicts the company's cautious attitude.\n  * **B) A neutral appetite** would balance growth and stability.\n  * **C) An aggressive appetite** would also tend toward high-risk, high-return strategies, unlike the company's conservative focus."
   },
   160: {
-    topic: "Risk Management & Assessment",
+    topic: "Risk Management & Analysis",
     question: "Which of the following terms refers to a complete risk assessment within an organization that occurs at a specific moment, often to evaluate the impact of implementing a new system or to obtain an independent view of operational maturity?",
     options: [
       "A) One-time",
