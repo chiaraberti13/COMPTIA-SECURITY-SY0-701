@@ -4316,15 +4316,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   191: {
     topic: "Cryptography",
-    scenario: "Nicola, an IT manager, is evaluating an encryption method that uses public and private keys to encrypt and decrypt.",
-    question: "Which type of encryption is he considering?",
+    scenario: "A company must solve two problems with cryptography: protecting a 500 GB archive held on its own servers, and letting clients verify the identity of the servers they connect to. The team is weighing which of the two cryptographic families suits each task.",
+    question: "Which statements comparing symmetric and asymmetric cryptography are correct? (choose two)",
     options: [
-      "A) Asymmetric encryption",
-      "B) Key exchange",
-      "C) Communication encryption",
-      "D) Symmetric encryption",
+      "A) Symmetric cryptography is far faster and is the right choice for encrypting large volumes of data",
+      "B) Asymmetric cryptography uses a key pair and makes digital signatures and non-repudiation possible",
+      "C) Asymmetric cryptography is faster than symmetric for the same amount of data to encrypt",
+      "D) Symmetric cryptography supports digital signatures, because the key proves the signer's identity"
     ],
-    explanation: "The correct answer is **A) Asymmetric encryption**.\n\n* **Why it's correct:** **Asymmetric encryption** (or public-key cryptography) uses a pair of mathematically related keys: a public key (used to encrypt) and a private key (used to decrypt, kept secret by the recipient).\n* **Analysis of the distractors:**\n  * **B) Key exchange** is the process/protocol for securely sharing cryptographic keys, not a standalone encryption method.\n  * **C) Communication encryption** refers to the general protection of data in transit, which can use both symmetric and asymmetric algorithms.\n  * **D) Symmetric encryption** uses a single shared secret key for both encryption and decryption.",
+    explanation: "The correct answers are **A)** and **B)**.\n\n* **Why A) is correct:** **Symmetric cryptography** uses **a single key** to encrypt and decrypt, and its algorithms, AES foremost, are orders of magnitude faster than asymmetric ones, helped by hardware acceleration present in every modern CPU. That is why anything bulky, the archive's 500 GB as much as the body of a TLS connection, is encrypted symmetrically.\n* **Why B) is correct:** **Asymmetric cryptography** uses a mathematically linked **key pair**: what one encrypts, only the other decrypts. Two capabilities symmetric cryptography cannot have follow from this. **Key distribution** with no pre-existing secret, because the public key can be handed to anyone. And **digital signatures with non-repudiation**: by signing with their **own private key**, which nobody else holds, the signer cannot later deny having done so.\n* **Distractor analysis:**\n  * **C)** inverts the real relationship. Asymmetric is **far slower**, and that is precisely why no protocol uses it for real data: it serves only to agree or protect the symmetric key.\n  * **D)** describes something symmetric cryptography cannot do. With a key **shared** between two parties, neither can prove to a third party that the other wrote the message: both could have produced it. Non-repudiation is therefore absent.\n\n* **Exam trap:** remember that real systems are **hybrid** and use both families for what each is good at. In TLS, asymmetric authenticates the server and agrees the session key; symmetric encrypts all the traffic that follows. A practical rule for spotting the answer: if the scenario talks about **data volume or performance**, it is symmetric; if it talks about **identity, signatures, non-repudiation or key exchange between strangers**, it is asymmetric.",
   },
   192: {
     topic: "Change Management",
@@ -5573,15 +5573,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   477: {
     topic: "Threat Vectors & Vulnerabilities",
-    scenario: "Elvi downloads an app from a website not associated with Apple onto her new iPhone. The app offered free games and wallpapers. She installs it on her mobile device and grants it all the requested permissions. She notices that the app does not work as advertised and instead shows ads and pop-ups. She also notices that the device's performance and battery life have degraded significantly.",
-    question: "What is the most likely cause of Elvi's problems?",
+    scenario: "Elvi installs on the company phone several applications downloaded as packages from a third-party site rather than from the official store and, to do so without restrictions, removes the operating system's limits to gain administrator privileges on the device. Over the following weeks the phone shows abnormal data usage and the corporate MDM can no longer enforce policy.",
+    question: "Which of Elvi's practices increased the device's attack surface? (choose two)",
     options: [
-      "A) Side loading",
-      "B) End of Life vulnerability",
-      "C) Jailbreaking",
-      "D) Malicious update",
+      "A) Side loading: installing applications outside the official store, without its vetting",
+      "B) Jailbreaking: removing operating system restrictions to gain elevated privileges",
+      "C) Enrolling the device in the corporate MDM platform before handover",
+      "D) Enabling full encryption of the company phone's storage"
     ],
-    explanation: "The correct answer is **A) Side loading**.\n\n* **Why it's correct:** **Side loading** consists of installing an application on a mobile device from a source other than the official store. Elvi side-loaded by downloading and installing the app from an unauthorized site, exposing herself to malware or spyware that shows ads and consumes battery resources.\n* **Analysis of the distractors:**\n  * **B) End-of-life vulnerabilities** concern software no longer supported by the vendor; Elvi's iPhone is new, so it is unlikely to have EOL software.\n  * **C) Jailbreaking** is an unauthorized modification of the mobile device that allows the manufacturer's restrictions to be bypassed; Elvi did not modify the operating system or the applications.\n  * **D) A Malicious update** is the unauthorized replacement of a legitimate update with a harmful one; Elvi's problems do not stem from an update.",
+    explanation: "The correct answers are **A)** and **B)**.\n\n* **Why A) is correct:** **Side loading** means installing applications while bypassing the official store. With it go all the checks the store provides: automated package analysis, review, verified publisher signature, and the ability to revoke remotely if an application turns out to be malicious. A package downloaded from an arbitrary site offers none of these guarantees, and alternative channels are the favoured vector for distributing repackaged versions of popular applications with extra code.\n* **Why B) is correct:** **Jailbreaking** (or *rooting* on Android) removes operating system restrictions to gain administrator privileges. In doing so it dismantles the platform's security model: application isolation falls away, boot integrity verification falls away, and automatic updates are often disabled. It is also the direct cause of the second symptom described, because the MDM loses the ability to enforce policy on a device whose operating system can no longer be trusted.\n* **Distractor analysis:**\n  * **C) MDM enrolment:** is a **security control**, not a risk: it allows encryption, passcodes, updates and remote wipe to be enforced. In this scenario it is the jailbreak's victim, not its cause.\n  * **D) Storage encryption:** protects data if the phone is lost or stolen. It reduces risk rather than increasing it, and has no bearing on how applications are installed.\n\n* **Exam trap:** the two practices often appear together because they reinforce each other, but they are distinct and must be told apart. **Side loading** = *where* the application comes from, namely outside the official channel · **Jailbreaking or rooting** = *which* operating system restrictions have been removed. The countermeasures are equally distinct: an MDM policy blocking unknown sources against the first, jailbreak detection that blocks access to corporate resources against the second.",
   },
   478: {
     topic: "Mitigation Techniques & Controls",
@@ -6774,15 +6774,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   516: {
     topic: "Secure Network Protocols",
-    scenario: "The consulting firm Reed & Jamario Security Services has recommended that your company adopt a security system based on the switch's physical ports to prevent unauthorized devices and users from accessing the internal network.",
-    question: "Which of the following solutions are they recommending?",
+    scenario: "A company wants to stop an unregistered device, plugged into a network socket in a common area, from gaining access to the LAN. The network team is weighing which controls to apply directly on the access switch ports, before traffic reaches the rest of the infrastructure.",
+    question: "Which controls act at the switch port to deny access to an unauthorised device? (choose two)",
     options: [
-      "A) Fail-closed",
-      "B) IEEE 802.1X standard",
-      "C) Fail-open",
-      "D) Intrusion Detection System (IDS)",
+      "A) Configuring the devices fail-open, so service is not interrupted if they fail",
+      "B) IEEE 802.1X, authenticating the device at the port before opening it to traffic",
+      "C) Port security, limiting which and how many MAC addresses the port accepts and shutting it on violation",
+      "D) An intrusion detection system (IDS) connected in tap mode on the access segment"
     ],
-    explanation: "The correct answer is **B) IEEE 802.1X standard**.\n\n* **Why it's correct:** The **802.1X** standard is the Port-Based Network Access Control protocol. When a device connects to a switch's physical port (or to a Wi-Fi access point), the protocol requires authentication (usually interfacing with a RADIUS server) before unlocking the port and allowing data traffic to transit toward the corporate network.\n* **Analysis of the distractors:**\n  * **A) Fail-closed** indicates a behavior in which, if a control system or firewall encounters an error or stops working, it blocks all connections by default to ensure maximum security, but does not describe a port-based authentication system.\n  * **C) Fail-open** indicates that, in case of a failure, the system allows all traffic through to ensure service continuity at the expense of security.\n  * **D) An IDS (Intrusion Detection System)** analyzes network traffic looking for malicious patterns or anomalies, but does not block the physical or logical access of ports during the device's initial connection phase.",
+    explanation: "The correct answers are **B)** and **C)**.\n\n* **Why B) is correct:** **IEEE 802.1X** is port-based network access control. Until authentication completes, the switch port passes **only** authentication traffic: three actors handle it, the **supplicant** on the device, the **authenticator**, that is the switch, and the RADIUS **authentication server** that decides. It is the stronger of the two controls, because it verifies an **identity** proven by credentials or a certificate, not an attribute the device claims about itself.\n* **Why C) is correct:** **Port security** acts at the same point but through a simpler mechanism: it limits how many MAC addresses the port accepts and which, and reacts to a violation by shutting the port down or dropping traffic. It is the typical control where 802.1X cannot be used, for instance on printers and devices with no supplicant. Its limitation should be known: a MAC address is **spoofable**, so port security raises the bar without being as strong a defence as authentication.\n* **Distractor analysis:**\n  * **A) Fail-open:** describes what to do **when the control fails**, and chooses to let everything through to preserve availability. It denies access to nobody; on the contrary, if the switch or RADIUS server goes down, it is exactly the mode that opens the network to the unauthorised device.\n  * **D) IDS in tap mode:** receives a **copy** of the traffic and reports. It might detect the anomaly after the device connects, but it prevents no device from gaining access, because by construction it never holds the original packets.\n\n* **Exam trap:** distinguish the three layers governing network access, because questions place them side by side. **Port security** = MAC address filtering, simple and evadable · **802.1X** = genuine port authentication, with supplicant, authenticator and RADIUS · **NAC** = the framework that uses 802.1X and adds **posture assessment**, meaning checks on antivirus, patching and encryption, with quarantine for non-compliant devices. When a scenario mentions the device's health, move up to NAC.",
   },
   517: {
     topic: "Data Classification & Security",
@@ -7892,15 +7892,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   406: {
     topic: "Email Security",
-    scenario: "A network administrator must implement security measures against email spoofing and intends to use cryptographic signatures to allow the verification of messages.",
-    question: "Which email security protocol uses cryptographic signatures to verify the authenticity of a message's sender?",
+    scenario: "An administrator wants to publish a DMARC policy in reject mode for the corporate domain. Before doing so they must make sure the mechanisms DMARC bases its decision on are in place and correct: without them, every legitimate message would be rejected along with the forged ones.",
+    question: "Which authentication mechanisms does DMARC base its evaluation on? (choose two)",
     options: [
-      "A) SPF (Sender Policy Framework)",
-      "B) MTA (Mail Transfer Agent)",
-      "C) DKIM (DomainKeys Identified Mail)",
-      "D) DMARC (Domain-based Message Authentication, Reporting, and Conformance)",
+      "A) SPF, the DNS record listing the servers authorised to send mail for the domain",
+      "B) MTA, the program that actually routes and delivers the messages",
+      "C) DKIM, the cryptographic signature proving a message's origin and integrity",
+      "D) S/MIME, the personal certificate with which an individual sender signs their messages"
     ],
-    explanation: "The correct answer is **C) DKIM (DomainKeys Identified Mail)**.\n\n* **Why it's correct:** **DKIM** allows the sending server to affix a cryptographic digital signature to the headers of the sent emails. The receiving server can verify this signature by consulting the sender's public key published in the domain's DNS records, thus ensuring that the email actually comes from the declared domain and has not been altered in transit.\n* **Analysis of the distractors:**\n  * **A) SPF** is a DNS record that lists the IP addresses authorized to send emails on behalf of a domain; it does not use cryptographic signatures for the individual messages.\n  * **B) An MTA** is a software component (e.g. Postfix, Exchange) responsible for the transfer and routing of emails, not a cryptographic security protocol.\n  * **D) DMARC** relies on SPF and DKIM to establish the reception policies (e.g. rejecting or quarantining emails that fail the checks), but does not directly generate or apply the cryptographic signatures on the messages.",
+    explanation: "The correct answers are **A)** and **C)**.\n\n* **Why A) is correct:** **SPF** (*Sender Policy Framework*) is a DNS record listing the servers authorised to send mail for the domain. The recipient compares the sender's IP address against that list and obtains a pass or fail. It is the first of the two signals DMARC consults.\n* **Why C) is correct:** **DKIM** (*DomainKeys Identified Mail*) adds to the message a **cryptographic signature** generated with the domain's private key; the recipient verifies it with the public key published in DNS. It therefore proves two things at once, the origin and the fact that the message was not altered in transit, and it survives the forwarding that instead makes SPF fail.\n* **How DMARC uses them:** on their own, neither looks at the **From** field the user sees, and that is exactly where the attacker operates. DMARC adds the **alignment** requirement: the From field's domain must match the one validated by SPF **or** the one that signed with DKIM. One of the two passing **and** aligning is enough for DMARC to pass; if neither does, the published policy applies, `p=none`, `p=quarantine` or `p=reject`.\n* **Distractor analysis:**\n  * **B) MTA:** is the **program** that routes and delivers mail, the infrastructure all of this travels over. It is not an authentication mechanism and DMARC does not consult it.\n  * **D) S/MIME:** authenticates the **individual sender** with a personal certificate, on a separate and independent plane. It does not protect the domain from abuse and plays no part in DMARC evaluation.\n\n* **Exam trap:** remember the correct adoption sequence, which is a recurring question: publish **SPF and DKIM** first, then enable **DMARC at `p=none`** to collect aggregate reports and inventory every legitimate sender, and only then tighten to `quarantine` and finally `reject`. Going straight to `p=reject`, as the administrator in the scenario would like, means having your own mail rejected.",
   },
   407: {
     topic: "Security Policies & Lifecycle",
@@ -10054,15 +10054,15 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   75: {
     topic: "Risk Management & Analysis",
-    scenario: "A risk manager must configure the quantitative risk calculation parameters to estimate how many security incidents of the same type are expected to occur over the course of a calendar year.",
-    question: "Which of the following options BEST defines the term that represents the expected number of times a risk event will occur over a one-year period?",
+    scenario: "A risk manager must estimate what a given risk will cost the company on average over a year, so that figure can then be compared with the cost of the control that would reduce it. They have the asset's value, the percentage of value a single event would destroy, and ten years of event history.",
+    question: "Which quantities are needed to calculate ALE (Annual Loss Expectancy)? (choose two)",
     options: [
-      "A) SLE (Single Loss Expectancy)",
-      "B) EF (Exposure Factor)",
-      "C) ALE (Annual Loss Expectancy)",
-      "D) ARO (Annual Rate of Occurrence)"
+      "A) SLE (Single Loss Expectancy), the loss expected from one event",
+      "B) MTBF (Mean Time Between Failures), the average time between two consecutive failures",
+      "C) ARO (Annual Rate of Occurrence), how many times a year the event is expected",
+      "D) RTO (Recovery Time Objective), the maximum tolerable period of unavailability"
     ],
-    explanation: "The correct answer is **D) ARO (Annual Rate of Occurrence)**.\n\n* **Why it's correct:** The **ARO (Annual Rate of Occurrence)** quantifies the estimated frequency with which a given risk event will occur in a year (e.g. if it is expected to happen once every 10 years, the ARO is 0.1; if it happens 2 times a year, the ARO is 2).\n* **Analysis of the distractors:**\n  * **A) SLE** calculates the financial cost or estimated loss for a single occurrence of an incident.\n  * **B) EF** represents the percentage of damage or loss suffered by a given asset in the event of an incident.\n  * **C) ALE** is the total expected annual loss, resulting from multiplying SLE by ARO (ALE = SLE * ARO)."
+    explanation: "The correct answers are **A)** and **C)**.\n\n* **Why they are correct:** Quantitative risk analysis rests on a chain of three formulas, and ALE is its final result. **SLE = Asset Value × EF**, where the *exposure factor* is the percentage of value a single event would destroy. **ALE = SLE × ARO**, where the *annual rate of occurrence* is how many times a year the event is expected, and may perfectly well be a fraction: an event expected once every ten years has an ARO of 0.1. A concrete example: a €200,000 server, a fire that would destroy 50% of it (EF 0.5) expected once every twenty-five years (ARO 0.04) gives SLE = €100,000 and ALE = €4,000 per year. And this is where the number becomes a decision: a control costing €1,000 a year is worth it, one costing €9,000 is not, because **no control should cost more than the expected loss it avoids**.\n* **Distractor analysis:**\n  * **B) MTBF:** measures **hardware reliability**, the average operating time between two failures, and serves to plan maintenance and replacement. It can help estimate the ARO of a failure, but it is not a term in the formula.\n  * **D) RTO:** belongs to **business continuity** and states how quickly a service must be available again after a disruption. It is a recovery objective, not an ingredient of annual expected loss.\n\n* **Exam trap:** learn the formulas in the order they chain together, because questions often ask for the intermediate step: **SLE = AV × EF**, then **ALE = SLE × ARO**. Watch for two recurring mistakes: ARO **is not a whole number**, and a rare event must be expressed as a fraction; and the continuity acronyms, **RTO and RPO**, never enter these calculations. Remember finally that ALE is the instrument of **quantitative** analysis, which expresses risk in money, while **qualitative** analysis places it on a likelihood-and-impact matrix with no figures.",
   },
   76: {
     topic: "Risk Management & Analysis",

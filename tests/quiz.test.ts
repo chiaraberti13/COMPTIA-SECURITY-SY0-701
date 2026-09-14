@@ -8,6 +8,12 @@ import {
   scorePercent,
   appendHistory,
   unansweredIds,
+  correctIndexes,
+  requiredSelections,
+  isMultiResponse,
+  toggleSelection,
+  isSelectionComplete,
+  isSelectionCorrect,
 } from "../src/quiz";
 import type { Question, QuizResult } from "../src/types";
 
@@ -101,10 +107,110 @@ describe("appendHistory", () => {
 describe("unansweredIds", () => {
   it("lists only the questions with no recorded answer", () => {
     const questions = [question(1), question(2), question(3)];
-    expect(unansweredIds(questions, { 2: 0 })).toEqual([1, 3]);
+    expect(unansweredIds(questions, { 2: [0] })).toEqual([1, 3]);
   });
 
   it("counts an answer of index 0 as answered", () => {
-    expect(unansweredIds([question(1)], { 1: 0 })).toEqual([]);
+    expect(unansweredIds([question(1)], { 1: [0] })).toEqual([]);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Multi-response answers
+ * ------------------------------------------------------------------ */
+
+/** A "choose TWO" question whose correct options are B and D. */
+const multi = (): Question => ({ ...question(1), answerIndex: 1, answerIndexes: [1, 3] });
+
+describe("correctIndexes", () => {
+  it("wraps a single answerIndex in a list", () => {
+    expect(correctIndexes(question(1))).toEqual([0]);
+  });
+
+  it("returns every correct option of a multi-response question, sorted", () => {
+    expect(correctIndexes({ ...multi(), answerIndexes: [3, 1] })).toEqual([1, 3]);
+  });
+
+  it("drops duplicates rather than inflating the required count", () => {
+    expect(correctIndexes({ ...multi(), answerIndexes: [1, 1, 3] })).toEqual([1, 3]);
+  });
+
+  it("falls back to answerIndex when answerIndexes is present but empty", () => {
+    expect(correctIndexes({ ...question(1), answerIndex: 2, answerIndexes: [] })).toEqual([2]);
+  });
+});
+
+describe("requiredSelections / isMultiResponse", () => {
+  it("treats a plain question as single-answer", () => {
+    expect(requiredSelections(question(1))).toBe(1);
+    expect(isMultiResponse(question(1))).toBe(false);
+  });
+
+  it("treats a two-answer question as multi-response", () => {
+    expect(requiredSelections(multi())).toBe(2);
+    expect(isMultiResponse(multi())).toBe(true);
+  });
+});
+
+describe("toggleSelection", () => {
+  it("replaces the selection on a single-answer question", () => {
+    expect(toggleSelection(question(1), [2], 0)).toEqual([0]);
+  });
+
+  it("keeps a single-answer pick selected when clicked again", () => {
+    expect(toggleSelection(question(1), [2], 2)).toEqual([2]);
+  });
+
+  it("accumulates picks on a multi-response question, sorted", () => {
+    expect(toggleSelection(multi(), [3], 1)).toEqual([1, 3]);
+  });
+
+  it("deselects an already picked option", () => {
+    expect(toggleSelection(multi(), [1, 3], 1)).toEqual([3]);
+  });
+
+  it("ignores a pick beyond the required count instead of dropping an earlier one", () => {
+    expect(toggleSelection(multi(), [1, 3], 0)).toEqual([1, 3]);
+  });
+
+  it("does not mutate the selection it is given", () => {
+    const selection = Object.freeze([1]) as readonly number[];
+    expect(toggleSelection(multi(), selection, 3)).toEqual([1, 3]);
+    expect(selection).toEqual([1]);
+  });
+});
+
+describe("isSelectionComplete", () => {
+  it("needs one pick on a single-answer question", () => {
+    expect(isSelectionComplete(question(1), [])).toBe(false);
+    expect(isSelectionComplete(question(1), [2])).toBe(true);
+  });
+
+  it("needs both picks on a two-answer question", () => {
+    expect(isSelectionComplete(multi(), [1])).toBe(false);
+    expect(isSelectionComplete(multi(), [1, 3])).toBe(true);
+  });
+});
+
+describe("isSelectionCorrect", () => {
+  it("scores a single-answer question against answerIndex", () => {
+    expect(isSelectionCorrect(question(1), [0])).toBe(true);
+    expect(isSelectionCorrect(question(1), [1])).toBe(false);
+  });
+
+  it("accepts the correct set in any order", () => {
+    expect(isSelectionCorrect(multi(), [3, 1])).toBe(true);
+  });
+
+  it("scores a partially correct multi-response answer as wrong", () => {
+    expect(isSelectionCorrect(multi(), [1])).toBe(false);
+  });
+
+  it("rejects a selection that adds a distractor to the correct pair", () => {
+    expect(isSelectionCorrect(multi(), [1, 3, 0])).toBe(false);
+  });
+
+  it("rejects an empty selection", () => {
+    expect(isSelectionCorrect(multi(), [])).toBe(false);
   });
 });

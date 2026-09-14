@@ -47,6 +47,12 @@ import {
   scorePercent,
   appendHistory,
   unansweredIds,
+  correctIndexes,
+  requiredSelections,
+  isMultiResponse,
+  toggleSelection,
+  isSelectionComplete,
+  isSelectionCorrect,
 } from "./quiz";
 
 
@@ -103,8 +109,11 @@ export default function App() {
   const [activeQuestions, setActiveQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
+  // Options picked for the question on screen. A single-answer question
+  // holds at most one entry; a multi-response one holds up to the number of
+  // correct options it declares.
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number[]>>({});
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
@@ -128,7 +137,7 @@ export default function App() {
   const [remediationActive, setRemediationActive] = useState(false);
   const [remediationQuestions, setRemediationQuestions] = useState<Question[]>([]);
   const [remediationIndex, setRemediationIndex] = useState(0);
-  const [remediationSelected, setRemediationSelected] = useState<number | null>(null);
+  const [remediationSelected, setRemediationSelected] = useState<number[]>([]);
   const [remediationShowFeedback, setRemediationShowFeedback] = useState(false);
   const [remediationCompleted, setRemediationCompleted] = useState(false);
   const [remediationScore, setRemediationScore] = useState(0);
@@ -407,7 +416,7 @@ export default function App() {
     setQuizStarted(true);
     setCurrentQuestionIndex(0);
     setQuizAnswers({});
-    setSelectedOption(null);
+    setSelectedOptions([]);
     setShowFeedback(false);
     setQuizCompleted(false);
     setQuizScore(0);
@@ -452,16 +461,19 @@ export default function App() {
 
   const handleSelectOption = (index: number) => {
     if (showFeedback) return;
-    setSelectedOption(index);
+    const current = activeQuestions[currentQuestionIndex];
+    if (!current) return;
+    setSelectedOptions(prev => toggleSelection(current, prev, index));
   };
 
   const handleConfirmAnswer = () => {
-    if (selectedOption === null || showFeedback) return;
+    if (showFeedback) return;
 
     const currentQuestion = activeQuestions[currentQuestionIndex];
-    const isCorrect = selectedOption === currentQuestion.answerIndex;
+    if (!isSelectionComplete(currentQuestion, selectedOptions)) return;
+    const isCorrect = isSelectionCorrect(currentQuestion, selectedOptions);
 
-    setQuizAnswers(prev => ({ ...prev, [currentQuestion.id]: selectedOption }));
+    setQuizAnswers(prev => ({ ...prev, [currentQuestion.id]: [...selectedOptions] }));
     setShowFeedback(true);
 
     if (isCorrect) {
@@ -501,7 +513,7 @@ export default function App() {
   const handleNextQuestion = () => {
     if (currentQuestionIndex < activeQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedOption(null);
+      setSelectedOptions([]);
       setShowFeedback(false);
     } else {
       finishQuiz();
@@ -547,7 +559,7 @@ export default function App() {
         setRemediationQuestions(data.questions);
         setRemediationActive(true);
         setRemediationIndex(0);
-        setRemediationSelected(null);
+        setRemediationSelected([]);
         setRemediationShowFeedback(false);
         setRemediationCompleted(false);
         setRemediationScore(0);
@@ -563,14 +575,17 @@ export default function App() {
 
   const handleRemediationSelect = (index: number) => {
     if (remediationShowFeedback) return;
-    setRemediationSelected(index);
+    const current = remediationQuestions[remediationIndex];
+    if (!current) return;
+    setRemediationSelected(prev => toggleSelection(current, prev, index));
   };
 
   const handleRemediationConfirm = () => {
-    if (remediationSelected === null || remediationShowFeedback) return;
+    if (remediationShowFeedback) return;
 
     const currentQuestion = remediationQuestions[remediationIndex];
-    const isCorrect = remediationSelected === currentQuestion.answerIndex;
+    if (!isSelectionComplete(currentQuestion, remediationSelected)) return;
+    const isCorrect = isSelectionCorrect(currentQuestion, remediationSelected);
 
     setRemediationShowFeedback(true);
 
@@ -582,7 +597,7 @@ export default function App() {
   const handleRemediationNext = () => {
     if (remediationIndex < remediationQuestions.length - 1) {
       setRemediationIndex(prev => prev + 1);
-      setRemediationSelected(null);
+      setRemediationSelected([]);
       setRemediationShowFeedback(false);
     } else {
       setRemediationCompleted(true);
@@ -657,7 +672,7 @@ export default function App() {
   }, [
     activeTab, quizStarted, quizCompleted, remediationActive, remediationCompleted,
     remediationIndex, remediationShowFeedback, remediationSelected,
-    currentQuestionIndex, showFeedback, selectedOption, activeQuestions, remediationQuestions,
+    currentQuestionIndex, showFeedback, selectedOptions, activeQuestions, remediationQuestions,
   ]);
 
   const maxQuestionsByDomain: Record<number, number> = {
@@ -709,7 +724,7 @@ export default function App() {
     } else if (preset === "domain4") {
       setCustomCounts({ 1: 0, 2: 0, 3: 0, 4: maxQuestionsByDomain[4], 5: 0 });
     } else if (preset === "domain5") {
-      setCustomCounts({ 1: 0, 2: 0, 3: 0, 4: 0, 5: Math.min(15, maxQuestionsByDomain[5]) });
+      setCustomCounts({ 1: 0, 2: 0, 3: 0, 4: 0, 5: maxQuestionsByDomain[5] });
     } else if (preset === "mini") {
       setCustomCounts({ 1: 2, 2: 2, 3: 2, 4: 2, 5: 2 });
     } else if (preset === "balanced") {
@@ -720,7 +735,7 @@ export default function App() {
         2: maxQuestionsByDomain[2],
         3: maxQuestionsByDomain[3],
         4: maxQuestionsByDomain[4],
-        5: Math.min(15, maxQuestionsByDomain[5])
+        5: maxQuestionsByDomain[5]
       });
     }
   };
@@ -1650,7 +1665,7 @@ export default function App() {
                             {reviewQuestions.map(q => {
                               const given = quizAnswers[q.id];
                               const answered = given !== undefined;
-                              const correct = answered && given === q.answerIndex;
+                              const correct = answered && isSelectionCorrect(q, given);
                               const position = activeQuestions.findIndex(a => a.id === q.id) + 1;
 
                               return (
@@ -1675,12 +1690,12 @@ export default function App() {
                                   <div className="space-y-1 text-[11px]">
                                     <p className={correct ? "text-emerald-300" : "text-rose-300"}>
                                       <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewYourAnswer")}:</span>
-                                      {answered ? q.options[given] : t("quiz.reviewNoAnswer")}
+                                      {answered ? given.map(i => q.options[i]).join(" · ") : t("quiz.reviewNoAnswer")}
                                     </p>
                                     {!correct && (
                                       <p className="text-emerald-300">
                                         <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewCorrectAnswer")}:</span>
-                                        {q.options[q.answerIndex]}
+                                        {correctIndexes(q).map(i => q.options[i]).join(" · ")}
                                       </p>
                                     )}
                                   </div>
@@ -1776,11 +1791,25 @@ export default function App() {
                       {remediationQuestions[remediationIndex].question}
                     </h3>
 
+                    {isMultiResponse(remediationQuestions[remediationIndex]) && (
+                      <p
+                        id="remediation_multi_hint"
+                        className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/25 rounded px-2.5 py-1.5"
+                      >
+                        {t("quiz.selectN", { n: requiredSelections(remediationQuestions[remediationIndex]) })}
+                      </p>
+                    )}
+
                     {/* Options list */}
-                    <div className="space-y-2.5" id="remediation_options_list" role="radiogroup" aria-label={t("a11y.optionsGroup")}>
+                    <div
+                      className="space-y-2.5"
+                      id="remediation_options_list"
+                      role={isMultiResponse(remediationQuestions[remediationIndex]) ? "group" : "radiogroup"}
+                      aria-label={isMultiResponse(remediationQuestions[remediationIndex]) ? t("a11y.optionsGroupMulti") : t("a11y.optionsGroup")}
+                    >
                       {remediationQuestions[remediationIndex].options.map((opt, oIdx) => {
-                        const isSelected = remediationSelected === oIdx;
-                        const isCorrect = oIdx === remediationQuestions[remediationIndex].answerIndex;
+                        const isSelected = remediationSelected.includes(oIdx);
+                        const isCorrect = correctIndexes(remediationQuestions[remediationIndex]).includes(oIdx);
                         let optionStyle = "border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/40 text-slate-400";
 
                         if (remediationShowFeedback) {
@@ -1799,7 +1828,7 @@ export default function App() {
                           <button
                             key={oIdx}
                             id={`remediation_opt_${oIdx}`}
-                            role="radio"
+                            role={isMultiResponse(remediationQuestions[remediationIndex]) ? "checkbox" : "radio"}
                             aria-checked={isSelected}
                             disabled={remediationShowFeedback}
                             onClick={() => handleRemediationSelect(oIdx)}
@@ -1815,9 +1844,9 @@ export default function App() {
                     {/* Feedback and next actions */}
                     {remediationShowFeedback ? (
                       <div className="space-y-4" id="remediation_feedback_box">
-                        <div className={`p-4 rounded border ${remediationSelected === remediationQuestions[remediationIndex].answerIndex ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="remediation_feedback_details">
+                        <div className={`p-4 rounded border ${isSelectionCorrect(remediationQuestions[remediationIndex], remediationSelected) ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="remediation_feedback_details">
                           <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
-                            {remediationSelected === remediationQuestions[remediationIndex].answerIndex ? (
+                            {isSelectionCorrect(remediationQuestions[remediationIndex], remediationSelected) ? (
                               <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                             ) : (
                               <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
@@ -1841,7 +1870,7 @@ export default function App() {
                       <button 
                         id="remediation_confirm_btn"
                         onClick={handleRemediationConfirm}
-                        disabled={remediationSelected === null}
+                        disabled={!isSelectionComplete(remediationQuestions[remediationIndex], remediationSelected)}
                         className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
                       >
                         {t("quiz.confirmAnswer")}
@@ -1893,11 +1922,27 @@ export default function App() {
                     {activeQuestions[currentQuestionIndex].question}
                   </h3>
 
+                  {/* A multi-response question says so up front: the learner
+                      must know two picks are expected before choosing one. */}
+                  {isMultiResponse(activeQuestions[currentQuestionIndex]) && (
+                    <p
+                      id="quiz_multi_hint"
+                      className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/25 rounded px-2.5 py-1.5"
+                    >
+                      {t("quiz.selectN", { n: requiredSelections(activeQuestions[currentQuestionIndex]) })}
+                    </p>
+                  )}
+
                   {/* Options buttons */}
-                  <div className="space-y-2.5" id="quiz_options_list" role="radiogroup" aria-label={t("a11y.optionsGroup")}>
+                  <div
+                    className="space-y-2.5"
+                    id="quiz_options_list"
+                    role={isMultiResponse(activeQuestions[currentQuestionIndex]) ? "group" : "radiogroup"}
+                    aria-label={isMultiResponse(activeQuestions[currentQuestionIndex]) ? t("a11y.optionsGroupMulti") : t("a11y.optionsGroup")}
+                  >
                     {activeQuestions[currentQuestionIndex].options.map((opt, oIdx) => {
-                      const isSelected = selectedOption === oIdx;
-                      const isCorrect = oIdx === activeQuestions[currentQuestionIndex].answerIndex;
+                      const isSelected = selectedOptions.includes(oIdx);
+                      const isCorrect = correctIndexes(activeQuestions[currentQuestionIndex]).includes(oIdx);
                       let optionStyle = "border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/40 text-slate-400";
 
                       if (showFeedback) {
@@ -1916,7 +1961,7 @@ export default function App() {
                         <button
                           key={oIdx}
                           id={`quiz_opt_${oIdx}`}
-                          role="radio"
+                          role={isMultiResponse(activeQuestions[currentQuestionIndex]) ? "checkbox" : "radio"}
                           aria-checked={isSelected}
                           disabled={showFeedback}
                           onClick={() => handleSelectOption(oIdx)}
@@ -1932,9 +1977,9 @@ export default function App() {
                   {/* Feedback Box & Next Actions */}
                   {showFeedback ? (
                     <div className="space-y-4" id="quiz_feedback_box">
-                      <div className={`p-4 rounded border ${selectedOption === activeQuestions[currentQuestionIndex].answerIndex ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="quiz_feedback_details">
+                      <div className={`p-4 rounded border ${isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="quiz_feedback_details">
                         <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
-                          {selectedOption === activeQuestions[currentQuestionIndex].answerIndex ? (
+                          {isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? (
                             <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                           ) : (
                             <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
@@ -1959,7 +2004,7 @@ export default function App() {
                       <button 
                         id="quiz_confirm_btn"
                         onClick={handleConfirmAnswer}
-                        disabled={selectedOption === null}
+                        disabled={!isSelectionComplete(activeQuestions[currentQuestionIndex], selectedOptions)}
                         className="w-full bg-slate-800 disabled:bg-slate-900 border border-slate-700 disabled:border-slate-800 text-slate-300 disabled:text-slate-600 font-bold py-3 rounded transition-all text-xs"
                       >
                         {t("quiz.confirmAnswer")}
@@ -2170,9 +2215,9 @@ export default function App() {
                       {q.options.map((opt, optIdx) => (
                         <div
                           key={optIdx}
-                          className={`p-2 rounded border ${optIdx === q.answerIndex ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-medium" : "bg-slate-900/50 border-slate-800 text-slate-400"}`}
+                          className={`p-2 rounded border ${correctIndexes(q).includes(optIdx) ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-medium" : "bg-slate-900/50 border-slate-800 text-slate-400"}`}
                         >
-                          {opt} {optIdx === q.answerIndex && "✓"}
+                          {opt} {correctIndexes(q).includes(optIdx) && "✓"}
                         </div>
                       ))}
                     </div>

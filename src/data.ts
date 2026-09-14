@@ -4547,17 +4547,18 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   {
     id: 75,
     topic: "Risk Management & Analysis",
-    level: "COMPRENSIONE",
-    scenario: "Un risk manager deve configurare i parametri di calcolo quantitativo del rischio per stimare quanti incidenti di sicurezza dello stesso tipo si prevede possano accadere nell'arco di un anno solare.",
-    question: "Quale delle seguenti opzioni definisce MEGLIO il termine che rappresenta il numero previsto di volte in cui un evento di rischio si verificherà in un periodo di un anno?",
+    level: "APPLICAZIONE",
+    scenario: "Un risk manager deve stimare quanto costerà mediamente all'azienda, in un anno, un determinato rischio, per poter poi confrontare quella cifra con il costo del controllo che lo ridurrebbe. Dispone del valore dell'asset, della percentuale di valore che andrebbe perduta in un singolo evento e dello storico degli eventi degli ultimi dieci anni.",
+    question: "Quali grandezze servono per calcolare l'ALE (Annual Loss Expectancy)? (scegline due)",
     options: [
-      "A) SLE (Single Loss Expectancy)",
-      "B) EF (Exposure Factor)",
-      "C) ALE (Annual Loss Expectancy)",
-      "D) ARO (Annual Rate of Occurrence)"
+      "A) SLE (Single Loss Expectancy), la perdita attesa da un singolo evento",
+      "B) MTBF (Mean Time Between Failures), il tempo medio fra due guasti consecutivi",
+      "C) ARO (Annual Rate of Occurrence), quante volte l'anno ci si attende l'evento",
+      "D) RTO (Recovery Time Objective), il tempo massimo tollerabile di indisponibilità"
     ],
-    answerIndex: 3,
-    explanation: "La risposta corretta è la **D) ARO (Annual Rate of Occurrence)**.\n\n* **Perché è la corretta:** L'**ARO (Tasso Annuo di Accadimento)** quantifica la frequenza stimata con cui un determinato evento di rischio si verificherà in un anno (es. se si prevede che avvenga una volta ogni 10 anni, l'ARO è 0.1; se avviene 2 volte all'anno, l'ARO è 2).\n* **Analisi dei distrattori:**\n  * **A) SLE** calcola il costo finanziario o la perdita stimata per una singola occorrenza di un incidente.\n  * **B) EF** rappresenta la percentuale di danno o perdita subita da un determinato asset in caso di incidente.\n  * **C) ALE** è la perdita complessiva annua attesa, derivante dalla moltiplicazione di SLE per ARO (ALE = SLE * ARO)."
+    answerIndex: 0,
+    answerIndexes: [0, 2],
+    explanation: "Le risposte corrette sono la **A)** e la **C)**.\n\n* **Perché sono le corrette:** L'analisi quantitativa del rischio si regge su una catena di tre formule, e l'ALE è il suo risultato finale. **SLE = Valore dell'asset × EF**, dove l'*exposure factor* è la percentuale di valore che un singolo evento distruggerebbe. **ALE = SLE × ARO**, dove l'*annual rate of occurrence* è quante volte all'anno ci si attende l'evento, e può benissimo essere una frazione: un evento atteso ogni dieci anni ha ARO pari a 0,1. Un esempio concreto: un server da 200.000 euro, un incendio che ne distruggerebbe il 50% (EF 0,5) atteso una volta ogni venticinque anni (ARO 0,04) dà SLE = 100.000 euro e ALE = 4.000 euro l'anno. Ed è qui che il numero diventa una decisione: un controllo che costa 1.000 euro l'anno conviene, uno che ne costa 9.000 no, perché **nessun controllo dovrebbe costare più della perdita attesa che evita**.\n* **Analisi dei distrattori:**\n  * **B) MTBF:** misura l'**affidabilità dell'hardware**, cioè il tempo medio di funzionamento fra due guasti, e serve a pianificare manutenzione e sostituzioni. Può contribuire a stimare l'ARO di un guasto, ma non è un termine della formula.\n  * **D) RTO:** appartiene alla **continuità operativa** e indica entro quanto tempo un servizio deve tornare disponibile dopo un'interruzione. È un obiettivo di ripristino, non un ingrediente della perdita attesa annua.\n\n* **Trappola d'esame:** impara le formule nell'ordine in cui si incatenano, perché le domande chiedono spesso il passaggio intermedio: **SLE = AV × EF**, poi **ALE = SLE × ARO**. Attenzione a due errori ricorrenti: l'ARO **non è un numero intero**, e un evento raro va espresso come frazione; e le sigle della continuità, **RTO e RPO**, non entrano mai in questi calcoli. Ricorda infine che l'ALE è lo strumento dell'analisi **quantitativa**, quella che esprime il rischio in denaro, mentre l'analisi **qualitativa** lo colloca in una matrice di probabilità e impatto senza cifre."
   },
   {
     id: 76,
@@ -6246,16 +6247,17 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 406,
     topic: "Email Security",
     level: "COMPRENSIONE",
-    scenario: "Un amministratore di rete deve implementare misure di sicurezza contro lo spoofing delle e-mail e intende utilizzare firme crittografiche per consentire la verifica dei messaggi.",
-    question: "Quale protocollo di sicurezza delle e-mail utilizza firme crittografiche per verificare l'autenticità del mittente di un messaggio?",
+    scenario: "Un amministratore vuole pubblicare una policy DMARC in modalità di rifiuto per il dominio aziendale. Prima di farlo deve assicurarsi che siano attivi e corretti i meccanismi su cui DMARC fonda la propria decisione: senza di essi, ogni messaggio legittimo verrebbe rifiutato insieme a quelli contraffatti.",
+    question: "Su quali meccanismi di autenticazione DMARC basa la propria valutazione? (scegline due)",
     options: [
-      "A) SPF (Sender Policy Framework)",
-      "B) MTA (Mail Transfer Agent)",
-      "C) DKIM (DomainKeys Identified Mail)",
-      "D) DMARC (Domain-based Message Authentication, Reporting, and Conformance)"
+      "A) SPF, il record DNS che elenca i server autorizzati a inviare posta per il dominio",
+      "B) MTA, il programma che si occupa materialmente di instradare e consegnare i messaggi",
+      "C) DKIM, la firma crittografica che prova origine e integrità del messaggio",
+      "D) S/MIME, il certificato personale con cui il singolo mittente firma i propri messaggi"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) DKIM (DomainKeys Identified Mail)**.\n\n* **Perché è la corretta:** Il **DKIM** consente al server mittente di apporre una firma crittografica digitale alle intestazioni delle e-mail inviate. Il server ricevente può verificare tale firma consultando la chiave pubblica del mittente pubblicata nei record DNS del dominio, garantendo così che l'e-mail provenga effettivamente dal dominio dichiarato e non sia stata alterata in transito.\n* **Analisi dei distrattori:**\n  * **A) SPF** è un record DNS che elenca gli indirizzi IP autorizzati a inviare e-mail per conto di un dominio; non utilizza firme crittografiche per i singoli messaggi.\n  * **B) Un MTA** è un componente software (es. Postfix, Exchange) responsabile del trasferimento e del routing delle e-mail, non un protocollo crittografico di sicurezza.\n  * **D) DMARC** si appoggia su SPF e DKIM per stabilire le policy di ricezione (es. rifiutare o mettere in quarantena le e-mail che falliscono i controlli), ma non genera o applica direttamente le firme crittografiche sui messaggi."
+    answerIndex: 0,
+    answerIndexes: [0, 2],
+    explanation: "Le risposte corrette sono la **A)** e la **C)**.\n\n* **Perché la A) è corretta:** **SPF** (*Sender Policy Framework*) è un record DNS che elenca i server autorizzati a inviare posta per il dominio. Il destinatario confronta l'indirizzo IP del mittente con quell'elenco e ottiene un esito di superamento o fallimento. È il primo dei due segnali che DMARC consulta.\n* **Perché la C) è corretta:** **DKIM** (*DomainKeys Identified Mail*) aggiunge al messaggio una **firma crittografica** generata con la chiave privata del dominio; il destinatario la verifica con la chiave pubblica pubblicata nel DNS. Prova quindi due cose insieme, l'origine e il fatto che il messaggio non sia stato alterato in transito, e sopravvive agli inoltri che invece fanno fallire SPF.\n* **Come DMARC li usa:** da solo, nessuno dei due guarda il campo **Da** che l'utente vede, ed è esattamente lì che l'attaccante interviene. DMARC aggiunge il requisito dell'**allineamento**: il dominio del campo Da deve coincidere con quello validato da SPF **oppure** con quello che ha firmato in DKIM. Basta che uno dei due sia superato **e** allineato perché DMARC dia esito positivo; se nessuno lo è, si applica la policy pubblicata, `p=none`, `p=quarantine` o `p=reject`.\n* **Analisi dei distrattori:**\n  * **B) MTA:** è il **programma** che instrada e consegna la posta, cioè l'infrastruttura su cui tutto questo viaggia. Non è un meccanismo di autenticazione e DMARC non lo interroga.\n  * **D) S/MIME:** autentica il **singolo mittente** con un certificato personale, su un piano diverso e indipendente. Non protegge il dominio dall'uso abusivo e non entra in alcun modo nella valutazione DMARC.\n\n* **Trappola d'esame:** ricorda la sequenza corretta di adozione, che è una domanda ricorrente: prima si pubblicano **SPF e DKIM**, poi si attiva **DMARC in `p=none`** per raccogliere i report aggregati e censire tutti i mittenti legittimi, e solo dopo si inasprisce a `quarantine` e infine a `reject`. Passare direttamente a `p=reject`, come l'amministratore dello scenario vorrebbe, significa far respingere la propria stessa posta."
   },
   {
     id: 407,
@@ -9099,16 +9101,17 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 516,
     topic: "Secure Network Protocols",
     level: "APPLICAZIONE",
-    scenario: "La società di consulenza Reed & Jamario Security Services ha raccomandato alla vostra azienda l'adozione di un sistema di sicurezza basato sulle porte fisiche dello switch per impedire l'accesso alla rete interna a dispositivi e utenti non autorizzati.",
-    question: "Quale delle seguenti soluzioni stanno raccomandando?",
+    scenario: "Un'azienda vuole impedire che un dispositivo non censito, collegato a una presa di rete di un'area comune, ottenga accesso alla LAN. Il team di rete valuta quali controlli applicare direttamente sulle porte degli switch di accesso, prima che il traffico raggiunga il resto dell'infrastruttura.",
+    question: "Quali controlli agiscono sulla porta dello switch per negare l'accesso a un dispositivo non autorizzato? (scegline due)",
     options: [
-      "A) Fail-closed",
-      "B) Standard IEEE 802.1X",
-      "C) Fail-open",
-      "D) Sistema di rilevamento delle intrusioni (IDS)"
+      "A) Configurare gli apparati in modalità fail-open, per non interrompere il servizio in caso di guasto",
+      "B) Standard IEEE 802.1X, che autentica il dispositivo sulla porta prima di aprirla al traffico",
+      "C) Port security, che limita quali e quanti indirizzi MAC la porta accetta e la disattiva in caso di violazione",
+      "D) Un sistema di rilevamento delle intrusioni (IDS) collegato in tap sul segmento di accesso"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Standard IEEE 802.1X**.\n\n* **Perché è la corretta:** Lo standard **802.1X** è il protocollo di controllo degli accessi alla rete basato sulle porte (Port-Based Network Access Control). Quando un dispositivo si collega a una porta fisica dello switch (o a un access point Wi-Fi), il protocollo richiede un'autenticazione (solitamente interfacciandosi con un server RADIUS) prima di sbloccare la porta e consentire il transito del traffico dati verso la rete aziendale.\n* **Analisi dei distrattori:**\n  * **A) Fail-closed** indica un comportamento in cui, se un sistema di controllo o un firewall incontra un errore o smette di funzionare, blocca tutte le connessioni per impostazione predefinita per garantire la massima sicurezza, ma non descrive un sistema di autenticazione basato su porte.\n  * **C) Fail-open** indica che, in caso di guasto, il sistema permette il passaggio di tutto il traffico per garantire la continuità del servizio a scapito della sicurezza.\n  * **D) Un IDS (Intrusion Detection System)** analizza il traffico di rete alla ricerca di pattern malevoli o anomalie, ma non blocca l'accesso fisico o logico delle porte in fase di connessione iniziale del dispositivo."
+    answerIndexes: [1, 2],
+    explanation: "Le risposte corrette sono la **B)** e la **C)**.\n\n* **Perché la B) è corretta:** **IEEE 802.1X** è il controllo d'accesso alla rete basato sulla porta. Finché l'autenticazione non è completata, la porta dello switch lascia passare **solo** il traffico di autenticazione: tre attori se ne occupano, il **supplicant** sul dispositivo, l'**authenticator**, cioè lo switch, e il **server di autenticazione** RADIUS che decide. È il controllo più robusto dei due, perché verifica un'**identità** provata da credenziali o da un certificato, non un attributo che il dispositivo dichiara di sé.\n* **Perché la C) è corretta:** La **port security** agisce sullo stesso punto ma con un meccanismo più semplice: limita quanti indirizzi MAC la porta accetta e quali, e reagisce a una violazione disattivando la porta o scartando il traffico. È il controllo tipico dove 802.1X non è applicabile, per esempio su stampanti e apparati privi di supplicant. Il suo limite va conosciuto: un indirizzo MAC è **falsificabile**, quindi la port security alza la barriera senza essere una difesa forte quanto l'autenticazione.\n* **Analisi dei distrattori:**\n  * **A) Fail-open:** descrive cosa fare **quando il controllo si guasta**, e sceglie di lasciar passare tutto per preservare la disponibilità. Non nega l'accesso a nessuno; anzi, se lo switch o il server RADIUS cadono, è proprio la modalità che apre la rete al dispositivo non autorizzato.\n  * **D) IDS in tap:** riceve una **copia** del traffico e segnala. Rileverebbe forse l'anomalia dopo il collegamento, ma non impedisce a nessun dispositivo di ottenere accesso, perché per costruzione non ha in mano i pacchetti originali.\n\n* **Trappola d'esame:** distingui i tre livelli con cui si governa l'accesso alla rete, perché le domande li accostano. **Port security** = filtro sugli indirizzi MAC, semplice ed eludibile · **802.1X** = autenticazione vera sulla porta, con supplicant, authenticator e RADIUS · **NAC** = il framework che usa 802.1X e vi aggiunge il **posture assessment**, cioè la verifica di antivirus, patch e cifratura, con quarantena per i non conformi. Quando lo scenario nomina lo stato di salute del dispositivo, sali fino a NAC."
   },
   {
     id: 517,
@@ -11187,16 +11190,17 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 477,
     topic: "Threat Vectors & Vulnerabilities",
     level: "ANALISI",
-    scenario: "Elvi scarica un'app da un sito web non associato ad Apple sul suo nuovo iPhone. L'app offriva giochi e sfondi gratuiti. La installa sul suo dispositivo mobile e le concede tutti i permessi richiesti. Nota che l'app non funziona come pubblicizzato e invece mostra annunci e pop-up. Nota anche che le prestazioni del dispositivo e la durata della batteria si sono degradate significativamente.",
-    question: "Qual è la causa più probabile dei problemi di Elvi?",
+    scenario: "Elvi installa sul telefono aziendale alcune applicazioni scaricate come pacchetti da un sito di terze parti anziché dallo store ufficiale e, per riuscirci senza restrizioni, rimuove i limiti imposti dal sistema operativo ottenendo privilegi di amministratore sul dispositivo. Nelle settimane successive il telefono mostra consumo anomalo di dati e l'MDM aziendale non riesce più ad applicare le policy.",
+    question: "Quali pratiche di Elvi hanno aumentato la superficie d'attacco del dispositivo? (scegline due)",
     options: [
-      "A) Side loading",
-      "B) End of Life vulnerability",
-      "C) Jailbreaking",
-      "D) Malicious update"
+      "A) Side loading: installare applicazioni fuori dallo store ufficiale, senza le sue verifiche",
+      "B) Jailbreaking: rimuovere le restrizioni del sistema operativo per ottenere privilegi elevati",
+      "C) Iscrizione del dispositivo alla piattaforma MDM aziendale prima della consegna",
+      "D) Attivazione della cifratura integrale della memoria del telefono aziendale"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Side loading**.\n\n* **Perché è la corretta:** Il **Side loading** consiste nell'installazione di un'applicazione su un dispositivo mobile da una fonte diversa dallo store ufficiale. Elvi ha effettuato il side loading scaricando e installando l'app da un sito non autorizzato, esponendosi a malware o spyware che mostrano annunci e consumano risorse della batteria.\n* **Analisi dei distrattori:**\n  * **B) Le End-of-life vulnerabilities** riguardano software non più supportato dal vendor; l'iPhone di Elvi è nuovo, quindi è improbabile avere software EOL.\n  * **C) Il Jailbreaking** è una modifica non autorizzata del dispositivo mobile che consente di aggirare le restrizioni del produttore; Elvi non ha modificato il sistema operativo o le applicazioni.\n  * **D) Un Malicious update** è la sostituzione non autorizzata di un aggiornamento legittimo con uno dannoso; i problemi di Elvi non derivano da un aggiornamento."
+    answerIndexes: [0, 1],
+    explanation: "Le risposte corrette sono la **A)** e la **B)**.\n\n* **Perché la A) è corretta:** Il **side loading** consiste nell'installare applicazioni aggirando lo store ufficiale. Con esso si perdono tutte le verifiche che lo store fornisce: analisi automatica del pacchetto, revisione, firma verificata dell'editore e possibilità di revoca a distanza se l'applicazione si rivela malevola. Un pacchetto scaricato da un sito qualsiasi non offre nessuna di queste garanzie, e i canali alternativi sono il vettore preferito per distribuire versioni ripacchettate di applicazioni popolari con codice aggiuntivo.\n* **Perché la B) è corretta:** Il **jailbreaking** (o *rooting* su Android) rimuove le restrizioni del sistema operativo per ottenere privilegi di amministratore. Nel farlo smantella il modello di sicurezza della piattaforma: cade l'isolamento fra applicazioni, cade la verifica dell'integrità all'avvio, e spesso vengono disattivati gli aggiornamenti automatici. È anche la causa diretta del secondo sintomo descritto, perché l'MDM perde la capacità di imporre le policy su un dispositivo il cui sistema non è più affidabile.\n* **Analisi dei distrattori:**\n  * **C) Iscrizione all'MDM:** è un **controllo di sicurezza**, non un rischio: consente di imporre cifratura, codice di sblocco, aggiornamenti e cancellazione remota. Nello scenario è la vittima del jailbreak, non la causa.\n  * **D) Cifratura della memoria:** protegge i dati se il telefono viene perso o rubato. Riduce il rischio, non lo aumenta, e non ha alcun rapporto con l'installazione di applicazioni.\n\n* **Trappola d'esame:** le due pratiche compaiono spesso insieme perché si rafforzano a vicenda, ma sono distinte e vanno sapute separare. **Side loading** = *da dove* arriva l'applicazione, cioè fuori dal canale ufficiale · **Jailbreaking o rooting** = *quali restrizioni* del sistema operativo sono state rimosse. Le contromisure sono altrettanto distinte: una policy MDM che blocca le sorgenti sconosciute contro il primo, il rilevamento di jailbreak con blocco dell'accesso alle risorse aziendali contro il secondo."
   },
   {
     id: 478,
@@ -13110,16 +13114,17 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 191,
     topic: "Cryptography",
     level: "COMPRENSIONE",
-    scenario: "Nicola, un IT manager, sta valutando un metodo di crittografia che utilizza chiavi pubbliche e private per cifrare e decifrare.",
-    question: "Quale tipo di crittografia sta prendendo in considerazione?",
+    scenario: "Un'azienda deve risolvere due problemi con la crittografia: proteggere un archivio di 500 GB conservato sui propri server, e permettere ai client di verificare l'identità dei server a cui si collegano. Il team valuta quale delle due famiglie crittografiche sia adatta a ciascun compito.",
+    question: "Quali affermazioni sul confronto fra crittografia simmetrica e asimmetrica sono corrette? (scegline due)",
     options: [
-      "A) Crittografia asimmetrica (Asymmetric encryption)",
-      "B) Scambio di chiavi (Key exchange)",
-      "C) Crittografia delle comunicazioni (Communication encryption)",
-      "D) Crittografia simmetrica (Symmetric encryption)"
+      "A) La crittografia simmetrica è molto più veloce ed è la scelta giusta per cifrare grandi volumi di dati",
+      "B) La crittografia asimmetrica usa una coppia di chiavi e rende possibili firma digitale e non ripudio",
+      "C) La crittografia asimmetrica è più veloce di quella simmetrica a parità di dati da cifrare",
+      "D) La crittografia simmetrica consente la firma digitale, perché la chiave prova l'identità del firmatario"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Crittografia asimmetrica (Asymmetric encryption)**.\n\n* **Perché è la corretta:** La **crittografia asimmetrica** (o crittografia a chiave pubblica) impiega una coppia di chiavi matematicamente correlate: una chiave pubblica (usata per cifrare) e una chiave privata (usata per decifrare, conservata segretamente dal destinatario).\n* **Analisi dei distrattori:**\n  * **B) Lo scambio di chiavi (Key exchange)** è il processo/protocollo per condividere in modo sicuro chiavi crittografiche, non un metodo di cifratura autonomo.\n  * **C) La crittografia delle comunicazioni** si riferisce alla protezione dei dati in transito generale, che può fare uso sia di algoritmi simmetrici che asimmetrici.\n  * **D) La crittografia simmetrica** impiega un'unica chiave segreta condivisa sia per la cifratura che per la decifratura."
+    answerIndexes: [0, 1],
+    explanation: "Le risposte corrette sono la **A)** e la **B)**.\n\n* **Perché la A) è corretta:** La **crittografia simmetrica** usa **una sola chiave** per cifrare e decifrare, e i suoi algoritmi, AES in testa, sono ordini di grandezza più rapidi di quelli asimmetrici, anche grazie all'accelerazione hardware presente in ogni CPU moderna. È per questo che tutto ciò che è voluminoso, i 500 GB dell'archivio come il corpo di una connessione TLS, viene cifrato simmetricamente.\n* **Perché la B) è corretta:** La **crittografia asimmetrica** usa una **coppia** di chiavi matematicamente legate: ciò che una cifra, solo l'altra decifra. Da qui discendono le due capacità che il simmetrico non può avere. La **distribuzione delle chiavi** senza un segreto preesistente, perché la chiave pubblica può essere data a chiunque. E la **firma digitale con non ripudio**: firmando con la **propria chiave privata**, che nessun altro possiede, il firmatario non può in seguito negare di averlo fatto.\n* **Analisi dei distrattori:**\n  * **C)** capovolge il rapporto reale. L'asimmetrico è **molto più lento**, ed è precisamente questo il motivo per cui nessun protocollo lo usa per i dati veri: serve solo a concordare o proteggere la chiave simmetrica.\n  * **D)** descrive qualcosa che il simmetrico non può fare. Con una chiave **condivisa** fra due parti, nessuna delle due può dimostrare a un terzo che il messaggio è stato scritto dall'altra: entrambe avrebbero potuto produrlo. Manca quindi il non ripudio.\n\n* **Trappola d'esame:** ricorda che i sistemi reali sono **ibridi** e usano entrambe le famiglie per ciò in cui ciascuna è forte. In TLS l'asimmetrico autentica il server e concorda la chiave di sessione; il simmetrico cifra tutto il traffico che segue. Regola pratica per riconoscere la risposta: se lo scenario parla di **volume di dati o prestazioni**, è simmetrico; se parla di **identità, firma, non ripudio o scambio di chiavi fra sconosciuti**, è asimmetrico."
   },
   {
     id: 192,

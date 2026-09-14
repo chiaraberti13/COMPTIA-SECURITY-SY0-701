@@ -246,6 +246,8 @@ const it = {
   "quiz.finishExam": "Concludi Esame",
   "quiz.nextQuestion": "Prossima Domanda",
   "quiz.confirmAnswer": "Conferma Risposta",
+  "quiz.selectN": "Seleziona {n} risposte",
+  "quiz.selectNRemaining": "Ancora {n} da selezionare",
   "quiz.bestChoice": "BEST CHOICE SELEZIONATA",
   "quiz.distractor": "DISTRATTORE RILEVATO",
 
@@ -282,6 +284,7 @@ const it = {
   "a11y.selectTopic": "Apri l'argomento {name}",
   "a11y.toggleCheck": "Segna {name} come completato",
   "a11y.optionsGroup": "Opzioni di risposta",
+  "a11y.optionsGroupMulti": "Opzioni di risposta, scelta multipla",
   "a11y.keyboardHint": "Suggerimento: premi 1-4 per selezionare, Invio per confermare.",
 
 
@@ -502,6 +505,8 @@ const en: Record<UIKey, string> = {
   "quiz.finishExam": "Finish Exam",
   "quiz.nextQuestion": "Next Question",
   "quiz.confirmAnswer": "Confirm Answer",
+  "quiz.selectN": "Select {n} answers",
+  "quiz.selectNRemaining": "{n} still to select",
   "quiz.bestChoice": "BEST CHOICE SELECTED",
   "quiz.distractor": "DISTRACTOR DETECTED",
 
@@ -538,6 +543,7 @@ const en: Record<UIKey, string> = {
   "a11y.selectTopic": "Open topic {name}",
   "a11y.toggleCheck": "Mark {name} as completed",
   "a11y.optionsGroup": "Answer options",
+  "a11y.optionsGroupMulti": "Answer options, multiple choice",
   "a11y.keyboardHint": "Tip: press 1-4 to select, Enter to confirm.",
 
 
