@@ -6064,18 +6064,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 184,
-    topic: "Multi-Factor Authentication",
-    level: "COMPRENSIONE",
-    scenario: "Un dipendente viaggia frequentemente per motivi di lavoro in vari paesi. Il dipartimento di sicurezza dell'organizzazione desidera implementare una misura di autenticazione a più fattori (MFA) aggiuntiva, che analizzi e verifichi la sua posizione geografica effettiva (tramite geolocalizzazione IP o coordinate GPS) prima di consentirgli l'accesso ai sistemi aziendali riservati.",
-    question: "Quale fattore di autenticazione a più fattori (MFA) sta pianificando di utilizzare l'organizzazione in questo scenario?",
+    topic: "Identity & Access Control Models",
+    level: "ANALISI",
+    scenario: "Un ospedale deve applicare questa regola: un medico può aprire la cartella clinica solo se il paziente è ricoverato nel suo reparto, solo durante il proprio turno e solo da un terminale interno alla struttura. Con i ruoli attuali la regola non è esprimibile: creare un ruolo per ogni combinazione di reparto, turno e postazione produrrebbe centinaia di ruoli da mantenere.",
+    question: "Quale modello di controllo degli accessi consente di esprimere direttamente una regola di questo tipo?",
     options: [
-      "A) Qualcosa che sai (Something you know)",
-      "B) Qualcosa che sei (Something you are)",
-      "C) Un posto in cui ti trovi (Somewhere you are)",
-      "D) Qualcosa che possiedi (Something you have)"
+      "A) DAC, lasciando al proprietario della cartella la scelta di chi può aprirla",
+      "B) RBAC, creando un ruolo distinto per ogni combinazione di reparto e turno",
+      "C) ABAC, valutando gli attributi di utente, risorsa e contesto a ogni richiesta",
+      "D) MAC, assegnando etichette di classificazione a cartelle cliniche e utenti"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Un posto in cui ti trovi (Somewhere you are)**.\n\n* **Perché è la corretta:** Il fattore **Somewhere you are** (luogo in cui ti trovi) si basa sulla posizione fisica o geografica dell'utente nel momento in cui richiede l'autenticazione. Può essere validato tramite coordinate GPS del dispositivo mobile, indirizzo IP geolocalizzato o tramite l'uso di geofencing.\n* **Analisi dei distrattori:**\n  * **A) Something you know** riguarda informazioni di conoscenza esclusive, come password, PIN o risposte a domande di sicurezza.\n  * **B) Something you are** si riferisce a fattori biometrici innati dell'utente, come impronte digitali, scansione della retina o riconoscimento vocale.\n  * **D) Something you have** riguarda il possesso di un oggetto fisico o digitale, come token hardware, smart card o codici OTP generati da un'applicazione di autenticazione sullo smartphone."
+    explanation: "La risposta corretta è la **C) ABAC (Attribute-Based Access Control)**.\n\n* **Perché è la corretta:** L'**ABAC** non decide in base a *chi sei* una volta per tutte, ma valuta a **ogni singola richiesta** una policy che combina attributi di tre provenienze: attributi del **soggetto** (reparto di appartenenza, specializzazione, turno in corso), attributi della **risorsa** (reparto di ricovero del paziente, livello di riservatezza della cartella) e attributi del **contesto o ambiente** (ora, indirizzo IP di origine, postura del dispositivo). La regola dell'ospedale diventa così una policy sola, leggibile quasi come è stata scritta in italiano: *consenti se reparto-del-medico è uguale a reparto-del-paziente, e ora-corrente è dentro turno-del-medico, e rete-di-origine è interna*. È anche l'unico modello che si adatta da solo al cambiamento: se un medico viene trasferito di reparto, la sua autorizzazione cambia nell'istante in cui cambia l'attributo, senza che nessuno debba toccare i permessi.\n* **Analisi dei distrattori:**\n  * **A) DAC:** affida la decisione al **proprietario** della risorsa. In sanità è inaccettabile, perché l'accesso a un dato clinico non può dipendere dalla discrezionalità di un singolo, e in ogni caso non esprime alcuna condizione su turno o postazione.\n  * **B) RBAC:** è proprio il punto di partenza che lo scenario dichiara insufficiente. I ruoli sono statici e non conoscono il contesto: per rappresentare ogni combinazione di reparto, turno e postazione bisognerebbe moltiplicarli, cadendo nella cosiddetta **esplosione dei ruoli**, che rende l'insieme impossibile da mantenere e da verificare.\n  * **D) MAC:** si basa su **etichette di classificazione** fissate dal sistema e su livelli di autorizzazione, ed è tipico degli ambienti militari o governativi. È rigido per costruzione, e una classificazione non può esprimere \"solo durante il tuo turno\".\n\n* **Trappola d'esame:** riconosci ciascun modello dalla domanda a cui risponde. **DAC** = decide il proprietario, tipico dei permessi sui file · **MAC** = decide il sistema con etichette e livelli, ambienti ad alta classificazione · **RBAC** = decide il ruolo, che è il modello aziendale più diffuso · **Rule-based** = regole uguali per tutti, come una ACL di firewall · **ABAC** = decidono gli attributi valutati nel contesto, ed è il modello su cui poggia lo **Zero Trust**. Quando lo scenario nomina condizioni **dinamiche**, cioè orario, posizione, dispositivo o relazione fra utente e risorsa, la risposta è ABAC."
   },
   {
     id: 185,
@@ -6094,18 +6094,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 186,
-    topic: "Architecture Models & Shared Responsibility",
-    level: "COMPRENSIONE",
-    scenario: "Un'azienda di sviluppo software si trova in prossimità di una scadenza di consegna critica. Per rispettare le tempistiche imposte dal management, il team sceglie deliberatamente di ignorare alcune inefficienze note del sistema e di adottare scorciatoie architetturali provvisorie, consapevole che queste decisioni renderanno il sistema più fragile e vulnerabile e richiederanno costosi interventi correttivi futuri.",
-    question: "Quale dei seguenti termini descrive MEGLIO questa situazione in cui si preferisce il rilascio rapido a scapito della qualità e della sicurezza a lungo termine?",
+    topic: "Security Monitoring & Alerting",
+    level: "ANALISI",
+    scenario: "Il SIEM di un'azienda genera circa 4.000 alert al giorno. Il 96% proviene da tre regole che segnalano attività normali, come il backup notturno che apre centinaia di connessioni e uno strumento di gestione che si autentica in sequenza su tutti i server. Gli analisti hanno smesso di leggere quelle categorie, e in un incidente recente l'alert che segnalava l'esfiltrazione era rimasto in coda per undici ore.",
+    question: "Quale intervento affronta la causa reale del problema?",
     options: [
-      "A) Costo economico (Cost)",
-      "B) Singolo punto di vulnerabilità (Single point of failure)",
-      "C) Debito tecnico (Technical debt)",
-      "D) Complessità strutturale (Complexity)"
+      "A) Disattivare le tre regole rumorose, eliminando alla radice il volume in eccesso",
+      "B) Assumere altri analisti, così da smaltire tutti gli alert entro la giornata",
+      "C) Alert tuning: soglie, correlazione ed esclusioni mirate per le attività note",
+      "D) Archiviare gli alert più vecchi di 24 ore, mantenendo la coda sempre corta"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Debito tecnico (Technical debt)**.\n\n* **Perché è la corretta:** Il **Debito Tecnico** (Technical Debt) rappresenta il costo implicito e cumulativo dei futuri sforzi e del rework necessari per correggere scorciatoie, bug o scelte di progettazione non ottimali effettuate nel presente per motivi di budget, tempo o convenienza commerciale.\n* **Analisi dei distrattori:**\n  * **A) Il costo** descrive la spesa monetaria immediata o pianificata, ma non descrive specificamente il sovraccarico derivante dal rinvio intenzionale della correzione di difetti architetturali.\n  * **B) Un Single Point of Failure (SPOF)** è un singolo componente hardware, software o di rete il cui malfunzionamento causa l'interruzione dell'intero sistema, slegato dal concetto di scorciatoie di sviluppo.\n  * **D) La complessità** è una caratteristica strutturale del sistema (sistemi complessi e interconnessi), che può essere incrementata dal debito tecnico ma non ne costituisce la definizione principale."
+    explanation: "La risposta corretta è la **C) Alert tuning**.\n\n* **Perché è la corretta:** Il problema descritto ha un nome, **alert fatigue**: quando il rapporto fra segnale e rumore crolla, gli analisti smettono di fidarsi degli alert, e a quel punto un rilevamento che funziona perfettamente sul piano tecnico non produce alcuna reazione. L'**alert tuning** interviene esattamente lì, rendendo ogni regola più precisa invece che più silenziosa: si alzano o si contestualizzano le **soglie**, si aggiungono **esclusioni mirate** per le attività legittime e note (l'account di servizio del backup, entro la sua finestra oraria, verso le sue destinazioni abituali), si **correlano** più eventi in modo che a un singolo evento innocuo non corrisponda un alert, e si assegnano priorità in base alla criticità del bersaglio. L'obiettivo non è ridurre il numero di alert ma **aumentare la percentuale di alert che meritano di essere guardati**, così che la coda torni a essere leggibile e l'alert importante emerga.\n* **Analisi dei distrattori:**\n  * **A) Disattivare le tre regole:** è la scorciatoia che crea un punto cieco. Il backup notturno è anche uno dei comportamenti che un attaccante imita più volentieri, proprio perché sa che nessuno lo guarda: spegnere la regola significa garantirgli l'impunità su quel percorso. Il tuning esclude il *caso noto e legittimo*, non l'intera categoria di comportamento.\n  * **B) Assumere altri analisti:** scala il costo, non la qualità. Con il 96% di rumore, il doppio degli analisti passa il doppio del tempo su falsi positivi, e l'alert critico continua a nascondersi nella stessa proporzione. La reazione umana al rumore, cioè smettere di leggere, non si risolve con più persone che lo leggono.\n  * **D) Archiviare gli alert vecchi:** rende la coda più corta senza guardare nessuno di quegli alert. È cosmesi sul sintomo: l'incidente dello scenario era in coda da undici ore e sarebbe stato archiviato, non gestito.\n\n* **Trappola d'esame:** distingui i tre esiti sbagliati di un sistema di rilevamento. **Falso positivo** = alert su attività legittima, costa tempo e genera alert fatigue · **Falso negativo** = attacco reale non rilevato, il più pericoloso · **Alert fatigue** = l'effetto *umano* di troppi falsi positivi, cioè alert veri che vengono ignorati. La risposta corretta a un eccesso di alert è quasi sempre **tuning**, mai la disattivazione della regola: si riduce il rumore mantenendo la capacità di rilevare."
   },
   {
     id: 187,
@@ -6515,17 +6515,17 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   {
     id: 200,
     topic: "Email Security",
-    level: "COMPRENSIONE",
-    scenario: "Un amministratore della sicurezza vuole prevenire gli attacchi di email spoofing implementando uno standard che consenta ai server riceventi di verificare se il server mittente è autorizzato dal dominio a inviare email per suo conto.",
-    question: "Quale standard di sicurezza delle e-mail consente ai proprietari di un dominio di specificare quali server di posta sono autorizzati a inviare e-mail per loro conto?",
+    level: "ANALISI",
+    scenario: "Un'azienda ha pubblicato da mesi un record SPF corretto e firma tutta la posta in uscita con DKIM. Nonostante questo, i clienti continuano a ricevere messaggi fraudolenti che nel campo Da mostrano il dominio aziendale. L'analisi rivela che l'attaccante supera i controlli perché usa un proprio dominio, regolarmente autorizzato in SPF e firmato in DKIM, mentre falsifica soltanto l'indirizzo visibile all'utente. L'azienda non ha alcuna visibilità su chi invii posta a suo nome.",
+    question: "Quale standard aggiunge il controllo mancante e fornisce quella visibilità?",
     options: [
-      "A) SPF (Sender Policy Framework)",
-      "B) SMTP (Simple Mail Transfer Protocol)",
-      "C) DMARC (Domain-based Message Authentication, Reporting and Conformance)",
-      "D) DKIM (DomainKeys Identified Mail)"
+      "A) DMARC, che impone l'allineamento del dominio e pubblica una policy con reportistica",
+      "B) TLS opportunistico sul trasporto fra i server di posta mittente e destinatario",
+      "C) S/MIME, firmando digitalmente ogni messaggio inviato dai dipendenti",
+      "D) Un secondo record SPF, che elenchi anche i domini dei fornitori esterni"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) SPF (Sender Policy Framework)**.\n\n* **Perché è la corretta:** **SPF** aiuta a prevenire l'email spoofing consentendo ai proprietari di dominio di definire, tramite un record DNS TXT, quali server sono autorizzati a inviare email per loro conto. I server di posta riceventi verificano questo record per confermare la legittimità del mittente.\n* **Analisi dei distrattori:**\n  * **B)** SMTP è il protocollo utilizzato per l'invio delle email, ma non specifica né controlla le autorizzazioni dei server mittenti per un dominio.\n  * **C)** DMARC utilizza i risultati delle verifiche DKIM e SPF per determinare l'azione da intraprendere sui messaggi non conformi, ma non elenca direttamente i server autorizzati.\n  * **D)** DKIM fornisce un metodo per validare l'identità del dominio tramite autenticazione crittografica, ma non specifica quali server siano autorizzati a inviare email per conto del dominio."
+    explanation: "La risposta corretta è la **A) DMARC**.\n\n* **Perché è la corretta:** SPF e DKIM, presi da soli, hanno un buco preciso e lo scenario lo mostra all'opera. **SPF** verifica il dominio della busta (*MAIL FROM*), quello che l'utente non vede mai; **DKIM** verifica la firma del dominio che ha firmato il messaggio. Nessuno dei due guarda il campo **Da** visualizzato nel client di posta, che è esattamente ciò che l'attaccante falsifica. **DMARC** aggiunge il controllo mancante, l'**allineamento**: pretende che il dominio del campo Da coincida con il dominio validato da SPF o da DKIM. In questo modo il messaggio dell'attaccante, pur superando entrambi i controlli sul *proprio* dominio, fallisce l'allineamento e viene trattato secondo la **policy** pubblicata nel DNS, cioè `p=none` per osservare, `p=quarantine` per lo spam, `p=reject` per rifiutare. DMARC risponde anche alla seconda esigenza dichiarata, perché i **report aggregati** inviati dai destinatari mostrano chi sta inviando posta a nome del dominio, il che permette di censire i mittenti legittimi prima di passare a una policy restrittiva.\n* **Analisi dei distrattori:**\n  * **B) TLS opportunistico:** cifra il **trasporto** fra server, proteggendo il messaggio da intercettazione lungo il percorso. Non dice nulla sull'autenticità del mittente: un messaggio contraffatto viaggia cifrato altrettanto bene.\n  * **C) S/MIME:** autentica il **singolo mittente** con un certificato personale, ed è efficace ma su un piano diverso. Richiede certificati per ogni utente e la cooperazione del destinatario, e non protegge il dominio dall'uso abusivo da parte di terzi verso chiunque.\n  * **D) Un secondo record SPF:** è un errore tecnico, oltre che inutile. Un dominio deve avere **un solo** record SPF, e pubblicarne due fa fallire la valutazione con esito *permerror*, peggiorando la situazione invece di migliorarla.\n\n* **Trappola d'esame:** memorizza la divisione dei compiti fra i tre standard. **SPF** = quali server possono inviare per il dominio, controlla il MAIL FROM della busta · **DKIM** = firma crittografica che prova origine e integrità del messaggio · **DMARC** = allinea il campo Da visibile con SPF o DKIM, pubblica la policy e restituisce i report. La sequenza corretta di adozione è sempre la stessa: prima SPF e DKIM, poi DMARC in `p=none` per osservare, infine l'inasprimento a `quarantine` e `reject`."
   },
   {
     id: 201,
@@ -6784,18 +6784,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 218,
-    topic: "Multi-Factor Authentication",
-    level: "APPLICAZIONE",
-    scenario: "La Dion Training sta implementando una nuova applicazione per i dipendenti in remoto. Vuole garantire che gli utenti possano accedere in modo sicuro senza la necessità di un dispositivo fisico diverso dai loro smartphone. Il sistema genererebbe un codice numerico temporaneo sul dispositivo dell'utente, che verrebbe poi utilizzato come seconda forma di autenticazione.",
-    question: "Quale delle seguenti soluzioni soddisfa MEGLIO questo requisito?",
+    topic: "Identity & Access Management",
+    level: "ANALISI",
+    scenario: "Dion Training vuole che i dipendenti accedano a un'applicazione SaaS di terze parti usando le credenziali del proprio identity provider aziendale. Il requisito posto dalla sicurezza è che la password non venga mai trasmessa né conosciuta dal fornitore SaaS: quest'ultimo deve limitarsi a ricevere, da un provider di cui si fida, un'asserzione firmata che attesta l'identità dell'utente e i suoi attributi.",
+    question: "Quale standard è progettato specificamente per questo scambio fra identity provider e applicazione?",
     options: [
-      "A) Autenticazione basata sulla posizione di rete (Network location-based authentication)",
-      "B) Token di autenticazione software (Software authentication tokens)",
-      "C) Password statica (Static password)",
-      "D) Autenticazione biometrica (Biometric authentication)"
+      "A) LDAP, interrogando la directory aziendale per verificare le credenziali",
+      "B) SAML, con un'asserzione XML firmata scambiata fra identity e service provider",
+      "C) RADIUS, centralizzando autenticazione, autorizzazione e accounting",
+      "D) Kerberos, emettendo ticket validi all'interno del dominio aziendale"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Token di autenticazione software (Software authentication tokens)**.\n\n* **Perché è la corretta:** I **token di autenticazione software** generano codici sensibili al tempo su dispositivi come gli smartphone, fornendo un ulteriore livello di sicurezza senza la necessità di un dispositivo fisico separato oltre allo smartphone dell'utente. Questa soluzione (tipicamente implementata tramite app TOTP come Google Authenticator) soddisfa esattamente i requisiti descritti.\n* **Analisi dei distrattori:**\n  * **A)** L'autenticazione basata sulla posizione di rete valida gli utenti in base alla rete dalla quale si connettono, non genera codici numerici temporanei.\n  * **C)** Una password statica è un insieme fisso di caratteri e non fornisce la natura dinamica e temporanea della soluzione descritta.\n  * **D)** L'autenticazione biometrica utilizza caratteristiche biologiche uniche come impronte digitali o riconoscimento facciale, non genera codici numerici temporanei."
+    explanation: "La risposta corretta è la **B) SAML (Security Assertion Markup Language)**.\n\n* **Perché è la corretta:** **SAML** è lo standard nato esattamente per il **single sign-on federato verso applicazioni web di terze parti**. Il flusso corrisponde punto per punto al requisito: l'utente si autentica una sola volta presso l'**identity provider** aziendale, che è l'unico a vedere la password; l'IdP produce un'**asserzione** in XML **firmata digitalmente**, contenente l'identità dell'utente e gli attributi utili (gruppi, ruolo, reparto); il browser la consegna al **service provider**, cioè al SaaS, che ne verifica la firma con il certificato dell'IdP e concede l'accesso. Il fornitore SaaS non riceve mai la password e non deve custodirla, il che elimina in un colpo solo un'intera classe di rischio: una violazione del fornitore non espone credenziali aziendali. Allo stesso modo, quando l'azienda disattiva l'account nel proprio IdP, l'accesso al SaaS cessa immediatamente, senza dipendere da un processo del fornitore.\n* **Analisi dei distrattori:**\n  * **A) LDAP:** è un **protocollo di directory** per interrogare e gestire un archivio di identità, tipicamente sulla rete interna. Esporlo a un SaaS esterno significherebbe aprire la directory aziendale a Internet e, in molte configurazioni, trasmettere le credenziali per la verifica: esattamente ciò che il requisito vieta.\n  * **C) RADIUS:** centralizza autenticazione, autorizzazione e accounting soprattutto per **accessi di rete**, come 802.1X, VPN e apparati. Non è il meccanismo con cui un'applicazione web di terze parti riceve un'identità federata.\n  * **D) Kerberos:** fornisce single sign-on con ticket **all'interno di un dominio** fidato, tipicamente Active Directory su rete aziendale. Non è pensato per attraversare Internet verso un fornitore che non appartiene al dominio.\n\n* **Trappola d'esame:** distingui i due standard federativi che vengono più spesso confusi. **SAML** = **autenticazione** federata, asserzione XML, il classico SSO aziendale verso applicazioni web · **OAuth 2.0** = **autorizzazione** delegata, token di accesso, serve a consentire a un'applicazione di agire su una risorsa per conto tuo, non a dire chi sei · **OpenID Connect** = il livello di **identità** costruito sopra OAuth 2.0, con token JWT, tipico dell'accesso da app mobili e moderne. Regola pratica: se la domanda dice \"accedere a\", pensa a SAML o OIDC; se dice \"consentire a un'app di accedere ai miei dati su un altro servizio\", pensa a OAuth."
   },
   {
     id: 219,
@@ -7174,18 +7174,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 244,
-    topic: "Wireless Security",
-    level: "COMPRENSIONE",
-    scenario: "Un amministratore di rete responsabile della valutazione del protocollo di crittografia di un'azienda per i dispositivi wireless ha scoperto che l'azienda utilizza un protocollo di crittografia deprecato che rappresenta una significativa minaccia alla sicurezza.",
-    question: "Quale dei seguenti è il protocollo di crittografia PIÙ appropriato da raccomandare per l'upgrade?",
+    topic: "System & Device Hardening",
+    level: "APPLICAZIONE",
+    scenario: "Durante un'indagine emerge che l'attaccante non ha mai scritto un file eseguibile sul disco: ha usato PowerShell e strumenti già presenti nel sistema operativo per raccogliere credenziali e muoversi lateralmente. L'antivirus installato, basato su firme, non ha prodotto alcuna segnalazione, e il team non dispone di alcuna registrazione delle azioni compiute sugli endpoint nelle settimane precedenti.",
+    question: "Quale soluzione di sicurezza degli endpoint risponde MEGLIO a questa carenza?",
     options: [
-      "A) WEP",
-      "B) WPA",
-      "C) AES",
-      "D) TKIP"
+      "A) Un antivirus di un altro fornitore, con firme aggiornate più frequentemente",
+      "B) Una scansione completa del disco pianificata ogni notte su tutti gli endpoint",
+      "C) EDR, che registra il comportamento dei processi e consente indagine e risposta",
+      "D) Un firewall personale su ogni endpoint, che blocchi le connessioni in uscita"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) AES (Advanced Encryption Standard)**.\n\n* **Perché è la corretta:** **AES** è attualmente il protocollo di crittografia più sicuro e ampiamente adottato per le reti wireless. I suoi robusti algoritmi di crittografia e i test estensivi dimostrano la sua efficacia contro vari attacchi.\n* **Analisi dei distrattori:**\n  * **A)** **WEP** è un protocollo di crittografia obsoleto largamente sfruttato e altamente insicuro; la sua gestione delle chiavi debole lo rende vulnerabile e dovrebbe essere assolutamente evitato.\n  * **B)** **WPA** era un miglioramento rispetto a WEP, ma presenta vulnerabilità note soprattutto in modalità PSK (pre-shared key), rendendolo insufficiente per ambienti moderni.\n  * **D)** **TKIP** è stato introdotto come miglioramento rispetto a WEP, ma è ancora considerato debole e con vulnerabilità note; non è consigliabile quando sono disponibili alternative più sicure come AES."
+    explanation: "La risposta corretta è la **C) EDR (Endpoint Detection and Response)**.\n\n* **Perché è la corretta:** Lo scenario descrive una tecnica **living off the land**: nessun file malevolo sul disco, solo strumenti legittimi del sistema operativo usati in modo illegittimo. Un antivirus a firme è cieco per costruzione davanti a questo, perché confronta **file** con firme note e qui non esiste alcun file da confrontare. L'**EDR** cambia proprio l'oggetto dell'osservazione: registra in continuo il **comportamento** degli endpoint, cioè albero dei processi, riga di comando con cui ciascuno è stato avviato, connessioni di rete, modifiche al registro e accessi alla memoria, e segnala le **sequenze** anomale, come un processo di Office che avvia PowerShell che scarica ed esegue codice in memoria. Risolve inoltre la seconda carenza dichiarata, l'assenza di storico: la telemetria conservata permette di ricostruire a ritroso cosa è successo e, dalla stessa console, di isolare la macchina, terminare il processo e annullare le modifiche.\n* **Analisi dei distrattori:**\n  * **A) Un altro antivirus a firme:** cambia il fornitore, non il metodo. Il limite non è la qualità delle firme ma il fatto che qui **non c'è alcun file** da confrontare con esse.\n  * **B) Scansione notturna del disco:** ispeziona di nuovo il disco, cioè l'unico posto dove l'attaccante non ha lasciato nulla. Un attacco che vive in memoria scompare al riavvio senza lasciare traccia sul filesystem.\n  * **D) Firewall personale:** può limitare le connessioni in uscita ed è utile, ma non vede cosa accade *dentro* l'endpoint e non registra nulla. Inoltre l'attività descritta si nasconde dietro processi di sistema autorizzati, che il firewall lascia passare.\n\n* **Trappola d'esame:** tieni presente la progressione delle tecnologie di endpoint. **Antivirus** = confronto con firme di file noti, efficace solo sul malware già catalogato · **EDR** = telemetria comportamentale continua, rilevamento su sequenze, indagine e risposta sull'endpoint · **XDR** = la stessa logica estesa e correlata su endpoint, rete, posta e cloud. Quando lo scenario nomina **attacco fileless, living off the land, PowerShell** o dichiara che l'antivirus non ha rilevato nulla, la risposta è EDR o XDR, non un antivirus diverso."
   },
   {
     id: 245,
@@ -8314,18 +8314,18 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
   },
   {
     id: 320,
-    topic: "Multi-Factor Authentication",
-    level: "COMPRENSIONE",
-    scenario: "Mary è preoccupata per la sicurezza dei suoi account online. Legge di un dispositivo che può portare con sé, che quando inserito o toccato sul suo computer o telefono, fornisce un livello più elevato di garanzia di autenticazione.",
-    question: "Quale dei seguenti descrive MEGLIO quello che sta considerando?",
+    topic: "Vulnerability Management",
+    level: "ANALISI",
+    scenario: "Una scansione restituisce due risultati. Il primo è una vulnerabilità con punteggio CVSS base 9,8, presente su un server di collaudo isolato in una rete di laboratorio non raggiungibile da Internet e privo di dati reali. Il secondo ha punteggio base 6,5 e si trova sul portale clienti esposto su Internet, che tratta dati di pagamento, e per esso esiste già un exploit pubblico usato attivamente.",
+    question: "Su quale criterio va fondata la priorità di intervento?",
     options: [
-      "A) Certificati software (Software-based certificates)",
-      "B) Chiavi di sicurezza fisiche (Physical security keys)",
-      "C) Carte biometriche (Biometric cards)",
-      "D) Scanner di codici QR (QR code scanners)"
+      "A) Sul punteggio base CVSS più alto: va corretta per prima la vulnerabilità da 9,8",
+      "B) Sul rischio effettivo, combinando il punteggio con esposizione, dati trattati e sfruttamento in corso",
+      "C) Sull'ordine di comparsa nel rapporto di scansione, per non trascurare alcun risultato",
+      "D) Sul numero di sistemi colpiti da ciascuna delle due vulnerabilità rilevate"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Chiavi di sicurezza fisiche (Physical security keys)**.\n\n* **Perché è la corretta:** Le **chiavi di sicurezza fisiche** sono dispositivi hardware, spesso in forma di chiavette USB o dispositivi NFC, che forniscono una forte autenticazione a due fattori. Quando inserite o toccate su un computer o telefono, dimostrano fisicamente il possesso del dispositivo.\n* **Analisi dei distrattori:**\n  * **A)** I certificati software possono migliorare la sicurezza, ma sono certificati digitali memorizzati sui dispositivi, non chiavi fisiche.\n  * **C)** Le carte biometriche usano caratteristiche biologiche uniche di una persona per l'accesso, ma non vengono tipicamente inserite o toccate sui dispositivi nel modo descritto.\n  * **D)** I codici QR possono essere usati per l'autenticazione ma non coinvolgono l'inserimento o il tocco di un dispositivo."
+    explanation: "La risposta corretta è la **B) Sul rischio effettivo**.\n\n* **Perché è la corretta:** Il **punteggio base CVSS** misura le caratteristiche **intrinseche e immutabili** di una vulnerabilità, cioè quanto è difficile sfruttarla e quanto danno produrrebbe in astratto. Per costruzione **non sa nulla** del tuo ambiente: non sa se il sistema è esposto a Internet, che dati tratta, quanto è critico per l'attività, né se qualcuno lo stia già attaccando. Proprio per questo lo standard prevede altri due gruppi di metriche: quelle **temporali**, che riflettono la maturità del codice di sfruttamento e la disponibilità di una correzione, e quelle **ambientali**, che riponderano il punteggio in base alla criticità del bersaglio nel *tuo* contesto. Applicandole, i due risultati si invertono: il 9,8 sta su un sistema di laboratorio isolato e senza dati, quindi con esposizione e impatto prossimi allo zero; il 6,5 sta su un portale esposto, con dati di pagamento e un exploit già in uso, quindi con probabilità di sfruttamento altissima e impatto reale su riservatezza e conformità. Il secondo va corretto per primo.\n* **Analisi dei distrattori:**\n  * **A) Ordinare per punteggio base:** è l'errore più comune nella gestione delle vulnerabilità, e produce settimane di lavoro spese su sistemi che nessuno può raggiungere mentre il portale esposto resta aperto. Il punteggio base è un ingrediente della decisione, non la decisione.\n  * **C) Ordine di comparsa nel rapporto:** non è un criterio, è l'assenza di un criterio. L'ordine dello strumento dipende da come ha scansionato, non da quanto rischio corri.\n  * **D) Numero di sistemi colpiti:** conta, ma da solo inganna. Cinquanta stazioni di laboratorio con la stessa falla restano un rischio minore di un singolo portale che espone i dati di pagamento di tutti i clienti: pesa l'esposizione e il valore, non la quantità.\n\n* **Trappola d'esame:** ricorda la distinzione fra i tre gruppi di metriche CVSS, perché è la base di quasi tutte le domande sulla prioritizzazione. **Base** = caratteristiche intrinseche, non cambiano mai · **Temporale** = maturità dell'exploit e disponibilità della patch, cambia nel tempo · **Ambientale** = criticità e contesto nella *tua* organizzazione. E tieni separate le due sigle: **CVE** è l'**identificativo** univoco della singola vulnerabilità, **CVSS** è il **sistema di punteggio** che ne misura la gravità."
   },
   {
     id: 321,
