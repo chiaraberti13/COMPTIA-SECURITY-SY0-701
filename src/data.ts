@@ -4117,9 +4117,9 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     question: "Calcola la SLE e la ALE per questo scenario aziendale. Quale delle seguenti rappresenta la decisione di sicurezza finanziariamente MIGLIORE?",
     options: [
       "A) SLE = $150.000, ALE = $15.000. La barriera è finanziariamente conveniente, quindi il controllo va mitigato spendendo $18.000 all'anno.",
-      "B) SLE = $150.000, ALE = $15.000. Il costo della barriera ($18.000) supera l'ALE ($15.000), pertanto la decisione corretta è accettare il rischio residuo o trasferirlo tramite assicurazione più economica (es. $5.000/anno).",
+      "B) SLE = $150.000, ALE = $15.000. Il costo della barriera ($18.000) supera l'ALE, quindi conviene accettare il rischio o trasferirlo con un'assicurazione.",
       "C) SLE = $350.000, ALE = $35.000. Il costo della barriera ($18.000) è inferiore all'ALE ($35.000), quindi la decisione corretta è mitigare installando le barriere stagne.",
-      "D) SLE = $15.000, ALE = $1.500. Il rischio è irrilevante e non richiede alcuna azione oltre alla cancellazione del cluster."
+      "D) SLE = $15.000, ALE = $1.500. Il rischio è trascurabile: non serve alcuna contromisura e il cluster può restare dov'è."
     ],
     answerIndex: 1,
     explanation: "La risposta corretta è la **B) SLE = $150.000, ALE = $15.000. Il costo della barriera ($18.000) supera l'ALE ($15.000), pertanto la decisione corretta è accettare il rischio residuo o trasferirlo tramite assicurazione più economica (es. $5.000/anno).** \n\n* **Fasi di Calcolo:**\n  1. **SLE (Single Loss Expectancy)** = AV * EF = $500.000 * 0.30 = **$150.000** (costo di un singolo evento di allagamento).\n  2. **ALE (Annualized Loss Expectancy)** = SLE * ARO = $150.000 * 0.1 = **$15.000** (perdita media attesa su base annua).\n* **Analisi di Business (Due Diligence):** Secondo i principi di gestione del rischio CompTIA, l'organizzazione non dovrebbe spendere per un controllo di sicurezza più di quanto si prevede di perdere su base annua a causa della minaccia (Costo del Controllo <= ALE). Spendere $18.000 all'anno per mitigare una perdita annuale attesa di $15.000 rappresenta una perdita netta di $3.000. La decisione finanziaria corretta è **Accettare il rischio residuo** (documentandolo) o **Trasferirlo** tramite un'assicurazione alluvioni dal premio annuale inferiore a $15.000.\n* **Piccolo Esempio Concentrato:** Se riparare un tetto che perde costa $10.000 all'anno di manutenzione, ma il danno della pioggia atteso è solo di $5.000 all'anno, dal punto di vista finanziario conviene tollerare il rischio o trovare un'assicurazione da $2.000 all'anno piuttosto che pagare $10.000 di lavori continui."
@@ -4176,9 +4176,9 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Un'organizzazione sanitaria regolamentata da HIPAA intende adottare un innovativo servizio SaaS di CRM per la gestione dei pazienti critici. Durante la fase di due diligence, il fornitore SaaS rifiuta di consegnare la copia integrale del proprio report di audit SOC 2 Type II, adducendo motivi di riservatezza industriale sulla propria architettura interna proprietaria. Offre invece un certificato ISO 27001 attivo e una sintesi esecutiva delle proprie vulnerabilità pubbliche verificate. Il fornitore è critico per l'ospedale e non vi sono alternative valide sul mercato a parità di costo.",
     question: "Quale delle seguenti azioni rappresenta il compromesso di sicurezza e conformità MIGLIORE per procedere nel rispetto della Due Diligence?",
     options: [
-      "A) Accettare il certificato ISO 27001 come evidenza sufficiente, esonerando il fornitore dal report SOC 2, in quanto l'ISO 27001 è uno standard internazionale riconosciuto.",
-      "B) Richiedere al fornitore la compilazione dettagliata di un questionario standardizzato como il CAIQ (Consensus Assessment Initiative Questionnaire) o il SIG, mappare le risposte direttamente sui controlli HIPAA richiesti e imporre clausole di audit ad-hoc e SLA di segnalazione breach all'interno del Business Associate Agreement (BAA).",
-      "C) Richiedere un audit fisico in loco dei datacenter del fornitore da parte del team di sicurezza dell'ospedale, rifiutando di firmare qualsiasi accordo prima del completamento dell'ispezione.",
+      "A) Accettare il certificato ISO 27001 come evidenza sufficiente ed esonerare il fornitore dal report SOC 2, dato che l'ISO 27001 è uno standard internazionale riconosciuto e certificato da un ente accreditato terzo.",
+      "B) Far compilare al fornitore un questionario standardizzato (CAIQ o SIG), mappare le risposte sui controlli HIPAA e imporre clausole di audit e SLA di notifica breach nel Business Associate Agreement (BAA).",
+      "C) Pretendere un audit fisico in loco dei datacenter del fornitore da parte del team di sicurezza dell'ospedale, rifiutando di firmare qualsiasi accordo prima che l'ispezione sia completata e verbalizzata.",
       "D) Firmare l'accordo standard inserendo una penale finanziaria di recesso in caso di violazione dati (Data Breach), senza richiedere ulteriori autocertificazioni o controlli operativi."
     ],
     answerIndex: 1,
@@ -4221,9 +4221,9 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Un security manager sta conducendo una valutazione del rischio di un fornitore di servizi cloud di terze parti a cui l'azienda intende esternalizzare l'archiviazione di dati sensibili. Il manager richiede al fornitore i verbali e le prove degli audit di sicurezza interni condotti da quest'ultimo.",
     question: "Quale delle seguenti opzioni rappresenta MEGLIO l'obiettivo primario quando si richiedono prove di audit interni a un fornitore terzo?",
     options: [
-      "A) La verifica della conformità con gli standard di sicurezza interni del fornitore stesso (Verification of compliance with internal security standards)",
-      "B) L'esame approfondito della lista dei clienti attivi del fornitore (Review of the vendor's client list)",
-      "C) La determinazione esatta dei margini di profitto del fornitore (Determination of the vendor's profit margins)",
+      "A) La verifica della conformità del fornitore ai propri standard di sicurezza interni",
+      "B) L'esame approfondito della lista dei clienti attivi del fornitore",
+      "C) La determinazione esatta dei margini di profitto del fornitore",
       "D) La valutazione del panorama delle minacce esterne per ridurre le vulnerabilità complessive"
     ],
     answerIndex: 0,
@@ -4267,7 +4267,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     question: "Quale delle seguenti opzioni descrive MEGLIO lo scopo principale di questa progettazione suddivisa in zone (zoning) delle difese fisiche?",
     options: [
       "A) Ridurre i costi di implementazione dei sistemi di sicurezza fisica",
-      "B) Massimizzare i controlli di accesso e la protezione per le aree più sicure e critiche (To maximize access controls for the most secure areas)",
+      "B) Massimizzare i controlli di accesso e la protezione via via che ci si avvicina alle aree più critiche",
       "C) Aumentare l'impatto visivo e l'attrattiva estetica del campus aziendale",
       "D) Semplificare la pianta architettonica e la manutenzione dei locali del sito"
     ],
@@ -4281,8 +4281,8 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Jason e Reed, specialisti IT presso Kelly Innovations LLC, hanno il compito di garantire che la configurazione sicura di riferimento (secure baseline) di tutte le workstation aziendali rimanga intatta, coerente e non subisca alterazioni o deviazioni non autorizzate nel corso del tempo.",
     question: "Quale delle seguenti tecniche li aiuterebbe MEGLIO a raggiungere questo obiettivo in modo automatizzato, efficiente e scalabile?",
     options: [
-      "A) Utilizzare il servizio Windows Update senza alcun processo di test o convalida preventiva",
-      "B) Implementare playbook di automazione (es. tramite Ansible, Chef o Group Policy avanzate) per applicare e verificare costantemente le impostazioni (Implement playbooks to enforce and verify settings)",
+      "A) Affidarsi al solo servizio Windows Update, senza alcun processo di test o di convalida preventiva delle configurazioni",
+      "B) Implementare playbook di automazione (Ansible, Chef o Group Policy) che applichino e verifichino di continuo le impostazioni",
       "C) Verificare manualmente ciascuna workstation alla fine di ogni mese per trovare deviazioni dalla configurazione base",
       "D) Affidarsi esclusivamente alle scansioni periodiche dell'antivirus per rilevare modifiche alla configurazione del sistema"
     ],
@@ -4296,10 +4296,10 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Esaminando il panorama legislativo degli Stati Uniti in materia di privacy e protezione dei dati personali.",
     question: "Quale legge rappresenta un noto esempio di regolamento 'orizzontale' sui dati personali, molto simile nel suo approccio ad ampio spettro al GDPR europeo?",
     options: [
-      "A) PCI DSS",
-      "B) FISMA",
+      "A) PCI DSS (Payment Card Industry Data Security Standard)",
+      "B) FISMA (Federal Information Security Management Act)",
       "C) CCPA (California Consumer Privacy Act)",
-      "D) GLBA"
+      "D) GLBA (Gramm-Leach-Bliley Act)"
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) CCPA (California Consumer Privacy Act)**.\n\n* **Perché è la corretta:** Il **CCPA** è una legge statale della California che garantisce ampi diritti di protezione della privacy ai consumatori. Proprio come il GDPR, viene considerata una regolamentazione 'orizzontale' perché si applica in modo uniforme a prescindere dal settore industriale in cui opera l'azienda (purché vengano soddisfatti determinati requisiti di fatturato o volume di dati gestiti).\n* **Analisi dei distrattori:**\n  * **A) PCI DSS** non è una legge statale o federale, bensì uno standard di sicurezza privato concordato dai principali circuiti di pagamento per la tutela delle transazioni con carte di credito.\n  * **B) FISMA** è una legge federale degli Stati Uniti indirizzata esclusivamente alle agenzie governative federali e ai loro appaltatori, non un regolamento orizzontale per i consumatori privati.\n  * **D) GLBA** è un classico esempio di regolamentazione 'verticale', poiché si applica unicamente ad un settore specifico: quello finanziario e degli istituti di credito.\n\n*ID Domanda: 6545639b7dcb30bec4e75c4e*"
@@ -4371,10 +4371,10 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Nell'ambito del monitoraggio della conformità e della gestione delle responsabilità legali all'interno di un'azienda.",
     question: "A cosa si riferisce esattamente il concetto combinato di 'due diligence' e 'due care'?",
     options: [
-      "A) Conducting internal audits on a regular basis. (Condurre audit interni su base regolare.)",
-      "B) Reviewing third-party vendor agreements. (Esaminare gli accordi con i fornitori terzi.)",
-      "C) Taking steps to meet legal and other requirements. (Adottare misure attive per soddisfare i requisiti legali e di altra natura.)",
-      "D) Automated compliance checks. (Eseguire controlli automatici di conformità.)"
+      "A) Condurre audit interni a cadenza regolare.",
+      "B) Esaminare gli accordi contrattuali con i fornitori terzi.",
+      "C) Adottare misure attive per soddisfare i requisiti legali e di altra natura.",
+      "D) Eseguire controlli di conformità automatizzati."
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) Taking steps to meet legal and other requirements (Adottare misure attive per soddisfare i requisiti legali e di altra natura)**.\n\n* **Due Diligence vs. Due Care: Una distinzione cruciale per superare l'esame CompTIA:**\n  * **Due Diligence (Dovuta Diligenza - INVESTIGARE/PIANIFICARE):** È il processo formale di ricerca, analisi, autovalutazione e indagine che un'azienda compie prima di prendere una decisione o per stabilire le proprie linee guida di sicurezza. Significa \"raccogliere le evidenze e preparare il terreno\". *Esempi di Due Diligence:* fare background check sui dipendenti, esaminare i report SOC 2 Type II dei fornitori cloud prima di firmare il contratto, scrivere le politiche di sicurezza (AUP, Incident Response Plan), effettuare valutazioni dei rischi.\n  * **Due Care (Dovuto Trattamento/Cura - AGIRE/APPLICARE):** È la messa in pratica continuativa, attiva e vigile di quelle decisioni e politiche per evitare negligenze e minimizzare i danni reali. Significa \"agire con buon senso e fare la cosa giusta giorno per giorno\". *Esempi di Due Care:* installare attivamente le patch di sicurezza rilasciate, far firmare e rispettare l'AUP ai dipendenti, configurare effettivamente i firewall secondo la policy, proteggere i server in stanze chiuse a chiave.\n\n* **Mnemonic / Regola della Memoria (Inglese):**\n  * **Due Diligence** = *Do background check* (investigazione/pianificazione preventiva).\n  * **Due Care** = *Do Correctly* o *Do Care* (agire correttamente e con attenzione durante l'operatività).\n\n* **Perché è la corretta:** Entrambi i concetti combinati descrivono le responsabilità e gli obblighi legali e morali di un'organizzazione per dimostrare conformità normativa (es. GDPR, HIPAA, PCI-DSS). Mostrare che si sono scritte le regole (Due Diligence) e che si applicano concretamente (Due Care) protegge l'azienda e i suoi dirigenti da accuse di grave negligenza in caso di violazione dei dati (Data Breach).\n\n* **Analisi dei distrattori:**\n  * **A) Condurre audit interni** è un'attività specifica di verifica del controllo, non la definizione complessiva dello stato di diligenza/cura richiesto dalla legge.\n  * **B) Esaminare i contratti dei fornitori** fa parte del Vendor Management, un sotto-processo specifico della sicurezza e non il concetto generale di conformità.\n  * **D) Controlli automatici di conformità** sono strumenti tecnologici utilizzati per facilitare la conformità, ma non esauriscono gli obblighi di condotta diligente previsti dalle responsabilità legali.\n\n*ID Domanda: 64bf5d7f402d8b511311a73e*"
@@ -5376,10 +5376,10 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Un'azienda sta implementando standard di crittografia per proteggere i dati sensibili. Il team di sicurezza deve definire e documentare le procedure formali di gestione delle chiavi crittografiche (Key Management Procedures).",
     question: "Quale delle seguenti attività NON fa tipicamente parte delle procedure standard di gestione delle chiavi crittografiche (Key Management Procedures)?",
     options: [
-      "A) Generazione e distribuzione sicura delle chiavi (Generation and distribution of keys)",
-      "B) Conservazione sicura e rotazione periodica delle chiavi (Storage and rotation of keys)",
-      "C) Aggiornare regolarmente il software applicativo per supportare nuovi metodi di crittografia (Regularly updating software to support new encryption methods)",
-      "D) Procedure per la revoca e la distruzione di chiavi compromesse (Procedures for revoking compromised keys)"
+      "A) Generazione e distribuzione sicura delle chiavi",
+      "B) Conservazione sicura e rotazione periodica delle chiavi",
+      "C) Aggiornare regolarmente il software applicativo per supportare nuovi algoritmi",
+      "D) Procedure di revoca e distruzione delle chiavi compromesse"
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) Aggiornare regolarmente il software applicativo per supportare nuovi metodi di crittografia (Regularly updating software to support new encryption methods)**.\n\n* **Perché è la corretta:** La gestione delle chiavi (**Key Management**) si concentra esclusivamente sull'intero ciclo di vita delle chiavi crittografiche (generazione, distribuzione, archiviazione, rotazione, revoca e distruzione). L'aggiornamento dei software applicativi per supportare nuovi protocolli crittografici è un'attività generica di manutenzione software o di Vulnerability/Patch Management, non una procedura di Key Management.\n* **Analisi dei distrattori:**\n  * **A, B e D)** Sono tutti passaggi fondamentali e obbligatori del ciclo di vita della gestione delle chiavi crittografiche."
@@ -5541,10 +5541,10 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     scenario: "Jamario, uno specialista di cybersecurity presso Kelly Innovations LLC, vuole valutare come i dipendenti reagiscono ai tentativi di ingegneria sociale. Invia e-mail simulate a tutti i dipendenti per vedere chi vi risponde.",
     question: "Quale dei seguenti termini descrive MEGLIO l'iniziativa di Jamario?",
     options: [
-      "A) Spear phishing",
-      "B) Whaling",
-      "C) Vishing",
-      "D) Phishing campaign (Campagna di phishing)"
+      "A) Spear phishing (attacco mirato a un individuo specifico)",
+      "B) Whaling (attacco mirato a un dirigente apicale)",
+      "C) Vishing (phishing condotto per via telefonica)",
+      "D) Phishing campaign (invio massivo a un gruppo di utenti)"
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) Phishing campaign (Campagna di phishing)**.\n\n* **Perché è la corretta:** Una campagna di phishing è un tentativo strutturato, spesso usato come strumento di formazione o valutazione all'interno delle organizzazioni, per simulare minacce di phishing reali e misurare come i singoli individui rispondono.\n* **Analisi dei distrattori:**\n  * **A) Lo Spear phishing** è un tentativo di phishing mirato, diretto verso individui o aziende specifiche. In questo caso, Jamario ha inviato l'e-mail a tutti i dipendenti.\n  * **B) Il Whaling** consiste in attacchi di phishing di alto livello mirati a dirigenti senior e altri bersagli di alto profilo. In questo caso, Jamario ha inviato l'e-mail a tutti i dipendenti.\n  * **C) Il Vishing (phishing vocale)** è un attacco che avviene tramite telefono, spesso da parte di attaccanti che si spacciano per entità fidate. In questo caso, Jamario ha inviato delle e-mail."
@@ -5946,11 +5946,11 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 16,
     topic: "Incident Response",
     level: "ANALISI",
-    scenario: "Un server Web aziendale linux che ospita un'applicazione transazionale sensibile è stato compromesso da hacker russi, i quali hanno sfruttato una vulnerabilità di tipo Command Injection per installare molteplici web shell offuscate nei percorsi del server e modificare alcuni binari di sistema (come 'ssh' e 'ls') per nascondere i propri processi. Il team di Incident Response si trova ora nella fase di Eradicazione.",
+    scenario: "Un server Web aziendale linux che ospita un'applicazione transazionale sensibile è stato compromesso da un attore di minaccia esterno, che ha sfruttato una vulnerabilità di tipo Command Injection per installare molteplici web shell offuscate nei percorsi del server e modificare alcuni binari di sistema (come 'ssh' e 'ls') per nascondere i propri processi. Il team di Incident Response si trova ora nella fase di Eradicazione.",
     question: "Quale delle seguenti azioni rappresenta la best practice ufficiale per garantire una completa ed affidabile eradicazione della minaccia prima del ripristino in produzione?",
     options: [
-      "A) Eseguire un tool di disinfezione antivirus centralizzato per rimuovere solo i file modificati nelle ultime 24 ore",
-      "B) Ricostruire completamente il server web eseguendo un re-imaging del sistema operativo partendo da una Golden Image certificata e patchata, seguita dal ripristino del codice sorgente dell'applicazione convalidato",
+      "A) Eseguire un tool di disinfezione antivirus centralizzato che rimuova i file modificati nelle ultime 24 ore, lasciando in produzione il sistema operativo esistente",
+      "B) Ricostruire il server con un re-imaging del sistema operativo da Golden Image certificata, poi ripristinare il codice applicativo convalidato",
       "C) Eliminare manualmente le web shell identificate esaminando i log di accesso e modificare la password dell'amministratore di sistema",
       "D) Spostare il server web in una VLAN di isolamento e lasciarlo in esecuzione permanente per raccogliere indicatori di compromissione (IoC)"
     ],
@@ -5979,8 +5979,8 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Durante un audit periodico di conformità basato sullo standard CIS Benchmarks, l'auditor rileva che il 40% dei server Windows di produzione mostra vulnerabilità legate a servizi inutilizzati abilitati (es. SMBv1) e configurazioni di cifratura non sicure. Gli amministratori di sistema ammettono di aver modificato manualmente i server per risolvere problemi di compatibilità di applicazioni legacy nel corso dell'anno, bypassando il processo di approvazione centrale.",
     question: "Come viene definito questo fenomeno di progressivo allontanamento dei sistemi dallo stato originale blindato approvato e qual è il metodo migliore per mitigarlo?",
     options: [
-      "A) Configuration Drift; mitigato tramite strumenti di Configuration Management automatizzati (es. Ansible o Group Policy) che applicano periodicamente e forzatamente le baseline CIS",
-      "B) Patch Regression; mitigato tramite scansioni di vulnerabilità passive bisettimanali",
+      "A) Configuration Drift; mitigato con strumenti di Configuration Management che riapplicano forzatamente le baseline CIS",
+      "B) Patch Regression; mitigato con scansioni di vulnerabilità passive a cadenza bisettimanale sui server di produzione",
       "C) Scope Creep; mitigato tramite audit manuali mensili svolti dal comitato consultivo dei cambiamenti (CAB)",
       "D) Privilege Creep; mitigato tramite l'implementazione immediata del controllo d'accesso Role-Based (RBAC)"
     ],
@@ -6009,10 +6009,10 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Un grande gruppo bancario desidera automatizzare l'acquisizione in tempo reale degli indicatori di compromissione (IoC) - come indirizzi IP di server Command & Control noti, hash di file binari nocivi e domini di phishing - rilasciati da molteplici feed pubblici (OSINT) e privati per inoltrarli direttamente alle proprie sonde IDS/IPS e firewall senza richiedere conversioni di formato manuali da parte degli analisti del SOC.",
     question: "Quale combinazione di standard e protocolli ufficiali di mercato supporta nativamente questo requisito di interoperabilità e trasporto automatizzato dei dati di minaccia?",
     options: [
-      "A) XML e SOAP",
-      "B) STIX (Structured Threat Information Expression) per il formato dei dati e TAXII (Trusted Automated Exchange of Intelligence Information) per il trasporto sicuro",
-      "C) OpenPGP e SSH Tunneling",
-      "D) CSV ed SFTP"
+      "A) XML (Extensible Markup Language) e SOAP (Simple Object Access Protocol)",
+      "B) STIX (formato dei dati) e TAXII (protocollo di trasporto)",
+      "C) OpenPGP (Pretty Good Privacy) e tunneling SSH (Secure Shell)",
+      "D) CSV (Comma-Separated Values) e SFTP (SSH File Transfer Protocol)"
     ],
     answerIndex: 1,
     explanation: "La risposta corretta è la **B) STIX (Structured Threat Information Expression) per il formato dei dati e TAXII (Trusted Automated Exchange of Intelligence Information) per il trasporto sicuro**. \n\n* **Perché è la BEST:** STIX e TAXII sono gli standard internazionali e gratuiti sviluppati per la Cyber Threat Intelligence aziendale. STIX definisce la grammatica comune (formato JSON strutturato) per descrivere le minacce, mentre TAXII definisce il protocollo di trasporto di messaggi sopra HTTPS per scambiare questi dati in tempo reale tra computer. Questo permette a vari sistemi difensivi (firewall, IPS, EDR, SIEM) di digerire e bloccare automaticamente le nuove minacce senza traduzioni manuali.\n* **Perché le altre non sono corrette:**\n  * **A) XML e SOAP** sono standard web generici risalenti agli anni 2000, non specifici per rappresentare relazioni complesse di threat intelligence.\n  * **C) e D)** L'uso di file CSV tramite server SFTP era comune in passato ma manca della semantica strutturata (attori, campagne, indicatori legati tra loro) offerta dal formato STIX, richiedendo script manuali pesanti e instabili per ciascun vendor."
@@ -6396,16 +6396,16 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 192,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "Il meccanismo di controllo degli accessi di un'azienda determina l'accesso alle risorse in base alle mansioni lavorative degli utenti. Il sistema applica il controllo degli accessi sulla base di queste responsabilità predefinite e gli utenti non hanno la discrezionalità di modificare o ignorare i permessi di accesso.",
-    question: "Quale tipo di meccanismo di controllo degli accessi viene utilizzato in questo scenario?",
+    scenario: "In un'agenzia governativa ogni documento riceve un'etichetta di classificazione (Non classificato, Riservato, Segreto) assegnata dall'amministratore di sistema secondo policy centrali. A ogni dipendente è associato un livello di nulla osta (clearance). Il sistema operativo confronta automaticamente etichetta e clearance e nega l'accesso quando la clearance è inferiore. Il generale Marchetti, autore di un documento Segreto, chiede di condividerlo con un collega privo di nulla osta adeguato: il sistema glielo impedisce.",
+    question: "Quale modello di controllo degli accessi è implementato e quale sua caratteristica spiega il rifiuto opposto al generale?",
     options: [
-      "A) Basato sui ruoli (Role-based)",
-      "B) Basato su regole (Rule-based)",
-      "C) Basato sugli attributi (Attribute-based)",
-      "D) Discrezionale (Discretionary)"
+      "A) MAC: le etichette sono imposte dal sistema e nemmeno il creatore del documento può concedere l'accesso",
+      "B) DAC: il proprietario del documento decide chi può accedervi, ma serve l'approvazione del suo superiore",
+      "C) RBAC: l'accesso dipende dal ruolo ricoperto e il collega non appartiene al gruppo autorizzato",
+      "D) ABAC: la policy valuta attributi di contesto come l'orario e la posizione geografica del richiedente"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Basato sui ruoli (Role-based)**.\n\n* **Perché è la corretta:** Il **Role-Based Access Control (RBAC)** determina l'accesso alle risorse in base al ruolo lavorativo o alla mansione dell'utente, con permessi assegnati a questi ruoli predefiniti per una gestione strutturata. Gli utenti non possono modificare autonomamente i propri permessi.\n* **Analisi dei distrattori:**\n  * **B)** Il controllo basato su regole è più ampio e copre vari meccanismi, ma non ha il focus specifico sul ruolo lavorativo tipico di RBAC.\n  * **C)** Il controllo basato sugli attributi (ABAC) utilizza attributi dinamici come la posizione geografica e l'orario, a differenza della struttura più semplice di RBAC basata sui ruoli.\n  * **D)** Il controllo discrezionale (DAC) consente agli utenti di gestire autonomamente i permessi sulle proprie risorse, al contrario di RBAC dove i permessi sono gestiti centralmente.\n\n*(ID Domanda: 64c13e0259b059a712065d06)*"
+    explanation: "La risposta corretta è la **A) MAC (Mandatory Access Control)**.\n\n* **Perché è la corretta:** Nel modello **MAC** le decisioni di accesso sono imposte dal sistema in base al confronto fra l'**etichetta di sensibilità** dell'oggetto e il **livello di clearance** del soggetto. Le etichette le assegna un amministratore centrale secondo policy, non il creatore del file. È esattamente per questo che il generale, pur avendo scritto il documento, **non ha alcun potere di condividerlo**: in MAC il proprietario non possiede discrezionalità. È il modello più restrittivo e si trova tipicamente in ambito militare, governativo e in SELinux.\n* **Analisi dei distrattori:**\n  * **B) DAC** è il modello opposto: il proprietario della risorsa decide *a propria discrezione* chi può accedervi. Se lo scenario fosse DAC, il generale avrebbe potuto concedere l'accesso da solo. L'aggiunta dell'approvazione del superiore non esiste in DAC ed è un dettaglio inventato.\n  * **C) RBAC** assegna i permessi in base alla **funzione lavorativa** (ruolo), non a etichette di classificazione confrontate con un nulla osta. Nello scenario non si parla di ruoli o gruppi aziendali, ma di livelli di segretezza.\n  * **D) ABAC** valuta dinamicamente **attributi** di soggetto, risorsa e ambiente (orario, posizione, stato del dispositivo). Qui non compare alcuna valutazione contestuale: il confronto è statico fra etichetta e clearance.\n\n* **Mnemonico dei quattro modelli:** **D**AC → **D**ecide il proprietario · **M**AC → **M**ilitare, etichette obbligatorie · **R**BAC → **R**uolo aziendale · **A**BAC → **A**ttributi e contesto.\n* **Trappola d'esame:** la parola chiave che smaschera MAC è sempre la coppia *classificazione/clearance* (oppure 'etichetta', 'livello di segretezza'). Se invece lo scenario dice che è il creatore del file a scegliere con chi condividerlo, è DAC."
   },
   {
     id: 193,
@@ -6564,8 +6564,8 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Sasha, amministratrice di rete presso Kelly's Technical Innovations, ha appena installato un Next Generation Firewall (NGFW) per sostituire il precedente firewall stateful tradizionale.",
     question: "Quale capacità distingue in modo specifico l'NGFW dal firewall stateful che ha sostituito?",
     options: [
-      "A) L'application awareness unita alla deep packet inspection, che consente di riconoscere e controllare le singole applicazioni indipendentemente da porta e protocollo",
-      "B) Il tracciamento dello stato delle connessioni TCP per consentire automaticamente il traffico di ritorno",
+      "A) L'application awareness unita alla deep packet inspection, che riconosce le singole applicazioni a prescindere dalla porta",
+      "B) Il tracciamento dello stato delle connessioni TCP, che consente automaticamente il traffico di ritorno della sessione",
       "C) L'ispezione esclusiva del traffico HTTP/HTTPS per bloccare SQL injection e Cross-Site Scripting",
       "D) Il filtraggio dei pacchetti basato su indirizzo IP sorgente, IP destinazione e numero di porta"
     ],
@@ -6804,9 +6804,9 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Dopo una valutazione di sicurezza, a Jono è stato assegnato il compito di sostituire il suo access point domestico con uno che supporti WPA3, che il precedente non era in grado di gestire.",
     question: "Quale miglioramento di sicurezza introdotto da WPA3-Personal risolve la debolezza principale di WPA2-Personal?",
     options: [
-      "A) SAE (Simultaneous Authentication of Equals), che sostituisce lo scambio PSK di WPA2 e neutralizza il cracking offline della passphrase",
+      "A) SAE (Simultaneous Authentication of Equals), che sostituisce lo scambio PSK e blocca il cracking offline",
       "B) L'uso di TKIP al posto di RC4 per ruotare dinamicamente le chiavi di cifratura",
-      "C) La cifratura del processo di autenticazione tramite il protocollo TCP",
+      "C) La cifratura dell'intero processo di autenticazione tramite il protocollo di trasporto TCP",
       "D) La nascita dell'SSID (SSID cloaking), che impedisce agli attaccanti di individuare la rete"
     ],
     answerIndex: 0,
@@ -7959,10 +7959,10 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     scenario: "Enrique sta preparando un elenco dettagliato di ogni applicazione installata sul server della Dion Training.",
     question: "Quale dei seguenti compiti descrive MEGLIO l'attività di Enrique?",
     options: [
-      "A) Enumerazione software (Software enumeration)",
-      "B) Network mapping",
-      "C) Patch management",
-      "D) Risk assessment"
+      "A) Software enumeration (censimento del software installato)",
+      "B) Network mapping (mappatura degli host e dei servizi di rete)",
+      "C) Patch management (gestione degli aggiornamenti software)",
+      "D) Risk assessment (valutazione del rischio aziendale)"
     ],
     answerIndex: 0,
     explanation: "La risposta corretta è la **A) Enumerazione software (Software enumeration)**.\n\n* **Perché è la corretta:** L'**enumerazione software** si concentra sull'identificazione e la catalogazione di ogni componente software presente su un sistema specifico. Aiuta a comprendere il panorama software e a prendere decisioni informate relative alla gestione degli asset software.\n* **Analisi dei distrattori:**\n  * **B)** Il network mapping è il processo di creazione di una rappresentazione visiva dell'infrastruttura di rete; non riguarda la catalogazione del software installato.\n  * **C)** Il patch management si concentra sull'aggiornamento dei componenti software con patch per correggere vulnerabilità o bug; non implica la creazione di un elenco delle installazioni.\n  * **D)** Il risk assessment è una valutazione completa delle potenziali minacce e vulnerabilità; sebbene possa considerare il software presente, il suo obiettivo primario non è elencarli.\n\n*(ID Domanda: 651ee4e11f74c79745701b06)*"
@@ -8472,10 +8472,10 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     scenario: "Un'azienda ospita la propria applicazione web transazionale all'interno della rete locale. Per proteggere i database interni (che contengono record finanziari sensibili) ed evitare che un'eventuale compromissione del server web (esposto a internet) consenta l'accesso diretto alla rete aziendale privata, l'architetto di rete progetta una topologia di rete a sicurezza elevata.",
     question: "Quale rappresenta il design infrastrutturale PIÙ sicuro e idoneo per ospitare questi servizi?",
     options: [
-      "A) Posizionare sia il server web che il database nella LAN aziendale interna protetta da un singolo firewall",
+      "A) Posizionare sia il server web sia il server database nella LAN aziendale interna, protetti da un unico firewall perimetrale con le porte web pubblicate verso Internet",
       "B) Posizionare il server web in una DMZ delimitata e il server database nella LAN interna, consentendo connessioni SQL dirette da internet",
-      "C) Posizionare il server web all'interno di una DMZ protetta da un firewall esterno, e il database in un segmento di rete backend protetto da un secondo firewall interno, consentendo solo la porta specifica di connessione dal server web al database",
-      "D) Configurare un unico bridge di rete wireless in chiaro tra il server web e il database per bypassare i controls di routing"
+      "C) Posizionare il server web in una DMZ protetta da un firewall esterno e il database in un segmento backend protetto da un secondo firewall interno, aprendo solo la porta di connessione dal web al database",
+      "D) Configurare un bridge di rete wireless non cifrato fra il server web e il server database, in modo da aggirare i controlli di routing e ridurre la latenza delle query"
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) Posizionare il server web all'interno di una DMZ protetta da un firewall esterno, e il database in un segmento di rete backend protetto da un secondo firewall interno, consentendo solo la porta specifica di connessione dal server web al database**. \n\n* **Perché è la BEST:** Questa configurazione rappresenta una topologia 'Screened Subnet' o DMZ a due firewall (esterno e interno). Isola il server web esposto ad attacchi esterni dal database critico. Qualora un attaccante comprometta il server web, il secondo firewall (interno) bloccherà qualsiasi traffico verso la LAN interna o verso il database che non sia esplicitamente autorizzato (es. solo traffico SQL proveniente esclusivamente dall'IP del server web), limitando drasticamente il movimento laterale.\n* **Analisi dei distrattori:**\n  * **A)** Espone l'intera LAN interna a intrusioni immediate se il server web viene violato.\n  * **B)** Consentire connessioni SQL dirette da internet al database è una gravissima vulnerabilità di sicurezza e bypassa lo scopo della DMZ.\n  * **D)** Un bridge wireless non protetto e in chiaro è catastrofico dal punto di vista della riservatezza e dell'integrità dei dati transazionali.\n\n* **Piccolo Esempio Concentrato:** Un server e-commerce risiede in una DMZ protetta da un firewall esterno che consente solo traffico HTTP/HTTPS (porte 80 e 443). Il database PostgreSQL con le carte di credito risiede in una sottorete backend protetta da un secondo firewall interno. Quest'ultimo ha una regola rigida: *'Consenti solo connessioni TCP sulla porta 5432 dall'IP statico del server e-commerce'*. Se un hacker sfrutta una vulnerabilità RCE sull'e-commerce ed ottiene i privilegi di amministratore sul server web, non può comunque eseguire scansioni sulla LAN aziendale o connettersi ad altri dispositivi interni, poiché il secondo firewall blocca ogni altra connessione."
@@ -8519,8 +8519,8 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     options: [
       "A) Scaricando la Certificate Revocation List (CRL) completa di 50 MB via HTTP",
       "B) Tramite un'interrogazione diretta al server LDAP della Registration Authority (RA)",
-      "C) Tramite il protocollo OCSP con meccanismo di 'OCSP Stapling' fornito direttamente dal web server durante l'handshake TLS",
-      "D) Controllando la data di scadenza (Expiration Date) stampata sul certificato"
+      "C) Tramite OCSP con 'OCSP Stapling', fornito dal web server durante l'handshake TLS",
+      "D) Controllando la sola data di scadenza (Expiration Date) riportata all'interno del certificato"
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) Tramite il protocollo OCSP con meccanismo di 'OCSP Stapling' fornito direttamente dal web server**. \n\n* **Perché è la BEST:** L'**OCSP (Online Certificate Status Protocol) Stapling** risolve sia i problemi di latenza che quelli di scalabilità e privacy legati alla verifica dei certificati. Invece di richiedere al client (il browser) di contattare la CA ad ogni connessione per verificare lo stato di revoca (rivelando quale sito l'utente sta visitando), è il web server stesso che interroga periodicamente la CA, ottiene una risposta OCSP firmata e con marca temporale, e la 'spilla' (staple) direttamente insieme al certificato TLS durante l'handshake col client. Il browser verifica semplicemente la firma della CA sulla risposta ricevuta, riducendo a zero la latenza e il carico sulla CA.\n* **Analisi dei distrattori:**\n  * **A)** Scaricare una CRL di grandi dimensioni introdurrebbe una latenza di rete insostenibile per la normale navigazione web.\n  * **B) La RA** si occupa di verificare l'identità dei richiedenti all'inizio del processo di emissione, ma non gestisce le query in tempo reale sullo stato di revoca.\n  * **D) La data di scadenza** indica solo se il certificato è scaduto nel tempo fisiologico, ma non fornisce informazioni sul fatto che sia stato esplicitamente revocato in anticipo a causa di una compromissione delle chiavi.\n\n* **Piccolo Esempio Concentrato:** Un browser si collega a `https://bancaria.it`. Se viene utilizzato l'OCSP Stapling, il server di `bancaria.it` invia, insieme al proprio certificato X.509, anche un'attestazione firmata dalla CA (es. Let's Encrypt) risalente a poche ore prima che certifica: *'Questo certificato è ancora valido'*. Il browser dell'utente non deve effettuare nessuna chiamata di rete aggiuntiva verso i server della CA, velocizzando il caricamento della pagina e proteggendo la privacy dell'utente."
@@ -8787,10 +8787,10 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     scenario: "Kelly Innovations LLC deve autenticare in modo sicuro gli utenti remoti e ha la necessità di supportare molteplici metodi di autenticazione differenti.",
     question: "Quale dei seguenti protocolli è il PIÙ indicato per soddisfare questo scenario?",
     options: [
-      "A) SD-WAN",
-      "B) IPsec",
+      "A) SD-WAN (Software-Defined Wide Area Network)",
+      "B) IPsec (Internet Protocol Security)",
       "C) EAP (Extensible Authentication Protocol)",
-      "D) ICMP"
+      "D) ICMP (Internet Control Message Protocol)"
     ],
     answerIndex: 2,
     explanation: "La risposta corretta è la **C) EAP (Extensible Authentication Protocol)**.\n\n* **Perché è la corretta:** **EAP** (Extensible Authentication Protocol) è un framework di autenticazione flessibile ed estensibile che supporta svariati metodi di verifica (es. password, token hardware, certificati digitali, smart card). È ampiamente utilizzato per gli accessi remoti e le reti aziendali proprio per la sua capacità di adattarsi a requisiti di sicurezza complessi.\n* **Analisi dei distrattori:**\n  * **A) SD-WAN** è un'architettura di rete geografica virtuale (Software-Defined) che ottimizza il routing del traffico di trasporto, non un protocollo per autenticare gli utenti remoti.\n  * **B) IPsec** assicura la riservatezza e l'integrità del traffico di rete tramite crittografia e incapsulamento (es. in tunnel VPN), ma non è focalizzato sulla gestione di svariati metodi di autenticazione utente flessibili come EAP.\n  * **D) ICMP** è un protocollo di servizio utilizzato per l'invio di messaggi di controllo e diagnostica di rete (es. ping, traceroute), privo di qualsiasi funzione di autenticazione.\n\n* **Piccolo Esempio Concentrato:** Un'azienda di consulenza introduce l'uso di chiavi di sicurezza fisiche FIDO2 USB per tutti i dipendenti. Avendo un'infrastruttura di rete basata su EAP, l'amministratore di rete può semplicemente configurare il server di autenticazione RADIUS per supportare EAP-TLS con le nuove chiavi hardware, senza dover cambiare o riconfigurare gli switch o gli access point Wi-Fi esistenti nell'edificio.\n\n*(ID Domanda: 64c16de0fbaff7327d208b4a)*"
@@ -10140,9 +10140,9 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     scenario: "Un'azienda scopre che una libreria open-source ampiamente integrata nel proprio portale di e-commerce contiene una grave vulnerabilità che consente l'esecuzione di codice da remoto. Poiché si tratta di una vulnerabilità appena scoperta (Zero-Day), il team di sviluppo del progetto open-source non ha ancora rilasciato una patch correttiva.",
     question: "Quale rappresenta la prima e più efficace azione immediata che il team di sicurezza deve intraprendere per contenere il rischio?",
     options: [
-      "A) Sospendere qualsiasi operazione di sicurezza e attendere il rilascio della patch ufficiale del vendor",
+      "A) Sospendere ogni operazione di sicurezza sul portale e attendere che il vendor rilasci la patch ufficiale della libreria",
       "B) Disattivare temporaneamente l'antivirus per evitare conflitti con la libreria software",
-      "C) Implementare controlli compensativi, come una regola di filtraggio ad-hoc sul Web Application Firewall (WAF) o l'isolamento del server web interessato",
+      "C) Applicare controlli compensativi: una regola ad-hoc sul Web Application Firewall (WAF) o l'isolamento del server",
       "D) Eseguire una scansione di vulnerabilità non accreditata per sovrascrivere il codice difettoso"
     ],
     answerIndex: 2,
@@ -11790,10 +11790,10 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     scenario: null,
     question: "Chi, tra i seguenti, rappresenta il vertice delle capacità, sfruttando potenzialmente sia mezzi digitali che non digitali per raggiungere i propri obiettivi?",
     options: [
-      "A) Grey hat hacker",
-      "B) Whistleblower",
-      "C) Troll",
-      "D) State-sponsored Advanced Persistent Threat"
+      "A) Grey hat hacker (agisce senza autorizzazione ma senza intento distruttivo)",
+      "B) Whistleblower (insider che denuncia illeciti dell'organizzazione)",
+      "C) Troll (disturbatore online privo di capacità tecniche)",
+      "D) APT sponsorizzata da uno Stato (Nation-state actor)"
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) State-sponsored Advanced Persistent Threat (APT sponsorizzato da stati)**.\n\n* **Perché è la corretta:** Le **APT sponsorizzate dagli stati**, supportate da nazioni, non solo utilizzano strumenti cyber sofisticati, ma hanno anche potenziale accesso a risorse politiche o militari. Questo li posiziona al vertice delle capacità, potendo combinare cyber-operazioni con intelligence umana, risorse diplomatiche e capacità militari.\n* **Analisi dei distrattori:**\n  * **A) Un Grey hat hacker** opera tra intenzione etica e malevola, cercando spesso vulnerabilità ma non per scopi malevoli; non ha accesso alle risorse statali.\n  * **B) Un Whistleblower** espone informazioni riservate o classificate, spesso per ragioni etiche; non è un attore di minacce in senso tecnico.\n  * **C) Un Troll** causa disruption online, cercando spesso reazioni emotive; non ha capacità di alto livello né accesso a risorse non digitali.\n\n*(ID Domanda: 6525af1f8df7b33c1cfa4040)*"
@@ -12184,8 +12184,8 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     question: "Quale fase critica del processo di Change Management è stata totalmente omessa e avrebbe evitato l'incidente?",
     options: [
       "A) La stesura del piano di ripristino d'emergenza (Rollback Plan)",
-      "B) L'analisi di impatto (Impact Analysis) e l'approvazione formale da parte del Change Advisory Board (CAB) o del team di sicurezza",
-      "C) La notifica agli utenti esterni dell'avvenuto cambiamento della regola sul firewall",
+      "B) L'analisi di impatto e l'approvazione formale del Change Advisory Board (CAB)",
+      "C) La notifica preventiva agli utenti esterni dell'imminente cambiamento della regola sul firewall perimetrale",
       "D) L'esecuzione di una scansione di vulnerabilità prima della modifica della regola"
     ],
     answerIndex: 1,
