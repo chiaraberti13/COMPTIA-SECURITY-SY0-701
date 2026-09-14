@@ -13378,18 +13378,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 209,
-    topic: "Public Key Infrastructure",
-    level: "COMPRENSIONE",
-    scenario: "Le organizzazioni si affidano all'infrastruttura a chiave pubblica (PKI) per stabilire canali sicuri e convalidare l'identità di server o partner commerciali esterni.",
-    question: "Quale dei seguenti certificati viene emesso da un'autorità esterna riconosciuta e comporta intrinsecamente un livello di fiducia più elevato per gli utenti e i sistemi che non conoscono l'origine del certificato?",
+    topic: "Security Principles",
+    level: "APPLICAZIONE",
+    scenario: "In un'azienda lo stesso impiegato dell'ufficio acquisti può creare un nuovo fornitore nell'anagrafica, emettere un ordine a suo favore e approvare il pagamento della fattura. Un audit segnala la situazione come rischio grave di frode interna.",
+    question: "Quale principio di sicurezza è violato e quale contromisura lo ripristina?",
     options: [
-      "A) Certificato di terze parti (Third-party certificate)",
-      "B) Una CRL (Certificate Revocation List)",
-      "C) Chiave privata (Private key)",
-      "D) Chiave pubblica (Public key)"
+      "A) Minimo privilegio: all'impiegato vanno revocati tutti i permessi tranne la consultazione in sola lettura",
+      "B) Separazione dei compiti (separation of duties): creazione, ordine e approvazione del pagamento vanno assegnate a persone diverse",
+      "C) Need to know: all'impiegato va impedito di consultare l'anagrafica dei fornitori concorrenti",
+      "D) Rotazione delle mansioni: l'impiegato va spostato in un altro reparto ogni dodici mesi"
     ],
-    answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Certificato di terze parti (Third-party certificate)**.\n\n* **Perché è la corretta:** Un **certificato di terze parti (third-party certificate)** è firmato e validato da una Certificate Authority (CA) pubblica e riconosciuta a livello globale. Poiché i sistemi operativi e i browser integrano nativamente l'elenco delle CA attendibili, questo certificato è considerato immediatamente fiduciario da chiunque vi si colleghi, a differenza di un certificato autofirmato.\n* **Analisi dei distrattori:**\n  * **B) Una CRL** è un file contenente l'elenco dei certificati revocati dalla CA prima della loro naturale scadenza; non è un tipo di certificato digitale.\n  * **C) La chiave privata** è il segreto crittografico asimmetrico usato per decifrare o firmare i dati, non è un tipo di certificato.\n  * **D) La chiave pubblica** è la componente liberamente distribuibile usata per cifrare o verificare firme; sebbene sia contenuta all'interno di un certificato digitale, non rappresenta essa stessa un certificato emesso da una CA."
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Separazione dei compiti**.\n\n* **Perché è la corretta:** La **separation of duties** impone che nessuna singola persona possa controllare da sola l'intero ciclo di un'operazione sensibile. Qui un solo impiegato crea il fornitore, ordina e paga: può quindi inventare un fornitore fittizio e liquidarsi denaro senza che nessuno debba approvare. Spezzando il ciclo fra persone diverse, la frode richiederebbe una collusione, che è molto più difficile e molto più rilevabile.\n* **Analisi dei distrattori:**\n  * **A) Il minimo privilegio** riguarda l'*ampiezza* dei permessi di una persona, non la *combinazione pericolosa* di più permessi tutti legittimi. Qui ciascuna delle tre funzioni è pertinente al ruolo dell'impiegato: il problema nasce dal fatto che le ha tutte e tre. Revocargli quasi tutto gli impedirebbe anche di lavorare.\n  * **C) Il need to know** limita l'accesso alle *informazioni* a quelle necessarie per il compito. Lo scenario non descrive un problema di visibilità dei dati, ma di autorità sulle transazioni.\n  * **D) La rotazione delle mansioni** è un controllo utile e complementare, perché rende più difficile mantenere una frode nel tempo e ne facilita la scoperta al cambio. Ma non impedisce la frode *oggi*: per dodici mesi l'impiegato conserverebbe l'intero ciclo nelle proprie mani.\n\n* **Trappola d'esame:** distingui i due principi che vengono sempre confusi. **Minimo privilegio** = *quanto* può fare una persona · **Separazione dei compiti** = *quali combinazioni* di poteri non devono mai stare insieme. Controlli affini che l'esame associa a questo tema: **dual control** (due persone per eseguire una singola azione critica), **ferie obbligatorie** e **job rotation**, pensati proprio per far emergere frodi che richiedono presenza continua."
   },
   {
     id: 210,
@@ -13438,18 +13438,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 213,
-    topic: "Identity & Access Control Models",
-    level: "COMPRENSIONE",
-    scenario: "In un'architettura Zero Trust, le richieste di accesso non vengono mai considerate attendibili di default, ma devono essere costantemente verificate e applicate.",
-    question: "Quale componente dell'architettura Zero Trust è responsabile di far rispettare concretamente le policy consentendo o negando l'accesso alle risorse?",
+    topic: "Zero Trust Architecture",
+    level: "ANALISI",
+    scenario: "Un dipendente chiede l'accesso a un'applicazione finanziaria. Il sistema Zero Trust raccoglie identità, stato di aggiornamento del portatile, posizione e punteggio di rischio, li confronta con le policy aziendali e conclude che l'accesso va concesso ma solo in sola lettura. Un secondo componente trasforma quella decisione in una configurazione operativa e ordina di aprire la sessione con quei limiti.",
+    question: "Quali componenti del Control Plane hanno svolto rispettivamente la valutazione e l'emissione della decisione?",
     options: [
-      "A) Policy Engine",
-      "B) Identity Provider",
-      "C) Policy Enforcement Point",
-      "D) Threat Scope Reducer"
+      "A) Policy Administrator per la valutazione, Threat Scope Reducer per l'emissione della decisione",
+      "B) Policy Enforcement Point per la valutazione, Policy Engine per l'emissione della decisione",
+      "C) Identity Provider per la valutazione, Policy Enforcement Point per l'emissione della decisione",
+      "D) Policy Engine per la valutazione, Policy Administrator per l'emissione della decisione"
     ],
-    answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Policy Enforcement Point**.\n\n* **Perché è la corretta:** Il **Policy Enforcement Point (PEP)** è il componente logico o fisico (es. un gateway, proxy, o firewall) incaricato di abilitare, monitorare e interrompere materialmente le connessioni tra un soggetto e una risorsa aziendale, applicando le decisioni stabilite dal Policy Decision Point.\n* **Analisi dei distrattori:**\n  * **A) Il Policy Engine** è la mente decisionale incaricata di valutare i criteri di sicurezza e stabilire se l'accesso debba essere concesso, ma non applica direttamente o materialmente la decisione sul traffico dati.\n  * **B) L'Identity Provider** gestisce i database delle identità degli utenti e la loro autenticazione iniziale, ma non si occupa del controllo continuo o dell'applicazione delle policy di accesso Zero Trust alle risorse.\n  * **D) Un 'Threat Scope Reducer'** non è un componente standard o definito all'interno delle architetture di riferimento Zero Trust (come NIST SP 800-207)."
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Policy Engine per la valutazione, Policy Administrator per l'emissione**.\n\n* **Perché è la corretta:** Il modello NIST SP 800-207 separa tre ruoli distinti.\n  * Il **Policy Engine (PE)** è il componente che **decide**: incrocia segnali di identità, stato del dispositivo, contesto e telemetria delle minacce con le policy e produce un verdetto (consenti, nega, consenti con restrizioni).\n  * Il **Policy Administrator (PA)** **esegue amministrativamente** quel verdetto: genera credenziali o token di sessione e istruisce il punto di applicazione su cosa aprire e con quali limiti.\n  * Insieme PE e PA formano il **Control Plane**.\n* **Analisi dei distrattori:**\n  * **B)** Inverte i ruoli. Il **Policy Enforcement Point (PEP)** non valuta nulla: sta sul **Data Plane** ed è il punto in cui la sessione viene materialmente aperta o bloccata.\n  * **C)** L'**Identity Provider** fornisce *uno* dei segnali che il PE considera, cioè l'autenticazione dell'identità, ma non prende la decisione di accesso né ne valuta il contesto complessivo.\n  * **A)** Il **Threat Scope Reducer** non è un componente decisionale: è l'obiettivo architetturale di ridurre il raggio d'azione di una compromissione, che si ottiene con la microsegmentazione.\n\n* **Trappola d'esame:** memorizza la catena e il piano di appartenenza. **PE decide → PA emette (Control Plane) → PEP applica (Data Plane)**. Se la domanda chiede *chi valuta le policy* la risposta è il Policy Engine; se chiede *chi consente o blocca concretamente il traffico* è il Policy Enforcement Point."
   },
   {
     id: 214,
@@ -13483,18 +13483,18 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
   },
   {
     id: 216,
-    topic: "Change Management",
-    level: "COMPRENSIONE",
-    scenario: "Un'organizzazione desidera comprendere in che modo un cambiamento proposto ai propri sistemi possa influire su diverse aree aziendali prima di procedere con l'implementazione.",
-    question: "Qual è il nome del processo che consiste nell'analizzare e prevedere gli effetti di un cambiamento proposto, tenendo conto del suo impatto su diverse aree di un'organizzazione o di un sistema?",
+    topic: "Security Controls",
+    level: "ANALISI",
+    scenario: "Un ransomware cifra il file server di un'azienda. Il team interviene in sequenza: isola l'host dalla rete, ripristina i dati dai backup immutabili, reinstalla il sistema operativo da un'immagine certificata e infine applica la patch che chiudeva la vulnerabilità sfruttata.",
+    question: "A quale categoria funzionale appartengono il ripristino dei dati e la reinstallazione del sistema?",
     options: [
-      "A) Backout Plan",
-      "B) Impact Analysis",
-      "C) Approval Process",
-      "D) Version Control"
+      "A) Controlli investigativi (detective)",
+      "B) Controlli preventivi (preventive)",
+      "C) Controlli correttivi (corrective)",
+      "D) Controlli deterrenti (deterrent)"
     ],
-    answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Impact Analysis**.\n\n* **Perché è la corretta:** L'**Impact Analysis** (analisi di impatto) è il processo che consiste nel valutare e prevedere le potenziali conseguenze di un cambiamento proposto, tenendo conto di vari aspetti di un'organizzazione o di un sistema, come l'infrastruttura IT, i processi di business e la sicurezza.\n* **Analisi dei distrattori:**\n  * **A) Backout Plan** è la strategia che delinea i passaggi da seguire per annullare le modifiche qualora queste comportino complicazioni impreviste o non raggiungano i risultati desiderati.\n  * **C) Approval Process** è la procedura formalizzata che garantisce che le modifiche vengano esaminate e approvate prima della loro implementazione.\n  * **D) Version Control** è un sistema che registra le modifiche apportate a un file o a un insieme di file nel tempo, consentendo di richiamare versioni specifiche in un secondo momento.\n\n* **Piccolo Esempio Concentrato:** Prima di distribuire un aggiornamento critico al sistema di gestione degli ordini, il team IT conduce un'Impact Analysis e scopre che la modifica influenzerebbe negativamente l'integrazione con il sistema di fatturazione, decidendo quindi di posticipare il rilascio."
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Controlli correttivi**.\n\n* **Perché è la corretta:** Un controllo **correttivo** interviene **dopo** che l'incidente si è verificato, per limitarne gli effetti e riportare i sistemi allo stato operativo. Il ripristino da backup e la reinstallazione da immagine certificata fanno esattamente questo: non impediscono l'attacco, ne riparano le conseguenze.\n* **Analisi dei distrattori:**\n  * **B) Preventivi:** nello scenario il controllo preventivo è la **patch applicata alla fine**, perché impedisce lo sfruttamento futuro di quella vulnerabilità. Il ripristino non previene nulla: l'evento è già accaduto.\n  * **A) Investigativi:** avrebbero rilevato l'attacco mentre avveniva (un EDR, un SIEM, il monitoraggio delle anomalie). Nello scenario il rilevamento c'è già stato; qui si sta rimediando.\n  * **D) Deterrenti:** agiscono sulla decisione dell'attaccante *prima* del tentativo (cartelli, banner legali, notorietà delle sanzioni). Il ransomware ha già colpito, non c'è nulla da scoraggiare.\n\n* **Nota d'esame — l'isolamento è un caso interessante:** isolare l'host dalla rete è un controllo tipicamente classificato come **correttivo** in quanto azione di contenimento dell'incidente in corso, ma alcuni testi lo leggono come preventivo perché *impedisce* la propagazione. Se la domanda propone entrambe le letture, scegli quella coerente con il momento descritto: se l'incidente è in corso e si sta limitando il danno, la risposta è correttivo.\n* **Schema temporale da memorizzare:** *prima* → direttivo, deterrente, preventivo · *durante* → investigativo · *dopo* → correttivo · *quando il controllo giusto non è applicabile* → compensativo."
   },
   {
     id: 217,
