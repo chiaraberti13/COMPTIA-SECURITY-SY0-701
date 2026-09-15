@@ -813,6 +813,25 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
       una sola risposta difendibile, distrattori plausibili e spiegazione
       individuale di ogni opzione. La presenza delle lettere nella spiegazione
       e la copertura degli override non provano l'accuratezza dei contenuti.
+  - [x] **D1 letto (105/105).** Sette difetti corretti in IT ed EN:
+        `D1#42` (compensativo presentato come funzione anziché come ruolo: per
+        funzione quel firewall previene, è il contesto a renderlo compensativo),
+        `D1#48` (l'opzione corretta diceva «senza intervento umano»: qualcuno
+        la GPO la configura),
+        `D1#132` (collegata alla distinzione blockchain / open public ledger
+        introdotta dalla S1, altrimenti il glossario e la domanda dicevano
+        cose diverse),
+        `D1#143` (**ambiguità reale**: anche un root certificate è
+        autofirmato — ora il distrattore D spiega perché non è la risposta),
+        `D1#156` (residuo di S32: «il chip sulla scheda madre» nell'opzione e
+        nella spiegazione, mentre esistono gli fTPM),
+        `D1#180` (la domanda diceva che OCSP «elimina» la finestra di
+        esposizione e l'opzione che interroga «la CA»: è un responder, e
+        restano `nextUpdate` e soprattutto il **soft-fail** dei browser),
+        `D1#199` (**ambiguità reale**: lo scenario descriveva processi interni
+        disallineati, che è l'opzione C, ma la risposta era la conformità
+        normativa; scenario riscritto su due obblighi di legge nuovi e un
+        regolatore estero).
 - [ ] Costruire la matrice **obiettivo → checklist → domanda → spiegazione**
       per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
       non verificati nella lettura semantica, senza inferire copertura dal solo
