@@ -817,10 +817,25 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
       per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
       non verificati nella lettura semantica, senza inferire copertura dal solo
       numero di occorrenze di una parola.
-- [ ] Ricercare in tutti i tre tipi di contenuto le generalizzazioni già
-      individuate (firma = cifratura con chiave privata, blockchain = sempre
-      pubblica, ALE = budget massimo, MFA da certificati client/server,
-      Zero Trust = cifratura di ogni richiesta) e uniformare IT/EN.
+- [x] **Ricerca delle generalizzazioni note in tutto il corpus** (firma =
+      cifratura con chiave privata, blockchain = sempre pubblica, ALE = budget
+      massimo, MFA da certificati, Zero Trust = cifratura di ogni richiesta),
+      estesa agli assoluti in genere. Trovati e corretti 13 residui in IT e EN:
+      `D1#146` (opzione e spiegazione: la firma non è un hash cifrato),
+      `DigitalSignaturesConcept` (la verifica non è una decifratura),
+      `PrivateKeyConcept` («ancora di sicurezza assoluta»),
+      `RootOfTrustConcept` EN («unbreakable»),
+      `PhysicalSegmentationConcept` («isolamento fisico impenetrabile via
+      software», che era anche una contraddizione: l'air gap si supera per via
+      fisica, come fece Stuxnet), `HotSiteRes` e `ReplicationRes` («azzerando
+      la perdita di dati»), `BackupEncryptionRes` («inviolabilità»),
+      `SSHPBQ` EN («100% secure»), `TicketEscalationAutomation` EN
+      («guarantees no incident is left forgotten»), `WPA3PersonalRes`
+      («azzerare gli attacchi brute-force»), `PassiveTestingConcept`
+      («azzera il rischio»), e soprattutto **`D5#6`, dove era rimasta la
+      formula «Costo del Controllo <= ALE»** che la S3 aveva corretto altrove.
+      I 19 usi residui di «azzerare» sono legittimi (zeroization degli HSM,
+      azzeramento della RAM, l'evitamento che azzera davvero il rischio).
 - [ ] Verificare i confronti didattici IDS/IPS, DAC/MAC/RBAC/ABAC,
       phishing/vishing/smishing e cifratura simmetrica/asimmetrica rispetto
       ai casi limite; aggiungere esempi in checklist o spiegazioni solo
