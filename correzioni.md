@@ -175,6 +175,18 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
       S32) → D2 (S11, S12, S29) → D3 (S2, S8, S13, S14, S27, S28,
       S30) → D4 (S15, S16, S19, S20) → D5 (S3, S5, S17, S18).
       Per ogni voce correggere IT/EN prima di spuntarla.
+  - [x] **D1 fatto** — S1 (blockchain e open public ledger separati, con la
+        soglia del 51% ricondotta al solo Proof of Work), S4 (firma ≠ cifratura
+        dell'hash; il non ripudio dipende dalla custodia della chiave),
+        S6 (Zero Trust: decisione di accesso distinta dalla protezione del
+        canale), S9 (DH/ECDH = key agreement, non cifratura), S10 (i KDF non
+        sono equivalenti e non rendono nulla «matematicamente impraticabile»),
+        S25 (D1#225: il confine della chiave, il costo su indici e ricerche,
+        A e C spiegate separatamente), S31 (CRL = elenco, OCSP = interrogazione,
+        + OCSP stapling; un certificato valida il dominio, non l'onestà del
+        sito), S32 (TPM ≠ Secure Boot; measured boot registra, non blocca;
+        esistono fTPM).
+  - [ ] D2 → D3 → D4 → D5
 - [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
       `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
       2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.
