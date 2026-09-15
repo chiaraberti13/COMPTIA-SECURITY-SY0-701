@@ -836,10 +836,20 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
       formula «Costo del Controllo <= ALE»** che la S3 aveva corretto altrove.
       I 19 usi residui di «azzerare» sono legittimi (zeroization degli HSM,
       azzeramento della RAM, l'evitamento che azzera davvero il rischio).
-- [ ] Verificare i confronti didattici IDS/IPS, DAC/MAC/RBAC/ABAC,
-      phishing/vishing/smishing e cifratura simmetrica/asimmetrica rispetto
-      ai casi limite; aggiungere esempi in checklist o spiegazioni solo
-      dove risolvono un'ambiguità effettiva.
+- [x] **Confronti didattici verificati ai casi limite.** Phishing / vishing /
+      smishing (e quishing) erano già distinti per canale in modo coerente, e
+      simmetrico / asimmetrico è coperto dalla `D1#191`: nessun intervento.
+      Tre ambiguità reali corrette invece altrove:
+      **IDS/IPS** — le due voci presentavano «passivo» e «in-line» come
+      proprietà del prodotto. La distinzione vera è **posizionamento e
+      configurazione**: un IPS in modalità di sola rilevazione è un IDS, e un
+      IPS su porta SPAN non blocca nulla. Aggiunta anche la conseguenza che
+      l'esame verifica: stando in linea, un IPS è un potenziale punto di
+      guasto e un falso positivo diventa un disservizio.
+      **MAC** — era «il modello più restrittivo e sicuro». È il più
+      restrittivo; «più sicuro» dipende dal contesto, e la sua rigidità
+      altrove spinge ad aggirarlo. Aggiunto il caso limite RBAC → ABAC:
+      quando il ruolo non basta e servono condizioni di contesto.
 
 **Fonti primarie della revisione:** [CompTIA SY0-701 Exam Objectives v5.0](https://assets.ctfassets.net/82ripq7fjls2/6TYWUym0Nudqa8nGEnegjG/0f9b974d3b1837fe85ab8e6553f4d623/CompTIA-Security-Plus-SY0-701-Exam-Objectives.pdf)
 (Obj 1.2, 1.4, 2.1, 2.4, 3.2, 3.4, 4.1, 4.2, 4.6, 5.2, 5.3);
