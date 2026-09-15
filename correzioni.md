@@ -832,6 +832,22 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
         disallineati, che è l'opzione C, ma la risposta era la conformità
         normativa; scenario riscritto su due obblighi di legge nuovi e un
         regolatore estero).
+  - [x] **D2 letto (129/129).** Cinque difetti corretti in IT ed EN:
+        `D2#429` (**ambiguità concettuale**: l'opzione C era «race condition»
+        e la D «time-of-use», ma TOC/TOU *è* una race condition e l'obiettivo
+        2.3 la elenca come sua sottovoce — ora il distrattore spiega che fra
+        categoria e sottotipo vince il sottotipo quando lo scenario lo
+        descrive), `D2#455` (refuso: «Il improvviso gap»), `D2#466`
+        (diceva che le API insicure sono «esclusive» del cloud, il che è
+        falso: il cloud cambia il **ruolo** dell'API, che diventa l'unica
+        console di amministrazione; aggiunto anche lo scenario, che mancava),
+        `D2#516` (**ambiguità reale**: l'opzione corretta descriveva una
+        richiesta del CEO senza dire che era fraudolenta, e il distrattore C
+        sulla fattura allegata era un BEC altrettanto valido — opzioni
+        riscritte e aggiunto il tratto distintivo del BEC, che spesso non ha
+        né allegato né link), `D2#519` (HIPS presentato come difesa dal
+        buffer overflow senza nominare DEP/NX, ASLR e stack canary, che sono
+        le difese primarie).
 - [ ] Costruire la matrice **obiettivo → checklist → domanda → spiegazione**
       per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
       non verificati nella lettura semantica, senza inferire copertura dal solo
