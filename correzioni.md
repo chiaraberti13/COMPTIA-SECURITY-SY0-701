@@ -170,18 +170,79 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
 
 ### Piano ordinato per priorità
 
-- [ ] **P1 — Errori tecnici e domande ambigue:** S1–S6, S9–S20, S25,
+- [x] **P1 — Errori tecnici e domande ambigue:** S1–S6, S9–S20, S25,
       S27–S32. Procedere per dominio D1 (S1, S4, S6, S9, S10, S25, S31,
       S32) → D2 (S11, S12, S29) → D3 (S2, S8, S13, S14, S27, S28,
       S30) → D4 (S15, S16, S19, S20) → D5 (S3, S5, S17, S18).
       Per ogni voce correggere IT/EN prima di spuntarla.
-- [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
-      `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
-      2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.
-- [ ] **P4 — Spiegazioni:** S8, S15, S18, S21, S24, S25, S27, S30;
-      trattare ciascun distrattore
-      singolarmente e non far discendere una regola generale da un esempio.
-      Poi completare la lettura semantica D1 → D2 → D3 → D4 → D5.
+  - [x] **D1 fatto** — S1 (blockchain e open public ledger separati, con la
+        soglia del 51% ricondotta al solo Proof of Work), S4 (firma ≠ cifratura
+        dell'hash; il non ripudio dipende dalla custodia della chiave),
+        S6 (Zero Trust: decisione di accesso distinta dalla protezione del
+        canale), S9 (DH/ECDH = key agreement, non cifratura), S10 (i KDF non
+        sono equivalenti e non rendono nulla «matematicamente impraticabile»),
+        S25 (D1#225: il confine della chiave, il costo su indici e ricerche,
+        A e C spiegate separatamente), S31 (CRL = elenco, OCSP = interrogazione,
+        + OCSP stapling; un certificato valida il dominio, non l'onestà del
+        sito), S32 (TPM ≠ Secure Boot; measured boot registra, non blocca;
+        esistono fTPM).
+  - [x] **D2 fatto** — S11 (D2#457 riscritta: lo scenario ora chiede l'effetto
+        strutturale, D non è più «impossibile» ma sbagliata per la parola
+        «unica», e sono spariti i doppioni bilingui dalle opzioni), S12 (D2#166:
+        l'intento distingue i due casi, non definisce le categorie; insider
+        include il negligente e l'involontario — e in D2#31 gli script kiddie
+        non «mancano totalmente» di capacità), S22 (nuove voci di glossario
+        autosufficienti per Shadow IT e Bloatware), S29 (rimuovere software
+        riduce, non azzera, le vie di privilege escalation).
+  - [x] **D3 fatto** — S2 (EAP-TLS = autenticazione reciproca, non MFA
+        dell'utente: due certificati sono entrambi «qualcosa che hai»),
+        S8 (D3#29: il tunnel termina al gateway, non è end-to-end; A, C e D
+        ora hanno tre motivazioni distinte e la porta 8080 non implica
+        cifratura), S13 (D3#28: l'isolamento della VM è più robusto, non
+        inviolabile — il VM escape è nell'obiettivo 2.3; A, C e D separate,
+        con Kubernetes come orchestrazione e non confine di memoria),
+        S14 (D3#30: firmare non è cifrare, e il sistema deve già possedere
+        la chiave pubblica attendibile; via «assoluta certezza»),
+        S27 (nessuna soglia universale di 100 km; il failover geografico
+        dipende da rilevamento, convergenza, cache DNS e TTL),
+        S28 (la tokenizzazione riduce l'esposizione, non azzera il rischio;
+        esistono schemi vaultless), S30 (RPO = 0 vale per le scritture già
+        confermate e a condizioni date; la replica non sostituisce i backup).
+  - [x] **D4 fatto** — S15 (D4#20: STIX è il formato, TAXII lo scambio;
+        lo scambio non è distribuzione in tempo reale né blocco automatico,
+        e i feed vanno convalidati prima di alimentare un firewall; B e D
+        separate), S16 (D4#320: i gruppi di metriche dipendono dalla versione
+        — Temporal ed Environmental in v3.1, Threat e Supplemental in v4.0),
+        S19 (D4#282: la funzione della policy resta corretta, ma una password
+        compromessa va invalidata subito, non alla scadenza; NIST SP 800-63B
+        non raccomanda la rotazione arbitraria), S20 (D4#218: disabilitare
+        l'account nell'IdP blocca le nuove autenticazioni, non le sessioni
+        SaaS già aperte; e gli access token OAuth non devono essere JWT),
+        S26 (nuova voce su input validation e secure cookie, con ogni difesa
+        associata alla minaccia giusta).
+  - [x] **D5 fatto** — S3 (l'ALE non è un tetto di spesa: il confronto è fra
+        costo annualizzato del controllo e riduzione dell'ALE), S5 (password
+        policy allineata a NIST SP 800-63B: né classi di caratteri obbligatorie
+        né scadenza arbitraria presentate come raccomandazioni dello standard),
+        S17 (D5#4 riscritta: l'appetite è l'orientamento, la tolerance la soglia
+        misurabile; via la finestra dei 5 minuti che era una decisione
+        operativa), S18 (D5#86: l'attestazione vale entro perimetro, periodo e
+        criteri, con SOC 2 Type I vs Type II; A e D spiegate separatamente),
+        S24 (D5#81: le opzioni sono coppie e ora ciascuna è analizzata come
+        tale, con la nota che l'indicatore apre un'indagine, non una condanna),
+        S33 (work order distinto da SOW, con la gerarchia MSA/SOW/WO/SLA).
+- [x] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33.
+      S7 e S23 risolti con un rinvio esplicito nella descrizione dei due
+      gruppi («questi argomenti appartengono all'obiettivo 4.6 / 4.2, e
+      all'esame contano come Dominio 4»), senza spostare array né id.
+      S22 e S26 con nuove voci di glossario; S33 nella voce SOW.
+- [x] **P4 — Spiegazioni:** S8, S15, S18, S21, S24, S25, S27, S30 applicate.
+      I sette passi con lettere accorpate segnalati in S21 (D3#28, D3#29,
+      D4#20, D5#4, D5#86, D5#111, D1#225) hanno ora una motivazione per
+      ciascuna opzione.
+- [ ] **Resta aperta la lettura semantica** delle 642 domande una per una,
+      come indicato in fondo a questo documento: le 33 segnalazioni erano
+      il risultato di una lettura mirata, non di una verifica esaustiva.
 
 ### Correzioni testuali proposte (aperte; dataset non modificato)
 
