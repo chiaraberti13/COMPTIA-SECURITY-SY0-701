@@ -53,7 +53,77 @@ export function appendHistory(history: QuizResult[], entry: QuizResult): QuizRes
 /** Ids of questions in `questions` that have no entry in `answers`. */
 export function unansweredIds(
   questions: readonly Question[],
-  answers: Record<number, number>
+  answers: Record<number, number[]>
 ): number[] {
   return questions.filter((q) => !(q.id in answers)).map((q) => q.id);
+}
+
+/* ------------------------------------------------------------------ *
+ * Answers
+ *
+ * A question is single-answer or multi-response ("choose TWO"), and the
+ * difference lives entirely in the data: `answerIndexes` present means
+ * multi-response. The helpers below collapse both shapes to one list so
+ * the UI never has to branch on which field a question happens to use.
+ * ------------------------------------------------------------------ */
+
+/** Every correct option index, ascending, for single- and multi-response alike. */
+export function correctIndexes(question: Question): number[] {
+  const many = question.answerIndexes;
+  if (many && many.length > 0) return [...new Set(many)].sort((a, b) => a - b);
+  return [question.answerIndex];
+}
+
+/** How many options the learner must pick before the answer can be confirmed. */
+export function requiredSelections(question: Question): number {
+  return correctIndexes(question).length;
+}
+
+/** Whether the question expects more than one option. */
+export function isMultiResponse(question: Question): boolean {
+  return requiredSelections(question) > 1;
+}
+
+/**
+ * Applies a click on `index` to the current selection.
+ *
+ * Single-answer questions replace the selection, which keeps the familiar
+ * radio-button feel. Multi-response ones toggle, and once the required
+ * number of options is picked a further click on a new option is ignored:
+ * refusing the extra pick is clearer than silently dropping an earlier
+ * choice the learner still believes is selected.
+ */
+export function toggleSelection(
+  question: Question,
+  selection: readonly number[],
+  index: number
+): number[] {
+  if (!isMultiResponse(question)) return [index];
+  if (selection.includes(index)) return selection.filter((i) => i !== index);
+  if (selection.length >= requiredSelections(question)) return [...selection];
+  return [...selection, index].sort((a, b) => a - b);
+}
+
+/** Whether enough options are selected for the answer to be confirmed. */
+export function isSelectionComplete(
+  question: Question,
+  selection: readonly number[]
+): boolean {
+  return selection.length === requiredSelections(question);
+}
+
+/**
+ * Whether the selection is exactly the correct set.
+ *
+ * Multi-response questions are scored all-or-nothing, as CompTIA scores
+ * them: picking one of two correct options earns nothing.
+ */
+export function isSelectionCorrect(
+  question: Question,
+  selection: readonly number[]
+): boolean {
+  const correct = correctIndexes(question);
+  if (selection.length !== correct.length) return false;
+  const picked = new Set(selection);
+  return correct.every((i) => picked.has(i));
 }

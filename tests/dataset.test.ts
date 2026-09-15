@@ -99,6 +99,40 @@ describe("question shape", () => {
     expect(broken).toEqual([]);
   });
 
+  it("answerIndexes, where present, is a valid multi-response set", () => {
+    const broken = DOMAIN_IDS.flatMap((d) =>
+      QUESTIONS_BY_DOMAIN[d]
+        .filter((q) => q.answerIndexes !== undefined)
+        .filter(
+          (q) =>
+            // At least two options, or it should not be multi-response at all.
+            q.answerIndexes!.length < 2 ||
+            // Every index must address a real option.
+            q.answerIndexes!.some((i) => i < 0 || i >= q.options.length) ||
+            // No duplicates, which would inflate the required pick count.
+            new Set(q.answerIndexes!).size !== q.answerIndexes!.length ||
+            // answerIndex must be the lowest correct index, so code reading
+            // only that field points at a correct option, never a distractor.
+            Math.min(...q.answerIndexes!) !== q.answerIndex
+        )
+        .map((q) => `D${d}#${q.id}`)
+    );
+    expect(broken).toEqual([]);
+  });
+
+  it("a multi-response question announces itself in its own text", () => {
+    // The learner must be told two options are expected. The UI shows a
+    // badge, but the question text has to say so too, so the wording still
+    // makes sense wherever it is read on its own.
+    const broken = DOMAIN_IDS.flatMap((d) =>
+      QUESTIONS_BY_DOMAIN[d]
+        .filter((q) => (q.answerIndexes?.length ?? 0) > 1)
+        .filter((q) => !/\(scegli(ne)? due\)|\(choose two\)/i.test(q.question))
+        .map((q) => `D${d}#${q.id}`)
+    );
+    expect(broken).toEqual([]);
+  });
+
   it("every question carries text and an explanation", () => {
     const broken = DOMAIN_IDS.flatMap((d) =>
       QUESTIONS_BY_DOMAIN[d]
