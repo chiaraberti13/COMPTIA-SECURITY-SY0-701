@@ -83,6 +83,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "DACConcept": "Modelli di Controllo Accessi (IAM)",
   "MACConcept": "Modelli di Controllo Accessi (IAM)",
   "MFAConcept_New": "Modelli d'Identità e Federazione",
+  "MFAImplementationsTokens": "Modelli d'Identità e Federazione",
   "FederationConcept": "Modelli d'Identità e Federazione",
   "AccessControlModels": "Modelli di Controllo Accessi (IAM)",
   "RBACConcept": "Modelli di Controllo Accessi (IAM)",
@@ -94,6 +95,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "ImplicitDenyConcept": "Modelli di Controllo Accessi (IAM)",
   "PermissionRestrictions": "Modelli di Controllo Accessi (IAM)",
   "GeographicNetworkRestrictions": "Modelli di Controllo Accessi (IAM)",
+  "TimeOfDayRestrictions": "Modelli di Controllo Accessi (IAM)",
 
   // Domain 2
   "NationStateActor": "Profili e Attori delle Minacce",
@@ -379,6 +381,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "GreyBoxTesting": "Tecniche di Reconnaissance e Testing",
   "PassiveTestingConcept": "Tecniche di Reconnaissance e Testing",
   "SIEM": "Strumenti di Monitoraggio e Telemetria",
+  "EDRXDRConcept": "Strumenti di Monitoraggio e Telemetria",
   "DLP": "Strumenti di Monitoraggio e Telemetria",
   "SCAP": "Strumenti di Monitoraggio e Telemetria",
   "SNMP": "Strumenti di Monitoraggio e Telemetria",
