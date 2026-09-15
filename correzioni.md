@@ -17,7 +17,9 @@ fondo a questo documento.
   MITRE ATT&CK, OWASP) dove pertinenti.
 - Ogni voce si spunta solo dopo che `npm run check` (typecheck, lint, test) è verde.
 
-**Stato del dataset:** 535 voci di glossario e 642 domande, copertura EN al 100%.
+**Stato del dataset:** 535 voci di glossario e 642 domande, copertura EN al 100%
+secondo i controlli strutturali precedenti. La presenza di una traduzione non ne
+certifica l'equivalenza tecnica; la revisione semantica rimane aperta.
 
 ---
 
@@ -132,9 +134,184 @@ fondo a questo documento.
 
 ## Da fare
 
-- [ ] **Nessun intervento aperto.** Le lacune rilevate rispetto agli obiettivi
-      SY0-701 sono state colmate e i difetti trovati corretti. Restano solo le
-      decisioni editoriali elencate qui sotto, che spettano all'autore.
+- [ ] **Interventi aperti:** vedi «Seconda revisione dei contenuti» qui sotto.
+      Le voci completate sopra descrivono il lavoro precedente, non attestano
+      l'assenza di ulteriori errori o lacune. Non spuntare le nuove voci prima
+      della modifica testuale coerente in IT/EN e della verifica del dataset.
+
+---
+
+## Seconda revisione dei contenuti — 15 settembre 2026
+
+**Perimetro della tranche:** lettura delle cinque sezioni del dataset IT, degli
+override EN, del registro e degli obiettivi ufficiali; controllo strutturale delle
+642 domande (105/129/112/171/125 per i domini 1–5), degli identificativi,
+delle risposte e delle spiegazioni per riferimenti espliciti alle opzioni.
+Le segnalazioni qui sotto sono verificate sui passi indicati. Il controllo
+automatico delle lettere non dimostra che tutte le 642 spiegazioni siano corrette
+o che ogni distrattore sia inequivocabile: **una revisione semantica domanda per
+domanda resta da completare**. La copertura lessicale di un obiettivo non prova
+che sia trattato abbastanza in profondità.
+
+### Report per dominio
+
+| Dominio | Riscontro accertato | Implicazione didattica |
+| --- | --- | --- |
+| 1.0 General Security Concepts | La voce Blockchain identifica la blockchain con un registro necessariamente pubblico e attribuisce non ripudio automatico; la voce Non-Repudiation descrive la firma come «cifratura dell'hash» e promette una prova giuridica assoluta; Zero Trust prescrive la cifratura di *ogni richiesta* come requisito universale. | Distinguere tipo di ledger, firma, integrità e riservatezza; evitare assoluti nelle architetture. |
+| 2.0 Threats, Vulnerabilities & Mitigations | Nelle voci e domande campionate non è emersa una nuova lacuna terminologica certa. | Verificare ancora, una domanda alla volta, unicità della risposta e plausibilità dei distrattori: la ricerca di termini non sostituisce il giudizio tecnico. |
+| 3.0 Security Architecture | La nota EAP-TLS scambia l'autenticazione reciproca client/server per MFA dell'utente; `D3#29` chiama la VPN «end-to-end» fino alla risorsa interna e riunisce tre distrattori in una sola motivazione. | Separare protezione del canale, autenticazione reciproca e fattori dell'utente. |
+| 4.0 Security Operations | Il gruppo «Identity & Access Control Models (Obj 4.6)» è nel Dominio 1; nelle domande del Dominio 4 campionate non è emerso un nuovo errore certo. | Rendere visibile la corrispondenza dell'IAM con l'obiettivo 4.6 e completare la lettura semantica delle domande del Dominio 4. |
+| 5.0 Security Program Management & Oversight | `D5#6` dà la formula ALE corretta ma conclude che spendere oltre ALE per un controllo non ha senso; la checklist Password Policies impone la complessità di caratteri come regola obbligatoria. | Separare stima del rischio, decisione sul controllo e policy delle password corrente. |
+
+**Allineamento IT/EN:** gli errori su Blockchain, Zero Trust, EAP-TLS,
+password e ALE sono presenti in entrambe le lingue; non sono semplici difetti
+di traduzione. La voce Non-Repudiation presenta lo stesso modello riduttivo
+in IT ed EN. `D3#29` riunisce i distrattori in IT e anche nell'override EN.
+La copertura EN del 100% è quindi strutturale, non una certificazione di qualità.
+
+### Piano ordinato per priorità
+
+- [ ] **P1 — Modelli tecnici falsi o categorici:** S1 Blockchain/open public
+      ledger, S2 EAP-TLS/MFA, S3 ALE e costo dei controlli, S4 firme digitali
+      e non ripudio.
+- [ ] **P1 — Indicazioni operative da correggere:** S5 policy password,
+      S6 Zero Trust. Cercare nelle altre voci e domande gli stessi enunciati
+      prima di considerare conclusa ogni correzione.
+- [ ] **P3 — Allineamento agli obiettivi:** S7 gruppo IAM nel Dominio 1;
+      conservare i `checklistKey` e gli id. Una decisione sulla collocazione
+      editoriale non autorizza a riscrivere la struttura dei dati.
+- [ ] **P4 — Spiegazioni:** S8 `D3#29`; poi controllo semantico incrementale
+      D1 → D2 → D3 → D4 → D5, con una riga distinta per ogni distrattore,
+      esempi e trappole d'esame solo quando aiutano a distinguere i concetti.
+
+### Correzioni testuali proposte (aperte; dataset non modificato)
+
+I «prima» sono estratti esatti dei campi attuali; i «dopo» sono testi
+sostitutivi per **il campo specificato**, senza modifica di id, opzioni o schema.
+Per i campi `details` lunghi si indica il passo da sostituire e si mantengono
+gli altri passi soltanto dopo averli ricontrollati.
+
+**S1 · P1 · Blockchain e open public ledger (Obj 1.4).**
+`src/data.ts`, `BlockchainConcept.definition/details/examTip`;
+`src/data.en.ts`, override omonimo.
+
+| Lingua | Prima (estratto) | Dopo (testo guida) |
+| --- | --- | --- |
+| IT | «Un registro pubblico distribuito (**open public ledger**)»; «gli obiettivi ... chiamano questa tecnologia **open public ledger**»; «alterare un dato richiederebbe il ricalcolo ... su oltre la metà dei nodi»; «integrità e non ripudio ... ma non riservatezza, perché il registro è pubblico per costruzione». | **Definizione:** «Blockchain: registro distribuito resistente alle alterazioni, in cui i blocchi sono collegati tramite hash; può essere pubblico oppure permissioned. Open public ledger: registro consultabile pubblicamente, spesso realizzato con una blockchain pubblica.» **Dettagli:** «La resistenza alle modifiche dipende da hash, consenso e regole della rete; la soglia del 51% non descrive universalmente tutti i meccanismi di consenso. Un hash rende rilevabile un'alterazione, mentre autenticità e non ripudio richiedono ulteriori prove, per esempio firme e gestione affidabile delle chiavi.» **Nota:** «Gli obiettivi 1.4 elencano separatamente blockchain e open public ledger. Un ledger pubblico espone le informazioni registrate; uno permissioned può limitare la lettura. Non inserire dati segreti in chiaro in un ledger pubblico.» |
+| EN | “An open public ledger”; “the official ... objectives call this technology an open public ledger”; “recomputing ... on more than half the nodes”; “integrity and non-repudiation ... but not confidentiality, because the ledger is public by design”. | **Definition:** “Blockchain: a tamper-resistant distributed ledger whose blocks are linked by hashes; it may be public or permissioned. Open public ledger: a publicly readable ledger, often implemented using a public blockchain.” **Details:** “Tamper resistance depends on hashing, consensus and network rules; a 51% threshold does not apply universally to every consensus mechanism. Hashes make alteration detectable; authenticity and non-repudiation need additional evidence such as signatures and trustworthy key management.” **Tip:** “Objective 1.4 lists blockchain and open public ledger separately. Public ledgers expose recorded information; permissioned ledgers may restrict read access. Do not publish secrets in plaintext on a public ledger.” |
+
+Motivo: gli obiettivi distinguono i due termini; una blockchain non conferisce
+da sola riservatezza o non ripudio. Rivedere anche l'esempio del consorzio:
+un registro permissioned non è leggibile automaticamente da ogni cliente.
+
+**S2 · P1 · EAP-TLS non equivale a MFA (Obj 3.2/4.6).**
+`src/data.ts`, `EAPProtocol_New.examTip`; `src/data.en.ts`, stesso override.
+
+| Lingua | Prima | Dopo |
+| --- | --- | --- |
+| IT | «EAP-TLS ... richiede certificati digitali sia sul client sia sul server (MFA nativa basata su certificati).» | «EAP-TLS usa certificati per autenticazione reciproca del client e del server. Il certificato del server prova il server al client: **non è un secondo fattore dell'utente**. La MFA dell'utente richiede due fattori distinti, per esempio possesso della chiave client e un PIN verificato nel flusso di autenticazione.» |
+| EN | “EAP-TLS ... requires digital certificates on both the client and the server (native certificate-based MFA).” | “EAP-TLS uses certificates for mutual client/server authentication. The server certificate authenticates the server to the client; **it is not a second user factor**. User MFA requires two distinct factors, such as possession of the client key and a PIN verified during authentication.” |
+
+Motivo: autenticare le due estremità non prova due fattori del medesimo utente.
+
+**S3 · P1 · ALE non è una soglia universale di spesa (Obj 5.2).**
+`src/data.ts`, `D5#6.explanation` (ultima frase);
+`src/data.en.ts`, `QUESTION_EN[5][6].explanation` (ultima frase).
+
+| Lingua | Prima | Dopo |
+| --- | --- | --- |
+| IT | «non ha senso dal punto di vista economico investire più di $1.500 all'anno ... per eliminare questo rischio.» | «$1.500 è la perdita annua attesa **prima** del controllo, non un tetto automatico di spesa. Confronta il costo annualizzato del controllo con la **riduzione stimata dell'ALE** (ALE iniziale − ALE residua); considera inoltre obblighi normativi, impatti non monetari e propensione al rischio. Per esempio, se il controllo riduce ALE da $1.500 a $300, evita in media $1.200 annui: il suo costo va valutato rispetto a questo beneficio e agli altri vincoli.» |
+| EN | “it makes no economic sense to invest more than $1,500 per year ... to eliminate this risk.” | “$1,500 is the expected annual loss **before** the control, not an automatic spending cap. Compare the control's annualized cost with the **estimated ALE reduction** (initial ALE − residual ALE), and consider regulatory duties, nonfinancial impacts and risk appetite. For example, reducing ALE from $1,500 to $300 avoids an expected $1,200 per year; weigh the control's cost against that benefit and other constraints.” |
+
+Motivo: la risposta B e il calcolo sono corretti; solo la deduzione sull'acquisto
+del controllo è sbagliata. Nessuna modifica a id, formula o opzioni.
+
+**S4 · P1 · Firma digitale, prova e non ripudio (Obj 1.2/1.4).**
+`src/data.ts`, `NonRepudiation.details`; `src/data.en.ts`, override.
+
+| Lingua | Prima (estratto) | Dopo (passo e esempio) |
+| --- | --- | --- |
+| IT | «genera l'hash ... e lo cifra utilizzando la propria chiave privata»; «può decifrare la firma»; «non può fare causa alla banca ... garantendo il non-ripudio». | «Il firmatario calcola l'hash e crea una **firma** con la chiave privata mediante un algoritmo di firma; il verificatore usa la chiave pubblica per **verificare** firma e integrità. Non è cifratura del documento né, in generale, “decifrare l'hash”. La firma offre evidenza di origine e integrità se la chiave e la sua associazione al firmatario sono affidabili. Nell'esempio bancario la firma aiuta a provare l'ordine, ma identità, custodia della chiave, log e norme applicabili determinano il valore della prova; non vieta un'azione legale.» |
+| EN | “encrypts [the hash] using their private key”; “decrypt the signature”; “cannot sue the bank ... guaranteeing non-repudiation”. | “The signer hashes the message and produces a **signature** with the private key using a signature algorithm; the verifier uses the public key to **verify** the signature and integrity. This does not encrypt the document and is not, in general, ‘decrypting the hash’. A signature provides evidence of origin and integrity when the key and its binding to the signer are trustworthy. In the banking example it supports proof of the order; identity, key custody, logs and applicable law determine its evidentiary value. It does not bar a legal challenge.” |
+
+Motivo: distinguere firma e cifratura evita una trappola ricorrente; il non ripudio
+è supportato da prove e processi, non una certezza giuridica automatica.
+
+**S5 · P1 · Password policy e linee guida correnti (Obj 4.6).**
+`src/data.ts`, voce `PasswordPoliciesAccount`, passo «Password Policies»
+in `details`;
+`src/data.en.ts`, override della stessa voce.
+
+| Lingua | Prima (estratto) | Dopo (passo) |
+| --- | --- | --- |
+| IT | «Definizione obbligatoria di regole di complessità (maiuscole, minuscole, numeri, simboli)». | «Definire lunghezza adeguata e verificare le nuove password contro elenchi di credenziali compromesse o comuni; consentire password lunghe e password manager. Non insegnare l'obbligo di mischiare classi di caratteri come raccomandazione NIST: una policy interna può imporlo, ma NIST SP 800-63B non lo raccomanda. Richiedere il cambio quando vi sono indizi di compromissione, non automaticamente per ogni scadenza arbitraria.» |
+| EN | “Mandatory definition of complexity rules (uppercase, lowercase, numbers, symbols)”. | “Set suitable length and screen new passwords against compromised or common-password blocklists; allow long passwords and password managers. Do not present mandatory character-class mixtures as a NIST recommendation: an internal policy may require them, but NIST SP 800-63B does not. Require changes on evidence of compromise, rather than arbitrary periodic expiry.” |
+
+Motivo: gli obiettivi richiedono i concetti di password; le istruzioni normative
+attribuite implicitamente allo standard devono riflettere la guida aggiornata.
+
+**S6 · P1 · Zero Trust e protezione del canale (Obj 1.2).**
+`src/data.ts`, `ZeroTrustIntro.examTip` e passo «Verifica Continua»;
+`src/data.en.ts`, stesso override.
+
+| Lingua | Prima | Dopo |
+| --- | --- | --- |
+| IT | «ogni richiesta di accesso deve essere autenticata, autorizzata e crittografata prima di concedere l'accesso». | «Zero Trust non accorda fiducia implicita in base alla posizione di rete. Prima di stabilire una sessione verso la risorsa verifica soggetto e dispositivo e applica una decisione di autorizzazione; proteggi il traffico con protocolli appropriati e monitora la sessione secondo il rischio. La cifratura del canale è una misura di protezione, non un fattore di autenticazione né una regola per “cifrare la richiesta” prima della decisione.» |
+| EN | “every access request must be authenticated, authorized and encrypted before access is granted.” | “Zero Trust grants no implicit trust based on network location. Before establishing a resource session, authenticate the subject and device and enforce an authorization decision; protect traffic with suitable protocols and monitor the session according to risk. Channel encryption is a protection, not an authentication factor or a rule to ‘encrypt the request’ before making the access decision.” |
+
+Motivo: NIST SP 800-207 separa la decisione di accesso dai mezzi di protezione
+del traffico; evitare di trasformare un esempio di implementazione in un assioma.
+
+**S7 · P3 · Copertura IAM nel dominio corretto (Obj 4.6).**
+`src/data.ts`, titolo del gruppo «8. Identity & Access Control Models
+(Obj 4.6)» nel Dominio 1; `src/data.en.ts`, `GROUP_EN` dello stesso titolo.
+**Prima IT/EN:** gruppo 4.6 elencato sotto il Dominio 1. **Dopo IT/EN
+proposto:** collocare editorialmente la checklist IAM sotto Security Operations
+4.6 oppure renderne esplicito nel titolo e nella guida il rinvio «Approfondimento
+IAM → Obj 4.6 / Security Operations». Motivo: un obiettivo 4.6 può essere studiato
+in anticipo, ma non deve sembrare coperto dal Dominio 1. Non spostare array,
+`checklistKey` o identificativi in una correzione solo testuale: decidere prima
+come rappresentare il rinvio senza modificare la struttura.
+
+**S8 · P4 · `D3#29`: distrattori e limiti della VPN (Obj 3.2).**
+`src/data.ts`, `D3#29.explanation`; `src/data.en.ts`,
+`QUESTION_EN[3][29].explanation`.
+
+| Lingua | Prima (estratto) | Dopo (passi da sostituire) |
+| --- | --- | --- |
+| IT | «canale protetto end-to-end»; «firme crittografiche dei pacchetti»; «A), C) e D) ... Telnet, FTP o HTTP». | «La VPN protegge il traffico **tra il client e il gateway VPN** con cifratura e controllo di integrità/autenticazione del canale; il tratto dal gateway al database richiede protezioni proprie se attraversa segmenti non fidati. MFA limita l'abuso delle credenziali.» **A:** «Telnet espone credenziali e comandi.» **C:** «FTP in chiaro espone credenziali e dati; l'accesso anonimo amplia il rischio.» **D:** «HTTP senza TLS espone richieste e risposte; la porta 8080 non implica cifratura.» |
+| EN | “end-to-end protected channel”; “cryptographic signatures on packets”; “A), C) and D) ... Telnet, FTP or unencrypted HTTP”. | “The VPN protects traffic **between client and VPN gateway** using encryption and channel integrity/authentication; the gateway-to-database leg needs its own protection if it crosses untrusted segments. MFA reduces credential abuse.” **A:** “Telnet exposes credentials and commands.” **C:** “Plain FTP exposes credentials and data; anonymous access widens exposure.” **D:** “HTTP without TLS exposes requests and responses; port 8080 does not imply encryption.” |
+
+Motivo: la risposta B resta unica e l'id invariato, ma la spiegazione deve
+descrivere il confine del tunnel e distinguere i tre errori.
+
+### Lacune e verifiche ancora da colmare
+
+- [ ] Costruire una matrice **obiettivo → checklist → domanda → spiegazione**
+      per tutti i sotto-obiettivi 1.1–5.6, con evidenza di profondità e non
+      soltanto presenza della parola. Partire da 4.6 IAM e 1.4 blockchain/open
+      public ledger; segnalare come *non verificati* gli altri obiettivi finché
+      non sono letti semanticamente.
+- [ ] Controllare le 642 domande in tranche per dominio: una sola risposta
+      difendibile nello scenario, distrattori plausibili, nessuna supposizione
+      nascosta, spiegazione individuale per ciascuna opzione. Le lettere presenti
+      nel testo sono un controllo di forma, non di correttezza.
+- [ ] Cercare in glossario, checklist e quiz le stesse generalizzazioni (MFA
+      da certificati client/server, firma = cifratura con privata, blockchain =
+      sempre pubblica, ALE = budget massimo, cifratura obbligatoria di ogni
+      richiesta) e verificare che IT/EN sostengano la stessa distinzione.
+- [ ] Controllare i mnemonici esistenti contro i casi limite: IDS/IPS, DAC/MAC/
+      RBAC/ABAC, phishing/vishing/smishing, cifratura simmetrica/asimmetrica.
+      Aggiungere esempi soltanto quando chiariscono la risposta, evitando
+      regole «sempre/mai» non vere.
+
+**Fonti primarie della revisione:** [CompTIA SY0-701 Exam Objectives v5.0](https://assets.ctfassets.net/82ripq7fjls2/6TYWUym0Nudqa8nGEnegjG/0f9b974d3b1837fe85ab8e6553f4d623/CompTIA-Security-Plus-SY0-701-Exam-Objectives.pdf)
+(Obj 1.2, 1.4, 3.2, 4.6, 5.2);
+[NIST IR 8202 — Blockchain Technology Overview](https://csrc.nist.gov/pubs/ir/8202/final);
+[NIST SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final);
+[NIST SP 800-63B — Digital Identity Guidelines](https://pages.nist.gov/800-63-4/sp800-63b.html);
+[RFC 8017 — PKCS #1](https://www.rfc-editor.org/rfc/rfc8017.html)
+(firme RSA). Nessun riferimento a domande reali d'esame.
 
 ---
 
@@ -177,6 +354,12 @@ Problemi rilevati fuori dall'ambito dei contenuti.
 
 - [ ] **Nessuna.**
 
+Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
+le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
+I controlli automatici qui sotto descrivono l'ultimo esito registrato dalla
+revisione precedente, salvo la distribuzione delle risposte ricontata oggi;
+non equivalgono a una nuova esecuzione completa della suite.
+
 ---
 
 ## Controlli automatici disponibili
@@ -196,7 +379,7 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Coerenza numerica `ALE = SLE × ARO` | 0 errori |
 | Duplicati semantici fra domande | 0 |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
-| Distribuzione della risposta corretta | A 162 · B 169 · C 163 · D 153 |
+| Distribuzione della risposta corretta | A 162 · B 167 · C 160 · D 153 = 642 (ricontata sul dataset corrente) |
 
 ---
 
