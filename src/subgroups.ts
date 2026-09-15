@@ -347,6 +347,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
 
   // Domain 4
   "HardeningConcept": "Hardening di Sistemi e Dispositivi",
+  "ApplicationSecurityHardening": "Hardening di Sistemi e Dispositivi",
   "ServerHardening": "Hardening di Sistemi e Dispositivi",
   "WorkstationHardening": "Hardening di Sistemi e Dispositivi",
   "RouterHardening": "Hardening di Sistemi e Dispositivi",

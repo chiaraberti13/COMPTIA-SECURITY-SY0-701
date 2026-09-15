@@ -208,7 +208,19 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
         S28 (la tokenizzazione riduce l'esposizione, non azzera il rischio;
         esistono schemi vaultless), S30 (RPO = 0 vale per le scritture già
         confermate e a condizioni date; la replica non sostituisce i backup).
-  - [ ] D4 → D5
+  - [x] **D4 fatto** — S15 (D4#20: STIX è il formato, TAXII lo scambio;
+        lo scambio non è distribuzione in tempo reale né blocco automatico,
+        e i feed vanno convalidati prima di alimentare un firewall; B e D
+        separate), S16 (D4#320: i gruppi di metriche dipendono dalla versione
+        — Temporal ed Environmental in v3.1, Threat e Supplemental in v4.0),
+        S19 (D4#282: la funzione della policy resta corretta, ma una password
+        compromessa va invalidata subito, non alla scadenza; NIST SP 800-63B
+        non raccomanda la rotazione arbitraria), S20 (D4#218: disabilitare
+        l'account nell'IdP blocca le nuove autenticazioni, non le sessioni
+        SaaS già aperte; e gli access token OAuth non devono essere JWT),
+        S26 (nuova voce su input validation e secure cookie, con ogni difesa
+        associata alla minaccia giusta).
+  - [ ] D5
 - [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
       `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
       2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.
