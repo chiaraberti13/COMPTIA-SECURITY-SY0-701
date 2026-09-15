@@ -186,7 +186,15 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
         + OCSP stapling; un certificato valida il dominio, non l'onestà del
         sito), S32 (TPM ≠ Secure Boot; measured boot registra, non blocca;
         esistono fTPM).
-  - [ ] D2 → D3 → D4 → D5
+  - [x] **D2 fatto** — S11 (D2#457 riscritta: lo scenario ora chiede l'effetto
+        strutturale, D non è più «impossibile» ma sbagliata per la parola
+        «unica», e sono spariti i doppioni bilingui dalle opzioni), S12 (D2#166:
+        l'intento distingue i due casi, non definisce le categorie; insider
+        include il negligente e l'involontario — e in D2#31 gli script kiddie
+        non «mancano totalmente» di capacità), S22 (nuove voci di glossario
+        autosufficienti per Shadow IT e Bloatware), S29 (rimuovere software
+        riduce, non azzera, le vie di privilege escalation).
+  - [ ] D3 → D4 → D5
 - [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
       `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
       2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.

@@ -104,6 +104,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "HacktivistActor": "Profili e Attori delle Minacce",
   "ScriptKiddieActor": "Profili e Attori delle Minacce",
   "CompetitorActor": "Profili e Attori delle Minacce",
+  "ShadowITActor": "Profili e Attori delle Minacce",
+  "BloatwareConcept": "Profili e Attori delle Minacce",
   
   "FinancialGainMotiv": "Motivazioni degli Attaccanti",
   "EspionageMotiv": "Motivazioni degli Attaccanti",
