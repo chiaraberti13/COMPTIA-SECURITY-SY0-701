@@ -471,6 +471,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "VendorAssessment": "Valutazione del Rischio Fornitori (Third Party)",
   "SupplyChainAnalysis": "Valutazione del Rischio Fornitori (Third Party)",
   "Questionnaires": "Valutazione del Rischio Fornitori (Third Party)",
+  "RightToAuditClause": "Valutazione del Rischio Fornitori (Third Party)",
   "SLA": "Accordi e Contratti di Servizio",
   "NDA": "Accordi e Contratti di Servizio",
   "MOU": "Accordi e Contratti di Servizio",

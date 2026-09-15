@@ -17,7 +17,7 @@ fondo a questo documento.
   MITRE ATT&CK, OWASP) dove pertinenti.
 - Ogni voce si spunta solo dopo che `npm run check` (typecheck, lint, test) è verde.
 
-**Stato del dataset:** 529 voci di glossario e 641 domande, copertura EN al 100%.
+**Stato del dataset:** 535 voci di glossario e 642 domande, copertura EN al 100%.
 
 ---
 
@@ -91,7 +91,7 @@ fondo a questo documento.
 
 ---
 
-## Da fare
+## Completato in questa tranche
 
 ### P3 — Lacune rispetto agli obiettivi SY0-701
 
@@ -106,12 +106,16 @@ fondo a questo documento.
         dell'aggregazione, presentato come rovescio dell'OSINT.
   - [x] *Hybrid and remote work practices* — rete, ambiente fisico e dispositivi di
         casa, con il legame a Zero Trust.
-- [ ] **Obj 1.4 — «open public ledger».** La voce Blockchain descrive correttamente
-      un registro distribuito e immutabile, ma non usa il termine con cui
-      l'obiettivo la nomina, che è quello che comparirà all'esame.
-- [ ] **Obj 5.3 — «right-to-audit clause».** Presente ma appena accennata (una riga),
-      a fronte di un rilievo d'esame maggiore: è la clausola che rende esigibile la
-      verifica sul fornitore anche dopo la firma.
+- [x] **Obj 1.4 — «open public ledger».** La voce Blockchain descriveva correttamente
+      un registro distribuito e immutabile, ma non usava il termine con cui
+      l'obiettivo la nomina. Riscritta attorno alla dicitura ufficiale, con le quattro
+      proprietà e la trappola su ciò che **non** garantisce: la riservatezza, perché
+      il registro è pubblico per costruzione.
+- [x] **Obj 5.3 — «right-to-audit clause».** Era accennata in una riga. Nuova voce
+      che spiega le quattro cose che una clausola esigibile deve dire (preavviso,
+      frequenza, perimetro, chi paga), il motivo per cui va negoziata prima della
+      firma, e le valutazioni indipendenti che in pratica la soddisfano, con la
+      distinzione SOC 2 Type I / Type II.
 - [x] **Domanda di verifica per le nuove voci di awareness.** `D5#165` sull'OPSEC: un
       attaccante costruisce un phishing credibile aggregando solo informazioni
       pubbliche, e i distrattori (classificazione, DLP, NDA) si distinguono per
@@ -119,10 +123,18 @@ fondo a questo documento.
 
 ### P4 — Rifiniture
 
-- [ ] **`D5#81`: etichetta imprecisa.** La domanda riguarda gli indicatori
-      comportamentali di minaccia interna ed è etichettata «Social Engineering».
-      Rientra in Obj 5.6 (*anomalous behavior recognition*, *insider threat*): da
-      rivedere insieme alle nuove voci di awareness, per non creare un topic isolato.
+- [x] **`D5#81`: etichetta imprecisa.** La domanda riguarda gli indicatori
+      comportamentali di minaccia interna ed era etichettata «Social Engineering».
+      Rietichettata «Security Awareness» (Obj 5.6), che ora non è un topic isolato
+      perché lo condivide con `D5#165`.
+
+---
+
+## Da fare
+
+- [ ] **Nessun intervento aperto.** Le lacune rilevate rispetto agli obiettivi
+      SY0-701 sono state colmate e i difetti trovati corretti. Restano solo le
+      decisioni editoriali elencate qui sotto, che spettano all'autore.
 
 ---
 
@@ -184,7 +196,7 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Coerenza numerica `ALE = SLE × ARO` | 0 errori |
 | Duplicati semantici fra domande | 0 |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
-| Distribuzione della risposta corretta | A 162 · B 168 · C 163 · D 153 |
+| Distribuzione della risposta corretta | A 162 · B 169 · C 163 · D 153 |
 
 ---
 
