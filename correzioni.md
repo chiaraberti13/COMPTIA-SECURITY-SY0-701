@@ -170,7 +170,7 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
 
 ### Piano ordinato per priorità
 
-- [ ] **P1 — Errori tecnici e domande ambigue:** S1–S6, S9–S20, S25,
+- [x] **P1 — Errori tecnici e domande ambigue:** S1–S6, S9–S20, S25,
       S27–S32. Procedere per dominio D1 (S1, S4, S6, S9, S10, S25, S31,
       S32) → D2 (S11, S12, S29) → D3 (S2, S8, S13, S14, S27, S28,
       S30) → D4 (S15, S16, S19, S20) → D5 (S3, S5, S17, S18).
@@ -220,14 +220,29 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
         SaaS già aperte; e gli access token OAuth non devono essere JWT),
         S26 (nuova voce su input validation e secure cookie, con ogni difesa
         associata alla minaccia giusta).
-  - [ ] D5
-- [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
-      `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
-      2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.
-- [ ] **P4 — Spiegazioni:** S8, S15, S18, S21, S24, S25, S27, S30;
-      trattare ciascun distrattore
-      singolarmente e non far discendere una regola generale da un esempio.
-      Poi completare la lettura semantica D1 → D2 → D3 → D4 → D5.
+  - [x] **D5 fatto** — S3 (l'ALE non è un tetto di spesa: il confronto è fra
+        costo annualizzato del controllo e riduzione dell'ALE), S5 (password
+        policy allineata a NIST SP 800-63B: né classi di caratteri obbligatorie
+        né scadenza arbitraria presentate come raccomandazioni dello standard),
+        S17 (D5#4 riscritta: l'appetite è l'orientamento, la tolerance la soglia
+        misurabile; via la finestra dei 5 minuti che era una decisione
+        operativa), S18 (D5#86: l'attestazione vale entro perimetro, periodo e
+        criteri, con SOC 2 Type I vs Type II; A e D spiegate separatamente),
+        S24 (D5#81: le opzioni sono coppie e ora ciascuna è analizzata come
+        tale, con la nota che l'indicatore apre un'indagine, non una condanna),
+        S33 (work order distinto da SOW, con la gerarchia MSA/SOW/WO/SLA).
+- [x] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33.
+      S7 e S23 risolti con un rinvio esplicito nella descrizione dei due
+      gruppi («questi argomenti appartengono all'obiettivo 4.6 / 4.2, e
+      all'esame contano come Dominio 4»), senza spostare array né id.
+      S22 e S26 con nuove voci di glossario; S33 nella voce SOW.
+- [x] **P4 — Spiegazioni:** S8, S15, S18, S21, S24, S25, S27, S30 applicate.
+      I sette passi con lettere accorpate segnalati in S21 (D3#28, D3#29,
+      D4#20, D5#4, D5#86, D5#111, D1#225) hanno ora una motivazione per
+      ciascuna opzione.
+- [ ] **Resta aperta la lettura semantica** delle 642 domande una per una,
+      come indicato in fondo a questo documento: le 33 segnalazioni erano
+      il risultato di una lettura mirata, non di una verifica esaustiva.
 
 ### Correzioni testuali proposte (aperte; dataset non modificato)
 
