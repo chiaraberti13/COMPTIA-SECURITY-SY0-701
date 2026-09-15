@@ -194,7 +194,21 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
         non «mancano totalmente» di capacità), S22 (nuove voci di glossario
         autosufficienti per Shadow IT e Bloatware), S29 (rimuovere software
         riduce, non azzera, le vie di privilege escalation).
-  - [ ] D3 → D4 → D5
+  - [x] **D3 fatto** — S2 (EAP-TLS = autenticazione reciproca, non MFA
+        dell'utente: due certificati sono entrambi «qualcosa che hai»),
+        S8 (D3#29: il tunnel termina al gateway, non è end-to-end; A, C e D
+        ora hanno tre motivazioni distinte e la porta 8080 non implica
+        cifratura), S13 (D3#28: l'isolamento della VM è più robusto, non
+        inviolabile — il VM escape è nell'obiettivo 2.3; A, C e D separate,
+        con Kubernetes come orchestrazione e non confine di memoria),
+        S14 (D3#30: firmare non è cifrare, e il sistema deve già possedere
+        la chiave pubblica attendibile; via «assoluta certezza»),
+        S27 (nessuna soglia universale di 100 km; il failover geografico
+        dipende da rilevamento, convergenza, cache DNS e TTL),
+        S28 (la tokenizzazione riduce l'esposizione, non azzera il rischio;
+        esistono schemi vaultless), S30 (RPO = 0 vale per le scritture già
+        confermate e a condizioni date; la replica non sostituisce i backup).
+  - [ ] D4 → D5
 - [ ] **P3 — Copertura e collocazione:** S7, S22, S23, S26, S33; conservare
       `checklistKey` e id. Verificare i concetti degli obiettivi 1.4, 2.1,
       2.4 e 4.2 già presenti solo dentro spiegazioni o altre sezioni.
