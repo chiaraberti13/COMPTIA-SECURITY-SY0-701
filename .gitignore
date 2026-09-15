@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Scratch directory for throwaway analysis scripts
+.tmp/
