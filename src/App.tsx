@@ -2259,6 +2259,22 @@ export default function App() {
 
       </div>
 
+      {/*
+        Study-notes disclaimer.
+        The READMEs already say this, but nobody using the app reads the
+        README, so the statement has to live where the study happens.
+      */}
+      <footer
+        className="shrink-0 border-t border-slate-800 bg-slate-900/50 px-3 sm:px-6 py-1.5 flex items-start gap-2 text-[10px] leading-snug text-slate-500"
+        id="app_disclaimer"
+      >
+        <Info className="w-3 h-3 shrink-0 mt-[1px] text-slate-600" aria-hidden="true" />
+        <p className="min-w-0">
+          <span className="font-semibold text-slate-400">{t("disclaimer.notOfficial")}</span>{" "}
+          {t("disclaimer.verify")}
+        </p>
+      </footer>
+
       {/* Inline notification (replaces window.alert) */}
       {toast && (
         <div

@@ -395,6 +395,10 @@ const it = {
   "glossDom.5.title": "Dominio 5: Security Program Management & Oversight (20%)",
   "glossDom.5.short": "Dominio 5: Governance e Conformità",
 
+  // Study-notes disclaimer (footer)
+  "disclaimer.notOfficial": "Note di studio personali e originali, non materiale ufficiale CompTIA.",
+  "disclaimer.verify": "Verifica obiettivi d'esame, costi e policy sulle fonti ufficiali CompTIA.",
+
   // Glossary categories
   "cat.acronyms": "Acronimi & Protocolli",
   "cat.core": "Concetti Cardine",
@@ -653,6 +657,10 @@ const en: Record<UIKey, string> = {
   "glossDom.4.short": "Domain 4: Security Operations",
   "glossDom.5.title": "Domain 5: Security Program Management & Oversight (20%)",
   "glossDom.5.short": "Domain 5: Governance and Compliance",
+
+  // Study-notes disclaimer (footer)
+  "disclaimer.notOfficial": "Original personal study notes, not official CompTIA material.",
+  "disclaimer.verify": "Verify exam objectives, pricing and policies against official CompTIA sources.",
 
   // Glossary categories
   "cat.acronyms": "Acronyms & Protocols",

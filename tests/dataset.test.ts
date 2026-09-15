@@ -14,6 +14,7 @@ import {
 import { SUBTOPIC_EN, QUESTION_EN } from "../src/data.en";
 import { SUBGROUP_MAP } from "../src/subgroups";
 import { getDomainQuestions, questionUid, domainOfQuestion } from "../src/localizedData";
+import type { Question } from "../src/types";
 
 const TOPICS_BY_DOMAIN = {
   1: DOMAIN_1_TOPICS,
@@ -166,11 +167,155 @@ describe("checklist keys", () => {
   });
 });
 
+/**
+ * Subtopics deliberately left out of SUBGROUP_MAP, and therefore rendered as
+ * standalone cards.
+ *
+ * The map is allowed to be partial by design, but an unmapped key is invisible:
+ * a new glossary entry that nobody remembers to map is simply rendered on its
+ * own, with no error anywhere. Pinning the exceptions here turns that silence
+ * into a failing test, so adding an entry forces a deliberate choice — map it,
+ * or add it below.
+ */
+const STANDALONE_SUBTOPICS = new Set([
+  "HVACPhysical",
+  "ThreatIntelligenceRes",
+  "OSINTRes",
+  "ProprietaryIntelligenceRes",
+  "InformationSharingRes",
+  "DarkWebIntelligenceRes",
+  "MonolithicArchitecture",
+  "MicroservicesArchitecture",
+  "APIArchitecture",
+  "ServerlessArchitecture",
+  "HypervisorConcept",
+  "VirtualMachineConcept",
+  "GuestOSConcept",
+  "HostOSConcept",
+  "ContainerConcept",
+  "DockerConcept",
+  "CostCloud",
+  "CAPEXCloud",
+  "OPEXCloud",
+  "IaCArchitecture",
+  "VPNConcentratorConcept",
+  "SSLTLSTunnelVPNConcept",
+  "IPSecTunnelTransportModes",
+  "FalsePositiveRes",
+  "FalseNegativeRes",
+]);
+
 describe("subgroup map", () => {
   it("every mapped key exists in the dataset", () => {
     const known = new Set(allSubtopics.map((s) => s.sub.checklistKey));
     const orphans = Object.keys(SUBGROUP_MAP).filter((k) => !known.has(k));
     expect(orphans).toEqual([]);
+  });
+
+  it("every subtopic is either mapped to a subgroup or listed as standalone", () => {
+    const unaccounted = allSubtopics
+      .filter((s) => !(s.sub.checklistKey in SUBGROUP_MAP))
+      .filter((s) => !STANDALONE_SUBTOPICS.has(s.sub.checklistKey))
+      .map((s) => `D${s.domain}:${s.sub.checklistKey}`);
+    expect(unaccounted).toEqual([]);
+  });
+
+  it("the standalone list carries no key that has since been mapped", () => {
+    const stale = [...STANDALONE_SUBTOPICS].filter((k) => k in SUBGROUP_MAP);
+    expect(stale).toEqual([]);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Explanations
+ *
+ * Every explanation opens by naming the option it is about, and then works
+ * through the others. Two ways that can go wrong survive a careful read but
+ * not a regular expression: the opening can name a letter that is not the
+ * correct one, and the distractor section can discuss a letter that is in
+ * fact the answer. Both mislead the learner in the worst possible place, and
+ * both have happened — the second one in the English overlay only, where the
+ * letters were translated out of step with the Italian source.
+ * ------------------------------------------------------------------ */
+
+const LETTERS = "ABCDEFGH";
+
+/** The sentence an explanation opens with, in either language. */
+const OPENING = /(?:rispost[ae] corrett[ae] (?:sono|è)|correct answers? (?:are|is))[^\n]*/i;
+
+/** The heading after which an explanation discusses the wrong options. */
+const DISTRACTOR_HEADING =
+  /Analisi dei distrattori|Perché le altre non sono corrette|Distractor analysis|Analysis of the distractors|Why the others are not correct/i;
+
+/** Option letters called out in bold, as `**B)`, in ascending order. */
+function citedLetters(text: string): number[] {
+  const found = [...text.matchAll(/\*\*\s*([A-H])\)/g)].map((m) => LETTERS.indexOf(m[1]));
+  return [...new Set(found)].sort((a, b) => a - b);
+}
+
+/** Every correct option index, ascending — single- and multi-response alike. */
+function correctLetters(q: { answerIndex: number; answerIndexes?: number[] }): number[] {
+  const many = q.answerIndexes;
+  const all = many && many.length > 0 ? many : [q.answerIndex];
+  return [...new Set(all)].sort((a, b) => a - b);
+}
+
+/** Italian source and English overlay for one question, as (label, text) pairs. */
+function bothLanguages(domain: number, q: Question): [string, string][] {
+  const en = QUESTION_EN[domain]?.[q.id]?.explanation;
+  const pairs: [string, string][] = [["it", q.explanation]];
+  if (en) pairs.push(["en", en]);
+  return pairs;
+}
+
+describe("explanations", () => {
+  it("open by naming exactly the correct options", () => {
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        const correct = correctLetters(q);
+        for (const [lang, text] of bothLanguages(d, q)) {
+          const opening = text.match(OPENING);
+          if (!opening) {
+            broken.push(`${lang} D${d}#${q.id}: no opening sentence`);
+            continue;
+          }
+          const cited = citedLetters(opening[0]);
+          if (cited.length === 0) {
+            broken.push(`${lang} D${d}#${q.id}: opening names no option`);
+            continue;
+          }
+          if (cited.join() !== correct.join()) {
+            broken.push(
+              `${lang} D${d}#${q.id}: opening says ${cited.map((i) => LETTERS[i])}, answer is ${correct.map((i) => LETTERS[i])}`
+            );
+          }
+        }
+      }
+    }
+    expect(broken).toEqual([]);
+  });
+
+  it("never discuss a correct option among the distractors", () => {
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        const correct = correctLetters(q);
+        for (const [lang, text] of bothLanguages(d, q)) {
+          const sections = text.split(DISTRACTOR_HEADING);
+          // No distractor section: the "every distractor is discussed" test
+          // below is the one that has something to say about it.
+          if (sections.length < 2) continue;
+          const distractors = sections[sections.length - 1];
+          for (const i of correct) {
+            if (new RegExp(`\\*\\*\\s*${LETTERS[i]}\\)`).test(distractors)) {
+              broken.push(`${lang} D${d}#${q.id}: ${LETTERS[i]} is the answer but is listed as a distractor`);
+            }
+          }
+        }
+      }
+    }
+    expect(broken).toEqual([]);
   });
 });
 
