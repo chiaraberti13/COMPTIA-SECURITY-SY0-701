@@ -95,24 +95,27 @@ fondo a questo documento.
 
 ### P3 — Lacune rispetto agli obiettivi SY0-701
 
-- [ ] **Obj 5.6 — Security Awareness, quattro argomenti mancanti.** Il gruppo ha solo
-      quattro voci (phishing, password, social engineering, insider threat). Gli
-      obiettivi ne elencano altri che non sono trattati:
-  - [ ] *Anomalous behavior recognition* — riconoscere comportamenti rischiosi,
-        inattesi e involontari.
-  - [ ] *Removable media and cables* — chiavette USB trovate, cavi e caricatori
-        manomessi (USB drop attack, juice jacking, cavi con impianto).
-  - [ ] *Operational security (OPSEC)* — la sigla non compare mai nel materiale.
-  - [ ] *Hybrid and remote work practices* — le pratiche di sicurezza del lavoro
-        fuori sede.
+- [x] **Obj 5.6 — Security Awareness, quattro argomenti mancanti.** Il gruppo aveva
+      solo quattro voci (phishing, password, social engineering, insider threat).
+      Aggiunte le quattro che gli obiettivi elencano e che non erano trattate:
+  - [x] *Anomalous behavior recognition* — le tre categorie da riconoscere (rischioso,
+        inatteso, involontario) e la cultura della segnalazione senza colpa.
+  - [x] *Removable media and cables* — USB drop attack, cavi manomessi, juice jacking,
+        USB data blocker, con la distinzione fra livello umano e controlli tecnici.
+  - [x] *Operational security (OPSEC)* — il processo in cinque passi e il principio
+        dell'aggregazione, presentato come rovescio dell'OSINT.
+  - [x] *Hybrid and remote work practices* — rete, ambiente fisico e dispositivi di
+        casa, con il legame a Zero Trust.
 - [ ] **Obj 1.4 — «open public ledger».** La voce Blockchain descrive correttamente
       un registro distribuito e immutabile, ma non usa il termine con cui
       l'obiettivo la nomina, che è quello che comparirà all'esame.
 - [ ] **Obj 5.3 — «right-to-audit clause».** Presente ma appena accennata (una riga),
       a fronte di un rilievo d'esame maggiore: è la clausola che rende esigibile la
       verifica sul fornitore anche dopo la firma.
-- [ ] **Domanda di verifica per le nuove voci di awareness.** Una volta aggiunte, una
-      domanda che le metta alla prova (Dominio 5, id nuovo).
+- [x] **Domanda di verifica per le nuove voci di awareness.** `D5#165` sull'OPSEC: un
+      attaccante costruisce un phishing credibile aggregando solo informazioni
+      pubbliche, e i distrattori (classificazione, DLP, NDA) si distinguono per
+      *su che cosa agiscono*.
 
 ### P4 — Rifiniture
 
