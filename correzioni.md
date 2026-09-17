@@ -1112,9 +1112,8 @@ Problemi rilevati fuori dall'ambito dei contenuti.
 
 Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
 le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
-I controlli automatici qui sotto descrivono l'ultimo esito registrato dalla
-revisione precedente, salvo la distribuzione delle risposte ricontata oggi;
-non equivalgono a una nuova esecuzione completa della suite.
+I controlli automatici qui sotto sono stati **rieseguiti per intero** al termine
+della lettura semantica dei cinque domini e degli interventi sull'obiettivo 4.5.
 
 ---
 
@@ -1136,6 +1135,25 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Duplicati semantici fra domande | 0 |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
 | Distribuzione della risposta corretta | A 162 · B 167 · C 160 · D 153 = 642 (ricontata sul dataset corrente) |
+
+**Due segnalazioni degli scanner sono artefatti degli script, non difetti**, e
+conviene annotarle per non riaprirle a ogni esecuzione:
+
+* Il controllo «opzione corretta citata fra i distrattori» segnala `D4#192`
+  perché la spiegazione contiene il mnemonico «**A**BAC → **A**ttributi», che
+  l'espressione regolare legge come un riferimento all'opzione A. Il test della
+  suite, più stretto, non lo segnala: la spiegazione è corretta.
+* Il controllo `ALE = SLE × ARO` segnala `D5#6` perché legge «ARO = 0.1» come
+  intero 1 (rimuove il separatore decimale) e pesca la cifra dell'ALE da una
+  frase successiva. I numeri della domanda sono verificati a mano e corretti:
+  SLE = 500.000 × 0,30 = 150.000 e ALE = 150.000 × 0,1 = 15.000.
+
+Gli scanner restituiscono **candidati**, non verdetti: ogni segnalazione è stata
+letta prima di decidere se fosse un difetto. Le altre voci prodotte in questa
+esecuzione (aperture «NO_LEAD» sulle cinque domande a risposta multipla, porte
+multiple in `D4#300`, coppie di domande con lo stesso incipit ma scenario e
+risposta diversi in `D2#451`/`D2#487` e `D3#416`/`D3#421`) sono state verificate
+una per una e sono tutte legittime.
 
 ---
 
