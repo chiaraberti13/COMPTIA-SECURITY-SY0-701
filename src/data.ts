@@ -1050,8 +1050,8 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         name: "Race Condition (TOC/TOU)",
         checklistKey: "RaceConditionVuln",
         definition: "Vulnerabilità che nasce quando il comportamento corretto di un sistema dipende dall'ordine o dalla tempistica di eventi concorrenti, e un attaccante riesce a inserirsi tra il momento del controllo e quello dell'uso.",
-        details: "La forma d'esame è il **TOC/TOU** (*Time-of-Check to Time-of-Use*): il programma verifica una condizione e poi agisce, ma tra i due istanti esiste una finestra sfruttabile.\n* **Lo schema:** 1) il programma controlla che l'utente possa accedere al file A; 2) l'attaccante, in quella frazione di secondo, sostituisce A con un collegamento a un file riservato; 3) il programma agisce sul file sbagliato, credendo di aver già verificato i permessi.\n* **Dove si manifesta:** accessi al file system, transazioni bancarie, applicazione di codici sconto, incremento di contatori concorrenti.\n* **Difese:** operazioni **atomiche** (controllo e uso in un unico passo indivisibile), lock e mutex, transazioni di database con isolamento adeguato, uso di descrittori di file anziché di percorsi testuali.\n\n* **Piccolo Esempio Concentrato:** Un sito di e-commerce verifica che un buono sconto non sia ancora stato usato e poi lo marca come consumato. Inviando 50 richieste nello stesso millisecondo, l\'attaccante fa superare il controllo a tutte e 50 prima che la prima riesca a scrivere l\'aggiornamento: lo stesso buono viene applicato 50 volte.",
-        examTip: "Parole chiave da riconoscere all'esame: 'tra la verifica e l'utilizzo', 'richieste simultanee', 'condizione di gara'. La risposta corretta è Race Condition / TOC-TOU, e la contromisura è rendere l'operazione atomica, non aggiungere un secondo controllo."
+        details: "La forma d'esame è il **TOC/TOU** (*Time-of-Check to Time-of-Use*): il programma verifica una condizione e poi agisce, ma tra i due istanti esiste una finestra sfruttabile.\n* **I tre termini elencati dall'obiettivo 2.3:** il **TOC** (*Time-of-Check*) è l'istante in cui il programma verifica la condizione; il **TOU** (*Time-of-Use*) è l'istante in cui agisce fidandosi di quella verifica; il **TOE** (*Target of Evaluation*) è la risorsa verificata — il file, il record, il contatore — cioè esattamente ciò che l'attaccante sostituisce nella finestra fra i due istanti.\n* **Lo schema:** 1) il programma controlla che l'utente possa accedere al file A; 2) l'attaccante, in quella frazione di secondo, sostituisce A con un collegamento a un file riservato; 3) il programma agisce sul file sbagliato, credendo di aver già verificato i permessi.\n* **Dove si manifesta:** accessi al file system, transazioni bancarie, applicazione di codici sconto, incremento di contatori concorrenti.\n* **Difese:** operazioni **atomiche** (controllo e uso in un unico passo indivisibile), lock e mutex, transazioni di database con isolamento adeguato, uso di descrittori di file anziché di percorsi testuali.\n\n* **Piccolo Esempio Concentrato:** Un sito di e-commerce verifica che un buono sconto non sia ancora stato usato e poi lo marca come consumato. Inviando 50 richieste nello stesso millisecondo, l\'attaccante fa superare il controllo a tutte e 50 prima che la prima riesca a scrivere l\'aggiornamento: lo stesso buono viene applicato 50 volte.",
+        examTip: "Parole chiave da riconoscere all'esame: 'tra la verifica e l'utilizzo', 'richieste simultanee', 'condizione di gara'. La risposta corretta è Race Condition / TOC-TOU, e la contromisura è rendere l'operazione atomica, non aggiungere un secondo controllo. **Trappola d'esame:** quando fra le opzioni compaiono sia *Race condition* sia *Time-of-use*, la categoria generale è la prima e il sottotipo la seconda: se lo scenario descrive proprio la finestra fra verifica e uso, la risposta è il sottotipo. E non confondere il **TOE** con i due istanti: non è un momento, è l'oggetto valutato."
       },
       {
         name: "Malicious Update",
@@ -4194,8 +4194,8 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         name: "Data Retention",
         checklistKey: "DataRetentionRes",
         definition: "Data Retention (Conservazione dei Dati): Una policy formale che stabilisce per quanto tempo le diverse tipologie di informazioni aziendali e dati personali dei clienti devono essere conservate, e come devono essere smaltite una volta scaduto il termine.",
-        details: "È dettata da obblighi legali e di conformità (es. tenere i record fiscali per 10 anni, i dati medici per decenni). Prevede l'eliminazione proattiva dei dati scaduti per minimizzare l'esposizione al rischio e ridurre i costi di archiviazione: è l'applicazione pratica del principio di **minimizzazione dei dati**, perché ciò che non si conserva più non può essere né violato né richiesto in giudizio.",
-        examTip: "La policy di Data Retention definisce i termini massimi e minimi di conservazione dei dati in conformità alle leggi locali e industriali, imponendone l'eliminazione sicura immediata al termine prestabilito."
+        details: "È dettata da obblighi legali e di conformità (es. tenere i record fiscali per 10 anni, i dati medici per decenni). Prevede l'eliminazione proattiva dei dati scaduti per minimizzare l'esposizione al rischio e ridurre i costi di archiviazione: è l'applicazione pratica del principio di **minimizzazione dei dati**, perché ciò che non si conserva più non può essere né violato né richiesto in giudizio.\n\n* **Prima della conservazione viene l'inventario:** l'obiettivo 5.4 accosta **data inventory** e **data retention**, e non è un accostamento casuale: la seconda è impraticabile senza la prima. L'**inventario dei dati** è il censimento di *quali* dati l'organizzazione detiene, *dove* si trovano (server, cloud, backup, portatili), *chi* ne è titolare, a quale *categoria* appartengono e su quale *base giuridica* sono trattati. Senza quella mappa non si può sapere a quale dato applicare quale termine di conservazione, né rispondere a una richiesta di cancellazione, né stabilire che cosa sia realmente uscito durante una violazione.\n* **Piccolo Esempio Concentrato:** un'azienda riceve da un ex cliente una richiesta di cancellazione ai sensi del GDPR. Cancella il record dal CRM e considera la pratica chiusa. Sei mesi dopo scopre che gli stessi dati vivevano anche in un foglio di calcolo condiviso del reparto vendite, in tre anni di backup e in un servizio di newsletter esterno: senza inventario dei dati, la cancellazione era destinata a essere incompleta.",
+        examTip: "La policy di Data Retention definisce i termini massimi e minimi di conservazione dei dati in conformità alle leggi locali e industriali, imponendone l'eliminazione sicura immediata al termine prestabilito. **Trappola d'esame:** non confondere i due termini vicini. L'**inventario dei dati** risponde a «che cosa abbiamo e dove», la **conservazione** risponde a «per quanto tempo lo teniamo»: l'inventario è il presupposto, la conservazione la regola che vi si applica sopra."
       }
     ]
   }
@@ -4440,7 +4440,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
       "D) Massimizzare i controlli di accesso e la protezione via via che ci si avvicina alle aree più critiche"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Massimizzare i controlli di accesso e la protezione per le aree più sicure e critiche**.\n\n* **Perché è la corretta:** Lo 'zoning' o suddivisione in zone concentriche di sicurezza fisica (concept di 'Defense-in-Depth') garantisce che le risorse più critiche e preziose dell'azienda (come la Sala Server) siano circondate da molteplici barriere fisiche e logiche, massimizzando il controllo delle autorizzazioni e rendendo estremamente complessa l'intrusione non autorizzata.\n* **Analisi dei distrattori:**\n  * **A) La segmentazione in zone** aumenta solitamente i costi complessivi di sicurezza fisica poiché richiede lettori biometrici multipli, varchi fisici interni (mantrap) e muri rinforzati per zona.\n  * **C) L'estetica** è irrilevante ai fini degli obiettivi primari di cybersecurity e mitigazione del rischio fisico.\n  * **B) Lo zoning** rende in realtà la planimetria dell'edificio più complessa, non più semplice."
+    explanation: "La risposta corretta è la **D) Massimizzare i controlli di accesso e la protezione per le aree più sicure e critiche**.\n\n* **Perché è la corretta:** Lo 'zoning' o suddivisione in zone concentriche di sicurezza fisica (concept di 'Defense-in-Depth') garantisce che le risorse più critiche e preziose dell'azienda (come la Sala Server) siano circondate da molteplici barriere fisiche e logiche, massimizzando il controllo delle autorizzazioni e rendendo estremamente complessa l'intrusione non autorizzata.\n* **Analisi dei distrattori:**\n  * **A) La segmentazione in zone** aumenta solitamente i costi complessivi di sicurezza fisica poiché richiede lettori biometrici multipli, vestiboli di controllo accessi interni (access control vestibule, il vecchio *mantrap*) e muri rinforzati per zona.\n  * **C) L'estetica** è irrilevante ai fini degli obiettivi primari di cybersecurity e mitigazione del rischio fisico.\n  * **B) Lo zoning** rende in realtà la planimetria dell'edificio più complessa, non più semplice."
   },
   {
     id: 57,
@@ -5572,7 +5572,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 132,
     topic: "Security Assessment / Penetration Testing",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un penetration tester ha appena ricevuto l'incarico, ma la finestra di attività concordata con il cliente si apre solo la settimana successiva. Nel frattempo raccoglie quanto più possibile sul bersaglio consultando registri pubblici dei domini, archivi online e profili social, senza inviare un solo pacchetto ai sistemi del cliente.",
     question: "Quale delle seguenti opzioni descrive MEGLIO la fase di un penetration test in cui le informazioni vengono raccolte senza interagire direttamente con il sistema target?",
     options: [
       "A) Ricognizione attiva (Active reconnaissance)",
@@ -5587,7 +5587,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 133,
     topic: "Security Assessment / Penetration Testing",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Una società di sviluppo vuole che il tester incaricato trovi anche i difetti più nascosti della propria applicazione bancaria e decide di consegnargli tutto ciò che possiede: schemi di architettura, documenti di progettazione, credenziali amministrative e il codice sorgente completo.",
     question: "Quale dei seguenti tipi di penetration test fornisce al tester una conoscenza completa dell'ambiente target, inclusi architettura, design e codice sorgente, per identificare vulnerabilità nascoste?",
     options: [
       "A) Valutazione passiva (passive)",
@@ -5647,7 +5647,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 137,
     topic: "Security Policies & Lifecycle",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Al termine di un incidente, l'autorità di vigilanza chiede all'azienda di dimostrare chi ha fatto che cosa sui sistemi coinvolti e in quale ordine, per verificare che tutti gli obblighi normativi siano stati rispettati durante la gestione dell'evento.",
     question: "Quale delle seguenti funzionalità di sicurezza, parte integrante della risposta agli incidenti, tiene traccia delle attività ed è utilizzata come prova durante gli incidenti per dimostrare che tutte le normative sono state rispettate?",
     options: [
       "A) Incident logs (Log degli incidenti)",
@@ -5677,7 +5677,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 139,
     topic: "Personnel Security & Onboarding",
     level: "APPLICAZIONE",
-    scenario: null,
+    scenario: "Un audit rileva che diversi ex dipendenti risultano ancora in grado di autenticarsi sui sistemi aziendali mesi dopo l'ultimo giorno di lavoro. Le risorse umane e l'IT rivedono insieme la procedura di uscita per individuare il passo che non viene mai eseguito.",
     question: "Quale delle seguenti procedure è fondamentale durante il processo di offboarding per garantire la sicurezza degli asset e dei dati organizzativi?",
     options: [
       "A) Fornire ai dipendenti in uscita un elenco di tutti i sistemi interni da includere nel proprio curriculum.",
@@ -5722,7 +5722,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 142,
     topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Nei propri regolamenti interni un'azienda fissa il valore oltre il quale un rischio non può più essere semplicemente registrato e sorvegliato, ma fa scattare l'obbligo di intervenire. Al di sotto di quel valore il rischio viene accettato senza ulteriori azioni.",
     question: "Quale dei seguenti termini si riferisce al livello predefinito di rischio che un'organizzazione è disposta ad accettare prima di intraprendere un'azione?",
     options: [
       "A) Risk limit (Limite di rischio)",
@@ -5752,7 +5752,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 144,
     topic: "Third-Party Risk & Assessments",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Prima di firmare il contratto con la società che ospiterà l'archivio documentale, il responsabile della sicurezza vuole esaminarne i controlli, le certificazioni e le debolezze note, per decidere con cognizione di causa se affidarle i dati aziendali.",
     question: "Quale tipo di valutazione dovresti effettuare per esaminare le misure di sicurezza e le vulnerabilità di un'azienda che fornisce beni o servizi?",
     options: [
       "A) Statement of Work",
@@ -5812,7 +5812,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 148,
     topic: "Risk Management & Analysis",
     level: "RICORDO",
-    scenario: null,
+    scenario: "Nel registro dei rischi di un'azienda ogni voce ha due colonne da compilare: quanto è probabile che l'evento si verifichi, e quanto danno operativo, economico e reputazionale produrrebbe se si verificasse. Il risk manager sta stabilendo il nome corretto della seconda colonna.",
     question: "Quale dei seguenti è il termine standard utilizzato nella gestione del rischio per descrivere l'effetto di un evento di rischio su un'organizzazione, in particolare in termini di danno operativo, finanziario e reputazionale?",
     options: [
       "A) EF",
@@ -5842,7 +5842,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 150,
     topic: "Security Policies & Lifecycle",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'azienda scopre che reparti diversi hanno adottato in autonomia algoritmi e lunghezze di chiave differenti per proteggere i dati scambiati sulla rete. La direzione vuole un documento unico e vincolante che stabilisca quali algoritmi e protocolli sono ammessi e quali sono vietati.",
     question: "Quale standard definisce i metodi e i protocolli utilizzati per controllare gli algoritmi che gestiscono i dati in transito?",
     options: [
       "A) Physical security standard (Standard di sicurezza fisica)",
@@ -5872,7 +5872,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 152,
     topic: "Security Awareness",
     level: "RICORDO",
-    scenario: null,
+    scenario: "Il responsabile della formazione vuole misurare, e non soltanto raccontare, quanto il personale sia esposto all'ingegneria sociale. Progetta quindi un'attività ricorrente che riproduce messaggi ingannevoli realistici e registra chi clicca, chi segnala e chi non fa nulla.",
     question: "Quale pratica di sensibilizzazione alla sicurezza prevede la conduzione di attacchi e-mail simulati per educare i dipendenti a riconoscere e rispondere ai tentativi di phishing?",
     options: [
       "A) User guidance and training (Guida e formazione degli utenti)",
@@ -5917,7 +5917,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 155,
     topic: "Security Awareness",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Durante una sessione di sensibilizzazione, i dipendenti di un'azienda chiedono un criterio pratico e immediato da applicare a ogni messaggio sospetto che arriva nella casella di posta, prima di compiere qualunque azione.",
     question: "Per migliorare la consapevolezza sulla sicurezza, quale delle seguenti affermazioni descrive MEGLIO come i dipendenti potrebbero riconoscere un tentativo di phishing?",
     options: [
       "A) Aprendo solo le e-mail provenienti da mittenti fidati e persone che conoscono.",
@@ -5932,7 +5932,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 156,
     topic: "Security Assessment / Penetration Testing",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il consiglio di un'azienda non vuole più valutazioni separate per la rete, per le applicazioni e per la sicurezza fisica: chiede un unico incarico che verifichi come un attaccante reale potrebbe combinare le tre superfici per arrivare al dato che gli interessa.",
     question: "Quale delle seguenti opzioni descrive MEGLIO l'obiettivo primario di un test di penetrazione integrato (integrated penetration test)?",
     options: [
       "A) Concentrarsi solo sulle vulnerabilità della rete esterna.",
@@ -5992,7 +5992,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 160,
     topic: "Risk Management & Analysis",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Prima di mandare in produzione un nuovo sistema gestionale, la direzione commissiona una valutazione completa dei rischi dell'organizzazione, da svolgersi una sola volta e in quel preciso momento, per fotografare l'impatto dell'introduzione e la maturità dei controlli esistenti.",
     question: "Quale dei seguenti termini si riferisce a una valutazione completa dei rischi all'interno di un'organizzazione che avviene in un momento specifico, spesso per valutare l'impatto dell'implementazione di un nuovo sistema o per ottenere una visione indipendente della maturità operativa?",
     options: [
       "A) One-time (Singola/Una tantum)",
@@ -10737,7 +10737,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Missing logs (log mancanti)"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Out-of-cycle logging (registrazione fuori ciclo)**.\n\n* **Il concetto, dal principio:** ogni sistema ha un proprio **ritmo normale** di generazione dei log. Un server di backup scrive di notte, un gestionale durante l'orario d'ufficio, e questo server scrive voci di modifica della configurazione **solo il sabato notte**, perché è allora che gli amministratori applicano i cambiamenti approvati. L'**out-of-cycle logging** è l'indicatore che scatta quando compare una voce di log **fuori da quel ritmo atteso**: non conta il contenuto della singola riga, conta il fatto che sia stata scritta in un momento in cui nessuna attività legittima avrebbe dovuto produrla.\n* **Perché è la corretta:** lo scenario fornisce i due elementi che definiscono l'indicatore. Primo, un **ciclo atteso e documentato** (modifiche solo nella finestra del sabato). Secondo, una voce che **cade fuori** da quel ciclo, alle 03:14 di mercoledì, **senza** un ticket di change che la giustifichi. La mancanza del ticket è ciò che esclude la spiegazione innocente: se un amministratore avesse applicato una modifica urgente, esisterebbe una richiesta, magari approvata a posteriori. Qui il sistema è stato riconfigurato da qualcuno che non passa dal processo aziendale, che è precisamente il comportamento di un attaccante che si insedia (persistenza) o disattiva un controllo.\n* **Analisi dei distrattori:**\n  * **A) Impossible travel:** riguarda le **autenticazioni**, non le modifiche di configurazione. Scatta quando lo stesso account accede da due luoghi geograficamente incompatibili con il tempo trascorso fra i due accessi (per esempio Milano alle 09:00 e Singapore alle 09:40). Lo scenario non nomina alcun accesso da posizioni diverse.\n  * **C) Resource consumption:** è l'impennata anomala di CPU, memoria, disco o banda, tipica del cryptomining, dell'esfiltrazione di grandi volumi o di un attacco di esaurimento delle risorse. Qui non si parla di carico: una singola riga di log non consuma nulla.\n  * **D) Missing logs:** è l'indicatore **opposto**, e altrettanto grave: un intervallo temporale **vuoto** nei log, segno che qualcuno ha cancellato le tracce o fermato il servizio di logging. Nello scenario però la voce c'è, ed è proprio la sua presenza fuori orario a insospettire. Se il log fosse **sparito** fra le 03:20 e le 04:05, allora sì, l'indicatore sarebbe questo.\n\n* **Trappola d'esame:** gli indicatori dell'obiettivo 2.4 si distinguono per **che cosa osservano**. **Out-of-cycle logging** = una voce compare quando non dovrebbe (anomalia di *tempo*) · **Missing logs** = una voce manca dove dovrebbe esserci (anomalia di *assenza*, il classico antiforense) · **Impossible travel** = stesso account, due posizioni incompatibili (anomalia di *geografia*) · **Concurrent session usage** = stesso account attivo da più dispositivi insieme (anomalia di *molteplicità*) · **Resource consumption** = picco anomalo di risorse (anomalia di *quantità*) · **Account lockout** e **blocked content** = un controllo che scatta ripetutamente (anomalia di *reazione delle difese*). Leggi sempre la domanda cercando **quale dimensione è anomala**: è la chiave che seleziona l'indicatore giusto."
+    explanation: "La risposta corretta è la **B) Out-of-cycle logging (registrazione fuori ciclo)**.\n\n* **Il concetto, dal principio:** ogni sistema ha un proprio **ritmo normale** di generazione dei log. Un server di backup scrive di notte, un gestionale durante l'orario d'ufficio, e questo server scrive voci di modifica della configurazione **solo il sabato notte**, perché è allora che gli amministratori applicano i cambiamenti approvati. L'**out-of-cycle logging** è l'indicatore che scatta quando compare una voce di log **fuori da quel ritmo atteso**: non conta il contenuto della singola riga, conta il fatto che sia stata scritta in un momento in cui nessuna attività legittima avrebbe dovuto produrla.\n* **Perché è la corretta:** lo scenario fornisce i due elementi che definiscono l'indicatore. Primo, un **ciclo atteso e documentato** (modifiche solo nella finestra del sabato). Secondo, una voce che **cade fuori** da quel ciclo, alle 03:14 di mercoledì, **senza** un ticket di change che la giustifichi. La mancanza del ticket è ciò che esclude la spiegazione innocente: se un amministratore avesse applicato una modifica urgente, esisterebbe una richiesta, magari approvata a posteriori. Qui il sistema è stato riconfigurato da qualcuno che non passa dal processo aziendale, che è precisamente il comportamento di un attaccante che si insedia (persistenza) o disattiva un controllo.\n* **Analisi dei distrattori:**\n  * **A) Impossible travel:** riguarda le **autenticazioni**, non le modifiche di configurazione. Scatta quando lo stesso account accede da due luoghi geograficamente incompatibili con il tempo trascorso fra i due accessi (per esempio Milano alle 09:00 e Singapore alle 09:40). Lo scenario non nomina alcun accesso da posizioni diverse.\n  * **C) Resource consumption:** è l'impennata anomala di CPU, memoria, disco o banda, tipica del cryptomining, dell'esfiltrazione di grandi volumi o di un attacco di esaurimento delle risorse. Qui non si parla di carico: una singola riga di log non consuma nulla.\n  * **D) Missing logs:** è l'indicatore **opposto**, e altrettanto grave: un intervallo temporale **vuoto** nei log, segno che qualcuno ha cancellato le tracce o fermato il servizio di logging. Nello scenario però la voce c'è, ed è proprio la sua presenza fuori orario a insospettire. Se il log fosse **sparito** fra le 03:20 e le 04:05, allora sì, l'indicatore sarebbe questo.\n\n* **Trappola d'esame:** gli indicatori dell'obiettivo 2.4 si distinguono per **che cosa osservano**. **Out-of-cycle logging** = una voce compare quando non dovrebbe (anomalia di *tempo*) · **Missing logs** = una voce manca dove dovrebbe esserci (anomalia di *assenza*, il classico antiforense) · **Impossible travel** = stesso account, due posizioni incompatibili (anomalia di *geografia*) · **Concurrent session usage** = stesso account attivo da più dispositivi insieme (anomalia di *molteplicità*) · **Resource consumption** = picco anomalo di risorse (anomalia di *quantità*) · **Resource inaccessibility** = una risorsa che esiste ancora ma non risponde più, come una condivisione cifrata dal ransomware, un volume smontato o un account di servizio bloccato (anomalia di *disponibilità*) · **Account lockout** e **blocked content** = un controllo che scatta ripetutamente (anomalia di *reazione delle difese*). Leggi sempre la domanda cercando **quale dimensione è anomala**: è la chiave che seleziona l'indicatore giusto."
   },
   {
     id: 38,
@@ -11088,7 +11088,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 436,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il SOC di una società di consulenza classifica gli incidenti dell'ultimo trimestre in base al canale da cui è partita la compromissione. Tre casi condividono lo stesso schema: un dipendente ha aperto un documento o un eseguibile ricevuto dall'esterno, e il codice malevolo è entrato in esecuzione proprio da quel file.",
     question: "Quale dei seguenti vettori di minaccia riguarda principalmente software o dati dannosi trasferiti o eseguiti tramite documenti, file eseguibili o altri tipi di file comuni?",
     options: [
       "A) Voice call",
@@ -11103,7 +11103,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 437,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'azienda ha installato un centralino VoIP raggiungibile dalla rete e il fornitore telefonico segnala un'impennata di chiamate internazionali notturne addebitate all'azienda. Il team di rete riesamina quali porte di segnalazione siano esposte e monitorate sul firewall perimetrale.",
     question: "Quale delle seguenti porte dovrebbe essere disabilitata o monitorata attentamente per prevenire segnalazioni VoIP (Voice over IP) non autorizzate, che possono essere un vettore di frode telefonica o controllo non autorizzato delle chiamate?",
     options: [
       "A) Port 139",
@@ -11118,7 +11118,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 438,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il server di un piccolo studio professionale si guasta e va sostituito. Il tecnico deve rimetterlo in produzione nel minor tempo possibile con sistema operativo, patch, applicazioni di terze parti e configurazioni esattamente com'erano, senza rifare a mano alcuna installazione.",
     question: "Quale dei seguenti è il MIGLIORE tipo di backup che consente il rapido ripristino di un sistema operativo senza richiedere la reinstallazione di software di terze parti, patch e configurazioni?",
     options: [
       "A) Image backup",
@@ -11148,7 +11148,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 440,
     topic: "Vulnerability Types",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Durante una valutazione, il team di sicurezza esamina le vulnerabilità hardware di una linea di apparati di rete. L'attenzione si concentra sul codice di basso livello che governa le funzioni del dispositivo: se un attaccante riuscisse a sostituirlo, otterrebbe il controllo dell'apparato al di sotto del sistema operativo.",
     question: "Quale delle seguenti vulnerabilità hardware riguarda la capacità di modificare il software che controlla le funzionalità di un dispositivo?",
     options: [
       "A) Side loading",
@@ -11253,7 +11253,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 447,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "In un edificio a uso misto, il cablaggio di rete di un'azienda attraversa un cavedio tecnico accessibile anche agli altri inquilini. Il responsabile della sicurezza valuta il rischio che qualcuno intervenga direttamente sui cavi per intercettare il traffico, senza passare da alcun apparato aziendale.",
     question: "Quale delle seguenti tecniche consente a un attaccante di intercettare una rete cablata collegando il proprio dispositivo direttamente ai cavi di rete?",
     options: [
       "A) Port Mirroring",
@@ -11283,7 +11283,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 449,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un analista di threat intelligence prepara per il consiglio di amministrazione una scheda di sintesi sui profili degli attori delle minacce. Per ciascuna categoria deve indicare la motivazione prevalente, e sta compilando la riga dedicata agli attori sponsorizzati da uno Stato.",
     question: "Quale delle seguenti motivazioni è PIÙ probabile che spinga un attore di minacce nation-state a lanciare un attacco?",
     options: [
       "A) Service disruption",
@@ -11298,7 +11298,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 450,
     topic: "Indicators of Malicious Activity",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Durante una revisione del codice di un portale, uno sviluppatore junior trova una query costruita concatenando direttamente il contenuto di un campo del modulo di ricerca. Il revisore si ferma per spiegargli a quale attacco web quella singola riga apre la porta.",
     question: "Qual è il nome dell'attacco web-based che consiste nell'inserire codice SQL dannoso nei campi di input utente, che viene poi eseguito dal server del database?",
     options: [
       "A) Structured Query Language injection",
@@ -11388,7 +11388,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 456,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il team di brand protection di una banca monitora i domini registrati di recente che somigliano al proprio. Nell'ultimo mese ne compaiono quattro che differiscono dal dominio ufficiale per una sola lettera, per un trattino o per un punto in più.",
     question: "Quale dei seguenti è un tipo di attacco al vettore umano (human vector attack) che consiste nel creare un indirizzo web o un nome di dominio falso che assomiglia a uno legittimo, ma con lievi differenze ortografiche o di punteggiatura?",
     options: [
       "A) Business email compromise",
@@ -11433,7 +11433,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 459,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Alcuni clienti di un operatore telefonico segnalano una pagina di pagamento che riproduce fedelmente logo, colori e carattere tipografico del sito ufficiale, ma è ospitata su un dominio estraneo all'azienda e chiede i dati della carta.",
     question: "Quale dei seguenti è un attacco di ingegneria sociale che consiste nell'utilizzare loghi di un'organizzazione reale per ingannare gli utenti e far loro fidare di un sito web falso?",
     options: [
       "A) Watering hole",
@@ -11463,7 +11463,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 461,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il gruppo di risposta agli incidenti di un consorzio di piccole imprese osserva che quasi tutte le infezioni da ransomware dell'ultimo anno sono cominciate allo stesso modo: un servizio di accesso remoto pubblicato direttamente su Internet e poi sottoposto a tentativi ripetuti sulle credenziali.",
     question: "Quale servizio di accesso remoto è associato alla porta TCP 3389 e, quando viene esposto direttamente su Internet, è uno dei vettori più sfruttati per attacchi di forza bruta sulle credenziali seguiti dalla distribuzione di ransomware?",
     options: [
       "A) SSH, sulla porta TCP 22",
@@ -11478,7 +11478,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 462,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "In una simulazione di ingegneria sociale autorizzata, un tester si presenta alla reception spacciandosi per il tecnico della manutenzione degli ascensori, esibisce un tesserino plastificato senza alcun riscontro e chiede di essere accompagnato al piano dei server.",
     question: "Quale dei seguenti è una tecnica di ingegneria sociale in cui un attaccante si spaccia per qualcun altro, spesso per ottenere accesso non autorizzato a sistemi o informazioni?",
     options: [
       "A) Reconnaissance",
@@ -11493,7 +11493,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 463,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il gateway di posta di un'azienda blocca ogni settimana centinaia di messaggi che veicolano allegati o collegamenti ostili. Il responsabile della sicurezza fa notare che nessuno di quei messaggi fa danno da solo: serve sempre che il destinatario apra l'allegato o segua il link.",
     question: "Quale vettore di minaccia utilizza allegati dannosi o hyperlink all'interno delle comunicazioni, richiedendo all'attaccante di convincere il destinatario a interagire con il contenuto per uno sfruttamento efficace?",
     options: [
       "A) Wireless networks",
@@ -11523,7 +11523,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 465,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il responsabile della sicurezza aggiorna la tassonomia degli attori delle minacce usata nei rapporti interni. Deve definire la categoria di chi non possiede alcuna credenziale né alcun accesso legittimo all'organizzazione e deve quindi procurarseli dall'esterno.",
     question: "Quale dei seguenti descrive MEGLIO un individuo che non ha accesso autorizzato ma tenta di violare la sicurezza usando malware o ingegneria sociale?",
     options: [
       "A) External threat actor",
@@ -11568,7 +11568,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 468,
     topic: "Vulnerability Types",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Nell'inventario di un'azienda compaiono quindici switch e due sistemi di archiviazione che il produttore non fabbrica né supporta più. Funzionano ancora perfettamente e nessuno intende sostituirli, ma per essi non uscirà mai più alcun aggiornamento, nemmeno di sicurezza.",
     question: "Quali dei seguenti sono problemi hardware che derivano da prodotti che non vengono più prodotti o supportati, ma sono ancora utilizzabili?",
     options: [
       "A) Legacy vulnerability",
@@ -11598,7 +11598,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 470,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Rivedendo le regole del firewall perimetrale, un analista trova alcune aperture dimenticate verso i server della sala macchine. Deve stabilire quale di esse permetterebbe a un'origine esterna non autorizzata di interrogare direttamente un database.",
     question: "Quale delle seguenti porte, se lasciata aperta e non monitorata, potrebbe consentire query di database da fonti esterne non autorizzate?",
     options: [
       "A) Port 1433",
@@ -11673,7 +11673,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 475,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'azienda si accorge di non sapere nulla di ciò che accade sui propri server fra un incidente e l'altro: quando qualcosa va storto non esiste alcuna registrazione delle attività da esaminare. Il team di sicurezza cerca la tecnica di mitigazione che colma esattamente questa lacuna.",
     question: "Quale delle seguenti tecniche di mitigazione può aiutare a rilevare e rispondere a potenziali minacce o incidenti su un sistema raccogliendo dati sulle attività che avvengono sul sistema?",
     options: [
       "A) Permissions",
@@ -11749,7 +11749,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 480,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Lo studio legale che assiste un'azienda chiede che le comunicazioni riservate scambiate via posta elettronica siano firmate e cifrate dal singolo mittente con un certificato personale, così che la protezione resti attaccata al messaggio e non soltanto al canale di trasporto.",
     question: "Quale delle seguenti tecniche di sicurezza email utilizza specificamente certificati email per autenticare e salvaguardare il contenuto delle email?",
     options: [
       "A) S/MIME",
@@ -11779,8 +11779,8 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 482,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
-    question: "Un attaccante usa una telefonata per impersonare un rappresentante di banca al fine di raccogliere informazioni sensibili dei clienti. Quale dei seguenti vettori di minaccia descrive questo scenario?",
+    scenario: "Un attaccante telefona a una serie di clienti di una banca presentandosi come operatore dell'ufficio antifrode dell'istituto. Con tono rassicurante e citando gli ultimi movimenti del conto, li invita a confermare le credenziali di accesso per «bloccare un addebito sospetto».",
+    question: "Quale dei seguenti vettori di minaccia descrive questo scenario?",
     options: [
       "A) Vishing",
       "B) Spear Phishing",
@@ -11794,8 +11794,8 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 483,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
-    question: "Stai lavorando su un progetto con un vendor che ti fornisce un'applicazione software che gira sul tuo computer. Il vendor afferma che il software è sicuro e che non dovrai occuparti tu di aggiornamenti o patch: quando saranno disponibili, verranno scaricati automaticamente dal suo server e installati sul tuo computer. Che tipo di vettore di attacco è questo un esempio?",
+    scenario: "Stai lavorando a un progetto con un fornitore che ti consegna un'applicazione da installare sul tuo computer. Il fornitore assicura che il software è sicuro e che non dovrai occuparti tu di aggiornamenti o patch: quando saranno disponibili verranno scaricati automaticamente dal suo server e installati sulla tua macchina.",
+    question: "Di quale tipo di vettore di attacco è un esempio questa situazione?",
     options: [
       "A) Agentless software",
       "B) Client-based software",
@@ -11824,7 +11824,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 485,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Nel magazzino di un'azienda si accumulano da anni portatili sostituiti, telefoni aziendali dismessi e dischi rimossi dai server. Nessuno li ha mai cancellati né rottamati formalmente e, in un'occasione, uno di quei portatili è stato ceduto a un dipendente con i dati ancora a bordo.",
     question: "Quale delle seguenti tecniche di mitigazione è MIGLIORE per prevenire violazioni dei dati da dispositivi che non sono più in uso?",
     options: [
       "A) Encryption",
@@ -11944,7 +11944,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 493,
     topic: "Vulnerability Types",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un revisore del codice esamina una funzione che verifica i permessi di un file e, subito dopo, lo apre in scrittura. Fra le due operazioni passa una frazione di secondo, e in quella finestra un altro processo può sostituire il file con un collegamento a un percorso di sistema.",
     question: "Quale dei seguenti è un attacco in cui un processo verifica lo stato o il valore di una risorsa prima di usarla, ma un altro processo lo ha cambiato nel frattempo?",
     options: [
       "A) Virtual machine (VM) escape",
@@ -11989,7 +11989,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 496,
     topic: "Vulnerability Types",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un rapporto di threat intelligence descrive una falla di un browser molto diffuso, sfruttata in rete da settimane. Il produttore ne è venuto a conoscenza soltanto dalle prime vittime e non ha ancora pubblicato alcuna correzione.",
     question: "Quale dei seguenti si riferisce a una vulnerabilità nel software sconosciuta al vendor e spesso sfruttata da attori malevoli prima che venga rilasciata una patch?",
     options: [
       "A) Hardware incompatibility",
@@ -12064,7 +12064,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 501,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Una scansione interna rileva che dodici stampanti di rete, quattro telecamere e due apparati di archiviazione rispondono ancora alle combinazioni utente/password impostate in fabbrica, reperibili nei manuali pubblici del produttore.",
     question: "Quale dei seguenti vettori di minaccia è associato ai rischi derivanti dal non cambiare le informazioni di login preimpostate sui sistemi, consentendo potenzialmente un facile accesso non autorizzato?",
     options: [
       "A) Phishing",
@@ -12109,7 +12109,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 504,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Il team di sicurezza redige la matrice delle tecniche di mitigazione da applicare ai dati aziendali. Per la riga «riservatezza dei dati a riposo e in transito» deve indicare la tecnica che rende il contenuto illeggibile a chiunque non possieda la chiave.",
     question: "Quale delle seguenti tecniche di mitigazione prevede l'uso di algoritmi matematici per trasformare i dati in un formato illeggibile?",
     options: [
       "A) Encryption",
@@ -12184,7 +12184,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 509,
     topic: "Mitigation Techniques & Controls",
     level: "APPLICAZIONE",
-    scenario: null,
+    scenario: "Un'azienda incorpora nei propri prodotti diversi componenti software acquistati o open source. Dopo che una libreria di terze parti ha introdotto una falla critica in tutti i clienti che l'avevano aggiornata, la direzione chiede quale pratica riduca davvero questo tipo di rischio.",
     question: "Quale delle seguenti pratiche è PIÙ efficace nel mitigare le vulnerabilità della supply chain del software?",
     options: [
       "A) Limitare il numero di vendor hardware per un'organizzazione.",
@@ -12199,7 +12199,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 510,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un amministratore deve limitare quali indirizzi di origine, quali porte e quali protocolli possono raggiungere un server web aziendale, scrivendo regole esplicite di consenso e di diniego direttamente sull'apparato che instrada il traffico.",
     question: "Quale delle seguenti tecniche di mitigazione può aiutare a prevenire l'accesso non autorizzato alle risorse su un web server impostando regole riguardanti le porte e i protocolli autorizzati a connettersi?",
     options: [
       "A) Access control list (ACL)",
@@ -12229,7 +12229,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 512,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'analisi geopolitica descrive la condotta di uno Stato verso un paese confinante: attacchi informatici alle infrastrutture, campagne di disinformazione sui social, spionaggio industriale e pressione diplomatica, tutti coordinati fra loro e mai dichiarati come atti di guerra.",
     question: "Quale dei seguenti termini si riferisce a una strategia che combina spionaggio, disinformazione, hacking e uso di risorse diplomatiche, spesso eseguita da attori statali?",
     options: [
       "A) Hybrid warfare",
@@ -12244,7 +12244,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 513,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'azienda scopre che il proprio server di posta viene usato da estranei per inoltrare spam verso l'esterno, e il suo dominio finisce in diverse liste di blocco. Il team di rete riesamina quale porta di trasporto della posta sia esposta su Internet senza che ve ne sia bisogno.",
     question: "La disabilitazione di quale delle seguenti porte può aiutare a prevenire l'esposizione di un servizio di trasporto della posta comunemente utilizzato, riducendo così la probabilità di attacchi mail relay?",
     options: [
       "A) Port 3389",
@@ -12289,16 +12289,16 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 516,
     topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "L'ufficio contabilit\u00e0 di un'azienda manifatturiera ha ricevuto nell'ultimo anno tentativi di truffa via posta elettronica molto diversi fra loro. Il responsabile della sicurezza vuole che il personale sappia riconoscere in particolare il business email compromise, perch\u00e9 \u00e8 l'unico che non porta n\u00e9 allegati n\u00e9 link malevoli e quindi supera indenne i filtri tecnici.",
     question: "Quale dei seguenti scenari esemplifica MEGLIO un business email compromise?",
     options: [
-      "A) La richiesta del CEO al reparto finanziario di effettuare un bonifico urgente.",
-      "B) Ricevere un'email di spam riguardante una vincita alla lotteria.",
-      "C) Un'email di un collega che chiede di rivedere una fattura allegata.",
-      "D) Avvistare un pop-up su un sito web che chiede i dettagli della carta di credito."
+      "A) Un'e-mail che sembra provenire dall'amministratore delegato chiede all'ufficio contabilit\u00e0 un bonifico urgente verso un conto nuovo, fuori dalla procedura ordinaria",
+      "B) Un'e-mail di spam annuncia una vincita alla lotteria e chiede i dati per riscuoterla",
+      "C) Un'e-mail veicola un allegato che, una volta aperto, installa software malevolo",
+      "D) Un pop-up su un sito web chiede i dati della carta di credito per poter continuare a navigare"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) La richiesta del CEO al reparto finanziario di effettuare un bonifico urgente**.\n\n* **Perché è la corretta:** Il **Business Email Compromise (BEC)** ha tre tratti distintivi, e nell'opzione A ci sono tutti e tre. Primo, l'attaccante **impersona una figura di autorità interna** — l'amministratore delegato, il direttore finanziario, a volte un fornitore noto — usando un dominio somigliante o un account davvero compromesso. Secondo, la richiesta è **plausibile nel suo contesto aziendale**: un bonifico è ciò che quel reparto fa tutti i giorni. Terzo, fa leva su **urgenza e autorità** e spinge il destinatario a **saltare la procedura normale**, ed è questo il dettaglio decisivo: il BEC non sfrutta alcuna falla tecnica, sfrutta la disponibilità di una persona a fare un'eccezione per il capo.\n* **Il segno che lo distingue:** un BEC spesso non porta **né allegati né link malevoli**, ed è la ragione per cui i filtri anti-malware non lo intercettano: è solo testo. La difesa è **procedurale** — verificare il beneficiario su un canale diverso, doppia autorizzazione sopra una soglia — non tecnologica.\n* **Analisi dei distrattori:**\n  * **B) L'email spam sulla lotteria** è una forma diffusa di spam che lancia una rete ampia sperando di attirare destinatari creduloni; non prende di mira specificatamente le aziende.\n  * **C) L'email del collega con la fattura** potrebbe sembrare un potenziale BEC, ma è più indicativa di un tentativo di spear phishing o schema di allegato dannoso; l'enfasi è sul payload dannoso nell'allegato, non su una richiesta ingannevole di fondi.\n  * **D) Il pop-up con i dettagli della carta di credito** è un tipo di truffa web progettata per indurre gli utenti a divulgare informazioni finanziarie personali; non è tipicamente un BEC."
+    explanation: "La risposta corretta è la **A) L'e-mail che sembra provenire dall'amministratore delegato e chiede un bonifico urgente fuori procedura**.\n\n* **Perché è la corretta:** Il **Business Email Compromise (BEC)** ha tre tratti distintivi, e nell'opzione A ci sono tutti e tre. Primo, l'attaccante **impersona una figura di autorità interna** — l'amministratore delegato, il direttore finanziario, a volte un fornitore noto — usando un dominio somigliante o un account davvero compromesso. Secondo, la richiesta è **plausibile nel suo contesto aziendale**: un bonifico è ciò che quel reparto fa tutti i giorni. Terzo, fa leva su **urgenza e autorità** e spinge il destinatario a **saltare la procedura normale**, ed è questo il dettaglio decisivo: il BEC non sfrutta alcuna falla tecnica, sfrutta la disponibilità di una persona a fare un'eccezione per il capo.\n* **Il segno che lo distingue:** un BEC spesso non porta **né allegati né link malevoli**, ed è la ragione per cui i filtri anti-malware non lo intercettano: è solo testo. La difesa è **procedurale** — verificare il beneficiario su un canale diverso, doppia autorizzazione sopra una soglia — non tecnologica.\n* **Analisi dei distrattori:**\n  * **B) L'e-mail di spam sulla vincita alla lotteria** lancia una rete amplissima sperando che qualcuno abbocchi: non impersona nessuno, non si appoggia a un contesto aziendale reale e non prende di mira una funzione specifica dell'organizzazione.\n  * **C) L'e-mail con l'allegato che installa software malevolo** è phishing con payload: il danno arriva dal file eseguito, e proprio per questo un filtro antimalware o il sandboxing dell'allegato possono intercettarla. Il BEC lavora all'opposto, con il solo testo e una richiesta ingannevole di fondi.\n  * **D) Il pop-up che chiede i dati della carta** è una truffa web rivolta al singolo consumatore: non passa nemmeno dalla posta elettronica aziendale, che è il canale su cui il BEC per definizione si costruisce."
   },
   {
     id: 517,
@@ -12334,7 +12334,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 519,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Dopo un exploit che ha scritto oltre lo spazio di memoria allocato a un servizio, il team di sicurezza cerca un software da installare sugli host, capace di sorvegliare il comportamento dei processi e di interrompere questo tipo di tentativi mentre avvengono.",
     question: "Quale delle seguenti tecniche di hardening può aiutare a prevenire attacchi buffer overflow su un sistema o dispositivo usando un software in grado di rilevare e prevenire qualsiasi tentativo di scrivere dati oltre lo spazio di memoria allocato di un programma?",
     options: [
       "A) Isolamento (Isolation)",
@@ -12379,7 +12379,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 522,
     topic: "Indicators of Malicious Activity",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un'applicazione web pubblica i commenti degli utenti senza codificarne l'output. Il team di sicurezza deve spiegare alla direzione che cosa ottiene concretamente un attaccante quando riesce a far eseguire il proprio script nel browser degli altri visitatori.",
     question: "Quale delle seguenti è una conseguenza comune di un attacco Cross-site scripting (XSS)?",
     options: [
       "A) Denial of service per gli utenti legittimi",
@@ -12394,8 +12394,8 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 523,
     topic: "Threat Actors & Motivations",
     level: "COMPRENSIONE",
-    scenario: null,
-    question: "Un report di threat intelligence descrive un gruppo che sviluppa in proprio exploit per vulnerabilità mai divulgate, impiega malware scritto su misura per ogni bersaglio e mantiene l'accesso per mesi senza essere rilevato. Quale attributo dell'attore delle minacce viene descritto?",
+    scenario: "Un report di threat intelligence descrive un gruppo che sviluppa in proprio exploit per vulnerabilità mai divulgate, impiega malware scritto su misura per ogni bersaglio e mantiene l'accesso ai sistemi delle vittime per mesi senza essere rilevato.",
+    question: "Quale attributo dell'attore delle minacce viene descritto?",
     options: [
       "A) Il livello di sofisticatezza e capacità",
       "B) Le risorse e il finanziamento a disposizione",
@@ -12454,7 +12454,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 527,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Durante un incidente, un singolo portatile compromesso ha potuto raggiungere in pochi minuti i server di produzione, i sistemi di fabbrica e la rete delle telecamere, perché tutto è collegato allo stesso dominio di livello 2. Il team di rete progetta la contromisura strutturale.",
     question: "Quale tecnica di mitigazione è più efficace nel garantire che i diversi componenti di rete siano isolati per prevenire la diffusione di potenziali violazioni?",
     options: [
       "A) Antivirus software",
@@ -12559,7 +12559,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 534,
     topic: "Mitigation Techniques & Controls",
     level: "COMPRENSIONE",
-    scenario: null,
+    scenario: "Un penetration test interno entra in undici apparati di rete e in tre pannelli di amministrazione in meno di un'ora, usando un semplice elenco di parole. Tutte le credenziali trovate erano quelle preimpostate dal produttore, presenti nei dizionari pubblici che gli strumenti di attacco provano per primi.",
     question: "Quale delle seguenti tecniche di hardening è PIÙ efficace nel prevenire il facile cracking delle password tramite l'uso di dizionari?",
     options: [
       "A) Isolamento del dispositivo (Device isolation)",
