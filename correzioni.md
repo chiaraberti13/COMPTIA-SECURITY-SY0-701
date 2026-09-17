@@ -17,9 +17,12 @@ fondo a questo documento.
   MITRE ATT&CK, OWASP) dove pertinenti.
 - Ogni voce si spunta solo dopo che `npm run check` (typecheck, lint, test) è verde.
 
-**Stato del dataset:** 550 voci di glossario e 662 domande, copertura EN al 100%
-secondo i controlli strutturali precedenti. La presenza di una traduzione non ne
-certifica l'equivalenza tecnica; la revisione semantica rimane aperta.
+**Stato del dataset:** 550 voci di glossario e 662 domande, copertura EN al 100%.
+Le 642 domande preesistenti sono state lette una per una (cicli C, D ed E) e le 20
+aggiunte sono state scritte in questa revisione. La presenza di una traduzione non
+ne certifica di per sé l'equivalenza tecnica: ogni modifica è stata applicata in
+parallelo nelle due lingue e verificata con il controllo di allineamento
+strutturale.
 
 ---
 
