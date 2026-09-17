@@ -813,18 +813,149 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
       una sola risposta difendibile, distrattori plausibili e spiegazione
       individuale di ogni opzione. La presenza delle lettere nella spiegazione
       e la copertura degli override non provano l'accuratezza dei contenuti.
-- [ ] Costruire la matrice **obiettivo → checklist → domanda → spiegazione**
-      per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
-      non verificati nella lettura semantica, senza inferire copertura dal solo
-      numero di occorrenze di una parola.
-- [ ] Ricercare in tutti i tre tipi di contenuto le generalizzazioni già
-      individuate (firma = cifratura con chiave privata, blockchain = sempre
-      pubblica, ALE = budget massimo, MFA da certificati client/server,
-      Zero Trust = cifratura di ogni richiesta) e uniformare IT/EN.
-- [ ] Verificare i confronti didattici IDS/IPS, DAC/MAC/RBAC/ABAC,
-      phishing/vishing/smishing e cifratura simmetrica/asimmetrica rispetto
-      ai casi limite; aggiungere esempi in checklist o spiegazioni solo
-      dove risolvono un'ambiguità effettiva.
+  - [x] **D1 letto (105/105).** Sette difetti corretti in IT ed EN:
+        `D1#42` (compensativo presentato come funzione anziché come ruolo: per
+        funzione quel firewall previene, è il contesto a renderlo compensativo),
+        `D1#48` (l'opzione corretta diceva «senza intervento umano»: qualcuno
+        la GPO la configura),
+        `D1#132` (collegata alla distinzione blockchain / open public ledger
+        introdotta dalla S1, altrimenti il glossario e la domanda dicevano
+        cose diverse),
+        `D1#143` (**ambiguità reale**: anche un root certificate è
+        autofirmato — ora il distrattore D spiega perché non è la risposta),
+        `D1#156` (residuo di S32: «il chip sulla scheda madre» nell'opzione e
+        nella spiegazione, mentre esistono gli fTPM),
+        `D1#180` (la domanda diceva che OCSP «elimina» la finestra di
+        esposizione e l'opzione che interroga «la CA»: è un responder, e
+        restano `nextUpdate` e soprattutto il **soft-fail** dei browser),
+        `D1#199` (**ambiguità reale**: lo scenario descriveva processi interni
+        disallineati, che è l'opzione C, ma la risposta era la conformità
+        normativa; scenario riscritto su due obblighi di legge nuovi e un
+        regolatore estero).
+  - [x] **D2 letto (129/129).** Cinque difetti corretti in IT ed EN:
+        `D2#429` (**ambiguità concettuale**: l'opzione C era «race condition»
+        e la D «time-of-use», ma TOC/TOU *è* una race condition e l'obiettivo
+        2.3 la elenca come sua sottovoce — ora il distrattore spiega che fra
+        categoria e sottotipo vince il sottotipo quando lo scenario lo
+        descrive), `D2#455` (refuso: «Il improvviso gap»), `D2#466`
+        (diceva che le API insicure sono «esclusive» del cloud, il che è
+        falso: il cloud cambia il **ruolo** dell'API, che diventa l'unica
+        console di amministrazione; aggiunto anche lo scenario, che mancava),
+        `D2#516` (**ambiguità reale**: l'opzione corretta descriveva una
+        richiesta del CEO senza dire che era fraudolenta, e il distrattore C
+        sulla fattura allegata era un BEC altrettanto valido — opzioni
+        riscritte e aggiunto il tratto distintivo del BEC, che spesso non ha
+        né allegato né link), `D2#519` (HIPS presentato come difesa dal
+        buffer overflow senza nominare DEP/NX, ASLR e stack canary, che sono
+        le difese primarie).
+  - [x] **D3 letto (112/112).** Due difetti corretti in IT ed EN:
+        `D3#24` (la spiegazione diceva che SNMPv3 «elimina le vulnerabilità di
+        SNMPv1 e SNMPv2» senza dire come, e l'opzione nomina SHA/MD5 e AES/DES:
+        aggiunti i tre livelli *noAuthNoPriv / authNoPriv / authPriv* e
+        l'avvertenza che MD5 e DES sono deprecati anche se lo standard li
+        ammette), `D3#420` (**ambiguità apparente**: le altre tre opzioni sono
+        tutte pratiche di sicurezza corrette, quindi la domanda sembrava avere
+        più risposte valide — aggiunto il paragrafo che spiega che lo scenario
+        fissa l'obiettivo sulla conformità normativa, con la regola generale:
+        quando lo scenario nomina un obbligo di legge o un regolatore, la
+        risposta cercata parla di conformità, non della misura tecnicamente più
+        sofisticata).
+  - [x] **D4 letto (171/171).** Diciassette difetti corretti in IT ed EN.
+        *Terminologia:* `D4#19` (l'opzione e la spiegazione dicevano
+        «mantrap»; negli obiettivi SY0-701 il controllo è l'**access control
+        vestibule** — rimosso anche «eliminare definitivamente» dalla domanda e
+        aggiunto il perimetro reale del controllo).
+        *Sanitizzazione (NIST SP 800-88 Rev. 1):* `D4#185` e `D4#411`
+        («sovrascrittura ripetuta» come definizione di bonifica e di secure
+        erase — introdotti i livelli *Clear / Purge / Destroy*, il limite del
+        degaussing ai soli supporti magnetici e l'inaffidabilità della
+        sovrascrittura su SSD per via del wear-leveling), `D4#209` (la domanda
+        contrappone sanitizzazione e distruzione mentre nello standard
+        *Destroy* è un livello di sanitizzazione: esplicitata la gerarchia per
+        non contraddire le due voci precedenti).
+        *Precisazioni mancanti:* `D4#403` (SSL inspection senza il prerequisito
+        della CA aziendale nel trust store, il certificate pinning e le
+        esclusioni per privacy), `D4#235` (MD5 presentato alla pari di SHA-256
+        per l'integrità delle prove: è rotto dal 2004 e contestabile in aula),
+        `D4#240` (lasciava intendere che SNMP fosse insicuro per definizione,
+        in contrasto con `D3#24`), `D4#270` (fasce CVSS elencate per intero e
+        motivazione ancorata alla metrica *Attack Complexity*), `D4#287`
+        (l'exposure factor è una percentuale, non un importo: aggiunte
+        `SLE = AV × EF` e `ALE = SLE × ARO` con esempio numerico), `D4#286`
+        («la screened subnet impedisce l'accesso alla rete interna»: la
+        segmentazione confina, non impedisce), `D4#262` (l'assicurazione come
+        trasferimento del rischio: non riduce la probabilità, non trasferisce
+        la responsabilità, ha esclusioni).
+        *Password policy allineata a NIST SP 800-63B:* `D4#315` (la scadenza
+        periodica era presentata come buona pratica: resta la risposta corretta
+        alla domanda, ma il NIST raccomanda il cambio solo su evidenza di
+        compromissione — e PCI DSS la impone ancora), `D4#316` (aggiunta la
+        preferenza per la lunghezza sulle regole di composizione, la blocklist
+        delle credenziali trapelate e la precisazione che le password non si
+        cifrano ma si trasformano con hash lento e salato).
+        *Distinzioni concettuali:* `D4#255` (appetite / tolerance / threshold),
+        `D4#217` (i benchmark nella sicurezza sono i CIS Benchmarks e le DISA
+        STIG, base della baseline sicura, distinti dall'audit), `D4#222` (la
+        cifratura del dispositivo dipende dal blocco schermo, perché la chiave
+        deriva dal PIN), `D4#223` (i tre punti di applicazione del DLP: in
+        transito, a riposo, in uso — la copia su USB la intercetta solo
+        l'agente).
+  - [x] **D5 letto (125/125).** Cinque difetti corretti in IT ed EN:
+        `D5#143` (**contraddizione interna**: trattava eccezione ed esenzione
+        come sinonimi, mentre `D5#136` le distingue per durata e portata),
+        `D5#6` (ultimo residuo della regola «costo del controllo ≤ ALE»:
+        sostituita con il confronto fra costo annuo e **riduzione di ALE**, con
+        la nota che qui le due cifre coincidono perché la barriera azzera
+        l'esposizione, e l'avvertenza che obblighi di legge e rischi per
+        l'incolumità prevalgono sul calcolo), `D5#3` (citava «Concetto Chiave
+        CompTIA **CASP+**» in una piattaforma per Security+: ora rimanda
+        all'Obiettivo 5.1 di SY0-701), `D5#82` (**doppione di acronimo**: BPA
+        vale sia *Business Process Analysis* qui sia *Business Partners
+        Agreement* in `D5#127` e `D5#153` — aggiunto il criterio per
+        distinguerli dal contesto), `D5#128` («Data Custodian (o Data Steward)»
+        dati per sinonimi: SY0-701 li elenca insieme, ma nella pratica il
+        custodian custodisce il dato sul piano tecnico e lo steward ne cura
+        qualità e significato).
+  - **Lettura semantica conclusa: 642/642 domande lette, 36 difetti corretti**
+        (D1 7, D2 5, D3 2, D4 17, D5 5).
+- [x] Costruita la matrice **obiettivo → checklist → domanda → spiegazione**
+      per tutti i sotto-obiettivi 1.1–5.6: vedi la sezione «Matrice di copertura
+      degli obiettivi» qui sotto. Tre lacune emerse sono state messe in coda e
+      risolte; le altre sono annotate come squilibri di densità, non come
+      assenze.
+- [x] **Ricerca delle generalizzazioni note in tutto il corpus** (firma =
+      cifratura con chiave privata, blockchain = sempre pubblica, ALE = budget
+      massimo, MFA da certificati, Zero Trust = cifratura di ogni richiesta),
+      estesa agli assoluti in genere. Trovati e corretti 13 residui in IT e EN:
+      `D1#146` (opzione e spiegazione: la firma non è un hash cifrato),
+      `DigitalSignaturesConcept` (la verifica non è una decifratura),
+      `PrivateKeyConcept` («ancora di sicurezza assoluta»),
+      `RootOfTrustConcept` EN («unbreakable»),
+      `PhysicalSegmentationConcept` («isolamento fisico impenetrabile via
+      software», che era anche una contraddizione: l'air gap si supera per via
+      fisica, come fece Stuxnet), `HotSiteRes` e `ReplicationRes` («azzerando
+      la perdita di dati»), `BackupEncryptionRes` («inviolabilità»),
+      `SSHPBQ` EN («100% secure»), `TicketEscalationAutomation` EN
+      («guarantees no incident is left forgotten»), `WPA3PersonalRes`
+      («azzerare gli attacchi brute-force»), `PassiveTestingConcept`
+      («azzera il rischio»), e soprattutto **`D5#6`, dove era rimasta la
+      formula «Costo del Controllo <= ALE»** che la S3 aveva corretto altrove.
+      I 19 usi residui di «azzerare» sono legittimi (zeroization degli HSM,
+      azzeramento della RAM, l'evitamento che azzera davvero il rischio).
+- [x] **Confronti didattici verificati ai casi limite.** Phishing / vishing /
+      smishing (e quishing) erano già distinti per canale in modo coerente, e
+      simmetrico / asimmetrico è coperto dalla `D1#191`: nessun intervento.
+      Tre ambiguità reali corrette invece altrove:
+      **IDS/IPS** — le due voci presentavano «passivo» e «in-line» come
+      proprietà del prodotto. La distinzione vera è **posizionamento e
+      configurazione**: un IPS in modalità di sola rilevazione è un IDS, e un
+      IPS su porta SPAN non blocca nulla. Aggiunta anche la conseguenza che
+      l'esame verifica: stando in linea, un IPS è un potenziale punto di
+      guasto e un falso positivo diventa un disservizio.
+      **MAC** — era «il modello più restrittivo e sicuro». È il più
+      restrittivo; «più sicuro» dipende dal contesto, e la sua rigidità
+      altrove spinge ad aggirarlo. Aggiunto il caso limite RBAC → ABAC:
+      quando il ruolo non basta e servono condizioni di contesto.
 
 **Fonti primarie della revisione:** [CompTIA SY0-701 Exam Objectives v5.0](https://assets.ctfassets.net/82ripq7fjls2/6TYWUym0Nudqa8nGEnegjG/0f9b974d3b1837fe85ab8e6553f4d623/CompTIA-Security-Plus-SY0-701-Exam-Objectives.pdf)
 (Obj 1.2, 1.4, 2.1, 2.4, 3.2, 3.4, 4.1, 4.2, 4.6, 5.2, 5.3);
@@ -843,6 +974,100 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
 [Microsoft — TPM](https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/tpm-fundamentals),
 [Microsoft — Secure Boot](https://learn.microsoft.com/en-us/windows/security/operating-system-security/system-security/secure-the-windows-10-boot-process).
 Nessun riferimento a domande reali d'esame.
+
+---
+
+## Matrice di copertura degli obiettivi (1.1 – 5.6)
+
+**Come è stata costruita.** La colonna *checklist* riporta i gruppi del dataset
+con l'obiettivo dichiarato nel loro titolo e il numero di voci che contengono
+(538 voci al momento della costruzione della matrice, 541 dopo gli interventi
+che ne sono derivati). La colonna *domande* conta le 642 domande classificando
+ciascuna in base al proprio campo `topic`. La colonna *stato* dice che cosa è
+stato **effettivamente verificato**, non che cosa si presume coperto: tutte le
+642 domande sono state lette una per una nei cicli C, D ed E; le voci di
+checklist sono state sottoposte a scansioni mirate (assoluti, generalizzazioni
+note, confronti didattici) e lette integralmente solo dove la scansione o una
+domanda collegata le richiamava. **La densità non è una prova di qualità** e il
+numero di domande non misura la profondità con cui un obiettivo è trattato.
+
+| Obj | Titolo (SY0-701) | Checklist (gruppo · voci) | Domande | Stato |
+| --- | --- | --- | --- | --- |
+| 1.1 | Security controls | D1 Security Controls + Control Types · 10 | 10 | Coperto |
+| 1.2 | Fundamental security concepts | D1 Fondamentali + Physical Security + Deception · 20 | 35 | Coperto |
+| 1.3 | Change management | D1 Change Management · 5 | 20 | Coperto |
+| 1.4 | Cryptographic solutions | D1 Cryptography · 23 | 42 | Coperto |
+| 2.1 | Threat actors e motivazioni | D2 Threat Actors + Motivations · 13 (+ Threat Intelligence · 5) | 18 | Coperto |
+| 2.2 | Threat vectors e superfici d'attacco | D2 Threat Vectors + Social Engineering · 15 | 10 (+ 50 in comune con 2.3) | Coperto |
+| 2.3 | Tipi di vulnerabilità | D2 Vulnerabilities · 13 | vedi sopra | **Etichetta condivisa** |
+| 2.4 | Indicatori di attività malevola | D2 Malware + Password Attacks + Network/Wireless/App · 17 | 39 | Coperto |
+| 2.5 | Tecniche di mitigazione | D2 Mitigations · 11 | 22 | Coperto |
+| 3.1 | Modelli di architettura | D3 Cloud + Dispositivi Speciali & IoT · 28 | 32 | Coperto |
+| 3.2 | Infrastruttura sicura | D3 Network Security + Firewalls · 80 | 30 | Coperto |
+| 3.3 | Protezione dei dati | D3 Data Security · 12 | 22 | Coperto |
+| 3.4 | Resilienza e ripristino | D3 Resilience & Recovery · 47 | 26 | Coperto |
+| 4.1 | Tecniche di sicurezza sulle risorse | D4 Hardening + Mobile Security · 21 | 18 | Coperto |
+| 4.2 | Asset management | D5 Secure Deconstruction & Disposal · 9 | 20 | **Gruppo nel Dominio 5** (S23) |
+| 4.3 | Vulnerability management | D4 Vulnerability Management · 33 | 23 | Coperto |
+| 4.4 | Alerting e monitoraggio | D4 Monitoring & Enterprise Controls · 32 | 14 | Coperto |
+| 4.5 | Modifica delle capacità aziendali | prima: **nessun gruppo etichettato 4.5** — ora D4 Monitoring & Enterprise Controls (Obj 4.4 e 4.5) · 32, di cui 6 voci di 4.5 | 23 | **Lacuna risolta** (vedi sotto) |
+| 4.6 | Identity & Access Management | D1 Identity & Access Control Models · 23 | 33 | **Gruppo nel Dominio 1** (S7) |
+| 4.7 | Automazione e orchestrazione | D4 Automation · 9 | 13 | Coperto |
+| 4.8 | Risposta agli incidenti | D4 Incident Response + Digital Forensics · 20 (+ PBQ · 6) | 17 | Coperto |
+| 4.9 | Fonti dati per un'indagine | D4 Log Analysis · 6 | 6 | **Densità bassa** |
+| 5.1 | Governance | D5 Governance + Policies · 17 | 30 | Coperto |
+| 5.2 | Processo di gestione del rischio | D5 Risk Management + Risk Responses · 23 | 35 | Coperto |
+| 5.3 | Rischio di terze parti | D5 Third Party Risk + Agreements · 11 | 18 | Coperto |
+| 5.4 | Conformità | D5 Compliance · 7 | 27 | Coperto |
+| 5.5 | Audit e assessment | D5 Audits · 10 | 7 | **Densità bassa** |
+| 5.6 | Security awareness | D5 Security Awareness · 8 | 2 dichiarate | **Etichetta da rivedere** |
+
+### Che cosa la matrice ha fatto emergere
+
+1. **Obiettivo 4.5 senza un gruppo che lo dichiari.** I contenuti esistono e
+   sono 23 domande, ma sono distribuiti fra gruppi etichettati *Obj 3.2*
+   (firewall, IDS/IPS, protocolli sicuri, SPF/DKIM/DMARC, NAC) e *Obj 4.4*
+   (`EDRXDRConcept`, `DLP`, `UBAConcept`, che sono voci di 4.5 in un gruppo che
+   dichiara 4.4). Uno studente che usa la checklist come traccia di ripasso non
+   trova mai il riferimento all'obiettivo 4.5.
+2. **Tre voci dell'obiettivo 4.5 mancavano del tutto dalla checklist**, pur
+   avendo domande collegate: **DNS filtering** (0 voci, domanda `D4#275`),
+   **filtraggio web e categorizzazione dei contenuti** (0 voci, 6 domande sul
+   tema in D4), **File Integrity Monitoring** (0 voci come concetto — esistono
+   solo le voci sui *log* — domanda `D4#193`). Ricerca condotta su chiave, nome,
+   definizione, dettagli e nota d'esame di tutte le 538 voci.
+3. **Obiettivo 5.6 sotto-rappresentato nell'etichettatura.** Solo 2 domande
+   portano `topic: Security Awareness`, ma altre 9 domande del Dominio 5
+   etichettate `Social Engineering` trattano in realtà campagne di phishing
+   simulate, riconoscimento del comportamento anomalo e segnalazione, che sono
+   contenuti di 5.6. L'obiettivo è quindi coperto; è l'etichetta a essere
+   fuorviante.
+4. **Obiettivi 4.9 e 5.5 a densità bassa** (6 e 7 domande). Entrambi sono
+   obiettivi «given a scenario» / «explain types and purposes», quindi la
+   densità andrebbe alzata. Non è un errore, è uno squilibrio.
+5. **2.2 e 2.3 condividono un'unica etichetta** (`Threat Vectors &
+   Vulnerabilities`, 50 domande): impossibile misurare separatamente la
+   copertura dei due obiettivi dal solo campo `topic`.
+
+### Coda di lavoro generata dalla matrice
+
+- [x] Aggiungere alla checklist le tre voci mancanti dell'obiettivo 4.5:
+      filtraggio DNS, filtraggio web con categorizzazione dei contenuti,
+      monitoraggio dell'integrità dei file. In IT ed EN, con voce in
+      `SUBGROUP_MAP`.
+- [x] Correggere il riferimento d'obiettivo del gruppo che ospita EDR/XDR, DLP
+      e UBA: dichiara *Obj 4.4* ma contiene anche voci di *Obj 4.5*.
+- [ ] **Decisione dell'autore** — alzare la densità degli obiettivi 4.9 (fonti
+      dati per un'indagine) e 5.5 (audit e assessment), oggi a 6 e 7 domande
+      contro una media di 23. Richiede domande nuove, non correzioni: è una
+      scelta di programma didattico, non un difetto da sanare.
+- [ ] **Decisione dell'autore** — l'etichetta `topic` di 9 domande del Dominio 5
+      dice `Social Engineering` mentre il contenuto è security awareness
+      (Obj 5.6), e 50 domande del Dominio 2 condividono `Threat Vectors &
+      Vulnerabilities` per due obiettivi distinti (2.2 e 2.3). Rietichettarle
+      migliorerebbe la misurabilità della copertura, ma `topic` è un campo che
+      guida la visualizzazione: la modifica esula dalla sola correzione testuale
+      e va decisa da chi cura il dataset.
 
 ---
 
@@ -887,9 +1112,8 @@ Problemi rilevati fuori dall'ambito dei contenuti.
 
 Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
 le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
-I controlli automatici qui sotto descrivono l'ultimo esito registrato dalla
-revisione precedente, salvo la distribuzione delle risposte ricontata oggi;
-non equivalgono a una nuova esecuzione completa della suite.
+I controlli automatici qui sotto sono stati **rieseguiti per intero** al termine
+della lettura semantica dei cinque domini e degli interventi sull'obiettivo 4.5.
 
 ---
 
@@ -911,6 +1135,25 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Duplicati semantici fra domande | 0 |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
 | Distribuzione della risposta corretta | A 162 · B 167 · C 160 · D 153 = 642 (ricontata sul dataset corrente) |
+
+**Due segnalazioni degli scanner sono artefatti degli script, non difetti**, e
+conviene annotarle per non riaprirle a ogni esecuzione:
+
+* Il controllo «opzione corretta citata fra i distrattori» segnala `D4#192`
+  perché la spiegazione contiene il mnemonico «**A**BAC → **A**ttributi», che
+  l'espressione regolare legge come un riferimento all'opzione A. Il test della
+  suite, più stretto, non lo segnala: la spiegazione è corretta.
+* Il controllo `ALE = SLE × ARO` segnala `D5#6` perché legge «ARO = 0.1» come
+  intero 1 (rimuove il separatore decimale) e pesca la cifra dell'ALE da una
+  frase successiva. I numeri della domanda sono verificati a mano e corretti:
+  SLE = 500.000 × 0,30 = 150.000 e ALE = 150.000 × 0,1 = 15.000.
+
+Gli scanner restituiscono **candidati**, non verdetti: ogni segnalazione è stata
+letta prima di decidere se fosse un difetto. Le altre voci prodotte in questa
+esecuzione (aperture «NO_LEAD» sulle cinque domande a risposta multipla, porte
+multiple in `D4#300`, coppie di domande con lo stesso incipit ma scenario e
+risposta diversi in `D2#451`/`D2#487` e `D3#416`/`D3#421`) sono state verificate
+una per una e sono tutte legittime.
 
 ---
 
