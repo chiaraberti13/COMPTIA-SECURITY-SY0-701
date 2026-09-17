@@ -447,4 +447,35 @@ describe("English overlay", () => {
     }
     expect(orphans).toEqual([]);
   });
+
+  /**
+   * One Italian section heading, one English rendering. The explanations were
+   * written over many passes and drifted into two English wordings for the
+   * same Italian heading ("Distractor analysis" next to "Analysis of the
+   * distractors"), which reads as two different products.
+   */
+  it("render each Italian section heading with a single English wording", () => {
+    const HEADINGS: [string, string][] = [
+      ["Perché è la corretta:", "Why it's correct:"],
+      ["Perché è la BEST:", "Why it's the BEST:"],
+      ["Analisi dei distrattori:", "Analysis of the distractors:"],
+      ["Perché le altre non sono corrette:", "Why the others are not correct:"],
+      ["Piccolo Esempio Concentrato:", "Focused Mini-Example:"],
+      ["Trappola d'esame:", "Exam trap:"],
+    ];
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        const en = QUESTION_EN[d]?.[q.id]?.explanation;
+        if (!en) continue;
+        for (const [it, expected] of HEADINGS) {
+          const inSource = q.explanation.includes(`**${it}`);
+          if (inSource !== en.includes(`**${expected}`)) {
+            broken.push(`D${d}#${q.id}: «${it}» ${inSource ? "in" : "not in"} the source, «${expected}» ${inSource ? "missing from" : "present in"} the overlay`);
+          }
+        }
+      }
+    }
+    expect(broken).toEqual([]);
+  });
 });
