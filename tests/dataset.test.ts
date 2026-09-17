@@ -319,6 +319,93 @@ describe("explanations", () => {
   });
 });
 
+/* ------------------------------------------------------------------ *
+ * Near-duplicate questions
+ *
+ * Two questions can be worded completely differently and still ask the same
+ * thing. Comparing the question text misses that: what gives a twin away is
+ * the *correct answer*, because two questions testing one concept converge on
+ * the same option however their scenarios are dressed up.
+ *
+ * So this compares the correct option of every pair inside a domain and flags
+ * the ones that overlap. A hit is not automatically a defect — the same term
+ * legitimately answers a definition question and an application question, and
+ * one word ("brute force") can name two different attacks. Pairs that have
+ * been read and judged deliberate are pinned below; anything else fails, so a
+ * new question that restates an existing one cannot land unnoticed.
+ */
+const ANSWER_SIMILARITY_LIMIT = 0.55;
+
+const REVIEWED_ANSWER_TWINS = new Set([
+  // "chiave pubblica" answers both a scenario (which key encrypts for the
+  // recipient) and a definition (what the freely distributable key is called).
+  "D1#147/#210",
+  // Brute force against a safe keypad (a physical attack) and against a login
+  // portal (a password attack). Same word, two objectives; the explanations
+  // now point at each other.
+  "D2#444/#495",
+  // "Quantitative risk analysis" names the method; "risk analysis" names the
+  // stage of the process. Different options, different questions.
+  "D5#76/#158",
+]);
+
+/**
+ * The correct option(s) of a question, as a bag of meaningful words. Short
+ * words are dropped as noise, but bare numbers are kept: "Layer 7" and
+ * "Layer 4" are different answers, and throwing the digit away would make
+ * them look identical.
+ */
+function answerTokens(q: Question): Set<string> {
+  const text = correctLetters(q)
+    .map((i) => q.options[i].replace(/^\s*[A-H]\)\s*/, ""))
+    .join(" ");
+  return new Set(
+    text
+      .toLowerCase()
+      .split(/[^a-zà-ÿ0-9]+/)
+      .filter((w) => w.length >= 4 || /^\d+$/.test(w))
+  );
+}
+
+function jaccard(a: Set<string>, b: Set<string>): number {
+  let shared = 0;
+  for (const token of a) if (b.has(token)) shared += 1;
+  const union = a.size + b.size - shared;
+  return union === 0 ? 0 : shared / union;
+}
+
+/** Every same-domain pair whose correct answers overlap past the limit. */
+function answerTwins(): { pair: string; score: number }[] {
+  const found: { pair: string; score: number }[] = [];
+  for (const d of DOMAIN_IDS) {
+    const scored = QUESTIONS_BY_DOMAIN[d].map((q) => ({ id: q.id, tokens: answerTokens(q) }));
+    for (let a = 0; a < scored.length; a += 1) {
+      for (let b = a + 1; b < scored.length; b += 1) {
+        const score = jaccard(scored[a].tokens, scored[b].tokens);
+        if (score >= ANSWER_SIMILARITY_LIMIT) {
+          found.push({ pair: `D${d}#${scored[a].id}/#${scored[b].id}`, score });
+        }
+      }
+    }
+  }
+  return found;
+}
+
+describe("near-duplicate questions", () => {
+  it("no unreviewed pair of questions shares a correct answer", () => {
+    const unreviewed = answerTwins()
+      .filter(({ pair }) => !REVIEWED_ANSWER_TWINS.has(pair))
+      .map(({ pair, score }) => `${pair} (${score.toFixed(2)})`);
+    expect(unreviewed).toEqual([]);
+  });
+
+  it("the reviewed list carries no pair that has since diverged", () => {
+    const live = new Set(answerTwins().map((t) => t.pair));
+    const stale = [...REVIEWED_ANSWER_TWINS].filter((pair) => !live.has(pair));
+    expect(stale).toEqual([]);
+  });
+});
+
 describe("English overlay", () => {
   it("subtopic overrides target existing checklist keys in their domain", () => {
     const orphans: string[] = [];

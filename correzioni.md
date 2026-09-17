@@ -1114,19 +1114,23 @@ Problemi rilevati fuori dall'ambito dei contenuti.
       veniva resa standalone in silenzio. Le 25 voci deliberatamente standalone sono
       ora elencate in `STANDALONE_SUBTOPICS` e due test impongono una scelta
       esplicita per ogni voce nuova.
+- [x] **Nessun controllo permanente sui duplicati.** Quattro domande aggiunte in
+      questa revisione duplicavano nella sostanza una domanda già presente, e
+      nessun controllo della suite le aveva intercettate: quello esistente
+      confronta il **testo** della domanda, mentre due domande possono essere
+      scritte in modo del tutto diverso e chiedere la stessa cosa. Aggiunti due
+      test che confrontano la **risposta corretta** di ogni coppia dello stesso
+      dominio con l'indice di Jaccard sui termini significativi, soglia 0,55.
+      I numeri nudi restano nel confronto — senza di essi *Livello 7* e
+      *Livello 4* risulterebbero identici. Le tre coppie legittime sono elencate
+      in `REVIEWED_ANSWER_TWINS` con la motivazione, e un secondo test segnala
+      le voci diventate obsolete, così l'elenco non può marcire.
+      *(Risolto su richiesta esplicita dell'autore, con modifica a
+      `tests/dataset.test.ts`.)*
 
 ### Aperte
 
-- [ ] **Nessun controllo permanente sui duplicati.** In questa tranche quattro
-      domande nuove duplicavano nella sostanza una domanda già presente, e
-      nessuno dei controlli della suite le ha intercettate: il test di
-      similarità confronta il **testo** della domanda, mentre due domande
-      possono essere scritte in modo completamente diverso e chiedere la stessa
-      cosa. Il controllo che le ha trovate confronta la **risposta corretta**, ed
-      è stato scritto per l'occasione. Portarlo nella suite (`tests/`) darebbe una
-      garanzia permanente ogni volta che si aggiungono domande.
-      *Segnalato e non implementato: la modifica riguarda il codice di test, non
-      i contenuti.*
+- [ ] **Nessuna.**
 
 Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
 le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
@@ -1151,7 +1155,7 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Fatti crittografici (lunghezze chiave, simmetrico/asimmetrico, hash) | 0 errori |
 | Coerenza numerica `ALE = SLE × ARO` | 0 errori |
 | Duplicati semantici fra domande (testo) | 0 |
-| Duplicati per **risposta corretta** (controllo nuovo) | 0 reali su 4 candidati: `D3#416`/`#421` è un artefatto (lo script scarta le cifre e legge *Livello 7* e *Livello 4* come identici); `D1#147`/`#210` e `D5#76`/`#158` hanno risposte diverse e livelli cognitivi diversi; `D2#444`/`#495` sono la forza bruta **fisica** e quella sulle **credenziali**, ora messe esplicitamente a confronto |
+| Duplicati per **risposta corretta** (ora nei test) | 0 non esaminati. Le tre coppie legittime sono pinnate con la motivazione: `D1#147`/`#210` (scenario contro definizione della chiave pubblica), `D2#444`/`#495` (forza bruta **fisica** contro quella sulle **credenziali**, ora messe a confronto nelle spiegazioni), `D5#76`/`#158` (il **metodo** contro la **fase** del processo) |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
 | Distribuzione della risposta corretta | A 165 · B 176 · C 170 · D 156 (ricontata sul dataset corrente di 662 domande; il totale supera 662 perché le domande a risposta multipla contano più di una lettera) |
 
