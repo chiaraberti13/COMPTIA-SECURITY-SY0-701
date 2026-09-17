@@ -317,6 +317,25 @@ describe("explanations", () => {
     }
     expect(broken).toEqual([]);
   });
+
+  it("discuss every wrong option", () => {
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        const correct = new Set(correctLetters(q));
+        const wrong = q.options.map((_, i) => i).filter((i) => !correct.has(i));
+        for (const [lang, text] of bothLanguages(d, q)) {
+          const missing = wrong.filter((i) => !new RegExp(`\\*\\*\\s*${LETTERS[i]}[)*]`).test(text));
+          if (missing.length > 0) {
+            broken.push(
+              `${lang} D${d}#${q.id}: no analysis of ${missing.map((i) => LETTERS[i]).join(", ")}`
+            );
+          }
+        }
+      }
+    }
+    expect(broken).toEqual([]);
+  });
 });
 
 /* ------------------------------------------------------------------ *
