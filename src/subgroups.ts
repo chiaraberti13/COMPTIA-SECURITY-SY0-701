@@ -492,6 +492,10 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "SOW": "Accordi e Contratti di Servizio",
   "InternalAudit": "Valutazioni e Audit di Sicurezza",
   "ExternalAudit": "Valutazioni e Audit di Sicurezza",
+  "AttestationConcept": "Valutazioni e Audit di Sicurezza",
+  "AuditCommitteeConcept": "Valutazioni e Audit di Sicurezza",
+  "SelfAssessmentConcept": "Valutazioni e Audit di Sicurezza",
+  "ExaminationConcept": "Valutazioni e Audit di Sicurezza",
   "RegulatoryAudit": "Valutazioni e Audit di Sicurezza",
   "PenetrationTestAudit": "Valutazioni e Audit di Sicurezza", // Domain 5
   "PenTestEngagementTypes": "Valutazioni e Audit di Sicurezza", // Domain 5
