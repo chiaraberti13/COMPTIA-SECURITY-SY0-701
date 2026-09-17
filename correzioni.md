@@ -1131,6 +1131,69 @@ Problemi rilevati fuori dall'ambito dei contenuti.
 ### Aperte
 
 - [ ] **Nessuna.**
+---
+
+## Terza revisione — lettura del glossario, 17 settembre 2026
+
+**Perimetro:** le **550 voci di checklist e glossario**, lette una per una. Erano
+l'unica parte del corpus mai sottoposta a lettura integrale: i cicli precedenti
+le avevano solo attraversate con scansioni mirate (assoluti, generalizzazioni
+note, confronti didattici) e lette per intero solo dove una scansione o una
+domanda collegata le richiamava.
+
+**Controllo strutturale preliminare, prima di leggere:** nessuna voce priva di
+definizione, dettagli, nota d'esame o traduzione inglese. Un solo candidato a
+«definizione circolare» (`HotSiteRes`), verificato e risultato un falso positivo
+dell'euristica.
+
+### Report per dominio
+
+| Dominio | Voci | Difetti | Natura prevalente |
+| --- | --- | --- | --- |
+| 1.0 | 81 | 7 | Contraddizioni con voci già corrette, e nozioni crittografiche imprecise (sale, chiave pubblica, key escrow) |
+| 2.0 | 74 | 6 | Un errore tecnico grave (cifratura contro il ransomware), una categoria definita per intenzione anziché per accesso, assoluti |
+| 3.0 | 174 | 12 | Misconcezioni diffuse (NAT come sicurezza, proxy come anonimato, WAF «unico» a Layer 7) e assoluti su air gap e fault tolerance |
+| 4.0 | 132 | 5 | Contraddizioni con le correzioni su IDS/IPS e sugli attacchi alle password, imprecisioni su scansioni e port scan |
+| 5.0 | 89 | 5 | La regola ALE non allineata alla correzione di `D5#6`, ambito del GDPR, assoluti su formazione e SOC 2 |
+| **Totale** | **550** | **35** | |
+
+### I tre schemi ricorrenti
+
+1. **Correzioni applicate alle domande ma non al glossario.** Il caso più
+   frequente e il più insidioso, perché lascia due parti del materiale che
+   dicono cose opposte: `DetectiveControl` presentava IDS e IPS come categorie
+   di prodotto dopo che le voci dedicate erano state corrette; `AccessControlModels`
+   diceva che MAC è «il più sicuro» mentre `MACConcept` dice l'opposto; `ALE`
+   conservava la regola «costo del controllo ≤ ALE» corretta in `D5#6`; `IPSLogs`
+   e `SystemLogs` contraddicevano le correzioni su IPS e password spraying;
+   `SocialEngineering` dava la formazione come unica difesa mentre
+   `BECSocialEngineering` indica la verifica *out-of-band* come la più efficace.
+2. **Assoluti sopravvissuti solo in italiano.** `RootOfTrustConcept` e `SSHPBQ`
+   avevano perso «indissolubile» e «sicuro al 100%» nella versione inglese in un
+   ciclo precedente, ma non in quella italiana. Un controllo mirato sugli
+   assoluti in IT ha confermato che erano gli unici due rimasti.
+3. **Nozioni popolari ma sbagliate.** Il NAT come misura di sicurezza, il proxy
+   come strumento di anonimato, il sale come difesa dalla forza bruta, la
+   cifratura come protezione dal ransomware. Tutte affermazioni che si trovano
+   ovunque e che l'esame verifica proprio perché sono diffuse.
+
+### Verificato e lasciato invariato
+
+Non ogni segnalazione è un difetto, e annotare i non-difetti evita di riaprirli:
+
+* **«Trasferimento affidabile» per Layer 2 e Layer 4** è la dicitura classica del
+  modello OSI; i tip chiariscono subito TCP contro UDP.
+* **«Controllo investigativo»** come resa italiana di *detective control* è una
+  convenzione di casa, usata in modo coerente e sempre affiancata al termine
+  inglese fra parentesi: non genera ambiguità sulla categoria CompTIA.
+* **`SASTRes` chiama l'analisi statica «white box»**: termine che gli obiettivi
+  non usano più per le *modalità di penetration test*, ma corrente nel gergo
+  dell'application security, e la voce lo presenta come tale.
+* **`SimulationsConcept`** descrive un'esercitazione a squadre contrapposte:
+  coerente al proprio interno e distinta da `FunctionalExercisesConcept`, che è
+  quella richiamata dalla domanda `D5#172`.
+
+
 
 Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
 le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
