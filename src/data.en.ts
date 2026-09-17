@@ -2358,7 +2358,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   AntivirusRes: {
     name: "Antivirus",
     definition: "Software program installed locally on the host designed to scan, detect, isolate and remove viruses and malicious files.",
-    details: "Traditional **Antivirus** systems:\n* Rely mainly on **Signature-based detection**: they compare the cryptographic hash of each file with a local database of known signatures.\n* Require constant and daily updating of the signatures from the vendor's cloud to remain effective.\n* Have limited effectiveness against zero-day threats, polymorphic modified files and fileless malware that acts only in RAM.",
+    details: "Traditional **Antivirus** systems:\n* Rely mainly on **Signature-based detection**: they compare the content of each file against a local database of known patterns. A signature is not necessarily the file hash — that identifies a single sample — but more often a recurring byte sequence, which also catches minor variants of the same family.\n* Require constant and daily updating of the signatures from the vendor's cloud to remain effective.\n* Have limited effectiveness against zero-day threats, polymorphic modified files and fileless malware that acts only in RAM.",
     examTip: "Signature-based antivirus is extremely effective and fast at blocking known and common threats, but fails in the face of zero-day attacks.",
   },
   AntiMalwareRes: {
@@ -2418,7 +2418,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   CVSS: {
     name: "CVSS",
     definition: "Common Vulnerability Scoring System: standardized framework used to calculate a numeric score indicating the severity of a software vulnerability.",
-    details: "The **CVSS** score ranges from 0.0 to 10.0 (Critical severity) and is composed of three groups of metrics:\n* **Base Score Metrics:** Intrinsic and permanent characteristics of a vulnerability, such as the attack vector (AV), attack complexity (AC), privileges required (PR), user interaction (UI) and impact on CIA.\n* **Temporal Score Metrics:** Dynamic characteristics that vary over time, such as the availability of public exploit code and the status of official patches.\n* **Environmental Score Metrics:** Customization factors based on the organization's actual infrastructure context (asset importance, modified CIA requirements).",
+    details: "The **CVSS** score ranges from 0.0 (no severity) to 10.0 (Critical). In version **3.1**, the one the exam material is calibrated on and the one you will find in almost every advisory, it is composed of three groups of metrics:\n* **Base Score Metrics:** Intrinsic and permanent characteristics of a vulnerability, such as the attack vector (AV), attack complexity (AC), privileges required (PR), user interaction (UI) and impact on CIA.\n* **Temporal Score Metrics:** Dynamic characteristics that vary over time, such as the availability of public exploit code and the status of official patches.\n* **Environmental Score Metrics:** Customization factors based on the organization's actual infrastructure context (asset importance, modified CIA requirements).\n* **A note on version 4.0:** published by FIRST at the end of 2023, it renames the *Temporal* group to **Threat** and adds a **Supplemental** group; its vectors are recognizable by the `CVSS:4.0` prefix. The underlying logic does not change: stable metrics, metrics that vary over time, metrics tied to your own context.",
     examTip: "The CVSS Base Metrics measure the stable and permanent attributes of a vulnerability, determining the initial priority and severity level for the exam.",
   },
   PatchManagement: {
@@ -2442,7 +2442,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   InabilityToPatchConcept: {
     name: "Inability to Patch",
     definition: "The impossibility or extreme technical and operational difficulty of applying a security patch to a system, due to compatibility constraints, obsolete hardware or integrated firmware.",
-    details: "Frequent in embedded systems, medical devices, industrial systems (ICS) and legacy systems running no-longer-supported software. It requires external compensating security measures (such as firewalls or segmentation).",
+    details: "Frequent in embedded systems, medical devices, industrial systems (ICS) and legacy systems running no-longer-supported software. It requires external compensating security measures (such as dedicated firewalls or network segmentation).",
     examTip: "Faced with the Inability to Patch a critical system, applying compensating controls such as physical or logical segmentation is the correct exam answer.",
   },
   ActiveReconnaissanceConcept: {
@@ -2622,7 +2622,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   SNMP: {
     name: "SNMP",
     definition: "Simple Network Management Protocol: standard protocol used to remotely monitor and manage network devices, collecting performance and status parameters.",
-    details: "The main versions of the **SNMP** protocol are:\n* **SNMPv1 and SNMPv2c:** Lack cryptographic security. They use Community Strings, which act as simple passwords transmitted in cleartext over the network. Subject to sniffing and interception attacks.\n* **SNMPv3:** Introduces robust cryptographic standards based on three pillars: **Authentication** (verification of the origin through SHA/MD5 cryptographic hashes), **Confidentiality** (AES/DES encryption of packets to prevent sniffing) and **Integrity** (guarantee that packets have not been modified in transit).",
+    details: "The main versions of the **SNMP** protocol are:\n* **SNMPv1 and SNMPv2c:** Lack cryptographic security. They use Community Strings, which act as simple passwords transmitted in cleartext over the network. Subject to sniffing and interception attacks.\n* **SNMPv3:** Introduces robust cryptographic standards based on three pillars: **Authentication** (verification of the origin through SHA/MD5 cryptographic hashes), **Confidentiality** (encryption of packets to prevent sniffing: **AES** in correct configurations, DES only on dated equipment and to be avoided, as is MD5 for authentication) and **Integrity** (guarantee that packets have not been modified in transit).",
     examTip: "In exam contexts, to securely manage network devices, always disable SNMPv1/v2c and mandatorily implement SNMPv3.",
   },
   NetFlow: {
@@ -2766,7 +2766,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   ProbeRes: {
     name: "Probe",
     definition: "Probe: Dedicated device or software responsible for the passive interception and preliminary analysis of network traffic or logs at a specific point of the network, before sending them to the centralized collector.",
-    details: "A **Probe** (e.g. NetFlow Probe):\n* Can be integrated into routers/switches or be a standalone hardware connected to a SPAN or network TAP port.\n* Examines the transiting packets, extracts the summary information (IP, ports, volumes) and organizes it into standardized records (e.g. Flow Records) to send them securely to the collector.\n* Does not affect the performance of the monitored servers or applications.",
+    details: "A **Probe** (e.g. NetFlow Probe):\n* Can be integrated into routers/switches or be a standalone hardware connected to a SPAN or network TAP port.\n* Examines the transiting packets, extracts the summary information (IP, ports, volumes) and organizes it into standardized records (e.g. Flow Records) to send them securely to the collector.\n* Does not affect the performance of the observed servers and applications, because it reads a copy of the traffic and never sits in its path. Watch out, though: when the probe is *integrated* into a router or switch, it consumes that device's CPU and memory, and under heavy load that shows.",
     examTip: "The Probe monitors and captures local telemetry at the physical or logical level, acting as the information source for the centralized collector.",
   },
   CollectorRes: {
@@ -2940,7 +2940,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   ChainOfCustody: {
     name: "Chain of Custody",
     definition: "Structured chronological document that formally records every transition, handling, movement and custody of a physical or digital piece of evidence.",
-    details: "The **Chain of Custody**:\n* Ensures the integrity and authenticity of digital evidence from the moment of seizure until its presentation in court.\n* Must clearly indicate: date and time of the handover, identity and signature of the person handing over and the person receiving, unique asset identifier, and technical reason for the transfer.\n* Any interruption or inconsistency in the documentation invalidates the admissibility of the evidence in legal proceedings.",
+    details: "The **Chain of Custody**:\n* Ensures the integrity and authenticity of digital evidence from the moment of seizure until its presentation in court.\n* Must clearly indicate: date and time of the handover, identity and signature of the person handing over and the person receiving, unique asset identifier, and technical reason for the transfer.\n* Any interruption or inconsistency in the documentation compromises admissibility: it is the first point opposing counsel attacks, because a gap in the chain means nobody can rule out that the evidence was altered while unattended. Whether the evidence is actually excluded is for the court to decide, case by case.",
     examTip: "The Chain of Custody serves to legally certify that the digital evidence has not been altered, contaminated or replaced throughout the entire forensic investigation cycle.",
   },
   AcquisitionForensics: {
@@ -2952,7 +2952,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   PreservationForensics: {
     name: "Preservation",
     definition: "Maintenance of the logical and physical integrity of the acquired digital evidence.",
-    details: "**Preservation** involves:\n* Immediate calculation of the cryptographic hash (e.g. SHA-256 or MD5) of the acquired image and comparison with the hash calculated on the original medium to certify their exact mathematical correspondence.\n* Storing the seized original media in controlled and protected areas (e.g. inside electromagnetically shielded antistatic bags).\n* Performing any technical analysis activity exclusively on a working copy of the forensic image, never on the original file.",
+    details: "**Preservation** involves:\n* Immediate calculation of the cryptographic hash of the acquired image — today **SHA-256**; MD5 survives in forensics only for compatibility with dated tools and should not be chosen for a new acquisition, since collisions have been constructible since 2004 — and comparison with the hash calculated on the original medium to certify their exact mathematical correspondence.\n* Storing the seized original media in controlled and protected areas (e.g. inside electromagnetically shielded antistatic bags).\n* Performing any technical analysis activity exclusively on a working copy of the forensic image, never on the original file.",
     examTip: "The mathematical integrity of the forensic copy is verified and guaranteed by computing and comparing the cryptographic hash (SHA-256) between source and destination.",
   },
   ReportingForensics: {
