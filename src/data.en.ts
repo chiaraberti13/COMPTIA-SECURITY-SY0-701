@@ -2401,7 +2401,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Vulnerability Scan",
     definition: "Automated process of scanning systems and networks looking for vulnerabilities, misconfigurations and missing patches against a database of known flaws.",
     details: "The key concepts include:\n* **Credentialed vs Non-Credentialed:** Credentialed scans connect by authenticating locally on the target, reading file versions and registry keys; they provide maximum accuracy, drastically reducing false positives. Non-credentialed scans act from the outside (examining open ports and banners), simulating an external attacker.\n* **Active vs Passive Scanning:** Active scans send targeted packets to the targets (risk of network instability); passive scans only analyze the network traffic in transit to infer software versions.",
-    examTip: "Credentialed scans ensure maximum accuracy of results and avoid false positives/negatives tied to misleading service banners.",
+    examTip: "A **credentialed** scan logs into the system and reads installed versions, registry keys and configuration files directly, instead of inferring them from the **banner** the service exposes on the network. That is why it **drastically reduces** false positives — banners lie often, for instance when a distribution backports a fix without changing the version number. **Reducing is not eliminating:** false negatives remain for whatever the scanner does not know about, and false positives for checks it cannot interpret.\n* **The price:** privileged credentials are needed on every system, and they must be stored and rotated. Those credentials become a target in their own right, which is why authenticated scanning runs from a dedicated account with privileges limited to what it needs, and monitored.",
   },
   PenetrationTest: {
     name: "Penetration Test",
@@ -2581,7 +2581,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Port Scan",
     definition: "Port scanning: An active reconnaissance activity aimed at sending packets to a range of TCP/UDP ports on a target computer to discover which ports and services are open, closed or filtered.",
     details: "The **Port Scan**:\n* Is a fundamental step for both penetration testers and attackers to map a host's attack surface.\n* Allows inferring the operating systems running (OS Fingerprinting) and the exact versions of the active software daemons by examining the packet responses (e.g. SYN, ACK, RST packets).\n* Is commonly performed with tools such as **Nmap**.",
-    examTip: "Nmap is the absolute standard tool for port scanning. A dense sequence of rejected connection attempts (RST) signals a scanning activity intercepted by the firewall.",
+    examTip: "**Nmap** is the reference tool. **The three outcomes to tell apart, because they say different things:**\n  * **Open** — the service answers (in TCP, a `SYN/ACK`): something is listening.\n  * **Closed** — an `RST` comes back: the host is reachable but nothing is listening on that port. The `RST` therefore proves **the host exists**.\n  * **Filtered** — **nothing comes back** and the scanner times out: something in between is **dropping** the packets, typically a firewall with a *drop* policy.\n* **From the defender's side:** a dense run of attempts against different ports from the same address within seconds is the classic scanning profile, and it shows in the firewall logs whatever the outcome. **Exam trap:** a firewall configured to *reject* answers with `RST` and makes the port look **closed**; one configured to *drop* does not answer and makes it look **filtered** — which is preferable, because it does not even confirm that the host exists.",
   },
   VulnerabilityAssessmentRes: {
     name: "Vulnerability Assessment Lifecycle (Phases)",
@@ -2791,7 +2791,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Firewall Logs",
     definition: "Firewall event-log files that keep track of all authorized or rejected network traffic.",
     details: "**Firewall Logs** store structured records containing:\n* Source and destination IP addresses, TCP/UDP communication ports involved and protocols (e.g. TCP, UDP, ICMP).\n* The action taken: `ALLOW` (connection allowed based on the rules) or `DENY`/`DROP` (connection blocked).\n* The identifier of the specific rule that made the decision about the traffic.",
-    examTip: "A dense sequence of records with the `DENY` action coming from the same source IP directed to progressive external ports unequivocally denotes port-scanning activity.",
+    examTip: "A dense sequence of `DENY` records from the same source towards different ports within seconds is the typical profile of a **port scan**. **Verify before concluding:** a misconfigured application retrying, a backup agent or an internal monitoring system produces the same shape. Look at the **origin** (internal and known, or external and never seen), the **regularity** of the intervals, and whether the ports follow a sequence: retrying software hammers the **same** port, a scan walks through them.\n* **What a firewall log says and does not say:** it says a connection was attempted, from which address, to which port, and whether policy allowed or denied it. It does **not** say what the traffic contained or who the person behind the address was: for content you need packet capture, for the person the DHCP log and the asset inventory.",
   },
   EndpointLogs: {
     name: "Endpoint Logs",
@@ -2803,7 +2803,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "System Logs",
     definition: "Operating-system event logs focused on user access, service status and configuration changes.",
     details: "**System Logs** (e.g. Windows Event Viewer Security/System logs, syslog on Linux):\n* Track successfully completed access attempts and failed attempts (Event ID 4625 on Windows).\n* Record the creation of new user accounts, changes to membership in high-privilege groups (e.g. addition to Domain Admins).\n* Show system-level anomalies, shutdowns or crashes of core services.\n* To protect the integrity of the logs, they must be sent in real time to a centralized Syslog server with WORM (Write-Once-Read-Many) storage.",
-    examTip: "A sudden spike of failed login attempts for different accounts (Usernames) followed by a single success indicates a password spraying or brute-force attack.",
+    examTip: "**Direction matters, not the number of attempts.** Many failures across **different accounts**, one or two tries each, is **password spraying**: the attacker tries one common password against the whole directory, precisely so as not to trip per-account lockout. Many failures against **a single account** is **brute force**. One attempt per account, with both username and password plausible, is **credential stuffing** from already-breached credentials.\n* **The detail that changes the severity:** the **final success**. A run of failures is an attempt; repeated failure **followed by a successful logon** is a probable compromise, and from there the analysis moves to what that account did after getting in.",
   },
   IDSLogs: {
     name: "IDS Logs",
@@ -2815,7 +2815,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "IPS Logs",
     definition: "Logs generated by intrusion-prevention systems, documenting the actively blocked attacks.",
     details: "**IPS Logs**:\n* Document not only the detection of the threat, but the immediate preventive action taken to neutralize the attack (e.g. `RESET CONNECTION` or `DROP PACKET`).\n* Record the application of temporary dynamic blocking rules for the attacker's IP addresses on the perimeter firewall.",
-    examTip: "IPS logs act as proof of an active preventive control, highlighting which threats were blocked before penetrating the network.",
+    examTip: "IPS logs record what the sensor recognized **and what it did about it**. **Always read the action field; do not stop at the product name:** `blocked`, `dropped` or `reset` mean the traffic was stopped; `alert`, `detected` or `permitted` mean it was **seen and let through**. An IPS in detection-only mode, or attached to a SPAN port, produces entries of the second kind and behaves in every respect like an IDS.\n* **Why this is common:** many organizations keep new signatures in detection-only mode for an observation period, promoting them to blocking only after confirming they do not catch legitimate traffic. Inferring a block from the mere presence of an entry in the IPS log is therefore a misreading.",
   },
   ApplicationLogs: {
     name: "Application Logs",
