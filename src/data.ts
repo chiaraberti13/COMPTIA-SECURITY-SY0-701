@@ -5060,7 +5060,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 98,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "ANALISI",
     scenario: "Presso Kelly Innovations LLC, David ha recentemente notato alcuni pattern insoliti nel flusso di lavoro del suo team. Jamario, un dipendente solitamente diligente, ha improvvisamente iniziato ad accedere a file non correlati al suo dipartimento ed è stato sorpreso a caricare grandi quantità di dati su un servizio cloud esterno. Enrique ha cliccato per errore sul link di un'e-mail sospetta, ma lo ha segnalato immediatamente. Susan ha notato che il suo computer era molto più lento del solito, pur non avendo apportato modifiche o aggiornamenti.",
     question: "Date queste situazioni, quale dei seguenti dipendenti ha manifestato un comportamento anomalo, rischioso e inatteso che potrebbe indicare una potenziale minaccia alla sicurezza?",
@@ -5705,7 +5705,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 141,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Jamario, uno specialista di cybersecurity presso Kelly Innovations LLC, vuole valutare come i dipendenti reagiscono ai tentativi di ingegneria sociale. Invia e-mail simulate a tutti i dipendenti per vedere chi vi risponde.",
     question: "Quale dei seguenti termini descrive MEGLIO l'iniziativa di Jamario?",
@@ -5765,7 +5765,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 145,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Susan, dipendente presso Dion Training, riceve un'e-mail da un mittente apparentemente familiare. L'e-mail le chiede di cliccare su un link per reimpostare la password a causa di 'attività insolita'. Trova la cosa strana poiché non ha richiesto alcun reset della password.",
     question: "Quale delle seguenti azioni dovrebbe intraprendere Susan?",
@@ -5825,7 +5825,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 149,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Rico Financials ha implementato un programma di sensibilizzazione alla sicurezza. In una recente lezione, i dipendenti hanno appreso i rischi associati a dipendenti malintenzionati e minacce simili.",
     question: "Qual è l'obiettivo di questa lezione?",
@@ -5870,7 +5870,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 152,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "RICORDO",
     scenario: null,
     question: "Quale pratica di sensibilizzazione alla sicurezza prevede la conduzione di attacchi e-mail simulati per educare i dipendenti a riconoscere e rispondere ai tentativi di phishing?",
@@ -5915,7 +5915,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 155,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Per migliorare la consapevolezza sulla sicurezza, quale delle seguenti affermazioni descrive MEGLIO come i dipendenti potrebbero riconoscere un tentativo di phishing?",
@@ -5945,7 +5945,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 157,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Il Johnson Group, un laboratorio forense, ha implementato un programma completo di sensibilizzazione alla sicurezza per educare i propri dipendenti sulle best practice di cybersecurity. Come parte di questo programma, hanno pianificato e creato e-mail di phishing simulate. Ora sono entrati nella fase di esecuzione del programma.",
     question: "Cosa farà il Johnson Group nella fase di esecuzione?",
@@ -10651,7 +10651,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 32,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Mitigation Techniques & Controls",
     level: "ANALISI",
     scenario: "Un'azienda scopre che una libreria open-source ampiamente integrata nel proprio portale di e-commerce contiene una grave vulnerabilità che consente l'esecuzione di codice da remoto. Poiché si tratta di una vulnerabilità appena scoperta (Zero-Day), il team di sviluppo del progetto open-source non ha ancora rilasciato una patch correttiva.",
     question: "Quale rappresenta la prima e più efficace azione immediata che il team di sicurezza deve intraprendere per contenere il rischio?",
@@ -10711,7 +10711,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 36,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Actors & Motivations",
     level: "APPLICAZIONE",
     scenario: "Per superare i limiti di dimensione dei file imposti dal server di posta aziendale e accelerare lo scambio di file grafici pesanti con i clienti esterni, i dipendenti dell'ufficio marketing acquistano autonomamente un abbonamento di gruppo ad un servizio cloud non autorizzato di file sharing, utilizzandolo quotidianamente per condividere materiale aziendale.",
     question: "Come viene definito questo specifico fenomeno e rischio per la sicurezza aziendale?",
@@ -10921,7 +10921,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 425,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: "Un dipendente dell'amministrazione riceve un'e-mail apparentemente proveniente dal dipartimento IT che richiede un cambio password immediato tramite un link esterno, che in realtà reindirizza a una pagina di login contraffatta.",
     question: "Qual è il nome del vettore di attacco che prevede l'invio di e-mail fraudolente per ingannare i destinatari e spingerli a rivelare informazioni sensibili o a fare clic su collegamenti dannosi?",
@@ -10966,7 +10966,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 428,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: "Durante un incontro sulla sicurezza degli endpoint personali, un formatore discute dei rischi legati all'uso di tecnologie di comunicazione a corto raggio che, se non configurate correttamente, consentono la connessione di dispositivi vicini senza richiedere credenziali o cifratura nativa automatica.",
     question: "Quale delle seguenti opzioni rappresenta un tipo di rete wireless non protetta che utilizza onde radio a corto raggio per connettere dispositivi senza crittografia o autenticazione iniziale obbligatoria?",
@@ -10981,7 +10981,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 429,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un'applicazione web crea un file temporaneo per salvare un valore che verrà letto e utilizzato pochi istanti dopo. Un utente malintenzionato monitora il sistema e riesce a cancellare o modificare questo file subito dopo la sua creazione, ma un attimo prima che l'applicazione lo richiami per l'elaborazione.",
     question: "Quale tipo di vulnerabilità viene sfruttata in questa situazione?",
@@ -11011,7 +11011,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 431,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Il responsabile amministrativo riceve una videochiamata dal direttore finanziario, che riconosce per volto e voce. Il direttore, apparentemente in aeroporto, chiede un bonifico urgente verso un nuovo fornitore e insiste perché la pratica resti riservata fino al suo rientro. La chiamata dura due minuti, l'immagine ha qualche scatto e il direttore non risponde mai alle domande dirette, ripetendo invece frasi generiche. Il vero direttore era in riunione altrove.",
     question: "Quale tecnica è stata impiegata e quale controllo l'avrebbe fermata?",
@@ -11026,7 +11026,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 432,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Enrique sta verificando l'integrità dei file all'interno dei server della Kelly Innovations LLC quando si accorge di una gravissima anomalia: due file completamente diversi (con contenuti differenti) producono esattamente lo stesso valore hash crittografico. Comprendendo l'estremo rischio per l'autenticità dei dati, Enrique segnala subito l'accaduto per cambiare algoritmo.",
     question: "Quale termine descrive MEGLIO l'anomalia crittografica riscontrata da Enrique?",
@@ -11071,7 +11071,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 435,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Jason riceve un'e-mail all'account aziendale della Kelly Innovations LLC. L'e-mail sembra provenire da Reed, un suo collega, e afferma che Reed ha urgente bisogno di ricevere la fattura di un progetto recente entro 10 minuti, perché si trova in riunione con Sasha e i dirigenti. Jason invia la fattura immediatamente, senza verificare con Reed.",
     question: "Quale tipo di attacco descrive MEGLIO questa situazione?",
@@ -11086,7 +11086,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 436,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti vettori di minaccia riguarda principalmente software o dati dannosi trasferiti o eseguiti tramite documenti, file eseguibili o altri tipi di file comuni?",
@@ -11101,7 +11101,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 437,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti porte dovrebbe essere disabilitata o monitorata attentamente per prevenire segnalazioni VoIP (Voice over IP) non autorizzate, che possono essere un vettore di frode telefonica o controllo non autorizzato delle chiamate?",
@@ -11131,7 +11131,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 439,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Stai lavorando in remoto e hai bisogno di accedere alle risorse di rete aziendali. Ti connetti a un hotspot Wi-Fi pubblico in un bar vicino e usi un client VPN per stabilire una connessione sicura. Tuttavia, noti che il client VPN è obsoleto.",
     question: "A quale tipo di vulnerabilità ti stai esponendo?",
@@ -11146,7 +11146,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 440,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti vulnerabilità hardware riguarda la capacità di modificare il software che controlla le funzionalità di un dispositivo?",
@@ -11161,7 +11161,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 441,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Un attaccante installa un access point wireless non autorizzato in un bar, che imita un punto di accesso legittimo. I clienti ignari si connettono a questo access point, consentendo all'attaccante di intercettare i loro dati.",
     question: "Quale dei seguenti termini descrive MEGLIO questo vettore di minaccia?",
@@ -11191,7 +11191,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 443,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In un istituto di ricerca ad alta sicurezza, i dipendenti notano alcune anomalie. Ogni mattina, il primo dipendente ad arrivare trova la porta d'ingresso principale leggermente socchiusa, anche se nulla sembra rubato o manomesso. La struttura utilizza un sistema di tessere di accesso ad alta tecnologia e i log mostrano diversi addetti autorizzati che avrebbero presumibilmente avuto accesso all'edificio più volte durante la notte. Tuttavia, tali dipendenti affermano di essere stati a casa in quelle ore.",
     question: "Quale tipo di attività dannosa è PIÙ probabilmente responsabile di queste anomalie?",
@@ -11251,7 +11251,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 447,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti tecniche consente a un attaccante di intercettare una rete cablata collegando il proprio dispositivo direttamente ai cavi di rete?",
@@ -11386,7 +11386,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 456,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un tipo di attacco al vettore umano (human vector attack) che consiste nel creare un indirizzo web o un nome di dominio falso che assomiglia a uno legittimo, ma con lievi differenze ortografiche o di punteggiatura?",
@@ -11416,7 +11416,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 458,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In una sala conferenze, i partecipanti collegati al Wi-Fi aziendale vengono disconnessi ripetutamente e in blocco, ogni pochi secondi. L'analisi dello spettro mostra un flusso continuo di frame di gestione 802.11 che ordinano ai client di disconnettersi, apparentemente inviati dall'indirizzo MAC dell'access point legittimo. La rete usa WPA2 con una passphrase robusta, e nessun client risulta compromesso.",
     question: "Quale attacco è in corso e perché la robustezza della passphrase non lo impedisce?",
@@ -11431,7 +11431,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 459,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un attacco di ingegneria sociale che consiste nell'utilizzare loghi di un'organizzazione reale per ingannare gli utenti e far loro fidare di un sito web falso?",
@@ -11461,7 +11461,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 461,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale servizio di accesso remoto è associato alla porta TCP 3389 e, quando viene esposto direttamente su Internet, è uno dei vettori più sfruttati per attacchi di forza bruta sulle credenziali seguiti dalla distribuzione di ransomware?",
@@ -11476,7 +11476,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 462,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è una tecnica di ingegneria sociale in cui un attaccante si spaccia per qualcun altro, spesso per ottenere accesso non autorizzato a sistemi o informazioni?",
@@ -11491,7 +11491,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 463,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale vettore di minaccia utilizza allegati dannosi o hyperlink all'interno delle comunicazioni, richiedendo all'attaccante di convincere il destinatario a interagire con il contenuto per uno sfruttamento efficace?",
@@ -11536,7 +11536,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 466,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: "Un'azienda migra la propria infrastruttura su un fornitore cloud pubblico. Tutta la gestione — creazione delle macchine, regole di rete, permessi sui bucket di archiviazione — avviene tramite chiamate a interfacce di programmazione raggiungibili da Internet e autenticate con chiavi di accesso.",
     question: "Quale di queste vulnerabilità è la più caratteristica degli ambienti cloud, dove diventa la via d'accesso principale alla gestione dell'infrastruttura?",
@@ -11551,7 +11551,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 467,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "I sistemi di un'azienda sono stati compromessi e dati sensibili sono stati rubati. Dalle indagini è emerso che la violazione è avvenuta tramite un Trojan installato sul cellulare di un dipendente. Il dipendente aveva aggirato i controlli di sicurezza MDM (Mobile Device Management) per installare un gioco non autorizzato, che ha introdotto il Trojan o ha consentito agli attaccanti di sfruttare la sicurezza indebolita del telefono.",
     question: "Quale delle seguenti è la causa PIÙ probabile di questa vulnerabilità?",
@@ -11566,7 +11566,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 468,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quali dei seguenti sono problemi hardware che derivano da prodotti che non vengono più prodotti o supportati, ma sono ancora utilizzabili?",
@@ -11581,7 +11581,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 469,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Un attaccante sottrae il file delle password di un'applicazione: contiene soltanto gli hash, calcolati con SHA-256. In poche ore recupera in chiaro il 70% delle password, senza mai provarne una sul sistema, confrontando gli hash con un archivio precalcolato che aveva già pronto. Gli account con password molto lunghe e insolite restano invece intatti.",
     question: "Quale tecnica ha usato l'attaccante e quale contromisura l'avrebbe resa inutile?",
@@ -11596,7 +11596,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 470,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti porte, se lasciata aperta e non monitorata, potrebbe consentire query di database da fonti esterne non autorizzate?",
@@ -11626,7 +11626,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 472,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "APPLICAZIONE",
     scenario: "Jason sta lavorando su un'applicazione legacy che elabora input degli utenti. Nota che gli input utente non verificati possono essere usati per manipolare direttamente le locazioni di memoria, portando a potenziali attacchi di memory injection.",
     question: "Per contrastare questa vulnerabilità, cosa dovrebbe prioritizzare Jason?",
@@ -11701,7 +11701,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 477,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Elvi installa sul telefono aziendale alcune applicazioni scaricate come pacchetti da un sito di terze parti anziché dallo store ufficiale e, per riuscirci senza restrizioni, rimuove i limiti imposti dal sistema operativo ottenendo privilegi di amministratore sul dispositivo. Nelle settimane successive il telefono mostra consumo anomalo di dati e l'MDM aziendale non riesce più ad applicare le policy.",
     question: "Quali pratiche di Elvi hanno aumentato la superficie d'attacco del dispositivo? (scegline due)",
@@ -11762,7 +11762,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 481,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "La Kelly Innovations LLC sta ospitando una riunione fuori sede in un hotel. Benjamin sta cercando di accedere alla rete Wi-Fi dell'hotel. Alla connessione, non gli viene richiesto di inserire alcuna credenziale, ma viene reindirizzato a una splash page che richiede il numero di camera e il cognome. Benjamin è consapevole delle potenziali minacce sulle reti aperte e vuole garantire che le sue comunicazioni rimangano riservate.",
     question: "Cosa dovrebbe fare Benjamin per garantire comunicazioni sicure sul Wi-Fi aperto?",
@@ -11777,7 +11777,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 482,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Un attaccante usa una telefonata per impersonare un rappresentante di banca al fine di raccogliere informazioni sensibili dei clienti. Quale dei seguenti vettori di minaccia descrive questo scenario?",
@@ -11792,7 +11792,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 483,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Stai lavorando su un progetto con un vendor che ti fornisce un'applicazione software che gira sul tuo computer. Il vendor afferma che il software è sicuro e che non dovrai occuparti tu di aggiornamenti o patch: quando saranno disponibili, verranno scaricati automaticamente dal suo server e installati sul tuo computer. Che tipo di vettore di attacco è questo un esempio?",
@@ -11897,7 +11897,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 490,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Ricevi un'email dalla tua banca che ti chiede di verificare i dettagli del tuo account cliccando su un link. L'email sembra legittima, ma sei sospettoso.",
     question: "Che tipo di vettore di minaccia è stato utilizzato per questo attacco?",
@@ -11912,7 +11912,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 491,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Il direttore generale di un gruppo industriale riceve una singola e-mail, scritta in un italiano impeccabile, che cita per nome due membri del consiglio e fa riferimento a un'operazione di acquisizione realmente in corso e nota solo a poche persone. Il messaggio lo invita ad approvare con urgenza, tramite un portale esterno, il documento riservato allegato. Nessun altro dipendente ha ricevuto messaggi simili.",
     question: "Quale tecnica di ingegneria sociale descrive MEGLIO questo attacco?",
@@ -11927,7 +11927,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 492,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Nei log di un'applicazione web compaiono richieste come `GET /download?file=../../../../etc/passwd` e, in forma codificata, `%2e%2e%2f%2e%2e%2f`. L'applicazione riceve dall'utente il nome del file da scaricare e lo concatena direttamente al percorso della cartella dei documenti, senza alcun controllo. Alcune risposte hanno codice 200 e dimensione anomala.",
     question: "Quale vulnerabilità viene sfruttata e come si corregge alla radice?",
@@ -11942,7 +11942,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 493,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un attacco in cui un processo verifica lo stato o il valore di una risorsa prima di usarla, ma un altro processo lo ha cambiato nel frattempo?",
@@ -11957,7 +11957,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 494,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un software di gestione remota usato da migliaia di aziende rilascia un aggiornamento regolarmente firmato con il certificato del produttore e distribuito dai suoi canali ufficiali. Due settimane dopo l'installazione, in tutte le organizzazioni che lo hanno applicato compare una backdoor che contatta un server esterno. Chi non aveva ancora aggiornato non risulta compromesso.",
     question: "Quale tipo di attacco si è verificato?",
@@ -11987,7 +11987,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 496,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti si riferisce a una vulnerabilità nel software sconosciuta al vendor e spesso sfruttata da attori malevoli prima che venga rilasciata una patch?",
@@ -12002,7 +12002,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 497,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Tre studi di ingegneria che lavorano su una stessa gara d'appalto vengono compromessi nello stesso periodo. L'analisi forense rileva che tutti e tre i team consultavano abitualmente il portale di un'associazione tecnica di settore, e che quel portale era stato violato e serviva un exploit del browser ai soli visitatori provenienti dagli indirizzi IP dei tre studi.",
     question: "Quale tecnica d'attacco descrive questo scenario?",
@@ -12017,7 +12017,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 498,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "In un venerdì lavorativo molto occupato, Jennifer riceve un'email con una richiesta urgente da Robert, il CEO di Cornerstone Design. L'importo, la fattura e i dettagli di pagamento sono inclusi nell'email. L'indirizzo email è Robert@cornerslonedesign.com. Robert ha l'abitudine di aspettare troppo a lungo per il pagamento e poi inviare un'email frettolosa a Jennifer richiedendo il pagamento.",
     question: "Che tipo di attacco sta avendo luogo?",
@@ -12062,7 +12062,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 501,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti vettori di minaccia è associato ai rischi derivanti dal non cambiare le informazioni di login preimpostate sui sistemi, consentendo potenzialmente un facile accesso non autorizzato?",
@@ -12122,7 +12122,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 505,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In un aeroporto, i passeggeri si collegano a una rete Wi-Fi aperta che espone lo stesso nome della rete ufficiale dello scalo e un segnale più forte. I dispositivi già configurati vi si agganciano da soli, senza che nessuno scelga nulla. Chi naviga verso siti aziendali riceve un avviso di certificato non valido, che molti ignorano. Il punto di accesso è un dispositivo portatile collocato in sala d'attesa da un estraneo.",
     question: "Quale attacco è in corso e quale contromisura lo neutralizza dal lato del client?",
@@ -12212,7 +12212,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 511,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Un'azienda tecnologica scopre che il firmware di alcuni dei loro dispositivi contiene una backdoor nascosta. Dalle indagini emerge che il firmware compromesso proveniva da un fornitore straniero con cui avevano stipulato un contratto. La backdoor dava agli attaccanti accesso remoto ai dispositivi senza che l'utente ne fosse a conoscenza.",
     question: "A quale tipo di vettore di attacco è caduta vittima l'azienda?",
@@ -12272,7 +12272,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 515,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Nei giorni precedenti l'assemblea degli azionisti, decine di profili creati di recente diffondono la notizia che l'amministratore delegato di un'azienda quotata sia sotto indagine. La notizia è falsa e costruita ad arte, corredata da uno screenshot contraffatto di una testata reale, e viene rilanciata da account che sembrano indipendenti ma pubblicano gli stessi contenuti negli stessi minuti. Il titolo perde il 9% in due giorni.",
     question: "Quale vettore d'attacco descrive MEGLIO questa campagna?",
@@ -12287,7 +12287,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 516,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti scenari esemplifica MEGLIO un business email compromise?",
@@ -12302,7 +12302,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 517,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un'applicazione di magazzino calcola il totale di un ordine moltiplicando quantità e prezzo unitario e conserva il risultato in una variabile intera a 32 bit con segno. Un cliente ordina una quantità enorme di un articolo: il totale dovrebbe superare il limite rappresentabile, ma il sistema registra un importo **negativo** e accredita la differenza sul conto del cliente. Nessun controllo di input aveva limitato la quantità.",
     question: "Quale vulnerabilità è stata sfruttata?",
@@ -12347,7 +12347,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 520,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un fornitore di hosting condiviso assegna a ogni cliente una macchina virtuale sullo stesso host fisico. Durante un test autorizzato, Barzun parte da una macchina virtuale di prova con soli privilegi utente, sfrutta un difetto nel driver grafico paravirtualizzato dell'hypervisor e ottiene esecuzione di codice sull'host. Da lì può leggere la memoria delle macchine virtuali degli altri clienti.",
     question: "Quale tipo di vulnerabilità è stata sfruttata?",
@@ -12437,7 +12437,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 526,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Nella hall e negli ascensori di un'azienda compaiono adesivi con un codice QR e la scritta \"Inquadra per attivare il nuovo Wi-Fi ospiti\". Chi lo scansiona col telefono raggiunge una pagina che imita fedelmente il portale SSO aziendale e chiede credenziali e codice MFA. Il gateway di posta non ha registrato nulla di anomalo e nessun dipendente segnala SMS sospetti; i primi account compromessi appartengono a persone che hanno inquadrato il codice con il telefono personale.",
     question: "Quale tecnica descrive l'attacco, e perché i controlli su e-mail e SMS non l'hanno intercettato?",
@@ -12467,7 +12467,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 528,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Durante una site survey wireless, un analista rileva in magazzino un access point che trasmette l'SSID aziendale ma non compare nell'inventario, non è gestito dal controller centrale e accetta connessioni senza autenticazione 802.1X. Risulta collegato a una presa di rete dell'ufficio e configurato con le impostazioni di fabbrica.",
     question: "Quale minaccia è stata individuata e qual è il controllo che l'avrebbe impedita?",
@@ -12497,7 +12497,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 530,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Ricevi un messaggio di testo dalla tua banca che ti chiede di confermare i dettagli del tuo account e il PIN cliccando su un link. Il messaggio sembra legittimo, ma sei sospettoso.",
     question: "Di che tipo di attacco potrebbe essere un esempio questo scenario?",
@@ -12527,7 +12527,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 532,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Lunedì mattina il SOC di un'azienda manifatturiera rileva che tre workstation di reparti diversi hanno eseguito lo stesso binario dall'unità `E:` pochi minuti dopo l'inizio del turno. Il venerdì precedente alcune chiavette USB con l'etichetta scritta a mano \"Stipendi 2026 - Riservato\" erano state trovate nel parcheggio aziendale e diversi dipendenti le avevano collegate al PC per capire a chi restituirle. I log del gateway di posta e del firewall perimetrale non mostrano alcun transito di quel file.",
     question: "Quale vettore d'attacco è stato sfruttato e quale controllo lo avrebbe neutralizzato alla radice?",

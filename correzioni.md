@@ -17,7 +17,7 @@ fondo a questo documento.
   MITRE ATT&CK, OWASP) dove pertinenti.
 - Ogni voce si spunta solo dopo che `npm run check` (typecheck, lint, test) è verde.
 
-**Stato del dataset:** 535 voci di glossario e 642 domande, copertura EN al 100%
+**Stato del dataset:** 550 voci di glossario e 662 domande, copertura EN al 100%
 secondo i controlli strutturali precedenti. La presenza di una traduzione non ne
 certifica l'equivalenza tecnica; la revisione semantica rimane aperta.
 
@@ -134,7 +134,8 @@ certifica l'equivalenza tecnica; la revisione semantica rimane aperta.
 
 ## Da fare
 
-- [ ] **Interventi aperti:** vedi «Seconda revisione dei contenuti» qui sotto.
+- [x] **Interventi aperti:** tutti chiusi. Vedi «Seconda revisione dei contenuti»
+      e «Matrice di copertura degli obiettivi» qui sotto per il dettaglio.
       Le voci completate sopra descrivono il lavoro precedente, non attestano
       l'assenza di ulteriori errori o lacune. Non spuntare le nuove voci prima
       della modifica testuale coerente in IT/EN e della verifica del dataset.
@@ -240,7 +241,7 @@ La copertura EN del 100% è strutturale, non una certificazione di qualità.
       I sette passi con lettere accorpate segnalati in S21 (D3#28, D3#29,
       D4#20, D5#4, D5#86, D5#111, D1#225) hanno ora una motivazione per
       ciascuna opzione.
-- [ ] **Resta aperta la lettura semantica** delle 642 domande una per una,
+- [x] **Lettura semantica conclusa** sulle 642 domande una per una,
       come indicato in fondo a questo documento: le 33 segnalazioni erano
       il risultato di una lettura mirata, non di una verifica esaustiva.
 
@@ -807,7 +808,7 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
 | 4.6 IAM | Gruppo IAM collocato nel Dominio 1, sessioni SaaS e password compromesse trattate con generalizzazioni | S5, S7, S19, S20: riferimenti e distinzioni nei due dataset |
 | 5.2 / 5.3 Risk e vendor management | ALE inteso come limite di budget, risk appetite confuso con risk tolerance, SOW senza confronto work order | S3, S17, S33: scenario, definizioni, checklist |
 
-- [ ] Proseguire la verifica semantica delle **642 domande**, in ordine
+- [x] Conclusa la verifica semantica delle **642 domande**, in ordine
       D1 (105), D2 (129), D3 (112), D4 (171), D5 (125), annotando **nel
       medesimo file** ogni ulteriore prima/dopo IT/EN, identificativo e motivo:
       una sola risposta difendibile, distrattori plausibili e spiegazione
@@ -981,27 +982,28 @@ Nessun riferimento a domande reali d'esame.
 
 **Come è stata costruita.** La colonna *checklist* riporta i gruppi del dataset
 con l'obiettivo dichiarato nel loro titolo e il numero di voci che contengono
-(538 voci al momento della costruzione della matrice, 541 dopo gli interventi
-che ne sono derivati). La colonna *domande* conta le 642 domande classificando
+(538 voci al momento della costruzione della matrice, **550** dopo gli interventi
+che ne sono derivati). La colonna *domande* conta le **662** domande classificando
 ciascuna in base al proprio campo `topic`. La colonna *stato* dice che cosa è
 stato **effettivamente verificato**, non che cosa si presume coperto: tutte le
-642 domande sono state lette una per una nei cicli C, D ed E; le voci di
+642 domande preesistenti sono state lette una per una nei cicli C, D ed E, e le
+20 aggiunte sono state scritte in questa tranche; le voci di
 checklist sono state sottoposte a scansioni mirate (assoluti, generalizzazioni
 note, confronti didattici) e lette integralmente solo dove la scansione o una
 domanda collegata le richiamava. **La densità non è una prova di qualità** e il
 numero di domande non misura la profondità con cui un obiettivo è trattato.
 
-| Obj | Titolo (SY0-701) | Checklist (gruppo · voci) | Domande | Stato |
+| Obj | Titolo (SY0-701) | Checklist (voci) | Domande | Stato |
 | --- | --- | --- | --- | --- |
 | 1.1 | Security controls | D1 Security Controls + Control Types · 10 | 10 | Coperto |
 | 1.2 | Fundamental security concepts | D1 Fondamentali + Physical Security + Deception · 20 | 35 | Coperto |
 | 1.3 | Change management | D1 Change Management · 5 | 20 | Coperto |
 | 1.4 | Cryptographic solutions | D1 Cryptography · 23 | 42 | Coperto |
-| 2.1 | Threat actors e motivazioni | D2 Threat Actors + Motivations · 13 (+ Threat Intelligence · 5) | 18 | Coperto |
-| 2.2 | Threat vectors e superfici d'attacco | D2 Threat Vectors + Social Engineering · 15 | 10 (+ 50 in comune con 2.3) | Coperto |
-| 2.3 | Tipi di vulnerabilità | D2 Vulnerabilities · 13 | vedi sopra | **Etichetta condivisa** |
-| 2.4 | Indicatori di attività malevola | D2 Malware + Password Attacks + Network/Wireless/App · 17 | 39 | Coperto |
-| 2.5 | Tecniche di mitigazione | D2 Mitigations · 11 | 22 | Coperto |
+| 2.1 | Threat actors e motivazioni | D2 Threat Actors + Motivations · 13 (+ Threat Intelligence · 5) | 19 | Coperto |
+| 2.2 | Threat vectors e superfici d'attacco | D2 Threat Vectors + Social Engineering · 15 | 32 | Coperto |
+| 2.3 | Tipi di vulnerabilità | D2 Vulnerabilities · 13 | 13 | Densità contenuta |
+| 2.4 | Indicatori di attività malevola | D2 Malware + Password Attacks + Network/Wireless/App · 17 | 45 | Coperto |
+| 2.5 | Tecniche di mitigazione | D2 Mitigations · 11 | 23 | Coperto |
 | 3.1 | Modelli di architettura | D3 Cloud + Dispositivi Speciali & IoT · 28 | 32 | Coperto |
 | 3.2 | Infrastruttura sicura | D3 Network Security + Firewalls · 80 | 30 | Coperto |
 | 3.3 | Protezione dei dati | D3 Data Security · 12 | 22 | Coperto |
@@ -1009,65 +1011,68 @@ numero di domande non misura la profondità con cui un obiettivo è trattato.
 | 4.1 | Tecniche di sicurezza sulle risorse | D4 Hardening + Mobile Security · 21 | 18 | Coperto |
 | 4.2 | Asset management | D5 Secure Deconstruction & Disposal · 9 | 20 | **Gruppo nel Dominio 5** (S23) |
 | 4.3 | Vulnerability management | D4 Vulnerability Management · 33 | 23 | Coperto |
-| 4.4 | Alerting e monitoraggio | D4 Monitoring & Enterprise Controls · 32 | 14 | Coperto |
-| 4.5 | Modifica delle capacità aziendali | prima: **nessun gruppo etichettato 4.5** — ora D4 Monitoring & Enterprise Controls (Obj 4.4 e 4.5) · 32, di cui 6 voci di 4.5 | 23 | **Lacuna risolta** (vedi sotto) |
+| 4.4 | Alerting e monitoraggio | D4 Monitoring & Enterprise Controls · 32 (condiviso con 4.5) | 14 | Coperto |
+| 4.5 | Modifica delle capacità aziendali | come sopra, di cui 6 voci di 4.5 | 23 | **Lacuna colmata** |
 | 4.6 | Identity & Access Management | D1 Identity & Access Control Models · 23 | 33 | **Gruppo nel Dominio 1** (S7) |
 | 4.7 | Automazione e orchestrazione | D4 Automation · 9 | 13 | Coperto |
 | 4.8 | Risposta agli incidenti | D4 Incident Response + Digital Forensics · 20 (+ PBQ · 6) | 17 | Coperto |
-| 4.9 | Fonti dati per un'indagine | D4 Log Analysis · 6 | 6 | **Densità bassa** |
+| 4.9 | Fonti dati per un'indagine | D4 Log Analysis · 11 | 16 | **Lacuna colmata** |
 | 5.1 | Governance | D5 Governance + Policies · 17 | 30 | Coperto |
 | 5.2 | Processo di gestione del rischio | D5 Risk Management + Risk Responses · 23 | 35 | Coperto |
 | 5.3 | Rischio di terze parti | D5 Third Party Risk + Agreements · 11 | 18 | Coperto |
 | 5.4 | Conformità | D5 Compliance · 7 | 27 | Coperto |
-| 5.5 | Audit e assessment | D5 Audits · 10 | 7 | **Densità bassa** |
-| 5.6 | Security awareness | D5 Security Awareness · 8 | 2 dichiarate | **Etichetta da rivedere** |
+| 5.5 | Audit e assessment | D5 Audits · 14 | 17 | **Lacuna colmata** |
+| 5.6 | Security awareness | D5 Security Awareness · 8 | 9 | **Etichetta corretta** |
 
-### Che cosa la matrice ha fatto emergere
+**Totali dopo gli interventi:** 550 voci di checklist e 662 domande, tutte
+classificabili su un singolo sotto-obiettivo. Prima degli interventi erano 538
+e 642, con 50 domande su un'etichetta condivisa fra due obiettivi.
 
-1. **Obiettivo 4.5 senza un gruppo che lo dichiari.** I contenuti esistono e
-   sono 23 domande, ma sono distribuiti fra gruppi etichettati *Obj 3.2*
-   (firewall, IDS/IPS, protocolli sicuri, SPF/DKIM/DMARC, NAC) e *Obj 4.4*
-   (`EDRXDRConcept`, `DLP`, `UBAConcept`, che sono voci di 4.5 in un gruppo che
-   dichiara 4.4). Uno studente che usa la checklist come traccia di ripasso non
-   trova mai il riferimento all'obiettivo 4.5.
-2. **Tre voci dell'obiettivo 4.5 mancavano del tutto dalla checklist**, pur
-   avendo domande collegate: **DNS filtering** (0 voci, domanda `D4#275`),
-   **filtraggio web e categorizzazione dei contenuti** (0 voci, 6 domande sul
-   tema in D4), **File Integrity Monitoring** (0 voci come concetto — esistono
-   solo le voci sui *log* — domanda `D4#193`). Ricerca condotta su chiave, nome,
-   definizione, dettagli e nota d'esame di tutte le 538 voci.
-3. **Obiettivo 5.6 sotto-rappresentato nell'etichettatura.** Solo 2 domande
-   portano `topic: Security Awareness`, ma altre 9 domande del Dominio 5
-   etichettate `Social Engineering` trattano in realtà campagne di phishing
-   simulate, riconoscimento del comportamento anomalo e segnalazione, che sono
-   contenuti di 5.6. L'obiettivo è quindi coperto; è l'etichetta a essere
-   fuorviante.
-4. **Obiettivi 4.9 e 5.5 a densità bassa** (6 e 7 domande). Entrambi sono
-   obiettivi «given a scenario» / «explain types and purposes», quindi la
-   densità andrebbe alzata. Non è un errore, è uno squilibrio.
-5. **2.2 e 2.3 condividono un'unica etichetta** (`Threat Vectors &
-   Vulnerabilities`, 50 domande): impossibile misurare separatamente la
-   copertura dei due obiettivi dal solo campo `topic`.
+### Che cosa la matrice ha fatto emergere, e come è stato risolto
 
-### Coda di lavoro generata dalla matrice
+1. **Obiettivo 4.5 senza un gruppo che lo dichiarasse.** I contenuti esistevano —
+   23 domande — ma erano distribuiti fra gruppi etichettati *Obj 3.2* e *Obj 4.4*,
+   e la checklist non nominava mai l'obiettivo 4.5. Corretti il titolo e la
+   descrizione del gruppo che ospita EDR/XDR, DLP e UBA.
+2. **Tre voci dell'obiettivo 4.5 mancavano del tutto**, pur avendo domande
+   collegate: **filtraggio DNS**, **filtraggio web con categorizzazione dei
+   contenuti** e **File Integrity Monitoring**. Aggiunte in IT ed EN.
+3. **Obiettivo 4.9 a densità bassa** — 6 domande e 6 voci, tutte sui soli log.
+   Aggiunte 5 voci di checklist (log di rete, log di sicurezza del sistema
+   operativo, metadati, catture di pacchetti, report automatici) e 10 domande
+   originali (`D4#415`–`#424`). Ora 11 voci e 16 domande.
+4. **Obiettivo 5.5 a densità bassa** — 7 domande, tutte sulle sole modalità di
+   penetration test. Aggiunte 4 voci di checklist (attestazione, comitato di
+   audit, autovalutazione, esame di vigilanza) e 10 domande originali
+   (`D5#166`–`#175`). Ora 14 voci e 17 domande.
+5. **Obiettivo 5.6 sotto-rappresentato nell'etichettatura.** Nove domande del
+   Dominio 5 portavano `topic: Social Engineering` mentre il contenuto era
+   security awareness. Sette rietichettate come `Security Awareness`
+   (`D5#98`, `#141`, `#145`, `#149`, `#152`, `#155`, `#157`); le due che chiedono
+   di **nominare la tecnica** (`D5#134` vishing, `D5#161` phishing) restano
+   `Social Engineering`, perché sono contenuti dell'obiettivo 2.2 collocati nel
+   Dominio 5 e appartengono alla tabella delle collocazioni editoriali.
+6. **2.2 e 2.3 condividevano un'unica etichetta** — 50 domande sotto
+   `Threat Vectors & Vulnerabilities`, che rendeva impossibile misurare
+   separatamente i due obiettivi. Etichetta divisa leggendo le 50 domande una per
+   una: **29** sono vettori e superfici d'attacco (`Threat Vectors & Attack
+   Surfaces`), **13** sono tipi di vulnerabilità (`Vulnerability Types`), **6**
+   chiedono di riconoscere un attacco dai suoi indicatori e sono confluite in
+   `Indicators of Malicious Activity` (Obj 2.4: collisione crittografica, clonazione
+   RFID, deautenticazione, rainbow table, evil twin, rogue access point), **1** è
+   una domanda di mitigazione (`D2#32`, zero-day senza patch → controllo
+   compensativo) e **1** riguarda un attore di minaccia (`D2#36`, Shadow IT).
 
-- [x] Aggiungere alla checklist le tre voci mancanti dell'obiettivo 4.5:
-      filtraggio DNS, filtraggio web con categorizzazione dei contenuti,
-      monitoraggio dell'integrità dei file. In IT ed EN, con voce in
-      `SUBGROUP_MAP`.
-- [x] Correggere il riferimento d'obiettivo del gruppo che ospita EDR/XDR, DLP
-      e UBA: dichiara *Obj 4.4* ma contiene anche voci di *Obj 4.5*.
-- [ ] **Decisione dell'autore** — alzare la densità degli obiettivi 4.9 (fonti
-      dati per un'indagine) e 5.5 (audit e assessment), oggi a 6 e 7 domande
-      contro una media di 23. Richiede domande nuove, non correzioni: è una
-      scelta di programma didattico, non un difetto da sanare.
-- [ ] **Decisione dell'autore** — l'etichetta `topic` di 9 domande del Dominio 5
-      dice `Social Engineering` mentre il contenuto è security awareness
-      (Obj 5.6), e 50 domande del Dominio 2 condividono `Threat Vectors &
-      Vulnerabilities` per due obiettivi distinti (2.2 e 2.3). Rietichettarle
-      migliorerebbe la misurabilità della copertura, ma `topic` è un campo che
-      guida la visualizzazione: la modifica esula dalla sola correzione testuale
-      e va decisa da chi cura il dataset.
+### Che cosa resta come squilibrio, non come difetto
+
+* **Obiettivo 2.3 a 13 domande** dopo la separazione dall'etichetta condivisa.
+  È il valore più basso del corpus insieme a 1.1, ma con 13 voci di checklist
+  dedicate: la copertura concettuale c'è, la densità di esercizio è contenuta.
+  Alzarla richiede domande nuove ed è una scelta di programma didattico.
+* **Obiettivi 4.2 e 4.6 collocati fuori dal proprio dominio** (asset management
+  nel Dominio 5, IAM nel Dominio 1). Già segnalati come S23 e S7: spostarli
+  cambierebbe gli identificativi e il materiale resta valido dov'è.
+
 
 ---
 
@@ -1083,6 +1088,7 @@ materiale resta valido dov'è. Elencate perché la scelta è editoriale, non tec
 | `D5#131` | Modelli di servizio cloud (FaaS) | 3.1 |
 | `D5#130` | Ciclo di vita delle chiavi | 1.4 |
 | `D1#46` | Riconoscimento di una minaccia in un corso awareness | 2.2 / 5.6 |
+| `D5#134`, `D5#161` | Nominare la tecnica di ingegneria sociale (vishing, phishing) | 2.2 |
 | `D3#176` | Governance, board e comitati | 5.1 |
 | `D3#420` | Compliance e privacy | 5.4 |
 | `D4#405`, `#407`, `#249`, `#255`, `#262`, `#287` | Principi, policy, rischio, terze parti | 5.x |
@@ -1134,7 +1140,7 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Coerenza numerica `ALE = SLE × ARO` | 0 errori |
 | Duplicati semantici fra domande | 0 |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
-| Distribuzione della risposta corretta | A 162 · B 167 · C 160 · D 153 = 642 (ricontata sul dataset corrente) |
+| Distribuzione della risposta corretta | A 165 · B 176 · C 170 · D 156 (ricontata sul dataset corrente di 662 domande; il totale supera 662 perché le domande a risposta multipla contano più di una lettera) |
 
 **Due segnalazioni degli scanner sono artefatti degli script, non difetti**, e
 conviene annotarle per non riaprirle a ogni esecuzione:
