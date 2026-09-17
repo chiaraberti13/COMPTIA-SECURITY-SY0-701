@@ -3281,7 +3281,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   Accept: {
     name: "Accept",
     definition: "Risk acceptance: consciously deciding to live with the risk without implementing further controls.",
-    details: "This strategy is adopted when the cost of the control exceeds the expected economic benefit (Cost > ALE), or when the risk level falls fully within the corporate tolerance. Acceptance must always be formally documented and signed by the Risk Owner.",
+    details: "This strategy is adopted when the annual cost of the control exceeds the **ALE reduction** that control would deliver — not the ALE in absolute terms: a control that halves the exposure must be compared against half the ALE — or when the risk level falls fully within the corporate tolerance. Acceptance must always be formally documented and signed by the Risk Owner.",
     examTip: "Accepting a risk does not mean ignoring it out of negligence, but formally documenting it after a quantitative analysis demonstrating the economic ineffectiveness of the countermeasures.",
   },
   Transfer: {
@@ -3605,7 +3605,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   DataRetentionRes: {
     name: "Data Retention",
     definition: "Data Retention: A formal policy that establishes how long the different types of corporate information and customers' personal data must be kept, and how they must be disposed of once the term has expired.",
-    details: "It is dictated by legal and compliance obligations (e.g. keeping tax records for 10 years, medical data for decades). It provides for the proactive elimination of expired data to minimize risk exposure and reduce storage costs (proactive DLP).",
+    details: "It is dictated by legal and compliance obligations (e.g. keeping tax records for 10 years, medical data for decades). It provides for the proactive elimination of expired data to minimize risk exposure and reduce storage costs: it is the practical application of the **data minimization** principle, because what is no longer kept can neither be breached nor subpoenaed.",
     examTip: "The Data Retention policy defines the maximum and minimum data-retention terms in compliance with local and industry laws, mandating their immediate secure elimination at the predefined term.",
   },
   },

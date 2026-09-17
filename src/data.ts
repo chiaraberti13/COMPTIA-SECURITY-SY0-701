@@ -3774,7 +3774,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         name: "Accept",
         checklistKey: "Accept",
         definition: "Accettazione del rischio: decidere consapevolmente di convivere con il rischio senza implementare ulteriori controlli.",
-        details: "Questa strategia viene adottata quando il costo del controllo supera il beneficio economico atteso (Costo > ALE), oppure quando il livello di rischio rientra pienamente nella tolleranza aziendale. L'accettazione deve essere sempre formalmente documentata e firmata dal Risk Owner.",
+        details: "Questa strategia viene adottata quando il costo annuo del controllo supera la **riduzione di ALE** che quel controllo produrrebbe — non l'ALE in assoluto: un controllo che dimezza l'esposizione va confrontato con metà dell'ALE — oppure quando il livello di rischio rientra pienamente nella tolleranza aziendale. L'accettazione deve essere sempre formalmente documentata e firmata dal Risk Owner.",
         examTip: "Accettare un rischio non significa ignorarlo per negligenza, ma documentarlo formalmente dopo un'analisi quantitativa che dimostra l'inefficacia economica delle contromisure."
       },
       {
@@ -3977,7 +3977,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         name: "External Audit",
         checklistKey: "ExternalAudit",
         definition: "Una valutazione condotta da una società di revisione o ente certificatore terzo e indipendente.",
-        details: "L'obiettivo primario è verificar l'effettiva aderenza a standard internazionali per emettere certificazioni formali e pubbliche (es. SOC 2 Type II, ISO 27001), indispensabili per dimostrare ai clienti e ai partner la postura di sicurezza dell'organizzazione.",
+        details: "L'obiettivo primario è verificare l'effettiva aderenza a standard internazionali per emettere certificazioni formali e pubbliche (es. SOC 2 Type II, ISO 27001), indispensabili per dimostrare ai clienti e ai partner la postura di sicurezza dell'organizzazione.",
         examTip: "Gli audit esterni offrono la massima affidabilità per gli stakeholder poiché sono condotti da terze parti indipendenti dotate di accreditamento ufficiale."
       },
       {
@@ -4173,7 +4173,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         name: "Physical Destruction",
         checklistKey: "PhysicalDestructionRes",
         definition: "Distruzione Fisica (Physical Destruction): L'atto di frantumare, incenerire o macinare materialmente un supporto di memorizzazione dati per escluderne definitivamente l'utilizzo e rendere impossibile la ricostruzione dei chip di memoria.",
-        details: "Include metodi come lo **Shredding** (triturazione in piccoli frammenti, altamente consigliato per SSD e chip flash), il **Pulping** (riduzione in pasta di carta per documenti cartacei), la **Pulverizing** (riduzione dei chip in polvere finissima) e l'**Incineration** (incenerimento termico completo ad alte temperature).",
+        details: "Include metodi come lo **Shredding** (triturazione in piccoli frammenti, altamente consigliato per SSD e chip flash), il **Pulping** (riduzione in pasta di carta per documenti cartacei), il **Pulverizing** (riduzione dei chip in polvere finissima) e l'**Incineration** (incenerimento termico completo ad alte temperature).",
         examTip: "La triturazione fisica (Shredding) è considerata la misura di distruzione fisica d'elezione per gli SSD, in quanto i chip flash non risentono della smagnetizzazione."
       },
       {
@@ -4194,7 +4194,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         name: "Data Retention",
         checklistKey: "DataRetentionRes",
         definition: "Data Retention (Conservazione dei Dati): Una policy formale che stabilisce per quanto tempo le diverse tipologie di informazioni aziendali e dati personali dei clienti devono essere conservate, e come devono essere smaltite una volta scaduto il termine.",
-        details: "È dettata da obblighi legali e di conformità (es. tenere i record fiscali per 10 anni, i dati medici per decenni). Prevede l'eliminazione proattiva dei dati scaduti per minimizzare l'esposizione al rischio e ridurre i costi di archiviazione (DLP proattivo).",
+        details: "È dettata da obblighi legali e di conformità (es. tenere i record fiscali per 10 anni, i dati medici per decenni). Prevede l'eliminazione proattiva dei dati scaduti per minimizzare l'esposizione al rischio e ridurre i costi di archiviazione: è l'applicazione pratica del principio di **minimizzazione dei dati**, perché ciò che non si conserva più non può essere né violato né richiesto in giudizio.",
         examTip: "La policy di Data Retention definisce i termini massimi e minimi di conservazione dei dati in conformità alle leggi locali e industriali, imponendone l'eliminazione sicura immediata al termine prestabilito."
       }
     ]
