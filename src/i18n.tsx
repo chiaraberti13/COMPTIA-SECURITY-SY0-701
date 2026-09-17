@@ -737,6 +737,7 @@ export const SUBGROUP_NAME_EN: Record<string, string> = {
   "Strategie di Backup e Replica": "Backup & Replication Strategies",
   "Strategie di Trattamento del Rischio": "Risk Treatment Strategies",
   "Strumenti di Monitoraggio e Telemetria": "Monitoring & Telemetry Tools",
+  "Controlli di Filtraggio e Integrità": "Filtering & Integrity Controls",
   "Strutture di Governance e Ruoli dei Dati": "Governance Structures & Data Roles",
   "Tecniche di Mitigazione (Hardening)": "Mitigation Techniques (Hardening)",
   "Tecniche di Protezione del Dato": "Data Protection Techniques",

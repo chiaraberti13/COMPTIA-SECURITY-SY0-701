@@ -918,10 +918,11 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
         qualità e significato).
   - **Lettura semantica conclusa: 642/642 domande lette, 36 difetti corretti**
         (D1 7, D2 5, D3 2, D4 17, D5 5).
-- [ ] Costruire la matrice **obiettivo → checklist → domanda → spiegazione**
-      per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
-      non verificati nella lettura semantica, senza inferire copertura dal solo
-      numero di occorrenze di una parola.
+- [x] Costruita la matrice **obiettivo → checklist → domanda → spiegazione**
+      per tutti i sotto-obiettivi 1.1–5.6: vedi la sezione «Matrice di copertura
+      degli obiettivi» qui sotto. Tre lacune emerse sono state messe in coda e
+      risolte; le altre sono annotate come squilibri di densità, non come
+      assenze.
 - [x] **Ricerca delle generalizzazioni note in tutto il corpus** (firma =
       cifratura con chiave privata, blockchain = sempre pubblica, ALE = budget
       massimo, MFA da certificati, Zero Trust = cifratura di ogni richiesta),
@@ -973,6 +974,100 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
 [Microsoft — TPM](https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/tpm-fundamentals),
 [Microsoft — Secure Boot](https://learn.microsoft.com/en-us/windows/security/operating-system-security/system-security/secure-the-windows-10-boot-process).
 Nessun riferimento a domande reali d'esame.
+
+---
+
+## Matrice di copertura degli obiettivi (1.1 – 5.6)
+
+**Come è stata costruita.** La colonna *checklist* riporta i gruppi del dataset
+con l'obiettivo dichiarato nel loro titolo e il numero di voci che contengono
+(538 voci al momento della costruzione della matrice, 541 dopo gli interventi
+che ne sono derivati). La colonna *domande* conta le 642 domande classificando
+ciascuna in base al proprio campo `topic`. La colonna *stato* dice che cosa è
+stato **effettivamente verificato**, non che cosa si presume coperto: tutte le
+642 domande sono state lette una per una nei cicli C, D ed E; le voci di
+checklist sono state sottoposte a scansioni mirate (assoluti, generalizzazioni
+note, confronti didattici) e lette integralmente solo dove la scansione o una
+domanda collegata le richiamava. **La densità non è una prova di qualità** e il
+numero di domande non misura la profondità con cui un obiettivo è trattato.
+
+| Obj | Titolo (SY0-701) | Checklist (gruppo · voci) | Domande | Stato |
+| --- | --- | --- | --- | --- |
+| 1.1 | Security controls | D1 Security Controls + Control Types · 10 | 10 | Coperto |
+| 1.2 | Fundamental security concepts | D1 Fondamentali + Physical Security + Deception · 20 | 35 | Coperto |
+| 1.3 | Change management | D1 Change Management · 5 | 20 | Coperto |
+| 1.4 | Cryptographic solutions | D1 Cryptography · 23 | 42 | Coperto |
+| 2.1 | Threat actors e motivazioni | D2 Threat Actors + Motivations · 13 (+ Threat Intelligence · 5) | 18 | Coperto |
+| 2.2 | Threat vectors e superfici d'attacco | D2 Threat Vectors + Social Engineering · 15 | 10 (+ 50 in comune con 2.3) | Coperto |
+| 2.3 | Tipi di vulnerabilità | D2 Vulnerabilities · 13 | vedi sopra | **Etichetta condivisa** |
+| 2.4 | Indicatori di attività malevola | D2 Malware + Password Attacks + Network/Wireless/App · 17 | 39 | Coperto |
+| 2.5 | Tecniche di mitigazione | D2 Mitigations · 11 | 22 | Coperto |
+| 3.1 | Modelli di architettura | D3 Cloud + Dispositivi Speciali & IoT · 28 | 32 | Coperto |
+| 3.2 | Infrastruttura sicura | D3 Network Security + Firewalls · 80 | 30 | Coperto |
+| 3.3 | Protezione dei dati | D3 Data Security · 12 | 22 | Coperto |
+| 3.4 | Resilienza e ripristino | D3 Resilience & Recovery · 47 | 26 | Coperto |
+| 4.1 | Tecniche di sicurezza sulle risorse | D4 Hardening + Mobile Security · 21 | 18 | Coperto |
+| 4.2 | Asset management | D5 Secure Deconstruction & Disposal · 9 | 20 | **Gruppo nel Dominio 5** (S23) |
+| 4.3 | Vulnerability management | D4 Vulnerability Management · 33 | 23 | Coperto |
+| 4.4 | Alerting e monitoraggio | D4 Monitoring & Enterprise Controls · 32 | 14 | Coperto |
+| 4.5 | Modifica delle capacità aziendali | prima: **nessun gruppo etichettato 4.5** — ora D4 Monitoring & Enterprise Controls (Obj 4.4 e 4.5) · 32, di cui 6 voci di 4.5 | 23 | **Lacuna risolta** (vedi sotto) |
+| 4.6 | Identity & Access Management | D1 Identity & Access Control Models · 23 | 33 | **Gruppo nel Dominio 1** (S7) |
+| 4.7 | Automazione e orchestrazione | D4 Automation · 9 | 13 | Coperto |
+| 4.8 | Risposta agli incidenti | D4 Incident Response + Digital Forensics · 20 (+ PBQ · 6) | 17 | Coperto |
+| 4.9 | Fonti dati per un'indagine | D4 Log Analysis · 6 | 6 | **Densità bassa** |
+| 5.1 | Governance | D5 Governance + Policies · 17 | 30 | Coperto |
+| 5.2 | Processo di gestione del rischio | D5 Risk Management + Risk Responses · 23 | 35 | Coperto |
+| 5.3 | Rischio di terze parti | D5 Third Party Risk + Agreements · 11 | 18 | Coperto |
+| 5.4 | Conformità | D5 Compliance · 7 | 27 | Coperto |
+| 5.5 | Audit e assessment | D5 Audits · 10 | 7 | **Densità bassa** |
+| 5.6 | Security awareness | D5 Security Awareness · 8 | 2 dichiarate | **Etichetta da rivedere** |
+
+### Che cosa la matrice ha fatto emergere
+
+1. **Obiettivo 4.5 senza un gruppo che lo dichiari.** I contenuti esistono e
+   sono 23 domande, ma sono distribuiti fra gruppi etichettati *Obj 3.2*
+   (firewall, IDS/IPS, protocolli sicuri, SPF/DKIM/DMARC, NAC) e *Obj 4.4*
+   (`EDRXDRConcept`, `DLP`, `UBAConcept`, che sono voci di 4.5 in un gruppo che
+   dichiara 4.4). Uno studente che usa la checklist come traccia di ripasso non
+   trova mai il riferimento all'obiettivo 4.5.
+2. **Tre voci dell'obiettivo 4.5 mancavano del tutto dalla checklist**, pur
+   avendo domande collegate: **DNS filtering** (0 voci, domanda `D4#275`),
+   **filtraggio web e categorizzazione dei contenuti** (0 voci, 6 domande sul
+   tema in D4), **File Integrity Monitoring** (0 voci come concetto — esistono
+   solo le voci sui *log* — domanda `D4#193`). Ricerca condotta su chiave, nome,
+   definizione, dettagli e nota d'esame di tutte le 538 voci.
+3. **Obiettivo 5.6 sotto-rappresentato nell'etichettatura.** Solo 2 domande
+   portano `topic: Security Awareness`, ma altre 9 domande del Dominio 5
+   etichettate `Social Engineering` trattano in realtà campagne di phishing
+   simulate, riconoscimento del comportamento anomalo e segnalazione, che sono
+   contenuti di 5.6. L'obiettivo è quindi coperto; è l'etichetta a essere
+   fuorviante.
+4. **Obiettivi 4.9 e 5.5 a densità bassa** (6 e 7 domande). Entrambi sono
+   obiettivi «given a scenario» / «explain types and purposes», quindi la
+   densità andrebbe alzata. Non è un errore, è uno squilibrio.
+5. **2.2 e 2.3 condividono un'unica etichetta** (`Threat Vectors &
+   Vulnerabilities`, 50 domande): impossibile misurare separatamente la
+   copertura dei due obiettivi dal solo campo `topic`.
+
+### Coda di lavoro generata dalla matrice
+
+- [x] Aggiungere alla checklist le tre voci mancanti dell'obiettivo 4.5:
+      filtraggio DNS, filtraggio web con categorizzazione dei contenuti,
+      monitoraggio dell'integrità dei file. In IT ed EN, con voce in
+      `SUBGROUP_MAP`.
+- [x] Correggere il riferimento d'obiettivo del gruppo che ospita EDR/XDR, DLP
+      e UBA: dichiara *Obj 4.4* ma contiene anche voci di *Obj 4.5*.
+- [ ] **Decisione dell'autore** — alzare la densità degli obiettivi 4.9 (fonti
+      dati per un'indagine) e 5.5 (audit e assessment), oggi a 6 e 7 domande
+      contro una media di 23. Richiede domande nuove, non correzioni: è una
+      scelta di programma didattico, non un difetto da sanare.
+- [ ] **Decisione dell'autore** — l'etichetta `topic` di 9 domande del Dominio 5
+      dice `Social Engineering` mentre il contenuto è security awareness
+      (Obj 5.6), e 50 domande del Dominio 2 condividono `Threat Vectors &
+      Vulnerabilities` per due obiettivi distinti (2.2 e 2.3). Rietichettarle
+      migliorerebbe la misurabilità della copertura, ma `topic` è un campo che
+      guida la visualizzazione: la modifica esula dalla sola correzione testuale
+      e va decisa da chi cura il dataset.
 
 ---
 
