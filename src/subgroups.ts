@@ -401,6 +401,11 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "IDSLogs": "Analisi delle Tipologie di Log",
   "IPSLogs": "Analisi delle Tipologie di Log",
   "ApplicationLogs": "Analisi delle Tipologie di Log",
+  "NetworkLogs": "Analisi delle Tipologie di Log",
+  "OSSecurityLogs": "Analisi delle Tipologie di Log",
+  "MetadataSource": "Fonti Dati per le Indagini",
+  "PacketCaptureSource": "Fonti Dati per le Indagini",
+  "AutomatedReports": "Fonti Dati per le Indagini",
   "PreparationPhase": "Fasi del Ciclo di Incident Response",
   "DetectionPhase": "Fasi del Ciclo di Incident Response",
   "AnalysisPhase": "Fasi del Ciclo di Incident Response",
@@ -487,6 +492,10 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "SOW": "Accordi e Contratti di Servizio",
   "InternalAudit": "Valutazioni e Audit di Sicurezza",
   "ExternalAudit": "Valutazioni e Audit di Sicurezza",
+  "AttestationConcept": "Valutazioni e Audit di Sicurezza",
+  "AuditCommitteeConcept": "Valutazioni e Audit di Sicurezza",
+  "SelfAssessmentConcept": "Valutazioni e Audit di Sicurezza",
+  "ExaminationConcept": "Valutazioni e Audit di Sicurezza",
   "RegulatoryAudit": "Valutazioni e Audit di Sicurezza",
   "PenetrationTestAudit": "Valutazioni e Audit di Sicurezza", // Domain 5
   "PenTestEngagementTypes": "Valutazioni e Audit di Sicurezza", // Domain 5

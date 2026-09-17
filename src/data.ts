@@ -3183,6 +3183,41 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         definition: "File di log generati direttamente da applicazioni specifiche, come web server, database e sistemi gestionali.",
         details: "Gli **Application Logs** comprendono:\n* **Web Server Logs (es. Apache/Nginx access/error logs):** Registrano richieste HTTP (metodo GET/POST), URI risorsa richiesta, indirizzo IP del client, stringhe di query, User-Agent, e codice di stato della risposta (es. 200, 403, 404, 500).\n* **Database Logs:** Registrano query SQL eseguite, login amministrativi al database ed errori di sintassi.\n* Essenziali per rilevare attacchi applicativi complessi (SQLi, Cross-Site Scripting, Directory Traversal).",
         examTip: "La presenza di stringhe contenenti caratteri come `' UNION SELECT` o script tag `<script>` nei log di accesso del server web indica tentativi di attacco SQL Injection o Cross-Site Scripting (XSS)."
+      },
+      {
+        name: "Network Logs",
+        checklistKey: "NetworkLogs",
+        definition: "Registrazioni prodotte dai dispositivi di rete — switch, router, access point, server DHCP e DNS — che documentano connessioni, assegnazioni di indirizzo e risoluzioni di nome.",
+        details: "Le sorgenti più utili in un'indagine:\n* **Log DHCP:** associano un indirizzo IP a un indirizzo MAC in un intervallo di tempo preciso. Sono ciò che permette di trasformare *l'IP 10.4.2.37 ha esfiltrato dati alle 03:14* in *quel portatile, di quella persona*. Senza di essi un IP interno è un numero che nel frattempo può essere stato riassegnato.\n* **Log DNS:** mostrano quali nomi sono stati risolti da quale client. Rivelano la comunicazione verso domini di *command and control* e il *DNS tunneling* anche quando il traffico successivo è cifrato.\n* **Log di switch e router:** cambi di stato delle porte, adiacenze di routing, negazioni delle ACL.\n* **Log degli access point:** associazioni e disassociazioni dei client wireless, con MAC e potenza del segnale.\n* **NetFlow e sFlow:** non sono log di eventi ma registrazioni dei **flussi** (chi ha parlato con chi, su quale porta, per quanti byte e per quanto tempo), con un costo di archiviazione bassissimo rispetto alla cattura completa.",
+        examTip: "Quando lo scenario chiede **quale dispositivo fisico** stava dietro un indirizzo IP interno in un certo momento, la risposta è il **log DHCP**. Quando chiede quali domini un host ha contattato, è il **log DNS**. Un log di firewall dice che una connessione è avvenuta, non chi era la persona."
+      },
+      {
+        name: "OS-Specific Security Logs",
+        checklistKey: "OSSecurityLogs",
+        definition: "I log di sicurezza del sistema operativo, distinti dai log applicativi: registrano autenticazioni, uso dei privilegi, modifiche agli account e accessi agli oggetti.",
+        details: "Dove si guarda, in concreto:\n* **Windows — Event Log, canale Security:** gli ID da conoscere sono **4624** (accesso riuscito), **4625** (accesso fallito), **4672** (assegnazione di privilegi speciali, cioè un accesso amministrativo), **4720** (creazione di un account), **4728/4732** (aggiunta a un gruppo privilegiato) e **1102** (cancellazione del registro di sicurezza, che è di per sé un indicatore di compromissione).\n* **Il campo *Logon Type* del 4624** distingue un accesso alla console (2), di rete (3), un servizio (5), un desktop remoto (10): è ciò che separa l'amministratore alla tastiera dal movimento laterale.\n* **Linux — `/var/log/auth.log` su Debian e Ubuntu, `/var/log/secure` su RHEL:** autenticazioni SSH, uso di `sudo`, cambi di identità con `su`, eventi PAM.\n* **`auditd`** aggiunge su Linux il livello più fine: accessi a file specifici e chiamate di sistema, secondo regole definite.",
+        examTip: "Distingui **log di sistema** e **log di sicurezza del sistema operativo**: i primi raccontano come sta il sistema (servizi, driver, errori hardware), i secondi chi ha fatto che cosa. Per un'indagine su un accesso non autorizzato si va sempre sui secondi."
+      },
+      {
+        name: "Metadata",
+        checklistKey: "MetadataSource",
+        definition: "I dati che descrivono altri dati: chi ha creato un file e quando, da quale dispositivo, con quale applicazione, quale percorso ha seguito un messaggio.",
+        details: "I tre insiemi che ricorrono nelle indagini:\n* **Metadati di file:** autore, date di creazione, modifica e ultimo accesso, applicazione che ha prodotto il documento, revisioni. Nelle foto gli **EXIF** possono contenere modello del dispositivo e coordinate GPS.\n* **Metadati di posta elettronica:** le **intestazioni** del messaggio. I campi `Received` ricostruiscono a ritroso la catena dei server attraversati, `Message-ID` identifica il messaggio, `Return-Path` mostra il mittente di busta — che è quello verificato da SPF e che può essere diverso dal `From` mostrato all'utente. È qui che si smaschera uno spoofing.\n* **Metadati di traffico:** indirizzi, porte, volumi e durata, senza il contenuto. Sono ciò che NetFlow registra e ciò che resta visibile anche quando il payload è cifrato.\n\nIl motivo per cui contano: i metadati **non raccontano il contenuto, ma il contesto**, e il contesto è spesso sufficiente. Sapere che un documento riservato è stato aperto alle 3 di notte da un account che non lo aveva mai toccato è una prova, anche senza leggerne una riga.",
+        examTip: "Attenzione a un errore ricorrente: i metadati descrivono il **file**, non l'elenco di **chi lo ha aperto**. La cronologia degli accessi sta nei log di sicurezza del sistema operativo o nei log dell'applicazione, non nei metadati."
+      },
+      {
+        name: "Packet Captures",
+        checklistKey: "PacketCaptureSource",
+        definition: "La registrazione integrale dei pacchetti che transitano su un segmento di rete, contenuto compreso, tipicamente in formato PCAP.",
+        details: "Che cosa dà e che cosa costa:\n* **Contenuto completo:** è l'unica sorgente che consente di ricostruire il payload — la query esatta, il file trasferito, la stringa di *command and control*. Dove NetFlow dice *questi due host hanno scambiato 4 GB*, la cattura dice *che cosa* si sono scambiati.\n* **Come si raccoglie:** una **porta SPAN** (o mirror) sullo switch duplica il traffico verso il sensore, oppure un **TAP** di rete lo intercetta passivamente sul cavo. Il TAP non perde pacchetti sotto carico ed è la scelta forense.\n* **Il costo:** volume. Conservare mesi di cattura integrale sull'intera rete è economicamente insostenibile, ed è la ragione per cui la pratica corrente è NetFlow ovunque e cattura completa **solo sui segmenti critici** o attivata su innesco di un alert.\n* **Il limite:** se il traffico è cifrato, la cattura contiene i byte ma non il testo in chiaro. Restano leggibili le informazioni di contorno — indirizzi, porte, dimensioni, tempi e, nel TLS, il nome del server (SNI).",
+        examTip: "Quando lo scenario chiede una **prova del contenuto** — che cosa è stato esfiltrato, che cosa conteneva la query — la risposta è la cattura dei pacchetti. Quando chiede una visione **storica ed estesa** di chi ha parlato con chi, è NetFlow."
+      },
+      {
+        name: "Automated Reports",
+        checklistKey: "AutomatedReports",
+        definition: "Rapporti generati e recapitati a cadenza fissa dagli strumenti di sicurezza — SIEM, scanner di vulnerabilità, piattaforme di gestione delle patch — senza intervento umano.",
+        details: "A che cosa servono davvero:\n* **Traducono il dato in andamento:** un singolo rapporto di scansione dice quante vulnerabilità ci sono oggi; la serie dei rapporti dice se la situazione migliora o peggiora, ed è questo che interessa alla direzione.\n* **Sostengono la conformità:** molti quadri normativi chiedono di *dimostrare* che un controllo viene eseguito con regolarità. Un rapporto automatico datato e archiviato è l'evidenza che un auditor cerca.\n* **Alimentano le metriche di programma:** tempo medio di correzione delle vulnerabilità, percentuale di sistemi conformi alla baseline, copertura dell'agente di sicurezza sul parco macchine.\n\n**Il rischio da conoscere:** un rapporto che nessuno legge è peggio dell'assenza di rapporto, perché produce l'illusione del controllo. Un rapporto automatico va indirizzato a un destinatario con l'autorità di agire, e deve prevedere una soglia che trasformi il dato in una segnalazione quando serve.",
+        examTip: "Distingui **alert** e **report**: l'alert è immediato e riguarda un evento singolo che richiede una decisione ora; il report è periodico, aggregato, e serve a misurare una tendenza. Uno scenario che parla di direzione, cadenza mensile o evidenza per l'audit sta parlando di report."
       }
     ]
   },
@@ -4000,6 +4035,34 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         definition: "Reporting (Rendicontazione): La fase conclusiva di un audit, penetration test o scansione di sicurezza, in cui vengono compilati, analizzati e presentati in un documento strutturato i risultati, le vulnerabilità scoperte, i livelli di rischio e le raccomandazioni di remediation destinate ai vari stakeholder aziendali.",
         details: "Un'attività di **Reporting** efficace richiede di adattare il linguaggio al pubblico di destinazione:\n* **Executive Summary (Sintesi per i Dirigenti):** Sezione non tecnica, scritta in termini di rischio di business, impatto finanziario e conformità normativa, destinata al management per supportare decisioni strategiche e stanziamenti di budget.\n* **Technical Report (Dettaglio Tecnico):** Sezione estremamente dettagliata destinata agli amministratori di sistema e agli sviluppatori, contenente la descrizione tecnica delle falle, gli IoC correlati, le prove di concetto (PoC) di exploitation e le istruzioni precise passo-passo per la remediation e la riscansione.\n* **Prioritizzazione:** Le vulnerabilità devono essere chiaramente classificate in base alla severità (es. tramite scala CVSS da Critica a Info) per consentire una pianificazione efficiente della bonifica.",
         examTip: "Il report finale (Reporting) è il deliverable principale di qualsiasi audit o test di sicurezza; deve sempre includere sia un Executive Summary per il board, focalizzato sui rischi di business, sia un corpo tecnico dettagliato per il team IT focalizzato sulle patch."
+      },
+      {
+        name: "Attestation",
+        checklistKey: "AttestationConcept",
+        definition: "Attestazione: la dichiarazione formale con cui un revisore indipendente si esprime sui controlli di un'organizzazione, delimitandone esplicitamente perimetro, periodo e criteri di valutazione.",
+        details: "Che cosa la distingue da una semplice autodichiarazione:\n* **Chi la firma:** una parte **terza qualificata**, che assume una responsabilità professionale sul giudizio espresso. È questo a renderla spendibile verso clienti e regolatori, mentre un questionario compilato in proprio vale quanto la buona fede di chi lo compila.\n* **I tre confini che ogni attestazione dichiara:** il **perimetro** (quali sistemi, quali sedi, quali servizi), il **periodo** (una data sola oppure un intervallo) e i **criteri** (l'insieme di controlli rispetto a cui si è valutato). Un'attestazione non dice *l'azienda è sicura*: dice *questi controlli, su questo perimetro, in questo periodo, rispettavano questi criteri*.\n* **L'esempio più frequente, il SOC 2:** il **tipo I** attesta che i controlli erano **progettati** adeguatamente **a una data**; il **tipo II** attesta che hanno anche **funzionato** lungo un **periodo** di osservazione, tipicamente da sei a dodici mesi. Solo il tipo II dice qualcosa sul funzionamento reale.\n* **Attestazione e certificazione non coincidono:** la certificazione (per esempio ISO/IEC 27001) dichiara la conformità a uno standard secondo uno schema accreditato; l'attestazione è il giudizio professionale di un revisore su un insieme di controlli, e può riguardare anche criteri definiti su misura.",
+        examTip: "Quando lo scenario chiede un'evidenza **indipendente** che copra un **periodo** e non una sola data, la risposta è un'attestazione di terza parte di **tipo II**. Attenzione all'insidia: nessuna attestazione garantisce alcunché **fuori** dal perimetro e dal periodo dichiarati, e leggerla come una promessa generale di sicurezza è l'errore che l'esame verifica."
+      },
+      {
+        name: "Audit Committee",
+        checklistKey: "AuditCommitteeConcept",
+        definition: "Comitato di audit: organo del consiglio di amministrazione che vigila in modo indipendente sui rischi, sui controlli interni e sull'operato della funzione di internal audit.",
+        details: "Perché esiste e a che cosa serve:\n* **Indipendenza dalla linea operativa:** la funzione di internal audit non può riportare a chi audita, altrimenti il giudizio è viziato all'origine. Il comitato di audit è il destinatario che rende quel riporto indipendente, perché siede nel consiglio e non nella catena di comando del management.\n* **Che cosa fa in concreto:** approva il piano annuale di audit, riceve i rapporti, verifica che i rilievi vengano chiusi davvero e non semplicemente accettati, e nomina o revoca il responsabile dell'internal audit.\n* **Che cosa non fa:** non gestisce gli incidenti, non implementa controlli, non sostituisce il management. Vigila; non opera.\n* **La distinzione con il Security Steering Committee:** quest'ultimo allinea la **strategia** di sicurezza alle esigenze di business ed è composto da dirigenti delle funzioni aziendali; il comitato di audit **verifica** che quanto dichiarato corrisponda a quanto accade, ed è composto da consiglieri, tipicamente non esecutivi.",
+        examTip: "Quando uno scenario parla di **supervisione indipendente**, di a chi riporta l'internal audit, o di chi risponde al consiglio della tenuta dei controlli, la risposta è il comitato di audit. Se invece parla di allineare la sicurezza agli obiettivi di business, è lo steering committee."
+      },
+      {
+        name: "Self-Assessment",
+        checklistKey: "SelfAssessmentConcept",
+        definition: "Autovalutazione: esame che l'organizzazione conduce sui propri controlli, per misurare lo scostamento dai requisiti prima che a misurarlo sia qualcun altro.",
+        details: "Il suo posto nel programma di audit:\n* **A che cosa serve davvero:** a trovare i problemi **quando costano poco**. Un rilievo scoperto in autovalutazione si corregge in silenzio; lo stesso rilievo scoperto da un auditor esterno finisce in un rapporto, richiede un piano di rimedio formale e, se il contesto è regolamentato, può avere conseguenze.\n* **Come si conduce:** confrontando lo stato reale con un riferimento esterno — un **benchmark** CIS, un quadro come il NIST CSF, i requisiti di uno standard — e documentando ogni scostamento con un responsabile e una data.\n* **Il limite strutturale, che l'esame verifica:** manca l'**indipendenza**. Chi valuta il proprio lavoro ha un interesse, anche involontario, a giudicarlo bene. Per questo l'autovalutazione **non sostituisce** l'audit interno né l'attestazione di terza parte: li prepara.\n* **Nella catena di fornitura:** il questionario che si chiede a un fornitore (**CAIQ**, **SIG**) è per lui un'autovalutazione. Ha valore come primo filtro e come base per le domande successive, non come evidenza conclusiva.",
+        examTip: "Ordina le tre evidenze per grado di indipendenza crescente: **autovalutazione** (l'organizzazione su sé stessa) → **audit interno** (una funzione indipendente dalla linea operativa, ma interna) → **audit o attestazione di terza parte** (esterna e qualificata). Se lo scenario dice che il cliente o il regolatore non accetta la parola dell'azienda, occorre salire di un gradino."
+      },
+      {
+        name: "Examinations",
+        checklistKey: "ExaminationConcept",
+        definition: "Esame (examination): verifica esterna, spesso condotta da un'autorità di vigilanza, che accerta il rispetto di requisiti obbligatori con potere di prescrivere azioni correttive.",
+        details: "Che cosa lo distingue dagli altri controlli esterni:\n* **Chi lo conduce:** tipicamente un **regolatore** o un ente di vigilanza del settore, non un revisore scelto e pagato dall'organizzazione. Non si negozia il perimetro e non si sceglie chi viene.\n* **Che cosa comporta:** l'esame non produce soltanto un giudizio, ma può imporre **azioni correttive vincolanti**, con scadenze e verifiche successive, e nei casi gravi sanzioni, limitazioni dell'attività o revoca dell'autorizzazione.\n* **Il metodo:** ispezione documentale e in loco, colloqui con il personale, prova a campione dei controlli. Ci si aspetta che l'organizzazione dimostri la conformità con evidenze, non che la dichiari.\n* **Come si prepara:** con l'autovalutazione e con l'audit interno. Chi arriva all'esame senza aver mai guardato i propri controlli scopre i rilievi nel momento peggiore.",
+        examTip: "Metti in fila i quattro termini che l'obiettivo 5.5 tiene distinti: **autovalutazione** (interna, nessuna indipendenza) · **audit interno** (interno, indipendente dalla linea) · **audit o attestazione di terza parte** (esterno, su incarico dell'organizzazione) · **esame** (esterno, per iniziativa di un'autorità, con potere di prescrivere). Il potere sanzionatorio è ciò che identifica l'esame."
       }
     ]
   },
@@ -4997,7 +5060,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 98,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "ANALISI",
     scenario: "Presso Kelly Innovations LLC, David ha recentemente notato alcuni pattern insoliti nel flusso di lavoro del suo team. Jamario, un dipendente solitamente diligente, ha improvvisamente iniziato ad accedere a file non correlati al suo dipartimento ed è stato sorpreso a caricare grandi quantità di dati su un servizio cloud esterno. Enrique ha cliccato per errore sul link di un'e-mail sospetta, ma lo ha segnalato immediatamente. Susan ha notato che il suo computer era molto più lento del solito, pur non avendo apportato modifiche o aggiornamenti.",
     question: "Date queste situazioni, quale dei seguenti dipendenti ha manifestato un comportamento anomalo, rischioso e inatteso che potrebbe indicare una potenziale minaccia alla sicurezza?",
@@ -5642,7 +5705,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 141,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Jamario, uno specialista di cybersecurity presso Kelly Innovations LLC, vuole valutare come i dipendenti reagiscono ai tentativi di ingegneria sociale. Invia e-mail simulate a tutti i dipendenti per vedere chi vi risponde.",
     question: "Quale dei seguenti termini descrive MEGLIO l'iniziativa di Jamario?",
@@ -5702,7 +5765,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 145,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Susan, dipendente presso Dion Training, riceve un'e-mail da un mittente apparentemente familiare. L'e-mail le chiede di cliccare su un link per reimpostare la password a causa di 'attività insolita'. Trova la cosa strana poiché non ha richiesto alcun reset della password.",
     question: "Quale delle seguenti azioni dovrebbe intraprendere Susan?",
@@ -5762,7 +5825,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 149,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Rico Financials ha implementato un programma di sensibilizzazione alla sicurezza. In una recente lezione, i dipendenti hanno appreso i rischi associati a dipendenti malintenzionati e minacce simili.",
     question: "Qual è l'obiettivo di questa lezione?",
@@ -5807,7 +5870,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 152,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "RICORDO",
     scenario: null,
     question: "Quale pratica di sensibilizzazione alla sicurezza prevede la conduzione di attacchi e-mail simulati per educare i dipendenti a riconoscere e rispondere ai tentativi di phishing?",
@@ -5852,7 +5915,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 155,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Per migliorare la consapevolezza sulla sicurezza, quale delle seguenti affermazioni descrive MEGLIO come i dipendenti potrebbero riconoscere un tentativo di phishing?",
@@ -5882,7 +5945,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
   },
   {
     id: 157,
-    topic: "Social Engineering",
+    topic: "Security Awareness",
     level: "APPLICAZIONE",
     scenario: "Il Johnson Group, un laboratorio forense, ha implementato un programma completo di sensibilizzazione alla sicurezza per educare i propri dipendenti sulle best practice di cybersecurity. Come parte di questo programma, hanno pianificato e creato e-mail di phishing simulate. Ora sono entrati nella fase di esecuzione del programma.",
     question: "Cosa farà il Johnson Group nella fase di esecuzione?",
@@ -6014,6 +6077,156 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     ],
     answerIndex: 1,
     explanation: "La risposta corretta è la **B) Operational security (OPSEC)**.\n\n* **Il concetto, dal principio:** siamo abituati a proteggere ciò che è **classificato**, cioè i segreti. L'OPSEC parte da un'osservazione diversa e meno ovvia: un avversario può ricostruire quello che gli serve **senza rubare alcun segreto**, semplicemente **mettendo insieme** frammenti che singolarmente non lo sono. Il pericolo non sta nella singola informazione, ma nella **aggregazione**.\n* **Perché è la corretta:** lo scenario lo dice esplicitamente — le informazioni erano tutte pubbliche, prese una alla volta innocue, e nessun documento riservato è uscito. È esattamente il caso che l'OPSEC affronta. Il processo (identificare le informazioni critiche, analizzare minacce e vulnerabilità, valutare il rischio, applicare le contromisure) avrebbe portato a chiedersi che cosa rivelano i **canali pubblici**: annunci di lavoro con versioni e prodotti, foto con badge e schermi leggibili, risponditori che espongono l'organigramma. Le contromisure sono banali una volta vista la domanda giusta: annunci che descrivono le competenze senza nominare versioni, regole sulle foto in ufficio, risponditori che rimandano a una casella di reparto invece che a una persona.\n* **Analisi dei distrattori:**\n  * **A) Classificazione dei dati:** assegna un livello di riservatezza ai **documenti** e ne governa la gestione. Qui però non è trascurato alcun documento: le informazioni non sono mai state classificabili, perché l'azienda le ha **pubblicate di proposito**. La classificazione non ha nulla su cui agire.\n  * **C) DLP:** intercetta i dati sensibili che tentano di **uscire dal perimetro**, per posta, su supporti rimovibili o verso il cloud. Nello scenario nulla è uscito indebitamente: un annuncio di lavoro e un risponditore automatico sono canali di comunicazione legittimi e voluti, che il DLP non ha motivo di bloccare.\n  * **D) NDA:** vincola alla riservatezza **per contratto** e agisce quando qualcuno divulga ciò che avrebbe dovuto tacere. Nessuno qui ha violato un obbligo: il dipendente che fotografa la propria scrivania non sta divulgando un segreto, e un contratto non gli avrebbe impedito di farlo.\n\n* **Trappola d'esame:** distingui le quattro per **su che cosa agiscono**. **OPSEC** = sulle informazioni **pubbliche e aggregabili**, riduce ciò che l'organizzazione lascia in giro · **Classificazione** = sui **documenti**, assegna livelli e regole di trattamento · **DLP** = sul **traffico in uscita**, blocca ciò che non deve lasciare il perimetro · **NDA** = sulle **persone**, crea un obbligo giuridico di riservatezza. Vedi l'OPSEC come il rovescio dell'**OSINT**: l'OSINT raccoglie ciò che di pubblico esiste su un bersaglio, l'OPSEC riduce ciò che di pubblico il bersaglio lascia esistere. Quando lo scenario insiste sul fatto che **nulla di riservato è uscito**, la risposta è quasi sempre OPSEC."
+  },
+  {
+    id: 166,
+    topic: "Security Assessment / Penetration Testing",
+    level: "APPLICAZIONE",
+    scenario: "Un'azienda sta per firmare l'incarico con una società esterna per un penetration test offensivo sui propri sistemi di produzione. Il responsabile della sicurezza vuole che il documento contrattuale eviti sia il rischio di un'interruzione del servizio non concordata, sia il rischio che i tester si trovino esposti sul piano legale.",
+    question: "Quale documento assolve a questa funzione, e che cosa deve fissare?",
+    options: [
+      "A) L'accordo sui livelli di servizio (SLA), che fissa i tempi di consegna del rapporto e le penali per il ritardo",
+      "B) L'accordo di riservatezza (NDA), che vincola i tester a non divulgare quanto scoperto durante l'incarico",
+      "C) Le regole d'ingaggio (rules of engagement), che fissano perimetro, finestra temporale, azioni vietate e contatto di escalation",
+      "D) Il rapporto finale, che documenta a posteriori che cosa è stato fatto e con quali strumenti"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Le regole d'ingaggio**.\n\n* **Perché è la corretta:** le regole d'ingaggio sono il documento che trasforma un'intrusione in un'attività **autorizzata**. Senza di esse le stesse azioni sarebbero reati, e l'esposizione è reciproca: il tester rischia sul piano penale, il committente rischia un'interruzione che nessuno aveva previsto.\n* **Che cosa devono fissare, punto per punto:**\n  * **Perimetro** — quali indirizzi, quali domini, quali applicazioni. E soprattutto che cosa è **fuori** perimetro: i sistemi di terze parti, i servizi in cloud del fornitore, i domini simili ma non appartenenti all'azienda.\n  * **Finestra temporale** — quando si può operare. Sui sistemi di produzione questo è il punto che protegge l'attività: nessun test nei giorni di chiusura contabile, nessuna attività rumorosa in orario lavorativo.\n  * **Azioni vietate** — tipicamente denial of service, modifica o cancellazione di dati reali, ingegneria sociale verso il personale se non espressamente concordata, exploit noti per destabilizzare un sistema.\n  * **Contatto di escalation** — un nominativo raggiungibile in ogni momento, per entrambe le direzioni: se il tester provoca un disservizio, o se trova una compromissione **già in corso** e deve fermarsi e avvisare.\n  * **Trattamento dei dati** — che cosa succede alle credenziali e ai dati raccolti: come si conservano, per quanto, e come vengono distrutti a fine incarico.\n* **Analisi dei distrattori:**\n  * **A) Lo SLA** regola la qualità della fornitura di un servizio: tempi di consegna, disponibilità, penali. Non autorizza alcuna azione tecnica e non protegge la produzione.\n  * **B) L'NDA** è necessario — il tester vedrà informazioni riservate e le vulnerabilità scoperte sono materiale sensibile — ma copre la **riservatezza**, non l'autorizzazione né i limiti operativi. I due documenti si firmano entrambi e non si sostituiscono.\n  * **D) Il rapporto finale** documenta a cose fatte. Nessun documento successivo può autorizzare a posteriori ciò che è già accaduto.\n* **Nota pratica:** nei test **fisici** si aggiunge una lettera da esibire se si viene fermati, spesso chiamata *get out of jail letter*, con i nominativi dei tester, il perimetro autorizzato e il recapito del referente aziendale da chiamare per verifica."
+  },
+  {
+    id: 167,
+    topic: "Security Assessment / Penetration Testing",
+    level: "ANALISI",
+    scenario: "In una banca, il responsabile dell'internal audit riporta gerarchicamente al direttore dei sistemi informativi, che è anche il responsabile dei controlli IT che l'audit deve verificare. Nell'ultimo ciclo, tre rilievi sulla gestione degli accessi privilegiati sono stati declassati da alti a medi dopo un colloquio fra i due, e non sono mai arrivati al consiglio.",
+    question: "Quale difetto strutturale di governance descrive lo scenario, e come si corregge?",
+    options: [
+      "A) Mancanza di separazione dei compiti fra chi amministra i sistemi e chi ne gestisce gli accessi",
+      "B) Assenza di un registro dei rischi, che avrebbe reso tracciabile il declassamento dei rilievi",
+      "C) Perdita di indipendenza dell'internal audit: la funzione deve riportare al comitato di audit del consiglio",
+      "D) Carenza di formazione degli auditor interni sulla gestione degli accessi privilegiati"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Perdita di indipendenza dell'internal audit**.\n\n* **Il principio, dal principio:** un audit vale quanto vale la sua **indipendenza**. Se chi verifica riporta gerarchicamente a chi viene verificato, il giudizio è compromesso all'origine — non perché le persone siano disoneste, ma perché la struttura mette l'auditor nella posizione di dover contraddire il proprio superiore per fare il proprio lavoro. Lo scenario mostra esattamente l'esito prevedibile: i rilievi che riguardano l'area del superiore si ammorbidiscono e non risalgono.\n* **La correzione:** la funzione di internal audit riporta al **comitato di audit** del consiglio di amministrazione, che è composto da consiglieri esterni alla catena di comando del management. È il comitato ad approvare il piano di audit, a ricevere i rapporti, a verificare che i rilievi siano **chiusi** e non solo accettati, e a nominare o revocare il responsabile dell'audit. Il riporto amministrativo al management può restare per le questioni pratiche; quello **funzionale** deve essere al comitato.\n* **Analisi dei distrattori:**\n  * **A) La separazione dei compiti** è un principio corretto e forse anche violato altrove, ma non è ciò che lo scenario descrive: il problema non è chi amministra gli accessi, è chi giudica chi li amministra.\n  * **B) Il registro dei rischi** avrebbe reso il declassamento tracciabile, il che è utile, ma non ne avrebbe impedito la causa. È una misura di documentazione applicata a un problema di struttura.\n  * **D) La formazione degli auditor** non c'entra: i rilievi erano stati individuati correttamente. Sono stati declassati **dopo**, ed è quello il punto.\n* **Da distinguere:** il **comitato di audit** verifica che quanto dichiarato corrisponda a quanto accade, e siede nel consiglio. Il **security steering committee** allinea la strategia di sicurezza alle esigenze di business, ed è composto da dirigenti delle funzioni. Sono due organi con finalità diverse, e l'esame li mette spesso nella stessa lista di opzioni."
+  },
+  {
+    id: 168,
+    topic: "Security Assessment / Penetration Testing",
+    level: "APPLICAZIONE",
+    scenario: "Prima dell'ispezione annuale dell'autorità di vigilanza, prevista fra quattro mesi, il responsabile della conformità di un istituto finanziario vuole individuare in anticipo gli scostamenti rispetto ai requisiti obbligatori, per poterli correggere senza che finiscano in un verbale.",
+    question: "Quale attività risponde a questa esigenza, e qual è il suo limite riconosciuto?",
+    options: [
+      "A) Un'autovalutazione rispetto ai requisiti: utile come preparazione, ma priva di indipendenza",
+      "B) Un esame condotto dall'autorità in via anticipata, che darebbe l'esito reale con mesi di margine",
+      "C) Un'attestazione di terza parte, che sostituisce l'ispezione dimostrando la conformità già accertata",
+      "D) Un penetration test in ambiente sconosciuto, che verifica sul campo la tenuta dei controlli obbligatori"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Un'autovalutazione**.\n\n* **Perché è la corretta:** l'autovalutazione serve esattamente a questo — trovare gli scostamenti **quando costano poco**. Un rilievo scoperto in casa si corregge in silenzio; lo stesso rilievo scoperto dal vigilante finisce in un verbale, richiede un piano formale con scadenze e, in un contesto regolamentato, può portare a prescrizioni vincolanti. Si conduce confrontando lo stato reale con un riferimento esterno — i requisiti della normativa, un benchmark, un quadro come il NIST CSF — e documentando ogni scostamento con un responsabile e una data.\n* **Il limite, che la domanda chiede esplicitamente:** manca l'**indipendenza**. Chi valuta il proprio lavoro ha un interesse, anche del tutto involontario, a giudicarlo con indulgenza, e tende a non cercare dove sa che troverebbe. Per questo l'autovalutazione **non sostituisce** l'audit interno né l'attestazione di terza parte: li **prepara**.\n* **Analisi dei distrattori:**\n  * **B)** Un esame non si chiede e non si anticipa: è l'autorità a decidere quando condurlo e con quale perimetro. L'opzione descrive qualcosa che non esiste.\n  * **C)** Un'attestazione di terza parte è un'evidenza forte da mostrare **durante** l'ispezione, ma non la sostituisce: il potere di vigilanza non si esaurisce perché un revisore privato ha espresso un giudizio favorevole.\n  * **D)** Un penetration test misura la tenuta **tecnica** di un perimetro ristretto. La conformità a requisiti obbligatori comprende processi, documentazione, ruoli e formazione, che nessun test tecnico verifica.\n* **La scala da tenere a mente, per indipendenza crescente:** **autovalutazione** (l'organizzazione su sé stessa) → **audit interno** (funzione indipendente dalla linea operativa, ma interna) → **audit o attestazione di terza parte** (esterna, su incarico dell'organizzazione) → **esame** (esterno, per iniziativa dell'autorità, con potere di prescrivere e sanzionare)."
+  },
+  {
+    id: 169,
+    topic: "Security Assessment / Penetration Testing",
+    level: "ANALISI",
+    scenario: "Il consiglio di un'azienda manifatturiera chiede di sapere quanto tempo passerebbe prima che qualcuno si accorga di un attacco in corso. Il team di sicurezza propone quattro attività, tutte tecnicamente valide.",
+    question: "Quale attività risponde alla domanda posta dal consiglio?",
+    options: [
+      "A) Una scansione autenticata delle vulnerabilità su tutto il perimetro, ripetuta settimanalmente",
+      "B) Un audit di conformità ai requisiti contrattuali dei clienti principali",
+      "C) Un penetration test offensivo condotto senza avvisare il team di difesa, misurando i tempi di rilevamento",
+      "D) Un'autovalutazione dei controlli rispetto al benchmark CIS di riferimento"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Un penetration test offensivo condotto senza avvisare il team di difesa**.\n\n* **Che cosa è stato chiesto davvero:** non *quali vulnerabilità abbiamo*, ma **quanto tempo passa prima che ce ne accorgiamo**. È una domanda sulla **capacità di rilevamento e risposta**, non sulla superficie d'attacco. Solo un'attività che simuli un attacco reale mentre i difensori lavorano ignari può misurarla.\n* **Perché il test deve essere condotto all'insaputa del blue team:** se i difensori sanno, alzano l'attenzione, e ciò che si misura non è più il tempo di rilevamento ordinario ma quello in condizioni di allerta. Il numero che ne esce sarebbe ottimistico e inutile. Il vincolo è che la **direzione** deve saperlo e autorizzarlo per iscritto, con perimetro, finestra temporale e regole d'ingaggio definite: il *red team* opera all'insaputa dei difensori, mai all'insaputa dell'organizzazione.\n* **Analisi dei distrattori:**\n  * **A) La scansione delle vulnerabilità** elenca le debolezze note. È indispensabile, ma non produce alcun evento che qualcuno debba rilevare: risponde a *dove siamo esposti*, non a *ce ne accorgiamo*.\n  * **B) L'audit di conformità** verifica che i controlli previsti esistano e siano documentati. Un'organizzazione può essere pienamente conforme e impiegare comunque settimane ad accorgersi di un'intrusione.\n  * **D) L'autovalutazione rispetto a un benchmark** misura lo scostamento della configurazione da uno standard. Anche qui: dice com'è impostato il sistema, non che cosa succede quando qualcuno attacca.\n* **Le quattro modalità dell'obiettivo 5.5, da distinguere:** **offensivo** (*red team*, attacca) · **difensivo** (*blue team*, rileva e risponde) · **integrato** (*purple team*, le due squadre lavorano insieme e in trasparenza, per trasformare ogni tecnica in un rilevamento) · **fisico** (prova l'accesso a edifici e locali). Se lo scenario chiede di **misurare** il rilevamento, serve l'offensivo non annunciato; se chiede di **migliorarlo** in fretta, l'integrato."
+  },
+  {
+    id: 170,
+    topic: "Security Assessment / Penetration Testing",
+    level: "ANALISI",
+    scenario: "Un tester documenta le attività della prima giornata di incarico. Ha interrogato il registro pubblico dei domini del cliente, ha consultato i registri di trasparenza dei certificati per elencarne i sottodomini, ha aperto il sito pubblico dell'azienda scaricando alcuni documenti PDF per esaminarne i metadati, e ha inviato una query al server DNS autoritativo del cliente per verificare i record MX.",
+    question: "Quali fra queste attività escono dalla ricognizione passiva, e perché?",
+    options: [
+      "A) Nessuna: tutte le informazioni raccolte erano pubblicamente accessibili",
+      "B) La visita al sito e la query al server DNS autoritativo, perché entrambe raggiungono un sistema del cliente e vi lasciano traccia",
+      "C) Solo la query al server DNS autoritativo, perché il sito pubblico è destinato a essere visitato da chiunque",
+      "D) Solo il download dei PDF, perché l'esame dei metadati va oltre l'uso previsto del documento"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B)**.\n\n* **Il discrimine non è la riservatezza dell'informazione, è il destinatario della richiesta.** Una ricognizione è **passiva** finché le informazioni si ottengono da **terzi**; diventa **attiva** nell'istante in cui una richiesta raggiunge un sistema del bersaglio, indipendentemente dal fatto che quel sistema sia pubblico e che l'informazione sia banale.\n* **Le quattro attività, una per una:**\n  * **Registro dei domini** (*whois*) — la risposta arriva dal registrar, non dal cliente. **Passiva**.\n  * **Registri di trasparenza dei certificati** — sono archivi pubblici di terze parti che raccolgono ogni certificato emesso. Il cliente non sa che qualcuno li sta consultando. **Passiva**, ed è una delle fonti più produttive, perché rivela sottodomini dimenticati che nessuno ha mai pubblicizzato.\n  * **Visita al sito pubblico e download dei PDF** — ogni richiesta finisce nel **log del web server** del cliente, con indirizzo IP, orario e *user agent*. **Attiva**, per quanto innocua. L'esame dei metadati dei file, invece, avviene in locale ed è passivo: è stato lo **scaricamento** a essere attivo.\n  * **Query al server DNS autoritativo del cliente** — il server è del cliente e la query ne raggiunge l'infrastruttura, lasciando traccia. **Attiva**. Consultare invece un resolver pubblico o un archivio di DNS passivo sarebbe rimasto nel perimetro passivo.\n* **Analisi dei distrattori:**\n  * **A)** Confonde *pubblicamente accessibile* con *passivo*. L'informazione può essere pubblica quanto si vuole: se per ottenerla mando un pacchetto al bersaglio, sto agendo attivamente.\n  * **C)** Applica il criterio giusto solo a metà. Il sito pubblico è destinato a essere visitato, ma registra comunque chi lo visita: se il committente ha chiesto una prima fase realmente invisibile, anche quella visita va evitata o condotta da un'infrastruttura non riconducibile al tester.\n  * **D)** Inverte i termini: l'analisi dei metadati è l'unico passaggio interamente locale, e quindi il più passivo dei quattro.\n* **Perché la distinzione conta nella pratica:** la fase passiva è quella che non può far fallire l'incarico. Dal primo pacchetto inviato il bersaglio **può accorgersene**, e in un test che vuole misurare anche la capacità di rilevamento quel momento va scelto, non subito per distrazione."
+  },
+  {
+    id: 171,
+    topic: "Security Assessment / Penetration Testing",
+    level: "APPLICAZIONE",
+    scenario: "Un'organizzazione ha investito molto in controlli tecnici perimetrali, ma non ha mai verificato se un estraneo possa entrare materialmente nei propri uffici. Il consiglio autorizza una verifica che comprenda il tentativo di superare la reception, di accedere al locale tecnico e di collegare un dispositivo alla rete interna.",
+    question: "Quale modalità di penetration test è stata autorizzata?",
+    options: [
+      "A) Test in ambiente sconosciuto (black box), perché il tester non conosce la pianta degli edifici",
+      "B) Test fisico, perché il perimetro della verifica sono i controlli di accesso ai locali",
+      "C) Test integrato (purple team), perché coinvolge sia il personale di sicurezza sia quello di reception",
+      "D) Test difensivo (blue team), perché misura la reazione del personale alla presenza di un estraneo"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Test fisico**.\n\n* **Perché è la corretta:** il **physical penetration test** ha per oggetto i **controlli di sicurezza fisica** — reception, badge, tornelli, vestiboli di controllo accessi, serrature, videosorveglianza, vigilanza e comportamento del personale. Le tre azioni autorizzate nello scenario (superare la reception, entrare nel locale tecnico, collegare un dispositivo alla rete) descrivono esattamente questo perimetro. Il collegamento del dispositivo è il punto in cui il test fisico mostra la propria ragione d'essere: dimostra che **la miglior difesa perimetrale di rete non serve a nulla se l'attaccante arriva dietro di essa a piedi**.\n* **Analisi dei distrattori:**\n  * **A)** Confonde due assi di classificazione. *Ambiente sconosciuto*, *parzialmente noto* e *noto* descrivono **quante informazioni** il committente consegna al tester; *fisico*, *offensivo*, *difensivo* e *integrato* descrivono **che cosa** si testa. Un test fisico può essere condotto in ambiente noto o sconosciuto: sono due domande diverse.\n  * **C) Il test integrato** è quello in cui la squadra d'attacco e quella di difesa lavorano **insieme e in trasparenza**, condividendo tecniche e rilevamenti in tempo reale. Qui non è descritta alcuna collaborazione fra squadre.\n  * **D) Il test difensivo** è l'esercizio del *blue team*, che si misura sulla capacità di rilevare e rispondere. Il fatto che il personale possa reagire non trasforma in difensivo un test il cui oggetto sono le barriere fisiche.\n* **Un vincolo pratico che vale la pena conoscere:** un test fisico richiede un'autorizzazione scritta particolarmente accurata — spesso una lettera da esibire se si viene fermati, a volte detta *get out of jail letter* — perché le azioni previste, senza mandato, sarebbero reati. Perimetro, sedi, orari, nominativi dei tester e referente da contattare vanno concordati prima, e il committente deve avere l'autorità di autorizzare l'accesso ai locali coinvolti."
+  },
+  {
+    id: 172,
+    topic: "Security Assessment / Penetration Testing",
+    level: "APPLICAZIONE",
+    scenario: "Il piano di risposta agli incidenti di un ospedale è stato scritto due anni fa e non è mai stato messo alla prova. La direzione vuole verificare se i ruoli sono chiari, se i recapiti di reperibilità sono aggiornati e se il personale saprebbe decidere quando dichiarare un incidente, senza però toccare i sistemi clinici né simulare alcun attacco reale.",
+    question: "Quale forma di verifica risponde a questi vincoli?",
+    options: [
+      "A) Un'esercitazione difensiva da tavolo (tabletop), in cui il personale percorre a voce uno scenario senza agire sui sistemi",
+      "B) Un penetration test offensivo in ambiente sconosciuto, che metta alla prova le difese senza preavviso",
+      "C) Una scansione autenticata delle vulnerabilità sui sistemi clinici, per stabilire da dove partirebbe un attacco",
+      "D) Un audit di conformità del piano di risposta agli incidenti rispetto ai requisiti normativi del settore"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Un'esercitazione difensiva da tavolo (tabletop)**.\n\n* **Perché è la corretta:** lo scenario pone tre vincoli, e uno solo dei quattro strumenti li rispetta tutti. Si vuole verificare **decisioni, ruoli e recapiti** — cioè il lato **difensivo**, non la tenuta tecnica; non si possono toccare i **sistemi clinici**, il che esclude qualsiasi attività sui sistemi reali; e non si vuole simulare un attacco. Un'esercitazione da tavolo fa esattamente questo: le persone che dovrebbero rispondere si siedono attorno a un tavolo, un facilitatore espone uno scenario a tappe, e a ogni tappa si chiede *tu, in questo momento, che cosa fai e chi chiami*. Costa poche ore, non produce alcun rischio operativo, e fa emergere ciò che nessuna verifica tecnica troverebbe: il ruolo che due persone credono di ricoprire entrambe, il numero di reperibilità di chi è andato in pensione, la soglia di dichiarazione dell'incidente che nessuno sa dove sia scritta.\n* **Dove si colloca fra le modalità di verifica:** è l'estremo meno invasivo del **lato difensivo** (*blue team*). Salendo di realismo si incontrano la **simulazione funzionale** (si esegue davvero la procedura, per esempio un ripristino da backup in ambiente separato) e la **prova completa** (*full-scale*, con i sistemi reali), che però richiede un rischio operativo che un ospedale accetta raramente.\n* **Analisi dei distrattori:**\n  * **B) Il test offensivo senza preavviso** violerebbe due dei tre vincoli: agisce sui sistemi e simula un attacco reale. In un contesto sanitario è anche la scelta con il profilo di rischio più alto.\n  * **C) La scansione delle vulnerabilità** misura l'esposizione tecnica, non la capacità di decidere. Inoltre una scansione autenticata su apparati biomedicali può destabilizzarli: molti dispositivi clinici reagiscono male anche a un traffico di scansione ordinario.\n  * **D) L'audit di conformità** verifica che il piano **esista**, sia completo e rispetti i requisiti. È utile, ma un piano formalmente perfetto può restare ingestibile alla prova dei fatti: l'audit legge il documento, l'esercitazione mette alla prova le persone.\n* **Da ricordare:** quando lo scenario chiede di verificare **un piano** e non **un sistema**, la risposta è un'esercitazione. Quando chiede espressamente di non interrompere l'attività e di non toccare i sistemi, è l'esercitazione **da tavolo**."
+  },
+  {
+    id: 173,
+    topic: "Security Assessment / Penetration Testing",
+    level: "APPLICAZIONE",
+    scenario: "Una società di sviluppo deve far verificare un'applicazione bancaria che gestisce disposizioni di pagamento. Il committente vuole che il tester individui il maggior numero possibile di difetti nella logica di autorizzazione, comprese le condizioni che si manifestano solo con determinate combinazioni di ruoli e importi, entro un budget di dieci giorni.",
+    question: "Quale mandato conviene assegnare al tester?",
+    options: [
+      "A) Ambiente sconosciuto (black box), perché riproduce fedelmente la prospettiva di un attaccante esterno",
+      "B) Ambiente parzialmente noto (grey box), perché bilancia realismo e profondità con credenziali di utente ordinario",
+      "C) Ambiente noto (white box), con accesso al codice sorgente, all'architettura e alle configurazioni",
+      "D) Ricognizione passiva estesa, perché individua il maggior numero di informazioni senza consumare budget"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Ambiente noto (white box)**.\n\n* **Il criterio di scelta, dal principio:** i tre mandati non sono gradi di qualità, sono **compromessi fra realismo e copertura**, e si scelgono in base alla domanda a cui si vuole rispondere.\n  * **Ambiente sconosciuto (*black box*)** — il tester non riceve nulla. Massimo realismo, perché riproduce la posizione di un estraneo, ma buona parte del tempo si consuma nella ricognizione, e ciò che non si trova resta non verificato.\n  * **Ambiente parzialmente noto (*grey box*)** — il tester riceve informazioni limitate, tipicamente le credenziali di un utente ordinario o uno schema di rete di massima. Simula bene la posizione di un dipendente o di un cliente con un account, ed è il compromesso più frequente.\n  * **Ambiente noto (*white box*)** — il tester riceve architettura, configurazioni e **codice sorgente**. Minimo realismo, massima copertura.\n* **Perché lo scenario impone il terzo:** si chiede il **maggior numero possibile** di difetti nella **logica di autorizzazione**, comprese le condizioni che emergono solo con **certe combinazioni** di ruoli e importi, e il tutto entro **dieci giorni**. Una falla di logica di autorizzazione non si trova a tentoni: si trova **leggendo il codice** che decide chi può disporre che cosa. E lo spazio delle combinazioni ruolo-importo è troppo vasto perché una prova cieca lo copra in dieci giorni.\n* **Analisi dei distrattori:**\n  * **A)** Il realismo, qui, non è l'obiettivo: il committente vuole **trovare i difetti**, non misurare quanto sia difficile trovarli dall'esterno.\n  * **B)** È la scelta ragionevole per verificare *che cosa può fare un utente autenticato che tenti di eccedere i propri privilegi*, ma non consente di ispezionare la logica: i casi limite resterebbero in buona parte inesplorati.\n  * **D)** La ricognizione passiva è una **fase** di un test, non un mandato, e su un'applicazione già nota al committente non aggiunge quasi nulla.\n* **Nota pratica:** i due approcci si completano. L'analisi **statica** del codice (SAST) trova ciò che si vede leggendo; quella **dinamica** sull'applicazione in esecuzione (DAST) trova ciò che emerge solo eseguendo — ed è il motivo per cui un mandato in ambiente noto include di norma entrambe."
+  },
+  {
+    id: 174,
+    topic: "Security Assessment / Penetration Testing",
+    level: "ANALISI",
+    scenario: "Il rapporto di un penetration test viene consegnato in un unico documento di ottanta pagine, con l'elenco delle vulnerabilità ordinato per punteggio CVSS, le schermate delle prove e i comandi usati. Il consiglio, dopo averlo ricevuto, non stanzia alcun budget e chiede al CISO se la situazione sia grave.",
+    question: "Quale carenza del rapporto spiega questo esito?",
+    options: [
+      "A) L'ordinamento per punteggio CVSS, che andrebbe sostituito con l'ordine di scoperta delle vulnerabilità",
+      "B) L'assenza di una sintesi per la direzione, che traduca i risultati tecnici in rischio di business",
+      "C) La presenza delle schermate e dei comandi, che rende il documento troppo lungo da leggere",
+      "D) La mancanza di un confronto con i rapporti degli anni precedenti, che avrebbe mostrato l'andamento"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) L'assenza di una sintesi per la direzione**.\n\n* **Il principio:** un rapporto ha **due pubblici** con due domande diverse, e un documento solo non può rispondere a entrambe con lo stesso linguaggio.\n  * La **sintesi per la direzione** (*executive summary*) risponde a *quanto siamo esposti, che cosa rischiamo e che cosa serve per ridurlo*. È non tecnica, si esprime in termini di impatto sull'attività, obblighi normativi e costo dell'intervento, e occupa una o due pagine. È ciò che consente a un consiglio di **decidere**.\n  * Il **corpo tecnico** risponde a *che cosa esattamente devo correggere e come*. Contiene passi di riproduzione, schermate, comandi e riferimenti, ed è destinato a chi metterà le mani sul sistema.\n  Lo scenario descrive un rapporto con un solo pubblico. Il consiglio non ha chiesto un budget perché non ha ricevuto nulla su cui deliberare: un elenco ordinato per punteggio tecnico non dice a un amministratore quale danno l'azienda subirebbe.\n* **Analisi dei distrattori:**\n  * **A)** L'ordinamento per gravità è corretto per il pubblico tecnico; l'ordine di scoperta non ha alcun valore informativo. E il problema non è l'ordine: è che manca del tutto il livello di lettura destinato alla direzione.\n  * **C)** Schermate e comandi sono ciò che rende un rilievo **riproducibile** e quindi credibile: toglierli peggiorerebbe il rapporto. La lunghezza non è il difetto; l'assenza di una porta d'ingresso lo è.\n  * **D)** Il confronto storico è un miglioramento reale e sarebbe utile al consiglio, ma è un di più: anche con l'andamento in evidenza, senza traduzione in termini di rischio di business la domanda *è grave?* resterebbe senza risposta.\n* **Da ricordare per l'esame:** ogni volta che uno scenario nomina il **pubblico destinatario** di un rapporto — consiglio, legali, sistemisti — la risposta corretta riguarda l'**adattamento del linguaggio e del livello di dettaglio**. Il contenuto tecnico non cambia: cambia il modo in cui viene presentato."
+  },
+  {
+    id: 175,
+    topic: "Security Assessment / Penetration Testing",
+    level: "COMPRENSIONE",
+    scenario: "Un'organizzazione conduce ogni trimestre una revisione formale dei diritti di accesso, in cui ciascun responsabile di funzione riceve l'elenco delle persone che accedono ai propri dati e deve confermare o revocare ogni voce. In parallelo, una piattaforma verifica di continuo che le configurazioni dei server cloud restino conformi alla baseline, segnalando ogni scostamento entro pochi minuti.",
+    question: "Come si classificano rispettivamente le due attività?",
+    options: [
+      "A) Revisione periodica la prima; valutazione continua la seconda",
+      "B) Valutazione continua la prima; revisione periodica la seconda",
+      "C) Audit interno la prima; autovalutazione la seconda",
+      "D) Attestazione la prima; esame la seconda"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Revisione periodica la prima; valutazione continua la seconda**.\n\n* **Il criterio che distingue le due:** non è l'importanza, è la **cadenza** e, di conseguenza, il tipo di problema che ciascuna intercetta.\n  * La **revisione periodica** avviene a intervalli stabiliti e comporta un **giudizio umano**. La revisione trimestrale dei diritti di accesso — detta anche *attestazione degli accessi* o *access review* — è l'esempio canonico: nessun automatismo può sapere se una persona abbia ancora bisogno di quell'accesso, perché la risposta dipende da che cosa quella persona fa oggi. È il controllo che smaschera il *privilege creep*, l'accumulo silenzioso di permessi che nessuno ha mai revocato dopo un cambio di ruolo.\n  * La **valutazione continua** è automatica e ininterrotta, e vive sul confronto fra uno stato osservato e uno stato atteso. Sorveglia ciò che cambia rapidamente e in modo misurabile: configurazioni cloud, deriva dalla baseline, comparsa di risorse non previste.\n* **Perché servono entrambe, e non sono intercambiabili:** l'automazione rileva in pochi minuti che un bucket è diventato pubblico, ma non saprà mai dire che l'accesso di una persona al sistema paghe non è più giustificato dal suo ruolo. Il giudizio umano risponde a quella domanda, ma non può essere esercitato di continuo.\n* **Analisi dei distrattori:**\n  * **B)** Inverte le due definizioni: è il distrattore che l'esame usa più spesso, perché richiede di leggere la cadenza descritta e non il nome dell'attività.\n  * **C)** Né l'una né l'altra sono un audit interno: manca la funzione indipendente che conduce l'esame e produce rilievi formali. La revisione degli accessi la svolgono i responsabili di funzione sui **propri** dati.\n  * **D)** L'attestazione presuppone un revisore **esterno** e indipendente; l'esame presuppone un'**autorità di vigilanza**. Qui non compare né l'uno né l'altra.\n* **Attenzione a un'ambiguità lessicale:** in ambito IAM si parla di *attestazione degli accessi* per indicare la conferma periodica dei diritti da parte del responsabile. È un uso diverso dell'*attestazione* dell'obiettivo 5.5, che è invece il giudizio formale di un revisore indipendente. Il contesto decide: se compare un revisore terzo, è la seconda; se compaiono i responsabili di funzione che confermano gli accessi dei propri collaboratori, è la prima."
   }
 ];
 
@@ -8583,6 +8796,156 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     ],
     answerIndex: 0,
     explanation: "La risposta corretta è la **A) Monitoring (Monitoraggio)**.\n\n* **Perché è la corretta:** Il **monitoraggio** è una tecnica che prevede l'osservazione e la misurazione continua dello stato e dell'attività della rete e dei sistemi, utilizzando strumenti come analizzatori di rete, monitor delle prestazioni o sistemi di rilevamento delle intrusioni. Il monitoraggio può fornire dati in tempo reale e alert sulle prestazioni, la disponibilità e la sicurezza della rete, consentendo all'azienda di rilevare e rispondere a qualsiasi incidente o anomalia.\n* **Analisi dei distrattori:**\n  * **B)** Il patching prevede l'aggiornamento e la correzione del software e del firmware sulla rete e sui sistemi; non rileva né risponde attivamente agli incidenti.\n  * **C)** L'auditing prevede la revisione periodica e la verifica della conformità e dell'efficacia della rete e dei sistemi; è orientato alla conformità, non al rilevamento in tempo reale.\n  * **D)** Il logging prevede la registrazione e l'archiviazione degli eventi che si verificano sulla rete; i log possono essere usati dai sistemi di monitoraggio, ma i log da soli non rilevano né rispondono agli incidenti."
+  },
+  {
+    id: 415,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Il SIEM segnala che l'indirizzo IP interno 10.42.7.118 ha trasferito 6 GB verso un servizio di archiviazione esterno alle 03:20 di martedì. La rete assegna gli indirizzi dinamicamente con lease di otto ore e il parco macchine è composto quasi interamente da portatili che si spostano fra le sedi. Quando l'analista controlla, quell'indirizzo è oggi assegnato alla postazione di una persona che quella notte era in ferie.",
+    question: "Quale sorgente dati permette di stabilire QUALE dispositivo fosse dietro quell'indirizzo IP al momento del trasferimento?",
+    options: [
+      "A) Il log del firewall perimetrale, che ha registrato la connessione in uscita",
+      "B) Il log del server DHCP, che associa indirizzo IP e indirizzo MAC per intervalli di tempo",
+      "C) L'inventario degli asset, che elenca gli indirizzi IP assegnati a ciascun dispositivo",
+      "D) I metadati dei file trasferiti, che indicano il dispositivo di origine"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Il log del server DHCP**.\n\n* **Il problema, dal principio:** un indirizzo IP interno non è un'identità. In una rete con assegnazione dinamica è un'etichetta temporanea, prestata a un dispositivo per la durata del *lease* e poi riassegnata a un altro. Chiedersi *di chi è 10.42.7.118* senza specificare **quando** è una domanda senza risposta, ed è esattamente l'errore in cui l'analista dello scenario stava per cadere.\n* **Perché è la corretta:** il **log DHCP** registra, per ogni assegnazione, l'indirizzo IP, l'indirizzo **MAC** del dispositivo e gli istanti di inizio e fine del lease. È la sola sorgente che lega un indirizzo a un dispositivo **in un intervallo di tempo preciso**. Trovato il MAC, l'inventario degli asset dice di quale portatile si tratta e a chi è assegnato.\n* **Analisi dei distrattori:**\n  * **A) Il log del firewall** conferma che la connessione è avvenuta, con indirizzi, porte e volume. È ciò che ha generato l'allarme, ma si ferma all'indirizzo: non sa nulla del dispositivo che c'era dietro.\n  * **C) L'inventario degli asset** è indispensabile al passaggio *successivo*, ma da solo non basta: in un ambiente DHCP non contiene l'associazione storica indirizzo-dispositivo, e l'assegnazione che riporta oggi è proprio quella fuorviante.\n  * **D) I metadati dei file** descrivono autore, date e applicazione che li ha prodotti; il dispositivo che ha materialmente eseguito il trasferimento non compare.\n* **Trappola d'esame:** quando una domanda chiede di passare da un **indirizzo IP interno** a un **dispositivo o a una persona**, la catena è sempre la stessa: *log DHCP → indirizzo MAC → inventario degli asset → assegnatario*. Se l'indirizzo è pubblico ed esterno, la catena è invece *registro RIPE/ARIN → provider → richiesta legale*."
+  },
+  {
+    id: 416,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Una workstation compromessa comunica con l'esterno. Tutto il traffico in uscita è HTTPS, quindi il contenuto non è leggibile, e l'indirizzo IP di destinazione cambia ogni poche ore perché l'attaccante usa un servizio che ruota gli indirizzi. Il team deve capire con quale infrastruttura la macchina stia effettivamente parlando, per bloccarla e per cercare altri host compromessi.",
+    question: "Quale sorgente dati offre l'elemento più stabile su cui costruire il blocco e la ricerca?",
+    options: [
+      "A) I log applicativi del server web aziendale, che registrano le richieste HTTP",
+      "B) Il log del server DHCP, che registra le assegnazioni degli indirizzi",
+      "C) La cattura completa dei pacchetti, che contiene i byte della sessione cifrata",
+      "D) Il log DNS, che registra i nomi di dominio risolti da ciascun client"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Il log DNS**.\n\n* **Perché è la corretta:** prima di aprire una connessione verso un nome, un host deve **risolverlo**. Quella richiesta passa dal resolver aziendale e viene registrata, e il nome di dominio è l'elemento che rimane **stabile** anche mentre gli indirizzi IP ruotano. Con il nome in mano si fanno due cose in un colpo solo: lo si blocca sul resolver, e si interrogano i log DNS per trovare **ogni altro host** che lo ha risolto — cioè la lista delle macchine compromesse, che l'analista non sapeva di dover cercare.\n* **Analisi dei distrattori:**\n  * **B) Il log DHCP** serve a identificare il dispositivo dietro un indirizzo, che qui è già noto: la workstation è stata individuata.\n  * **C) La cattura dei pacchetti** contiene i byte, ma il traffico è cifrato: senza le chiavi di sessione non si legge il contenuto. Resta utile per il nome del server nell'estensione **SNI** del TLS e per i tempi, ma è una sorgente pesante e non necessariamente attiva su quel segmento nel momento giusto.\n  * **A) I log del server web aziendale** registrano le richieste **in ingresso** verso i servizi dell'azienda: sono la direzione sbagliata rispetto a una comunicazione in uscita.\n* **Nota pratica:** il log DNS è una delle sorgenti con il rapporto valore/costo più alto in assoluto. Occupa pochissimo, si conserva a lungo, e resta informativo anche quando tutto il resto è cifrato. Il suo punto cieco è il malware che contatta **direttamente un indirizzo IP** senza risolvere alcun nome, e il client che usa **DoH** verso un resolver esterno aggirando quello aziendale."
+  },
+  {
+    id: 417,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Durante la revisione dell'Event Log di sicurezza di un server Windows, un analista trova in sequenza, nell'arco di quattro minuti: una lunga serie di eventi 4625 provenienti da un unico indirizzo IP interno, poi un evento 4624 con Logon Type 3 per l'account di servizio `svc_backup`, poi un evento 4672 per lo stesso account e infine un evento 1102.",
+    question: "Come va letta questa sequenza e qual è l'elemento PIÙ grave?",
+    options: [
+      "A) Manutenzione pianificata: il 4672 indica che l'account di servizio ha eseguito il backup con i privilegi previsti",
+      "B) Attacco fallito: la serie di 4625 dimostra che l'attaccante non è mai riuscito ad autenticarsi",
+      "C) Attacco riuscito: a un password spraying segue un accesso di rete privilegiato, e il 1102 dice che il registro di sicurezza è stato cancellato",
+      "D) Problema di configurazione: l'account di servizio ha la password scaduta, da cui i tentativi falliti e la successiva pulizia dei log"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C)**.\n\n* **La sequenza, evento per evento:**\n  * **4625 ripetuti da un solo indirizzo** — accessi **falliti**. Molti tentativi in pochi minuti da un'unica origine interna sono il profilo di un *password spraying* o di un attacco a forza bruta condotto **da una macchina già dentro la rete**.\n  * **4624 con Logon Type 3** — accesso **riuscito**, e di tipo **rete**: qualcuno si è autenticato da remoto su questo server, non alla sua console. È la firma del movimento laterale.\n  * **4672** — all'account sono stati assegnati **privilegi speciali** al momento dell'accesso: in pratica, è entrato come amministratore.\n  * **1102** — **il registro di sicurezza è stato cancellato**. È il punto più grave dei quattro, perché non è un evento operativo: è un'azione deliberata di **anti-forensics**. Nessun processo legittimo di manutenzione svuota l'Event Log di sicurezza.\n* **Perché il 1102 è l'elemento decisivo:** gli altri tre eventi descrivono un'intrusione; il 1102 dice che l'attaccante sta **distruggendo le prove**, il che significa che da quel momento in poi il log locale non è più una fonte affidabile. È anche la dimostrazione del perché i log vadano **inoltrati in tempo reale a un sistema centrale**: la copia sul SIEM sopravvive alla cancellazione di quella locale.\n* **Analisi dei distrattori:**\n  * **A)** Il 4672 da solo non prova nulla di legittimo: dice che l'accesso era privilegiato, non che fosse autorizzato. E una manutenzione non cancella il registro di sicurezza.\n  * **B)** Si ferma ai 4625 ignorando il 4624 che segue: l'attacco è fallito molte volte e poi è **riuscito**. È l'errore classico di chi conta i tentativi falliti senza cercare quello riuscito.\n  * **D)** Una password scaduta produce esiti di errore diversi e non spiega in alcun modo la cancellazione del registro.\n* **Da memorizzare:** **4624** riuscito · **4625** fallito · **4672** privilegi speciali · **4720** account creato · **4728/4732** aggiunta a gruppo privilegiato · **1102** registro di sicurezza cancellato. E il **Logon Type**: 2 console, 3 rete, 5 servizio, 10 desktop remoto."
+  },
+  {
+    id: 418,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Un'azienda deve dimostrare in sede legale **quali documenti specifici** sono usciti da un server di progettazione durante una finestra di due ore, non soltanto che un trasferimento di dati è avvenuto. Il SIEM conserva i flussi NetFlow di tutta la rete, i log del firewall e i log applicativi del server.",
+    question: "Quale sorgente dati soddisfa questo requisito probatorio?",
+    options: [
+      "A) I record NetFlow, che documentano volume, durata e porte della conversazione",
+      "B) I log del firewall, che registrano la connessione consentita e il suo esito",
+      "C) La cattura completa dei pacchetti sul segmento del server (PCAP)",
+      "D) I metadati dei documenti presenti sul server, con le date di ultimo accesso"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) La cattura completa dei pacchetti**.\n\n* **Il criterio, dal principio:** le sorgenti di rete si dividono in due famiglie. Quelle che registrano **che cosa è successo** — chi ha parlato con chi, quando, per quanti byte — e quelle che registrano **che cosa è stato detto**. NetFlow, i log di firewall e i log di connessione appartengono alla prima; solo la cattura dei pacchetti appartiene alla seconda.\n* **Perché è la corretta:** lo scenario chiede **quali documenti**, cioè il contenuto. Solo il PCAP consente di ricostruire il payload e di riesumare i file trasferiti. È anche l'unica risposta che regge in giudizio a quella domanda precisa.\n* **Analisi dei distrattori:**\n  * **A) NetFlow** dice che sono usciti 4 GB verso quell'indirizzo: prova il trasferimento, non il suo contenuto. È eccellente per lo storico esteso e per individuare l'anomalia, ed è il motivo per cui si tiene acceso ovunque.\n  * **B) I log del firewall** confermano che la connessione era permessa dalla policy: stesso limite di NetFlow, con ancora meno dettaglio sul volume.\n  * **D) I metadati dei documenti** possono mostrare che un file è stato **aperto**, ma non che sia stato trasferito, né verso dove. Sono un indizio, non una prova del trasferimento.\n* **La ragione per cui non si cattura tutto:** un PCAP integrale su tutta la rete per mesi è insostenibile come volume e come costo. La pratica corrente è **NetFlow ovunque, cattura completa solo sui segmenti critici** o innescata da un alert — ed è precisamente il motivo per cui, in uno scenario reale, la domanda diventa *avevamo la cattura attiva su quel segmento?*\n* **Il limite da non dimenticare:** se la sessione era cifrata, il PCAP contiene i byte ma non il testo in chiaro. Restano indirizzi, porte, dimensioni, tempi e, nel TLS, il nome del server nell'estensione SNI."
+  },
+  {
+    id: 419,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Il direttore finanziario riceve un'e-mail apparentemente inviata dall'amministratore delegato che chiede un bonifico urgente. Nel client di posta il campo del mittente mostra correttamente il nome e l'indirizzo aziendale del CEO. Il team di sicurezza deve stabilire se il messaggio provenga davvero dall'infrastruttura aziendale.",
+    question: "Quale elemento va esaminato per rispondere?",
+    options: [
+      "A) Le intestazioni complete del messaggio, in particolare i campi Received, Return-Path e gli esiti di autenticazione",
+      "B) La firma in calce al messaggio, confrontandola con quella usata abitualmente dal CEO",
+      "C) I log della casella del CEO, per verificare se il messaggio compare fra gli elementi inviati",
+      "D) I metadati dell'eventuale allegato, che indicano l'autore del documento"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Le intestazioni complete del messaggio**.\n\n* **Perché è la corretta:** ciò che il client mostra come mittente è il campo **`From`**, ed è un semplice testo che chiunque può scrivere a piacere. La verità sta nelle **intestazioni**, che il destinatario normalmente non vede:\n  * I campi **`Received`** si leggono **dal basso verso l'alto** e ricostruiscono la catena dei server attraversati: il più in basso è il primo, cioè l'origine reale. Se il messaggio non è mai transitato dall'infrastruttura aziendale, lì non c'è.\n  * Il **`Return-Path`** è il mittente di **busta**, quello che il protocollo usa davvero e che **SPF** verifica. In uno spoofing è quasi sempre diverso dal `From` mostrato.\n  * L'intestazione **`Authentication-Results`** riporta gli esiti di **SPF**, **DKIM** e **DMARC**. Un `dmarc=fail` chiude la questione.\n* **Analisi dei distrattori:**\n  * **B) La firma in calce** è testo: un attaccante che ha visto una sola e-mail del CEO la replica alla perfezione. Non prova nulla.\n  * **C) I log della casella del CEO** sono utili se l'ipotesi è che l'account sia stato **compromesso**, ma non rispondono alla domanda: in uno spoofing il messaggio non passa mai dalla casella del CEO, quindi la sua assenza dagli elementi inviati non distingue lo spoofing da una compromissione con cancellazione delle tracce.\n  * **D) I metadati dell'allegato** riguardano il documento, non il percorso del messaggio — e lo scenario, tipico del **BEC**, spesso non prevede alcun allegato.\n* **Trappola d'esame:** ricorda i due mittenti. Il **`From`** è quello che l'utente **vede** e non è verificato da nulla; il **`Return-Path`** (o `MAIL FROM`) è quello che il protocollo **usa** ed è quello che SPF controlla. È perché i due possono divergere che esiste **DMARC**, che impone l'**allineamento** fra il dominio del `From` e quello verificato da SPF o DKIM."
+  },
+  {
+    id: 420,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Il consiglio di amministrazione chiede al CISO un quadro mensile dell'andamento del programma di sicurezza: percentuale di sistemi allineati alla baseline, tempo medio di correzione delle vulnerabilità critiche e copertura dell'agente EDR sul parco macchine. Il SOC dispone già di un SIEM che invia notifiche in tempo reale agli analisti.",
+    question: "Quale strumento risponde a questa esigenza, e perché non basta ciò che il SOC ha già?",
+    options: [
+      "A) Un alert aggiuntivo del SIEM con soglia mensile, che avvisi il consiglio al superamento dei limiti",
+      "B) Un report automatico periodico, perché la domanda riguarda una tendenza aggregata e non un evento singolo",
+      "C) L'accesso diretto del consiglio alla console del SIEM, per consultare i dati grezzi quando serve",
+      "D) Una cattura dei pacchetti pianificata, che documenti il traffico del mese"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Un report automatico periodico**.\n\n* **La distinzione che la domanda verifica:** *alert* e *report* rispondono a due domande diverse.\n  * L'**alert** è **immediato**, riguarda un **evento singolo** e chiede una **decisione adesso**. Destinatario: chi è di turno.\n  * Il **report** è **periodico**, **aggregato**, e serve a misurare un **andamento**. Destinatario: chi deve allocare risorse.\n  Le tre metriche richieste — percentuale di conformità, tempo medio di correzione, copertura dell'agente — sono per costruzione aggregate: nessuna di esse esiste come singolo evento, e quindi nessuna può essere un alert.\n* **Perché il report va automatizzato:** perché l'evidenza che un auditor cerca non è il numero, è la **serie**: un rapporto datato, prodotto con cadenza fissa e archiviato, dimostra che il controllo viene eseguito con regolarità. Un foglio compilato a mano prima della riunione dimostra solo che qualcuno ha compilato un foglio.\n* **Analisi dei distrattori:**\n  * **A)** Un alert mensile a un consiglio di amministrazione confonde i due strumenti: il consiglio non è un turno di reperibilità e non prende decisioni operative in tempo reale.\n  * **C)** Dare al consiglio i dati grezzi del SIEM è un errore di **destinatario**: il valore di un report sta nell'aggregazione e nell'interpretazione, che sono esattamente il lavoro che si chiede al CISO.\n  * **D)** La cattura dei pacchetti è una sorgente per l'analisi forense di un incidente, non una misura dell'andamento di un programma.\n* **L'insidia da conoscere:** un report che nessuno legge è peggio dell'assenza di report, perché produce l'illusione del controllo. Un report automatico deve avere un destinatario con l'**autorità di agire** e una **soglia** che, superata, lo trasformi in una segnalazione senza attendere la cadenza successiva."
+  },
+  {
+    id: 421,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Un'organizzazione protegge il proprio traffico con due sensori: un IDS collegato a una porta SPAN dello switch di distribuzione e un IPS in linea sul collegamento verso internet. Dopo un tentativo di intrusione, l'analista trova nei log di entrambi una voce che cita lo stesso exploit, con lo stesso indirizzo di origine e la stessa firma.",
+    question: "Che cosa dimostrano rispettivamente le due voci di log?",
+    options: [
+      "A) Entrambe dimostrano che il traffico malevolo è stato bloccato, perché entrambi i sensori riconoscono la firma",
+      "B) La voce dell'IDS dimostra che il traffico è stato osservato; quella dell'IPS, se l'azione registrata è di blocco, che è stato fermato",
+      "C) La voce dell'IDS ha più valore probatorio, perché il sensore passivo non altera il traffico che registra",
+      "D) Entrambe dimostrano soltanto che il traffico è stato osservato: nessun sensore registra l'esito dell'azione"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B)**.\n\n* **Il principio, dal principio:** la differenza fra i due sensori non sta in ciò che **riconoscono** — la firma è la stessa — ma in ciò che **possono fare** in virtù di dove sono collegati.\n  * L'**IDS** su porta SPAN riceve una **copia** del traffico. Può solo osservare e segnalare: il pacchetto originale è già proseguito. La sua voce di log significa *questo è passato di qui*, e nulla di più.\n  * L'**IPS in linea** sta **sul percorso** del traffico: ogni pacchetto lo attraversa, quindi può scartarlo. Ma anche un IPS può essere configurato in sola rilevazione, e allora si comporta esattamente come un IDS.\n* **Perché la risposta contiene un *se*:** è il punto che l'esame verifica. Non basta sapere che il sensore è un IPS; occorre leggere il **campo azione** della voce di log — `blocked`, `dropped`, `reset` da un lato, `alert`, `detected`, `permitted` dall'altro. Un IPS che registra *alert* ha visto e lasciato passare, esattamente come l'IDS. Dedurre il blocco dal nome del prodotto invece che dal log è l'errore.\n* **Analisi dei distrattori:**\n  * **A)** Confonde il riconoscimento con l'azione. Riconoscere una firma è ciò che fanno entrambi; agire dipende dal posizionamento e dalla configurazione.\n  * **C)** Il valore probatorio non dipende dalla passività del sensore. Semmai è vero il contrario di ciò che l'opzione lascia intendere: una porta SPAN sotto carico **scarta pacchetti** senza dirlo, e per questo nella raccolta forense si preferisce un **TAP**, che non perde nulla.\n  * **D)** È falsa per l'IPS, che registra l'esito dell'azione intrapresa; è vera solo per l'IDS.\n* **La conseguenza operativa da ricordare:** stando in linea, un IPS è un potenziale **punto di guasto** e un suo falso positivo diventa un disservizio immediato. È la ragione per cui molte organizzazioni tengono le firme nuove in sola rilevazione per un periodo di osservazione, e le promuovono al blocco solo dopo aver verificato che non intercettino traffico legittimo."
+  },
+  {
+    id: 422,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Un'organizzazione conserva i log esclusivamente sui sistemi che li generano, con rotazione settimanale. Durante un'indagine su una compromissione risalente a venti giorni prima, il team scopre che sul server interessato i log del periodo rilevante non esistono più, e che sull'unico sistema in cui sopravvivevano l'attaccante li aveva cancellati.",
+    question: "Quale pratica avrebbe protetto le evidenze in ENTRAMBI i modi in cui sono andate perse?",
+    options: [
+      "A) Aumentare la frequenza dei backup del sistema operativo dei server",
+      "B) Inoltrare i log in tempo reale a un sistema centralizzato in sola aggiunta, con conservazione dedicata",
+      "C) Attivare la cattura completa dei pacchetti sul segmento di rete del server",
+      "D) Applicare il monitoraggio dell'integrità dei file ai file di log del server"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) L'inoltro in tempo reale a un sistema centralizzato in sola aggiunta**.\n\n* **Le prove sono andate perse in due modi distinti**, e la domanda chiede la misura che li copre entrambi:\n  1. **Rotazione troppo breve** — i log del periodo rilevante erano già stati sovrascritti prima che qualcuno li cercasse. Una compromissione viene scoperta settimane o mesi dopo, e una rotazione settimanale è una garanzia di non trovare nulla.\n  2. **Cancellazione da parte dell'attaccante** — chi ottiene privilegi amministrativi su un sistema controlla anche i log **di quel sistema**. Un log custodito soltanto sulla macchina che lo produce è, per definizione, alla mercé di chi quella macchina l'ha conquistata.\n* **Perché l'inoltro centralizzato risolve entrambi:** la copia arriva **in tempo reale** su un sistema separato, quindi esiste già prima che la rotazione locale la elimini; e vive su una macchina su cui l'attaccante non ha necessariamente privilegi. La modalità **in sola aggiunta** (*append-only*, o WORM) chiude il cerchio: chi ha accesso al sistema centrale può scrivere nuovi eventi ma non riscrivere o cancellare quelli passati. La conservazione **dedicata** consente di tenere mesi o anni sul sistema centrale pur mantenendo rotazioni brevi in locale.\n* **Analisi dei distrattori:**\n  * **A) I backup del sistema operativo** possono contenere per caso qualche file di log, ma non sono una strategia di conservazione delle evidenze: la frequenza è sbagliata, la granularità pure, e un backup di una macchina compromessa contiene log già manomessi.\n  * **C) La cattura dei pacchetti** documenta il traffico di rete, non le azioni svolte **sul** sistema: autenticazioni, uso di privilegi, comandi eseguiti non compaiono.\n  * **D) Il FIM sui file di log** segnalerebbe la manomissione — ed è utile — ma **dopo** che è avvenuta e senza restituire il contenuto perduto. Soprattutto, non fa nulla contro il primo dei due problemi, la rotazione.\n* **Per l'esame:** quando uno scenario nomina la **cancellazione dei log da parte dell'attaccante**, la risposta è quasi sempre l'inoltro a un archivio centrale immutabile. È anche la ragione per cui l'evento Windows **1102** (registro di sicurezza cancellato) ha senso come indicatore solo se qualcuno lo riceve **altrove**."
+  },
+  {
+    id: 423,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Un server web è stato compromesso. Il team sa quando l'attacco è avvenuto ma non attraverso quale falla. Ha a disposizione i log di accesso del web server, i report delle scansioni di vulnerabilità eseguite ogni mese sullo stesso host e il registro delle modifiche applicate dal team di sistemistica.",
+    question: "Come va usato il report della scansione di vulnerabilità in questa indagine?",
+    options: [
+      "A) Non è utile: descrive uno stato precedente all'incidente e non registra alcun evento",
+      "B) Per restringere le ipotesi sul vettore, confrontando le falle note e non corrette con quanto mostrano i log di accesso",
+      "C) Per dimostrare che l'organizzazione aveva adempiuto ai propri obblighi di conformità",
+      "D) Per stabilire quali dati siano stati effettivamente sottratti dal server"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Per restringere le ipotesi sul vettore**.\n\n* **Perché è la corretta:** un report di scansione non è un log — non registra eventi — ma è comunque una **sorgente dati per l'indagine**, e serve a una cosa precisa: dice **quali porte erano aperte**. Confrontando le vulnerabilità note e non corrette su quell'host con ciò che i log di accesso mostrano nella finestra dell'attacco, l'insieme delle ipotesi si riduce drasticamente. Se lo scanner segnalava da due mesi una falla di *upload* non autenticato e i log mostrano una POST verso quell'endpoint poco prima della compromissione, il vettore non è più un'ipotesi.\n* **Il valore della serie storica:** più report ravvicinati nel tempo permettono di stabilire **quando** la falla è comparsa e **quanto a lungo** è rimasta aperta — informazione che conta sia per capire l'esposizione sia, spesso, per gli obblighi di notifica.\n* **Analisi dei distrattori:**\n  * **A)** Confonde *non registra eventi* con *non è utile*. È vero che descrive uno stato precedente: è proprio quello lo stato che l'attaccante ha trovato.\n  * **C)** È un uso legittimo dei report di scansione, ma risponde a una domanda di **conformità**, non all'indagine in corso. Attenzione all'insidia: usare l'evidenza di conformità come se fosse analisi della causa è il modo tipico di chiudere un incidente senza averlo capito.\n  * **D)** Il report di scansione non sa nulla dei dati presenti sul server né di ciò che è uscito. Quella risposta la danno i log di accesso, i flussi di rete e, per il contenuto, l'eventuale cattura dei pacchetti.\n* **Da ricordare per l'obiettivo 4.9:** le sorgenti per un'indagine non sono solo log. Rientrano anche i **report delle scansioni di vulnerabilità**, i **report automatici**, i **cruscotti** e i **metadati** — ciascuno risponde a una domanda diversa, e la ricostruzione nasce dal loro incrocio, non da una sola di esse."
+  },
+  {
+    id: 424,
+    topic: "Log Analysis",
+    level: "COMPRENSIONE",
+    scenario: "Il responsabile del SOC vuole che gli analisti vedano, appena entrano in turno, lo stato complessivo del centro: numero di alert aperti per gravità, sistemi che hanno smesso di inviare log, carico in coda per ciascun analista. I dati sono già tutti nel SIEM.",
+    question: "Quale strumento risponde a questa esigenza?",
+    options: [
+      "A) Una query salvata sul SIEM, che ciascun analista esegue quando ne ha bisogno",
+      "B) Un report automatico settimanale recapitato per e-mail a tutto il team",
+      "C) Un alert per ciascuna delle tre metriche, inviato all'inizio di ogni turno",
+      "D) Un cruscotto (dashboard), che presenta in forma visuale e continuamente aggiornata lo stato corrente"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Un cruscotto (dashboard)**.\n\n* **Le tre forme in cui un SIEM restituisce ciò che sa**, e la domanda a cui ciascuna risponde:\n  * **Alert** — *è successo qualcosa che richiede una decisione adesso?* Immediato, su evento singolo, con un destinatario che deve agire.\n  * **Dashboard** — *com'è la situazione in questo momento?* Visuale, continuamente aggiornata, pensata per essere **guardata** e per rendere evidente uno scostamento a colpo d'occhio.\n  * **Report** — *come stiamo andando nel tempo?* Periodico, aggregato, con un destinatario che deve decidere dove investire.\n  Lo scenario chiede una fotografia dello stato corrente da vedere all'inizio del turno: è la definizione di cruscotto.\n* **Un dettaglio che vale la pena notare:** fra le metriche richieste c'è *i sistemi che hanno smesso di inviare log*. È una delle più importanti e delle più trascurate: una sorgente che tace non genera alert — genera **silenzio**, che è indistinguibile dalla quiete. Solo un cruscotto che mostra esplicitamente la copertura delle sorgenti rende visibile un'assenza.\n* **Analisi dei distrattori:**\n  * **B) Il report settimanale** ha la cadenza sbagliata: lo stato corrente cambia di ora in ora, e a fine settimana la fotografia non serve più a chi entra in turno lunedì mattina.\n  * **C) Tre alert a inizio turno** snaturano lo strumento: l'alert segnala un **evento**, non uno stato, e usarlo come promemoria periodico contribuisce all'*alert fatigue* che rende gli analisti ciechi a quelli veri.\n  * **A) La query salvata** produce lo stesso dato, ma solo quando qualcuno si ricorda di eseguirla. Il punto del cruscotto è che l'informazione è **già lì**, senza che occorra decidere di cercarla."
   }
 ];
 
@@ -10288,7 +10651,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 32,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Mitigation Techniques & Controls",
     level: "ANALISI",
     scenario: "Un'azienda scopre che una libreria open-source ampiamente integrata nel proprio portale di e-commerce contiene una grave vulnerabilità che consente l'esecuzione di codice da remoto. Poiché si tratta di una vulnerabilità appena scoperta (Zero-Day), il team di sviluppo del progetto open-source non ha ancora rilasciato una patch correttiva.",
     question: "Quale rappresenta la prima e più efficace azione immediata che il team di sicurezza deve intraprendere per contenere il rischio?",
@@ -10348,7 +10711,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 36,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Actors & Motivations",
     level: "APPLICAZIONE",
     scenario: "Per superare i limiti di dimensione dei file imposti dal server di posta aziendale e accelerare lo scambio di file grafici pesanti con i clienti esterni, i dipendenti dell'ufficio marketing acquistano autonomamente un abbonamento di gruppo ad un servizio cloud non autorizzato di file sharing, utilizzandolo quotidianamente per condividere materiale aziendale.",
     question: "Come viene definito questo specifico fenomeno e rischio per la sicurezza aziendale?",
@@ -10558,7 +10921,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 425,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: "Un dipendente dell'amministrazione riceve un'e-mail apparentemente proveniente dal dipartimento IT che richiede un cambio password immediato tramite un link esterno, che in realtà reindirizza a una pagina di login contraffatta.",
     question: "Qual è il nome del vettore di attacco che prevede l'invio di e-mail fraudolente per ingannare i destinatari e spingerli a rivelare informazioni sensibili o a fare clic su collegamenti dannosi?",
@@ -10603,7 +10966,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 428,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: "Durante un incontro sulla sicurezza degli endpoint personali, un formatore discute dei rischi legati all'uso di tecnologie di comunicazione a corto raggio che, se non configurate correttamente, consentono la connessione di dispositivi vicini senza richiedere credenziali o cifratura nativa automatica.",
     question: "Quale delle seguenti opzioni rappresenta un tipo di rete wireless non protetta che utilizza onde radio a corto raggio per connettere dispositivi senza crittografia o autenticazione iniziale obbligatoria?",
@@ -10618,7 +10981,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 429,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un'applicazione web crea un file temporaneo per salvare un valore che verrà letto e utilizzato pochi istanti dopo. Un utente malintenzionato monitora il sistema e riesce a cancellare o modificare questo file subito dopo la sua creazione, ma un attimo prima che l'applicazione lo richiami per l'elaborazione.",
     question: "Quale tipo di vulnerabilità viene sfruttata in questa situazione?",
@@ -10648,7 +11011,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 431,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Il responsabile amministrativo riceve una videochiamata dal direttore finanziario, che riconosce per volto e voce. Il direttore, apparentemente in aeroporto, chiede un bonifico urgente verso un nuovo fornitore e insiste perché la pratica resti riservata fino al suo rientro. La chiamata dura due minuti, l'immagine ha qualche scatto e il direttore non risponde mai alle domande dirette, ripetendo invece frasi generiche. Il vero direttore era in riunione altrove.",
     question: "Quale tecnica è stata impiegata e quale controllo l'avrebbe fermata?",
@@ -10663,7 +11026,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 432,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Enrique sta verificando l'integrità dei file all'interno dei server della Kelly Innovations LLC quando si accorge di una gravissima anomalia: due file completamente diversi (con contenuti differenti) producono esattamente lo stesso valore hash crittografico. Comprendendo l'estremo rischio per l'autenticità dei dati, Enrique segnala subito l'accaduto per cambiare algoritmo.",
     question: "Quale termine descrive MEGLIO l'anomalia crittografica riscontrata da Enrique?",
@@ -10708,7 +11071,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 435,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Jason riceve un'e-mail all'account aziendale della Kelly Innovations LLC. L'e-mail sembra provenire da Reed, un suo collega, e afferma che Reed ha urgente bisogno di ricevere la fattura di un progetto recente entro 10 minuti, perché si trova in riunione con Sasha e i dirigenti. Jason invia la fattura immediatamente, senza verificare con Reed.",
     question: "Quale tipo di attacco descrive MEGLIO questa situazione?",
@@ -10723,7 +11086,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 436,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti vettori di minaccia riguarda principalmente software o dati dannosi trasferiti o eseguiti tramite documenti, file eseguibili o altri tipi di file comuni?",
@@ -10738,7 +11101,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 437,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti porte dovrebbe essere disabilitata o monitorata attentamente per prevenire segnalazioni VoIP (Voice over IP) non autorizzate, che possono essere un vettore di frode telefonica o controllo non autorizzato delle chiamate?",
@@ -10768,7 +11131,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 439,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Stai lavorando in remoto e hai bisogno di accedere alle risorse di rete aziendali. Ti connetti a un hotspot Wi-Fi pubblico in un bar vicino e usi un client VPN per stabilire una connessione sicura. Tuttavia, noti che il client VPN è obsoleto.",
     question: "A quale tipo di vulnerabilità ti stai esponendo?",
@@ -10783,7 +11146,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 440,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti vulnerabilità hardware riguarda la capacità di modificare il software che controlla le funzionalità di un dispositivo?",
@@ -10798,7 +11161,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 441,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Un attaccante installa un access point wireless non autorizzato in un bar, che imita un punto di accesso legittimo. I clienti ignari si connettono a questo access point, consentendo all'attaccante di intercettare i loro dati.",
     question: "Quale dei seguenti termini descrive MEGLIO questo vettore di minaccia?",
@@ -10828,7 +11191,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 443,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In un istituto di ricerca ad alta sicurezza, i dipendenti notano alcune anomalie. Ogni mattina, il primo dipendente ad arrivare trova la porta d'ingresso principale leggermente socchiusa, anche se nulla sembra rubato o manomesso. La struttura utilizza un sistema di tessere di accesso ad alta tecnologia e i log mostrano diversi addetti autorizzati che avrebbero presumibilmente avuto accesso all'edificio più volte durante la notte. Tuttavia, tali dipendenti affermano di essere stati a casa in quelle ore.",
     question: "Quale tipo di attività dannosa è PIÙ probabilmente responsabile di queste anomalie?",
@@ -10854,7 +11217,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Attacco ambientale (Environmental attack)"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Brute force (Forza bruta)**.\n\n* **Perché è la corretta:** Gli attacchi a **forza bruta** implicano il tentativo automatizzato di molte combinazioni fino a trovare quella corretta. Il messaggio 'numero massimo di tentativi raggiunto' sul tastierino della cassaforte indica chiaramente che qualcosa (o qualcuno, automatizzato) ha tentato numerose combinazioni di codice sul dispositivo.\n* **Analisi dei distrattori:**\n  * **A) Il Phishing** è un metodo per indurre individui a rivelare informazioni sensibili tramite comunicazioni fraudolente; non è rilevante per un attacco fisico a un tastierino elettronico.\n  * **C) La Clonazione RFID** coinvolge la copia di dati da tag RFID per accesso non autorizzato; non è applicabile a un tastierino a codice numerico.\n  * **D) Un attacco ambientale** sfrutta fattori ambientali come temperatura o umidità; non produce messaggi di errore di 'tentativi massimi raggiunti'."
+    explanation: "La risposta corretta è la **B) Brute force (Forza bruta)**.\n\n* **Perché è la corretta:** Gli attacchi a **forza bruta** consistono nel provare molte combinazioni finché non si trova quella giusta. Il messaggio *numero massimo di tentativi raggiunto* sul tastierino della cassaforte dice esattamente questo: qualcuno ha provato una sequenza di codici.\n* **Attenzione a dove si colloca:** questa è una **forza bruta fisica**, che negli obiettivi d'esame rientra fra gli **attacchi fisici** insieme alla clonazione RFID e agli attacchi ambientali. Lo stesso termine indica anche l'attacco alle credenziali su un servizio di rete, che è invece un **attacco alle password**. Il meccanismo è identico — provare finché non si indovina — ma cambiano il bersaglio, gli indicatori e la difesa: qui un blocco del tastierino dopo N tentativi e un allarme fisico, là un blocco dell'account, la limitazione del ritmo di richiesta e l'MFA.\n* **L'indicatore condiviso:** in entrambi i casi il segnale è **il numero di tentativi falliti**, non il loro contenuto. È il motivo per cui un sistema che non conta i fallimenti non si accorge mai di una forza bruta, quale che sia il bersaglio.\n* **Analisi dei distrattori:**\n  * **A) Il Phishing** è un metodo per indurre individui a rivelare informazioni sensibili tramite comunicazioni fraudolente; non è rilevante per un attacco fisico a un tastierino elettronico.\n  * **C) La Clonazione RFID** coinvolge la copia di dati da tag RFID per accesso non autorizzato; non è applicabile a un tastierino a codice numerico.\n  * **D) Un attacco ambientale** sfrutta fattori ambientali come temperatura o umidità; non produce messaggi di errore di 'tentativi massimi raggiunti'."
   },
   {
     id: 445,
@@ -10888,7 +11251,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 447,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti tecniche consente a un attaccante di intercettare una rete cablata collegando il proprio dispositivo direttamente ai cavi di rete?",
@@ -11023,7 +11386,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 456,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un tipo di attacco al vettore umano (human vector attack) che consiste nel creare un indirizzo web o un nome di dominio falso che assomiglia a uno legittimo, ma con lievi differenze ortografiche o di punteggiatura?",
@@ -11053,7 +11416,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 458,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In una sala conferenze, i partecipanti collegati al Wi-Fi aziendale vengono disconnessi ripetutamente e in blocco, ogni pochi secondi. L'analisi dello spettro mostra un flusso continuo di frame di gestione 802.11 che ordinano ai client di disconnettersi, apparentemente inviati dall'indirizzo MAC dell'access point legittimo. La rete usa WPA2 con una passphrase robusta, e nessun client risulta compromesso.",
     question: "Quale attacco è in corso e perché la robustezza della passphrase non lo impedisce?",
@@ -11068,7 +11431,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 459,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un attacco di ingegneria sociale che consiste nell'utilizzare loghi di un'organizzazione reale per ingannare gli utenti e far loro fidare di un sito web falso?",
@@ -11098,7 +11461,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 461,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale servizio di accesso remoto è associato alla porta TCP 3389 e, quando viene esposto direttamente su Internet, è uno dei vettori più sfruttati per attacchi di forza bruta sulle credenziali seguiti dalla distribuzione di ransomware?",
@@ -11113,7 +11476,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 462,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è una tecnica di ingegneria sociale in cui un attaccante si spaccia per qualcun altro, spesso per ottenere accesso non autorizzato a sistemi o informazioni?",
@@ -11128,7 +11491,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 463,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale vettore di minaccia utilizza allegati dannosi o hyperlink all'interno delle comunicazioni, richiedendo all'attaccante di convincere il destinatario a interagire con il contenuto per uno sfruttamento efficace?",
@@ -11173,7 +11536,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 466,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: "Un'azienda migra la propria infrastruttura su un fornitore cloud pubblico. Tutta la gestione — creazione delle macchine, regole di rete, permessi sui bucket di archiviazione — avviene tramite chiamate a interfacce di programmazione raggiungibili da Internet e autenticate con chiavi di accesso.",
     question: "Quale di queste vulnerabilità è la più caratteristica degli ambienti cloud, dove diventa la via d'accesso principale alla gestione dell'infrastruttura?",
@@ -11188,7 +11551,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 467,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "I sistemi di un'azienda sono stati compromessi e dati sensibili sono stati rubati. Dalle indagini è emerso che la violazione è avvenuta tramite un Trojan installato sul cellulare di un dipendente. Il dipendente aveva aggirato i controlli di sicurezza MDM (Mobile Device Management) per installare un gioco non autorizzato, che ha introdotto il Trojan o ha consentito agli attaccanti di sfruttare la sicurezza indebolita del telefono.",
     question: "Quale delle seguenti è la causa PIÙ probabile di questa vulnerabilità?",
@@ -11203,7 +11566,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 468,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quali dei seguenti sono problemi hardware che derivano da prodotti che non vengono più prodotti o supportati, ma sono ancora utilizzabili?",
@@ -11218,7 +11581,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 469,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Un attaccante sottrae il file delle password di un'applicazione: contiene soltanto gli hash, calcolati con SHA-256. In poche ore recupera in chiaro il 70% delle password, senza mai provarne una sul sistema, confrontando gli hash con un archivio precalcolato che aveva già pronto. Gli account con password molto lunghe e insolite restano invece intatti.",
     question: "Quale tecnica ha usato l'attaccante e quale contromisura l'avrebbe resa inutile?",
@@ -11233,7 +11596,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 470,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale delle seguenti porte, se lasciata aperta e non monitorata, potrebbe consentire query di database da fonti esterne non autorizzate?",
@@ -11263,7 +11626,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 472,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "APPLICAZIONE",
     scenario: "Jason sta lavorando su un'applicazione legacy che elabora input degli utenti. Nota che gli input utente non verificati possono essere usati per manipolare direttamente le locazioni di memoria, portando a potenziali attacchi di memory injection.",
     question: "Per contrastare questa vulnerabilità, cosa dovrebbe prioritizzare Jason?",
@@ -11338,7 +11701,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 477,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Elvi installa sul telefono aziendale alcune applicazioni scaricate come pacchetti da un sito di terze parti anziché dallo store ufficiale e, per riuscirci senza restrizioni, rimuove i limiti imposti dal sistema operativo ottenendo privilegi di amministratore sul dispositivo. Nelle settimane successive il telefono mostra consumo anomalo di dati e l'MDM aziendale non riesce più ad applicare le policy.",
     question: "Quali pratiche di Elvi hanno aumentato la superficie d'attacco del dispositivo? (scegline due)",
@@ -11399,7 +11762,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 481,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "La Kelly Innovations LLC sta ospitando una riunione fuori sede in un hotel. Benjamin sta cercando di accedere alla rete Wi-Fi dell'hotel. Alla connessione, non gli viene richiesto di inserire alcuna credenziale, ma viene reindirizzato a una splash page che richiede il numero di camera e il cognome. Benjamin è consapevole delle potenziali minacce sulle reti aperte e vuole garantire che le sue comunicazioni rimangano riservate.",
     question: "Cosa dovrebbe fare Benjamin per garantire comunicazioni sicure sul Wi-Fi aperto?",
@@ -11414,7 +11777,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 482,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Un attaccante usa una telefonata per impersonare un rappresentante di banca al fine di raccogliere informazioni sensibili dei clienti. Quale dei seguenti vettori di minaccia descrive questo scenario?",
@@ -11429,7 +11792,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 483,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Stai lavorando su un progetto con un vendor che ti fornisce un'applicazione software che gira sul tuo computer. Il vendor afferma che il software è sicuro e che non dovrai occuparti tu di aggiornamenti o patch: quando saranno disponibili, verranno scaricati automaticamente dal suo server e installati sul tuo computer. Che tipo di vettore di attacco è questo un esempio?",
@@ -11534,7 +11897,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 490,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Ricevi un'email dalla tua banca che ti chiede di verificare i dettagli del tuo account cliccando su un link. L'email sembra legittima, ma sei sospettoso.",
     question: "Che tipo di vettore di minaccia è stato utilizzato per questo attacco?",
@@ -11549,7 +11912,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 491,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Il direttore generale di un gruppo industriale riceve una singola e-mail, scritta in un italiano impeccabile, che cita per nome due membri del consiglio e fa riferimento a un'operazione di acquisizione realmente in corso e nota solo a poche persone. Il messaggio lo invita ad approvare con urgenza, tramite un portale esterno, il documento riservato allegato. Nessun altro dipendente ha ricevuto messaggi simili.",
     question: "Quale tecnica di ingegneria sociale descrive MEGLIO questo attacco?",
@@ -11564,7 +11927,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 492,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Nei log di un'applicazione web compaiono richieste come `GET /download?file=../../../../etc/passwd` e, in forma codificata, `%2e%2e%2f%2e%2e%2f`. L'applicazione riceve dall'utente il nome del file da scaricare e lo concatena direttamente al percorso della cartella dei documenti, senza alcun controllo. Alcune risposte hanno codice 200 e dimensione anomala.",
     question: "Quale vulnerabilità viene sfruttata e come si corregge alla radice?",
@@ -11579,7 +11942,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 493,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti è un attacco in cui un processo verifica lo stato o il valore di una risorsa prima di usarla, ma un altro processo lo ha cambiato nel frattempo?",
@@ -11594,7 +11957,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 494,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un software di gestione remota usato da migliaia di aziende rilascia un aggiornamento regolarmente firmato con il certificato del produttore e distribuito dai suoi canali ufficiali. Due settimane dopo l'installazione, in tutte le organizzazioni che lo hanno applicato compare una backdoor che contatta un server esterno. Chi non aveva ancora aggiornato non risulta compromesso.",
     question: "Quale tipo di attacco si è verificato?",
@@ -11620,11 +11983,11 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Phishing attack"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Brute force attack (Attacco a forza bruta)**.\n\n* **Perché è la corretta:** Un **attacco Brute force** tenta tutte le possibili combinazioni di caratteri fino a trovare la password o la chiave corretta. L'osservazione di Jamario di rapidi, vari tentativi di login da un singolo IP, unita all'intenso carico di elaborazione sul server, è indicativa di questo tipo di attacco.\n* **Analisi dei distrattori:**\n  * **A) Un Replay attack** cattura e ritrasmette una trasmissione di dati valida (come un token di autenticazione); non corrisponde all'osservazione di vari tentativi di login con combinazioni diverse.\n  * **B) Il Password spraying** tenta una singola password contro più username, non multiple password contro un singolo target da un IP.\n  * **D) Un attacco Phishing** cerca di ingannare gli utenti a rivelare informazioni tramite comunicazioni fraudolente; non genera tentativi multipli automatizzati al portale di login."
+    explanation: "La risposta corretta è la **C) Brute force attack (Attacco a forza bruta)**.\n\n* **Perché è la corretta:** Un **attacco a forza bruta** prova molte combinazioni finché non trova la password giusta. I tre elementi osservati da Jamario coincidono: **un solo indirizzo di origine**, **molte password diverse** contro lo stesso bersaglio, e un carico anomalo sul server che ne è la conseguenza.\n* **Il confronto che l'esame verifica davvero, forza bruta contro password spraying:** non è la quantità di tentativi, è la **direzione**. La forza bruta prova **molte password su un account**; il *password spraying* prova **una password comune su moltissimi account**. Il secondo esiste proprio per **non** far scattare il blocco dell'account, perché ogni singolo utente vede uno o due tentativi falliti, e per questo si rileva solo correlando i fallimenti **fra** account diversi anziché all'interno di uno solo.\n* **Da tenere presente:** lo stesso termine indica anche la **forza bruta fisica** su una serratura o un tastierino, che negli obiettivi rientra fra gli attacchi fisici. Il meccanismo è lo stesso; cambiano bersaglio e difese.\n* **Analisi dei distrattori:**\n  * **A) Un Replay attack** cattura e ritrasmette una trasmissione di dati valida (come un token di autenticazione); non corrisponde all'osservazione di vari tentativi di login con combinazioni diverse.\n  * **B) Il Password spraying** tenta una singola password contro più username, non multiple password contro un singolo target da un IP.\n  * **D) Un attacco Phishing** cerca di ingannare gli utenti a rivelare informazioni tramite comunicazioni fraudolente; non genera tentativi multipli automatizzati al portale di login."
   },
   {
     id: 496,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti si riferisce a una vulnerabilità nel software sconosciuta al vendor e spesso sfruttata da attori malevoli prima che venga rilasciata una patch?",
@@ -11639,7 +12002,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 497,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Tre studi di ingegneria che lavorano su una stessa gara d'appalto vengono compromessi nello stesso periodo. L'analisi forense rileva che tutti e tre i team consultavano abitualmente il portale di un'associazione tecnica di settore, e che quel portale era stato violato e serviva un exploit del browser ai soli visitatori provenienti dagli indirizzi IP dei tre studi.",
     question: "Quale tecnica d'attacco descrive questo scenario?",
@@ -11654,7 +12017,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 498,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "In un venerdì lavorativo molto occupato, Jennifer riceve un'email con una richiesta urgente da Robert, il CEO di Cornerstone Design. L'importo, la fattura e i dettagli di pagamento sono inclusi nell'email. L'indirizzo email è Robert@cornerslonedesign.com. Robert ha l'abitudine di aspettare troppo a lungo per il pagamento e poi inviare un'email frettolosa a Jennifer richiedendo il pagamento.",
     question: "Che tipo di attacco sta avendo luogo?",
@@ -11699,7 +12062,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 501,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti vettori di minaccia è associato ai rischi derivanti dal non cambiare le informazioni di login preimpostate sui sistemi, consentendo potenzialmente un facile accesso non autorizzato?",
@@ -11759,7 +12122,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 505,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "In un aeroporto, i passeggeri si collegano a una rete Wi-Fi aperta che espone lo stesso nome della rete ufficiale dello scalo e un segnale più forte. I dispositivi già configurati vi si agganciano da soli, senza che nessuno scelga nulla. Chi naviga verso siti aziendali riceve un avviso di certificato non valido, che molti ignorano. Il punto di accesso è un dispositivo portatile collocato in sala d'attesa da un estraneo.",
     question: "Quale attacco è in corso e quale contromisura lo neutralizza dal lato del client?",
@@ -11849,7 +12212,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 511,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Un'azienda tecnologica scopre che il firmware di alcuni dei loro dispositivi contiene una backdoor nascosta. Dalle indagini emerge che il firmware compromesso proveniva da un fornitore straniero con cui avevano stipulato un contratto. La backdoor dava agli attaccanti accesso remoto ai dispositivi senza che l'utente ne fosse a conoscenza.",
     question: "A quale tipo di vettore di attacco è caduta vittima l'azienda?",
@@ -11909,7 +12272,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 515,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Nei giorni precedenti l'assemblea degli azionisti, decine di profili creati di recente diffondono la notizia che l'amministratore delegato di un'azienda quotata sia sotto indagine. La notizia è falsa e costruita ad arte, corredata da uno screenshot contraffatto di una testata reale, e viene rilanciata da account che sembrano indipendenti ma pubblicano gli stessi contenuti negli stessi minuti. Il titolo perde il 9% in due giorni.",
     question: "Quale vettore d'attacco descrive MEGLIO questa campagna?",
@@ -11924,7 +12287,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 516,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "COMPRENSIONE",
     scenario: null,
     question: "Quale dei seguenti scenari esemplifica MEGLIO un business email compromise?",
@@ -11939,7 +12302,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 517,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un'applicazione di magazzino calcola il totale di un ordine moltiplicando quantità e prezzo unitario e conserva il risultato in una variabile intera a 32 bit con segno. Un cliente ordina una quantità enorme di un articolo: il totale dovrebbe superare il limite rappresentabile, ma il sistema registra un importo **negativo** e accredita la differenza sul conto del cliente. Nessun controllo di input aveva limitato la quantità.",
     question: "Quale vulnerabilità è stata sfruttata?",
@@ -11984,7 +12347,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 520,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Vulnerability Types",
     level: "ANALISI",
     scenario: "Un fornitore di hosting condiviso assegna a ogni cliente una macchina virtuale sullo stesso host fisico. Durante un test autorizzato, Barzun parte da una macchina virtuale di prova con soli privilegi utente, sfrutta un difetto nel driver grafico paravirtualizzato dell'hypervisor e ottiene esecuzione di codice sull'host. Da lì può leggere la memoria delle macchine virtuali degli altri clienti.",
     question: "Quale tipo di vulnerabilità è stata sfruttata?",
@@ -12074,7 +12437,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 526,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Nella hall e negli ascensori di un'azienda compaiono adesivi con un codice QR e la scritta \"Inquadra per attivare il nuovo Wi-Fi ospiti\". Chi lo scansiona col telefono raggiunge una pagina che imita fedelmente il portale SSO aziendale e chiede credenziali e codice MFA. Il gateway di posta non ha registrato nulla di anomalo e nessun dipendente segnala SMS sospetti; i primi account compromessi appartengono a persone che hanno inquadrato il codice con il telefono personale.",
     question: "Quale tecnica descrive l'attacco, e perché i controlli su e-mail e SMS non l'hanno intercettato?",
@@ -12104,7 +12467,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 528,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Indicators of Malicious Activity",
     level: "ANALISI",
     scenario: "Durante una site survey wireless, un analista rileva in magazzino un access point che trasmette l'SSID aziendale ma non compare nell'inventario, non è gestito dal controller centrale e accetta connessioni senza autenticazione 802.1X. Risulta collegato a una presa di rete dell'ufficio e configurato con le impostazioni di fabbrica.",
     question: "Quale minaccia è stata individuata e qual è il controllo che l'avrebbe impedita?",
@@ -12134,7 +12497,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 530,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "APPLICAZIONE",
     scenario: "Ricevi un messaggio di testo dalla tua banca che ti chiede di confermare i dettagli del tuo account e il PIN cliccando su un link. Il messaggio sembra legittimo, ma sei sospettoso.",
     question: "Di che tipo di attacco potrebbe essere un esempio questo scenario?",
@@ -12164,7 +12527,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
   },
   {
     id: 532,
-    topic: "Threat Vectors & Vulnerabilities",
+    topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
     scenario: "Lunedì mattina il SOC di un'azienda manifatturiera rileva che tre workstation di reparti diversi hanno eseguito lo stesso binario dall'unità `E:` pochi minuti dopo l'inizio del turno. Il venerdì precedente alcune chiavette USB con l'etichetta scritta a mano \"Stipendi 2026 - Riservato\" erano state trovate nel parcheggio aziendale e diversi dipendenti le avevano collegate al PC per capire a chi restituirle. I log del gateway di posta e del firewall perimetrale non mostrano alcun transito di quel file.",
     question: "Quale vettore d'attacco è stato sfruttato e quale controllo lo avrebbe neutralizzato alla radice?",
