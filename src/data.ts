@@ -3183,6 +3183,41 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
         definition: "File di log generati direttamente da applicazioni specifiche, come web server, database e sistemi gestionali.",
         details: "Gli **Application Logs** comprendono:\n* **Web Server Logs (es. Apache/Nginx access/error logs):** Registrano richieste HTTP (metodo GET/POST), URI risorsa richiesta, indirizzo IP del client, stringhe di query, User-Agent, e codice di stato della risposta (es. 200, 403, 404, 500).\n* **Database Logs:** Registrano query SQL eseguite, login amministrativi al database ed errori di sintassi.\n* Essenziali per rilevare attacchi applicativi complessi (SQLi, Cross-Site Scripting, Directory Traversal).",
         examTip: "La presenza di stringhe contenenti caratteri come `' UNION SELECT` o script tag `<script>` nei log di accesso del server web indica tentativi di attacco SQL Injection o Cross-Site Scripting (XSS)."
+      },
+      {
+        name: "Network Logs",
+        checklistKey: "NetworkLogs",
+        definition: "Registrazioni prodotte dai dispositivi di rete — switch, router, access point, server DHCP e DNS — che documentano connessioni, assegnazioni di indirizzo e risoluzioni di nome.",
+        details: "Le sorgenti più utili in un'indagine:\n* **Log DHCP:** associano un indirizzo IP a un indirizzo MAC in un intervallo di tempo preciso. Sono ciò che permette di trasformare *l'IP 10.4.2.37 ha esfiltrato dati alle 03:14* in *quel portatile, di quella persona*. Senza di essi un IP interno è un numero che nel frattempo può essere stato riassegnato.\n* **Log DNS:** mostrano quali nomi sono stati risolti da quale client. Rivelano la comunicazione verso domini di *command and control* e il *DNS tunneling* anche quando il traffico successivo è cifrato.\n* **Log di switch e router:** cambi di stato delle porte, adiacenze di routing, negazioni delle ACL.\n* **Log degli access point:** associazioni e disassociazioni dei client wireless, con MAC e potenza del segnale.\n* **NetFlow e sFlow:** non sono log di eventi ma registrazioni dei **flussi** (chi ha parlato con chi, su quale porta, per quanti byte e per quanto tempo), con un costo di archiviazione bassissimo rispetto alla cattura completa.",
+        examTip: "Quando lo scenario chiede **quale dispositivo fisico** stava dietro un indirizzo IP interno in un certo momento, la risposta è il **log DHCP**. Quando chiede quali domini un host ha contattato, è il **log DNS**. Un log di firewall dice che una connessione è avvenuta, non chi era la persona."
+      },
+      {
+        name: "OS-Specific Security Logs",
+        checklistKey: "OSSecurityLogs",
+        definition: "I log di sicurezza del sistema operativo, distinti dai log applicativi: registrano autenticazioni, uso dei privilegi, modifiche agli account e accessi agli oggetti.",
+        details: "Dove si guarda, in concreto:\n* **Windows — Event Log, canale Security:** gli ID da conoscere sono **4624** (accesso riuscito), **4625** (accesso fallito), **4672** (assegnazione di privilegi speciali, cioè un accesso amministrativo), **4720** (creazione di un account), **4728/4732** (aggiunta a un gruppo privilegiato) e **1102** (cancellazione del registro di sicurezza, che è di per sé un indicatore di compromissione).\n* **Il campo *Logon Type* del 4624** distingue un accesso alla console (2), di rete (3), un servizio (5), un desktop remoto (10): è ciò che separa l'amministratore alla tastiera dal movimento laterale.\n* **Linux — `/var/log/auth.log` su Debian e Ubuntu, `/var/log/secure` su RHEL:** autenticazioni SSH, uso di `sudo`, cambi di identità con `su`, eventi PAM.\n* **`auditd`** aggiunge su Linux il livello più fine: accessi a file specifici e chiamate di sistema, secondo regole definite.",
+        examTip: "Distingui **log di sistema** e **log di sicurezza del sistema operativo**: i primi raccontano come sta il sistema (servizi, driver, errori hardware), i secondi chi ha fatto che cosa. Per un'indagine su un accesso non autorizzato si va sempre sui secondi."
+      },
+      {
+        name: "Metadata",
+        checklistKey: "MetadataSource",
+        definition: "I dati che descrivono altri dati: chi ha creato un file e quando, da quale dispositivo, con quale applicazione, quale percorso ha seguito un messaggio.",
+        details: "I tre insiemi che ricorrono nelle indagini:\n* **Metadati di file:** autore, date di creazione, modifica e ultimo accesso, applicazione che ha prodotto il documento, revisioni. Nelle foto gli **EXIF** possono contenere modello del dispositivo e coordinate GPS.\n* **Metadati di posta elettronica:** le **intestazioni** del messaggio. I campi `Received` ricostruiscono a ritroso la catena dei server attraversati, `Message-ID` identifica il messaggio, `Return-Path` mostra il mittente di busta — che è quello verificato da SPF e che può essere diverso dal `From` mostrato all'utente. È qui che si smaschera uno spoofing.\n* **Metadati di traffico:** indirizzi, porte, volumi e durata, senza il contenuto. Sono ciò che NetFlow registra e ciò che resta visibile anche quando il payload è cifrato.\n\nIl motivo per cui contano: i metadati **non raccontano il contenuto, ma il contesto**, e il contesto è spesso sufficiente. Sapere che un documento riservato è stato aperto alle 3 di notte da un account che non lo aveva mai toccato è una prova, anche senza leggerne una riga.",
+        examTip: "Attenzione a un errore ricorrente: i metadati descrivono il **file**, non l'elenco di **chi lo ha aperto**. La cronologia degli accessi sta nei log di sicurezza del sistema operativo o nei log dell'applicazione, non nei metadati."
+      },
+      {
+        name: "Packet Captures",
+        checklistKey: "PacketCaptureSource",
+        definition: "La registrazione integrale dei pacchetti che transitano su un segmento di rete, contenuto compreso, tipicamente in formato PCAP.",
+        details: "Che cosa dà e che cosa costa:\n* **Contenuto completo:** è l'unica sorgente che consente di ricostruire il payload — la query esatta, il file trasferito, la stringa di *command and control*. Dove NetFlow dice *questi due host hanno scambiato 4 GB*, la cattura dice *che cosa* si sono scambiati.\n* **Come si raccoglie:** una **porta SPAN** (o mirror) sullo switch duplica il traffico verso il sensore, oppure un **TAP** di rete lo intercetta passivamente sul cavo. Il TAP non perde pacchetti sotto carico ed è la scelta forense.\n* **Il costo:** volume. Conservare mesi di cattura integrale sull'intera rete è economicamente insostenibile, ed è la ragione per cui la pratica corrente è NetFlow ovunque e cattura completa **solo sui segmenti critici** o attivata su innesco di un alert.\n* **Il limite:** se il traffico è cifrato, la cattura contiene i byte ma non il testo in chiaro. Restano leggibili le informazioni di contorno — indirizzi, porte, dimensioni, tempi e, nel TLS, il nome del server (SNI).",
+        examTip: "Quando lo scenario chiede una **prova del contenuto** — che cosa è stato esfiltrato, che cosa conteneva la query — la risposta è la cattura dei pacchetti. Quando chiede una visione **storica ed estesa** di chi ha parlato con chi, è NetFlow."
+      },
+      {
+        name: "Automated Reports",
+        checklistKey: "AutomatedReports",
+        definition: "Rapporti generati e recapitati a cadenza fissa dagli strumenti di sicurezza — SIEM, scanner di vulnerabilità, piattaforme di gestione delle patch — senza intervento umano.",
+        details: "A che cosa servono davvero:\n* **Traducono il dato in andamento:** un singolo rapporto di scansione dice quante vulnerabilità ci sono oggi; la serie dei rapporti dice se la situazione migliora o peggiora, ed è questo che interessa alla direzione.\n* **Sostengono la conformità:** molti quadri normativi chiedono di *dimostrare* che un controllo viene eseguito con regolarità. Un rapporto automatico datato e archiviato è l'evidenza che un auditor cerca.\n* **Alimentano le metriche di programma:** tempo medio di correzione delle vulnerabilità, percentuale di sistemi conformi alla baseline, copertura dell'agente di sicurezza sul parco macchine.\n\n**Il rischio da conoscere:** un rapporto che nessuno legge è peggio dell'assenza di rapporto, perché produce l'illusione del controllo. Un rapporto automatico va indirizzato a un destinatario con l'autorità di agire, e deve prevedere una soglia che trasformi il dato in una segnalazione quando serve.",
+        examTip: "Distingui **alert** e **report**: l'alert è immediato e riguarda un evento singolo che richiede una decisione ora; il report è periodico, aggregato, e serve a misurare una tendenza. Uno scenario che parla di direzione, cadenza mensile o evidenza per l'audit sta parlando di report."
       }
     ]
   },
@@ -8583,6 +8618,156 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     ],
     answerIndex: 0,
     explanation: "La risposta corretta è la **A) Monitoring (Monitoraggio)**.\n\n* **Perché è la corretta:** Il **monitoraggio** è una tecnica che prevede l'osservazione e la misurazione continua dello stato e dell'attività della rete e dei sistemi, utilizzando strumenti come analizzatori di rete, monitor delle prestazioni o sistemi di rilevamento delle intrusioni. Il monitoraggio può fornire dati in tempo reale e alert sulle prestazioni, la disponibilità e la sicurezza della rete, consentendo all'azienda di rilevare e rispondere a qualsiasi incidente o anomalia.\n* **Analisi dei distrattori:**\n  * **B)** Il patching prevede l'aggiornamento e la correzione del software e del firmware sulla rete e sui sistemi; non rileva né risponde attivamente agli incidenti.\n  * **C)** L'auditing prevede la revisione periodica e la verifica della conformità e dell'efficacia della rete e dei sistemi; è orientato alla conformità, non al rilevamento in tempo reale.\n  * **D)** Il logging prevede la registrazione e l'archiviazione degli eventi che si verificano sulla rete; i log possono essere usati dai sistemi di monitoraggio, ma i log da soli non rilevano né rispondono agli incidenti."
+  },
+  {
+    id: 415,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Il SIEM segnala che l'indirizzo IP interno 10.42.7.118 ha trasferito 6 GB verso un servizio di archiviazione esterno alle 03:20 di martedì. La rete assegna gli indirizzi dinamicamente con lease di otto ore e il parco macchine è composto quasi interamente da portatili che si spostano fra le sedi. Quando l'analista controlla, quell'indirizzo è oggi assegnato alla postazione di una persona che quella notte era in ferie.",
+    question: "Quale sorgente dati permette di stabilire QUALE dispositivo fosse dietro quell'indirizzo IP al momento del trasferimento?",
+    options: [
+      "A) Il log del firewall perimetrale, che ha registrato la connessione in uscita",
+      "B) Il log del server DHCP, che associa indirizzo IP e indirizzo MAC per intervalli di tempo",
+      "C) L'inventario degli asset, che elenca gli indirizzi IP assegnati a ciascun dispositivo",
+      "D) I metadati dei file trasferiti, che indicano il dispositivo di origine"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Il log del server DHCP**.\n\n* **Il problema, dal principio:** un indirizzo IP interno non è un'identità. In una rete con assegnazione dinamica è un'etichetta temporanea, prestata a un dispositivo per la durata del *lease* e poi riassegnata a un altro. Chiedersi *di chi è 10.42.7.118* senza specificare **quando** è una domanda senza risposta, ed è esattamente l'errore in cui l'analista dello scenario stava per cadere.\n* **Perché è la corretta:** il **log DHCP** registra, per ogni assegnazione, l'indirizzo IP, l'indirizzo **MAC** del dispositivo e gli istanti di inizio e fine del lease. È la sola sorgente che lega un indirizzo a un dispositivo **in un intervallo di tempo preciso**. Trovato il MAC, l'inventario degli asset dice di quale portatile si tratta e a chi è assegnato.\n* **Analisi dei distrattori:**\n  * **A) Il log del firewall** conferma che la connessione è avvenuta, con indirizzi, porte e volume. È ciò che ha generato l'allarme, ma si ferma all'indirizzo: non sa nulla del dispositivo che c'era dietro.\n  * **C) L'inventario degli asset** è indispensabile al passaggio *successivo*, ma da solo non basta: in un ambiente DHCP non contiene l'associazione storica indirizzo-dispositivo, e l'assegnazione che riporta oggi è proprio quella fuorviante.\n  * **D) I metadati dei file** descrivono autore, date e applicazione che li ha prodotti; il dispositivo che ha materialmente eseguito il trasferimento non compare.\n* **Trappola d'esame:** quando una domanda chiede di passare da un **indirizzo IP interno** a un **dispositivo o a una persona**, la catena è sempre la stessa: *log DHCP → indirizzo MAC → inventario degli asset → assegnatario*. Se l'indirizzo è pubblico ed esterno, la catena è invece *registro RIPE/ARIN → provider → richiesta legale*."
+  },
+  {
+    id: 416,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Una workstation compromessa comunica con l'esterno. Tutto il traffico in uscita è HTTPS, quindi il contenuto non è leggibile, e l'indirizzo IP di destinazione cambia ogni poche ore perché l'attaccante usa un servizio che ruota gli indirizzi. Il team deve capire con quale infrastruttura la macchina stia effettivamente parlando, per bloccarla e per cercare altri host compromessi.",
+    question: "Quale sorgente dati offre l'elemento più stabile su cui costruire il blocco e la ricerca?",
+    options: [
+      "A) I log applicativi del server web aziendale, che registrano le richieste HTTP",
+      "B) Il log del server DHCP, che registra le assegnazioni degli indirizzi",
+      "C) La cattura completa dei pacchetti, che contiene i byte della sessione cifrata",
+      "D) Il log DNS, che registra i nomi di dominio risolti da ciascun client"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Il log DNS**.\n\n* **Perché è la corretta:** prima di aprire una connessione verso un nome, un host deve **risolverlo**. Quella richiesta passa dal resolver aziendale e viene registrata, e il nome di dominio è l'elemento che rimane **stabile** anche mentre gli indirizzi IP ruotano. Con il nome in mano si fanno due cose in un colpo solo: lo si blocca sul resolver, e si interrogano i log DNS per trovare **ogni altro host** che lo ha risolto — cioè la lista delle macchine compromesse, che l'analista non sapeva di dover cercare.\n* **Analisi dei distrattori:**\n  * **B) Il log DHCP** serve a identificare il dispositivo dietro un indirizzo, che qui è già noto: la workstation è stata individuata.\n  * **C) La cattura dei pacchetti** contiene i byte, ma il traffico è cifrato: senza le chiavi di sessione non si legge il contenuto. Resta utile per il nome del server nell'estensione **SNI** del TLS e per i tempi, ma è una sorgente pesante e non necessariamente attiva su quel segmento nel momento giusto.\n  * **A) I log del server web aziendale** registrano le richieste **in ingresso** verso i servizi dell'azienda: sono la direzione sbagliata rispetto a una comunicazione in uscita.\n* **Nota pratica:** il log DNS è una delle sorgenti con il rapporto valore/costo più alto in assoluto. Occupa pochissimo, si conserva a lungo, e resta informativo anche quando tutto il resto è cifrato. Il suo punto cieco è il malware che contatta **direttamente un indirizzo IP** senza risolvere alcun nome, e il client che usa **DoH** verso un resolver esterno aggirando quello aziendale."
+  },
+  {
+    id: 417,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Durante la revisione dell'Event Log di sicurezza di un server Windows, un analista trova in sequenza, nell'arco di quattro minuti: una lunga serie di eventi 4625 provenienti da un unico indirizzo IP interno, poi un evento 4624 con Logon Type 3 per l'account di servizio `svc_backup`, poi un evento 4672 per lo stesso account e infine un evento 1102.",
+    question: "Come va letta questa sequenza e qual è l'elemento PIÙ grave?",
+    options: [
+      "A) Manutenzione pianificata: il 4672 indica che l'account di servizio ha eseguito il backup con i privilegi previsti",
+      "B) Attacco fallito: la serie di 4625 dimostra che l'attaccante non è mai riuscito ad autenticarsi",
+      "C) Attacco riuscito: a un password spraying segue un accesso di rete privilegiato, e il 1102 dice che il registro di sicurezza è stato cancellato",
+      "D) Problema di configurazione: l'account di servizio ha la password scaduta, da cui i tentativi falliti e la successiva pulizia dei log"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C)**.\n\n* **La sequenza, evento per evento:**\n  * **4625 ripetuti da un solo indirizzo** — accessi **falliti**. Molti tentativi in pochi minuti da un'unica origine interna sono il profilo di un *password spraying* o di un attacco a forza bruta condotto **da una macchina già dentro la rete**.\n  * **4624 con Logon Type 3** — accesso **riuscito**, e di tipo **rete**: qualcuno si è autenticato da remoto su questo server, non alla sua console. È la firma del movimento laterale.\n  * **4672** — all'account sono stati assegnati **privilegi speciali** al momento dell'accesso: in pratica, è entrato come amministratore.\n  * **1102** — **il registro di sicurezza è stato cancellato**. È il punto più grave dei quattro, perché non è un evento operativo: è un'azione deliberata di **anti-forensics**. Nessun processo legittimo di manutenzione svuota l'Event Log di sicurezza.\n* **Perché il 1102 è l'elemento decisivo:** gli altri tre eventi descrivono un'intrusione; il 1102 dice che l'attaccante sta **distruggendo le prove**, il che significa che da quel momento in poi il log locale non è più una fonte affidabile. È anche la dimostrazione del perché i log vadano **inoltrati in tempo reale a un sistema centrale**: la copia sul SIEM sopravvive alla cancellazione di quella locale.\n* **Analisi dei distrattori:**\n  * **A)** Il 4672 da solo non prova nulla di legittimo: dice che l'accesso era privilegiato, non che fosse autorizzato. E una manutenzione non cancella il registro di sicurezza.\n  * **B)** Si ferma ai 4625 ignorando il 4624 che segue: l'attacco è fallito molte volte e poi è **riuscito**. È l'errore classico di chi conta i tentativi falliti senza cercare quello riuscito.\n  * **D)** Una password scaduta produce esiti di errore diversi e non spiega in alcun modo la cancellazione del registro.\n* **Da memorizzare:** **4624** riuscito · **4625** fallito · **4672** privilegi speciali · **4720** account creato · **4728/4732** aggiunta a gruppo privilegiato · **1102** registro di sicurezza cancellato. E il **Logon Type**: 2 console, 3 rete, 5 servizio, 10 desktop remoto."
+  },
+  {
+    id: 418,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Un'azienda deve dimostrare in sede legale **quali documenti specifici** sono usciti da un server di progettazione durante una finestra di due ore, non soltanto che un trasferimento di dati è avvenuto. Il SIEM conserva i flussi NetFlow di tutta la rete, i log del firewall e i log applicativi del server.",
+    question: "Quale sorgente dati soddisfa questo requisito probatorio?",
+    options: [
+      "A) I record NetFlow, che documentano volume, durata e porte della conversazione",
+      "B) I log del firewall, che registrano la connessione consentita e il suo esito",
+      "C) La cattura completa dei pacchetti sul segmento del server (PCAP)",
+      "D) I metadati dei documenti presenti sul server, con le date di ultimo accesso"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) La cattura completa dei pacchetti**.\n\n* **Il criterio, dal principio:** le sorgenti di rete si dividono in due famiglie. Quelle che registrano **che cosa è successo** — chi ha parlato con chi, quando, per quanti byte — e quelle che registrano **che cosa è stato detto**. NetFlow, i log di firewall e i log di connessione appartengono alla prima; solo la cattura dei pacchetti appartiene alla seconda.\n* **Perché è la corretta:** lo scenario chiede **quali documenti**, cioè il contenuto. Solo il PCAP consente di ricostruire il payload e di riesumare i file trasferiti. È anche l'unica risposta che regge in giudizio a quella domanda precisa.\n* **Analisi dei distrattori:**\n  * **A) NetFlow** dice che sono usciti 4 GB verso quell'indirizzo: prova il trasferimento, non il suo contenuto. È eccellente per lo storico esteso e per individuare l'anomalia, ed è il motivo per cui si tiene acceso ovunque.\n  * **B) I log del firewall** confermano che la connessione era permessa dalla policy: stesso limite di NetFlow, con ancora meno dettaglio sul volume.\n  * **D) I metadati dei documenti** possono mostrare che un file è stato **aperto**, ma non che sia stato trasferito, né verso dove. Sono un indizio, non una prova del trasferimento.\n* **La ragione per cui non si cattura tutto:** un PCAP integrale su tutta la rete per mesi è insostenibile come volume e come costo. La pratica corrente è **NetFlow ovunque, cattura completa solo sui segmenti critici** o innescata da un alert — ed è precisamente il motivo per cui, in uno scenario reale, la domanda diventa *avevamo la cattura attiva su quel segmento?*\n* **Il limite da non dimenticare:** se la sessione era cifrata, il PCAP contiene i byte ma non il testo in chiaro. Restano indirizzi, porte, dimensioni, tempi e, nel TLS, il nome del server nell'estensione SNI."
+  },
+  {
+    id: 419,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Il direttore finanziario riceve un'e-mail apparentemente inviata dall'amministratore delegato che chiede un bonifico urgente. Nel client di posta il campo del mittente mostra correttamente il nome e l'indirizzo aziendale del CEO. Il team di sicurezza deve stabilire se il messaggio provenga davvero dall'infrastruttura aziendale.",
+    question: "Quale elemento va esaminato per rispondere?",
+    options: [
+      "A) Le intestazioni complete del messaggio, in particolare i campi Received, Return-Path e gli esiti di autenticazione",
+      "B) La firma in calce al messaggio, confrontandola con quella usata abitualmente dal CEO",
+      "C) I log della casella del CEO, per verificare se il messaggio compare fra gli elementi inviati",
+      "D) I metadati dell'eventuale allegato, che indicano l'autore del documento"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Le intestazioni complete del messaggio**.\n\n* **Perché è la corretta:** ciò che il client mostra come mittente è il campo **`From`**, ed è un semplice testo che chiunque può scrivere a piacere. La verità sta nelle **intestazioni**, che il destinatario normalmente non vede:\n  * I campi **`Received`** si leggono **dal basso verso l'alto** e ricostruiscono la catena dei server attraversati: il più in basso è il primo, cioè l'origine reale. Se il messaggio non è mai transitato dall'infrastruttura aziendale, lì non c'è.\n  * Il **`Return-Path`** è il mittente di **busta**, quello che il protocollo usa davvero e che **SPF** verifica. In uno spoofing è quasi sempre diverso dal `From` mostrato.\n  * L'intestazione **`Authentication-Results`** riporta gli esiti di **SPF**, **DKIM** e **DMARC**. Un `dmarc=fail` chiude la questione.\n* **Analisi dei distrattori:**\n  * **B) La firma in calce** è testo: un attaccante che ha visto una sola e-mail del CEO la replica alla perfezione. Non prova nulla.\n  * **C) I log della casella del CEO** sono utili se l'ipotesi è che l'account sia stato **compromesso**, ma non rispondono alla domanda: in uno spoofing il messaggio non passa mai dalla casella del CEO, quindi la sua assenza dagli elementi inviati non distingue lo spoofing da una compromissione con cancellazione delle tracce.\n  * **D) I metadati dell'allegato** riguardano il documento, non il percorso del messaggio — e lo scenario, tipico del **BEC**, spesso non prevede alcun allegato.\n* **Trappola d'esame:** ricorda i due mittenti. Il **`From`** è quello che l'utente **vede** e non è verificato da nulla; il **`Return-Path`** (o `MAIL FROM`) è quello che il protocollo **usa** ed è quello che SPF controlla. È perché i due possono divergere che esiste **DMARC**, che impone l'**allineamento** fra il dominio del `From` e quello verificato da SPF o DKIM."
+  },
+  {
+    id: 420,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Il consiglio di amministrazione chiede al CISO un quadro mensile dell'andamento del programma di sicurezza: percentuale di sistemi allineati alla baseline, tempo medio di correzione delle vulnerabilità critiche e copertura dell'agente EDR sul parco macchine. Il SOC dispone già di un SIEM che invia notifiche in tempo reale agli analisti.",
+    question: "Quale strumento risponde a questa esigenza, e perché non basta ciò che il SOC ha già?",
+    options: [
+      "A) Un alert aggiuntivo del SIEM con soglia mensile, che avvisi il consiglio al superamento dei limiti",
+      "B) Un report automatico periodico, perché la domanda riguarda una tendenza aggregata e non un evento singolo",
+      "C) L'accesso diretto del consiglio alla console del SIEM, per consultare i dati grezzi quando serve",
+      "D) Una cattura dei pacchetti pianificata, che documenti il traffico del mese"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Un report automatico periodico**.\n\n* **La distinzione che la domanda verifica:** *alert* e *report* rispondono a due domande diverse.\n  * L'**alert** è **immediato**, riguarda un **evento singolo** e chiede una **decisione adesso**. Destinatario: chi è di turno.\n  * Il **report** è **periodico**, **aggregato**, e serve a misurare un **andamento**. Destinatario: chi deve allocare risorse.\n  Le tre metriche richieste — percentuale di conformità, tempo medio di correzione, copertura dell'agente — sono per costruzione aggregate: nessuna di esse esiste come singolo evento, e quindi nessuna può essere un alert.\n* **Perché il report va automatizzato:** perché l'evidenza che un auditor cerca non è il numero, è la **serie**: un rapporto datato, prodotto con cadenza fissa e archiviato, dimostra che il controllo viene eseguito con regolarità. Un foglio compilato a mano prima della riunione dimostra solo che qualcuno ha compilato un foglio.\n* **Analisi dei distrattori:**\n  * **A)** Un alert mensile a un consiglio di amministrazione confonde i due strumenti: il consiglio non è un turno di reperibilità e non prende decisioni operative in tempo reale.\n  * **C)** Dare al consiglio i dati grezzi del SIEM è un errore di **destinatario**: il valore di un report sta nell'aggregazione e nell'interpretazione, che sono esattamente il lavoro che si chiede al CISO.\n  * **D)** La cattura dei pacchetti è una sorgente per l'analisi forense di un incidente, non una misura dell'andamento di un programma.\n* **L'insidia da conoscere:** un report che nessuno legge è peggio dell'assenza di report, perché produce l'illusione del controllo. Un report automatico deve avere un destinatario con l'**autorità di agire** e una **soglia** che, superata, lo trasformi in una segnalazione senza attendere la cadenza successiva."
+  },
+  {
+    id: 421,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "In seguito a un'intrusione confermata, l'analista tenta di ricostruire la sequenza degli eventi confrontando i log di tre sistemi: un firewall, un controller di dominio e un server applicativo. I tre orologi risultano disallineati di alcuni minuti l'uno dall'altro e il server applicativo registra gli orari nel fuso locale, mentre gli altri due usano UTC.",
+    question: "Quale requisito, se fosse stato soddisfatto in anticipo, avrebbe reso possibile la correlazione?",
+    options: [
+      "A) Una maggiore verbosità dei log, impostando tutti i sistemi al livello di dettaglio Debug",
+      "B) Un periodo di conservazione dei log più lungo su tutti e tre i sistemi",
+      "C) La sincronizzazione oraria tramite NTP su tutti i sistemi, con registrazione in UTC",
+      "D) L'inoltro dei log a un SIEM centralizzato, che li avrebbe riordinati automaticamente"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) La sincronizzazione oraria tramite NTP, con registrazione in UTC**.\n\n* **Perché è la corretta:** la correlazione fra sistemi diversi si regge interamente sul **tempo**. Se i tre orologi non concordano, la sequenza *l'accesso è avvenuto prima o dopo la connessione in uscita?* non ha una risposta affidabile — e in un'indagine quella sequenza è tutto, perché è ciò che distingue la causa dall'effetto. **NTP** allinea gli orologi a un riferimento comune; registrare in **UTC** elimina la seconda fonte di confusione, cioè fusi orari diversi e ora legale che cambia due volte l'anno.\n* **La conseguenza che va oltre l'analisi:** un log con orario non attendibile è **contestabile in giudizio**. La difesa non deve dimostrare che l'evento non è avvenuto: le basta dimostrare che non si può stabilire *quando*.\n* **Analisi dei distrattori:**\n  * **A) Alzare la verbosità a Debug** moltiplica il volume senza risolvere nulla: righe più dettagliate con orari sbagliati restano non correlabili, e il costo di archiviazione esplode.\n  * **B) Conservare più a lungo** serve a **trovare** eventi lontani nel tempo, non a metterli in ordine fra loro.\n  * **D) Il SIEM centralizzato** è indispensabile, ma **non risolve** questo problema: normalizza i formati e può aggiungere un proprio orario di ricezione, ma l'orario dichiarato dalla sorgente resta quello che l'orologio sbagliato ha scritto. Un SIEM su sistemi non sincronizzati produce una cronologia ordinata e **falsa**, che è peggio di una disordinata perché sembra affidabile.\n* **Da ricordare:** NTP è un prerequisito, non un dettaglio operativo. Va messo in piedi **prima** dell'incidente, perché non esiste alcun modo di ricostruire a posteriori l'ora esatta di una riga già scritta."
+  },
+  {
+    id: 422,
+    topic: "Log Analysis",
+    level: "APPLICAZIONE",
+    scenario: "Un'organizzazione conserva i log esclusivamente sui sistemi che li generano, con rotazione settimanale. Durante un'indagine su una compromissione risalente a venti giorni prima, il team scopre che sul server interessato i log del periodo rilevante non esistono più, e che sull'unico sistema in cui sopravvivevano l'attaccante li aveva cancellati.",
+    question: "Quale pratica avrebbe protetto le evidenze in ENTRAMBI i modi in cui sono andate perse?",
+    options: [
+      "A) Aumentare la frequenza dei backup del sistema operativo dei server",
+      "B) Inoltrare i log in tempo reale a un sistema centralizzato in sola aggiunta, con conservazione dedicata",
+      "C) Attivare la cattura completa dei pacchetti sul segmento di rete del server",
+      "D) Applicare il monitoraggio dell'integrità dei file ai file di log del server"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) L'inoltro in tempo reale a un sistema centralizzato in sola aggiunta**.\n\n* **Le prove sono andate perse in due modi distinti**, e la domanda chiede la misura che li copre entrambi:\n  1. **Rotazione troppo breve** — i log del periodo rilevante erano già stati sovrascritti prima che qualcuno li cercasse. Una compromissione viene scoperta settimane o mesi dopo, e una rotazione settimanale è una garanzia di non trovare nulla.\n  2. **Cancellazione da parte dell'attaccante** — chi ottiene privilegi amministrativi su un sistema controlla anche i log **di quel sistema**. Un log custodito soltanto sulla macchina che lo produce è, per definizione, alla mercé di chi quella macchina l'ha conquistata.\n* **Perché l'inoltro centralizzato risolve entrambi:** la copia arriva **in tempo reale** su un sistema separato, quindi esiste già prima che la rotazione locale la elimini; e vive su una macchina su cui l'attaccante non ha necessariamente privilegi. La modalità **in sola aggiunta** (*append-only*, o WORM) chiude il cerchio: chi ha accesso al sistema centrale può scrivere nuovi eventi ma non riscrivere o cancellare quelli passati. La conservazione **dedicata** consente di tenere mesi o anni sul sistema centrale pur mantenendo rotazioni brevi in locale.\n* **Analisi dei distrattori:**\n  * **A) I backup del sistema operativo** possono contenere per caso qualche file di log, ma non sono una strategia di conservazione delle evidenze: la frequenza è sbagliata, la granularità pure, e un backup di una macchina compromessa contiene log già manomessi.\n  * **C) La cattura dei pacchetti** documenta il traffico di rete, non le azioni svolte **sul** sistema: autenticazioni, uso di privilegi, comandi eseguiti non compaiono.\n  * **D) Il FIM sui file di log** segnalerebbe la manomissione — ed è utile — ma **dopo** che è avvenuta e senza restituire il contenuto perduto. Soprattutto, non fa nulla contro il primo dei due problemi, la rotazione.\n* **Per l'esame:** quando uno scenario nomina la **cancellazione dei log da parte dell'attaccante**, la risposta è quasi sempre l'inoltro a un archivio centrale immutabile. È anche la ragione per cui l'evento Windows **1102** (registro di sicurezza cancellato) ha senso come indicatore solo se qualcuno lo riceve **altrove**."
+  },
+  {
+    id: 423,
+    topic: "Log Analysis",
+    level: "ANALISI",
+    scenario: "Un server web è stato compromesso. Il team sa quando l'attacco è avvenuto ma non attraverso quale falla. Ha a disposizione i log di accesso del web server, i report delle scansioni di vulnerabilità eseguite ogni mese sullo stesso host e il registro delle modifiche applicate dal team di sistemistica.",
+    question: "Come va usato il report della scansione di vulnerabilità in questa indagine?",
+    options: [
+      "A) Non è utile: descrive uno stato precedente all'incidente e non registra alcun evento",
+      "B) Per restringere le ipotesi sul vettore, confrontando le falle note e non corrette con quanto mostrano i log di accesso",
+      "C) Per dimostrare che l'organizzazione aveva adempiuto ai propri obblighi di conformità",
+      "D) Per stabilire quali dati siano stati effettivamente sottratti dal server"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Per restringere le ipotesi sul vettore**.\n\n* **Perché è la corretta:** un report di scansione non è un log — non registra eventi — ma è comunque una **sorgente dati per l'indagine**, e serve a una cosa precisa: dice **quali porte erano aperte**. Confrontando le vulnerabilità note e non corrette su quell'host con ciò che i log di accesso mostrano nella finestra dell'attacco, l'insieme delle ipotesi si riduce drasticamente. Se lo scanner segnalava da due mesi una falla di *upload* non autenticato e i log mostrano una POST verso quell'endpoint poco prima della compromissione, il vettore non è più un'ipotesi.\n* **Il valore della serie storica:** più report ravvicinati nel tempo permettono di stabilire **quando** la falla è comparsa e **quanto a lungo** è rimasta aperta — informazione che conta sia per capire l'esposizione sia, spesso, per gli obblighi di notifica.\n* **Analisi dei distrattori:**\n  * **A)** Confonde *non registra eventi* con *non è utile*. È vero che descrive uno stato precedente: è proprio quello lo stato che l'attaccante ha trovato.\n  * **C)** È un uso legittimo dei report di scansione, ma risponde a una domanda di **conformità**, non all'indagine in corso. Attenzione all'insidia: usare l'evidenza di conformità come se fosse analisi della causa è il modo tipico di chiudere un incidente senza averlo capito.\n  * **D)** Il report di scansione non sa nulla dei dati presenti sul server né di ciò che è uscito. Quella risposta la danno i log di accesso, i flussi di rete e, per il contenuto, l'eventuale cattura dei pacchetti.\n* **Da ricordare per l'obiettivo 4.9:** le sorgenti per un'indagine non sono solo log. Rientrano anche i **report delle scansioni di vulnerabilità**, i **report automatici**, i **cruscotti** e i **metadati** — ciascuno risponde a una domanda diversa, e la ricostruzione nasce dal loro incrocio, non da una sola di esse."
+  },
+  {
+    id: 424,
+    topic: "Log Analysis",
+    level: "COMPRENSIONE",
+    scenario: "Il responsabile del SOC vuole che gli analisti vedano, appena entrano in turno, lo stato complessivo del centro: numero di alert aperti per gravità, sistemi che hanno smesso di inviare log, carico in coda per ciascun analista. I dati sono già tutti nel SIEM.",
+    question: "Quale strumento risponde a questa esigenza?",
+    options: [
+      "A) Una query salvata sul SIEM, che ciascun analista esegue quando ne ha bisogno",
+      "B) Un report automatico settimanale recapitato per e-mail a tutto il team",
+      "C) Un alert per ciascuna delle tre metriche, inviato all'inizio di ogni turno",
+      "D) Un cruscotto (dashboard), che presenta in forma visuale e continuamente aggiornata lo stato corrente"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Un cruscotto (dashboard)**.\n\n* **Le tre forme in cui un SIEM restituisce ciò che sa**, e la domanda a cui ciascuna risponde:\n  * **Alert** — *è successo qualcosa che richiede una decisione adesso?* Immediato, su evento singolo, con un destinatario che deve agire.\n  * **Dashboard** — *com'è la situazione in questo momento?* Visuale, continuamente aggiornata, pensata per essere **guardata** e per rendere evidente uno scostamento a colpo d'occhio.\n  * **Report** — *come stiamo andando nel tempo?* Periodico, aggregato, con un destinatario che deve decidere dove investire.\n  Lo scenario chiede una fotografia dello stato corrente da vedere all'inizio del turno: è la definizione di cruscotto.\n* **Un dettaglio che vale la pena notare:** fra le metriche richieste c'è *i sistemi che hanno smesso di inviare log*. È una delle più importanti e delle più trascurate: una sorgente che tace non genera alert — genera **silenzio**, che è indistinguibile dalla quiete. Solo un cruscotto che mostra esplicitamente la copertura delle sorgenti rende visibile un'assenza.\n* **Analisi dei distrattori:**\n  * **B) Il report settimanale** ha la cadenza sbagliata: lo stato corrente cambia di ora in ora, e a fine settimana la fotografia non serve più a chi entra in turno lunedì mattina.\n  * **C) Tre alert a inizio turno** snaturano lo strumento: l'alert segnala un **evento**, non uno stato, e usarlo come promemoria periodico contribuisce all'*alert fatigue* che rende gli analisti ciechi a quelli veri.\n  * **A) La query salvata** produce lo stesso dato, ma solo quando qualcuno si ricorda di eseguirla. Il punto del cruscotto è che l'informazione è **già lì**, senza che occorra decidere di cercarla."
   }
 ];
 
