@@ -747,9 +747,9 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   InsiderThreatActor: {
     name: "Insider Threat",
-    definition: "Employees, former employees or business partners who abuse their legitimate access to harm the organization.",
+    definition: "Anyone who holds or held legitimate access — employees, former employees, contractors, business partners — and causes harm to the organization through that access, whether deliberately or by mistake.",
     details: "Insider threats are particularly insidious:\n* **Advantage:** They already know the network structure, the sensitive data and the security procedures.\n* **Types:**\n  - *Malicious Insider:* Acts intentionally for revenge, gain or espionage.\n  - *Negligent Insider:* Causes incidents through carelessness, poor training or failure to follow policies.\n* **Mitigations:** Separation of Duties, Job Rotation, and rigorous log monitoring.\n\n* **Focused Mini-Example:** An angry employee in the finance department downloads the entire salary database and sends it to a journalist to take revenge for a missed promotion.",
-    examTip: "The main countermeasure against a malicious insider is the strict application of the Least Privilege principle.",
+    examTip: "**Exam trap:** the category is not the same as the disloyal employee. Objective 2.1 covers both the **malicious** insider (acting out of revenge, for profit or on someone else's behalf) and the **unintentional** insider, which is by far the more common case: the person who clicks the link, who takes an archive home on a USB stick to work at the weekend, who leaves a cloud bucket open. What they share is **legitimate access**, not intent, and that is precisely why perimeter controls do not see them.\n\nThe countermeasures follow the distinction: against the malicious insider, **least privilege**, **separation of duties**, **job rotation** and periodic access reviews; against the unintentional one, **training**, **DLP** and secure defaults. **Prompt deprovisioning** works against both, and the former employee whose credentials still work is the scenario the exam raises most often.",
   },
   OrganizedCrimeActor: {
     name: "Organized Crime",
@@ -861,9 +861,9 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   RootkitMalware: {
     name: "Rootkit",
-    definition: "Malware designed to gain administrator-level (root/system) permissions while actively hiding itself from the operating system.",
+    definition: "Malware that operates at privileged level (root or system) and whose defining function is to **conceal itself and the attacker's activity** from the operating system and the security tooling, maintaining access over time.",
     details: "Depth of infiltration:\n* **How it works:** It modifies the operating system's System Calls. If an antivirus asks for the list of active processes, the rootkit intercepts the request and removes itself from the list before sending it.\n* **Level:** It often operates at the kernel or firmware (UEFI) level, making detection almost impossible with standard software tools running on the same operating system.\n\n* **Focused Mini-Example:** A kernel-level rootkit intercepts the antivirus's file-exploration queries, hiding the folder where its malicious binary files reside.",
-    examTip: "To detect or remove a rootkit, it is often necessary to reboot the system from a clean, externally secure boot medium (e.g. a live antivirus USB stick).",
+    examTip: "**The point the exam tests:** a rootkit does not usually **gain** privileges, it **keeps and hides** them. An exploit or a stolen credential obtained them; the rootkit arrives afterwards and exists to stay. Hence the practical consequence: a compromised system **cannot investigate itself**, because the rootkit intercepts the very calls the antivirus would use to look for it, and the operating system reports whatever the rootkit lets it see. That is why the disk is examined from a **clean external boot medium**, and why for deeper rootkits (bootkits, firmware) the only reliable route is **reinstallation from a certified image**, not disinfection.",
   },
   SpywareMalware: {
     name: "Spyware",
@@ -987,7 +987,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Credential Stuffing",
     definition: "Automatic input of username/password pairs leaked from past breaches across various websites.",
     details: "It exploits the human weakness of credential reuse:\n* If a user uses the same password on both a gaming forum (breached in the past) and the corporate email inbox, the attacker uses automated bots to try those exact credentials on the corporate portal.\n\n* **Focused Mini-Example:** A database of credentials stolen from a minor e-commerce site is acquired by a criminal, who uses an automated script to test those email addresses and passwords on the site of a well-known national online bank, finding several valid accounts.",
-    examTip: "The only definitive mitigation against Credential Stuffing is enabling Multi-Factor Authentication (MFA).",
+    examTip: "**Why it works:** the attack guesses nothing, it **reuses** username-password pairs already leaked in other breaches. It succeeds for exactly one reason, **password reuse** across different services, which is why the success rate per attempt is low but never zero at scale.\n* **The strongest defence is MFA**, because the right password alone is no longer enough. **But do not call it definitive:** an attacker can bypass MFA with *real-time phishing* that relays the code, with **MFA fatigue**, or by stealing the **session token** after authentication. Against those you need **phishing-resistant** MFA (FIDO2/WebAuthn).\n* **The defences that go alongside:** screening chosen passwords against breached-credential corpora, per-address rate limiting, detection of *impossible travel* and of never-before-seen devices. **Exam trap:** tell credential stuffing (many **already known** pairs, one attempt per account) apart from password spraying (**one common password**, very many accounts) and brute force (**many generated passwords**, one account).",
   },
 
   /* ---- Group 7: Network, Wireless & App Attacks ---- */
@@ -1033,7 +1033,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "CVSS",
     definition: "Common Vulnerability Scoring System: a standard framework for assessing and communicating the severity of a vulnerability.",
     details: "The CVSS score ranges from 0.0 to 10.0 (Critical):\n* **Main Metrics:**\n  - *Base Metrics:* Intrinsic characteristics of the flaw (attack vector, attack complexity, privileges required, user interaction, impact on C-I-A).\n  - *Temporal Metrics:* How the flaw evolves over time (e.g. availability of public exploit code, availability of an official patch).\n  - *Environmental Metrics:* The importance of the affected system in the company's real infrastructure.\n\n* **Focused Mini-Example:** A vulnerability scanner finds a CVSS v3 flaw with a score of `9.8` on the company's web-facing Apache server, forcing the analysts to act for immediate patching outside working hours.",
-    examTip: "On the CVSS v3.x scale a score from 9.0 to 10.0 falls in the 'Critical' severity band and demands immediate action (typically flaws exploitable remotely, without authentication and without user interaction). Remember the bands: 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Note: the CVSS score measures technical severity, NOT business risk; remediation priority comes from CVSS combined with asset criticality and real exposure.",
+    examTip: "On the CVSS v3.x scale a score from 9.0 to 10.0 falls in the 'Critical' severity band and demands immediate action (typically flaws exploitable remotely, without authentication and without user interaction). Remember the bands, **identical in v3.1 and v4.0**: 0.0 None, 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Note: the CVSS score measures technical severity, NOT business risk; remediation priority comes from CVSS combined with asset criticality and real exposure.",
   },
   ZeroDayVuln: {
     name: "Zero-Day",
@@ -1143,7 +1143,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Encryption",
     definition: "The use of cryptography to protect the confidentiality of data both at rest and in transit.",
     details: "Types:\n* **Data-at-rest:** Encryption of hard disks (FDE, BitLocker), databases, files and backups.\n* **Data-in-transit:** Encryption of network packets (HTTPS/TLS, IPsec VPN) to avoid interception.\n\n* **Focused Mini-Example:** An employee loses the corporate laptop at the airport, but the data remains inaccessible to whoever finds the device because the entire hard disk is protected by full encryption (**Data-at-rest Encryption**).",
-    examTip: "Encryption makes stolen data useless to attackers attempting ransomware extortion.",
+    examTip: "**Mind what encryption actually protects.** It protects data once it reaches someone who **does not hold the key**: a stolen disk, a mislaid backup, a packet intercepted in transit. It does **not** protect against an attacker operating **inside an already authenticated session**: in a double-extortion ransomware case the malware runs with the privileges of a legitimate user or service, and the system decrypts the files for it transparently, exactly as it would for the owner. Disk encryption does not prevent exfiltration.\n* **Exfiltration calls for other controls:** least privilege, DLP, segmentation and monitoring of outbound volumes. **Against ransomware the defence is backup** — offline or immutable — and periodic restore testing. **Exam trap:** if the scenario involves a **lost or stolen device**, the answer is encryption; if it involves data **exfiltrated from a running system**, it is not.",
   },
   MonitoringMiti: {
     name: "Monitoring",
@@ -1187,7 +1187,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Proprietary Intelligence",
     definition: "Commercial, private and exclusive threat information collected and analyzed by specialized cybersecurity companies, provided to customers on a paid subscription basis.",
     details: "Unlike public or open-source sources, **Proprietary Intelligence** offers key competitive advantages:\n* **Quality and Accuracy:** The data is constantly validated and analyzed by dedicated teams of human analysts, drastically reducing false positives.\n* **Real-Time Feeds:** It provides exclusive IoCs and security advisories well before they are disclosed in national public databases.\n* **Examples:** Commercial threat feeds provided by market-leading vendors such as CrowdStrike, Mandiant or Palo Alto Networks.",
-    examTip: "Proprietary Intelligence offers the highest reliability and timeliness of information because it is based on non-public proprietary data constantly validated by dedicated experts.",
+    examTip: "**What you are actually paying for:** not inherently truer information, but **curation** — data enriched with context, filtered of noise, correlated with known campaigns and delivered in a directly usable format, with a contractual commitment on timing. **The limits to know:** the cost, and the fact that the vendor's sources cannot be inspected, so its assessments are taken partly on trust.\n* **How the sources compare:** **OSINT** is cheap and verifiable but must be filtered by hand; **proprietary intelligence** is curated and timely but opaque and expensive; a sector **information-sharing organization** (ISAC) offers the most relevant context, because its members face the same attacks. A mature posture uses them together rather than picking one.",
   },
   InformationSharingRes: {
     name: "Information Sharing",
