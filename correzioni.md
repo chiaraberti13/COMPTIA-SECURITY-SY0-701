@@ -1117,7 +1117,16 @@ Problemi rilevati fuori dall'ambito dei contenuti.
 
 ### Aperte
 
-- [ ] **Nessuna.**
+- [ ] **Nessun controllo permanente sui duplicati.** In questa tranche quattro
+      domande nuove duplicavano nella sostanza una domanda già presente, e
+      nessuno dei controlli della suite le ha intercettate: il test di
+      similarità confronta il **testo** della domanda, mentre due domande
+      possono essere scritte in modo completamente diverso e chiedere la stessa
+      cosa. Il controllo che le ha trovate confronta la **risposta corretta**, ed
+      è stato scritto per l'occasione. Portarlo nella suite (`tests/`) darebbe una
+      garanzia permanente ogni volta che si aggiungono domande.
+      *Segnalato e non implementato: la modifica riguarda il codice di test, non
+      i contenuti.*
 
 Nella seconda revisione non è stato verificato alcun nuovo bug tecnico:
 le nuove voci riguardano esclusivamente contenuto e collocazione didattica.
