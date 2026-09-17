@@ -848,6 +848,76 @@ che ogni altro obiettivo sia già trattato con profondità sufficiente.
         né allegato né link), `D2#519` (HIPS presentato come difesa dal
         buffer overflow senza nominare DEP/NX, ASLR e stack canary, che sono
         le difese primarie).
+  - [x] **D3 letto (112/112).** Due difetti corretti in IT ed EN:
+        `D3#24` (la spiegazione diceva che SNMPv3 «elimina le vulnerabilità di
+        SNMPv1 e SNMPv2» senza dire come, e l'opzione nomina SHA/MD5 e AES/DES:
+        aggiunti i tre livelli *noAuthNoPriv / authNoPriv / authPriv* e
+        l'avvertenza che MD5 e DES sono deprecati anche se lo standard li
+        ammette), `D3#420` (**ambiguità apparente**: le altre tre opzioni sono
+        tutte pratiche di sicurezza corrette, quindi la domanda sembrava avere
+        più risposte valide — aggiunto il paragrafo che spiega che lo scenario
+        fissa l'obiettivo sulla conformità normativa, con la regola generale:
+        quando lo scenario nomina un obbligo di legge o un regolatore, la
+        risposta cercata parla di conformità, non della misura tecnicamente più
+        sofisticata).
+  - [x] **D4 letto (171/171).** Diciassette difetti corretti in IT ed EN.
+        *Terminologia:* `D4#19` (l'opzione e la spiegazione dicevano
+        «mantrap»; negli obiettivi SY0-701 il controllo è l'**access control
+        vestibule** — rimosso anche «eliminare definitivamente» dalla domanda e
+        aggiunto il perimetro reale del controllo).
+        *Sanitizzazione (NIST SP 800-88 Rev. 1):* `D4#185` e `D4#411`
+        («sovrascrittura ripetuta» come definizione di bonifica e di secure
+        erase — introdotti i livelli *Clear / Purge / Destroy*, il limite del
+        degaussing ai soli supporti magnetici e l'inaffidabilità della
+        sovrascrittura su SSD per via del wear-leveling), `D4#209` (la domanda
+        contrappone sanitizzazione e distruzione mentre nello standard
+        *Destroy* è un livello di sanitizzazione: esplicitata la gerarchia per
+        non contraddire le due voci precedenti).
+        *Precisazioni mancanti:* `D4#403` (SSL inspection senza il prerequisito
+        della CA aziendale nel trust store, il certificate pinning e le
+        esclusioni per privacy), `D4#235` (MD5 presentato alla pari di SHA-256
+        per l'integrità delle prove: è rotto dal 2004 e contestabile in aula),
+        `D4#240` (lasciava intendere che SNMP fosse insicuro per definizione,
+        in contrasto con `D3#24`), `D4#270` (fasce CVSS elencate per intero e
+        motivazione ancorata alla metrica *Attack Complexity*), `D4#287`
+        (l'exposure factor è una percentuale, non un importo: aggiunte
+        `SLE = AV × EF` e `ALE = SLE × ARO` con esempio numerico), `D4#286`
+        («la screened subnet impedisce l'accesso alla rete interna»: la
+        segmentazione confina, non impedisce), `D4#262` (l'assicurazione come
+        trasferimento del rischio: non riduce la probabilità, non trasferisce
+        la responsabilità, ha esclusioni).
+        *Password policy allineata a NIST SP 800-63B:* `D4#315` (la scadenza
+        periodica era presentata come buona pratica: resta la risposta corretta
+        alla domanda, ma il NIST raccomanda il cambio solo su evidenza di
+        compromissione — e PCI DSS la impone ancora), `D4#316` (aggiunta la
+        preferenza per la lunghezza sulle regole di composizione, la blocklist
+        delle credenziali trapelate e la precisazione che le password non si
+        cifrano ma si trasformano con hash lento e salato).
+        *Distinzioni concettuali:* `D4#255` (appetite / tolerance / threshold),
+        `D4#217` (i benchmark nella sicurezza sono i CIS Benchmarks e le DISA
+        STIG, base della baseline sicura, distinti dall'audit), `D4#222` (la
+        cifratura del dispositivo dipende dal blocco schermo, perché la chiave
+        deriva dal PIN), `D4#223` (i tre punti di applicazione del DLP: in
+        transito, a riposo, in uso — la copia su USB la intercetta solo
+        l'agente).
+  - [x] **D5 letto (125/125).** Cinque difetti corretti in IT ed EN:
+        `D5#143` (**contraddizione interna**: trattava eccezione ed esenzione
+        come sinonimi, mentre `D5#136` le distingue per durata e portata),
+        `D5#6` (ultimo residuo della regola «costo del controllo ≤ ALE»:
+        sostituita con il confronto fra costo annuo e **riduzione di ALE**, con
+        la nota che qui le due cifre coincidono perché la barriera azzera
+        l'esposizione, e l'avvertenza che obblighi di legge e rischi per
+        l'incolumità prevalgono sul calcolo), `D5#3` (citava «Concetto Chiave
+        CompTIA **CASP+**» in una piattaforma per Security+: ora rimanda
+        all'Obiettivo 5.1 di SY0-701), `D5#82` (**doppione di acronimo**: BPA
+        vale sia *Business Process Analysis* qui sia *Business Partners
+        Agreement* in `D5#127` e `D5#153` — aggiunto il criterio per
+        distinguerli dal contesto), `D5#128` («Data Custodian (o Data Steward)»
+        dati per sinonimi: SY0-701 li elenca insieme, ma nella pratica il
+        custodian custodisce il dato sul piano tecnico e lo steward ne cura
+        qualità e significato).
+  - **Lettura semantica conclusa: 642/642 domande lette, 36 difetti corretti**
+        (D1 7, D2 5, D3 2, D4 17, D5 5).
 - [ ] Costruire la matrice **obiettivo → checklist → domanda → spiegazione**
       per tutti i sotto-obiettivi 1.1–5.6; indicare espressamente quelli ancora
       non verificati nella lettura semantica, senza inferire copertura dal solo
