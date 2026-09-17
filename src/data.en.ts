@@ -5244,6 +5244,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   436: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "The SOC of a consulting firm classifies last quarter's incidents by the channel the compromise came in through. Three cases share the same pattern: an employee opened a document or an executable received from outside, and the malicious code ran from that very file.",
     question: "Which of the following threat vectors mainly concerns malicious software or data transferred or executed through documents, executable files or other common file types?",
     options: [
       "A) Voice call",
@@ -5255,6 +5256,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   437: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "A company has installed a VoIP PBX reachable from the network, and the telephony provider reports a surge of night-time international calls billed to the company. The network team reviews which signalling ports are exposed and monitored on the perimeter firewall.",
     question: "Which of the following ports should be disabled or closely monitored to prevent unauthorized VoIP (Voice over IP) signaling, which can be a vector for telephone fraud or unauthorized call control?",
     options: [
       "A) Port 139",
@@ -5266,6 +5268,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   438: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "The server of a small professional practice fails and has to be replaced. The technician must get it back into production as quickly as possible, with the operating system, patches, third-party applications and configuration exactly as they were, without redoing any installation by hand.",
     question: "Which of the following is the BEST type of backup that allows the rapid restore of an operating system without requiring the reinstallation of third-party software, patches and configurations?",
     options: [
       "A) Image backup",
@@ -5289,6 +5292,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   440: {
     topic: "Vulnerability Types",
+    scenario: "During an assessment, the security team reviews the hardware vulnerabilities of a line of network appliances. Attention focuses on the low-level code that governs the device's functions: if an attacker managed to replace it, they would gain control of the appliance beneath the operating system.",
     question: "Which of the following hardware vulnerabilities concerns the ability to modify the software that controls a device's functionality?",
     options: [
       "A) Side loading",
@@ -5372,6 +5376,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   447: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "In a mixed-use building, a company's network cabling runs through a service riser that other tenants can also reach. The security manager assesses the risk of someone tapping the cables directly to intercept traffic, without going through any company device.",
     question: "Which of the following techniques allows an attacker to intercept a wired network by connecting their own device directly to the network cables?",
     options: [
       "A) Port Mirroring",
@@ -5395,6 +5400,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   449: {
     topic: "Threat Actors & Motivations",
+    scenario: "A threat intelligence analyst is preparing a summary sheet of threat-actor profiles for the board. For each category they must state the prevailing motivation, and they are currently filling in the row for state-sponsored actors.",
     question: "Which of the following motivations is MOST likely to drive a nation-state threat actor to launch an attack?",
     options: [
       "A) Service disruption",
@@ -5406,6 +5412,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   450: {
     topic: "Indicators of Malicious Activity",
+    scenario: "During a code review of a portal, a junior developer finds a query built by directly concatenating the contents of a search-form field. The reviewer stops to explain which web attack that single line opens the door to.",
     question: "What is the name of the web-based attack that consists of inserting malicious SQL code into user input fields, which is then executed by the database server?",
     options: [
       "A) Structured Query Language injection",
@@ -5477,6 +5484,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   456: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "A bank's brand protection team monitors newly registered domains that resemble its own. In the past month four have appeared that differ from the official domain by a single letter, a hyphen or one extra dot.",
     question: "Which of the following is a type of human vector attack that consists of creating a fake web address or domain name that resembles a legitimate one, but with slight spelling or punctuation differences?",
     options: [
       "A) Business email compromise",
@@ -5512,6 +5520,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   459: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "Several customers of a telecoms operator report a payment page that faithfully reproduces the official site's logo, colours and typeface but is hosted on a domain unrelated to the company and asks for card details.",
     question: "Which of the following is a social-engineering attack that consists of using the logos of a real organization to deceive users into trusting a fake website?",
     options: [
       "A) Watering hole",
@@ -5535,6 +5544,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   461: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "The incident response group of a small-business consortium notes that nearly all of last year's ransomware infections began the same way: a remote access service published directly on the Internet and then subjected to repeated credential attempts.",
     question: "Which remote access service is associated with TCP port 3389 and, when exposed directly to the internet, is one of the most heavily abused vectors for credential brute-force attacks followed by ransomware deployment?",
     options: [
       "A) SSH, on TCP port 22",
@@ -5546,6 +5556,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   462: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "In an authorised social engineering exercise, a tester turns up at reception posing as the lift maintenance engineer, shows a laminated badge that nobody verifies, and asks to be escorted to the server floor.",
     question: "Which of the following is a social-engineering technique in which an attacker poses as someone else, often to gain unauthorized access to systems or information?",
     options: [
       "A) Reconnaissance",
@@ -5557,6 +5568,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   463: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "A company's mail gateway blocks hundreds of messages a week carrying hostile attachments or links. The security manager points out that none of those messages does any harm on its own: the recipient always has to open the attachment or follow the link.",
     question: "Which threat vector uses malicious attachments or hyperlinks within communications, requiring the attacker to convince the recipient to interact with the content for effective exploitation?",
     options: [
       "A) Wireless networks",
@@ -5580,6 +5592,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   465: {
     topic: "Threat Actors & Motivations",
+    scenario: "The security manager updates the threat-actor taxonomy used in internal reports. They need to define the category of those who hold no credentials and no legitimate access to the organization and must therefore obtain them from outside.",
     question: "Which of the following BEST describes an individual who has no authorized access but attempts to breach security using malware or social engineering?",
     options: [
       "A) External threat actor",
@@ -5615,6 +5628,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   468: {
     topic: "Vulnerability Types",
+    scenario: "A company's inventory lists fifteen switches and two storage systems that the manufacturer no longer makes or supports. They still work perfectly and nobody intends to replace them, but no update will ever be released for them again, not even a security one.",
     question: "Which of the following are hardware issues that arise from products that are no longer manufactured or supported, but are still usable?",
     options: [
       "A) Legacy vulnerability",
@@ -5638,6 +5652,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   470: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "Reviewing the perimeter firewall rules, an analyst finds a few forgotten openings towards the server-room machines. They must work out which of them would let an unauthorised external source query a database directly.",
     question: "Which of the following ports, if left open and unmonitored, could allow database queries from unauthorized external sources?",
     options: [
       "A) Port 1433",
@@ -5697,6 +5712,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   475: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "A company realises it knows nothing about what happens on its servers between one incident and the next: when something goes wrong there is no record of activity to examine. The security team looks for the mitigation technique that fills exactly that gap.",
     question: "Which of the following mitigation techniques can help detect and respond to potential threats or incidents on a system by collecting data about the activities that occur on the system?",
     options: [
       "A) Permissions",
@@ -5756,6 +5772,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   480: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "The law firm advising a company requires that confidential email communications be signed and encrypted by the individual sender with a personal certificate, so that the protection stays attached to the message and not only to the transport channel.",
     question: "Which of the following email security techniques specifically uses email certificates to authenticate and safeguard the content of emails?",
     options: [
       "A) S/MIME",
@@ -5779,7 +5796,8 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   482: {
     topic: "Threat Vectors & Attack Surfaces",
-    question: "An attacker uses a phone call to impersonate a bank representative in order to gather customers' sensitive information. Which of the following threat vectors describes this scenario?",
+    scenario: "An attacker phones a series of a bank's customers, presenting themselves as an operator from the institution's fraud desk. In a reassuring tone, and quoting the account's latest transactions, they invite the customers to confirm their login credentials in order to \"block a suspicious charge\".",
+    question: "Which of the following threat vectors describes this scenario?",
     options: [
       "A) Vishing",
       "B) Spear Phishing",
@@ -5790,7 +5808,8 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   483: {
     topic: "Threat Vectors & Attack Surfaces",
-    question: "You are working on a project with a vendor who provides you with a software application that runs on your computer. The vendor states that the software is secure and that you will not have to handle updates or patches yourself: when they become available, they will be automatically downloaded from the vendor's server and installed on your computer. What type of attack vector is this an example of?",
+    scenario: "You are working on a project with a vendor who supplies you with an application that runs on your computer. The vendor assures you the software is secure and that you will not have to deal with updates or patches yourself: when they become available they will be downloaded automatically from the vendor's server and installed on your machine.",
+    question: "Which type of attack vector is this situation an example of?",
     options: [
       "A) Agentless software",
       "B) Client-based software",
@@ -5813,6 +5832,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   485: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "Replaced laptops, retired company phones and disks pulled out of servers have been piling up in a company's storeroom for years. Nobody has ever wiped them or formally disposed of them and, on one occasion, one of those laptops was handed to an employee with the data still on it.",
     question: "Which of the following mitigation techniques is BEST for preventing data breaches from devices that are no longer in use?",
     options: [
       "A) Encryption",
@@ -5908,6 +5928,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   493: {
     topic: "Vulnerability Types",
+    scenario: "A code reviewer examines a function that checks a file's permissions and then immediately opens it for writing. A fraction of a second passes between the two operations, and in that window another process can replace the file with a link to a system path.",
     question: "Which of the following is an attack in which a process checks the state or value of a resource before using it, but another process has changed it in the meantime?",
     options: [
       "A) Virtual machine (VM) escape",
@@ -5943,6 +5964,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   496: {
     topic: "Vulnerability Types",
+    scenario: "A threat intelligence report describes a flaw in a widely used browser that has been exploited in the wild for weeks. The vendor learned of it only from the first victims and has not yet published any fix.",
     question: "Which of the following refers to a vulnerability in software unknown to the vendor and often exploited by malicious actors before a patch is released?",
     options: [
       "A) Hardware incompatibility",
@@ -6002,6 +6024,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   501: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "An internal scan finds that twelve network printers, four cameras and two storage appliances still answer to the factory-set username/password combinations, which are available in the manufacturer's public manuals.",
     question: "Which of the following threat vectors is associated with the risks arising from not changing the preset login information on systems, potentially allowing easy unauthorized access?",
     options: [
       "A) Phishing",
@@ -6037,6 +6060,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   504: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "The security team is drawing up the matrix of mitigation techniques to apply to company data. For the row \"confidentiality of data at rest and in transit\" it must name the technique that renders the content unreadable to anyone who does not hold the key.",
     question: "Which of the following mitigation techniques involves the use of mathematical algorithms to transform data into an unreadable format?",
     options: [
       "A) Encryption",
@@ -6096,6 +6120,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   509: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "A company embeds several purchased or open-source software components in its products. After a third-party library introduced a critical flaw in every customer who had updated it, management asks which practice really reduces this kind of risk.",
     question: "Which of the following practices is MOST effective in mitigating software supply-chain vulnerabilities?",
     options: [
       "A) Limiting the number of hardware vendors for an organization.",
@@ -6107,6 +6132,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   510: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "An administrator has to restrict which source addresses, ports and protocols can reach a corporate web server, by writing explicit permit and deny rules directly on the device that routes the traffic.",
     question: "Which of the following mitigation techniques can help prevent unauthorized access to resources on a web server by setting rules regarding the ports and protocols authorized to connect?",
     options: [
       "A) Access control list (ACL)",
@@ -6130,6 +6156,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   512: {
     topic: "Threat Actors & Motivations",
+    scenario: "A geopolitical analysis describes one state's conduct towards a neighbouring country: cyberattacks on infrastructure, social-media disinformation campaigns, industrial espionage and diplomatic pressure, all coordinated with one another and never declared as acts of war.",
     question: "Which of the following terms refers to a strategy that combines espionage, disinformation, hacking and the use of diplomatic resources, often carried out by state actors?",
     options: [
       "A) Hybrid warfare",
@@ -6141,6 +6168,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   513: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "A company discovers that outsiders are using its mail server to relay spam outward, and its domain ends up on several block lists. The network team reviews which mail transport port is exposed to the Internet without any need for it to be.",
     question: "Disabling which of the following ports can help prevent the exposure of a commonly used mail-transport service, thus reducing the likelihood of mail relay attacks?",
     options: [
       "A) Port 3389",
@@ -6176,6 +6204,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   516: {
     topic: "Threat Vectors & Attack Surfaces",
+    scenario: "The accounts department of a manufacturing company has received widely different email fraud attempts over the past year. The security manager wants staff to recognise business email compromise in particular, because it is the one that carries neither attachment nor malicious link and therefore sails straight through the technical filters.",
     question: "Which of the following scenarios BEST exemplifies a business email compromise?",
     options: [
       "A) An email appearing to come from the CEO asks the finance department for an urgent transfer to a new account, outside the normal procedure",
@@ -6183,7 +6212,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
       "C) An email carries an attachment that installs malicious software once opened",
       "D) A pop-up on a website asks for credit-card details in order to continue browsing",
     ],
-    explanation: "The correct answer is **A) The CEO's request to the finance department to make an urgent wire transfer**.\n\n* **Why it's correct:** **Business Email Compromise** has three hallmarks, and all three appear in option A. First, the attacker **impersonates an internal figure of authority** - the CEO, the finance director, sometimes a known supplier - using a lookalike domain or a genuinely compromised account. Second, the request is **plausible in its business context**: a transfer is what that department does every day. Third, it works the **psychological levers of urgency and authority** and pushes the recipient to **skip the normal procedure**, which is the decisive detail: BEC exploits no technical flaw, it exploits a person's willingness to make an exception for the boss.\n* **The distinguishing sign:** a BEC often carries **neither attachment nor malicious link**, which is why anti-malware filters do not catch it: it is only text. The defense is **procedural** - verifying the payee over a different channel, dual authorization above a threshold - not technological.\n* **Analysis of the distractors:**\n  * **B) The lottery spam email** is a widespread form of spam that casts a wide net hoping to attract gullible recipients; it does not specifically target companies.\n  * **C) The colleague's email with the invoice** might seem like a potential BEC, but it is more indicative of a spear phishing attempt or malicious-attachment scheme; the emphasis is on the malicious payload in the attachment, not on a deceptive request for funds.\n  * **D) The pop-up with credit-card details** is a type of web scam designed to induce users to disclose personal financial information; it is not typically a BEC.",
+    explanation: "The correct answer is **A) The email that appears to come from the CEO asking for an urgent transfer outside the normal procedure**.\n\n* **Why it's correct:** **Business Email Compromise** has three hallmarks, and all three appear in option A. First, the attacker **impersonates an internal figure of authority** - the CEO, the finance director, sometimes a known supplier - using a lookalike domain or a genuinely compromised account. Second, the request is **plausible in its business context**: a transfer is what that department does every day. Third, it works the **psychological levers of urgency and authority** and pushes the recipient to **skip the normal procedure**, which is the decisive detail: BEC exploits no technical flaw, it exploits a person's willingness to make an exception for the boss.\n* **The distinguishing sign:** a BEC often carries **neither attachment nor malicious link**, which is why anti-malware filters do not catch it: it is only text. The defense is **procedural** - verifying the payee over a different channel, dual authorization above a threshold - not technological.\n* **Analysis of the distractors:**\n  * **B) The lottery-win spam email** casts the widest possible net hoping someone bites: it impersonates nobody, leans on no real business context and targets no specific function of the organization.\n  * **C) The email carrying an attachment that installs malicious software** is phishing with a payload: the damage comes from the file being executed, and precisely for that reason an anti-malware filter or attachment sandboxing can intercept it. BEC works the other way round, with text alone and a deceptive request for funds.\n  * **D) The pop-up asking for card details** is a web scam aimed at the individual consumer: it does not even travel over corporate email, which is the channel BEC is built on by definition.",
   },
   517: {
     topic: "Vulnerability Types",
@@ -6211,6 +6240,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   519: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "After an exploit that wrote past the memory space allocated to a service, the security team looks for software to install on the hosts, able to watch process behaviour and stop this kind of attempt while it is happening.",
     question: "Which of the following hardening techniques can help prevent buffer overflow attacks on a system or device by using software able to detect and prevent any attempt to write data beyond a program's allocated memory space?",
     options: [
       "A) Isolation",
@@ -6246,6 +6276,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   522: {
     topic: "Indicators of Malicious Activity",
+    scenario: "A web application publishes user comments without encoding the output. The security team has to explain to management what an attacker concretely gains when they manage to run their own script in other visitors' browsers.",
     question: "Which of the following is a common consequence of a Cross-site scripting (XSS) attack?",
     options: [
       "A) Denial of service for legitimate users",
@@ -6257,7 +6288,8 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   523: {
     topic: "Threat Actors & Motivations",
-    question: "A threat intelligence report describes a group that develops its own exploits for undisclosed vulnerabilities, deploys malware tailored to each target and keeps access for months without being detected. Which threat actor attribute is being described?",
+    scenario: "A threat intelligence report describes a group that develops its own exploits for never-disclosed vulnerabilities, deploys malware written to measure for each target, and keeps access to its victims' systems for months without being detected.",
+    question: "Which threat-actor attribute is being described?",
     options: [
       "A) The level of sophistication and capability",
       "B) The resources and funding available to it",
@@ -6304,6 +6336,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   527: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "During an incident, a single compromised laptop was able to reach the production servers, the factory systems and the camera network within minutes, because everything sits in the same layer 2 domain. The network team designs the structural countermeasure.",
     question: "Which mitigation technique is most effective in ensuring that the different network components are isolated to prevent the spread of potential breaches?",
     options: [
       "A) Antivirus software",
@@ -6387,6 +6420,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   534: {
     topic: "Mitigation Techniques & Controls",
+    scenario: "An internal penetration test gets into eleven network appliances and three administration panels in under an hour using a plain word list. Every credential it found was the manufacturer's preset one, present in the public dictionaries that attack tools try first.",
     question: "Which of the following hardening techniques is MOST effective in preventing the easy cracking of passwords through the use of dictionaries?",
     options: [
       "A) Device Isolation",
@@ -11013,6 +11047,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   132: {
     topic: "Security Assessment / Penetration Testing",
+    scenario: "A penetration tester has just been engaged, but the activity window agreed with the customer only opens the following week. In the meantime they gather as much as possible about the target from public domain registries, online archives and social profiles, without sending a single packet to the customer's systems.",
     question: "Which of the following options BEST describes the phase of a penetration test in which information is gathered without interacting directly with the target system?",
     options: [
       "A) Active reconnaissance",
@@ -11024,6 +11059,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   133: {
     topic: "Security Assessment / Penetration Testing",
+    scenario: "A software house wants the assigned tester to find even the most hidden flaws in its banking application and decides to hand over everything it has: architecture diagrams, design documents, administrative credentials and the complete source code.",
     question: "Which of the following types of penetration test provides the tester with complete knowledge of the target environment, including architecture, design and source code, to identify hidden vulnerabilities?",
     options: [
       "A) Passive assessment",
@@ -11071,6 +11107,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   137: {
     topic: "Security Policies & Lifecycle",
+    scenario: "After an incident, the supervisory authority asks the company to demonstrate who did what on the systems involved, and in what order, in order to verify that every regulatory obligation was met while the event was being handled.",
     question: "Which of the following security features, an integral part of incident response, tracks activities and is used as evidence during incidents to demonstrate that all regulations have been respected?",
     options: [
       "A) Incident logs",
@@ -11094,6 +11131,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   139: {
     topic: "Personnel Security & Onboarding",
+    scenario: "An audit finds that several former employees are still able to authenticate to corporate systems months after their last working day. HR and IT review the exit procedure together to identify the step that never gets carried out.",
     question: "Which of the following procedures is fundamental during the offboarding process to ensure the security of organizational assets and data?",
     options: [
       "A) Providing departing employees with a list of all internal systems to include in their resume.",
@@ -11129,6 +11167,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   142: {
     topic: "Risk Management & Analysis",
+    scenario: "In its internal rules a company sets the value beyond which a risk can no longer simply be recorded and watched, but triggers an obligation to act. Below that value the risk is accepted with no further action.",
     question: "Which of the following terms refers to the predefined level of risk that an organization is willing to accept before taking action?",
     options: [
       "A) Risk limit",
@@ -11152,6 +11191,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   144: {
     topic: "Third-Party Risk & Assessments",
+    scenario: "Before signing with the company that will host the document archive, the security manager wants to examine its controls, certifications and known weaknesses, so as to decide on an informed basis whether to entrust it with corporate data.",
     question: "Which type of assessment should you perform to examine the security measures and vulnerabilities of a company that provides goods or services?",
     options: [
       "A) Statement of Work",
@@ -11199,6 +11239,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   148: {
     topic: "Risk Management & Analysis",
+    scenario: "In a company's risk register each entry has two columns to fill in: how likely the event is to occur, and how much operational, financial and reputational damage it would cause if it did. The risk manager is settling on the correct name for the second column.",
     question: "Which of the following is the standard term used in risk management to describe the effect of a risk event on an organization, particularly in terms of operational, financial and reputational damage?",
     options: [
       "A) EF",
@@ -11222,6 +11263,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   150: {
     topic: "Security Policies & Lifecycle",
+    scenario: "A company discovers that different departments have independently adopted different algorithms and key lengths to protect data exchanged over the network. Management wants a single, binding document setting out which algorithms and protocols are allowed and which are forbidden.",
     question: "Which standard defines the methods and protocols used to control the algorithms that handle data in transit?",
     options: [
       "A) Physical security standard",
@@ -11245,6 +11287,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   152: {
     topic: "Security Awareness",
+    scenario: "The training manager wants to measure, not merely describe, how exposed staff are to social engineering. They design a recurring activity that reproduces realistic deceptive messages and records who clicks, who reports and who does nothing.",
     question: "Which security awareness practice involves conducting simulated email attacks to educate employees to recognize and respond to phishing attempts?",
     options: [
       "A) User guidance and training",
@@ -11280,6 +11323,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   155: {
     topic: "Security Awareness",
+    scenario: "During an awareness session, a company's employees ask for a practical, immediate criterion to apply to every suspicious message that lands in their inbox, before taking any action at all.",
     question: "To improve security awareness, which of the following statements BEST describes how employees might recognize a phishing attempt?",
     options: [
       "A) By opening only emails from trusted senders and people they know.",
@@ -11291,6 +11335,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   156: {
     topic: "Security Assessment / Penetration Testing",
+    scenario: "A company's board no longer wants separate assessments for the network, the applications and physical security: it asks for a single engagement that tests how a real attacker could combine the three surfaces to reach the data they are after.",
     question: "Which of the following options BEST describes the primary objective of an integrated penetration test?",
     options: [
       "A) To focus only on external network vulnerabilities.",
@@ -11338,6 +11383,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   160: {
     topic: "Risk Management & Analysis",
+    scenario: "Before putting a new ERP system into production, management commissions a complete assessment of the organization's risks, to be carried out once only and at that precise moment, to photograph the impact of the introduction and the maturity of the existing controls.",
     question: "Which of the following terms refers to a complete risk assessment within an organization that occurs at a specific moment, often to evaluate the impact of implementing a new system or to obtain an independent view of operational maturity?",
     options: [
       "A) One-time",
