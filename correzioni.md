@@ -1141,7 +1141,8 @@ l'occasione, che conviene rieseguire dopo ogni tranche di modifiche:
 | Numeri di porta (30 servizi) | 0 errori |
 | Fatti crittografici (lunghezze chiave, simmetrico/asimmetrico, hash) | 0 errori |
 | Coerenza numerica `ALE = SLE × ARO` | 0 errori |
-| Duplicati semantici fra domande | 0 |
+| Duplicati semantici fra domande (testo) | 0 |
+| Duplicati per **risposta corretta** (controllo nuovo) | 0 reali su 4 candidati: `D3#416`/`#421` è un artefatto (lo script scarta le cifre e legge *Livello 7* e *Livello 4* come identici); `D1#147`/`#210` e `D5#76`/`#158` hanno risposte diverse e livelli cognitivi diversi; `D2#444`/`#495` sono la forza bruta **fisica** e quella sulle **credenziali**, ora messe esplicitamente a confronto |
 | Cue bias (opzione corretta ≥ 2× le altre) | 0 |
 | Distribuzione della risposta corretta | A 165 · B 176 · C 170 · D 156 (ricontata sul dataset corrente di 662 domande; il totale supera 662 perché le domande a risposta multipla contano più di una lettera) |
 
