@@ -32,6 +32,11 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "BackoutPlan": "Processi di Change Management",
   "MaintenanceWindow": "Processi di Change Management",
   "VersionControl": "Processi di Change Management",
+  "OwnershipStakeholders": "Processi di Change Management",
+  "TestResultsChange": "Processi di Change Management",
+  "StandardOperatingProcedure": "Processi di Change Management",
+  "ChangeTechnicalImplications": "Processi di Change Management",
+  "ChangeDocumentation": "Processi di Change Management",
   
   // Topic 5: Cryptography
   "SymmetricEncryption": "Crittografia",
@@ -64,6 +69,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "PhysicalCameras": "Misure di Sicurezza Fisica",
   "PhysicalFencing": "Misure di Sicurezza Fisica",
   "PhysicalBollards": "Misure di Sicurezza Fisica",
+  "AccessControlVestibule": "Misure di Sicurezza Fisica",
+  "PhysicalLighting": "Misure di Sicurezza Fisica",
   "PhysicalSensors": "Misure di Sicurezza Fisica",
 
   // Topic 7: Deception Technologies
