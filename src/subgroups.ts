@@ -32,6 +32,11 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "BackoutPlan": "Processi di Change Management",
   "MaintenanceWindow": "Processi di Change Management",
   "VersionControl": "Processi di Change Management",
+  "OwnershipStakeholders": "Processi di Change Management",
+  "TestResultsChange": "Processi di Change Management",
+  "StandardOperatingProcedure": "Processi di Change Management",
+  "ChangeTechnicalImplications": "Processi di Change Management",
+  "ChangeDocumentation": "Processi di Change Management",
   
   // Topic 5: Cryptography
   "SymmetricEncryption": "Crittografia",
@@ -64,6 +69,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "PhysicalCameras": "Misure di Sicurezza Fisica",
   "PhysicalFencing": "Misure di Sicurezza Fisica",
   "PhysicalBollards": "Misure di Sicurezza Fisica",
+  "AccessControlVestibule": "Misure di Sicurezza Fisica",
+  "PhysicalLighting": "Misure di Sicurezza Fisica",
   "PhysicalSensors": "Misure di Sicurezza Fisica",
 
   // Topic 7: Deception Technologies
@@ -483,6 +490,9 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "SupplyChainAnalysis": "Valutazione del Rischio Fornitori (Third Party)",
   "Questionnaires": "Valutazione del Rischio Fornitori (Third Party)",
   "RightToAuditClause": "Valutazione del Rischio Fornitori (Third Party)",
+  "VendorMonitoring": "Valutazione del Rischio Fornitori (Third Party)",
+  "ConflictOfInterest": "Valutazione del Rischio Fornitori (Third Party)",
+  "RulesOfEngagement": "Valutazione del Rischio Fornitori (Third Party)",
   "SLA": "Accordi e Contratti di Servizio",
   "NDA": "Accordi e Contratti di Servizio",
   "MOU": "Accordi e Contratti di Servizio",
@@ -508,6 +518,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "AnomalousBehaviorAwareness": "Consapevolezza e Addestramento Personale",
   "RemovableMediaAwareness": "Consapevolezza e Addestramento Personale",
   "OperationalSecurityAwareness": "Consapevolezza e Addestramento Personale",
+  "SituationalAwarenessRes": "Consapevolezza e Addestramento Personale",
+  "AwarenessProgramLifecycle": "Consapevolezza e Addestramento Personale",
   "HybridRemoteWorkAwareness": "Consapevolezza e Addestramento Personale",
   "AssetManagementRes": "Smaltimento e Declassificazione Asset",
   "AssetTrackingRes": "Smaltimento e Declassificazione Asset",
