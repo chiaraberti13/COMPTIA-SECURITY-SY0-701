@@ -1780,11 +1780,15 @@ export default function App() {
                       <span>{t("rem.questionOf", { i: remediationIndex + 1, n: remediationQuestions.length })}</span>
                     </div>
 
-                    {/* Scenario card */}
-                    <div className="bg-slate-950/80 p-4 border-l-2 border-rose-500 rounded-r space-y-2" id="remediation_scenario_box">
-                      <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("rem.analysisScenario")}</span>
-                      <p className="text-xs text-slate-400 leading-relaxed italic">{remediationQuestions[remediationIndex].scenario}</p>
-                    </div>
+                    {/* Scenario card. Remediation questions come back from the
+                        model, so the scenario can legitimately be absent: without
+                        this guard the card renders as a labelled empty box. */}
+                    {remediationQuestions[remediationIndex].scenario?.trim() && (
+                      <div className="bg-slate-950/80 p-4 border-l-2 border-rose-500 rounded-r space-y-2" id="remediation_scenario_box">
+                        <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("rem.analysisScenario")}</span>
+                        <p className="text-xs text-slate-400 leading-relaxed italic">{remediationQuestions[remediationIndex].scenario}</p>
+                      </div>
+                    )}
 
                     {/* Question text */}
                     <h3 className="font-bold text-sm text-slate-200 leading-relaxed" id="remediation_q_text">
@@ -1912,10 +1916,12 @@ export default function App() {
                   </div>
 
                   {/* Scenario box */}
-                  <div className="bg-slate-950/80 p-4 border-l-2 border-cyan-500 rounded-r space-y-2" id="quiz_scenario_box">
-                    <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("quiz.businessScenario")}</span>
-                    <p className="text-xs text-slate-400 leading-relaxed italic">{activeQuestions[currentQuestionIndex].scenario}</p>
-                  </div>
+                  {activeQuestions[currentQuestionIndex].scenario?.trim() && (
+                    <div className="bg-slate-950/80 p-4 border-l-2 border-cyan-500 rounded-r space-y-2" id="quiz_scenario_box">
+                      <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("quiz.businessScenario")}</span>
+                      <p className="text-xs text-slate-400 leading-relaxed italic">{activeQuestions[currentQuestionIndex].scenario}</p>
+                    </div>
+                  )}
 
                   {/* Question text */}
                   <h3 className="font-bold text-sm text-slate-200 leading-relaxed" id="quiz_q_text">
@@ -2208,7 +2214,9 @@ export default function App() {
                       <span className="text-[10px] font-mono text-slate-500">{t("modal.topic", { topic: q.topic })}</span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs text-slate-400 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
+                      {q.scenario?.trim() && (
+                        <p className="text-xs text-slate-400 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
+                      )}
                       <p className="text-xs font-semibold text-slate-200">{q.question}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">

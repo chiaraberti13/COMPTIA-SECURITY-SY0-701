@@ -143,6 +143,30 @@ describe("question shape", () => {
     expect(broken).toEqual([]);
   });
 
+  /**
+   * Every question opens with a business scenario, in both languages.
+   *
+   * 46 questions carried `scenario: null` and the UI, which had no guard on the
+   * field, drew the "business scenario" card with its label and nothing under
+   * it. `strictNullChecks` is off, so the null went through the compiler
+   * unnoticed. Pinning it here is what turns a silent blank card into a
+   * failing test the next time an entry is added without one.
+   */
+  it("every question opens with a scenario, in Italian and in English", () => {
+    const broken = DOMAIN_IDS.flatMap((d) =>
+      QUESTIONS_BY_DOMAIN[d].flatMap((q) => {
+        const found: string[] = [];
+        if (!q.scenario?.trim()) found.push(`it D${d}#${q.id}`);
+        const en = QUESTION_EN[d]?.[q.id];
+        // An override that translates the question must translate its scenario
+        // too: a half-translated item reads as a language glitch to the learner.
+        if (en && !en.scenario?.trim()) found.push(`en D${d}#${q.id}`);
+        return found;
+      })
+    );
+    expect(broken).toEqual([]);
+  });
+
   it("no option inside a question is empty or duplicated", () => {
     const broken = DOMAIN_IDS.flatMap((d) =>
       QUESTIONS_BY_DOMAIN[d]
