@@ -10027,6 +10027,30 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
 
   5: {
+  176: {
+    topic: "Third-Party Risk & Assessments",
+    scenario: "During the selection of a managed security provider it emerges that the external consultant engaged to draft the evaluation criteria earns a commission on sales of one of the competing products. There is no evidence that the criteria were skewed, and the product in question is as technically sound as the others.",
+    question: "What is the correct course of action?",
+    options: [
+      "A) Continue the tender and check afterwards whether the commission influenced the outcome",
+      "B) Have the conflict formally declared and have the evaluation redone by someone without that interest",
+      "C) Ask the consultant to waive the commission, keeping the criteria already drafted",
+      "D) Exclude from the tender the product on which the consultant earns the commission",
+    ],
+    explanation: "The correct answer is **B) Have the conflict formally declared and have the evaluation redone by someone without that interest**.\n\n* **Why it's correct:** A conflict of interest **does not have to have produced misconduct** to be a problem. If a reasonable third party can doubt the impartiality of the decision, the damage to the credibility of the process has already occurred. The handling objective 5.3 prescribes is always the same: **advance declaration**, recording in a conflicts register, **recusal** of whoever is conflicted, and separation between who evaluates and who holds the interest.\n* **Analysis of the distractors:**\n  * **A)** This is the trap the exam offers most often. Checking the influence afterwards shifts the burden onto proving harm, whereas the risk to be governed is **impaired impartiality in itself**: criteria drafted by someone with a financial interest are not defensible before an auditor, effect proven or not.\n  * **C)** Waiving the commission removes the interest **from now on**, but the criteria were written while the interest existed. A document tainted at its origin stays tainted.\n  * **D)** Excluding the product penalises a supplier that is not at fault and leaves the real defect untouched: a selection run by someone who could not run it. You fix the process, not the list of competitors.\n\n* **Not to be confused with its twin question:** identifying which **category** of conflict this is — here it would be a **financial** interest — is a different exercise from deciding **what to do**. This question asks the second.\n* **Exam trap:** the correct answer is almost always **declare and recuse**, never 'check whether it made a difference'.",
+  },
+  177: {
+    topic: "Security Awareness",
+    scenario: "At an industry trade fair an employee receives on their corporate phone a message that appears to come from their manager, asking for urgent approval of a payment. The text is plausible, carries no links or attachments and shows no suspicious technical indicator; the only thing out of place is that the manager has never used that channel. The employee grows suspicious, calls back the number already in their contacts, and the fraud stops there.",
+    question: "Which element of the awareness programme produced this behaviour?",
+    options: [
+      "A) Recognising phishing emails through technical indicators",
+      "B) Situational awareness",
+      "C) OPSEC, that is, controlling the information the organisation lets slip",
+      "D) Recognising anomalous behaviour in colleagues (insider threat)",
+    ],
+    explanation: "The correct answer is **B) Situational awareness**.\n\n* **Why it's correct:** Situational awareness is the ability to recognise that **the context you are in changes the level of risk**, and to adjust your behaviour accordingly. There is nothing technically anomalous to spot here: what makes the employee suspicious is the context — a trade fair, that is, the moment when one is most exposed and most distracted — combined with an urgent request arriving through an **unusual channel**. It is what covers the cases no course anticipated.\n* **Analysis of the distractors:**\n  * **A)** Phishing recognition rests on **observable indicators**: forged sender, masked links, unexpected attachments, domain errors. The scenario rules them out explicitly, and that is exactly what makes that kind of training insufficient here.\n  * **C)** **OPSEC** concerns the information an organisation lets slip and an attacker can reassemble — org charts, job adverts, photographs of badges. If anything it explains how the attacker knew the manager's name and role, not why the employee stopped.\n  * **D)** Recognising anomalous behaviour concerns what **insiders** do, and is the control against the insider threat. There is no insider here: there is an outsider impersonating one.\n\n* **Exam trap:** distinguish what the attention is directed at. **Situational awareness** → the *situation* you are in · **OPSEC** → the *information* left lying around · **anomalous behaviour** → what *people do*.",
+  },
   1: {
     topic: "Agreements & Contracts",
     scenario: "Two government organizations intend to start a preliminary collaboration to exchange weather telemetry data. The parties are not ready to sign a financial or legally binding contract, but wish to formally document the common objectives, general roles and broad intentions before proceeding with the technical feasibility studies.",
