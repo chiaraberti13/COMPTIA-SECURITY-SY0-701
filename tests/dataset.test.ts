@@ -450,6 +450,45 @@ describe("near-duplicate questions", () => {
 });
 
 describe("English overlay", () => {
+  it("provides a complete translation for every question field", () => {
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        const en = QUESTION_EN[d]?.[q.id];
+        if (!en) {
+          broken.push(`D${d}#${q.id}: missing override`);
+          continue;
+        }
+        if (!en.topic?.trim()) broken.push(`D${d}#${q.id}: missing topic`);
+        if (!en.scenario?.trim()) broken.push(`D${d}#${q.id}: missing scenario`);
+        if (!en.question?.trim()) broken.push(`D${d}#${q.id}: missing question`);
+        if (!en.explanation?.trim()) broken.push(`D${d}#${q.id}: missing explanation`);
+        if (!en.options || en.options.length !== q.options.length) {
+          broken.push(`D${d}#${q.id}: option count differs from Italian`);
+        } else if (
+          en.options.some((option) => !option.trim()) ||
+          new Set(en.options.map((option) => option.trim())).size !== en.options.length
+        ) {
+          broken.push(`D${d}#${q.id}: empty or duplicate option`);
+        }
+      }
+    }
+    expect(broken).toEqual([]);
+  });
+
+  it("announces multi-response questions in both languages", () => {
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      for (const q of QUESTIONS_BY_DOMAIN[d]) {
+        if ((q.answerIndexes?.length ?? 0) < 2) continue;
+        const en = QUESTION_EN[d]?.[q.id];
+        if (!/\(scegli(?:ne)? due\)/i.test(q.question)) broken.push(`it D${d}#${q.id}`);
+        if (!/\(choose two\)/i.test(en?.question ?? "")) broken.push(`en D${d}#${q.id}`);
+      }
+    }
+    expect(broken).toEqual([]);
+  });
+
   it("subtopic overrides target existing checklist keys in their domain", () => {
     const orphans: string[] = [];
     for (const d of DOMAIN_IDS) {
@@ -500,6 +539,75 @@ describe("English overlay", () => {
         }
       }
     }
+    expect(broken).toEqual([]);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Blueprint and cognitive-level coverage
+ * ------------------------------------------------------------------ */
+
+/** Expand objective labels such as `3.1-3.4` and `4.4 e 4.5`. */
+function objectiveTags(title: string): string[] {
+  const objectivePart = title.match(/\bObj\s+(.+?)\)/i)?.[1] ?? "";
+  const tags = new Set<string>();
+  for (const match of objectivePart.matchAll(/(\d)\.(\d)(?:\s*-\s*(?:(\d)\.)?(\d))?/g)) {
+    const domain = Number(match[1]);
+    const start = Number(match[2]);
+    const endDomain = match[3] ? Number(match[3]) : domain;
+    const end = match[4] ? Number(match[4]) : start;
+    if (domain === endDomain) {
+      for (let objective = start; objective <= end; objective += 1) {
+        tags.add(`${domain}.${objective}`);
+      }
+    }
+  }
+  return [...tags];
+}
+
+describe("SY0-701 blueprint coverage", () => {
+  it("covers every numbered objective in the five official domains", () => {
+    const expected = [
+      "1.1", "1.2", "1.3", "1.4",
+      "2.1", "2.2", "2.3", "2.4", "2.5",
+      "3.1", "3.2", "3.3", "3.4",
+      "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9",
+      "5.1", "5.2", "5.3", "5.4", "5.5", "5.6",
+    ];
+    const covered = new Set(
+      DOMAIN_IDS.flatMap((d) => TOPICS_BY_DOMAIN[d].flatMap((group) => objectiveTags(group.title)))
+    );
+    expect(expected.filter((objective) => !covered.has(objective))).toEqual([]);
+  });
+
+  it("keeps every domain majority higher-order", () => {
+    const broken = DOMAIN_IDS.flatMap((d) => {
+      const questions = QUESTIONS_BY_DOMAIN[d];
+      const higherOrder = questions.filter(
+        (q) => q.level === "APPLICAZIONE" || q.level === "ANALISI"
+      ).length;
+      return higherOrder / questions.length >= 0.5
+        ? []
+        : [`D${d}: ${higherOrder}/${questions.length}`];
+    });
+    expect(broken).toEqual([]);
+  });
+
+  it("keeps question coverage close to the official domain weighting", () => {
+    const weights: Record<(typeof DOMAIN_IDS)[number], number> = {
+      1: 0.12,
+      2: 0.22,
+      3: 0.18,
+      4: 0.28,
+      5: 0.20,
+    };
+    const total = DOMAIN_IDS.reduce((sum, d) => sum + QUESTIONS_BY_DOMAIN[d].length, 0);
+    const broken = DOMAIN_IDS.flatMap((d) => {
+      const actual = QUESTIONS_BY_DOMAIN[d].length / total;
+      return Math.abs(actual - weights[d]) <= 0.05
+        ? []
+        : [`D${d}: ${(actual * 100).toFixed(1)}% vs ${(weights[d] * 100).toFixed(0)}%`];
+    });
     expect(broken).toEqual([]);
   });
 });
