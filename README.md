@@ -69,6 +69,8 @@ The philosophy, shared with the rest of these repositories:
   with detailed rationale and distractor analysis.
 - **AI remediation generator** — after a practice set, the AI dynamically generates
   targeted questions on the topics where you were weakest.
+- **Privacy-first smart review** — per-question mastery stays in the browser; mistakes
+  return immediately and correct answers reappear on a 1–3–7–14–30 day schedule.
 - **Full English / Italian localisation** — every subtopic and quiz question in both
   languages, switchable in-app.
 

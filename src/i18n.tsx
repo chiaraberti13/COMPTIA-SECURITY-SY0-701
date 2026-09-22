@@ -208,6 +208,10 @@ const it = {
   "quiz.rule2": "● Soglia di Sbarramento: 80% per superare il modulo.",
   "quiz.rule3": "● Se fallisci, si attiverà un quiz di recupero con domande adattive basate sulle tue debolezze.",
   "quiz.selectAtLeastOne": "Seleziona almeno una domanda per avviare il simulatore!",
+  "quiz.smartReviewTitle": "Ripasso intelligente",
+  "quiz.smartReviewReady": "{n} domande sono pronte: prima gli errori e poi i concetti in scadenza.",
+  "quiz.smartReviewEmpty": "Completa un test: gli errori compariranno subito, le risposte corrette torneranno a intervalli crescenti.",
+  "quiz.smartReviewStart": "Avvia ripasso",
 
   // Quiz completed
   "quiz.completedTitle": "Simulazione Completata",
@@ -286,6 +290,12 @@ const it = {
   "a11y.optionsGroup": "Opzioni di risposta",
   "a11y.optionsGroupMulti": "Opzioni di risposta, scelta multipla",
   "a11y.keyboardHint": "Suggerimento: premi 1-4 per selezionare, Invio per confermare.",
+  "a11y.mainNavigation": "Navigazione principale",
+  "a11y.decreaseDomainQuestions": "Riduci le domande del dominio {n}",
+  "a11y.increaseDomainQuestions": "Aumenta le domande del dominio {n}",
+  "a11y.domainQuestionCount": "Numero di domande del dominio {n}",
+  "a11y.closeTrainer": "Chiudi il Trainer AI",
+  "a11y.chatInput": "Domanda per il Trainer AI",
 
 
   // Chat sidebar
@@ -471,6 +481,10 @@ const en: Record<UIKey, string> = {
   "quiz.rule2": "● Passing Threshold: 80% to pass the module.",
   "quiz.rule3": "● If you fail, a remediation quiz with adaptive questions based on your weaknesses will start.",
   "quiz.selectAtLeastOne": "Select at least one question to start the simulator!",
+  "quiz.smartReviewTitle": "Smart review",
+  "quiz.smartReviewReady": "{n} questions are ready: mistakes first, then concepts due for review.",
+  "quiz.smartReviewEmpty": "Complete a test: mistakes appear immediately and correct answers return at increasing intervals.",
+  "quiz.smartReviewStart": "Start review",
 
   // Quiz completed
   "quiz.completedTitle": "Simulation Completed",
@@ -549,6 +563,12 @@ const en: Record<UIKey, string> = {
   "a11y.optionsGroup": "Answer options",
   "a11y.optionsGroupMulti": "Answer options, multiple choice",
   "a11y.keyboardHint": "Tip: press 1-4 to select, Enter to confirm.",
+  "a11y.mainNavigation": "Main navigation",
+  "a11y.decreaseDomainQuestions": "Decrease Domain {n} questions",
+  "a11y.increaseDomainQuestions": "Increase Domain {n} questions",
+  "a11y.domainQuestionCount": "Number of Domain {n} questions",
+  "a11y.closeTrainer": "Close the AI Trainer",
+  "a11y.chatInput": "Question for the AI Trainer",
 
 
   // Chat sidebar

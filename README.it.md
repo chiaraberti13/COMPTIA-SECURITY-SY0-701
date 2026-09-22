@@ -69,6 +69,8 @@ La filosofia, condivisa con gli altri repository:
   Analisi/Applicazione con motivazioni dettagliate e analisi dei distrattori.
 - **Generatore AI di domande di recupero** — dopo una sessione di pratica, l'AI genera
   dinamicamente domande mirate sugli argomenti dove sei stato più debole.
+- **Ripasso intelligente privacy-first** — la padronanza di ogni domanda resta nel browser;
+  gli errori tornano subito e le risposte corrette seguono intervalli di 1–3–7–14–30 giorni.
 - **Localizzazione completa Inglese / Italiano** — ogni subtopic e domanda di quiz in
   entrambe le lingue, commutabile nell'app.
 

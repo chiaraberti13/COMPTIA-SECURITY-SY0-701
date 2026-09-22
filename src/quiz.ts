@@ -1,4 +1,4 @@
-import type { Question, QuizResult } from "./types";
+import type { Question, QuestionProgress, QuizResult } from "./types";
 
 /** Passing threshold for the exam simulator, as a fraction of the total. */
 export const PASS_RATIO = 0.8;
@@ -8,6 +8,9 @@ export const SECONDS_PER_QUESTION = 120;
 
 /** How many past runs to keep in the local history. */
 export const HISTORY_LIMIT = 20;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const REVIEW_INTERVAL_DAYS = [1, 3, 7, 14, 30] as const;
 
 /** Formats a number of seconds as mm:ss, clamped at zero. */
 export function formatClock(totalSeconds: number): string {
@@ -126,4 +129,65 @@ export function isSelectionCorrect(
   if (selection.length !== correct.length) return false;
   const picked = new Set(selection);
   return correct.every((i) => picked.has(i));
+}
+
+/**
+ * Updates per-question mastery after a completed run. Incorrect and unanswered
+ * questions become due immediately; consecutive correct answers progressively
+ * move the next review from one day up to one month away.
+ */
+export function updateQuestionProgress(
+  progress: Record<number, QuestionProgress>,
+  questions: readonly Question[],
+  answers: Record<number, number[]>,
+  now = Date.now()
+): Record<number, QuestionProgress> {
+  const next = { ...progress };
+
+  for (const question of questions) {
+    const previous = progress[question.id];
+    const selection = answers[question.id];
+    const correct = selection !== undefined && isSelectionCorrect(question, selection);
+    const streak = correct ? (previous?.streak ?? 0) + 1 : 0;
+    const intervalIndex = Math.min(Math.max(streak - 1, 0), REVIEW_INTERVAL_DAYS.length - 1);
+
+    next[question.id] = {
+      attempts: (previous?.attempts ?? 0) + 1,
+      correct: (previous?.correct ?? 0) + (correct ? 1 : 0),
+      streak,
+      lastSeenAt: now,
+      dueAt: correct ? now + REVIEW_INTERVAL_DAYS[intervalIndex] * DAY_MS : now,
+    };
+  }
+
+  return next;
+}
+
+/**
+ * Returns due questions in learning priority: lower accuracy and shorter
+ * correct streaks first, then how overdue they are. Unknown/deleted ids are
+ * ignored.
+ */
+export function selectDueReviewQuestions(
+  questions: readonly Question[],
+  progress: Record<number, QuestionProgress>,
+  now = Date.now(),
+  limit = 20
+): Question[] {
+  return questions
+    .filter(question => {
+      const item = progress[question.id];
+      return item && item.attempts > 0 && item.dueAt <= now;
+    })
+    .sort((a, b) => {
+      const left = progress[a.id];
+      const right = progress[b.id];
+      return (
+        left.correct / left.attempts - right.correct / right.attempts ||
+        left.streak - right.streak ||
+        left.dueAt - right.dueAt ||
+        a.id - b.id
+      );
+    })
+    .slice(0, Math.max(0, limit));
 }

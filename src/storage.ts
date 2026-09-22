@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
   checklist: "comptia_sy0701_checklist",
   bookmarks: "comptia_glossary_bookmarks",
   quizHistory: "comptia_sy0701_quiz_history",
+  questionProgress: "comptia_sy0701_question_progress_v1",
   lang: "comptia_sy0701_lang",
 } as const;
 

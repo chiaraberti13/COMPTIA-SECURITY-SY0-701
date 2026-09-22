@@ -60,3 +60,12 @@ export interface QuizResult {
   /** Whether the run reached the 80% passing threshold. */
   passed: boolean;
 }
+
+/** Persisted learning state for one dataset-backed question. */
+export interface QuestionProgress {
+  attempts: number;
+  correct: number;
+  streak: number;
+  lastSeenAt: number;
+  dueAt: number;
+}

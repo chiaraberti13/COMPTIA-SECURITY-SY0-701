@@ -14,8 +14,10 @@ import {
   toggleSelection,
   isSelectionComplete,
   isSelectionCorrect,
+  updateQuestionProgress,
+  selectDueReviewQuestions,
 } from "../src/quiz";
-import type { Question, QuizResult } from "../src/types";
+import type { Question, QuestionProgress, QuizResult } from "../src/types";
 
 const question = (id: number): Question => ({
   id,
@@ -212,5 +214,43 @@ describe("isSelectionCorrect", () => {
 
   it("rejects an empty selection", () => {
     expect(isSelectionCorrect(multi(), [])).toBe(false);
+  });
+});
+
+describe("spaced repetition progress", () => {
+  const now = Date.UTC(2026, 8, 22, 10);
+  const day = 24 * 60 * 60 * 1000;
+
+  it("makes wrong and unanswered questions due immediately", () => {
+    const result = updateQuestionProgress({}, [question(1), question(2)], { 1: [2] }, now);
+    expect(result[1]).toMatchObject({ attempts: 1, correct: 0, streak: 0, dueAt: now });
+    expect(result[2]).toMatchObject({ attempts: 1, correct: 0, streak: 0, dueAt: now });
+  });
+
+  it("expands the interval after consecutive correct answers", () => {
+    const first = updateQuestionProgress({}, [question(1)], { 1: [0] }, now);
+    const second = updateQuestionProgress(first, [question(1)], { 1: [0] }, now + day);
+    expect(first[1].dueAt).toBe(now + day);
+    expect(second[1]).toMatchObject({ attempts: 2, correct: 2, streak: 2 });
+    expect(second[1].dueAt).toBe(now + 4 * day);
+  });
+
+  it("prioritizes lower accuracy before how overdue a question is", () => {
+    const progress: Record<number, QuestionProgress> = {
+      1: { attempts: 4, correct: 4, streak: 4, lastSeenAt: now, dueAt: now - 2 * day },
+      2: { attempts: 4, correct: 1, streak: 0, lastSeenAt: now, dueAt: now - day },
+      3: { attempts: 1, correct: 0, streak: 0, lastSeenAt: now, dueAt: now + day },
+    };
+    expect(selectDueReviewQuestions([question(1), question(2), question(3)], progress, now).map(q => q.id))
+      .toEqual([2, 1]);
+  });
+
+  it("ignores stale ids and respects the session limit", () => {
+    const progress: Record<number, QuestionProgress> = {
+      1: { attempts: 1, correct: 0, streak: 0, lastSeenAt: now, dueAt: now },
+      2: { attempts: 1, correct: 0, streak: 0, lastSeenAt: now, dueAt: now },
+      999: { attempts: 1, correct: 0, streak: 0, lastSeenAt: now, dueAt: now },
+    };
+    expect(selectDueReviewQuestions([question(1), question(2)], progress, now, 1)).toHaveLength(1);
   });
 });

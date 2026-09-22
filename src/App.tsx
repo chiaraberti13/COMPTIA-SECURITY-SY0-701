@@ -33,7 +33,7 @@ import {
   questionUid,
   domainOfQuestion,
 } from "./localizedData";
-import { Subtopic, Question, ChatMessage, QuizResult } from "./types";
+import { Subtopic, Question, ChatMessage, QuizResult, QuestionProgress } from "./types";
 import { motion, AnimatePresence } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
@@ -53,6 +53,8 @@ import {
   toggleSelection,
   isSelectionComplete,
   isSelectionCorrect,
+  updateQuestionProgress,
+  selectDueReviewQuestions,
 } from "./quiz";
 
 
@@ -70,6 +72,16 @@ export default function App() {
   const DOMAIN_4_QUESTIONS = useMemo(() => getDomainQuestions(4, lang), [lang]);
   const DOMAIN_5_QUESTIONS = useMemo(() => getDomainQuestions(5, lang), [lang]);
   const INITIAL_QUESTIONS = useMemo(() => getInitialQuestions(lang), [lang]);
+  const ALL_QUESTIONS = useMemo(
+    () => [
+      ...DOMAIN_1_QUESTIONS,
+      ...DOMAIN_2_QUESTIONS,
+      ...DOMAIN_3_QUESTIONS,
+      ...DOMAIN_4_QUESTIONS,
+      ...DOMAIN_5_QUESTIONS,
+    ],
+    [DOMAIN_1_QUESTIONS, DOMAIN_2_QUESTIONS, DOMAIN_3_QUESTIONS, DOMAIN_4_QUESTIONS, DOMAIN_5_QUESTIONS]
+  );
 
   // Navigation & General App State
   const [activeTab, setActiveTab] = useState<"studio" | "quiz" | "glossary">("studio");
@@ -98,7 +110,7 @@ export default function App() {
   };
 
   // Quiz state
-  const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom">("all");
+  const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review">("all");
   const [customCounts, setCustomCounts] = useState<Record<number, number>>({
     1: 5,
     2: 5,
@@ -131,6 +143,9 @@ export default function App() {
   // Locally persisted history of completed runs.
   const [quizHistory, setQuizHistory] = useState<QuizResult[]>(
     () => readJSON<QuizResult[]>(STORAGE_KEYS.quizHistory, [])
+  );
+  const [questionProgress, setQuestionProgress] = useState<Record<number, QuestionProgress>>(
+    () => readJSON<Record<number, QuestionProgress>>(STORAGE_KEYS.questionProgress, {})
   );
 
   // Remediation / Recovery State
@@ -459,6 +474,17 @@ export default function App() {
     beginQuizRun(questionsToUse);
   };
 
+  const dueReviewQuestions = useMemo(
+    () => selectDueReviewQuestions(ALL_QUESTIONS, questionProgress),
+    [ALL_QUESTIONS, questionProgress]
+  );
+
+  const handleStartSmartReview = () => {
+    if (dueReviewQuestions.length === 0) return;
+    setQuizFocus("review");
+    beginQuizRun(shuffle(dueReviewQuestions));
+  };
+
   const handleSelectOption = (index: number) => {
     if (showFeedback) return;
     const current = activeQuestions[currentQuestionIndex];
@@ -506,6 +532,11 @@ export default function App() {
     setQuizHistory(prev => {
       const next = appendHistory(prev, entry);
       writeJSON(STORAGE_KEYS.quizHistory, next);
+      return next;
+    });
+    setQuestionProgress(prev => {
+      const next = updateQuestionProgress(prev, activeQuestions, quizAnswers);
+      writeJSON(STORAGE_KEYS.questionProgress, next);
       return next;
     });
   };
@@ -752,9 +783,11 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-3 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-thin" id="navigation_tabs">
+        <div className="flex items-center gap-2 lg:gap-3 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-thin" id="navigation_tabs" role="tablist" aria-label={t("a11y.mainNavigation")}>
           <button 
             id="tab_btn_studio"
+            role="tab"
+            aria-selected={activeTab === "studio"}
             onClick={() => { setActiveTab("studio"); }}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "studio" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
@@ -763,6 +796,8 @@ export default function App() {
           </button>
           <button 
             id="tab_btn_glossary"
+            role="tab"
+            aria-selected={activeTab === "glossary"}
             onClick={() => { setActiveTab("glossary"); }}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "glossary" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
@@ -771,6 +806,8 @@ export default function App() {
           </button>
           <button 
             id="tab_btn_quiz"
+            role="tab"
+            aria-selected={activeTab === "quiz"}
             onClick={() => { setActiveTab("quiz"); }}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "quiz" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
@@ -1226,8 +1263,8 @@ export default function App() {
 
         {/* TAB 2: HIGH-STAKES SIMULATOR - Sleek Interface Style */}
         {activeTab === "quiz" && (
-          <main className="flex-1 overflow-y-auto bg-slate-950 p-8 flex items-center justify-center" id="quiz_layout">
-            <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-lg p-8 relative overflow-hidden shadow-2xl" id="quiz_panel_container">
+          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-center justify-center" id="quiz_layout">
+            <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="quiz_panel_container">
               
               {/* Animated subtle backdrop blur blobs */}
               <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
@@ -1245,6 +1282,34 @@ export default function App() {
                       <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
                         {t("quiz.subtitle")}
                       </p>
+                    </div>
+                  </div>
+
+                  {/* Local, privacy-first spaced repetition queue. */}
+                  <div className="bg-cyan-950/20 border border-cyan-500/25 p-4 rounded-lg" id="smart_review_box">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <RefreshCw className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+                          <h3 className="text-xs font-bold text-cyan-300">{t("quiz.smartReviewTitle")}</h3>
+                          <span className="rounded-full bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 text-[10px] font-mono text-cyan-300">
+                            {dueReviewQuestions.length}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
+                          {dueReviewQuestions.length > 0
+                            ? t("quiz.smartReviewReady", { n: dueReviewQuestions.length })
+                            : t("quiz.smartReviewEmpty")}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleStartSmartReview}
+                        disabled={dueReviewQuestions.length === 0}
+                        className="w-full sm:w-auto shrink-0 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-bold px-4 py-2 rounded text-[11px] transition-colors"
+                      >
+                        {t("quiz.smartReviewStart")}
+                      </button>
                     </div>
                   </div>
 
@@ -1382,6 +1447,7 @@ export default function App() {
                             <div className="flex items-center gap-3">
                               <button
                                 type="button"
+                                aria-label={t("a11y.decreaseDomainQuestions", { n: dom.id })}
                                 onClick={handleDecrement}
                                 disabled={currentVal <= 0}
                                 className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-800 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
@@ -1391,6 +1457,7 @@ export default function App() {
                               
                               <input
                                 type="range"
+                                aria-label={t("a11y.domainQuestionCount", { n: dom.id })}
                                 min={0}
                                 max={maxVal}
                                 value={currentVal}
@@ -1400,6 +1467,7 @@ export default function App() {
 
                               <button
                                 type="button"
+                                aria-label={t("a11y.increaseDomainQuestions", { n: dom.id })}
                                 onClick={handleIncrement}
                                 disabled={currentVal >= maxVal}
                                 className="w-7 h-7 flex items-center justify-center bg-slate-900 border border-slate-800 rounded hover:bg-slate-800 hover:border-slate-700 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-400 text-xs font-mono font-bold"
@@ -2057,6 +2125,8 @@ export default function App() {
                 </div>
                 <button 
                   id="close_sidebar_icon_btn"
+                  type="button"
+                  aria-label={t("a11y.closeTrainer")}
                   onClick={() => setSidebarOpen(false)}
                   className="p-1 text-slate-400 hover:text-slate-200 rounded hover:bg-slate-800 transition-colors"
                 >
@@ -2165,6 +2235,7 @@ export default function App() {
                   <input 
                     id="chat_text_input"
                     type="text"
+                    aria-label={t("a11y.chatInput")}
                     value={chatInput}
                     disabled={isChatLoading}
                     onChange={(e) => setChatInput(e.target.value)}
@@ -2189,15 +2260,16 @@ export default function App() {
         {/* Modal per visualizzare i testi delle nuove domande tradotte */}
         {showNewQuestionsModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" id="new_questions_modal_overlay">
-            <div className="w-full max-w-3xl h-[85vh] bg-slate-900 border border-slate-800 rounded-lg flex flex-col overflow-hidden shadow-2xl" id="new_questions_modal">
+            <div className="w-full max-w-3xl h-[85vh] bg-slate-900 border border-slate-800 rounded-lg flex flex-col overflow-hidden shadow-2xl" id="new_questions_modal" role="dialog" aria-modal="true" aria-labelledby="new_questions_modal_title">
               {/* Header */}
               <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950" id="new_questions_modal_header">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-100">{t("modal.title")}</h3>
+                  <h3 className="text-sm font-bold text-slate-100" id="new_questions_modal_title">{t("modal.title")}</h3>
                   <p className="text-[10px] text-slate-400">{t("modal.subtitle")}</p>
                 </div>
                 <button
                   type="button"
+                  aria-label={t("modal.close")}
                   onClick={() => setShowNewQuestionsModal(false)}
                   className="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition-colors"
                 >
