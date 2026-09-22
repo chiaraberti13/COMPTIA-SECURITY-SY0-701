@@ -12,6 +12,70 @@ export const HISTORY_LIMIT = 20;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const REVIEW_INTERVAL_DAYS = [1, 3, 7, 14, 30] as const;
 
+export interface WeakTopicSummary {
+  topic: string;
+  attempts: number;
+  correct: number;
+  accuracy: number;
+  due: number;
+}
+
+/**
+ * localStorage is user-controlled and survives application upgrades.  Keep
+ * malformed or legacy values from reaching rendering and review arithmetic.
+ */
+export function sanitizeQuizHistory(value: unknown): QuizResult[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((entry): entry is QuizResult => {
+      if (!entry || typeof entry !== "object") return false;
+      const item = entry as Partial<QuizResult>;
+      return (
+        Number.isFinite(item.at) && Number(item.at) > 0 &&
+        Number.isInteger(item.score) && Number(item.score) >= 0 &&
+        Number.isInteger(item.total) && Number(item.total) > 0 &&
+        Number(item.score) <= Number(item.total) &&
+        Array.isArray(item.domains) &&
+        item.domains.every(domain => Number.isInteger(domain) && domain >= 1 && domain <= 5) &&
+        typeof item.passed === "boolean"
+      );
+    })
+    .slice(0, HISTORY_LIMIT);
+}
+
+export function sanitizeQuestionProgress(value: unknown): Record<number, QuestionProgress> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  const safe: Record<number, QuestionProgress> = {};
+  for (const [rawId, rawProgress] of Object.entries(value)) {
+    const id = Number(rawId);
+    if (!Number.isSafeInteger(id) || id <= 0 || !rawProgress || typeof rawProgress !== "object") {
+      continue;
+    }
+
+    const item = rawProgress as Partial<QuestionProgress>;
+    if (
+      !Number.isInteger(item.attempts) || Number(item.attempts) <= 0 ||
+      !Number.isInteger(item.correct) || Number(item.correct) < 0 ||
+      Number(item.correct) > Number(item.attempts) ||
+      !Number.isInteger(item.streak) || Number(item.streak) < 0 ||
+      Number(item.streak) > Number(item.attempts) ||
+      !Number.isFinite(item.lastSeenAt) || Number(item.lastSeenAt) <= 0 ||
+      !Number.isFinite(item.dueAt) || Number(item.dueAt) <= 0
+    ) continue;
+
+    safe[id] = {
+      attempts: Number(item.attempts),
+      correct: Number(item.correct),
+      streak: Number(item.streak),
+      lastSeenAt: Number(item.lastSeenAt),
+      dueAt: Number(item.dueAt),
+    };
+  }
+  return safe;
+}
+
 /** Formats a number of seconds as mm:ss, clamped at zero. */
 export function formatClock(totalSeconds: number): string {
   const safe = Math.max(0, Math.floor(totalSeconds));
@@ -189,5 +253,44 @@ export function selectDueReviewQuestions(
         a.id - b.id
       );
     })
+    .slice(0, Math.max(0, limit));
+}
+
+/**
+ * Aggregates question-level mastery into learner-facing topic signals.
+ * Only attempted questions participate: an untouched topic is unknown, not a
+ * weakness. Lower accuracy wins; more evidence and more due questions break
+ * ties so one accidental miss does not outrank a repeatedly weak concept.
+ */
+export function summarizeWeakTopics(
+  questions: readonly Question[],
+  progress: Record<number, QuestionProgress>,
+  now = Date.now(),
+  limit = 5
+): WeakTopicSummary[] {
+  const topics = new Map<string, Omit<WeakTopicSummary, "topic" | "accuracy">>();
+
+  for (const question of questions) {
+    const item = progress[question.id];
+    if (!item || item.attempts <= 0) continue;
+    const current = topics.get(question.topic) ?? { attempts: 0, correct: 0, due: 0 };
+    current.attempts += item.attempts;
+    current.correct += item.correct;
+    current.due += item.dueAt <= now ? 1 : 0;
+    topics.set(question.topic, current);
+  }
+
+  return [...topics.entries()]
+    .map(([topic, item]) => ({
+      topic,
+      ...item,
+      accuracy: Math.round((item.correct / item.attempts) * 100),
+    }))
+    .sort((a, b) =>
+      a.accuracy - b.accuracy ||
+      b.attempts - a.attempts ||
+      b.due - a.due ||
+      a.topic.localeCompare(b.topic)
+    )
     .slice(0, Math.max(0, limit));
 }

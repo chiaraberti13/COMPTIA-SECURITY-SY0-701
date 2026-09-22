@@ -16,6 +16,9 @@ import {
   isSelectionCorrect,
   updateQuestionProgress,
   selectDueReviewQuestions,
+  sanitizeQuizHistory,
+  sanitizeQuestionProgress,
+  summarizeWeakTopics,
 } from "../src/quiz";
 import type { Question, QuestionProgress, QuizResult } from "../src/types";
 
@@ -103,6 +106,32 @@ describe("appendHistory", () => {
     for (let i = 0; i < HISTORY_LIMIT + 10; i++) history = appendHistory(history, entry(i));
     expect(history).toHaveLength(HISTORY_LIMIT);
     expect(history[0].at).toBe(HISTORY_LIMIT + 9);
+  });
+});
+
+describe("persisted learning data", () => {
+  it("drops malformed history entries instead of trusting localStorage", () => {
+    const valid: QuizResult = { at: 10, score: 8, total: 10, domains: [1, 2], passed: true };
+    expect(sanitizeQuizHistory([valid, null, { ...valid, score: 11 }, { ...valid, domains: [9] }]))
+      .toEqual([valid]);
+    expect(sanitizeQuizHistory({ length: 1 })).toEqual([]);
+  });
+
+  it("keeps only internally consistent question progress", () => {
+    const valid: QuestionProgress = {
+      attempts: 3,
+      correct: 2,
+      streak: 1,
+      lastSeenAt: 100,
+      dueAt: 200,
+    };
+    expect(sanitizeQuestionProgress({
+      101: valid,
+      102: { ...valid, correct: 4 },
+      103: { ...valid, dueAt: "tomorrow" },
+      nope: valid,
+    })).toEqual({ 101: valid });
+    expect(sanitizeQuestionProgress([])).toEqual({});
   });
 });
 
@@ -252,5 +281,24 @@ describe("spaced repetition progress", () => {
       999: { attempts: 1, correct: 0, streak: 0, lastSeenAt: now, dueAt: now },
     };
     expect(selectDueReviewQuestions([question(1), question(2)], progress, now, 1)).toHaveLength(1);
+  });
+
+  it("summarizes attempted weak topics without treating unseen topics as failures", () => {
+    const questions = [
+      { ...question(1), topic: "IAM" },
+      { ...question(2), topic: "IAM" },
+      { ...question(3), topic: "PKI" },
+      { ...question(4), topic: "Untouched" },
+    ];
+    const progress: Record<number, QuestionProgress> = {
+      1: { attempts: 3, correct: 1, streak: 0, lastSeenAt: now, dueAt: now },
+      2: { attempts: 1, correct: 1, streak: 1, lastSeenAt: now, dueAt: now + day },
+      3: { attempts: 2, correct: 2, streak: 2, lastSeenAt: now, dueAt: now },
+    };
+
+    expect(summarizeWeakTopics(questions, progress, now)).toEqual([
+      { topic: "IAM", attempts: 4, correct: 2, accuracy: 50, due: 1 },
+      { topic: "PKI", attempts: 2, correct: 2, accuracy: 100, due: 1 },
+    ]);
   });
 });

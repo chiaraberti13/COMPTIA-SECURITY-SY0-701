@@ -55,6 +55,9 @@ import {
   isSelectionCorrect,
   updateQuestionProgress,
   selectDueReviewQuestions,
+  sanitizeQuizHistory,
+  sanitizeQuestionProgress,
+  summarizeWeakTopics,
 } from "./quiz";
 
 
@@ -142,10 +145,10 @@ export default function App() {
 
   // Locally persisted history of completed runs.
   const [quizHistory, setQuizHistory] = useState<QuizResult[]>(
-    () => readJSON<QuizResult[]>(STORAGE_KEYS.quizHistory, [])
+    () => sanitizeQuizHistory(readJSON<unknown>(STORAGE_KEYS.quizHistory, []))
   );
   const [questionProgress, setQuestionProgress] = useState<Record<number, QuestionProgress>>(
-    () => readJSON<Record<number, QuestionProgress>>(STORAGE_KEYS.questionProgress, {})
+    () => sanitizeQuestionProgress(readJSON<unknown>(STORAGE_KEYS.questionProgress, {}))
   );
 
   // Remediation / Recovery State
@@ -479,10 +482,22 @@ export default function App() {
     [ALL_QUESTIONS, questionProgress]
   );
 
+  const weakTopicSummary = useMemo(
+    () => summarizeWeakTopics(ALL_QUESTIONS, questionProgress),
+    [ALL_QUESTIONS, questionProgress]
+  );
+
   const handleStartSmartReview = () => {
     if (dueReviewQuestions.length === 0) return;
     setQuizFocus("review");
     beginQuizRun(shuffle(dueReviewQuestions));
+  };
+
+  const handleRetryMistakes = () => {
+    const mistakes = activeQuestions.filter(question => wrongQuestions.includes(question.id));
+    if (mistakes.length === 0) return;
+    setQuizFocus("review");
+    beginQuizRun(shuffle(mistakes));
   };
 
   const handleSelectOption = (index: number) => {
@@ -1313,6 +1328,46 @@ export default function App() {
                     </div>
                   </div>
 
+                  {weakTopicSummary.length > 0 && (
+                    <section
+                      className="bg-slate-950/60 border border-slate-800 p-4 rounded-lg space-y-3"
+                      id="weak_topics_summary"
+                      aria-labelledby="weak_topics_summary_title"
+                    >
+                      <div className="space-y-1">
+                        <h3 id="weak_topics_summary_title" className="text-xs font-bold text-slate-200">
+                          {t("quiz.weakTopicsTitle")}
+                        </h3>
+                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                          {t("quiz.weakTopicsDesc")}
+                        </p>
+                      </div>
+                      <ul className="space-y-2">
+                        {weakTopicSummary.map(item => (
+                          <li key={item.topic} className="space-y-1.5">
+                            <div className="flex items-center justify-between gap-3 text-[11px]">
+                              <span className="text-slate-300 truncate" title={item.topic}>{item.topic}</span>
+                              <span className="font-mono text-slate-400 shrink-0">
+                                {t("quiz.weakTopicsAccuracy", { percent: item.accuracy, n: item.attempts })}
+                              </span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden" aria-hidden="true">
+                              <div
+                                className={`h-full rounded-full ${item.accuracy >= 80 ? "bg-cyan-500" : item.accuracy >= 60 ? "bg-amber-500" : "bg-rose-500"}`}
+                                style={{ width: `${item.accuracy}%` }}
+                              />
+                            </div>
+                            {item.due > 0 && (
+                              <span className="block text-[10px] font-mono text-cyan-400">
+                                {t("quiz.weakTopicsDue", { n: item.due })}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
                   {/* Highlight: Nuove Domande Caricate */}
                   <div className="bg-slate-950/60 border border-cyan-500/20 p-4 rounded-lg space-y-3 shadow-inner" id="new_questions_highlight_box">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -1622,7 +1677,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {!hasPassed ? (
+                  {wrongQuestions.length > 0 ? (
                     /* Remediation Prompt */
                     <div className="bg-slate-950 border border-rose-500/20 p-5 rounded space-y-4" id="remediation_box">
                       <div className="flex items-start gap-3">
@@ -1643,28 +1698,40 @@ export default function App() {
                         ))}
                       </div>
 
-                      <div className="pt-2 border-t border-slate-800 flex justify-between items-center gap-4" id="remediation_actions">
+                      <div className="pt-2 border-t border-slate-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4" id="remediation_actions">
                         <p className="text-xs text-slate-400 max-w-[340px]">
                           {t("quiz.remediationOffer")}
                         </p>
-                        <button 
-                          id="trigger_remediation_btn"
-                          disabled={isGeneratingRemediation}
-                          onClick={handleStartRemediation}
-                          className="bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 text-white font-bold px-4 py-2 text-xs rounded transition-all flex items-center gap-1 shrink-0 shadow-md shadow-rose-600/10"
-                        >
-                          {isGeneratingRemediation ? (
-                            <>
-                              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                              {t("quiz.generating")}
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5" />
-                              {t("quiz.startAdaptive")}
-                            </>
-                          )}
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                          <button
+                            type="button"
+                            id="retry_mistakes_btn"
+                            onClick={handleRetryMistakes}
+                            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-4 py-2 text-xs rounded transition-all flex items-center justify-center gap-1"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            {t("quiz.retryMistakes")}
+                          </button>
+                          <button
+                            type="button"
+                            id="trigger_remediation_btn"
+                            disabled={isGeneratingRemediation}
+                            onClick={handleStartRemediation}
+                            className="bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 text-white font-bold px-4 py-2 text-xs rounded transition-all flex items-center justify-center gap-1 shadow-md shadow-rose-600/10"
+                          >
+                            {isGeneratingRemediation ? (
+                              <>
+                                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                {t("quiz.generating")}
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3.5 h-3.5" />
+                                {t("quiz.startAdaptive")}
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
 
                       {remediationError && (
