@@ -1151,6 +1151,21 @@ export default function App() {
                           </section>
                         </div>
 
+                        <section className="bg-slate-950/70 border border-slate-700 rounded-lg p-4 space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-cyan-400" />
+                            <h3 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">{t("study.appliedScenario")} · {DOMAIN_GUIDE.appliedScenario.title}</h3>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{t("study.scenarioChallenge")}</div>
+                            <p className="text-xs text-slate-300 leading-relaxed">{DOMAIN_GUIDE.appliedScenario.prompt}</p>
+                          </div>
+                          <div className="space-y-1 border-t border-slate-800 pt-3">
+                            <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{t("study.scenarioReasoning")}</div>
+                            <p className="text-xs text-slate-400 leading-relaxed">{DOMAIN_GUIDE.appliedScenario.reasoning}</p>
+                          </div>
+                        </section>
+
                         <section className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-3">
                           <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>
                           <ul className="grid sm:grid-cols-2 gap-2">

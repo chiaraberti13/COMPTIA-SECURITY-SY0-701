@@ -190,6 +190,9 @@ const it = {
   "study.studyPath": "Percorso di studio consigliato",
   "study.decisionPatterns": "Pattern decisionali d'esame",
   "study.connections": "Collegamenti tra domini",
+  "study.appliedScenario": "Scenario applicativo",
+  "study.scenarioChallenge": "Sfida",
+  "study.scenarioReasoning": "Percorso di soluzione",
   "study.readiness": "Verifica di padronanza",
 
   // Quiz start
@@ -476,6 +479,9 @@ const en: Record<UIKey, string> = {
   "study.studyPath": "Recommended study path",
   "study.decisionPatterns": "Exam decision patterns",
   "study.connections": "Cross-domain connections",
+  "study.appliedScenario": "Applied scenario",
+  "study.scenarioChallenge": "Challenge",
+  "study.scenarioReasoning": "Reasoning path",
   "study.readiness": "Mastery check",
 
   // Quiz start

@@ -9,6 +9,7 @@ export interface DomainGuide {
   studyPath: { title: string; rationale: string }[];
   decisionPatterns: string[];
   connections: string[];
+  appliedScenario: { title: string; prompt: string; reasoning: string };
   readinessChecks: string[];
 }
 
@@ -40,6 +41,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "PKI e gestione delle chiavi ricompaiono in TLS, autenticazione, protezione dei dati, incident response e continuità operativa.",
       "Il change management collega governance, configurazioni sicure, vulnerabilità introdotte e capacità di rollback.",
     ],
+    appliedScenario: {
+      title: "Pacchetto di configurazione alterato",
+      prompt: "Un team distribuisce configurazioni firmate agli appliance. L'hash del file ricevuto non coincide e la firma non è valida. Quale problema è dimostrato e qual è la FIRST action sicura?",
+      reasoning: "Integrità e autenticità non sono dimostrate: il pacchetto non va applicato. Blocca la distribuzione, preserva file e log, verifica certificato/catena e provenienza, quindi riparti dall'artefatto approvato tramite il processo di change management. Cifrare il file non correggerebbe una firma non valida.",
+    },
     readinessChecks: [
       "Sai distinguere categoria e tipo dello stesso controllo senza confonderli.",
       "Sai motivare la scelta tra hashing, MAC, firma digitale e cifratura.",
@@ -74,6 +80,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Indicatori, vulnerability management, SIEM e incident response diventano processi operativi nel D4.",
       "Threat intelligence, risk appetite e priorità di remediation dipendono da governance e rischio del D5.",
     ],
+    appliedScenario: {
+      title: "Compromissione cloud con persistenza",
+      prompt: "Dopo un login anomalo, un account crea una regola di inoltro email e autorizza un'app OAuth. Quali elementi correlare e quali controlli interrompono davvero l'attacco?",
+      reasoning: "Correla sign-in, MFA, audit della mailbox, consenso OAuth, IP/device e timeline. Contieni revocando sessioni e token, disabilitando o limitando l'account e rimuovendo regola e app malevola; poi correggi la causa con credenziali, policy di consenso, MFA resistente al phishing e monitoring. Il solo reset password può lasciare validi token e persistenza.",
+    },
     readinessChecks: [
       "Sai ricostruire una kill chain essenziale partendo da log e sintomi.",
       "Sai distinguere una vulnerabilità da un indicatore della sua exploitation.",
@@ -107,6 +118,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Le vulnerabilità del D2 permettono di valutare superficie d'attacco e controlli compensativi dell'architettura.",
       "Monitoring e IAM del D4 rendono operativi zero trust e segmentation; BIA e governance del D5 stabiliscono i requisiti di resilienza.",
     ],
+    appliedScenario: {
+      title: "Servizio ibrido con RPO stretto",
+      prompt: "Un portale critico usa API pubbliche e un database on-premises. Il BIA richiede RTO di 2 ore e RPO di 15 minuti. Quali decisioni architetturali sono necessarie?",
+      reasoning: "Separa tier pubblico, applicativo e dati con flussi allowlist; applica identità workload e logging centralizzato. Replica o esegui backup con frequenza capace di rispettare 15 minuti e predisponi capacità alternativa testata entro 2 ore. Un backup giornaliero o un sito cold non soddisfano automaticamente gli obiettivi, anche se riducono il costo.",
+    },
     readinessChecks: [
       "Sai delimitare responsabilità cliente/provider in IaaS, PaaS e SaaS.",
       "Sai scegliere tra segmentazione, isolamento, ridondanza e recovery in base al requisito.",
@@ -145,6 +161,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "TTP, vulnerabilità e indicatori del D2 alimentano detection engineering, threat hunting e prioritizzazione.",
       "Architettura del D3 determina log disponibili e punti di enforcement; governance del D5 determina escalation, retention, evidence handling e reporting.",
     ],
+    appliedScenario: {
+      title: "PowerShell e beacon DNS",
+      prompt: "EDR segnala PowerShell offuscato su una workstation e il SIEM mostra query DNS periodiche verso un dominio appena registrato. Qual è la sequenza operativa corretta?",
+      reasoning: "Valida e correla processo, utente, parent process, DNS, proxy e autenticazioni; se l'attività è confermata, isola l'host preservando le evidenze richieste. Determina lo scope su altri endpoint, eradica persistenza e causa iniziale, ripristina da stato fidato e monitora recidive. Cancellare subito il file può distruggere evidenza e non interrompere credenziali o persistenza altrove.",
+    },
     readinessChecks: [
       "Sai ordinare le fasi di incident response e giustificare la FIRST action.",
       "Sai correlare almeno tre fonti di log su una timeline coerente.",
@@ -181,6 +202,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "BIA, RTO, RPO e MTD definiscono i requisiti che l'architettura resiliente del D3 deve realizzare e il D4 deve testare.",
       "Privacy, retention, legal hold e contratti influenzano logging, forensics, cloud, gestione dei dati e risposta agli incidenti.",
     ],
+    appliedScenario: {
+      title: "Fornitore che tratta dati personali",
+      prompt: "Un nuovo SaaS elaborerà dati personali critici. Il questionario è positivo, ma il contratto non specifica notifica degli incidenti né cancellazione dei dati. Si può approvare il rischio?",
+      reasoning: "La due diligence tecnica non sostituisce requisiti contrattuali e privacy. Registra il rischio, definisci DPA, tempi di notifica, retention/cancellazione, subprocessor, diritto di audit, ritorno dei dati e responsabilità; valuta i controlli residui. Solo l'autorità designata può accettare il rischio residuo, e non può derogare a un obbligo legale applicabile.",
+    },
     readinessChecks: [
       "Sai calcolare SLE, ARO e ALE e interpretarne i limiti decisionali.",
       "Sai distinguere risk appetite, tolerance, threshold, rischio inerente e residuo.",
@@ -218,6 +244,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "PKI and key management reappear in TLS, authentication, data protection, incident response, and business continuity.",
       "Change management connects governance, secure configurations, introduced vulnerabilities, and rollback capability.",
     ],
+    appliedScenario: {
+      title: "Altered configuration package",
+      prompt: "A team distributes signed configurations to appliances. The received file's hash does not match and its signature is invalid. What problem is demonstrated, and what is the safe FIRST action?",
+      reasoning: "Integrity and authenticity have not been established, so the package must not be applied. Stop distribution, preserve the file and logs, verify the certificate, chain, and origin, then restart from the approved artifact through change management. Encrypting the file would not correct an invalid signature.",
+    },
     readinessChecks: [
       "You can distinguish the category and type of the same control without confusing them.",
       "You can justify a choice among hashing, MAC, digital signature, and encryption.",
@@ -252,6 +283,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Indicators, vulnerability management, SIEM, and incident response become operational processes in D4.",
       "Threat intelligence, risk appetite, and remediation priority depend on governance and risk in D5.",
     ],
+    appliedScenario: {
+      title: "Cloud compromise with persistence",
+      prompt: "After an anomalous sign-in, an account creates an email forwarding rule and authorizes an OAuth app. Which evidence should be correlated, and which controls actually interrupt the attack?",
+      reasoning: "Correlate sign-in and MFA events, mailbox audit, OAuth consent, IP/device, and timeline. Contain by revoking sessions and tokens, disabling or restricting the account, and removing the malicious rule and app; then correct the cause with credential action, consent policy, phishing-resistant MFA, and monitoring. A password reset alone may leave tokens and persistence valid.",
+    },
     readinessChecks: [
       "You can reconstruct an essential attack chain from logs and symptoms.",
       "You can distinguish a vulnerability from an indicator of its exploitation.",
@@ -285,6 +321,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "D2 vulnerabilities help evaluate architectural attack surface and compensating controls.",
       "D4 monitoring and IAM operationalize zero trust and segmentation; D5 BIA and governance set resilience requirements.",
     ],
+    appliedScenario: {
+      title: "Hybrid service with a tight RPO",
+      prompt: "A critical portal uses public APIs and an on-premises database. The BIA requires a two-hour RTO and a 15-minute RPO. Which architectural decisions are necessary?",
+      reasoning: "Separate public, application, and data tiers with allowlisted flows; apply workload identity and centralized logging. Replicate or back up frequently enough to meet 15 minutes and provide tested alternate capacity within two hours. A daily backup or cold site does not automatically meet the objectives, even if it lowers cost.",
+    },
     readinessChecks: [
       "You can delimit customer and provider responsibilities in IaaS, PaaS, and SaaS.",
       "You can choose among segmentation, isolation, redundancy, and recovery based on the requirement.",
@@ -323,6 +364,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "D2 TTPs, vulnerabilities, and indicators feed detection engineering, threat hunting, and prioritization.",
       "D3 architecture determines available logs and enforcement points; D5 governance determines escalation, retention, evidence handling, and reporting.",
     ],
+    appliedScenario: {
+      title: "PowerShell and DNS beaconing",
+      prompt: "EDR flags obfuscated PowerShell on a workstation, and the SIEM shows periodic DNS queries to a newly registered domain. What is the correct operational sequence?",
+      reasoning: "Validate and correlate the process, user, parent process, DNS, proxy, and authentication data; if confirmed, isolate the host while preserving required evidence. Scope other endpoints, eradicate persistence and the initial cause, restore from trusted state, and monitor for recurrence. Immediately deleting the file can destroy evidence and may not interrupt stolen credentials or persistence elsewhere.",
+    },
     readinessChecks: [
       "You can order incident-response phases and justify the FIRST action.",
       "You can correlate at least three log sources into a coherent timeline.",
@@ -359,6 +405,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "BIA, RTO, RPO, and MTD define requirements that D3 resilient architecture must implement and D4 must test.",
       "Privacy, retention, legal hold, and contracts affect logging, forensics, cloud, data management, and incident response.",
     ],
+    appliedScenario: {
+      title: "Vendor processing personal data",
+      prompt: "A new SaaS will process critical personal data. Its questionnaire is positive, but the contract omits incident notification and data deletion. Can the risk be approved?",
+      reasoning: "Technical due diligence does not replace contractual and privacy requirements. Record the risk and define the DPA, notification timelines, retention/deletion, subprocessors, audit rights, data return, and liability; then assess residual controls. Only the designated authority may accept residual risk, and it cannot waive an applicable legal obligation.",
+    },
     readinessChecks: [
       "You can calculate SLE, ARO, and ALE and interpret their decision limits.",
       "You can distinguish risk appetite, tolerance, threshold, and inherent and residual risk.",

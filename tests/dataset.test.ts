@@ -658,6 +658,7 @@ describe("domain learning guides", () => {
       expect(enGuide.decisionPatterns).toHaveLength(itGuide.decisionPatterns.length);
       expect(enGuide.connections).toHaveLength(itGuide.connections.length);
       expect(enGuide.readinessChecks).toHaveLength(itGuide.readinessChecks.length);
+      expect(Object.keys(enGuide.appliedScenario)).toEqual(Object.keys(itGuide.appliedScenario));
     }
   });
 
@@ -671,6 +672,11 @@ describe("domain learning guides", () => {
       if (guide.decisionPatterns.length < 3) broken.push(`D${d}: decision patterns`);
       if (guide.connections.length < 3) broken.push(`D${d}: connections`);
       if (guide.readinessChecks.length < 3) broken.push(`D${d}: readiness checks`);
+      if (
+        !guide.appliedScenario.title.trim() ||
+        guide.appliedScenario.prompt.trim().length < 80 ||
+        guide.appliedScenario.reasoning.trim().length < 180
+      ) broken.push(`D${d}: applied scenario`);
       if (guide.objectives.some((o) => !o.outcome.trim())) broken.push(`D${d}: objective outcome`);
       if (guide.studyPath.some((step) => !step.title.trim() || !step.rationale.trim())) broken.push(`D${d}: empty study step`);
       if ([...guide.decisionPatterns, ...guide.connections, ...guide.readinessChecks].some((text) => !text.trim())) broken.push(`D${d}: empty list item`);
