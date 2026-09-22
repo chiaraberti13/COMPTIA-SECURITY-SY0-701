@@ -183,6 +183,14 @@ const it = {
   "study.askPrompt": 'Spiegami approfonditamente l\'argomento "{name}" con un esempio pratico aziendale e consigli d\'esame.',
   "study.scrollTop": "Torna all'inizio",
   "study.scrollBottom": "Vai in fondo",
+  "study.domainGuide": "Guida ragionata al dominio",
+  "study.officialWeight": "Peso esame: {weight}%",
+  "study.guidePurpose": "Perché conta",
+  "study.objectiveMap": "Obiettivi e risultati attesi",
+  "study.studyPath": "Percorso di studio consigliato",
+  "study.decisionPatterns": "Pattern decisionali d'esame",
+  "study.connections": "Collegamenti tra domini",
+  "study.readiness": "Verifica di padronanza",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",
@@ -461,6 +469,14 @@ const en: Record<UIKey, string> = {
   "study.askPrompt": 'Explain the topic "{name}" in depth with a practical business example and exam tips.',
   "study.scrollTop": "Back to top",
   "study.scrollBottom": "Go to bottom",
+  "study.domainGuide": "Reasoned domain guide",
+  "study.officialWeight": "Exam weight: {weight}%",
+  "study.guidePurpose": "Why it matters",
+  "study.objectiveMap": "Objectives and expected outcomes",
+  "study.studyPath": "Recommended study path",
+  "study.decisionPatterns": "Exam decision patterns",
+  "study.connections": "Cross-domain connections",
+  "study.readiness": "Mastery check",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",

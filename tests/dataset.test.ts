@@ -14,6 +14,11 @@ import {
 import { SUBTOPIC_EN, QUESTION_EN } from "../src/data.en";
 import { SUBGROUP_MAP } from "../src/subgroups";
 import { getDomainQuestions, questionUid, domainOfQuestion } from "../src/localizedData";
+import {
+  DOMAIN_GUIDES_EN,
+  DOMAIN_GUIDES_IT,
+  OFFICIAL_DOMAIN_WEIGHTS,
+} from "../src/domainGuides";
 import type { Question } from "../src/types";
 
 const TOPICS_BY_DOMAIN = {
@@ -608,6 +613,68 @@ describe("SY0-701 blueprint coverage", () => {
         ? []
         : [`D${d}: ${(actual * 100).toFixed(1)}% vs ${(weights[d] * 100).toFixed(0)}%`];
     });
+    expect(broken).toEqual([]);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Domain learning-guide integrity
+ * ------------------------------------------------------------------ */
+
+describe("domain learning guides", () => {
+  const EXPECTED_OBJECTIVES: Record<(typeof DOMAIN_IDS)[number], string[]> = {
+    1: ["1.1", "1.2", "1.3", "1.4"],
+    2: ["2.1", "2.2", "2.3", "2.4", "2.5"],
+    3: ["3.1", "3.2", "3.3", "3.4"],
+    4: ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9"],
+    5: ["5.1", "5.2", "5.3", "5.4", "5.5", "5.6"],
+  };
+
+  it("provides exactly one guide for every domain in both languages", () => {
+    expect(Object.keys(DOMAIN_GUIDES_IT).map(Number).sort()).toEqual([...DOMAIN_IDS]);
+    expect(Object.keys(DOMAIN_GUIDES_EN).map(Number).sort()).toEqual([...DOMAIN_IDS]);
+    for (const d of DOMAIN_IDS) {
+      expect(DOMAIN_GUIDES_IT[d].domainId).toBe(d);
+      expect(DOMAIN_GUIDES_EN[d].domainId).toBe(d);
+    }
+  });
+
+  it("uses the official weights and covers every objective exactly once", () => {
+    for (const d of DOMAIN_IDS) {
+      expect(DOMAIN_GUIDES_IT[d].weight).toBe(OFFICIAL_DOMAIN_WEIGHTS[d - 1]);
+      expect(DOMAIN_GUIDES_IT[d].objectives.map((o) => o.code)).toEqual(EXPECTED_OBJECTIVES[d]);
+      expect(duplicates(DOMAIN_GUIDES_IT[d].objectives.map((o) => o.code))).toEqual([]);
+    }
+    expect(OFFICIAL_DOMAIN_WEIGHTS.reduce((sum, weight) => sum + weight, 0)).toBe(100);
+  });
+
+  it("keeps the Italian source and English guide structurally aligned", () => {
+    for (const d of DOMAIN_IDS) {
+      const itGuide = DOMAIN_GUIDES_IT[d];
+      const enGuide = DOMAIN_GUIDES_EN[d];
+      expect(enGuide.weight).toBe(itGuide.weight);
+      expect(enGuide.objectives.map((o) => o.code)).toEqual(itGuide.objectives.map((o) => o.code));
+      expect(enGuide.studyPath).toHaveLength(itGuide.studyPath.length);
+      expect(enGuide.decisionPatterns).toHaveLength(itGuide.decisionPatterns.length);
+      expect(enGuide.connections).toHaveLength(itGuide.connections.length);
+      expect(enGuide.readinessChecks).toHaveLength(itGuide.readinessChecks.length);
+    }
+  });
+
+  it.each(["it", "en"] as const)("contains complete, substantive %s guide sections", (lang) => {
+    const guides = lang === "it" ? DOMAIN_GUIDES_IT : DOMAIN_GUIDES_EN;
+    const broken: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      const guide = guides[d];
+      if (!guide.title.trim() || guide.purpose.trim().length < 120) broken.push(`D${d}: title/purpose`);
+      if (guide.studyPath.length < 4) broken.push(`D${d}: study path`);
+      if (guide.decisionPatterns.length < 3) broken.push(`D${d}: decision patterns`);
+      if (guide.connections.length < 3) broken.push(`D${d}: connections`);
+      if (guide.readinessChecks.length < 3) broken.push(`D${d}: readiness checks`);
+      if (guide.objectives.some((o) => !o.outcome.trim())) broken.push(`D${d}: objective outcome`);
+      if (guide.studyPath.some((step) => !step.title.trim() || !step.rationale.trim())) broken.push(`D${d}: empty study step`);
+      if ([...guide.decisionPatterns, ...guide.connections, ...guide.readinessChecks].some((text) => !text.trim())) broken.push(`D${d}: empty list item`);
+    }
     expect(broken).toEqual([]);
   });
 });

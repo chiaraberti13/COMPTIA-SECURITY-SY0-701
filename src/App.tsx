@@ -38,6 +38,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 import { getSubgroupForSubtopic } from "./subgroups";
+import { getDomainGuide } from "./domainGuides";
 import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
 import {
   SECONDS_PER_QUESTION,
@@ -90,6 +91,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<"studio" | "quiz" | "glossary">("studio");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [activeDomain, setActiveDomain] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const DOMAIN_GUIDE = useMemo(() => getDomainGuide(activeDomain, lang), [activeDomain, lang]);
   const [selectedSubtopic, setSelectedSubtopic] = useState<Subtopic>(DOMAIN_1_TOPICS[0].subtopics[0]);
   // The AI panel is 380px wide: opening it by default on a phone would leave
   // no room for the content it is supposed to comment on.
@@ -1072,6 +1074,96 @@ export default function App() {
 
                 return (
                   <div className="max-w-3xl mx-auto space-y-8" id="study_content_container">
+
+                    {/* Domain-level learning guide: orientation before individual concepts. */}
+                    <details className="group bg-slate-900 border border-cyan-900/50 rounded-lg shadow-md overflow-hidden" id={`domain_guide_${activeDomain}`}>
+                      <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="p-2 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shrink-0">
+                            <GraduationCap className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">{t("study.domainGuide")}</div>
+                            <h2 className="text-base font-bold text-slate-100 truncate">{DOMAIN_GUIDE.title}</h2>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="hidden sm:inline-flex text-[10px] font-mono font-bold text-cyan-300 bg-cyan-950/40 border border-cyan-900 px-2.5 py-1 rounded-full">
+                            {t("study.officialWeight", { weight: DOMAIN_GUIDE.weight })}
+                          </span>
+                          <ChevronRight className="w-4 h-4 text-slate-400 transition-transform group-open:rotate-90" />
+                        </div>
+                      </summary>
+
+                      <div className="border-t border-slate-800 p-5 sm:p-6 space-y-7">
+                        <section className="space-y-2">
+                          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.guidePurpose")}</h3>
+                          <p className="text-sm text-slate-300 leading-relaxed border-l-2 border-cyan-500 pl-4">{DOMAIN_GUIDE.purpose}</p>
+                        </section>
+
+                        <section className="space-y-3">
+                          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.objectiveMap")}</h3>
+                          <div className="grid gap-2">
+                            {DOMAIN_GUIDE.objectives.map((objective) => (
+                              <div key={objective.code} className="flex gap-3 bg-slate-950/70 border border-slate-800 rounded-md p-3">
+                                <span className="font-mono font-bold text-cyan-400 text-xs shrink-0">{objective.code}</span>
+                                <p className="text-xs text-slate-300 leading-relaxed">{objective.outcome}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        <section className="space-y-3">
+                          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.studyPath")}</h3>
+                          <div className="grid sm:grid-cols-2 gap-3">
+                            {DOMAIN_GUIDE.studyPath.map((step) => (
+                              <div key={step.title} className="bg-slate-950/40 border border-slate-800 rounded-md p-3.5">
+                                <h4 className="text-xs font-bold text-cyan-300 mb-1.5">{step.title}</h4>
+                                <p className="text-xs text-slate-400 leading-relaxed">{step.rationale}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        <div className="grid md:grid-cols-2 gap-5">
+                          <section className="space-y-3">
+                            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.decisionPatterns")}</h3>
+                            <ul className="space-y-2">
+                              {DOMAIN_GUIDE.decisionPatterns.map((pattern) => (
+                                <li key={pattern} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                                  <Sparkles className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                                  <span>{pattern}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+
+                          <section className="space-y-3">
+                            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.connections")}</h3>
+                            <ul className="space-y-2">
+                              {DOMAIN_GUIDE.connections.map((connection) => (
+                                <li key={connection} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                                  <ArrowRight className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                                  <span>{connection}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+                        </div>
+
+                        <section className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-3">
+                          <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>
+                          <ul className="grid sm:grid-cols-2 gap-2">
+                            {DOMAIN_GUIDE.readinessChecks.map((check) => (
+                              <li key={check} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                                <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                                <span>{check}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+                      </div>
+                    </details>
                     
                     {/* Topic Header Card */}
                     <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg relative overflow-hidden shadow-md" id="topic_hero_card">
