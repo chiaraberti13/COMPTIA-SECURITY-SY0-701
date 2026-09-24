@@ -10,7 +10,7 @@ import { factDrift, strings } from "./helpers/languageFacts";
  */
 
 const DOMAIN_IDS = [1, 2, 3, 4, 5] as const;
-const ENRICHED_DOMAINS = [1, 2] as const;
+const ENRICHED_DOMAINS = [1, 2, 3] as const;
 
 /**
  * Official SY0-701 sub-topics per objective. Each must be named in the English
@@ -76,6 +76,34 @@ const OFFICIAL_SUBTOPICS: Record<string, string[]> = {
     "encryption", "monitoring", "least privilege", "configuration enforcement", "decommissioning",
     "installation of endpoint protection", "host-based firewall", "host-based intrusion prevention system",
     "disabling ports/protocols", "default password changes", "removal of unnecessary software",
+  ],
+  "3.1": [
+    "responsibility matrix", "hybrid considerations", "third-party vendors", "infrastructure as code", "serverless",
+    "microservices", "physical isolation", "air-gapped", "logical segmentation", "software-defined networking",
+    "on-premises", "centralized vs decentralized", "containerization", "virtualization", "IoT",
+    "industrial control systems", "SCADA", "real-time operating system", "embedded systems", "high availability",
+    "availability", "resilience", "cost", "responsiveness", "scalability", "ease of deployment", "risk transference",
+    "ease of recovery", "patch availability", "inability to patch", "power", "compute",
+  ],
+  "3.2": [
+    "device placement", "security zones", "attack surface", "connectivity", "fail-open", "fail-closed",
+    "active vs passive", "inline vs tap/monitor", "jump server", "proxy server", "IPS/IDS", "load balancer",
+    "sensors", "802.1X", "EAP", "web application firewall", "unified threat management",
+    "next-generation firewall", "layer 4/layer 7", "VPN", "remote access", "tunneling", "TLS", "IPSec", "SD-WAN",
+    "secure access service edge", "selection of effective controls",
+  ],
+  "3.3": [
+    "regulated", "trade secret", "intellectual property", "legal information", "financial information",
+    "human- and non-human-readable", "sensitive", "confidential", "public", "restricted", "private", "critical",
+    "data at rest", "data in transit", "data in use", "data sovereignty", "geolocation", "geographic restrictions",
+    "encryption", "hashing", "masking", "tokenization", "obfuscation", "segmentation", "permission restrictions",
+  ],
+  "3.4": [
+    "load balancing vs clustering", "hot", "cold", "warm", "geographic dispersion", "platform diversity",
+    "multi-cloud systems", "continuity of operations", "capacity planning", "people", "technology",
+    "infrastructure", "tabletop exercises", "fail over", "simulation", "parallel processing", "onsite/offsite",
+    "frequency", "encryption", "snapshots", "recovery", "replication", "journaling", "generators",
+    "uninterruptible power supply",
   ],
 };
 
