@@ -168,19 +168,18 @@ Un'attività è completata quando:
 Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle senza metodo è il modo più rapido per rompere un'app che funziona; lasciarle aperte accumula debito e vulnerabilità. Le regole seguenti bilanciano le due cose.
 
 - [x] **P0 — Smoke test di avvio in produzione nella CI:** `scripts/smoke-test.ts` (`npm run smoke`) avvia `dist/server.cjs` con `NODE_ENV=production` e verifica pagina dell'app, CSP, `nosniff`, assenza di `X-Powered-By`, fallback della SPA e risposta 400 delle due API; eseguito dalla CI dopo la build. Verificato che fallisce con Express 5 e la vecchia rotta `"*"` (`PathError: Missing parameter name`) — 2026-09-24.
-- [ ] **P0 — Smistare le 6 PR aperte di Dependabot**, una alla volta e dopo lo smoke test: **M**
+- [ ] 🟡 **P0 — Smistare le 6 PR aperte di Dependabot:** ognuna verificata il 2026-09-24 in una copia separata del repository, sopra le correzioni di questo branch, con `npm ci`, typecheck, lint, test, build e smoke test. Resta da integrarle, **in quest'ordine**: **M**
 
-  | PR di Dependabot | Tipo | Rischio verificato | Azione |
+  | Ordine | PR di Dependabot | Esito della verifica | Prerequisito |
   |---|---|---|---|
-  | Gruppo npm minor/patch (10 pacchetti) | minor/patch | esbuild passa da 0.25 a 0.28: nelle versioni 0.x anche un salto "minor" può rompere la build | Integrare se CI e smoke test sono verdi |
-  | Actions `checkout` e `setup-node` a v7 | major | Il commento di versione è presente, quindi `tests/workflows.test.ts` passa | Leggere le note di rilascio, integrare se la CI è verde |
-  | `express` 4 → 5 e `@types/express` | major | `server.ts` registra `app.get("*", …)`: in Express 5 un `*` senza nome non è più valido e **impedisce l'avvio in produzione**, mentre test e build restano verdi | Non integrare così com'è: prima la rotta `"/{*splat}"`, lo smoke test e la verifica degli errori asincroni |
-  | `vite` 6 → 8 | major | Vite 8 cambia il bundler interno: verificare `build.rollupOptions.output.manualChunks` in `vite.config.ts` e la dimensione dei chunk dei dataset | Integrare insieme a plugin-react 6, dopo la build e lo smoke test |
-  | `@vitejs/plugin-react` 5 → 6 | major | Da allineare alla versione di Vite | Nella stessa PR di Vite 8 |
-  | `motion` 12 → 13 | major | Usato per le animazioni del pannello AI | Verificare le animazioni e cogliere l'occasione per `prefers-reduced-motion` |
+  | 1 | Gruppo npm minor/patch (10 pacchetti, esbuild 0.25 → 0.28) | ✅ tutto verde | Nessuno |
+  | 2 | `express` 4 → 5 e `@types/express` | ✅ tutto verde **dopo** due correzioni: la rotta `"*"` fermava l'avvio (`PathError: Missing parameter name`) e le API senza corpo rispondevano 502 invece di 400 | Correzioni di `server.ts` e smoke test di questo branch |
+  | 3 | `vite` 6 → 8 **insieme a** `@vitejs/plugin-react` 5 → 6 | ✅ tutto verde, build in circa 1 s invece di 4 s, nessun avviso | Gruppo minor/patch già integrato (Vite 8 richiede esbuild 0.27 o 0.28) e `vite.config.ts` con `import.meta.dirname`. Le due PR modificano lo stesso lockfile: integrare la prima, poi chiedere a Dependabot di aggiornare la seconda (`@dependabot rebase`) |
+  | 4 | `motion` 12 → 13 | ✅ tutto verde; da controllare a vista l'animazione del pannello AI | Nessuno |
+  | 5 | Actions `checkout` e `setup-node` a v7 | Non verificabile in locale; il commento di versione rispetta `tests/workflows.test.ts` | La CI della PR stessa deve essere verde su Node 22 e 24 |
 
 - [ ] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** aggiornamenti di sicurezza entro 48 ore; minor e patch entro 7 giorni se la CI è verde; ogni major in una PR dedicata, con lettura del changelog, smoke test e verifica manuale dell'area coinvolta. **S**
-- [ ] 🟡 **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); resta da integrare la PR di Dependabot e sfruttare la gestione nativa degli errori asincroni. **S**
+- [ ] 🟡 **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); anche le API senza corpo JSON rispondono 400 e non 502 con Express 5 (`req.body ?? {}`); resta da integrare la PR di Dependabot e sfruttare la gestione nativa degli errori asincroni. **S**
 - [ ] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S**
 
 #### Collaborazione e manutenzione
