@@ -39,7 +39,7 @@ CI runs these on Node 22 and 24, plus a separate security workflow (secret scan,
 The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is the English overlay. Domain guides live in `src/domainGuides.ts`.
 
 1. **Change both languages in the same pull request.** The tests check that every Italian sentence and its translation carry the same numbers, acronyms and literal tokens (`tests/languageParity.test.ts`). If a difference is only idiomatic, add it to the reviewed list in that test with a one-line reason.
-2. **A new question** needs: a scenario, 2–6 options, the correct `answerIndex` (and `answerIndexes` for "choose TWO"), and an explanation that names the correct options and discusses **every** wrong one. `tests/dataset.test.ts` enforces all of this.
+2. **A new question** needs: a scenario, 2–6 options, the correct `answerIndex` (and `answerIndexes` for "choose TWO"), and an explanation that names the correct options and discusses **every** wrong one. `tests/dataset.test.ts` enforces all of this. Its `topic` must be linked to SY0-701 objectives in `src/questionObjectives.ts` (a new topic needs a new entry), then run `npm run coverage-matrix` and commit the updated `docs/coverage-matrix.md`.
 3. **Cite the source** for regulatory statements, numbers that change over time and configuration advice: official CompTIA objectives, NIST, RFCs, OWASP, CIS or vendor documentation.
 4. **Separate exam theory from practice**: say when the exam simplifies something that works differently in real environments.
 5. Commands and examples must be safe to copy: no real credentials, no destructive command without a warning, no targets you are not authorized to test.
@@ -108,7 +108,7 @@ La CI li esegue su Node 22 e 24, insieme a un workflow di sicurezza separato (ri
 Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è la sovrapposizione inglese. Le guide di dominio sono in `src/domainGuides.ts`.
 
 1. **Modifica entrambe le lingue nella stessa pull request.** I test verificano che ogni frase italiana e la sua traduzione riportino gli stessi numeri, sigle e token letterali (`tests/languageParity.test.ts`). Se una differenza è solo idiomatica, aggiungila all'elenco revisionato di quel test con una riga di motivazione.
-2. **Una nuova domanda** richiede: uno scenario, da 2 a 6 opzioni, l'`answerIndex` corretto (e `answerIndexes` per le domande "scegli DUE") e una spiegazione che nomini le opzioni corrette e discuta **ogni** opzione errata. `tests/dataset.test.ts` impone tutto questo.
+2. **Una nuova domanda** richiede: uno scenario, da 2 a 6 opzioni, l'`answerIndex` corretto (e `answerIndexes` per le domande "scegli DUE") e una spiegazione che nomini le opzioni corrette e discuta **ogni** opzione errata. `tests/dataset.test.ts` impone tutto questo. Il suo `topic` deve essere collegato agli obiettivi SY0-701 in `src/questionObjectives.ts` (un topic nuovo richiede una nuova voce); poi esegui `npm run coverage-matrix` e includi nel commit `docs/coverage-matrix.md` aggiornato.
 3. **Cita la fonte** per affermazioni normative, numeri che cambiano nel tempo e consigli di configurazione: obiettivi ufficiali CompTIA, NIST, RFC, OWASP, CIS o documentazione dei produttori.
 4. **Separa teoria d'esame e pratica**: indica quando l'esame semplifica qualcosa che nella realtà funziona diversamente.
 5. Comandi ed esempi devono essere sicuri da copiare: nessuna credenziale reale, nessun comando distruttivo senza avvertenza, nessun bersaglio che non si è autorizzati a testare.

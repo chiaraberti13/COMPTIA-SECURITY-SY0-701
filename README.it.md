@@ -279,6 +279,10 @@ aggiornamenti del programma d'esame. Verifica sempre sulle **fonti ufficiali Com
 In caso di divergenza fra queste note e la documentazione ufficiale CompTIA, **fa fede
 sempre la documentazione ufficiale**.
 
+La copertura di ogni obiettivo ufficiale (numero di domande per livello cognitivo ed esercizi
+guidati) è pubblicata in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generata dal
+dataset e verificata dalla CI.
+
 ---
 
 <p align="center">

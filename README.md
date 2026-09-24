@@ -279,6 +279,10 @@ Always verify against **official CompTIA sources**:
 Where these notes and CompTIA's official documentation disagree, **the official
 documentation always prevails**.
 
+How every official objective is covered (number of questions by cognitive level and guided
+exercises) is published in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generated
+from the dataset and checked by CI.
+
 ---
 
 <p align="center">

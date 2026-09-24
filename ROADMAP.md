@@ -31,7 +31,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 
 | Area | Già presente | Gap principale |
 |---|---|---|
-| Contenuti | 5 domini, checklist, ~550 voci di glossario, banca domande con scenario; **guide di dominio complete** per tutti e 5 i domini (ogni sotto-argomento ufficiale, 30 tabelle comparative, 40 errori comuni, 33 esercizi guidati), imposte da `tests/domainGuides.test.ts` | Le domande non dichiarano l'obiettivo (`1.1`…`5.6`) a cui sono collegate; nessuna data di revisione né fonte per voce |
+| Contenuti | 5 domini, checklist, ~550 voci di glossario, banca domande con scenario; **guide di dominio complete** per tutti e 5 i domini (ogni sotto-argomento ufficiale, 30 tabelle comparative, 40 errori comuni, 33 esercizi guidati), imposte da `tests/domainGuides.test.ts` | Nessuna data di revisione né fonte per voce; gli obiettivi 1.1, 2.3 e 5.6 hanno meno domande degli altri (vedi `docs/coverage-matrix.md`) |
 | Bilinguismo | Italiano sorgente di verità, overlay inglese con fallback, test di parità strutturale e **di contenuto** (stessi numeri, sigle e token in 7.979 coppie di frasi e in tutte le guide) | Il controllo automatico non coglie differenze di significato senza numeri o sigle; nessun segnale di traduzione da rivedere dopo una modifica al testo italiano |
 | Qualità contenuti | `tests/dataset.test.ts`: ID univoci, spiegazione di ogni distrattore, scenario obbligatorio, copertura di ogni obiettivo, pesi dei domini (±5%), maggioranza di domande di livello superiore | Nessun changelog/errata pubblico delle correzioni sostanziali |
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
@@ -86,8 +86,8 @@ Un'attività è completata quando:
 
 - [x] **P0 — Inventario del repository:** mappati directory, script, workflow, dipendenze e asset — 2026-09-24, sezione [Stato attuale](#-stato-attuale--audit-del-2026-09-24).
 - [x] **P0 — Mappatura degli obiettivi SY0-701 a livello di gruppo tematico:** ogni obiettivo numerato è coperto (test `covers every numbered objective in the five official domains`).
-- [ ] 🟡 **P0 — Mappatura degli obiettivi a livello di domanda:** aggiungere a `Question` un campo `objectives: string[]` (es. `["2.4"]`) e un test che lo renda obbligatorio. **M**
-- [ ] **P0 — Analisi dei gap:** identificare obiettivi con poche domande, sottovoci senza esempio pratico e contenuti non verificabili, usando la mappatura per domanda. **M**
+- [x] **P0 — Mappatura degli obiettivi a livello di domanda:** tutte le 664 domande sono collegate agli obiettivi in `src/questionObjectives.ts`, tramite una mappa revisionata `(dominio, topic) → obiettivi` e 4 eccezioni per singola domanda con motivazione, senza riscrivere i dataset. `tests/questionObjectives.test.ts` impone copertura completa, soli codici ufficiali, nessuna voce obsoleta e almeno 10 domande per obiettivo — 2026-09-24.
+- [ ] 🟡 **P0 — Analisi dei gap:** la matrice di copertura elenca gli obiettivi con meno domande (oggi 1.1 con 10, 2.3 e 5.6 con 13, 4.7 con 14, 4.4 con 16); restano da individuare sottovoci senza esempio pratico e contenuti non verificabili. **M**
 - [x] **P0 — Verifica linguistica strutturale:** test di parità IT/EN su ID, campi tradotti, intestazioni e annunci multi-risposta.
 - [ ] 🟡 **P0 — Baseline qualità:** registrare nel report numero di domande per dominio/obiettivo, stato Lighthouse (performance, accessibilità) e risultato di `npm audit`. **S**
 - [ ] **P0 — Threat model dell'applicazione e del repository:** STRIDE su browser → Express → Gemini, abuso dei costi AI, prompt injection, supply chain npm, workflow GitHub Actions, integrità dei progressi locali. **M**
@@ -157,7 +157,7 @@ Un'attività è completata quando:
 - [ ] **P1 — Test dell'API server:** con Supertest e client Gemini simulato: validazione input, limiti di dimensione, rate limit, gestione errori senza fuga di dettagli del provider. **M**
 - [ ] **P1 — Test dei componenti principali:** Testing Library per il flusso quiz (selezione, multi-risposta, timer, risultato) e per il cambio lingua. **M**
 - [ ] **P1 — Soglia di copertura dei test** per la logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`), non per l'intero progetto. **S**
-- [ ] **P1 — Generare automaticamente la matrice di copertura:** uno script legge dataset e guide e produce `docs/coverage-matrix.md`; la CI fallisce se il file committato non è aggiornato. **M**
+- [x] **P1 — Generare automaticamente la matrice di copertura:** `npm run coverage-matrix` genera `docs/coverage-matrix.md` (domande per obiettivo e per livello cognitivo, esercizi guidati, priorità); un test fa fallire la CI se il file non è aggiornato — 2026-09-24.
 - [ ] **P1 — Job separati e con permessi minimi:** `quality` (typecheck, lint, test), `build`, `security`, `docs`, ognuno con messaggi d'errore leggibili.
 - [ ] **P1 — Rendere obbligatori i controlli principali sulle pull request** tramite branch protection.
 - [ ] **P2 — Anteprima per pull request e deploy dalla branch principale** (solo frontend statico + backend su piattaforma con secret gestiti).
@@ -258,7 +258,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **P0 — Copertura SY0-701 verificata da test:** ogni obiettivo numerato è coperto e la distribuzione delle domande resta entro ±5% dei pesi ufficiali.
 - [x] **P0 — Spiegazione di tutte le opzioni:** i test verificano che la spiegazione nomini le risposte corrette e discuta ogni distrattore, in IT e EN.
-- [ ] **P0 — Matrice di copertura per obiettivo pubblicata:** dominio, obiettivo, numero di domande, livelli cognitivi, sottovoci, data dell'ultima revisione (generata, vedi CI). **M**
+- [ ] 🟡 **P0 — Matrice di copertura per obiettivo pubblicata:** `docs/coverage-matrix.md`, collegata dai README — 2026-09-24. Manca la data dell'ultima revisione per voce, che dipende dai metadati di revisione dei contenuti.
 - [ ] **P0 — Distinguere fonti primarie e secondarie:** privilegiare obiettivi ufficiali CompTIA, NIST, RFC, OWASP, CIS e documentazione dei vendor.
 - [ ] **P0 — Citazioni verificabili:** ogni affermazione normativa, configurazione sensibile o dato soggetto a cambiamento indica fonte e data di consultazione.
 - [ ] **P0 — Revisionare gli esempi per evitare cattive pratiche:** nessuna credenziale reale, disabilitazione ingiustificata dei controlli o comando distruttivo copiabile senza avvertenze.
@@ -296,7 +296,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **P0 — README come landing page:** scopo, funzionalità, prerequisiti, installazione per sistema operativo, architettura e risoluzione problemi, in IT e EN.
 - [x] **P0 — Navigazione per i cinque domini:** stesso ordine e stessi nomi in checklist, guide, glossario e simulatore.
-- [ ] 🟡 **P0 — Rendere visibile la copertura:** oggi è verificata dai test ma non mostrata; esporre nel README e nell'app una tabella basata su obiettivi, non sul numero di file. **S**
+- [ ] 🟡 **P0 — Rendere visibile la copertura:** la matrice per obiettivo è pubblicata e collegata dai README (2026-09-24); resta da mostrarla nell'app, per esempio nella futura vista "Exam readiness". **S**
 - [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi sotto).
 - [ ] **P0 — Percorsi di studio:** principiante, ripasso rapido, preparazione all'esame e consolidamento pratico, come pagina iniziale guidata ("Da dove inizio?"). **M**
 - [ ] **P1 — Collegare prerequisiti e passi successivi:** ogni modulo indica cosa conoscere prima e dove proseguire.
@@ -371,7 +371,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 5. [x] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review (2026-09-24).
 6. [x] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`, arresto graduale (2026-09-24).
 7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
-8. [ ] Aggiungere il campo `objectives` alle domande con test obbligatorio, poi generare la matrice di copertura. **M**
+8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
 9. [ ] Test end-to-end con Playwright e `axe-core` su telefono e desktop; poi quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion`. **M**
 10. [ ] Aggiungere test API (Supertest) e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`. **M**
 11. [ ] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali. **M**
@@ -398,7 +398,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Area | Indicatore | Baseline 2026-09-24 | Target iniziale |
 |---|---|---|---|
 | Copertura | Obiettivi coperti da almeno una sottovoce | 100% (verificato da test) | 100% |
-| Copertura | Domande collegate esplicitamente a un obiettivo | 0% (campo assente) | 100% |
+| Copertura | Domande collegate esplicitamente a un obiettivo | 100% dal 2026-09-24 (era 0%) | 100% |
 | Qualità | Test automatici verdi su `main` | Sì | Sempre |
 | Qualità | Link interni validi | Non misurato | 100% |
 | Sicurezza | Segreti confermati nella branch principale | 0 su 130 commit (gitleaks 8.30.1, 2026-09-24) | 0 |
@@ -446,7 +446,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 
 ## ✅ Checklist per ogni nuovo contenuto
 
-- [ ] È collegato a uno o più obiettivi SY0-701 (campo `objectives` quando disponibile).
+- [ ] È collegato a uno o più obiettivi SY0-701 (per le domande: `src/questionObjectives.ts`, poi `npm run coverage-matrix`).
 - [ ] Dichiara prerequisiti, livello e risultati di apprendimento.
 - [ ] Usa fonti autorevoli e indica la data di verifica quando pertinente.
 - [ ] Distingue ciò che serve per l'esame da ciò che dipende dal contesto reale.
@@ -493,6 +493,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M2 | Workflow `security.yml`: gitleaks con `.gitleaks.toml`, `npm audit`, dependency review, CodeQL; convalidato con actionlint | Attività n. 5 | Completato |
 | 2026-09-24 | M3 | Hardening degli endpoint AI: timeout con `AbortSignal`, `maxOutputTokens` sulla chat, tetto giornaliero (`server/aiGuard.ts`), `/healthz`, arresto graduale, rimosso `User-Agent` del template; smoke test esteso a 8 controlli | Attività n. 6 | Completato |
 | 2026-09-24 | M1 | `CONTRIBUTING.md` bilingue con policy sulle dipendenze, `CHANGELOG.md`, moduli per issue, modello di PR, `CODEOWNERS` | Attività n. 7 | Completato |
+| 2026-09-24 | M5 | Tutte le 664 domande collegate agli obiettivi ufficiali (`src/questionObjectives.ts`), matrice di copertura generata e verificata in CI (`docs/coverage-matrix.md`) | Attività n. 8 | Completato |
 
 ---
 
