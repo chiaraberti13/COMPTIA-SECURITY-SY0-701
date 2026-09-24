@@ -10,7 +10,7 @@ import { factDrift, strings } from "./helpers/languageFacts";
  */
 
 const DOMAIN_IDS = [1, 2, 3, 4, 5] as const;
-const ENRICHED_DOMAINS = [1, 2, 3] as const;
+const ENRICHED_DOMAINS = [1, 2, 3, 4] as const;
 
 /**
  * Official SY0-701 sub-topics per objective. Each must be named in the English
@@ -104,6 +104,62 @@ const OFFICIAL_SUBTOPICS: Record<string, string[]> = {
     "infrastructure", "tabletop exercises", "fail over", "simulation", "parallel processing", "onsite/offsite",
     "frequency", "encryption", "snapshots", "recovery", "replication", "journaling", "generators",
     "uninterruptible power supply",
+  ],
+  "4.1": [
+    "establish", "deploy", "maintain", "mobile devices", "workstations", "switches", "routers",
+    "cloud infrastructure", "servers", "ICS/SCADA", "embedded systems", "RTOS", "IoT devices", "site surveys",
+    "heat maps", "mobile device management", "BYOD", "COPE", "CYOD", "cellular", "Wi-Fi", "Bluetooth", "WPA3",
+    "AAA/RADIUS", "cryptographic protocols", "authentication protocols", "input validation", "secure cookies",
+    "static code analysis", "code signing", "sandboxing", "monitoring",
+  ],
+  "4.2": [
+    "acquisition/procurement process", "ownership", "classification", "inventory", "enumeration", "sanitization",
+    "destruction", "certification", "data retention",
+  ],
+  "4.3": [
+    "vulnerability scan", "static analysis", "dynamic analysis", "package monitoring", "OSINT",
+    "proprietary/third-party", "information-sharing organization", "dark web", "penetration testing",
+    "responsible disclosure program", "bug bounty program", "system/process audit", "false positive",
+    "false negative", "prioritize", "CVSS", "CVE", "vulnerability classification", "exposure factor",
+    "environmental variables", "industry/organizational impact", "risk tolerance", "patching", "insurance",
+    "segmentation", "compensating controls", "exceptions and exemptions", "rescanning", "audit", "verification",
+    "reporting",
+  ],
+  "4.4": [
+    "systems", "applications", "infrastructure", "log aggregation", "alerting", "scanning", "reporting",
+    "archiving", "quarantine", "alert tuning", "Security Content Automation Protocol", "benchmarks",
+    "agents/agentless", "SIEM", "antivirus", "DLP", "SNMP traps", "NetFlow", "vulnerability scanners",
+  ],
+  "4.5": [
+    "rules", "access lists", "ports/protocols", "screened subnets", "trends", "signatures", "agent-based",
+    "centralized proxy", "URL scanning", "content categorization", "block rules", "reputation", "Group Policy",
+    "SELinux", "protocol selection", "port selection", "transport method", "DNS filtering", "DMARC", "DKIM",
+    "SPF", "gateway", "file integrity monitoring", "DLP", "network access control", "EDR/XDR",
+    "user behavior analytics",
+  ],
+  "4.6": [
+    "provisioning/de-provisioning user accounts", "permission assignments and implications", "identity proofing",
+    "federation", "single sign-on", "LDAP", "OAuth", "SAML", "interoperability", "attestation", "mandatory",
+    "discretionary", "role-based", "rule-based", "attribute-based", "time-of-day restrictions", "least privilege",
+    "biometrics", "hard/soft authentication tokens", "security keys", "something you know", "something you have",
+    "something you are", "somewhere you are", "length", "complexity", "reuse", "expiration", "age",
+    "password managers", "passwordless", "just-in-time permissions", "password vaulting", "ephemeral credentials",
+  ],
+  "4.7": [
+    "user provisioning", "resource provisioning", "guard rails", "security groups", "ticket creation", "escalation",
+    "enabling/disabling services and access", "continuous integration and testing", "integrations and APIs",
+    "efficiency/time saving", "enforcing baselines", "standard infrastructure configurations",
+    "scaling in a secure manner", "employee retention", "reaction time", "workforce multiplier", "complexity",
+    "cost", "single point of failure", "technical debt", "ongoing supportability",
+  ],
+  "4.8": [
+    "preparation", "detection", "analysis", "containment", "eradication", "recovery", "lessons learned",
+    "training", "tabletop exercise", "simulation", "root cause analysis", "threat hunting", "legal hold",
+    "chain of custody", "acquisition", "reporting", "preservation", "e-discovery",
+  ],
+  "4.9": [
+    "firewall logs", "application logs", "endpoint logs", "OS-specific security logs", "IPS/IDS logs",
+    "network logs", "metadata", "vulnerability scans", "automated reports", "dashboards", "packet captures",
   ],
 };
 

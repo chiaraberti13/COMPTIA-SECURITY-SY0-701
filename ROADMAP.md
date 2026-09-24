@@ -286,7 +286,7 @@ Un'attività è completata quando:
 
 #### Sistema editoriale e leggibilità
 
-- [ ] 🟡 **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completati i Domini 1, 2 e 3 (2026-09-24); da fare i Domini 4 e 5.
+- [ ] 🟡 **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completati i Domini 1, 2, 3 e 4 (2026-09-24); da fare il Dominio 5.
 - [ ] **P0 — Template coerenti** per sottovoce, confronto, procedura, comando, domanda, scenario e lab.
 - [ ] **P0 — Gerarchia dei titoli corretta:** un solo H1, sezioni brevi, ancore stabili e sommario per le pagine lunghe.
 - [ ] **P0 — Callout standard:** `Nota`, `Esame`, `Pratica`, `Attenzione`, `Errore comune`, `Approfondimento`.
@@ -456,6 +456,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | 2026-09-24 | M6 | Area di studio resa leggibile su mobile (pannello a piena altezza sotto la checklist) | Correzione layout | Completato |
 | 2026-09-24 | M5 | Guida del Dominio 2 arricchita (sotto-argomenti 2.1–2.5, 5 tabelle, 8 errori comuni, 6 esercizi); controllo automatico di parità IT/EN esteso a tutti i contenuti, con 9 disallineamenti corretti | Guida D2 | Completato |
 | 2026-09-24 | M5 | Guida del Dominio 3 arricchita: sotto-argomenti ufficiali 3.1–3.4, 6 tabelle (responsabilità cloud, apparati di rete, fail-open/fail-closed, siti alternativi, tecniche di copia, stati del dato), 8 errori comuni, 6 esercizi, in IT e EN con parità verificata | Guida D3 | Completato |
+| 2026-09-24 | M5 | Guida del Dominio 4 arricchita: sotto-argomenti ufficiali 4.1–4.9, 7 tabelle (modelli di accesso, dispositivi mobili, SPF/DKIM/DMARC, esiti di scansione, fine vita degli asset, fasi di IR, fonti dati), 8 errori comuni, 9 esercizi (uno per obiettivo), in IT e EN con parità verificata | Guida D4 | Completato |
 
 ---
 
