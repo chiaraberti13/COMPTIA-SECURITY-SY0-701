@@ -23,6 +23,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - The quiz announces whether an answer was right to screen readers, and animations follow the system "reduce motion" setting.
 - The AI Trainer always shows that answers can be wrong and must not contain personal data; AI-generated remediation questions are labelled as unreviewed.
 - The optional exam timer warns screen-reader users when one minute is left.
+- `docs/threat-model.md` (STRIDE analysis with controls, tests and residual risks) and `docs/adr/` with four architecture decision records.
 - `.github/workflows/docs.yml`: Markdown lint (`npm run lint:md`, also part of `npm run check`) and link checking with lychee: internal links and anchors on every change, external links weekly.
 
 ### Changed
@@ -35,6 +36,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Security
 
+- `TRUST_PROXY` sets how many reverse proxies the rate limit trusts (default 1). With `0`, a server that clients reach directly can no longer be tricked by a made-up `X-Forwarded-For` header into giving a fresh quota to every request.
 - The Content-Security-Policy allows styles, fonts and scripts from the app itself only: no `'unsafe-inline'`, no Google Fonts, plus `base-uri 'self'` and `form-action 'self'`. The fonts are bundled (Fontsource, SIL OFL 1.1), so no visitor's IP address reaches a third party. An end-to-end test fails on any policy violation or third-party request.
 
 ### Fixed

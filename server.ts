@@ -28,6 +28,13 @@ const GEMINI_TIMEOUT_MS = readLimit(process.env.GEMINI_TIMEOUT_MS, 30_000) || 30
  */
 const aiBudget = createDailyBudget(readLimit(process.env.AI_DAILY_LIMIT, 500));
 
+/**
+ * Reverse proxies in front of the server (Cloud Run, Vercel, nginx...). Set 0
+ * when clients connect directly, or the rate limit can be bypassed with a
+ * forged X-Forwarded-For header.
+ */
+const TRUST_PROXY_HOPS = readLimit(process.env.TRUST_PROXY, 1);
+
 async function startServer() {
   // PaaS platforms (Cloud Run, Render, Railway, Heroku) impose the port through
   // the environment and health-check the container on it.
@@ -38,6 +45,7 @@ async function startServer() {
     model: GEMINI_MODEL,
     timeoutMs: GEMINI_TIMEOUT_MS,
     budget: aiBudget,
+    trustProxyHops: TRUST_PROXY_HOPS,
     getApiKey: () => process.env.GEMINI_API_KEY,
     createClient: (apiKey) => new GoogleGenAI({ apiKey }),
   });

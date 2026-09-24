@@ -213,4 +213,29 @@ describe("rate limiting", () => {
     const res = await post("/api/chat", { message: "3" });
     expect(res.status).toBe(429);
   });
+
+  /** Two chat requests, each claiming a different client in X-Forwarded-For. */
+  async function forgedPair(trustProxyHops: number | undefined) {
+    const { base } = await start(undefined, {
+      isProduction: true,
+      distPath: "/nonexistent",
+      rateLimit: { windowMs: 60_000, limit: 1 },
+      trustProxyHops,
+    });
+    const send = (ip: string) =>
+      fetch(`${base}/api/chat`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": ip },
+        body: JSON.stringify({ message: "hi" }),
+      });
+    return [(await send("203.0.113.1")).status, (await send("203.0.113.2")).status];
+  }
+
+  it("behind one proxy (the default), limits each forwarded client separately", async () => {
+    expect(await forgedPair(undefined)).toEqual([200, 200]);
+  });
+
+  it("with TRUST_PROXY=0, ignores a forged X-Forwarded-For", async () => {
+    expect(await forgedPair(0)).toEqual([200, 429]);
+  });
 });

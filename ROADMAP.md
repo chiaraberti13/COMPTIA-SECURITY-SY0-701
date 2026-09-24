@@ -90,8 +90,8 @@ Un'attività è completata quando:
 - [ ] 🟡 **P0 — Analisi dei gap:** la matrice di copertura elenca gli obiettivi con meno domande (oggi 1.1 con 10, 2.3 e 5.6 con 13, 4.7 con 14, 4.4 con 16); restano da individuare sottovoci senza esempio pratico e contenuti non verificabili. **M**
 - [x] **P0 — Verifica linguistica strutturale:** test di parità IT/EN su ID, campi tradotti, intestazioni e annunci multi-risposta.
 - [ ] 🟡 **P0 — Baseline qualità:** registrare nel report numero di domande per dominio/obiettivo, stato Lighthouse (performance, accessibilità) e risultato di `npm audit`. **S**
-- [ ] **P0 — Threat model dell'applicazione e del repository:** STRIDE su browser → Express → Gemini, abuso dei costi AI, prompt injection, supply chain npm, workflow GitHub Actions, integrità dei progressi locali. **M**
-- [ ] **P1 — Registro decisionale:** ADR essenziali per dataset in TypeScript vs file di contenuto, strategia bilingue a overlay, scelta del provider AI e politica di persistenza solo locale. **S**
+- [x] **P0 — Threat model dell'applicazione e del repository:** [`docs/threat-model.md`](docs/threat-model.md), STRIDE su quattro confini (browser, Internet → server, server → Gemini, supply chain), con controlli, test che li verificano e rischi residui. Ha trovato un rischio reale: con `trust proxy` fisso a 1, un server esposto senza proxy permetteva di aggirare il rate limit con un `X-Forwarded-For` falso. Ora è configurabile con `TRUST_PROXY` e coperto da test — 2026-09-24.
+- [x] **P1 — Registro decisionale:** [`docs/adr/`](docs/adr/README.md) con modello e quattro ADR: dataset in TypeScript, bilingue a overlay, provider AI dietro proxy, persistenza solo locale — 2026-09-24.
 
 **Deliverable:** report di audit, matrice di copertura per obiettivo, threat model e backlog confermato.
 
@@ -115,8 +115,8 @@ Un'attività è completata quando:
   ├── CODEOWNERS                 # nuovo
   └── pull_request_template.md   # nuovo
   docs/
-  ├── adr/                       # nuovo: decisioni architetturali
-  ├── threat-model.md            # nuovo
+  ├── adr/                       # decisioni architetturali (dal 2026-09-24)
+  ├── threat-model.md            # STRIDE (dal 2026-09-24)
   └── coverage-matrix.md         # nuovo: generato da script
   labs/                          # nuovo, vedi "Laboratori pratici sicuri"
   scripts/                       # nuovo: generazione indici e report
@@ -502,6 +502,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M3/M6 | Avviso di trasparenza nel Trainer AI, etichetta sulle domande generate, annuncio dell'esito nella remediation, avviso di un minuto per il timer | Voci P1 AI e accessibilità | Completato |
 | 2026-09-24 | M2 | Workflow `docs.yml`: `markdownlint-cli2` e `lychee` (link interni offline a ogni modifica, esterni settimanali); README IT/EN con albero dell'architettura aggiornato | Voci P0 Markdown lint e link check | Completato |
 | 2026-09-24 | M3 | CSP senza `'unsafe-inline'` né origini esterne: font nel bundle, `base-uri` e `form-action`; test end-to-end sulle violazioni e sulle richieste verso altre origini | Voce P1 CSP | Completato |
+| 2026-09-24 | M0/M3 | Threat model STRIDE e quattro ADR; `TRUST_PROXY` configurabile contro l'aggiramento del rate limit con `X-Forwarded-For` falso | Voci P0 threat model e P1 registro decisionale | Completato |
 
 ---
 

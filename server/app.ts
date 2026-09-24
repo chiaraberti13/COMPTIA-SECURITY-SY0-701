@@ -37,6 +37,14 @@ export interface AppOptions {
   distPath?: string;
   /** Per-IP limit on /api; defaults to 30 requests every 15 minutes. */
   rateLimit?: { windowMs: number; limit: number };
+  /**
+   * Reverse proxies in front of the server in production, whose
+   * X-Forwarded-For is trusted; defaults to 1. With 0 the socket address is
+   * used, which is the only safe choice when clients reach the server
+   * directly: otherwise any client could send a made-up X-Forwarded-For and
+   * get a fresh rate-limit bucket on every request.
+   */
+  trustProxyHops?: number;
 }
 
 /** Upper bound on a single chat message, in characters. */
@@ -120,7 +128,7 @@ export function createApp(opts: AppOptions): express.Express {
     );
     // Behind a reverse proxy the client address arrives in X-Forwarded-For;
     // without this every request would share one rate-limit bucket.
-    app.set("trust proxy", 1);
+    app.set("trust proxy", opts.trustProxyHops ?? 1);
   }
 
   app.use(express.json({ limit: "64kb" }));

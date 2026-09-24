@@ -106,12 +106,18 @@ APP_URL="http://localhost:3000"
 # Optional — cost and resilience limits for the AI endpoints
 AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 turns the AI off
 GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
+TRUST_PROXY=1             # reverse proxies in front of Node; 0 if browsers connect directly
 ```
 
 `AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
 public deployment it caps what many different addresses can spend together. The counter
 lives in the server process, so with several instances the effective cap is the limit
 multiplied by the number of instances.
+
+`TRUST_PROXY` tells the rate limit where to read the client address. Keep `1` behind one
+reverse proxy (Cloud Run, Vercel, Render, a single nginx). Set `0` when browsers reach
+Node directly: otherwise a client can send a made-up `X-Forwarded-For` header and get a
+fresh quota on every request.
 
 > [!WARNING]
 > Never commit your `.env` to a public repository — it holds a private API credential.
