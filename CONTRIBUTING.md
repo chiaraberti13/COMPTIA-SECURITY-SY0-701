@@ -27,7 +27,7 @@ npm run dev               # http://localhost:3000
 ### Checks to run before a pull request
 
 ```bash
-npm run check             # typecheck + lint + all tests (CI runs the same)
+npm run check             # typecheck + lint (code and Markdown) + all tests (CI runs the same)
 npm run build             # production build
 npm run smoke             # starts the built server in production mode and probes it
 npm run e2e               # Playwright + axe at phone and desktop width (after build)
@@ -99,7 +99,7 @@ npm run dev               # http://localhost:3000
 ### Controlli da eseguire prima di una pull request
 
 ```bash
-npm run check             # typecheck + lint + tutti i test (la CI esegue gli stessi)
+npm run check             # typecheck + lint (codice e Markdown) + tutti i test (la CI esegue gli stessi)
 npm run build             # build di produzione
 npm run smoke             # avvia il server compilato in modalità produzione e lo verifica
 npm run e2e               # Playwright + axe a larghezza telefono e desktop (dopo la build)

@@ -151,8 +151,8 @@ Un'attività è completata quando:
 - [x] **P0 — Pipeline di base:** typecheck, lint, test Vitest e build su ogni push a `main` e su ogni pull request.
 - [x] **P0 — Validazione dei dati strutturati:** i dataset sono tipizzati e verificati da `tests/dataset.test.ts` (ID, opzioni, risposte, spiegazioni, scenari, parità IT/EN).
 - [x] **P0 — Aggiornare Node.js in CI e in `engines`:** CI su matrice Node 22 + 24 (al posto di Node 20, fuori supporto da aprile 2026), `.nvmrc` a 24 e README IT/EN allineati — 2026-09-24. Togliere Node 22 dalla matrice alla sua fine vita (aprile 2027).
-- [ ] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` su README, ROADMAP, SECURITY e futuri `docs/` e `labs/`. **S**
-- [ ] **P0 — Aggiungere link checking:** `lychee` su file Markdown con cache, retry e allowlist motivata. **S**
+- [x] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` 0.23.2 (versione esatta) con `.markdownlint-cli2.jsonc` su tutti i `.md` della radice, di `docs/` e di `.github/`; `npm run lint:md`, incluso in `npm run check` e nel workflow `docs.yml`. La dipendenza `smol-toml` 1.7.0 (GHSA-7w5x-hrqm-74c2, DoS) è forzata a 1.8.0 con `overrides` — 2026-09-24.
+- [x] **P0 — Aggiungere link checking:** `lychee` 0.24.2 (`lychee.toml`, retry, esclusioni motivate): link interni e ancore `#sezione` offline a ogni push e PR, link esterni ogni lunedì e su richiesta, così un sito remoto irraggiungibile non blocca PR estranee — 2026-09-24.
 - [ ] **P1 — Aggiungere spell checking tecnico:** `cspell` con dizionari italiano e inglese e un dizionario di progetto per acronimi, protocolli e vendor. **M**
 - [x] **P1 — Test dell'API server:** `tests/api.test.ts`, 15 test sull'app reale con un finto client Gemini (senza rete e senza costi): validazione e limiti degli input, cronologia ridotta e troncata, guardia anti-injection nel prompt di sistema, chiave mancante, budget esaurito (503) e non consumato dalle richieste invalide, timeout reale (504), errori del provider non esposti (502), output della remediation trattato come non attendibile, rate limit (429). Nessuna nuova dipendenza: `fetch` al posto di Supertest — 2026-09-24.
 - [ ] 🟡 **P1 — Test dei componenti principali:** Testing Library e jsdom configurati; `tests/DomainGuidePanel.test.tsx` verifica apertura, sotto-argomenti come liste etichettate, tabelle con didascalia in regioni raggiungibili da tastiera, errori comuni etichettati a parole, soluzioni nascoste e sezioni opzionali assenti — 2026-09-24. Il flusso del quiz è coperto dagli end-to-end; restano test di componenti per quiz e cambio lingua dopo la loro estrazione. **M**
@@ -354,7 +354,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 |---|---|---|---|---|
 | **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
 | **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | ✅ Completata il 2026-09-24 | Repository contribuibile |
-| **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA e Dependabot presenti; 6 PR di Dependabot da smistare | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
+| **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA, Dependabot, smoke test, controlli di sicurezza, lint del Markdown e link check presenti; 6 PR di Dependabot da smistare | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
 | **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
 | **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
 | **M5 — Content Quality** | Obiettivi per domanda, fonti, freschezza, errata, style guide | M0–M2 | 🟡 Guide complete per i 5 domini, parità IT/EN automatica; mancano obiettivi per domanda, fonti e date di revisione | Materiale coerente e verificabile |
@@ -401,7 +401,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Copertura | Obiettivi coperti da almeno una sottovoce | 100% (verificato da test) | 100% |
 | Copertura | Domande collegate esplicitamente a un obiettivo | 100% dal 2026-09-24 (era 0%) | 100% |
 | Qualità | Test automatici verdi su `main` | Sì | Sempre |
-| Qualità | Link interni validi | Non misurato | 100% |
+| Qualità | Link interni validi | 100% (lychee offline in CI dal 2026-09-24) | 100% |
 | Sicurezza | Segreti confermati nella branch principale | 0 su 130 commit (gitleaks 8.30.1, 2026-09-24) | 0 |
 | Sicurezza | Workflow con permessi espliciti | 100% | 100% |
 | Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
@@ -500,6 +500,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M4 | `server.ts` diviso in `server/app.ts` (`createApp`) e avvio; 15 test API con finto client Gemini | Attività n. 10 | Parziale |
 | 2026-09-24 | M4 | Guida di dominio estratta da `App.tsx` in `DomainGuidePanel.tsx` (HTML identico), Testing Library e jsdom con 6 test di componente | Attività n. 10 | Completato |
 | 2026-09-24 | M3/M6 | Avviso di trasparenza nel Trainer AI, etichetta sulle domande generate, annuncio dell'esito nella remediation, avviso di un minuto per il timer | Voci P1 AI e accessibilità | Completato |
+| 2026-09-24 | M2 | Workflow `docs.yml`: `markdownlint-cli2` e `lychee` (link interni offline a ogni modifica, esterni settimanali); README IT/EN con albero dell'architettura aggiornato | Voci P0 Markdown lint e link check | Completato |
 
 ---
 

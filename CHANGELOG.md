@@ -23,6 +23,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - The quiz announces whether an answer was right to screen readers, and animations follow the system "reduce motion" setting.
 - The AI Trainer always shows that answers can be wrong and must not contain personal data; AI-generated remediation questions are labelled as unreviewed.
 - The optional exam timer warns screen-reader users when one minute is left.
+- `.github/workflows/docs.yml`: Markdown lint (`npm run lint:md`, also part of `npm run check`) and link checking with lychee: internal links and anchors on every change, external links weekly.
 
 ### Changed
 
@@ -39,6 +40,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - Nine IT/EN content drifts, among them WPA/TKIP vs WPA2/WPA3, Control Plane/SDN and a missing IBAN.
 - Five WCAG 2.2 AA violations found by axe, two critical: a tab list containing non-tab buttons, an unnamed chat button, nested checklist controls, 16 px touch targets, insufficient colour contrast and scrollable tables unreachable by keyboard.
 - Checklist and bookmarks read from the browser are now sanitised; a malformed bookmarks entry could crash the glossary.
+- The architecture section of both READMEs lists the current files (`server/`, `e2e/`, `scripts/`, `docs/`).
+- `smol-toml`, used by the Markdown linter, is forced to 1.8.0 (GHSA-7w5x-hrqm-74c2).
 - `src/data.ts` and `src/data.en.ts`, truncated by commit `9098ba5`, restored to their last intact version.
 
 ### Removed
