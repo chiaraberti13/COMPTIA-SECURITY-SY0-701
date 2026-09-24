@@ -36,7 +36,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Nessun timeout sulle chiamate Gemini, nessun budget globale, nessun `maxOutputTokens` sulla chat, nessun endpoint di health, header `User-Agent` residuo di AI Studio |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
-| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24 | Actions non fissate a SHA, nessun secret scan, SAST, audit dipendenze o Dependabot |
+| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA, Dependabot | Nessun secret scan, SAST o audit delle dipendenze |
 | Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS` |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`) | `src/App.tsx` supera le 2.500 righe: rendering, stato e logica di tutte le sezioni in un unico componente |
 | Accessibilità | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti | Nessun test automatico di accessibilità; animazioni `motion` senza rispetto di `prefers-reduced-motion` |
@@ -185,9 +185,9 @@ Un'attività è completata quando:
 - [x] **P0 — `SECURITY.md`:** canale privato tramite GitHub Security Advisories, ambito e regole di disclosure responsabile, in IT e EN.
 - [x] **P0 — Minimo privilegio nei workflow:** `permissions: contents: read` dichiarato a livello di workflow.
 - [x] **P0 — Lockfile versionato:** `package-lock.json` presente e installazione con `npm ci`.
-- [ ] **P0 — Fissare le GitHub Actions a commit SHA immutabili** (con commento della versione) e lasciare a Dependabot l'aggiornamento. **S**
+- [x] **P0 — Fissare le GitHub Actions a commit SHA immutabili:** `checkout` e `setup-node` fissate a v4.4.0 con commento della versione, `persist-credentials: false`, processo di aggiornamento documentato in `ci.yml` e imposto da `tests/workflows.test.ts` — 2026-09-24.
 - [ ] **P0 — Secret scanning:** attivare *secret scanning* e *push protection* su GitHub e aggiungere `gitleaks` in CI come controllo sulle pull request. **S**
-- [ ] **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` e `npm audit --omit=dev --audit-level=high` in CI. **S**
+- [ ] 🟡 **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` attivo (`.github/dependabot.yml`, settimanale, attesa di 7 giorni sulle nuove release, aggiornamenti minor/patch raggruppati) — 2026-09-24; manca `npm audit --omit=dev --audit-level=high` in CI (attività n. 4). **S**
 - [ ] **P0 — SAST pertinente:** CodeQL per JavaScript/TypeScript (unico linguaggio presente); nessuno scanner per linguaggi assenti. **S**
 - [ ] **P1 — Dependency review sulle pull request:** blocca l'introduzione di dipendenze con vulnerabilità note o licenze incompatibili con MIT.
 - [ ] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository.
@@ -329,7 +329,7 @@ Un'attività è completata quando:
 |---|---|---|---|---|
 | **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
 | **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | 🟡 Node LTS e identità del pacchetto completati | Repository contribuibile |
-| **M2 — Quality & Security Gate** | Action a SHA, Dependabot, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI di base presente | Pull request controllate automaticamente |
+| **M2 — Quality & Security Gate** | Action a SHA, Dependabot, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA e Dependabot presenti | Pull request controllate automaticamente |
 | **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
 | **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
 | **M5 — Content Quality** | Obiettivi per domanda, fonti, freschezza, errata, style guide | M0–M2 | 🟡 Test di integrità presenti | Materiale coerente e verificabile |
@@ -342,7 +342,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 
 1. [x] Completare l'inventario del repository (audit del 2026-09-24).
 2. [x] Aggiornare Node.js alla LTS in CI e `engines`, correggere `name`/`version` in `package.json` (2026-09-24).
-3. [ ] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`). **S**
+3. [x] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`) (2026-09-24).
 4. [ ] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review. **S**
 5. [ ] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`. **S**
 6. [ ] Pubblicare `CONTRIBUTING.md`, `CHANGELOG.md`, template di issue/PR e `CODEOWNERS`. **S**
@@ -378,7 +378,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | Qualità | Link interni validi | Non misurato | 100% |
 | Sicurezza | Segreti confermati nella branch principale | Non misurato (nessuno scanner) | 0 |
 | Sicurezza | Workflow con permessi espliciti | 100% | 100% |
-| Sicurezza | Actions fissate a SHA | 0% | 100% |
+| Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
 | Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | Non misurato | 0 |
 | Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 0 su 2 completi | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
@@ -447,7 +447,8 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | 2026-09-22 | M5 | Test di accuratezza e integrità, guide di dominio con scenari applicati | `9098ba5`, `014585f`, `3440958` | Completato |
 | 2026-09-24 | M0 | Audit del repository e roadmap riallineata allo stato reale | PR #37 | Completato |
 | 2026-09-24 | M1 | Node 22/24 in CI, `.nvmrc`, `engines`, nome e versione del pacchetto, prerequisiti del README | Attività n. 2 | Completato |
-| 2026-09-24 | M5 | ⛔ `src/data.ts` e `src/data.en.ts` troncati dal commit `9098ba5`: conservati solo i primi e gli ultimi 384 KiB (questi slittati di 2 bit), ~1,6 MB centrali persi per file; typecheck, test e build di `main` falliscono. Ripristino da decidere (file locale originale o ricostruzione dalla versione precedente) | `9098ba5` | Bloccato |
+| 2026-09-24 | M5 | `src/data.ts` e `src/data.en.ts` troncati dal commit `9098ba5`: conservati solo i primi e gli ultimi 384 KiB (questi slittati di 2 bit), ~1,6 MB centrali persi per file; typecheck, test e build di `main` fallivano. Risolto ripristinando i due file alla versione precedente (le correzioni di contenuto di `9098ba5` non sono recuperate) | `9098ba5`, `af7b320`, PR #38 | Completato |
+| 2026-09-24 | M2 | Actions fissate a SHA (v4.4.0), `persist-credentials: false`, Dependabot per npm e Actions, test `tests/workflows.test.ts` | Attività n. 3 | Completato |
 
 ---
 
