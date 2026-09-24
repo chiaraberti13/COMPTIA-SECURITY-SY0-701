@@ -1049,8 +1049,11 @@ export default function App() {
             </aside>
 
             {/* Right Pane Study Core - Sleek Interface Style */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative" id="study_panel_wrapper">
-              <main ref={studyPanelRef} className="flex-1 overflow-y-auto bg-slate-950 p-8 pb-24" id="study_panel">
+            {/* On phones the layout stacks and scrolls: flex-none keeps the panel a
+                full screen tall below the checklist instead of letting flex-1 shrink
+                it to zero height. From md up the two panes sit side by side. */}
+            <div className="flex-none h-full md:flex-1 md:min-w-0 flex flex-col overflow-hidden relative" id="study_panel_wrapper">
+              <main ref={studyPanelRef} className="flex-1 overflow-y-auto bg-slate-950 p-4 sm:p-8 pb-24" id="study_panel">
               <div ref={studyTopRef} className="h-0 w-full pointer-events-none opacity-0" id="study_top_anchor" />
               {(() => {
                 const subgroupName = getSubgroupForSubtopic(selectedSubtopic.checklistKey);

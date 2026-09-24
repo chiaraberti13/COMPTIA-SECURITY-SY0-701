@@ -277,7 +277,7 @@ Un'attività è completata quando:
 - [x] **P0 — README come landing page:** scopo, funzionalità, prerequisiti, installazione per sistema operativo, architettura e risoluzione problemi, in IT e EN.
 - [x] **P0 — Navigazione per i cinque domini:** stesso ordine e stessi nomi in checklist, guide, glossario e simulatore.
 - [ ] 🟡 **P0 — Rendere visibile la copertura:** oggi è verificata dai test ma non mostrata; esporre nel README e nell'app una tabella basata su obiettivi, non sul numero di file. **S**
-- [ ] **P0 — Area di studio illeggibile su mobile:** a 390 px di larghezza `#study_panel_wrapper` ha altezza 0 e il pannello di studio resta confinato in circa 128 px in fondo allo schermo (rilevato con Playwright il 2026-09-24). Correggere il layout a colonna di `#studio_layout` e aggiungere un test end-to-end sulla viewport mobile. **S**
+- [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi test automatici di accessibilità).
 - [ ] **P0 — Percorsi di studio:** principiante, ripasso rapido, preparazione all'esame e consolidamento pratico, come pagina iniziale guidata ("Da dove inizio?"). **M**
 - [ ] **P1 — Collegare prerequisiti e passi successivi:** ogni modulo indica cosa conoscere prima e dove proseguire.
 - [ ] 🟡 **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste; manca il collegamento contestuale dei termini dalle sottovoci e dalle spiegazioni dei quiz.
