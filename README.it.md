@@ -76,8 +76,9 @@ La filosofia, condivisa con gli altri repository:
 
 ## Prerequisiti
 
-- **Node.js** `18.x` o superiore (consigliata LTS `20.x` / `22.x`).
-- **npm** `9.x` o superiore (incluso con Node.js).
+- **Node.js** `22.13` o superiore — consigliata la LTS `24.x` (la versione indicata in [`.nvmrc`](.nvmrc)).
+  Node 18 e 20 sono a fine vita e non sono più supportati dagli strumenti di test e lint.
+- **npm** `10.x` o superiore (incluso con Node.js).
 - **Git** — per clonare il repository.
 
 ## Chiave API Gemini
@@ -114,14 +115,14 @@ APP_URL="http://localhost:3000"
 # 1. Installa i prerequisiti
 # Ubuntu / Debian:
 sudo apt update && sudo apt install -y curl git
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
 sudo apt install -y nodejs
 # Fedora / RHEL:   sudo dnf install -y git nodejs
 # Arch:            sudo pacman -S git nodejs npm
 
 # 2. Verifica
-node -v   # v18.x.x o superiore
-npm -v    # v9.x.x o superiore
+node -v   # v22.13.x o superiore (consigliata v24.x)
+npm -v    # v10.x.x o superiore
 
 # 3. Clona, installa, configura
 git clone https://github.com/chiaraberti13/CompTIA-Security-SY0-701.git
