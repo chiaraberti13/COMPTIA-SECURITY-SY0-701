@@ -1,0 +1,23 @@
+# Code owners are asked to review pull requests that touch their paths.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Today there is a single maintainer. Paths are split by area so that a second
+# reviewer can take over one area (content, translations, security) by editing
+# one line. Note: if branch protection requires code-owner review, a sole owner
+# cannot approve their own pull requests; enable it only with a second owner.
+
+*                               @chiaraberti13
+
+# Study content and translations
+/src/data.ts                    @chiaraberti13
+/src/data.en.ts                 @chiaraberti13
+/src/domainGuides.ts            @chiaraberti13
+
+# Security-sensitive: server, AI guard, CI and dependencies
+/server.ts                      @chiaraberti13
+/server/                        @chiaraberti13
+/.github/                       @chiaraberti13
+/package.json                   @chiaraberti13
+/package-lock.json              @chiaraberti13
+/.gitleaks.toml                 @chiaraberti13
+/SECURITY.md                    @chiaraberti13

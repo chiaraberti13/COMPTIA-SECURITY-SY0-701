@@ -1,0 +1,38 @@
+name: 💡 Study proposal · Proposta didattica
+description: A new question, guide section, lab or learning feature. · Una nuova domanda, sezione di guida, laboratorio o funzione di studio.
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of proposal · Tipo di proposta
+      options:
+        - New question · Nuova domanda
+        - Guide or subtopic · Guida o sottovoce
+        - Hands-on lab · Laboratorio pratico
+        - Learning feature · Funzione di apprendimento
+    validations:
+      required: true
+  - type: input
+    id: objectives
+    attributes:
+      label: SY0-701 objectives · Obiettivi SY0-701
+      placeholder: 3.2, 4.5
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal · Proposta
+      description: For a question, include scenario, options, the correct answer and why every other option is wrong. · Per una domanda, indica scenario, opzioni, risposta corretta e perché ogni altra opzione è sbagliata.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Rules · Regole
+      options:
+        - label: The content is original, not copied from the real exam or from commercial question banks. · Il contenuto è originale, non copiato dall'esame reale o da banche domande commerciali.
+          required: true
+        - label: Any hands-on step targets only systems I own or am authorized to test, in an isolated environment. · Ogni passo pratico riguarda solo sistemi miei o che sono autorizzato a testare, in un ambiente isolato.
+          required: true

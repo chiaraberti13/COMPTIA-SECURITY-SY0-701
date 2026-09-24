@@ -38,7 +38,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; mancano test API con un client Gemini simulato, log strutturati e validazione con schema |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
-| Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS` |
+| Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; `CODE_OF_CONDUCT.md` assente |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
 | Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Nessun test automatico di accessibilità né di layout (il difetto mobile è stato scoperto solo con Playwright a mano); animazioni `motion` senza rispetto di `prefers-reduced-motion` |
 
@@ -178,17 +178,17 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
   | 4 | `motion` 12 → 13 | ✅ tutto verde; da controllare a vista l'animazione del pannello AI | Nessuno |
   | 5 | Actions `checkout` e `setup-node` a v7 | Non verificabile in locale; il commento di versione rispetta `tests/workflows.test.ts`. Consigliata: le v4 sono scritte per Node 20, che GitHub sta ritirando dai runner (la CI è ancora verde al 2026-09-24) | La CI della PR stessa deve essere verde su Node 22 e 24 |
 
-- [ ] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** aggiornamenti di sicurezza entro 48 ore; minor e patch entro 7 giorni se la CI è verde; ogni major in una PR dedicata, con lettura del changelog, smoke test e verifica manuale dell'area coinvolta. **S**
+- [x] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** sicurezza entro 48 ore, minor e patch entro 7 giorni, ogni major in una PR dedicata con changelog, smoke test e verifica manuale — 2026-09-24.
 - [ ] 🟡 **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); anche le API senza corpo JSON rispondono 400 e non 502 con Express 5 (`req.body ?? {}`); resta da integrare la PR di Dependabot e sfruttare la gestione nativa degli errori asincroni. **S**
 - [ ] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S**
 
 #### Collaborazione e manutenzione
 
-- [ ] **P0 — Creare `CONTRIBUTING.md`:** setup, `npm run check`, convenzioni editoriali, come aggiungere una domanda (IT + EN + test), regole per fonti e traduzioni. **S**
-- [ ] **P0 — Aggiungere template di issue e pull request:** errore nel contenuto, proposta didattica, nuova domanda, nuovo lab, bug dell'app; le vulnerabilità vanno invece segnalate tramite `SECURITY.md`. **S**
-- [ ] **P0 — Creare `CHANGELOG.md`** con formato *Keep a Changelog*, ricostruendo le tappe principali dalla cronologia git. **S**
-- [ ] **P1 — Definire `CODEOWNERS`:** contenuti, sicurezza (`server.ts`, workflow, dipendenze), traduzioni e UX.
-- [ ] **P1 — Policy di versionamento:** SemVer applicato all'app; correzioni di contenuto = patch, nuove domande o sezioni = minor, cambi del formato dei dati salvati o del syllabus = major.
+- [x] **P0 — Creare `CONTRIBUTING.md`:** bilingue, con installazione, controlli (`check`, `build`, `smoke`), regole per contenuti e traduzioni, regole per il codice, policy di aggiornamento delle dipendenze e convenzioni di commit — 2026-09-24.
+- [x] **P0 — Aggiungere template di issue e pull request:** moduli bilingui per errore nei contenuti, bug dell'app e proposta didattica (domanda, guida, laboratorio); issue vuote disattivate e vulnerabilità indirizzate a Security Advisories; modello di PR con verifiche e checklist — 2026-09-24.
+- [x] **P0 — Creare `CHANGELOG.md`** nel formato *Keep a Changelog*, con la sezione *Unreleased* per questo ciclo e la cronologia precedente ricostruita dal log git per temi — 2026-09-24.
+- [x] **P1 — Definire `CODEOWNERS`:** aree separate (contenuti, sicurezza, CI e dipendenze) già pronte per un secondo revisore; nota sul limite della revisione obbligatoria con un solo owner — 2026-09-24.
+- [x] **P1 — Policy di versionamento:** SemVer dichiarato in `CHANGELOG.md` (correzioni di contenuto = patch, nuove domande o sezioni = minor, formato dei progressi salvati o syllabus = major) — 2026-09-24.
 - [ ] **P1 — Processo di deprecazione:** contenuti superati marcati `deprecated` con motivazione, senza rimozione immediata.
 - [ ] **P2 — Automatizzare le issue ricorrenti:** revisione link, aggiornamento fonti, audit dipendenze e parità linguistica.
 
@@ -352,7 +352,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 | Milestone | Focus | Dipendenze | Stato | Risultato atteso |
 |---|---|---|---|---|
 | **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
-| **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | 🟡 Node LTS e identità del pacchetto completati | Repository contribuibile |
+| **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | ✅ Completata il 2026-09-24 | Repository contribuibile |
 | **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA e Dependabot presenti; 6 PR di Dependabot da smistare | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
 | **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
 | **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
@@ -370,7 +370,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 4. [ ] 🟡 Aggiungere lo smoke test di avvio in produzione alla CI, poi smistare le PR di Dependabot secondo la tabella in [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze): smoke test e correzioni completati, tutte le PR verificate; resta da integrarle nell'ordine indicato. **S + M**
 5. [x] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review (2026-09-24).
 6. [x] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`, arresto graduale (2026-09-24).
-7. [ ] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS`. **S**
+7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
 8. [ ] Aggiungere il campo `objectives` alle domande con test obbligatorio, poi generare la matrice di copertura. **M**
 9. [ ] Test end-to-end con Playwright e `axe-core` su telefono e desktop; poi quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion`. **M**
 10. [ ] Aggiungere test API (Supertest) e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`. **M**
@@ -492,6 +492,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M2 | Smoke test di avvio in produzione in CI; fallback della SPA e lettura del corpo delle API compatibili con Express 5; `vite.config.ts` pronto per Vite 8; 6 PR di Dependabot verificate con ordine di integrazione | Attività n. 4 | Parziale |
 | 2026-09-24 | M2 | Workflow `security.yml`: gitleaks con `.gitleaks.toml`, `npm audit`, dependency review, CodeQL; convalidato con actionlint | Attività n. 5 | Completato |
 | 2026-09-24 | M3 | Hardening degli endpoint AI: timeout con `AbortSignal`, `maxOutputTokens` sulla chat, tetto giornaliero (`server/aiGuard.ts`), `/healthz`, arresto graduale, rimosso `User-Agent` del template; smoke test esteso a 8 controlli | Attività n. 6 | Completato |
+| 2026-09-24 | M1 | `CONTRIBUTING.md` bilingue con policy sulle dipendenze, `CHANGELOG.md`, moduli per issue, modello di PR, `CODEOWNERS` | Attività n. 7 | Completato |
 
 ---
 
