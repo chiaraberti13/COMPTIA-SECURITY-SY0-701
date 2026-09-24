@@ -42,6 +42,7 @@ import { getDomainGuide } from "./domainGuides";
 import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
 import { sanitizeChecklist } from "./progressBackup";
 import DataControls from "./components/DataControls";
+import OptionVerdict from "./components/OptionVerdict";
 import DomainGuidePanel from "./components/DomainGuidePanel";
 import {
   SECONDS_PER_QUESTION,
@@ -1840,9 +1841,15 @@ export default function App() {
                                       {t("quiz.reviewQuestionN", { i: position })} · {q.topic}
                                     </span>
                                     {correct ? (
-                                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                      <span className="inline-flex items-center gap-1 text-emerald-300 uppercase">
+                                        <Check className="w-3.5 h-3.5" aria-hidden="true" />
+                                        {t("quiz.verdictCorrect")}
+                                      </span>
                                     ) : (
-                                      <X className="w-3.5 h-3.5 text-rose-400" />
+                                      <span className="inline-flex items-center gap-1 text-rose-300 uppercase">
+                                        <X className="w-3.5 h-3.5" aria-hidden="true" />
+                                        {answered ? t("quiz.verdictWrong") : t("quiz.reviewNoAnswer")}
+                                      </span>
                                     )}
                                   </div>
 
@@ -2006,6 +2013,7 @@ export default function App() {
                           >
                             <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
                             {opt}
+                            {remediationShowFeedback && <OptionVerdict isCorrect={isCorrect} isSelected={isSelected} />}
                           </button>
                         );
                       })}
@@ -2155,6 +2163,7 @@ export default function App() {
                         >
                           <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
                           {opt}
+                          {showFeedback && <OptionVerdict isCorrect={isCorrect} isSelected={isSelected} />}
                         </button>
                       );
                     })}

@@ -297,6 +297,8 @@ const it = {
   "quiz.reviewYourAnswer": "La tua risposta",
   "quiz.reviewCorrectAnswer": "Risposta corretta",
   "quiz.reviewNoAnswer": "Nessuna risposta data",
+  "quiz.verdictCorrect": "Esatta",
+  "quiz.verdictWrong": "Errata",
   "quiz.reviewAllCorrect": "Nessun errore da ripassare: hai risposto correttamente a tutte le domande.",
   "quiz.reviewQuestionN": "Domanda {i}",
 
@@ -615,6 +617,8 @@ const en: Record<UIKey, string> = {
   "quiz.reviewYourAnswer": "Your answer",
   "quiz.reviewCorrectAnswer": "Correct answer",
   "quiz.reviewNoAnswer": "Not answered",
+  "quiz.verdictCorrect": "Correct",
+  "quiz.verdictWrong": "Incorrect",
   "quiz.reviewAllCorrect": "Nothing to review: you answered every question correctly.",
   "quiz.reviewQuestionN": "Question {i}",
 

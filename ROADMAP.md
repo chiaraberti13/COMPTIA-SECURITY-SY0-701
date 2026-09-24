@@ -322,8 +322,8 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 #### Accessibilità e inclusione (obiettivo: WCAG 2.2 AA)
 
 - [x] **P0 — Struttura ARIA corretta (trovata da axe il 2026-09-24):** `role="tablist"` ristretto alle tre schede, pulsante di invio della chat con nome accessibile, voci della checklist non più annidate (casella e argomento sono controlli affiancati), caselle da 24 px (WCAG 2.2 target size), tabelle scorrevoli raggiungibili da tastiera, `aria-pressed` su AI Trainer e lingua. Anche la schermata di remediation annuncia l'esito della risposta.
-- [ ] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`.
-- [ ] **P0 — Non affidarsi solo al colore:** risposta corretta/errata, stato e rischio con etichetta testuale o icona (verificare il simulatore e i risultati).
+- [x] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`: verificato il 2026-09-24, l'app non contiene immagini `<img>` e tutte le 88 icone SVG hanno `aria-hidden="true"`. Le icone che portano un significato (esatta o errata nel ripasso) sono ora affiancate da testo.
+- [x] **P0 — Non affidarsi solo al colore:** dopo la conferma, nel simulatore e nella remediation, ogni opzione giusta o scelta porta un'etichetta a parole con icona ("Risposta corretta", "La tua risposta"), letta anche dagli screen reader; il ripasso finale scrive "Esatta", "Errata" o "Nessuna risposta data" invece della sola icona colorata (WCAG 1.4.1). Componente `OptionVerdict` con test di componente e controllo end-to-end — 2026-09-24.
 - [x] **P0 — Contrasto e leggibilità:** sfondi `bg-cyan-600` sotto testo bianco portati a `bg-cyan-700` e testo secondario `text-slate-500` portato a `text-slate-400` su sfondo scuro (da 3,6–4,2:1 a oltre 4,5:1); axe non rileva più problemi di contrasto su studio, glossario e simulatore — 2026-09-24.
 - [x] **P0 — Navigazione completa da tastiera nel quiz:** tasti numerici e Invio erano già supportati; aggiunta una regione `role="status"` sempre presente che annuncia l'esito della risposta, icone decorative nascoste, e un test end-to-end che svolge una domanda solo da tastiera — 2026-09-24.
 - [x] **P1 — Rispetto di `prefers-reduced-motion`:** `MotionConfig reducedMotion="user"` attorno all'app — 2026-09-24.
@@ -504,6 +504,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M3 | CSP senza `'unsafe-inline'` né origini esterne: font nel bundle, `base-uri` e `form-action`; test end-to-end sulle violazioni e sulle richieste verso altre origini | Voce P1 CSP | Completato |
 | 2026-09-24 | M0/M3 | Threat model STRIDE e quattro ADR; `TRUST_PROXY` configurabile contro l'aggiramento del rate limit con `X-Forwarded-For` falso | Voci P0 threat model e P1 registro decisionale | Completato |
 | 2026-09-24 | M3 | Log strutturati JSON senza dati degli utenti né chiavi, verificati da test e dallo smoke test | Voce P1 log strutturati | Completato |
+| 2026-09-24 | M6 | Esito delle risposte indicato a parole oltre che col colore; verificate icone decorative e assenza di immagini senza testo alternativo | Voci P0 accessibilità | Completato |
 
 ---
 

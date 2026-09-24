@@ -79,6 +79,9 @@ test.describe("keyboard", () => {
     await expect(page.locator("#quiz_feedback_box")).toBeVisible();
     await expect(page.locator("#quiz_feedback_announcer")).not.toBeEmpty();
     await expect(page.locator("#quiz_feedback_announcer")).toHaveAttribute("role", "status");
+    // Colour is never the only cue: the right option says so in words (WCAG 1.4.1).
+    await expect(page.locator("#quiz_options_list")).toContainText("Risposta corretta");
+    await expect(page.locator("#quiz_options_list")).toContainText("La tua risposta");
 
     await page.keyboard.press("Enter");
     await expect(page.locator("#quiz_feedback_box")).toBeHidden();
