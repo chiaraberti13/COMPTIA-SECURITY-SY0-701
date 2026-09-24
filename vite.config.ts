@@ -8,14 +8,17 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        // import.meta.dirname rather than __dirname: Vite's native config loader,
+      // planned as the default in a future major, supports only the former.
+      '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     build: {
-      // The Italian dataset alone is ~1.8 MB of source. It is split into its own
-      // chunk below, so the generic 500 kB warning would fire on every build for
-      // something already handled.
-      chunkSizeWarningLimit: 1800,
+      // Each dataset is ~2.1-2.4 MB once built (Italian is the larger). They are
+      // split into their own chunks below, so the generic 500 kB warning would
+      // fire on every build for something already handled. The limit sits just
+      // above today's size, so an unexpected jump still warns.
+      chunkSizeWarningLimit: 2600,
       rollupOptions: {
         output: {
           manualChunks(id: string) {

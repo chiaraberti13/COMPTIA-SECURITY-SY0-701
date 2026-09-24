@@ -5,6 +5,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { GoogleGenAI, Type } from "@google/genai";
 import { validateRemediationPayload } from "./src/remediation";
+import { createDailyBudget, readLimit } from "./server/aiGuard";
 
 dotenv.config();
 
@@ -20,6 +21,45 @@ const MAX_MESSAGE_CHARS = 2000;
 
 /** How many previous turns are replayed to the model. */
 const MAX_HISTORY_TURNS = 8;
+
+/**
+ * Longest a Gemini call may take before the request is abandoned, in ms. The
+ * abort is client-side only: Gemini may still bill the call, which is why the
+ * daily budget below exists as well.
+ */
+const GEMINI_TIMEOUT_MS = readLimit(process.env.GEMINI_TIMEOUT_MS, 30_000) || 30_000;
+
+/** Upper bound on the length of a chat answer, in tokens. */
+const CHAT_MAX_OUTPUT_TOKENS = 2048;
+
+/**
+ * Total AI calls per UTC day across all clients ("denial of wallet" cap).
+ * AI_DAILY_LIMIT=0 switches the AI features off for this deployment.
+ */
+const aiBudget = createDailyBudget(readLimit(process.env.AI_DAILY_LIMIT, 500));
+
+/** Shared Gemini client settings for both endpoints. */
+function geminiClient(apiKey: string): GoogleGenAI {
+  return new GoogleGenAI({ apiKey });
+}
+
+/** The localized error for a request refused by the daily budget. */
+function budgetError(isEn: boolean): string {
+  if (aiBudget.limit === 0) {
+    return isEn
+      ? "The AI features are disabled on this deployment."
+      : "Le funzionalità AI sono disattivate su questa installazione.";
+  }
+  return isEn
+    ? "The daily limit for AI requests has been reached. Please try again tomorrow."
+    : "È stato raggiunto il limite giornaliero di richieste AI. Riprova domani.";
+}
+
+/** True when a Gemini call was abandoned because it exceeded GEMINI_TIMEOUT_MS. */
+function isTimeout(error: unknown): boolean {
+  const name = (error as { name?: unknown } | null)?.name;
+  return name === "TimeoutError" || name === "AbortError";
+}
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -79,6 +119,12 @@ async function startServer() {
 
   app.use(express.json({ limit: "64kb" }));
 
+  // Liveness probe for PaaS platforms and uptime monitors. It reveals nothing
+  // about the configuration and is registered before the /api rate limiter.
+  app.get("/healthz", (_req, res) => {
+    res.set("Cache-Control", "no-store").json({ status: "ok" });
+  });
+
   /**
    * The Gemini quota is a paid, shared resource and both endpoints are
    * unauthenticated. Without a limit, a public deployment can have its whole
@@ -99,7 +145,8 @@ async function startServer() {
   app.post("/api/chat", async (req, res) => {
     const isEn = req.body?.lang === "en";
     try {
-      const { message } = req.body;
+      // Express 5 leaves req.body undefined when the request carries no JSON.
+      const { message } = req.body ?? {};
 
       if (typeof message !== "string" || !message.trim()) {
         return res.status(400).json({
@@ -131,14 +178,11 @@ async function startServer() {
         });
       }
 
-      const ai = new GoogleGenAI({
-        apiKey: apiKey,
-        httpOptions: {
-          headers: {
-            "User-Agent": "aistudio-build",
-          },
-        },
-      });
+      if (!aiBudget.tryConsume()) {
+        return res.status(503).json({ error: budgetError(isEn) });
+      }
+
+      const ai = geminiClient(apiKey);
 
       // Format history into a cohesive prompt to prevent API-level state issues
       const studentLabel = isEn ? "Student" : "Studente";
@@ -188,6 +232,8 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
         config: {
           systemInstruction: systemPrompt,
           temperature: 0.3,
+          maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS,
+          abortSignal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
         },
       });
 
@@ -196,6 +242,13 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       // The provider error can carry internal endpoints, project ids and quota
       // details: it belongs in the server log, not in the browser.
       console.error("Error calling Gemini API:", error);
+      if (isTimeout(error)) {
+        return res.status(504).json({
+          error: isEn
+            ? "The AI assistant took too long to answer. Please try again."
+            : "L'assistente AI ha impiegato troppo tempo a rispondere. Riprova.",
+        });
+      }
       res.status(502).json({
         error: isEn
           ? "The AI assistant is temporarily unavailable. Please try again in a moment."
@@ -208,7 +261,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
   app.post("/api/quiz/remediation", async (req, res) => {
     const isEn = req.body?.lang === "en";
     try {
-      const { weakTopics } = req.body;
+      const { weakTopics } = req.body ?? {};
       if (!Array.isArray(weakTopics) || weakTopics.length === 0) {
         return res.status(400).json({
           error: isEn ? "Weak topics are required" : "Gli argomenti deboli sono obbligatori",
@@ -234,14 +287,11 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
         });
       }
 
-      const ai = new GoogleGenAI({
-        apiKey: apiKey,
-        httpOptions: {
-          headers: {
-            "User-Agent": "aistudio-build",
-          },
-        },
-      });
+      if (!aiBudget.tryConsume()) {
+        return res.status(503).json({ error: budgetError(isEn) });
+      }
+
+      const ai = geminiClient(apiKey);
 
       const topicsString = safeTopics.join(", ");
       const systemInstruction = isEn
@@ -277,6 +327,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",
           maxOutputTokens: 4096,
+          abortSignal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
           responseSchema: {
             type: Type.OBJECT,
             properties: {
@@ -317,6 +368,13 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       res.json({ questions: result });
     } catch (error: any) {
       console.error("Error generating remediation questions:", error);
+      if (isTimeout(error)) {
+        return res.status(504).json({
+          error: isEn
+            ? "Generating the questions took too long. Please try again."
+            : "La generazione delle domande ha richiesto troppo tempo. Riprova.",
+        });
+      }
       res.status(502).json({
         error: isEn
           ? "Could not generate the adaptive remediation questions. Please try again in a moment."
@@ -336,14 +394,29 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    // SPA fallback: any other GET returns the app shell. A final middleware
+    // instead of app.get("*") because Express 5 rejects an unnamed "*" route
+    // at start-up; this form behaves the same on Express 4 and 5.
+    app.use((req, res, next) => {
+      if (req.method !== "GET" && req.method !== "HEAD") return next();
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
+
+  // Graceful shutdown: PaaS platforms send SIGTERM before stopping a container.
+  // Stop accepting connections, let in-flight requests finish, and force the
+  // exit if they do not within the grace period.
+  const shutdown = (signal: string) => {
+    console.log(`${signal} received, shutting down`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(1), GEMINI_TIMEOUT_MS + 5_000).unref();
+  };
+  process.once("SIGTERM", () => shutdown("SIGTERM"));
+  process.once("SIGINT", () => shutdown("SIGINT"));
 }
 
 startServer();

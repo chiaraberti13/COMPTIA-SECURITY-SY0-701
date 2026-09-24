@@ -302,6 +302,22 @@ const it = {
   "quiz.historyTitle": "I tuoi risultati precedenti",
   "quiz.historyEmpty": "Nessun test completato finora. Il tuo storico comparirà qui.",
   "quiz.historyClear": "Cancella storico",
+  "data.title": "I tuoi dati",
+  "data.intro": "Checklist, segnalibri, storico e ripasso restano solo in questo browser: niente viene inviato al server. Puoi salvarne una copia o spostarli su un altro dispositivo.",
+  "data.export": "Esporta",
+  "data.import": "Importa",
+  "data.deleteAll": "Cancella tutti i dati",
+  "data.exported": "Copia salvata: {file}",
+  "data.importSummary": "Il file del {date} contiene {topics} argomenti completati, {bookmarks} segnalibri e {runs} risultati. Sostituire i progressi attuali?",
+  "data.confirmImport": "Sostituisci",
+  "data.confirmDelete": "Cancellare checklist, segnalibri, storico, ripasso e lingua salvati in questo browser? L'operazione non si può annullare.",
+  "data.confirmDeleteBtn": "Sì, cancella tutto",
+  "data.cancel": "Annulla",
+  "data.errorTooLarge": "Il file è troppo grande per essere un backup di questa app.",
+  "data.errorInvalid": "Il file non è un JSON valido.",
+  "data.errorWrongApp": "Il file non è un backup di questa app.",
+  "data.errorSchema": "Il file è stato creato da una versione dell'app non supportata.",
+  "data.errorStorage": "Il browser non permette di salvare i dati (spazio esaurito o archiviazione bloccata).",
   "quiz.historyBest": "Miglior punteggio: {percent}%",
   "quiz.historyAvg": "Media ultimi {n}: {percent}%",
 
@@ -320,6 +336,8 @@ const it = {
   "a11y.domainQuestionCount": "Numero di domande del dominio {n}",
   "a11y.closeTrainer": "Chiudi il Trainer AI",
   "a11y.chatInput": "Domanda per il Trainer AI",
+  "a11y.sendMessage": "Invia la domanda al Trainer AI",
+  "a11y.scrollableTable": "Tabella scorrevole: {title}",
 
 
   // Chat sidebar
@@ -599,6 +617,22 @@ const en: Record<UIKey, string> = {
   "quiz.historyTitle": "Your previous results",
   "quiz.historyEmpty": "No test completed yet. Your history will show up here.",
   "quiz.historyClear": "Clear history",
+  "data.title": "Your data",
+  "data.intro": "Checklist, bookmarks, history and review stay in this browser only: nothing is sent to the server. You can save a copy or move them to another device.",
+  "data.export": "Export",
+  "data.import": "Import",
+  "data.deleteAll": "Delete all data",
+  "data.exported": "Copy saved: {file}",
+  "data.importSummary": "The file from {date} contains {topics} completed topics, {bookmarks} bookmarks and {runs} results. Replace the current progress?",
+  "data.confirmImport": "Replace",
+  "data.confirmDelete": "Delete the checklist, bookmarks, history, review and language saved in this browser? This cannot be undone.",
+  "data.confirmDeleteBtn": "Yes, delete everything",
+  "data.cancel": "Cancel",
+  "data.errorTooLarge": "The file is too large to be a backup of this app.",
+  "data.errorInvalid": "The file is not valid JSON.",
+  "data.errorWrongApp": "The file is not a backup of this app.",
+  "data.errorSchema": "The file was created by an unsupported version of the app.",
+  "data.errorStorage": "The browser does not allow saving data (storage full or blocked).",
   "quiz.historyBest": "Best score: {percent}%",
   "quiz.historyAvg": "Average of last {n}: {percent}%",
 
@@ -617,6 +651,8 @@ const en: Record<UIKey, string> = {
   "a11y.domainQuestionCount": "Number of Domain {n} questions",
   "a11y.closeTrainer": "Close the AI Trainer",
   "a11y.chatInput": "Question for the AI Trainer",
+  "a11y.sendMessage": "Send the question to the AI Trainer",
+  "a11y.scrollableTable": "Scrollable table: {title}",
 
 
   // Chat sidebar

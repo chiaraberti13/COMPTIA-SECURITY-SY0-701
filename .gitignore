@@ -9,3 +9,7 @@ coverage/
 
 # Scratch directory for throwaway analysis scripts
 .tmp/
+
+# Playwright output
+test-results/
+playwright-report/

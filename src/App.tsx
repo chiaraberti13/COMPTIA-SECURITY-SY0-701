@@ -34,12 +34,14 @@ import {
   domainOfQuestion,
 } from "./localizedData";
 import { Subtopic, Question, ChatMessage, QuizResult, QuestionProgress } from "./types";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 import { getSubgroupForSubtopic } from "./subgroups";
 import { getDomainGuide } from "./domainGuides";
 import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
+import { sanitizeChecklist } from "./progressBackup";
+import DataControls from "./components/DataControls";
 import {
   SECONDS_PER_QUESTION,
   formatClock,
@@ -233,7 +235,8 @@ export default function App() {
 
   // Load checklist progress from localStorage
   useEffect(() => {
-    setCheckedItems(readJSON<Record<string, boolean>>(STORAGE_KEYS.checklist, {}));
+    // Sanitised: localStorage is user-controlled and may hold anything.
+    setCheckedItems(sanitizeChecklist(readJSON<unknown>(STORAGE_KEYS.checklist, {})));
   }, []);
 
   // Auto-dismiss the inline notification.
@@ -789,24 +792,30 @@ export default function App() {
   };
 
   return (
+    // reducedMotion="user": animations follow the operating-system setting
+    // "reduce motion" (WCAG 2.3.3), transforms are skipped and only opacity fades.
+    <MotionConfig reducedMotion="user">
     <div className="h-screen overflow-hidden bg-slate-950 flex flex-col font-sans text-slate-100" id="app_root">
       {/* Top Professional Header - Sleek Interface Style */}
       <header className="min-h-16 border-b border-slate-800 bg-slate-900/50 flex flex-wrap items-center justify-between gap-y-2 gap-x-4 px-3 sm:px-6 py-2 lg:py-0 lg:h-16 shrink-0 sticky top-0 z-40 backdrop-blur" id="app_header">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-cyan-600 rounded flex items-center justify-center font-bold text-lg sm:text-xl text-slate-50 shadow-md shadow-cyan-500/10 shrink-0" id="logo_icon_box">S+</div>
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-cyan-700 rounded flex items-center justify-center font-bold text-lg sm:text-xl text-slate-50 shadow-md shadow-cyan-500/10 shrink-0" id="logo_icon_box">S+</div>
           <div className="min-w-0">
             <h1 className="text-xs sm:text-sm font-bold tracking-tight text-cyan-400 uppercase truncate" id="header_title">CompTIA Security+ SY0-701</h1>
             <p className="text-xs text-slate-400 hidden sm:block truncate" id="header_subtitle">{t("header.subtitle")}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-3 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-thin" id="navigation_tabs" role="tablist" aria-label={t("a11y.mainNavigation")}>
+        <div className="flex items-center gap-2 lg:gap-3 overflow-x-auto max-w-full pb-1 lg:pb-0 scrollbar-thin" id="navigation_tabs">
+          {/* Only the three tabs belong to the tablist: the AI toggle and the
+              language switch are ordinary buttons next to it. */}
+          <div className="flex items-center gap-2 lg:gap-3 shrink-0" role="tablist" aria-label={t("a11y.mainNavigation")}>
           <button 
             id="tab_btn_studio"
             role="tab"
             aria-selected={activeTab === "studio"}
             onClick={() => { setActiveTab("studio"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "studio" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "studio" ? "bg-cyan-700 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <BookOpen className="w-3.5 h-3.5" />
             {t("tab.studio")}
@@ -816,7 +825,7 @@ export default function App() {
             role="tab"
             aria-selected={activeTab === "glossary"}
             onClick={() => { setActiveTab("glossary"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "glossary" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "glossary" ? "bg-cyan-700 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <FileText className="w-3.5 h-3.5" />
             {t("tab.glossary")}
@@ -826,16 +835,19 @@ export default function App() {
             role="tab"
             aria-selected={activeTab === "quiz"}
             onClick={() => { setActiveTab("quiz"); }}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "quiz" ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 flex items-center gap-2 shrink-0 whitespace-nowrap ${activeTab === "quiz" ? "bg-cyan-700 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
           >
             <Activity className="w-3.5 h-3.5" />
             {t("tab.quiz")}
           </button>
+          </div>
 
           <div className="h-6 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
           <button 
             id="toggle_sidebar_btn"
+            type="button"
+            aria-pressed={sidebarOpen}
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className={`px-2.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 shrink-0 whitespace-nowrap transition-all ${sidebarOpen ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" : "border border-slate-800 text-slate-400 hover:bg-slate-800/30"}`}
           >
@@ -849,17 +861,21 @@ export default function App() {
           <div className="flex items-center rounded-md border border-slate-800 overflow-hidden shrink-0" id="lang_toggle" title={t("lang.label")}>
             <button
               id="lang_btn_it"
+              type="button"
+              aria-pressed={lang === "it"}
               onClick={() => setLang("it")}
-              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${lang === "it" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${lang === "it" ? "bg-cyan-700 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
             >
               IT
             </button>
             <button
               id="lang_btn_en"
+              type="button"
+              aria-pressed={lang === "en"}
               onClick={() => setLang("en")}
               disabled={isLoadingLang}
               title={isLoadingLang ? t("lang.loadingEn") : undefined}
-              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 disabled:opacity-60 ${lang === "en" ? "bg-cyan-600 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+              className={`px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 disabled:opacity-60 ${lang === "en" ? "bg-cyan-700 text-white" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
             >
               {isLoadingLang && <RefreshCw className="w-3 h-3 animate-spin" />}
               EN
@@ -879,35 +895,35 @@ export default function App() {
             <aside className="w-full md:w-80 md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-slate-800 bg-slate-900/30 p-4 flex flex-col shrink-0" id="checklist_sidebar">
               <div className="mb-4 pb-2 border-b border-slate-800/60" id="checklist_header">
                 <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t("sidebar.browseChecklist")}</h2>
-                <p className="text-[11px] text-slate-500 mt-1 mb-3">{t("sidebar.selectAndCheck")}</p>
+                <p className="text-[11px] text-slate-400 mt-1 mb-3">{t("sidebar.selectAndCheck")}</p>
                 <div className="grid grid-cols-5 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800/80">
                   <button
                     onClick={() => handleSwitchDomain(1)}
-                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 1 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 1 ? "bg-cyan-700 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
                     {t("sidebar.domShort", { n: 1 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(2)}
-                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 2 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 2 ? "bg-cyan-700 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
                     {t("sidebar.domShort", { n: 2 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(3)}
-                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 3 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 3 ? "bg-cyan-700 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
                     {t("sidebar.domShort", { n: 3 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(4)}
-                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 4 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 4 ? "bg-cyan-700 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
                     {t("sidebar.domShort", { n: 4 })}
                   </button>
                   <button
                     onClick={() => handleSwitchDomain(5)}
-                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 5 ? "bg-cyan-600 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
+                    className={`py-1.5 text-[9px] font-bold rounded uppercase tracking-wider transition-all ${activeDomain === 5 ? "bg-cyan-700 text-white shadow-sm font-bold" : "text-slate-400 hover:text-slate-200"}`}
                   >
                     {t("sidebar.domShort", { n: 5 })}
                   </button>
@@ -961,54 +977,53 @@ export default function App() {
                               const totalCount = unit.subtopics.length;
 
                               return (
+                                // Checkbox and topic link are siblings, not nested: a control inside
+                                // another interactive element is unreachable for assistive tech.
                                 <div 
                                   key={unit.key} 
                                   id={`unit_${groupIdx}_${unitIdx}`}
-                                  role="button"
-                                  tabIndex={0}
-                                  aria-current={isSelected}
-                                  aria-label={t("a11y.selectTopic", { name: unit.name })}
-                                  className={`group flex items-center justify-between p-2 rounded border border-transparent transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${isSelected ? "bg-cyan-500/10 border-l-2 border-l-cyan-500 text-cyan-50 font-medium" : "text-xs text-slate-400 hover:text-slate-300 hover:bg-slate-900/30"}`}
-                                  onClick={() => setSelectedSubtopic(unit.subtopics[0])}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter" || e.key === " ") {
-                                      e.preventDefault();
-                                      setSelectedSubtopic(unit.subtopics[0]);
-                                    }
-                                  }}
+                                  className={`group flex items-center gap-1 p-1 rounded border border-transparent transition-all ${isSelected ? "bg-cyan-500/10 border-l-2 border-l-cyan-500 text-cyan-50 font-medium" : "text-xs text-slate-400 hover:text-slate-300 hover:bg-slate-900/30"}`}
                                 >
-                                  <div className="flex items-center gap-2 min-w-0 flex-1" id={`unit_label_${groupIdx}_${unit.key}`}>
-                                    {/* Checklist checkbox for bulk selection of all subtopics in subgroup */}
-                                    <button 
-                                      id={`unit_check_box_${groupIdx}_${unit.key}`}
-                                      role="checkbox"
-                                      aria-checked={isAllChecked ? true : isSomeChecked ? "mixed" : false}
-                                      aria-label={t("a11y.toggleCheck", { name: unit.name })}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleToggleGroupCheck(unit.subtopics.map(s => s.checklistKey));
-                                      }}
-                                      className={`w-4 h-4 rounded border flex items-center justify-center transition-colors shrink-0 ${isAllChecked ? "bg-cyan-500 border-cyan-500 text-slate-950" : isSomeChecked ? "border-cyan-600 bg-cyan-950/40 text-cyan-400" : "border-slate-700 hover:border-slate-500 bg-slate-950"}`}
-                                    >
+                                  {/* Checklist checkbox for bulk selection of all subtopics in subgroup.
+                                      The button is 24px (WCAG 2.2 target size); the visible box stays 16px. */}
+                                  <button 
+                                    id={`unit_check_box_${groupIdx}_${unit.key}`}
+                                    type="button"
+                                    role="checkbox"
+                                    aria-checked={isAllChecked ? true : isSomeChecked ? "mixed" : false}
+                                    aria-label={t("a11y.toggleCheck", { name: unit.name })}
+                                    onClick={() => handleToggleGroupCheck(unit.subtopics.map(s => s.checklistKey))}
+                                    className="w-6 h-6 flex items-center justify-center shrink-0 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
+                                  >
+                                    <span className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isAllChecked ? "bg-cyan-500 border-cyan-500 text-slate-950" : isSomeChecked ? "border-cyan-600 bg-cyan-950/40 text-cyan-400" : "border-slate-700 hover:border-slate-500 bg-slate-950"}`}>
                                       {isAllChecked ? (
                                         <Check className="w-3 h-3 stroke-[3]" />
                                       ) : isSomeChecked ? (
-                                        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-sm" />
+                                        <span className="w-1.5 h-1.5 bg-cyan-400 rounded-sm" />
                                       ) : null}
-                                    </button>
-                                    
-                                    <div className="flex flex-col min-w-0" id={`unit_text_${unit.key}`}>
+                                    </span>
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    id={`unit_label_${groupIdx}_${unit.key}`}
+                                    aria-current={isSelected}
+                                    aria-label={t("a11y.selectTopic", { name: unit.name })}
+                                    onClick={() => setSelectedSubtopic(unit.subtopics[0])}
+                                    className="flex items-center justify-between gap-2 min-w-0 flex-1 p-1 text-left rounded cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
+                                  >
+                                    <span className="flex flex-col min-w-0" id={`unit_text_${unit.key}`}>
                                       <span className="truncate text-xs text-slate-300 group-hover:text-cyan-200 transition-colors font-medium leading-tight">
                                         {unit.name}
                                       </span>
                                       {totalCount > 1 && (
-                                        <span className="text-[9px] font-mono text-slate-500 group-hover:text-slate-400 transition-colors leading-none mt-0.5">
+                                        <span className="text-[9px] font-mono text-slate-400 group-hover:text-slate-300 transition-colors leading-none mt-0.5">
                                           {t("common.completedOf", { done: completedCount, total: totalCount })}
                                         </span>
                                       )}
-                                    </div>
-                                  </div>
-                                  <ChevronRight className={`w-3 h-3 shrink-0 transition-transform ${isSelected ? "text-cyan-400 translate-x-0.5" : "text-slate-600"}`} />
+                                    </span>
+                                    <ChevronRight className={`w-3 h-3 shrink-0 transition-transform ${isSelected ? "text-cyan-400 translate-x-0.5" : "text-slate-600"}`} aria-hidden="true" />
+                                  </button>
                                 </div>
                               );
                             })}
@@ -1022,7 +1037,7 @@ export default function App() {
 
               {/* Progress Tracker Widget inspired by Design HTML */}
               <div className="mt-4 p-4 rounded-lg bg-slate-900 border border-slate-800" id="checklist_progress_box">
-                <div className="flex justify-between text-[10px] text-slate-500 mb-2">
+                <div className="flex justify-between text-[10px] text-slate-400 mb-2">
                   <span className="uppercase font-semibold font-mono tracking-wider">{t("sidebar.domainProgress", { n: activeDomain })}</span>
                   <span className="font-mono font-bold text-cyan-400">
                     {(() => {
@@ -1044,7 +1059,7 @@ export default function App() {
                     }}
                   ></div>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-2.5 italic">{t("sidebar.passingScore")}</p>
+                <p className="text-[10px] text-slate-400 mt-2.5 italic">{t("sidebar.passingScore")}</p>
               </div>
             </aside>
 
@@ -1168,7 +1183,8 @@ export default function App() {
                             <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.comparisons")}</h3>
                             <div className="space-y-4">
                               {DOMAIN_GUIDE.comparisons.map((comparison) => (
-                                <div key={comparison.title} className="overflow-x-auto border border-slate-800 rounded-md">
+                                // A scrollable region must be reachable from the keyboard to scroll it.
+                                <div key={comparison.title} className="overflow-x-auto border border-slate-800 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500" tabIndex={0} role="region" aria-label={t("a11y.scrollableTable", { title: comparison.title })}>
                                   <table className="w-full text-left text-xs">
                                     <caption className="text-left text-xs font-bold text-cyan-300 bg-slate-950/70 px-3 py-2 border-b border-slate-800">{comparison.title}</caption>
                                     <thead>
@@ -1329,7 +1345,7 @@ export default function App() {
                               
                               {/* Individual checklist checkbox */}
                               <div className="flex items-center gap-2" id={`concept_check_wrapper_${sub.checklistKey}`}>
-                                <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">{t("study.completed")}</span>
+                                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">{t("study.completed")}</span>
                                 <button 
                                   id={`concept_check_${sub.checklistKey}`}
                                   role="checkbox"
@@ -1386,7 +1402,7 @@ export default function App() {
                                   <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
                                   <span>{t("study.comparativeTable")}</span>
                                 </div>
-                                <div className="overflow-x-auto border border-slate-800 rounded bg-slate-950">
+                                <div className="overflow-x-auto border border-slate-800 rounded bg-slate-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500" tabIndex={0} role="region" aria-label={t("a11y.scrollableTable", { title: sub.name })}>
                                   <table className="w-full text-left border-collapse text-xs">
                                     <thead>
                                       <tr className="border-b border-slate-800 bg-slate-900/60 font-bold tracking-wider">
@@ -1517,7 +1533,7 @@ export default function App() {
                         type="button"
                         onClick={handleStartSmartReview}
                         disabled={dueReviewQuestions.length === 0}
-                        className="w-full sm:w-auto shrink-0 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-bold px-4 py-2 rounded text-[11px] transition-colors"
+                        className="w-full sm:w-auto shrink-0 bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-600 text-white font-bold px-4 py-2 rounded text-[11px] transition-colors"
                       >
                         {t("quiz.smartReviewStart")}
                       </button>
@@ -1534,7 +1550,7 @@ export default function App() {
                         <h3 id="weak_topics_summary_title" className="text-xs font-bold text-slate-200">
                           {t("quiz.weakTopicsTitle")}
                         </h3>
-                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
                           {t("quiz.weakTopicsDesc")}
                         </p>
                       </div>
@@ -1586,7 +1602,7 @@ export default function App() {
                               )
                             );
                           }}
-                          className="flex-1 sm:flex-initial bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-3 py-2 rounded text-[11px] transition-colors shadow-md shadow-cyan-600/10 text-center"
+                          className="flex-1 sm:flex-initial bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-3 py-2 rounded text-[11px] transition-colors shadow-md shadow-cyan-600/10 text-center"
                         >
                           {t("quiz.startTest10")}
                         </button>
@@ -1636,13 +1652,13 @@ export default function App() {
                     </div>
 
                     <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-slate-800/40">
-                      <span className="text-[9px] text-slate-500 font-mono flex items-center mr-1">{t("quiz.onlyDomain")}</span>
+                      <span className="text-[9px] text-slate-400 font-mono flex items-center mr-1">{t("quiz.onlyDomain")}</span>
                       {[1, 2, 3, 4, 5].map(domNum => (
                         <button
                           key={domNum}
                           type="button"
                           onClick={() => applyPreset(`domain${domNum}` as any)}
-                          className={`px-2 py-1 rounded text-[10px] font-mono border transition-all ${quizFocus === `domain${domNum}` ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-500 hover:border-slate-700 hover:text-slate-300"}`}
+                          className={`px-2 py-1 rounded text-[10px] font-mono border transition-all ${quizFocus === `domain${domNum}` ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-300"}`}
                         >
                           DOM {domNum}
                         </button>
@@ -1688,7 +1704,7 @@ export default function App() {
                             <div className="flex justify-between items-start gap-2">
                               <div className="space-y-0.5">
                                 <span className="text-xs font-bold text-slate-200 block">{dom.name}</span>
-                                <span className="text-[10px] text-slate-500 block leading-relaxed">{dom.desc}</span>
+                                <span className="text-[10px] text-slate-400 block leading-relaxed">{dom.desc}</span>
                               </div>
                               <div className="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-[11px] font-mono font-bold text-cyan-400 whitespace-nowrap">
                                 {currentVal} / {maxVal}
@@ -1745,7 +1761,7 @@ export default function App() {
                       />
                       <span className="space-y-0.5">
                         <span className="text-xs font-bold text-slate-200 block">{t("quiz.timerEnable")}</span>
-                        <span className="text-[10px] text-slate-500 block leading-relaxed">{t("quiz.timerHint")}</span>
+                        <span className="text-[10px] text-slate-400 block leading-relaxed">{t("quiz.timerHint")}</span>
                       </span>
                     </label>
                   </div>
@@ -1756,7 +1772,7 @@ export default function App() {
                       <div className="text-sm font-bold text-slate-100 font-sans">
                         <span className="text-cyan-400 font-mono text-lg">{totalQuestionsSelected}</span> {t("quiz.highStakesSelected")}
                       </div>
-                      <div className="text-[10px] text-slate-500 font-mono">
+                      <div className="text-[10px] text-slate-400 font-mono">
                         {t("quiz.thresholdTime", { min: totalQuestionsSelected * 2 })}
                       </div>
                     </div>
@@ -1765,7 +1781,7 @@ export default function App() {
                       id="start_quiz_btn"
                       disabled={totalQuestionsSelected <= 0}
                       onClick={handleStartQuiz}
-                      className="w-full md:w-auto bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 disabled:border-slate-800 disabled:shadow-none text-white font-bold px-6 py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all inline-flex items-center justify-center gap-2 border border-cyan-500/30"
+                      className="w-full md:w-auto bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-600 disabled:border-slate-800 disabled:shadow-none text-white font-bold px-6 py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all inline-flex items-center justify-center gap-2 border border-cyan-500/30"
                     >
                       {t("quiz.startSimulator")}
                       <ChevronRight className="w-4 h-4 stroke-[3]" />
@@ -1794,7 +1810,7 @@ export default function App() {
                           type="button"
                           id="clear_history_btn"
                           onClick={handleClearHistory}
-                          className="text-[10px] text-slate-500 hover:text-rose-400 underline underline-offset-2 transition-colors"
+                          className="text-[10px] text-slate-400 hover:text-rose-400 underline underline-offset-2 transition-colors"
                         >
                           {t("quiz.historyClear")}
                         </button>
@@ -1802,7 +1818,7 @@ export default function App() {
                     </div>
 
                     {quizHistory.length === 0 ? (
-                      <p className="text-[11px] text-slate-500 italic">{t("quiz.historyEmpty")}</p>
+                      <p className="text-[11px] text-slate-400 italic">{t("quiz.historyEmpty")}</p>
                     ) : (
                       <>
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-slate-400">
@@ -1817,7 +1833,7 @@ export default function App() {
                                 key={r.at}
                                 className="flex items-center justify-between gap-3 text-[11px] font-mono bg-slate-900/60 border border-slate-800 rounded px-2.5 py-1.5"
                               >
-                                <span className="text-slate-500">
+                                <span className="text-slate-400">
                                   {new Date(r.at).toLocaleDateString(lang === "it" ? "it-IT" : "en-GB", {
                                     day: "2-digit",
                                     month: "2-digit",
@@ -1838,6 +1854,8 @@ export default function App() {
                       </>
                     )}
                   </div>
+
+                  <DataControls />
                 </div>
               ) : quizCompleted ? (
                 /* Completed Screen */
@@ -2020,12 +2038,12 @@ export default function App() {
 
                                   <div className="space-y-1 text-[11px]">
                                     <p className={correct ? "text-emerald-300" : "text-rose-300"}>
-                                      <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewYourAnswer")}:</span>
+                                      <span className="text-slate-400 font-mono uppercase mr-1">{t("quiz.reviewYourAnswer")}:</span>
                                       {answered ? given.map(i => q.options[i]).join(" · ") : t("quiz.reviewNoAnswer")}
                                     </p>
                                     {!correct && (
                                       <p className="text-emerald-300">
-                                        <span className="text-slate-500 font-mono uppercase mr-1">{t("quiz.reviewCorrectAnswer")}:</span>
+                                        <span className="text-slate-400 font-mono uppercase mr-1">{t("quiz.reviewCorrectAnswer")}:</span>
                                         {correctIndexes(q).map(i => q.options[i]).join(" · ")}
                                       </p>
                                     )}
@@ -2054,7 +2072,7 @@ export default function App() {
                     <button 
                       id="back_to_studio_btn"
                       onClick={() => setActiveTab("studio")}
-                      className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded text-sm transition-all shadow-md shadow-cyan-600/15"
+                      className="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-2.5 rounded text-sm transition-all shadow-md shadow-cyan-600/15"
                     >
                       {t("quiz.backToStudio")}
                     </button>
@@ -2097,7 +2115,7 @@ export default function App() {
                           setRemediationActive(false);
                           setQuizCompleted(true);
                         }}
-                        className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded text-sm transition-all"
+                        className="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-2.5 rounded text-sm transition-all"
                       >
                         {t("rem.seeMainResult")}
                       </button>
@@ -2153,7 +2171,7 @@ export default function App() {
                           } else if (isSelected) {
                             optionStyle = "border-rose-500 bg-rose-500/10 text-rose-400";
                           } else {
-                            optionStyle = "border-slate-800/50 bg-slate-950/10 text-slate-500 opacity-60";
+                            optionStyle = "border-slate-800/50 bg-slate-950/10 text-slate-400 opacity-60";
                           }
                         } else if (isSelected) {
                           optionStyle = "border-rose-400 bg-rose-500/5 text-rose-300 font-medium shadow-rose-500/5 shadow-sm";
@@ -2169,7 +2187,7 @@ export default function App() {
                             onClick={() => handleRemediationSelect(oIdx)}
                             className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
                           >
-                            <span className="font-mono text-[10px] text-slate-500 mr-2 select-none">{oIdx + 1}</span>
+                            <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
                             {opt}
                           </button>
                         );
@@ -2182,9 +2200,9 @@ export default function App() {
                         <div className={`p-4 rounded border ${isSelectionCorrect(remediationQuestions[remediationIndex], remediationSelected) ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="remediation_feedback_details">
                           <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
                             {isSelectionCorrect(remediationQuestions[remediationIndex], remediationSelected) ? (
-                              <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
+                              <><Check className="w-4 h-4 text-emerald-400" aria-hidden="true" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                             ) : (
-                              <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
+                              <><X className="w-4 h-4 text-rose-400" aria-hidden="true" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
                             )}
                           </h4>
                           <div className="text-xs text-slate-400 leading-relaxed">
@@ -2288,7 +2306,7 @@ export default function App() {
                         } else if (isSelected) {
                           optionStyle = "border-rose-500 bg-rose-500/10 text-rose-400";
                         } else {
-                          optionStyle = "border-slate-800/50 bg-slate-950/10 text-slate-500 opacity-60";
+                          optionStyle = "border-slate-800/50 bg-slate-950/10 text-slate-400 opacity-60";
                         }
                       } else if (isSelected) {
                         optionStyle = "border-cyan-400 bg-cyan-500/5 text-cyan-300 font-medium shadow-cyan-500/5 shadow-sm";
@@ -2304,12 +2322,22 @@ export default function App() {
                           onClick={() => handleSelectOption(oIdx)}
                           className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
                         >
-                          <span className="font-mono text-[10px] text-slate-500 mr-2 select-none">{oIdx + 1}</span>
+                          <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
                           {opt}
                         </button>
                       );
                     })}
                   </div>
+
+                  {/* Always mounted, so screen readers announce the verdict as soon as
+                      the answer is confirmed (a live region added later is often missed). */}
+                  <p className="sr-only" role="status" aria-live="polite" id="quiz_feedback_announcer">
+                    {showFeedback
+                      ? isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions)
+                        ? t("quiz.bestChoice")
+                        : t("quiz.distractor")
+                      : ""}
+                  </p>
 
                   {/* Feedback Box & Next Actions */}
                   {showFeedback ? (
@@ -2317,9 +2345,9 @@ export default function App() {
                       <div className={`p-4 rounded border ${isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="quiz_feedback_details">
                         <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
                           {isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? (
-                            <><Check className="w-4 h-4 text-emerald-400" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
+                            <><Check className="w-4 h-4 text-emerald-400" aria-hidden="true" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
                           ) : (
-                            <><X className="w-4 h-4 text-rose-400" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
+                            <><X className="w-4 h-4 text-rose-400" aria-hidden="true" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
                           )}
                         </h4>
                         <div className="text-xs text-slate-400 leading-relaxed">
@@ -2330,7 +2358,7 @@ export default function App() {
                       <button 
                         id="quiz_next_btn"
                         onClick={handleNextQuestion}
-                        className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all text-xs flex items-center justify-center gap-1"
+                        className="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-3 rounded hover:shadow-lg hover:shadow-cyan-500/10 transition-all text-xs flex items-center justify-center gap-1"
                       >
                         <span>{currentQuestionIndex === activeQuestions.length - 1 ? t("quiz.finishExam") : t("quiz.nextQuestion")}</span>
                         <ChevronRight className="w-4 h-4 stroke-[3]" />
@@ -2346,7 +2374,7 @@ export default function App() {
                       >
                         {t("quiz.confirmAnswer")}
                       </button>
-                      <p className="text-[10px] text-slate-500 text-center font-mono">{t("a11y.keyboardHint")}</p>
+                      <p className="text-[10px] text-slate-400 text-center font-mono">{t("a11y.keyboardHint")}</p>
                     </div>
                   )}
 
@@ -2411,14 +2439,14 @@ export default function App() {
                     >
                       <div 
                         id={`msg_bubble_${i}`}
-                        className={`max-w-[85%] rounded p-3 text-xs leading-relaxed ${isTrainer ? "bg-slate-950 text-slate-300 border border-slate-800" : isSystem ? "bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono text-center" : "bg-cyan-600 text-white font-medium shadow-md shadow-cyan-600/10"}`}
+                        className={`max-w-[85%] rounded p-3 text-xs leading-relaxed ${isTrainer ? "bg-slate-950 text-slate-300 border border-slate-800" : isSystem ? "bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono text-center" : "bg-cyan-700 text-white font-medium shadow-md shadow-cyan-600/10"}`}
                       >
                         {isTrainer ? (
                           renderMarkdownToJSX(msg.text)
                         ) : (
                           <p>{msg.text}</p>
                         )}
-                        <span className="block text-[9px] text-slate-500 mt-1 text-right font-mono select-none">
+                        <span className="block text-[9px] text-slate-400 mt-1 text-right font-mono select-none">
                           {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
@@ -2438,7 +2466,7 @@ export default function App() {
 
               {/* Suggested chips based on context */}
               <div className="px-3 py-2 border-t border-slate-800/60 bg-slate-950/40" id="suggested_chips_box">
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-1.5 pl-1">{t("chat.askTrainer")}</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-1.5 pl-1">{t("chat.askTrainer")}</span>
                 <div className="flex flex-wrap gap-1.5" id="suggested_chips_list">
                   <button 
                     id="chip_threats"
@@ -2508,8 +2536,9 @@ export default function App() {
                   <button 
                     id="chat_submit_btn"
                     type="submit"
+                    aria-label={t("a11y.sendMessage")}
                     disabled={isChatLoading || !chatInput.trim()}
-                    className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 text-white disabled:text-slate-600 font-bold p-2 rounded transition-colors"
+                    className="bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 text-white disabled:text-slate-600 font-bold p-2 rounded transition-colors"
                   >
                     <Send className="w-4 h-4 stroke-[2.5]" />
                   </button>
@@ -2546,7 +2575,7 @@ export default function App() {
                   <div key={q.id} className="p-4 bg-slate-950/40 border border-slate-800/80 rounded-lg space-y-3" id={`modal_q_${q.id}`}>
                     <div className="flex items-center justify-between gap-2 border-b border-slate-800/60 pb-1.5">
                       <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase">{t("modal.questionN", { i: idx + 1, id: q.id })}</span>
-                      <span className="text-[10px] font-mono text-slate-500">{t("modal.topic", { topic: q.topic })}</span>
+                      <span className="text-[10px] font-mono text-slate-400">{t("modal.topic", { topic: q.topic })}</span>
                     </div>
                     <div className="space-y-2">
                       {q.scenario?.trim() && (
@@ -2591,7 +2620,7 @@ export default function App() {
                     );
                     setShowNewQuestionsModal(false);
                   }}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-bold transition-colors shadow-md shadow-cyan-600/10"
+                  className="px-4 py-2 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-bold transition-colors shadow-md shadow-cyan-600/10"
                 >
                   {t("modal.startDirect")}
                 </button>
@@ -2608,7 +2637,7 @@ export default function App() {
         README, so the statement has to live where the study happens.
       */}
       <footer
-        className="shrink-0 border-t border-slate-800 bg-slate-900/50 px-3 sm:px-6 py-1.5 flex items-start gap-2 text-[10px] leading-snug text-slate-500"
+        className="shrink-0 border-t border-slate-800 bg-slate-900/50 px-3 sm:px-6 py-1.5 flex items-start gap-2 text-[10px] leading-snug text-slate-400"
         id="app_disclaimer"
       >
         <Info className="w-3 h-3 shrink-0 mt-[1px] text-slate-600" aria-hidden="true" />
@@ -2638,5 +2667,6 @@ export default function App() {
         </div>
       )}
     </div>
+    </MotionConfig>
   );
 }

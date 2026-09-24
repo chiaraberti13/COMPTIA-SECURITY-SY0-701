@@ -102,7 +102,16 @@ GEMINI_API_KEY="Paste_Your_Gemini_API_Key_Here"
 
 # Optional — application base URL
 APP_URL="http://localhost:3000"
+
+# Optional — cost and resilience limits for the AI endpoints
+AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 turns the AI off
+GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
 ```
+
+`AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
+public deployment it caps what many different addresses can spend together. The counter
+lives in the server process, so with several instances the effective cap is the limit
+multiplied by the number of instances.
 
 > [!WARNING]
 > Never commit your `.env` to a public repository — it holds a private API credential.
@@ -196,6 +205,7 @@ to `http://localhost:3000` in your Windows browser automatically.
 | `npm run lint` | ESLint over the source (TypeScript + React Hooks rules). |
 | `npm test` | Vitest suite: dataset integrity, quiz logic and i18n coverage. |
 | `npm run check` | Typecheck + lint + tests, the same gate CI runs. |
+| `npm run smoke` | After `npm run build`: starts `dist/server.cjs` in production mode and checks the app shell, security headers, SPA fallback and API input validation. Also run by CI. |
 | `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
 
 ## Architecture
@@ -268,6 +278,10 @@ Always verify against **official CompTIA sources**:
 
 Where these notes and CompTIA's official documentation disagree, **the official
 documentation always prevails**.
+
+How every official objective is covered (number of questions by cognitive level and guided
+exercises) is published in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generated
+from the dataset and checked by CI.
 
 ---
 

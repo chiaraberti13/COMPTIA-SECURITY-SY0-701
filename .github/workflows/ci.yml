@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   check:
-    name: Typecheck, lint, test, build (Node ${{ matrix.node }})
+    name: Typecheck, lint, test, build, smoke (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -54,3 +54,44 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Starts dist/server.cjs with NODE_ENV=production: catches errors that only
+      # appear at start-up (route patterns, missing files, security headers),
+      # which typecheck, unit tests and the build cannot see.
+      - name: Smoke test (production start-up)
+        run: npm run smoke
+
+  e2e:
+    name: End-to-end (Playwright, axe)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Chromium matching the pinned @playwright/test version, with system libraries.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Layout at phone and desktop width, WCAG 2.2 AA with axe, quiz by keyboard.
+      - name: End-to-end tests
+        run: npm run e2e
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7

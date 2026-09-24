@@ -102,7 +102,16 @@ GEMINI_API_KEY="Incolla_Qui_La_Tua_Chiave_Gemini"
 
 # Opzionale — URL base dell'applicazione
 APP_URL="http://localhost:3000"
+
+# Opzionali — limiti di costo e di resilienza per gli endpoint AI
+AI_DAILY_LIMIT=500        # chiamate AI totali per giorno UTC, tutti gli utenti insieme; 0 disattiva l'AI
+GEMINI_TIMEOUT_MS=30000   # una chiamata a Gemini più lunga viene abbandonata e riceve 504
 ```
+
+`AI_DAILY_LIMIT` si aggiunge al limite per indirizzo IP (30 richieste ogni 15 minuti): in
+un'installazione pubblica limita ciò che molti indirizzi diversi possono spendere insieme.
+Il contatore vive nel processo del server, quindi con più istanze il tetto effettivo è il
+limite moltiplicato per il numero di istanze.
 
 > [!WARNING]
 > Non committare mai il file `.env` su un repository pubblico — contiene una credenziale API privata.
@@ -196,6 +205,7 @@ npm run build ; npm start
 | `npm run lint` | ESLint sul sorgente (regole TypeScript + React Hooks). |
 | `npm test` | Suite Vitest: integrità del dataset, logica del quiz e copertura i18n. |
 | `npm run check` | Typecheck + lint + test, lo stesso controllo eseguito dalla CI. |
+| `npm run smoke` | Dopo `npm run build`: avvia `dist/server.cjs` in modalità produzione e verifica pagina dell'app, header di sicurezza, fallback della SPA e validazione degli input delle API. Eseguito anche dalla CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
 
 ## Architettura
@@ -268,6 +278,10 @@ aggiornamenti del programma d'esame. Verifica sempre sulle **fonti ufficiali Com
 
 In caso di divergenza fra queste note e la documentazione ufficiale CompTIA, **fa fede
 sempre la documentazione ufficiale**.
+
+La copertura di ogni obiettivo ufficiale (numero di domande per livello cognitivo ed esercizi
+guidati) è pubblicata in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generata dal
+dataset e verificata dalla CI.
 
 ---
 

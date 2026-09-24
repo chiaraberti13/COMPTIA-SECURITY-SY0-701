@@ -1,0 +1,6 @@
+# Blank issues are disabled so every report arrives with the details needed to act on it.
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Security vulnerability · Vulnerabilità di sicurezza
+    url: https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new
+    about: Report it privately, never in a public issue. · Segnalala in privato, mai in una issue pubblica.
