@@ -1107,7 +1107,16 @@ export default function App() {
                             {DOMAIN_GUIDE.objectives.map((objective) => (
                               <div key={objective.code} className="flex gap-3 bg-slate-950/70 border border-slate-800 rounded-md p-3">
                                 <span className="font-mono font-bold text-cyan-400 text-xs shrink-0">{objective.code}</span>
-                                <p className="text-xs text-slate-300 leading-relaxed">{objective.outcome}</p>
+                                <div className="min-w-0 space-y-2">
+                                  <p className="text-xs text-slate-300 leading-relaxed">{objective.outcome}</p>
+                                  {objective.keyTopics && objective.keyTopics.length > 0 && (
+                                    <ul className="flex flex-wrap gap-1.5" aria-label={t("study.keyTopics", { code: objective.code })}>
+                                      {objective.keyTopics.map((topic) => (
+                                        <li key={topic} className="text-[11px] text-slate-400 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 leading-snug">{topic}</li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -1151,6 +1160,58 @@ export default function App() {
                           </section>
                         </div>
 
+                        {DOMAIN_GUIDE.comparisons && DOMAIN_GUIDE.comparisons.length > 0 && (
+                          <section className="space-y-3">
+                            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.comparisons")}</h3>
+                            <div className="space-y-4">
+                              {DOMAIN_GUIDE.comparisons.map((comparison) => (
+                                <div key={comparison.title} className="overflow-x-auto border border-slate-800 rounded-md">
+                                  <table className="w-full text-left text-xs">
+                                    <caption className="text-left text-xs font-bold text-cyan-300 bg-slate-950/70 px-3 py-2 border-b border-slate-800">{comparison.title}</caption>
+                                    <thead>
+                                      <tr className="bg-slate-900">
+                                        {comparison.headers.map((header) => (
+                                          <th key={header} scope="col" className="px-3 py-2 font-semibold text-slate-300">{header}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {comparison.rows.map((row) => (
+                                        <tr key={row[0]} className="border-t border-slate-800 align-top">
+                                          <th scope="row" className="px-3 py-2 font-semibold text-slate-200 min-w-[6rem]">{row[0]}</th>
+                                          {row.slice(1).map((cell, cellIdx) => (
+                                            <td key={cellIdx} className="px-3 py-2 text-slate-400 leading-relaxed min-w-[7rem]">{cell}</td>
+                                          ))}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              ))}
+                            </div>
+                          </section>
+                        )}
+
+                        {DOMAIN_GUIDE.commonTraps && DOMAIN_GUIDE.commonTraps.length > 0 && (
+                          <section className="space-y-3">
+                            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.commonTraps")}</h3>
+                            <ul className="grid sm:grid-cols-2 gap-3">
+                              {DOMAIN_GUIDE.commonTraps.map((trap) => (
+                                <li key={trap.misconception} className="bg-slate-950/40 border border-slate-800 rounded-md p-3.5 space-y-2">
+                                  <p className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
+                                    <span><span className="font-bold text-amber-300">{t("study.trapWrong")}:</span> {trap.misconception}</span>
+                                  </p>
+                                  <p className="flex gap-2 text-xs text-slate-400 leading-relaxed">
+                                    <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />
+                                    <span><span className="font-bold text-cyan-300">{t("study.trapRight")}:</span> {trap.correction}</span>
+                                  </p>
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+                        )}
+
                         <section className="bg-slate-950/70 border border-slate-700 rounded-lg p-4 space-y-3">
                           <div className="flex items-center gap-2">
                             <Activity className="w-4 h-4 text-cyan-400" />
@@ -1165,6 +1226,31 @@ export default function App() {
                             <p className="text-xs text-slate-400 leading-relaxed">{DOMAIN_GUIDE.appliedScenario.reasoning}</p>
                           </div>
                         </section>
+
+                        {DOMAIN_GUIDE.practiceScenarios && DOMAIN_GUIDE.practiceScenarios.length > 0 && (
+                          <section className="space-y-3">
+                            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.practiceScenarios")}</h3>
+                            <div className="space-y-3">
+                              {DOMAIN_GUIDE.practiceScenarios.map((scenario) => (
+                                <div key={scenario.title} className="bg-slate-950/70 border border-slate-800 rounded-lg p-4 space-y-2">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className="font-mono font-bold text-[10px] text-cyan-300 bg-cyan-950/40 border border-cyan-900 px-2 py-0.5 rounded-full">{t("study.objectiveTag", { code: scenario.objective })}</span>
+                                    <h4 className="text-xs font-bold text-slate-200">{scenario.title}</h4>
+                                  </div>
+                                  <p className="text-xs text-slate-300 leading-relaxed">{scenario.prompt}</p>
+                                  {/* The reasoning stays folded so the learner commits to an answer first. */}
+                                  <details className="group/answer border-t border-slate-800 pt-2">
+                                    <summary className="cursor-pointer list-none inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-400 hover:text-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded">
+                                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-open/answer:rotate-90" aria-hidden="true" />
+                                      {t("study.showReasoning")}
+                                    </summary>
+                                    <p className="mt-2 text-xs text-slate-400 leading-relaxed">{scenario.reasoning}</p>
+                                  </details>
+                                </div>
+                              ))}
+                            </div>
+                          </section>
+                        )}
 
                         <section className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-3">
                           <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>

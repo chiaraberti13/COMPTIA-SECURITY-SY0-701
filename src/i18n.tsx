@@ -194,6 +194,14 @@ const it = {
   "study.scenarioChallenge": "Sfida",
   "study.scenarioReasoning": "Percorso di soluzione",
   "study.readiness": "Verifica di padronanza",
+  "study.keyTopics": "Argomenti ufficiali dell'obiettivo {code}",
+  "study.comparisons": "Confronti chiave",
+  "study.commonTraps": "Errori comuni",
+  "study.trapWrong": "Errato",
+  "study.trapRight": "Corretto",
+  "study.practiceScenarios": "Esercizi guidati",
+  "study.objectiveTag": "Obiettivo {code}",
+  "study.showReasoning": "Mostra il ragionamento",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",
@@ -483,6 +491,14 @@ const en: Record<UIKey, string> = {
   "study.scenarioChallenge": "Challenge",
   "study.scenarioReasoning": "Reasoning path",
   "study.readiness": "Mastery check",
+  "study.keyTopics": "Official sub-topics of objective {code}",
+  "study.comparisons": "Key comparisons",
+  "study.commonTraps": "Common traps",
+  "study.trapWrong": "Wrong",
+  "study.trapRight": "Correct",
+  "study.practiceScenarios": "Guided practice",
+  "study.objectiveTag": "Objective {code}",
+  "study.showReasoning": "Show the reasoning",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",
