@@ -167,7 +167,7 @@ Un'attività è completata quando:
 
 Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle senza metodo è il modo più rapido per rompere un'app che funziona; lasciarle aperte accumula debito e vulnerabilità. Le regole seguenti bilanciano le due cose.
 
-- [ ] **P0 — Smoke test di avvio in produzione nella CI:** dopo `npm run build`, avviare `node dist/server.cjs` con `NODE_ENV=production` e verificare che `GET /` restituisca l'HTML con gli header di sicurezza e che `POST /api/chat` senza corpo risponda 400. Oggi nessun test avvia il server, quindi un errore che si manifesta solo all'avvio passa la CI. **S**
+- [x] **P0 — Smoke test di avvio in produzione nella CI:** `scripts/smoke-test.ts` (`npm run smoke`) avvia `dist/server.cjs` con `NODE_ENV=production` e verifica pagina dell'app, CSP, `nosniff`, assenza di `X-Powered-By`, fallback della SPA e risposta 400 delle due API; eseguito dalla CI dopo la build. Verificato che fallisce con Express 5 e la vecchia rotta `"*"` (`PathError: Missing parameter name`) — 2026-09-24.
 - [ ] **P0 — Smistare le 6 PR aperte di Dependabot**, una alla volta e dopo lo smoke test: **M**
 
   | PR di Dependabot | Tipo | Rischio verificato | Azione |
@@ -180,7 +180,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
   | `motion` 12 → 13 | major | Usato per le animazioni del pannello AI | Verificare le animazioni e cogliere l'occasione per `prefers-reduced-motion` |
 
 - [ ] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** aggiornamenti di sicurezza entro 48 ore; minor e patch entro 7 giorni se la CI è verde; ogni major in una PR dedicata, con lettura del changelog, smoke test e verifica manuale dell'area coinvolta. **S**
-- [ ] **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: rotta statica con wildcard nominata, gestione degli errori asincroni e test API già in place. **S**
+- [ ] 🟡 **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); resta da integrare la PR di Dependabot e sfruttare la gestione nativa degli errori asincroni. **S**
 - [ ] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S**
 
 #### Collaborazione e manutenzione

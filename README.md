@@ -196,6 +196,7 @@ to `http://localhost:3000` in your Windows browser automatically.
 | `npm run lint` | ESLint over the source (TypeScript + React Hooks rules). |
 | `npm test` | Vitest suite: dataset integrity, quiz logic and i18n coverage. |
 | `npm run check` | Typecheck + lint + tests, the same gate CI runs. |
+| `npm run smoke` | After `npm run build`: starts `dist/server.cjs` in production mode and checks the app shell, security headers, SPA fallback and API input validation. Also run by CI. |
 | `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
 
 ## Architecture

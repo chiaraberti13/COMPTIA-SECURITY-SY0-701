@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   check:
-    name: Typecheck, lint, test, build (Node ${{ matrix.node }})
+    name: Typecheck, lint, test, build, smoke (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -54,3 +54,9 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Starts dist/server.cjs with NODE_ENV=production: catches errors that only
+      # appear at start-up (route patterns, missing files, security headers),
+      # which typecheck, unit tests and the build cannot see.
+      - name: Smoke test (production start-up)
+        run: npm run smoke

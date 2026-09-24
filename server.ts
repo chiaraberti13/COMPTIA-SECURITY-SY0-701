@@ -336,7 +336,11 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    // SPA fallback: any other GET returns the app shell. A final middleware
+    // instead of app.get("*") because Express 5 rejects an unnamed "*" route
+    // at start-up; this form behaves the same on Express 4 and 5.
+    app.use((req, res, next) => {
+      if (req.method !== "GET" && req.method !== "HEAD") return next();
       res.sendFile(path.join(distPath, "index.html"));
     });
   }

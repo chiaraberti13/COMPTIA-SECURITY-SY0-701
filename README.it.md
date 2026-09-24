@@ -196,6 +196,7 @@ npm run build ; npm start
 | `npm run lint` | ESLint sul sorgente (regole TypeScript + React Hooks). |
 | `npm test` | Suite Vitest: integrità del dataset, logica del quiz e copertura i18n. |
 | `npm run check` | Typecheck + lint + test, lo stesso controllo eseguito dalla CI. |
+| `npm run smoke` | Dopo `npm run build`: avvia `dist/server.cjs` in modalità produzione e verifica pagina dell'app, header di sicurezza, fallback della SPA e validazione degli input delle API. Eseguito anche dalla CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
 
 ## Architettura
