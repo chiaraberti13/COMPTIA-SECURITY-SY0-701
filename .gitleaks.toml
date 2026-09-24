@@ -1,0 +1,21 @@
+# gitleaks configuration: the default rule set, plus narrow exceptions for
+# identifiers whose *name* contains "key" but whose value is not a secret.
+# Docs: https://github.com/gitleaks/gitleaks#configuration
+#
+# Keep every exception specific (one rule, one exact shape of line) and explain
+# it. Never allowlist a whole file or directory: a real key added there later
+# would go unnoticed.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "localStorage key names and checklist identifiers, not credentials"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = [
+  # const STORAGE_KEY = "comptia_sy0701_lang"   (src/i18n.tsx, older versions)
+  '''STORAGE_KEY\s*=\s*"comptia_sy0701_[a-z0-9_]+"''',
+  # checklistKey: "WPA3EnterpriseRes"   (identifiers of the study checklist)
+  '''checklistKey:\s*"[A-Za-z0-9]+"''',
+]

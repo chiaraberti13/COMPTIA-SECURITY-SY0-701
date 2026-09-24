@@ -37,7 +37,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Nessun timeout sulle chiamate Gemini, nessun budget globale, nessun `maxOutputTokens` sulla chat, nessun endpoint di health, header `User-Agent` residuo di AI Studio; **nessun test avvia il server in modalità produzione**, dove vengono registrate CSP e rotta statica |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
-| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Nessun secret scan, SAST o audit delle dipendenze; **6 PR di Dependabot aperte**, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
+| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
 | Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS` |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
 | Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Nessun test automatico di accessibilità né di layout (il difetto mobile è stato scoperto solo con Playwright a mano); animazioni `motion` senza rispetto di `prefers-reduced-motion` |
@@ -176,7 +176,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
   | 2 | `express` 4 → 5 e `@types/express` | ✅ tutto verde **dopo** due correzioni: la rotta `"*"` fermava l'avvio (`PathError: Missing parameter name`) e le API senza corpo rispondevano 502 invece di 400 | Correzioni di `server.ts` e smoke test di questo branch |
   | 3 | `vite` 6 → 8 **insieme a** `@vitejs/plugin-react` 5 → 6 | ✅ tutto verde, build in circa 1 s invece di 4 s, nessun avviso | Gruppo minor/patch già integrato (Vite 8 richiede esbuild 0.27 o 0.28) e `vite.config.ts` con `import.meta.dirname`. Le due PR modificano lo stesso lockfile: integrare la prima, poi chiedere a Dependabot di aggiornare la seconda (`@dependabot rebase`) |
   | 4 | `motion` 12 → 13 | ✅ tutto verde; da controllare a vista l'animazione del pannello AI | Nessuno |
-  | 5 | Actions `checkout` e `setup-node` a v7 | Non verificabile in locale; il commento di versione rispetta `tests/workflows.test.ts` | La CI della PR stessa deve essere verde su Node 22 e 24 |
+  | 5 | Actions `checkout` e `setup-node` a v7 | Non verificabile in locale; il commento di versione rispetta `tests/workflows.test.ts`. Consigliata: le v4 sono scritte per Node 20, che GitHub sta ritirando dai runner (la CI è ancora verde al 2026-09-24) | La CI della PR stessa deve essere verde su Node 22 e 24 |
 
 - [ ] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** aggiornamenti di sicurezza entro 48 ore; minor e patch entro 7 giorni se la CI è verde; ogni major in una PR dedicata, con lettura del changelog, smoke test e verifica manuale dell'area coinvolta. **S**
 - [ ] 🟡 **P1 — Migrazione a Express 5**, sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); anche le API senza corpo JSON rispondono 400 e non 502 con Express 5 (`req.body ?? {}`); resta da integrare la PR di Dependabot e sfruttare la gestione nativa degli errori asincroni. **S**
@@ -206,10 +206,10 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Minimo privilegio nei workflow:** `permissions: contents: read` dichiarato a livello di workflow.
 - [x] **P0 — Lockfile versionato:** `package-lock.json` presente e installazione con `npm ci`.
 - [x] **P0 — Fissare le GitHub Actions a commit SHA immutabili:** `checkout` e `setup-node` fissate a v4.4.0 con commento della versione, `persist-credentials: false`, processo di aggiornamento documentato in `ci.yml` e imposto da `tests/workflows.test.ts` — 2026-09-24.
-- [ ] **P0 — Secret scanning:** attivare *secret scanning* e *push protection* su GitHub e aggiungere `gitleaks` in CI come controllo sulle pull request. **S**
-- [ ] 🟡 **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` attivo (`.github/dependabot.yml`, settimanale, attesa di 7 giorni sulle nuove release, aggiornamenti minor/patch raggruppati) — 2026-09-24; manca `npm audit --omit=dev --audit-level=high` in CI (vedi ordine delle attività). **S**
-- [ ] **P0 — SAST pertinente:** CodeQL per JavaScript/TypeScript (unico linguaggio presente); nessuno scanner per linguaggi assenti. **S**
-- [ ] **P1 — Dependency review sulle pull request:** blocca l'introduzione di dipendenze con vulnerabilità note o licenze incompatibili con MIT.
+- [x] **P0 — Secret scanning:** job `Secret scan (gitleaks)` in `.github/workflows/security.yml` su ogni push, pull request e settimanalmente, sull'intera cronologia; `.gitleaks.toml` mantiene le regole predefinite con due sole eccezioni motivate (nomi di chiavi di `localStorage` e identificativi della checklist, unici 4 falsi positivi su 130 commit) — 2026-09-24. Da verificare nelle impostazioni del repository che *secret scanning* e *push protection* di GitHub siano attivi.
+- [x] **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` (settimanale, attesa di 7 giorni, minor/patch raggruppati) e job `Dependency audit (npm)` con `npm audit --omit=dev --audit-level=high` — 2026-09-24. Esito attuale: 0 vulnerabilità nelle dipendenze di produzione.
+- [x] **P0 — SAST pertinente:** job `CodeQL (JavaScript/TypeScript)` con la suite `security-extended`, senza build, risultati nella scheda Security — 2026-09-24. Se nel repository è attivo il *default setup* di CodeQL, va disattivato perché va in conflitto con questa configurazione avanzata.
+- [ ] 🟡 **P1 — Dependency review sulle pull request:** job `Dependency review` che blocca le PR che introducono dipendenze con vulnerabilità `high` o `critical` — 2026-09-24. Manca il controllo delle licenze incompatibili con MIT, da aggiungere con un elenco `allow-licenses` verificato sulle dipendenze attuali.
 - [ ] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository.
 - [ ] **P1 — Branch protection:** review obbligatoria, status check richiesti, conversazioni risolte, divieto di force push su `main`.
 - [ ] **P1 — SBOM (CycloneDX) allegato alle release** dell'app.
@@ -367,8 +367,8 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 1. [x] Completare l'inventario del repository (audit del 2026-09-24, PR #37).
 2. [x] Aggiornare Node.js alla LTS in CI e `engines`, correggere `name`/`version` in `package.json` (PR #38).
 3. [x] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`) (PR #39).
-4. [ ] Aggiungere lo smoke test di avvio in produzione alla CI, poi smistare le PR di Dependabot secondo la tabella in [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze). **S + M**
-5. [ ] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review. **S**
+4. [ ] 🟡 Aggiungere lo smoke test di avvio in produzione alla CI, poi smistare le PR di Dependabot secondo la tabella in [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze): smoke test e correzioni completati, tutte le PR verificate; resta da integrarle nell'ordine indicato. **S + M**
+5. [x] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review (2026-09-24).
 6. [ ] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`. **S**
 7. [ ] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS`. **S**
 8. [ ] Aggiungere il campo `objectives` alle domande con test obbligatorio, poi generare la matrice di copertura. **M**
@@ -401,17 +401,17 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Copertura | Domande collegate esplicitamente a un obiettivo | 0% (campo assente) | 100% |
 | Qualità | Test automatici verdi su `main` | Sì | Sempre |
 | Qualità | Link interni validi | Non misurato | 100% |
-| Sicurezza | Segreti confermati nella branch principale | Non misurato (nessuno scanner) | 0 |
+| Sicurezza | Segreti confermati nella branch principale | 0 su 130 commit (gitleaks 8.30.1, 2026-09-24) | 0 |
 | Sicurezza | Workflow con permessi espliciti | 100% | 100% |
 | Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
-| Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | Non misurato | 0 |
+| Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
 | Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 0 su 2 completi | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
 | Manutenzione | Righe di `src/App.tsx` | ~2.640 (erano ~2.550 all'audit iniziale) | < 500 |
 | Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
 | Didattica | Domini con guida completa (ogni sotto-argomento ufficiale, tabelle, errori comuni, un esercizio per obiettivo) | 5 su 5 (verificato da test) | 5 su 5 |
 | Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
-| Qualità | Avvio in produzione verificato automaticamente | No | Sì, a ogni pull request |
+| Qualità | Avvio in produzione verificato automaticamente | Sì, dal 2026-09-24 (`npm run smoke` in CI) | Sì, a ogni pull request |
 | Laboratori | Lab con isolamento e cleanup verificati | Nessun lab | 100% dei lab pubblicati |
 | Accessibilità | Violazioni axe gravi o critiche sulle viste principali | Non misurato | 0 |
 | Localizzazione | Campi tradotti per domanda e sottovoce | 100% (verificato da test) | 100% |
@@ -489,6 +489,8 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M5 | Guida del Dominio 4 arricchita: sotto-argomenti ufficiali 4.1–4.9, 7 tabelle (modelli di accesso, dispositivi mobili, SPF/DKIM/DMARC, esiti di scansione, fine vita degli asset, fasi di IR, fonti dati), 8 errori comuni, 9 esercizi (uno per obiettivo), in IT e EN con parità verificata | PR #49 | Completato |
 | 2026-09-24 | M5 | Guida del Dominio 5 arricchita: sotto-argomenti ufficiali 5.1–5.6, 7 tabelle (documenti di governance, ruoli sui dati, strategie di rischio, analisi quantitativa, metriche BIA, accordi con terze parti, ambienti di penetration test), 8 errori comuni, 6 esercizi, in IT e EN con parità verificata. Tutte e cinque le guide completate | PR #50 | Completato |
 | 2026-09-24 | M2 | Roadmap riallineata dopo le PR #37–#50: smistamento delle 6 PR di Dependabot (con il blocco di avvio di Express 5), smoke test di avvio, test end-to-end di layout, nuovi rischi e metriche | Revisione roadmap | Completato |
+| 2026-09-24 | M2 | Smoke test di avvio in produzione in CI; fallback della SPA e lettura del corpo delle API compatibili con Express 5; `vite.config.ts` pronto per Vite 8; 6 PR di Dependabot verificate con ordine di integrazione | Attività n. 4 | Parziale |
+| 2026-09-24 | M2 | Workflow `security.yml`: gitleaks con `.gitleaks.toml`, `npm audit`, dependency review, CodeQL; convalidato con actionlint | Attività n. 5 | Completato |
 
 ---
 
