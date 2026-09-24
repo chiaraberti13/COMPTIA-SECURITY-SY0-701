@@ -34,7 +34,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Contenuti | 5 domini, checklist, ~550 voci di glossario, banca domande con scenario; **guide di dominio complete** per tutti e 5 i domini (ogni sotto-argomento ufficiale, 30 tabelle comparative, 40 errori comuni, 33 esercizi guidati), imposte da `tests/domainGuides.test.ts` | Nessuna data di revisione né fonte per voce; gli obiettivi 1.1, 2.3 e 5.6 hanno meno domande degli altri (vedi `docs/coverage-matrix.md`) |
 | Bilinguismo | Italiano sorgente di verità, overlay inglese con fallback, test di parità strutturale e **di contenuto** (stessi numeri, sigle e token in 7.979 coppie di frasi e in tutte le guide) | Il controllo automatico non coglie differenze di significato senza numeri o sigle; nessun segnale di traduzione da rivedere dopo una modifica al testo italiano |
 | Qualità contenuti | `tests/dataset.test.ts`: ID univoci, spiegazione di ogni distrattore, scenario obbligatorio, copertura di ogni obiettivo, pesi dei domini (±5%), maggioranza di domande di livello superiore | Nessun changelog/errata pubblico delle correzioni sostanziali |
-| Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
+| Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI, esportazione/importazione e cancellazione dei progressi | Nessuna vista "exam readiness" per obiettivo; quiz non ancora filtrabile per obiettivo |
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; mancano test API con un client Gemini simulato, log strutturati e validazione con schema |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
@@ -249,10 +249,10 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 #### Integrità e privacy dei dati locali
 
 - [x] **P0 — Persistenza solo nel browser:** progressi, storico e segnalibri restano in `localStorage`; nessun account.
-- [x] **P0 — Lettura difensiva:** `storage.ts` non lancia mai eccezioni; `sanitizeQuizHistory` e `sanitizeQuestionProgress` scartano dati corrotti o manipolati.
-- [ ] **P1 — Versionare lo schema dei dati salvati** e prevedere migrazioni testate (oggi solo `question_progress_v1` è versionato). **S**
-- [ ] **P1 — Esportazione e importazione dei progressi in JSON**, con validazione tramite gli stessi sanificatori e nessun upload al server. **M**
-- [ ] **P1 — Pulsante "Cancella tutti i miei dati"** con conferma, per rendere esplicito il controllo dell'utente. **S**
+- [x] **P0 — Lettura difensiva:** `storage.ts` non lancia mai eccezioni; `sanitizeQuizHistory` e `sanitizeQuestionProgress` scartano dati corrotti o manipolati; dal 2026-09-24 anche checklist e segnalibri passano da `sanitizeChecklist` e `sanitizeBookmarks` (un valore non-array nei segnalibri bloccava il glossario).
+- [ ] 🟡 **P1 — Versionare lo schema dei dati salvati:** il file di backup ha un campo `schema` e rifiuta le versioni sconosciute (2026-09-24); le chiavi in `localStorage` restano da versionare con migrazioni testate. **S**
+- [x] **P1 — Esportazione e importazione dei progressi in JSON:** sezione "I tuoi dati" nel simulatore (`src/components/DataControls.tsx`, `src/progressBackup.ts`); l'importazione mostra un riepilogo e chiede conferma, valida il file con gli stessi sanificatori (dimensione massima, applicazione, schema, voci malformate, prototype pollution) e non invia nulla al server. 11 test unitari e 3 end-to-end — 2026-09-24.
+- [x] **P1 — Pulsante "Cancella tutti i miei dati":** con seconda conferma e annullamento, rimuove tutte le chiavi dell'app da questo browser; coperto da un test end-to-end — 2026-09-24.
 
 #### Qualità e correttezza dei contenuti
 
@@ -375,7 +375,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
 9. [x] Test end-to-end con Playwright e `axe-core` su telefono e desktop; quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion` (2026-09-24).
 10. [ ] Aggiungere test API (Supertest) e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`. **M**
-11. [ ] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali. **M**
+11. [x] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali (2026-09-24).
 
 ---
 
@@ -496,6 +496,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M1 | `CONTRIBUTING.md` bilingue con policy sulle dipendenze, `CHANGELOG.md`, moduli per issue, modello di PR, `CODEOWNERS` | Attività n. 7 | Completato |
 | 2026-09-24 | M5 | Tutte le 664 domande collegate agli obiettivi ufficiali (`src/questionObjectives.ts`), matrice di copertura generata e verificata in CI (`docs/coverage-matrix.md`) | Attività n. 8 | Completato |
 | 2026-09-24 | M6 | Test end-to-end con Playwright e axe (desktop e telefono) in CI; corrette 5 regole WCAG violate (2 critiche): tablist, nome del pulsante chat, controlli annidati, dimensione dei bersagli, contrasto, tabelle raggiungibili da tastiera; annuncio dell'esito nel quiz; `prefers-reduced-motion` | Attività n. 9 | Completato |
+| 2026-09-24 | M7 | Sezione "I tuoi dati": esportazione, importazione con conferma e cancellazione dei progressi locali; checklist e segnalibri ora sanificati alla lettura | Attività n. 11 | Completato |
 
 ---
 

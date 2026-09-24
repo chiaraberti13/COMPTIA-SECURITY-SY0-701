@@ -17,6 +17,10 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - Automatic IT/EN content parity check: every sentence and its translation must carry the same numbers, acronyms and literal tokens (7,979 sentence pairs plus all guides).
 - Dependabot for npm and GitHub Actions, with a 7-day cooldown and grouped minor/patch updates.
 - `CONTRIBUTING.md`, issue forms, a pull request template and `CODEOWNERS`.
+- Every question linked to its official objectives (`src/questionObjectives.ts`) and a generated coverage matrix in `docs/coverage-matrix.md`, checked by CI.
+- End-to-end tests with Playwright and axe at phone and desktop width (`npm run e2e`), also run by CI.
+- "Your data" section in the simulator: export the progress to a JSON file, import it with confirmation, or delete everything stored in this browser.
+- The quiz announces whether an answer was right to screen readers, and animations follow the system "reduce motion" setting.
 
 ### Changed
 
@@ -31,6 +35,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - The study area collapsed to zero height on phones; it now fills the screen below the checklist.
 - The SPA fallback route and the API body handling now work on both Express 4 and 5 (Express 5 refused to start with `app.get("*")` and answered 502 instead of 400 to requests without a body).
 - Nine IT/EN content drifts, among them WPA/TKIP vs WPA2/WPA3, Control Plane/SDN and a missing IBAN.
+- Five WCAG 2.2 AA violations found by axe, two critical: a tab list containing non-tab buttons, an unnamed chat button, nested checklist controls, 16 px touch targets, insufficient colour contrast and scrollable tables unreachable by keyboard.
+- Checklist and bookmarks read from the browser are now sanitised; a malformed bookmarks entry could crash the glossary.
 - `src/data.ts` and `src/data.en.ts`, truncated by commit `9098ba5`, restored to their last intact version.
 
 ### Removed

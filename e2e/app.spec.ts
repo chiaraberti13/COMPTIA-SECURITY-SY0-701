@@ -85,3 +85,69 @@ test.describe("keyboard", () => {
     await expect(page.locator("#quiz_feedback_announcer")).toBeEmpty();
   });
 });
+
+test.describe("your data (export, import, delete)", () => {
+  async function openSimulator(page: Page) {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await expect(page.locator("#data_controls")).toBeVisible();
+  }
+
+  test("export downloads a backup of this browser's progress", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true })));
+    await openSimulator(page);
+    const [download] = await Promise.all([page.waitForEvent("download"), page.locator("#data_export_btn").click()]);
+    expect(download.suggestedFilename()).toMatch(/^security-plus-progress-\d{4}-\d{2}-\d{2}\.json$/);
+    const backup = JSON.parse(await (await download.createReadStream()).toArray().then((c) => Buffer.concat(c).toString()));
+    expect(backup.app).toBe("comptia-security-sy0-701");
+    expect(backup.data.checklist).toEqual({ WPA3EnterpriseRes: true });
+  });
+
+  test("a file from elsewhere is rejected with an explanation", async ({ page }) => {
+    await openSimulator(page);
+    await page.locator("#data_import_input").setInputFiles({
+      name: "other.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({ app: "another-app", schema: 1, data: {} })),
+    });
+    await expect(page.locator("#data_status")).toHaveText(/non è un backup di questa app/);
+    await expect(page.locator("#data_confirm_box")).toBeHidden();
+  });
+
+  test("import asks for confirmation, then replaces the progress", async ({ page }) => {
+    await openSimulator(page);
+    const backup = {
+      app: "comptia-security-sy0-701",
+      schema: 1,
+      exportedAt: "2026-09-20T10:00:00.000Z",
+      data: { checklist: { HoneynetDeception: true }, bookmarks: [], quizHistory: [], questionProgress: {} },
+    };
+    await page.locator("#data_import_input").setInputFiles({
+      name: "backup.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(backup)),
+    });
+    await expect(page.locator("#data_confirm_box")).toContainText("1 argomenti completati");
+    await Promise.all([page.waitForEvent("load"), page.locator("#data_confirm_btn").click()]);
+    const stored = await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"));
+    expect(JSON.parse(stored ?? "{}")).toEqual({ HoneynetDeception: true });
+  });
+
+  test("delete all needs a second confirmation and empties this browser's storage", async ({ page }) => {
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem("seeded")) {
+        localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true }));
+        sessionStorage.setItem("seeded", "1");
+      }
+    });
+    await openSimulator(page);
+    await page.locator("#data_delete_btn").click();
+    await expect(page.locator("#data_confirm_box")).toBeVisible();
+    await page.locator("#data_cancel_btn").click();
+    expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).not.toBeNull();
+
+    await page.locator("#data_delete_btn").click();
+    await Promise.all([page.waitForEvent("load"), page.locator("#data_confirm_btn").click()]);
+    expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).toBeNull();
+  });
+});

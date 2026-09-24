@@ -19,6 +19,7 @@ import { getDomainTopics } from "../localizedData";
 import { TopicGroup, Subtopic } from "../types";
 import { useLang, translate, type Lang, type UIKey } from "../i18n";
 import { STORAGE_KEYS, readJSON, writeJSON } from "../storage";
+import { sanitizeBookmarks } from "../progressBackup";
 
 export interface GlossaryTerm {
   id: string;
@@ -209,7 +210,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
   // UI States
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(
-    () => readJSON<string[]>(STORAGE_KEYS.bookmarks, [])
+    // Sanitised: a non-array value here would crash the glossary on .includes().
+    () => sanitizeBookmarks(readJSON<unknown>(STORAGE_KEYS.bookmarks, []))
   );
 
   const [expandedTermId, setExpandedTermId] = useState<string | null>(null);

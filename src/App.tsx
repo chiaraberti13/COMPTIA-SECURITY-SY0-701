@@ -40,6 +40,8 @@ import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 import { getSubgroupForSubtopic } from "./subgroups";
 import { getDomainGuide } from "./domainGuides";
 import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
+import { sanitizeChecklist } from "./progressBackup";
+import DataControls from "./components/DataControls";
 import {
   SECONDS_PER_QUESTION,
   formatClock,
@@ -233,7 +235,8 @@ export default function App() {
 
   // Load checklist progress from localStorage
   useEffect(() => {
-    setCheckedItems(readJSON<Record<string, boolean>>(STORAGE_KEYS.checklist, {}));
+    // Sanitised: localStorage is user-controlled and may hold anything.
+    setCheckedItems(sanitizeChecklist(readJSON<unknown>(STORAGE_KEYS.checklist, {})));
   }, []);
 
   // Auto-dismiss the inline notification.
@@ -1851,6 +1854,8 @@ export default function App() {
                       </>
                     )}
                   </div>
+
+                  <DataControls />
                 </div>
               ) : quizCompleted ? (
                 /* Completed Screen */
