@@ -64,6 +64,28 @@ const checks: Check[] = [
     },
   },
   {
+    name: "GET /healthz answers ok without caching",
+    run: async () => {
+      const res = await fetch(`${BASE}/healthz`);
+      assert(res.status === 200, `expected 200, got ${res.status}`);
+      assert(JSON.stringify(await res.json()) === '{"status":"ok"}', "unexpected health payload");
+      assert(res.headers.get("cache-control") === "no-store", "health check must not be cached");
+    },
+  },
+  {
+    name: "a valid chat request is refused with 503 when the AI budget is 0",
+    run: async () => {
+      // AI_DAILY_LIMIT=0 below: the request must stop before any Gemini call.
+      const res = await fetch(`${BASE}/api/chat`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: "What is ALE?", lang: "en" }),
+      });
+      assert(res.status === 503, `expected 503, got ${res.status}`);
+      assert(String((await res.json()).error).includes("disabled"), "expected the 'AI disabled' message");
+    },
+  },
+  {
     name: "POST /api/chat without a message is rejected with 400",
     run: async () => {
       const res = await fetch(`${BASE}/api/chat`, {
@@ -98,14 +120,28 @@ const checks: Check[] = [
 async function main(): Promise<void> {
   assert(existsSync(SERVER), `${SERVER} not found: run "npm run build" first`);
 
-  // No Gemini key: the smoke test must never call the paid API.
-  const env = { ...process.env, NODE_ENV: "production", PORT: String(PORT), GEMINI_API_KEY: "" };
+  // A fake key with a zero AI budget: requests pass validation but stop before
+  // any Gemini call, so the smoke test never reaches the paid API.
+  const env = {
+    ...process.env,
+    NODE_ENV: "production",
+    PORT: String(PORT),
+    GEMINI_API_KEY: "smoke-test-fake-key",
+    AI_DAILY_LIMIT: "0",
+  };
   const server = spawn(process.execPath, [SERVER], { env, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   let exit: string | null = null;
+  let exitCode: number | null = null;
+  const exited = new Promise<void>((resolve) =>
+    server.on("exit", (code, signal) => {
+      exit = `code ${code}, signal ${signal}`;
+      exitCode = code;
+      resolve();
+    })
+  );
   server.stdout.on("data", (chunk) => (output += chunk));
   server.stderr.on("data", (chunk) => (output += chunk));
-  server.on("exit", (code, signal) => (exit = `code ${code}, signal ${signal}`));
 
   let failed = 0;
   try {
@@ -123,7 +159,19 @@ async function main(): Promise<void> {
     failed++;
     console.error(`  FAIL  start-up: ${(error as Error).message}`);
   } finally {
-    server.kill("SIGTERM");
+    // Graceful shutdown: SIGTERM must end the process cleanly and quickly.
+    if (!exit) server.kill("SIGTERM");
+    const stopped = await Promise.race([exited.then(() => true), new Promise((r) => setTimeout(() => r(false), 5_000))]);
+    if (!stopped) {
+      failed++;
+      console.error("  FAIL  SIGTERM: the server did not stop within 5 s");
+      server.kill("SIGKILL");
+    } else if (exitCode !== 0 && failed === 0) {
+      failed++;
+      console.error(`  FAIL  SIGTERM: expected exit code 0, got ${exit}`);
+    } else {
+      console.log("  ok    SIGTERM stops the server cleanly");
+    }
   }
 
   if (failed > 0) {

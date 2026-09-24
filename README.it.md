@@ -102,7 +102,16 @@ GEMINI_API_KEY="Incolla_Qui_La_Tua_Chiave_Gemini"
 
 # Opzionale — URL base dell'applicazione
 APP_URL="http://localhost:3000"
+
+# Opzionali — limiti di costo e di resilienza per gli endpoint AI
+AI_DAILY_LIMIT=500        # chiamate AI totali per giorno UTC, tutti gli utenti insieme; 0 disattiva l'AI
+GEMINI_TIMEOUT_MS=30000   # una chiamata a Gemini più lunga viene abbandonata e riceve 504
 ```
+
+`AI_DAILY_LIMIT` si aggiunge al limite per indirizzo IP (30 richieste ogni 15 minuti): in
+un'installazione pubblica limita ciò che molti indirizzi diversi possono spendere insieme.
+Il contatore vive nel processo del server, quindi con più istanze il tetto effettivo è il
+limite moltiplicato per il numero di istanze.
 
 > [!WARNING]
 > Non committare mai il file `.env` su un repository pubblico — contiene una credenziale API privata.

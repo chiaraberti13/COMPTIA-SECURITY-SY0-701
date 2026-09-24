@@ -102,7 +102,16 @@ GEMINI_API_KEY="Paste_Your_Gemini_API_Key_Here"
 
 # Optional — application base URL
 APP_URL="http://localhost:3000"
+
+# Optional — cost and resilience limits for the AI endpoints
+AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 turns the AI off
+GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
 ```
+
+`AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
+public deployment it caps what many different addresses can spend together. The counter
+lives in the server process, so with several instances the effective cap is the limit
+multiplied by the number of instances.
 
 > [!WARNING]
 > Never commit your `.env` to a public repository — it holds a private API credential.

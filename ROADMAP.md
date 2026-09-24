@@ -35,7 +35,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Bilinguismo | Italiano sorgente di verità, overlay inglese con fallback, test di parità strutturale e **di contenuto** (stessi numeri, sigle e token in 7.979 coppie di frasi e in tutte le guide) | Il controllo automatico non coglie differenze di significato senza numeri o sigle; nessun segnale di traduzione da rivedere dopo una modifica al testo italiano |
 | Qualità contenuti | `tests/dataset.test.ts`: ID univoci, spiegazione di ogni distrattore, scenario obbligatorio, copertura di ogni obiettivo, pesi dei domini (±5%), maggioranza di domande di livello superiore | Nessun changelog/errata pubblico delle correzioni sostanziali |
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
-| Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Nessun timeout sulle chiamate Gemini, nessun budget globale, nessun `maxOutputTokens` sulla chat, nessun endpoint di health, header `User-Agent` residuo di AI Studio; **nessun test avvia il server in modalità produzione**, dove vengono registrate CSP e rotta statica |
+| Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; mancano test API con un client Gemini simulato, log strutturati e validazione con schema |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
 | Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS` |
@@ -224,11 +224,11 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Rate limiting** su `/api/` (30 richieste ogni 15 minuti per IP) con `trust proxy` in produzione.
 - [x] **P0 — Nessuna fuga di dettagli interni:** gli errori del provider restano nei log del server.
 - [x] **P0 — Output AI reso senza `innerHTML`:** il Markdown è convertito in JSX, quindi il testo generato non può iniettare HTML.
-- [ ] **P0 — Timeout e annullamento delle chiamate Gemini** (es. 30 s con `AbortSignal`), per non tenere occupate connessioni e memoria. **S**
-- [ ] **P0 — Limitare anche l'output della chat:** `maxOutputTokens` su `/api/chat` come già avviene per la remediation. **S**
-- [ ] **P0 — Tetto di spesa globale (denial of wallet):** contatore giornaliero complessivo delle chiamate AI configurabile via env, oltre al limite per IP. **S**
-- [ ] **P1 — Rimuovere l'header `User-Agent: aistudio-build`** residuo del template, o renderlo configurabile, per non falsare l'identità del client. **S**
-- [ ] **P1 — Endpoint `/healthz`** senza dati sensibili e **arresto graduale** su `SIGTERM` per le piattaforme PaaS. **S**
+- [x] **P0 — Timeout e annullamento delle chiamate Gemini:** `AbortSignal.timeout(GEMINI_TIMEOUT_MS)` su entrambi gli endpoint (predefinito 30 s, configurabile); il timeout risponde 504 con messaggio localizzato. Verificato contro un finto endpoint che non risponde: richiesta annullata dopo 504 ms con `AbortError` — 2026-09-24.
+- [x] **P0 — Limitare anche l'output della chat:** `maxOutputTokens: 2048` su `/api/chat` (4096 già presente sulla remediation) — 2026-09-24.
+- [x] **P0 — Tetto di spesa globale (denial of wallet):** `server/aiGuard.ts` con budget giornaliero per giorno UTC (`AI_DAILY_LIMIT`, predefinito 500, `0` disattiva l'AI), controllato prima di ogni chiamata a Gemini, risposta 503 localizzata; valori non validi nella configurazione ricadono sul predefinito invece di togliere il limite. Test unitari in `tests/aiGuard.test.ts` e verifica dal vivo nello smoke test — 2026-09-24. Il contatore è per processo: con più istanze il tetto si moltiplica.
+- [x] **P1 — Rimuovere l'header `User-Agent: aistudio-build`:** rimosso; un unico `geminiClient()` crea il client per entrambi gli endpoint — 2026-09-24.
+- [x] **P1 — Endpoint `/healthz` e arresto graduale:** `GET /healthz` risponde `{"status":"ok"}` senza cache e senza dettagli di configurazione; su `SIGTERM`/`SIGINT` il server smette di accettare connessioni e chiude le richieste in corso. Entrambi verificati dallo smoke test — 2026-09-24.
 - [ ] **P1 — Log strutturati** (livello, route, esito, latenza) senza contenuto dei messaggi degli utenti e senza chiavi. **S**
 - [ ] **P1 — Irrigidire la CSP:** ospitare i font localmente per eliminare `fonts.googleapis.com`/`fonts.gstatic.com` e valutare la rimozione di `'unsafe-inline'` dagli stili; aggiungere `base-uri 'self'` e `form-action 'self'`. **M**
 - [ ] **P1 — Validazione degli input con schema** (es. Zod) condiviso tra client e server al posto dei controlli manuali. **M**
@@ -240,7 +240,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **LLM01 — Prompt injection (mitigazione di base):** il system prompt dichiara che i messaggi e gli argomenti dell'utente sono dati, non istruzioni.
 - [x] **LLM05 — Gestione dell'output:** la remediation usa uno schema JSON e l'output è validato da `validateRemediationPayload` prima dell'uso.
-- [x] **LLM10 — Consumo illimitato (parziale):** rate limit per IP e limiti sugli input; da completare con timeout, `maxOutputTokens` sulla chat e tetto globale (sopra).
+- [x] **LLM10 — Consumo illimitato:** rate limit per IP, limiti sugli input, timeout, `maxOutputTokens` su entrambi gli endpoint e tetto giornaliero complessivo — 2026-09-24.
 - [ ] **P1 — Suite di test anti-injection:** raccolta di prompt malevoli noti eseguita contro il client simulato per verificare che le regole non vengano aggirate e che l'output resti valido. **M**
 - [ ] **P1 — Avviso trasparente nell'interfaccia:** le risposte AI possono contenere errori e non sostituiscono i materiali ufficiali; i messaggi non vanno usati per dati personali. **S**
 - [ ] **P1 — Revisione umana delle domande AI:** le domande di remediation restano marcate come generate e non entrano mai nella banca domande senza revisione.
@@ -369,7 +369,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 3. [x] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`) (PR #39).
 4. [ ] 🟡 Aggiungere lo smoke test di avvio in produzione alla CI, poi smistare le PR di Dependabot secondo la tabella in [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze): smoke test e correzioni completati, tutte le PR verificate; resta da integrarle nell'ordine indicato. **S + M**
 5. [x] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review (2026-09-24).
-6. [ ] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`. **S**
+6. [x] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`, arresto graduale (2026-09-24).
 7. [ ] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS`. **S**
 8. [ ] Aggiungere il campo `objectives` alle domande con test obbligatorio, poi generare la matrice di copertura. **M**
 9. [ ] Test end-to-end con Playwright e `axe-core` su telefono e desktop; poi quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion`. **M**
@@ -405,7 +405,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Sicurezza | Workflow con permessi espliciti | 100% | 100% |
 | Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
 | Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
-| Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 0 su 2 completi | 2 su 2 |
+| Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 2 su 2 (2026-09-24; erano 0) | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
 | Manutenzione | Righe di `src/App.tsx` | ~2.640 (erano ~2.550 all'audit iniziale) | < 500 |
 | Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
@@ -491,6 +491,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M2 | Roadmap riallineata dopo le PR #37–#50: smistamento delle 6 PR di Dependabot (con il blocco di avvio di Express 5), smoke test di avvio, test end-to-end di layout, nuovi rischi e metriche | Revisione roadmap | Completato |
 | 2026-09-24 | M2 | Smoke test di avvio in produzione in CI; fallback della SPA e lettura del corpo delle API compatibili con Express 5; `vite.config.ts` pronto per Vite 8; 6 PR di Dependabot verificate con ordine di integrazione | Attività n. 4 | Parziale |
 | 2026-09-24 | M2 | Workflow `security.yml`: gitleaks con `.gitleaks.toml`, `npm audit`, dependency review, CodeQL; convalidato con actionlint | Attività n. 5 | Completato |
+| 2026-09-24 | M3 | Hardening degli endpoint AI: timeout con `AbortSignal`, `maxOutputTokens` sulla chat, tetto giornaliero (`server/aiGuard.ts`), `/healthz`, arresto graduale, rimosso `User-Agent` del template; smoke test esteso a 8 controlli | Attività n. 6 | Completato |
 
 ---
 
