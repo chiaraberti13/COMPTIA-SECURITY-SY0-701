@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DOMAIN_GUIDES_EN, DOMAIN_GUIDES_IT, type DomainGuide } from "../src/domainGuides";
+import { factDrift, strings } from "./helpers/languageFacts";
 
 /*
  * Rules for the optional, richer guide sections (key topics, comparisons,
@@ -9,7 +10,7 @@ import { DOMAIN_GUIDES_EN, DOMAIN_GUIDES_IT, type DomainGuide } from "../src/dom
  */
 
 const DOMAIN_IDS = [1, 2, 3, 4, 5] as const;
-const ENRICHED_DOMAINS = [1] as const;
+const ENRICHED_DOMAINS = [1, 2] as const;
 
 /**
  * Official SY0-701 sub-topics per objective. Each must be named in the English
@@ -42,6 +43,40 @@ const OFFICIAL_SUBTOPICS: Record<string, string[]> = {
     "open public ledger", "certificate authorities", "CRL", "OCSP", "self-signed", "third-party",
     "root of trust", "CSR", "wildcard",
   ],
+  "2.1": [
+    "nation-state", "unskilled attacker", "hacktivist", "insider threat", "organized crime", "shadow IT",
+    "internal/external", "resources/funding", "level of sophistication/capability", "data exfiltration",
+    "espionage", "service disruption", "blackmail", "financial gain", "philosophical/political beliefs",
+    "ethical", "revenge", "disruption/chaos", "war",
+  ],
+  "2.2": [
+    "message-based", "email", "SMS", "instant messaging", "image-based", "file-based", "voice call",
+    "removable device", "vulnerable software", "client-based", "agentless", "unsupported systems and applications",
+    "wireless", "wired", "Bluetooth", "open service ports", "default credentials", "managed service providers",
+    "vendors", "suppliers", "phishing", "vishing", "smishing", "misinformation/disinformation", "impersonation",
+    "business email compromise", "pretexting", "watering hole", "brand impersonation", "typosquatting",
+  ],
+  "2.3": [
+    "memory injection", "buffer overflow", "race conditions", "time-of-check", "time-of-use", "malicious update",
+    "operating system (OS)-based", "web-based", "SQL injection", "cross-site scripting", "firmware",
+    "end-of-life", "legacy", "VM escape", "resource reuse", "cloud-specific", "service provider",
+    "hardware provider", "software provider", "cryptographic", "misconfiguration", "side loading",
+    "jailbreaking", "zero-day",
+  ],
+  "2.4": [
+    "ransomware", "trojan", "worm", "spyware", "bloatware", "virus", "keylogger", "logic bomb", "rootkit",
+    "brute force", "RFID cloning", "environmental", "DDoS", "amplified", "reflected", "DNS attacks", "wireless",
+    "on-path", "credential replay", "malicious code", "injection", "replay", "privilege escalation", "forgery",
+    "directory traversal", "downgrade", "collision", "birthday", "spraying", "account lockout",
+    "concurrent session usage", "blocked content", "impossible travel", "resource consumption",
+    "resource inaccessibility", "out-of-cycle logging", "published/documented", "missing logs",
+  ],
+  "2.5": [
+    "segmentation", "access control", "ACL", "permissions", "application allow list", "isolation", "patching",
+    "encryption", "monitoring", "least privilege", "configuration enforcement", "decommissioning",
+    "installation of endpoint protection", "host-based firewall", "host-based intrusion prevention system",
+    "disabling ports/protocols", "default password changes", "removal of unnecessary software",
+  ],
 };
 
 const pairs = DOMAIN_IDS.map((d) => [d, DOMAIN_GUIDES_IT[d], DOMAIN_GUIDES_EN[d]] as const);
@@ -51,6 +86,37 @@ const shape = (guide: DomainGuide) => ({
   comparisons: (guide.comparisons ?? []).map((c) => [c.headers.length, c.rows.length]),
   commonTraps: guide.commonTraps?.length ?? 0,
   practice: (guide.practiceScenarios ?? []).map((s) => s.objective),
+});
+
+describe("Italian and English guides", () => {
+  it("have exactly the same fields in the same order", () => {
+    for (const [, itGuide, enGuide] of pairs) {
+      expect(strings(enGuide).map(([path]) => path)).toEqual(strings(itGuide).map(([path]) => path));
+    }
+  });
+
+  it("carry the same numbers, acronyms and literal tokens in every sentence", () => {
+    const drift: string[] = [];
+    for (const [d, itGuide, enGuide] of pairs) {
+      const en = new Map(strings(enGuide));
+      for (const [path, itText] of strings(itGuide)) {
+        const diff = factDrift(itText, en.get(path) ?? "");
+        if (diff) drift.push(`D${d} ${path}: ${diff}`);
+      }
+    }
+    expect(drift).toEqual([]);
+  });
+
+  it("keep practice scenarios and comparison rows on the same subject", () => {
+    for (const [, itGuide, enGuide] of pairs) {
+      expect((enGuide.practiceScenarios ?? []).map((s) => s.objective)).toEqual(
+        (itGuide.practiceScenarios ?? []).map((s) => s.objective)
+      );
+      expect((enGuide.comparisons ?? []).map((c) => c.rows.length)).toEqual(
+        (itGuide.comparisons ?? []).map((c) => c.rows.length)
+      );
+    }
+  });
 });
 
 describe("domain guide optional sections", () => {
