@@ -50,7 +50,12 @@ const checks: Check[] = [
       assert(res.status === 200, `expected 200, got ${res.status}`);
       assert(res.headers.get("content-type")?.includes("text/html"), "expected an HTML response");
       assert((await res.text()).includes('id="root"'), "the page does not contain the React root");
-      assert(res.headers.get("content-security-policy")?.includes("default-src 'self'"), "missing Content-Security-Policy");
+      const csp = res.headers.get("content-security-policy") ?? "";
+      assert(csp.includes("default-src 'self'"), "missing Content-Security-Policy");
+      for (const directive of ["base-uri 'self'", "form-action 'self'", "object-src 'none'"]) {
+        assert(csp.includes(directive), `CSP lacks ${directive}`);
+      }
+      assert(!/unsafe-inline|unsafe-eval|https:/.test(csp), `CSP allows inline code or another origin: ${csp}`);
       assert(res.headers.get("x-content-type-options") === "nosniff", "missing X-Content-Type-Options: nosniff");
       assert(!res.headers.has("x-powered-by"), "X-Powered-By reveals the framework");
     },

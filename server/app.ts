@@ -99,11 +99,17 @@ export function createApp(opts: AppOptions): express.Express {
           directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            // No 'unsafe-inline': the built CSS is a file and fonts are bundled
+            // (never data: URIs, see vite.config.ts). React and the animation
+            // library set styles through the DOM, which CSP does not restrict.
+            // e2e/app.spec.ts fails on any violation.
+            styleSrc: ["'self'"],
+            fontSrc: ["'self'"],
             imgSrc: ["'self'", "data:"],
             connectSrc: ["'self'"],
             objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
             frameAncestors: ["'self'"],
           },
         },

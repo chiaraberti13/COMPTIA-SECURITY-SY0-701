@@ -33,6 +33,10 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - `vite.config.ts` uses `import.meta.dirname` (ready for Vite 8) and a chunk-size limit that matches the real dataset size.
 - The roadmap reflects the audited state of the application.
 
+### Security
+
+- The Content-Security-Policy allows styles, fonts and scripts from the app itself only: no `'unsafe-inline'`, no Google Fonts, plus `base-uri 'self'` and `form-action 'self'`. The fonts are bundled (Fontsource, SIL OFL 1.1), so no visitor's IP address reaches a third party. An end-to-end test fails on any policy violation or third-party request.
+
 ### Fixed
 
 - The study area collapsed to zero height on phones; it now fills the screen below the checklist.

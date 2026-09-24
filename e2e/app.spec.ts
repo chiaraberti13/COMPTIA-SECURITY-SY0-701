@@ -161,3 +161,37 @@ test.describe("AI transparency", () => {
     await expect(page.locator("#ai_disclaimer")).toContainText("dati personali");
   });
 });
+
+test.describe("Content-Security-Policy", () => {
+  test("no view breaks the policy or contacts another origin, and the bundled fonts load", async ({ page, baseURL }) => {
+    const origin = new URL(baseURL!).origin;
+    const foreign: string[] = [];
+    page.on("request", (request) => {
+      const url = new URL(request.url());
+      if (/^https?:$/.test(url.protocol) && url.origin !== origin) foreign.push(request.url());
+    });
+    await page.addInitScript(() => {
+      const seen: string[] = [];
+      (window as unknown as { __csp: string[] }).__csp = seen;
+      document.addEventListener("securitypolicyviolation", (e) => seen.push(`${e.violatedDirective} ${e.blockedURI}`));
+    });
+
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#tab_btn_glossary").click();
+    await expect(page.locator("#glossary_root")).toBeVisible();
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#start_quiz_btn").click();
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await page.keyboard.press("1");
+    if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+
+    expect(await page.evaluate(() => (window as unknown as { __csp: string[] }).__csp)).toEqual([]);
+    expect(foreign).toEqual([]);
+    expect(await page.evaluate(() => document.fonts.check('16px "Inter Variable"'))).toBe(true);
+    const csp = (await page.request.get("/")).headers()["content-security-policy"];
+    expect(csp).not.toContain("unsafe-inline");
+  });
+});
