@@ -65,7 +65,7 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 | Tampering | Corpo della richiesta enorme o malformato per esaurire la memoria | `express.json` con limite di 64 kB; messaggio al massimo di 2000 caratteri, cronologia di 8 turni troncati, 10 argomenti di 120 caratteri; richiesta senza corpo → 400 | ✅ |
 | Tampering | XSS: testo dell'AI o dei dati che inietta HTML o script | Nessun `innerHTML` né `dangerouslySetInnerHTML`: il Markdown dell'AI è convertito in elementi React. La CSP ammette solo `'self'` per script, stili e font, senza `'unsafe-inline'`, e aggiunge `script-src-attr 'none'`, `object-src 'none'`, `base-uri 'self'` e `form-action 'self'`. Un test end-to-end fallisce a ogni violazione | ✅ |
 | Tampering | Clickjacking: l'app caricata in un iframe di un altro sito | `frame-ancestors 'self'` e `X-Frame-Options` di `helmet` | ✅ |
-| Repudiation | Abuso degli endpoint AI senza traccia per ricostruirlo | Nessun log applicativo strutturato: restano solo i log della piattaforma di hosting | ⬜ voce P1 "Log strutturati" |
+| Repudiation | Abuso degli endpoint AI senza traccia per ricostruirlo | Log strutturati in JSON (`server/log.ts`): ogni richiesta `/api/` con percorso, stato e durata, e ogni chiamata a Gemini fallita con tipo ed esito. Mai testo dell'utente, argomenti, IP o chiavi: i test e lo smoke test lo verificano | ✅ |
 | Information disclosure | Messaggi d'errore del fornitore AI (progetto, quote, URL interni) inoltrati al client | Risposta generica 502 o 504; il dettaglio resta nel log del server. Test dedicato in `tests/api.test.ts` | ✅ |
 | Information disclosure | La chiave Gemini finisce nel bundle del browser | La chiave è letta solo dal server (`process.env`); `vite.config.ts` non la inietta; gitleaks controlla tutta la cronologia | ✅ |
 | Information disclosure | L'indirizzo IP del visitatore raggiunge terze parti | Nessuna richiesta verso altre origini: font nel bundle, niente CDN né analytics. Verificato dal test end-to-end sulla CSP | ✅ |
@@ -105,7 +105,6 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 
 | Priorità | Azione | Dove è tracciata |
 |---|---|---|
-| P1 | Log strutturati (livello, route, esito, latenza), senza il contenuto dei messaggi e senza chiavi | ROADMAP, M3 |
 | P1 | Attivare nel repository secret scanning, push protection e protezione del branch `main` | ROADMAP, attività n. 5 (impostazioni) |
 | P2 | Contatore del budget AI condiviso tra le istanze, per esempio Redis, se si distribuisce su più istanze | Questo documento |
 | P2 | Validazione degli input con uno schema dichiarativo al posto dei controlli manuali | ROADMAP, M3 |

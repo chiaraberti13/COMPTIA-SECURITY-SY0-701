@@ -179,6 +179,23 @@ async function main(): Promise<void> {
     }
   }
 
+  // Log collectors parse one JSON object per line; anything else breaks them.
+  // The fake key must not appear in the logs either.
+  const lines = output.split("\n").filter((line) => line.trim());
+  const notJson = lines.filter((line) => {
+    try {
+      return typeof JSON.parse(line) !== "object";
+    } catch {
+      return true;
+    }
+  });
+  if (lines.length === 0 || notJson.length > 0 || output.includes(env.GEMINI_API_KEY)) {
+    failed++;
+    console.error(`  FAIL  logs: expected JSON lines without the API key, got ${notJson.length} other lines`);
+  } else {
+    console.log(`  ok    the server logged ${lines.length} JSON lines and no API key`);
+  }
+
   if (failed > 0) {
     console.error(`\nSmoke test failed (${failed}). Server output:\n${output.trim() || "(none)"}`);
     process.exit(1);

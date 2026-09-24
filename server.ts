@@ -3,8 +3,10 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import { createDailyBudget, readLimit } from "./server/aiGuard";
 import { createApp } from "./server/app";
+import { createJsonLogger } from "./server/log";
 
-dotenv.config();
+// quiet: dotenv 17 otherwise prints a promotional line that breaks the JSON logs.
+dotenv.config({ quiet: true });
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -35,6 +37,8 @@ const aiBudget = createDailyBudget(readLimit(process.env.AI_DAILY_LIMIT, 500));
  */
 const TRUST_PROXY_HOPS = readLimit(process.env.TRUST_PROXY, 1);
 
+const logger = createJsonLogger();
+
 async function startServer() {
   // PaaS platforms (Cloud Run, Render, Railway, Heroku) impose the port through
   // the environment and health-check the container on it.
@@ -46,6 +50,7 @@ async function startServer() {
     timeoutMs: GEMINI_TIMEOUT_MS,
     budget: aiBudget,
     trustProxyHops: TRUST_PROXY_HOPS,
+    logger,
     getApiKey: () => process.env.GEMINI_API_KEY,
     createClient: (apiKey) => new GoogleGenAI({ apiKey }),
   });
@@ -61,14 +66,22 @@ async function startServer() {
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    // The configuration, never the key: only whether one is set.
+    logger.log("info", "server_started", {
+      port: PORT,
+      production: isProduction,
+      model: GEMINI_MODEL,
+      aiDailyLimit: aiBudget.limit,
+      trustProxyHops: TRUST_PROXY_HOPS,
+      apiKeyConfigured: Boolean(process.env.GEMINI_API_KEY),
+    });
   });
 
   // Graceful shutdown: PaaS platforms send SIGTERM before stopping a container.
   // Stop accepting connections, let in-flight requests finish, and force the
   // exit if they do not within the grace period.
   const shutdown = (signal: string) => {
-    console.log(`${signal} received, shutting down`);
+    logger.log("info", "server_stopping", { signal });
     server.close(() => process.exit(0));
     setTimeout(() => process.exit(1), GEMINI_TIMEOUT_MS + 5_000).unref();
   };

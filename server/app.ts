@@ -14,6 +14,7 @@ import rateLimit from "express-rate-limit";
 import { Type, type GenerateContentParameters } from "@google/genai";
 import { validateRemediationPayload } from "../src/remediation";
 import type { DailyBudget } from "./aiGuard";
+import { createJsonLogger, redact, requestLogger, type Logger } from "./log";
 
 /** The part of the Gemini SDK the endpoints use; tests provide a fake. */
 export interface AiClient {
@@ -45,6 +46,8 @@ export interface AppOptions {
    * get a fresh rate-limit bucket on every request.
    */
   trustProxyHops?: number;
+  /** Structured log sink; defaults to JSON lines on stdout. */
+  logger?: Logger;
 }
 
 /** Upper bound on a single chat message, in characters. */
@@ -130,6 +133,23 @@ export function createApp(opts: AppOptions): express.Express {
     // without this every request would share one rate-limit bucket.
     app.set("trust proxy", opts.trustProxyHops ?? 1);
   }
+
+  const logger = opts.logger ?? createJsonLogger();
+
+  /** Logs a failed Gemini call without the prompt, the answer or the key. */
+  const logAiFailure = (route: string, error: unknown) => {
+    const err = error as { name?: unknown; message?: unknown; status?: unknown } | null;
+    logger.log("error", "ai_call_failed", {
+      route,
+      kind: isTimeout(error) ? "timeout" : "provider",
+      error: typeof err?.name === "string" ? err.name : "Error",
+      providerStatus: typeof err?.status === "number" ? err.status : undefined,
+      detail: redact(String(err?.message ?? error), [opts.getApiKey()]),
+    });
+  };
+
+  // Registered before the body parser, so even a rejected body is logged.
+  app.use("/api/", requestLogger(logger));
 
   app.use(express.json({ limit: "64kb" }));
 
@@ -255,7 +275,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
     } catch (error: any) {
       // The provider error can carry internal endpoints, project ids and quota
       // details: it belongs in the server log, not in the browser.
-      console.error("Error calling Gemini API:", error);
+      logAiFailure("/api/chat", error);
       if (isTimeout(error)) {
         return res.status(504).json({
           error: isEn
@@ -381,7 +401,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
       if (!result) throw new Error("Gemini returned an invalid remediation payload");
       res.json({ questions: result });
     } catch (error: any) {
-      console.error("Error generating remediation questions:", error);
+      logAiFailure("/api/quiz/remediation", error);
       if (isTimeout(error)) {
         return res.status(504).json({
           error: isEn

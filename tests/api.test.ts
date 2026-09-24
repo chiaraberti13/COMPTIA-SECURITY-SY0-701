@@ -4,6 +4,7 @@ import type { GenerateContentParameters } from "@google/genai";
 import { afterEach, describe, expect, it } from "vitest";
 import { createDailyBudget } from "../server/aiGuard";
 import { CHAT_MAX_OUTPUT_TOKENS, MAX_HISTORY_TURNS, MAX_MESSAGE_CHARS, createApp, type AppOptions } from "../server/app";
+import type { LogFields, LogLevel } from "../server/log";
 
 /*
  * API tests against the real Express app with a fake Gemini client: every
@@ -20,12 +21,14 @@ afterEach(() => {
 
 async function start(reply: Reply = async () => ({ text: "ok" }), options: Partial<AppOptions> = {}) {
   const calls: GenerateContentParameters[] = [];
+  const logs: Array<{ level: LogLevel; event: string } & LogFields> = [];
   const app = createApp({
     isProduction: false,
     model: "test-model",
     timeoutMs: 5_000,
     budget: createDailyBudget(100),
     getApiKey: () => "test-key",
+    logger: { log: (level, event, fields) => logs.push({ level, event, ...fields }) },
     createClient: () => ({
       models: {
         generateContent: (params) => {
@@ -46,7 +49,7 @@ async function start(reply: Reply = async () => ({ text: "ok" }), options: Parti
       headers: body === undefined ? {} : { "content-type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-  return { base, post, calls };
+  return { base, post, calls, logs };
 }
 
 const promptOf = (call: GenerateContentParameters) => String(call.contents);
@@ -201,6 +204,60 @@ describe("POST /api/quiz/remediation", () => {
     for (const text of ["not json", JSON.stringify({ questions: [] }), JSON.stringify({ questions: [{ options: ["only one"] }] })]) {
       const { post } = await start(async () => ({ text }));
       expect((await post("/api/quiz/remediation", { weakTopics: ["x"] })).status).toBe(502);
+    }
+  });
+});
+
+describe("structured logs", () => {
+  it("record route, status and duration of each API request, without the query string", async () => {
+    const { base, logs } = await start();
+    await fetch(`${base}/api/chat?debug=1`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: "hi" }),
+    });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const entry = logs.find((l) => l.event === "http_request");
+    expect(entry).toMatchObject({ level: "info", method: "POST", path: "/api/chat", status: 200 });
+    expect(typeof entry?.ms).toBe("number");
+  });
+
+  it("log rejected requests as warnings and failures as errors", async () => {
+    const { post, logs } = await start(async () => {
+      throw Object.assign(new Error("upstream down"), { status: 500 });
+    });
+    await post("/api/chat", {});
+    await post("/api/chat", { message: "hi" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const requests = logs.filter((l) => l.event === "http_request");
+    expect(requests.map((l) => [l.level, l.status])).toEqual([
+      ["warn", 400],
+      ["error", 502],
+    ]);
+    expect(logs.find((l) => l.event === "ai_call_failed")).toMatchObject({
+      level: "error",
+      route: "/api/chat",
+      kind: "provider",
+      providerStatus: 500,
+      detail: "upstream down",
+    });
+  });
+
+  it("never contain the learner's text, the model's answer or the API key", async () => {
+    const secretKey = "AIza" + "Q".repeat(35);
+    const { post, logs } = await start(
+      async () => {
+        throw new Error(`denied for ${secretKey}`);
+      },
+      { getApiKey: () => secretKey }
+    );
+    await post("/api/chat", { message: "my-private-question", history: [{ role: "user", content: "earlier-turn" }] });
+    await post("/api/quiz/remediation", { weakTopics: ["private-topic"] });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const text = JSON.stringify(logs);
+    expect(logs.filter((l) => l.event === "ai_call_failed")).toHaveLength(2);
+    for (const secret of ["my-private-question", "earlier-turn", "private-topic", secretKey]) {
+      expect(text).not.toContain(secret);
     }
   });
 });
