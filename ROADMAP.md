@@ -36,8 +36,8 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI | Nessuna esportazione/importazione dei progressi; nessuna vista "exam readiness" per obiettivo |
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Nessun timeout sulle chiamate Gemini, nessun budget globale, nessun `maxOutputTokens` sulla chat, nessun endpoint di health, header `User-Agent` residuo di AI Studio |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
-| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build | Actions non fissate a SHA, **Node 20 (fuori supporto da aprile 2026)**, nessun secret scan, SAST, audit dipendenze o Dependabot |
-| Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*` | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS`; `package.json` ha ancora nome `react-example` e versione `0.0.0` |
+| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24 | Actions non fissate a SHA, nessun secret scan, SAST, audit dipendenze o Dependabot |
+| Governance | `SECURITY.md` bilingue, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Mancano `CONTRIBUTING.md`, `CHANGELOG.md`, template issue/PR, `CODEOWNERS` |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`) | `src/App.tsx` supera le 2.500 righe: rendering, stato e logica di tutte le sezioni in un unico componente |
 | Accessibilità | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti | Nessun test automatico di accessibilità; animazioni `motion` senza rispetto di `prefers-reduced-motion` |
 
@@ -135,7 +135,7 @@ Un'attività è completata quando:
   LICENSE, README.md, README.it.md, ROADMAP.md
   ```
 
-- [ ] **P0 — Correggere l'identità del pacchetto:** `name` e `version` reali in `package.json` (oggi `react-example` / `0.0.0`), campo `engines.node` allineato alla CI. **S**
+- [x] **P0 — Correggere l'identità del pacchetto:** `name` `comptia-security-sy0-701`, `version` `1.0.0`, `engines` `node ^22.13.0 || >=24.0.0` e `npm >=10` — 2026-09-24.
 - [ ] **P0 — Stabilire convenzioni di naming:** file in `kebab-case` per documenti e lab, componenti React in `PascalCase`, identificatori univoci e stabili per obiettivi, domande, voci di glossario e lab.
 - [x] **P0 — Separare contenuti, logica e automazioni:** dataset, logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`) e test sono già separati.
 - [ ] **P1 — Scomporre `src/App.tsx`:** estrarre una sezione per PR (Studio, Quiz, Risultati, AI Trainer) in `src/components/`, con hook dedicati (`useQuizSession`, `useProgress`) e nessun cambiamento visivo. **L**
@@ -149,7 +149,7 @@ Un'attività è completata quando:
 
 - [x] **P0 — Pipeline di base:** typecheck, lint, test Vitest e build su ogni push a `main` e su ogni pull request.
 - [x] **P0 — Validazione dei dati strutturati:** i dataset sono tipizzati e verificati da `tests/dataset.test.ts` (ID, opzioni, risposte, spiegazioni, scenari, parità IT/EN).
-- [ ] **P0 — Aggiornare Node.js in CI e in `engines`:** passare da Node 20 (fine supporto: aprile 2026) alla LTS attiva (22 o 24), usando una matrice temporanea per verificare la compatibilità. **S**
+- [x] **P0 — Aggiornare Node.js in CI e in `engines`:** CI su matrice Node 22 + 24 (al posto di Node 20, fuori supporto da aprile 2026), `.nvmrc` a 24 e README IT/EN allineati — 2026-09-24. Togliere Node 22 dalla matrice alla sua fine vita (aprile 2027).
 - [ ] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` su README, ROADMAP, SECURITY e futuri `docs/` e `labs/`. **S**
 - [ ] **P0 — Aggiungere link checking:** `lychee` su file Markdown con cache, retry e allowlist motivata. **S**
 - [ ] **P1 — Aggiungere spell checking tecnico:** `cspell` con dizionari italiano e inglese e un dizionario di progetto per acronimi, protocolli e vendor. **M**
@@ -328,7 +328,7 @@ Un'attività è completata quando:
 | Milestone | Focus | Dipendenze | Stato | Risultato atteso |
 |---|---|---|---|---|
 | **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
-| **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | Da pianificare | Repository contribuibile |
+| **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | 🟡 Node LTS e identità del pacchetto completati | Repository contribuibile |
 | **M2 — Quality & Security Gate** | Action a SHA, Dependabot, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI di base presente | Pull request controllate automaticamente |
 | **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
 | **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
@@ -341,7 +341,7 @@ Un'attività è completata quando:
 Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 
 1. [x] Completare l'inventario del repository (audit del 2026-09-24).
-2. [ ] Aggiornare Node.js alla LTS in CI e `engines`, correggere `name`/`version` in `package.json`. **S**
+2. [x] Aggiornare Node.js alla LTS in CI e `engines`, correggere `name`/`version` in `package.json` (2026-09-24).
 3. [ ] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`). **S**
 4. [ ] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review. **S**
 5. [ ] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`. **S**
@@ -403,7 +403,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | Lab esposti o distruttivi | Danno a sistemi o reti | Isolamento, preflight, dati sintetici e cleanup |
 | Domande troppo simili all'esame | Rischio etico e di proprietà intellettuale | Contenuti originali basati sugli obiettivi |
 | Dipendenze non affidabili | Compromissione della supply chain | Pinning a SHA, Dependabot, dependency review, privilegi minimi |
-| Runtime fuori supporto | Nessuna patch di sicurezza per Node.js | Allineamento alla LTS attiva e campo `engines` |
+| Runtime fuori supporto | Nessuna patch di sicurezza per Node.js | Allineamento alla LTS attiva, campo `engines`, `.nvmrc` e matrice CI rivista a ogni fine vita |
 | Abuso degli endpoint AI | Costi imprevisti (denial of wallet) o servizio indisponibile | Rate limit per IP, tetto globale, timeout, opzione per disattivare l'AI |
 | Prompt injection o risposte AI errate | Contenuti fuorvianti presentati come autorevoli | Istruzioni difensive, schema e validazione dell'output, avviso nell'interfaccia, nessuna promozione automatica nella banca domande |
 | Refactoring del monolite `App.tsx` | Regressioni nell'interfaccia o perdita dei progressi salvati | Test di componenti prima dell'estrazione, una sezione per PR, migrazioni dei dati testate |
@@ -445,7 +445,9 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | 2026-09-21 | M5 | Riscrittura dei cluster più poveri del glossario | PR #34, #35 | Completato |
 | 2026-09-22 | M6 | Ripasso spaziato adattivo e hardening dei progressi persistiti | `bf529c0`, `dc00db6` | Completato |
 | 2026-09-22 | M5 | Test di accuratezza e integrità, guide di dominio con scenari applicati | `9098ba5`, `014585f`, `3440958` | Completato |
-| 2026-09-24 | M0 | Audit del repository e roadmap riallineata allo stato reale | Questa revisione | Completato |
+| 2026-09-24 | M0 | Audit del repository e roadmap riallineata allo stato reale | PR #37 | Completato |
+| 2026-09-24 | M1 | Node 22/24 in CI, `.nvmrc`, `engines`, nome e versione del pacchetto, prerequisiti del README | Attività n. 2 | Completato |
+| 2026-09-24 | M5 | ⛔ `src/data.ts` e `src/data.en.ts` troncati dal commit `9098ba5`: conservati solo i primi e gli ultimi 384 KiB (questi slittati di 2 bit), ~1,6 MB centrali persi per file; typecheck, test e build di `main` falliscono. Ripristino da decidere (file locale originale o ricostruzione dalla versione precedente) | `9098ba5` | Bloccato |
 
 ---
 
