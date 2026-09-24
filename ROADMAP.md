@@ -277,7 +277,7 @@ Un'attività è completata quando:
 - [x] **P0 — README come landing page:** scopo, funzionalità, prerequisiti, installazione per sistema operativo, architettura e risoluzione problemi, in IT e EN.
 - [x] **P0 — Navigazione per i cinque domini:** stesso ordine e stessi nomi in checklist, guide, glossario e simulatore.
 - [ ] 🟡 **P0 — Rendere visibile la copertura:** oggi è verificata dai test ma non mostrata; esporre nel README e nell'app una tabella basata su obiettivi, non sul numero di file. **S**
-- [ ] **P0 — Area di studio illeggibile su mobile:** a 390 px di larghezza `#study_panel_wrapper` ha altezza 0 e il pannello di studio resta confinato in circa 128 px in fondo allo schermo (rilevato con Playwright il 2026-09-24). Correggere il layout a colonna di `#studio_layout` e aggiungere un test end-to-end sulla viewport mobile. **S**
+- [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi test automatici di accessibilità).
 - [ ] **P0 — Percorsi di studio:** principiante, ripasso rapido, preparazione all'esame e consolidamento pratico, come pagina iniziale guidata ("Da dove inizio?"). **M**
 - [ ] **P1 — Collegare prerequisiti e passi successivi:** ogni modulo indica cosa conoscere prima e dove proseguire.
 - [ ] 🟡 **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste; manca il collegamento contestuale dei termini dalle sottovoci e dalle spiegazioni dei quiz.
@@ -286,7 +286,7 @@ Un'attività è completata quando:
 
 #### Sistema editoriale e leggibilità
 
-- [ ] 🟡 **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completato il Dominio 1 (2026-09-24); da fare i Domini 2–5.
+- [ ] 🟡 **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completati i Domini 1 e 2 (2026-09-24); da fare i Domini 3–5.
 - [ ] **P0 — Template coerenti** per sottovoce, confronto, procedura, comando, domanda, scenario e lab.
 - [ ] **P0 — Gerarchia dei titoli corretta:** un solo H1, sezioni brevi, ancore stabili e sommario per le pagine lunghe.
 - [ ] **P0 — Callout standard:** `Nota`, `Esame`, `Pratica`, `Attenzione`, `Errore comune`, `Approfondimento`.
@@ -296,6 +296,7 @@ Un'attività è completata quando:
 - [x] **P1 — Esempi progressivi negli scenari:** le guide di dominio includono scenari applicati e ogni domanda si apre con uno scenario.
 - [ ] **P1 — Style guide:** tono, terminologia, maiuscole, acronimi, nomi dei controlli e traduzioni approvate (partire dalle scelte già fatte, es. «access control vestibule» al posto di «mantrap»).
 - [x] **P1 — Parità semantica IT/EN verificata strutturalmente** dai test; la revisione semantica umana resta nella peer review.
+- [x] **P1 — Parità dei contenuti IT/EN verificata automaticamente:** per ogni frase di guide, sottovoci, glossario e domande i numeri, le sigle e i token letterali devono coincidere nelle due lingue (`tests/languageParity.test.ts`, `tests/helpers/languageFacts.ts`); le differenze solo idiomatiche stanno in un elenco revisionato — 2026-09-24.
 
 #### Accessibilità e inclusione (obiettivo: WCAG 2.2 AA)
 
@@ -452,6 +453,8 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata.
 | 2026-09-24 | M5 | `src/data.ts` e `src/data.en.ts` troncati dal commit `9098ba5`: conservati solo i primi e gli ultimi 384 KiB (questi slittati di 2 bit), ~1,6 MB centrali persi per file; typecheck, test e build di `main` fallivano. Risolto ripristinando i due file alla versione precedente (le correzioni di contenuto di `9098ba5` non sono recuperate) | `9098ba5`, `af7b320`, PR #38 | Completato |
 | 2026-09-24 | M2 | Actions fissate a SHA (v4.4.0), `persist-credentials: false`, Dependabot per npm e Actions, test `tests/workflows.test.ts` | Attività n. 3 | Completato |
 | 2026-09-24 | M5 | Guida del Dominio 1 arricchita: sotto-argomenti ufficiali 1.1–1.4, 5 tabelle comparative, 8 errori comuni, 6 esercizi guidati, percorso e verifiche estesi, in IT e EN | Guida D1 | Completato |
+| 2026-09-24 | M6 | Area di studio resa leggibile su mobile (pannello a piena altezza sotto la checklist) | Correzione layout | Completato |
+| 2026-09-24 | M5 | Guida del Dominio 2 arricchita (sotto-argomenti 2.1–2.5, 5 tabelle, 8 errori comuni, 6 esercizi); controllo automatico di parità IT/EN esteso a tutti i contenuti, con 9 disallineamenti corretti | Guida D2 | Completato |
 
 ---
 

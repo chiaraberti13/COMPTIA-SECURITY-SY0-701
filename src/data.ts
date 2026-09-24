@@ -1628,7 +1628,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "WPAWirelessConcept",
         definition: "Wi-Fi Protected Access: Un protocollo di sicurezza wireless intermedio introdotto nel 2003 come misura correttiva d'emergenza per sostituire WEP senza richiedere la sostituzione dell'hardware esistente.",
         details: "Caratteristiche di WPA:\n* **TKIP (Temporal Key Integrity Protocol):** Sostituisce la chiave statica di WEP con chiavi dinamiche che cambiano per ogni singolo pacchetto, sebbene utilizzi ancora l'algoritmo RC4 sottostante.\n* **MIC (Message Integrity Check):** Introduce un algoritmo di verifica dell'integrità dei frame più forte (chiamato Michael) per contrastare la manipolazione dei dati, al posto del debole CRC-32 di WEP.\n* **Sostituzione:** Trattandosi di una soluzione ponte, è stata presto superata da WPA2 (che impone AES e CCMP) e dal moderno standard WPA3.",
-        examTip: "WPA è stato progettato come un aggiornamento firmware temporaneo per i vecchi dispositivi WEP, introducendo TKIP per sanare le falle di cifratura statica."
+        examTip: "WPA è stato una soluzione di transizione: un aggiornamento firmware per i vecchi dispositivi WEP che introduce TKIP per sanare le falle della chiave statica, senza cambiare l'hardware. All'esame è comunque considerato obsoleto a favore di WPA2 e WPA3."
       },
       {
         name: "TKIP",
@@ -1817,7 +1817,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "ControlPlaneConcept",
         definition: "Piano di Controllo: La componente intelligente della rete responsabile di determinare come e dove il traffico debba essere instradato, calcolando i percorsi e le tabelle di routing.",
         details: "Caratteristiche del Control Plane:\n* **Presa decisionale:** Definisce la topologia della rete scambiando messaggi e informazioni con gli altri apparati di rete locali o globali.\n* **Protocolli attivi:** Esegue algoritmi complessi e gestisce protocolli di routing dinamico come OSPF, BGP, RIP, STP.\n* **Centralizzazione in SDN:** Nelle reti tradizionali, ciascun apparato possiede il proprio Control Plane locale. Nell'SDN, il Control Plane viene estratto e centralizzato all'interno di un software chiamato **SDN Controller**, lasciando sugli switch fisici solo il semplice Data Plane.",
-        examTip: "Il Control Plane decide la rotta logica del traffico (crea le tabelle di routing), mentre il Data Plane la esegue materialmente inoltrando i pacchetti."
+        examTip: "All'esame il Control Plane è il cervello decisionale della rete: calcola le rotte e crea le tabelle di routing, mentre il Data Plane le esegue inoltrando materialmente i pacchetti. In una rete SDN il Control Plane è centralizzato in un unico controller software."
       },
       {
         name: "Management Plane",
@@ -3817,7 +3817,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
         keyFormulas: [
           "ARO = numero di eventi / numero di anni osservati",
           "ALE = SLE * ARO",
-          "Conversioni rapide: ogni 4 anni = 0,25 | ogni 20 anni = 0,05 | 2 volte l'anno = 2 | 1 volta al mese = 12",
+          "Conversioni rapide: ogni 4 anni = 0,25 | ogni 20 anni = 0,05 | 2 volte l'anno = 2 | una volta al mese = 12",
         ],
         examTip: "**La conversione è tutto:** riporta sempre la frequenza a base annua prima di moltiplicare. «Una volta ogni 4 anni» → **0,25** · «due volte all'anno» → **2** · «una volta ogni 20 anni» → **0,05** · «una volta al mese» → **12**.\n* **La trappola classica:** lo scenario ti dà l'intervallo («ogni 4 anni») e tu devi usare il **reciproco** (0,25). Chi inserisce 4 nella formula ottiene un ALE sedici volte troppo grande e sceglie il distrattore che è stato costruito apposta per quell'errore.\n* **Il segno che stai sbagliando:** un ARO minore di 1 **riduce** l'ALE sotto la SLE; un ARO maggiore di 1 lo **aumenta** sopra la SLE. Se un evento raro ti risulta più costoso all'anno di quanto costi una volta sola, hai invertito il rapporto."
       },
@@ -12530,7 +12530,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     options: [
       "A) Phishing mirato, perché lo screenshot contraffatto imita una fonte autorevole",
       "B) Attacco alla catena di fornitura, perché sfrutta la reputazione di una testata reale",
-      "C) Esfiltrazione di dati, perché informazioni riservate sull'amministratore sono state divulgate",
+      "C) Esfiltrazione di dati, perché informazioni riservate sull'amministratore delegato sono state divulgate",
       "D) Disinformazione, cioè diffusione deliberata di notizie false per ottenere un effetto"
     ],
     answerIndex: 3,
