@@ -139,7 +139,7 @@ Un'attività è completata quando:
 - [x] **P0 — Correggere l'identità del pacchetto:** `name` `comptia-security-sy0-701`, `version` `1.0.0`, `engines` `node ^22.13.0 || >=24.0.0` e `npm >=10` — 2026-09-24.
 - [ ] **P0 — Stabilire convenzioni di naming:** file in `kebab-case` per documenti e lab, componenti React in `PascalCase`, identificatori univoci e stabili per obiettivi, domande, voci di glossario e lab.
 - [x] **P0 — Separare contenuti, logica e automazioni:** dataset, logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`) e test sono già separati.
-- [ ] **P1 — Scomporre `src/App.tsx`:** estrarre una sezione per PR (Studio, Quiz, Risultati, AI Trainer) in `src/components/`, con hook dedicati (`useQuizSession`, `useProgress`) e nessun cambiamento visivo. **L**
+- [ ] 🟡 **P1 — Scomporre `src/App.tsx`:** estratte la guida di dominio (`src/components/DomainGuidePanel.tsx`, HTML generato identico byte per byte prima e dopo su 5 domini × 2 lingue) e la sezione "I tuoi dati" (`DataControls.tsx`) — 2026-09-24; restano Studio, Quiz, Risultati e AI Trainer, una sezione per PR, con hook dedicati (`useQuizSession`, `useProgress`). **L**
 - [x] **P1 — Scomporre `server.ts`:** `server/app.ts` costruisce l'app con `createApp(opzioni)` (middleware di sicurezza, `/healthz`, le due rotte AI, file statici) e riceve il client Gemini come parametro; `server.ts` legge l'ambiente, aggiunge Vite in sviluppo e avvia il server. Comportamento invariato, verificato con smoke test, end-to-end e modalità sviluppo — 2026-09-24.
 - [ ] **P1 — Metadati di revisione dei contenuti:** aggiungere a dataset e glossario `lastReviewed`, `status` (`reviewed`/`needs-review`/`deprecated`) e, dove serve, `sources`. **M**
 - [ ] **P1 — Eliminare duplicazioni:** le definizioni presenti sia nel glossario sia nelle sottovoci devono puntare a una voce canonica tramite ID.
@@ -155,7 +155,7 @@ Un'attività è completata quando:
 - [ ] **P0 — Aggiungere link checking:** `lychee` su file Markdown con cache, retry e allowlist motivata. **S**
 - [ ] **P1 — Aggiungere spell checking tecnico:** `cspell` con dizionari italiano e inglese e un dizionario di progetto per acronimi, protocolli e vendor. **M**
 - [x] **P1 — Test dell'API server:** `tests/api.test.ts`, 15 test sull'app reale con un finto client Gemini (senza rete e senza costi): validazione e limiti degli input, cronologia ridotta e troncata, guardia anti-injection nel prompt di sistema, chiave mancante, budget esaurito (503) e non consumato dalle richieste invalide, timeout reale (504), errori del provider non esposti (502), output della remediation trattato come non attendibile, rate limit (429). Nessuna nuova dipendenza: `fetch` al posto di Supertest — 2026-09-24.
-- [ ] **P1 — Test dei componenti principali:** Testing Library per il flusso quiz (selezione, multi-risposta, timer, risultato) e per il cambio lingua. **M**
+- [ ] 🟡 **P1 — Test dei componenti principali:** Testing Library e jsdom configurati; `tests/DomainGuidePanel.test.tsx` verifica apertura, sotto-argomenti come liste etichettate, tabelle con didascalia in regioni raggiungibili da tastiera, errori comuni etichettati a parole, soluzioni nascoste e sezioni opzionali assenti — 2026-09-24. Il flusso del quiz è coperto dagli end-to-end; restano test di componenti per quiz e cambio lingua dopo la loro estrazione. **M**
 - [ ] **P1 — Soglia di copertura dei test** per la logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`), non per l'intero progetto. **S**
 - [x] **P1 — Generare automaticamente la matrice di copertura:** `npm run coverage-matrix` genera `docs/coverage-matrix.md` (domande per obiettivo e per livello cognitivo, esercizi guidati, priorità); un test fa fallire la CI se il file non è aggiornato — 2026-09-24.
 - [ ] **P1 — Job separati e con permessi minimi:** `quality` (typecheck, lint, test), `build`, `security`, `docs`, ognuno con messaggi d'errore leggibili.
@@ -374,7 +374,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
 8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
 9. [x] Test end-to-end con Playwright e `axe-core` su telefono e desktop; quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion` (2026-09-24).
-10. [ ] 🟡 Aggiungere test API e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`: test API completati (2026-09-24); restano test di componenti ed estrazione. **M**
+10. [x] Aggiungere test API e i primi test di componenti, poi estrarre la prima sezione da `App.tsx` (2026-09-24: 15 test API, 6 test di componente, guida di dominio estratta).
 11. [x] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali (2026-09-24).
 
 ---
@@ -408,7 +408,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
 | Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 2 su 2 (2026-09-24; erano 0) | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
-| Manutenzione | Righe di `src/App.tsx` | ~2.640 (erano ~2.550 all'audit iniziale) | < 500 |
+| Manutenzione | Righe di `src/App.tsx` | ~2.480 (erano ~2.640; ~2.550 all'audit iniziale) | < 500 |
 | Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
 | Didattica | Domini con guida completa (ogni sotto-argomento ufficiale, tabelle, errori comuni, un esercizio per obiettivo) | 5 su 5 (verificato da test) | 5 su 5 |
 | Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
@@ -498,6 +498,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M6 | Test end-to-end con Playwright e axe (desktop e telefono) in CI; corrette 5 regole WCAG violate (2 critiche): tablist, nome del pulsante chat, controlli annidati, dimensione dei bersagli, contrasto, tabelle raggiungibili da tastiera; annuncio dell'esito nel quiz; `prefers-reduced-motion` | Attività n. 9 | Completato |
 | 2026-09-24 | M7 | Sezione "I tuoi dati": esportazione, importazione con conferma e cancellazione dei progressi locali; checklist e segnalibri ora sanificati alla lettura | Attività n. 11 | Completato |
 | 2026-09-24 | M4 | `server.ts` diviso in `server/app.ts` (`createApp`) e avvio; 15 test API con finto client Gemini | Attività n. 10 | Parziale |
+| 2026-09-24 | M4 | Guida di dominio estratta da `App.tsx` in `DomainGuidePanel.tsx` (HTML identico), Testing Library e jsdom con 6 test di componente | Attività n. 10 | Completato |
 
 ---
 
