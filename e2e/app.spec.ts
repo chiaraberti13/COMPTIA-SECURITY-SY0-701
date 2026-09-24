@@ -151,3 +151,13 @@ test.describe("your data (export, import, delete)", () => {
     expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).toBeNull();
   });
 });
+
+test.describe("AI transparency", () => {
+  test("the AI Trainer always shows its limits and a privacy warning", async ({ page }) => {
+    await openApp(page);
+    // The panel starts open on wide screens and closed on phones.
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await expect(page.locator("#ai_disclaimer")).toContainText("possono contenere errori");
+    await expect(page.locator("#ai_disclaimer")).toContainText("dati personali");
+  });
+});

@@ -21,6 +21,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - End-to-end tests with Playwright and axe at phone and desktop width (`npm run e2e`), also run by CI.
 - "Your data" section in the simulator: export the progress to a JSON file, import it with confirmation, or delete everything stored in this browser.
 - The quiz announces whether an answer was right to screen readers, and animations follow the system "reduce motion" setting.
+- The AI Trainer always shows that answers can be wrong and must not contain personal data; AI-generated remediation questions are labelled as unreviewed.
+- The optional exam timer warns screen-reader users when one minute is left.
 
 ### Changed
 

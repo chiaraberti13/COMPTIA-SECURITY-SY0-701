@@ -1940,6 +1940,11 @@ export default function App() {
                       <span>{t("rem.headerLevel", { level: levelLabel(remediationQuestions[remediationIndex].level) })}</span>
                       <span>{t("rem.questionOf", { i: remediationIndex + 1, n: remediationQuestions.length })}</span>
                     </div>
+                    {/* Generated questions are never reviewed: say so next to each one. */}
+                    <p className="flex gap-2 text-[11px] text-slate-400 leading-snug" id="remediation_ai_notice">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" aria-hidden="true" />
+                      <span>{t("rem.aiGenerated")}</span>
+                    </p>
 
                     {/* Scenario card. Remediation questions come back from the
                         model, so the scenario can legitimately be absent: without
@@ -2006,6 +2011,14 @@ export default function App() {
                       })}
                     </div>
 
+                    <p className="sr-only" role="status" aria-live="polite" id="remediation_feedback_announcer">
+                      {remediationShowFeedback
+                        ? isSelectionCorrect(remediationQuestions[remediationIndex], remediationSelected)
+                          ? t("quiz.bestChoice")
+                          : t("quiz.distractor")
+                        : ""}
+                    </p>
+
                     {/* Feedback and next actions */}
                     {remediationShowFeedback ? (
                       <div className="space-y-4" id="remediation_feedback_box">
@@ -2053,15 +2066,21 @@ export default function App() {
                       <span className="text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded text-[10px] uppercase font-bold truncate">{activeQuestions[currentQuestionIndex].topic}</span>
                       <span className="flex items-center gap-2 shrink-0">
                         {secondsLeft !== null && (
-                          <span
-                            id="quiz_timer"
-                            role="timer"
-                            aria-live="off"
-                            className={`px-2 py-0.5 rounded text-[10px] font-bold tabular-nums border ${secondsLeft <= 60 ? "border-rose-500/40 bg-rose-500/10 text-rose-300" : "border-slate-700 bg-slate-900 text-slate-300"}`}
-                            title={t("quiz.timerLabel")}
-                          >
-                            {formatClock(secondsLeft)}
-                          </span>
+                          <>
+                            <span
+                              id="quiz_timer"
+                              role="timer"
+                              aria-live="off"
+                              className={`px-2 py-0.5 rounded text-[10px] font-bold tabular-nums border ${secondsLeft <= 60 ? "border-rose-500/40 bg-rose-500/10 text-rose-300" : "border-slate-700 bg-slate-900 text-slate-300"}`}
+                              title={t("quiz.timerLabel")}
+                            >
+                              {formatClock(secondsLeft)}
+                            </span>
+                            {/* The visible clock is not announced every second; one warning is. */}
+                            <span className="sr-only" role="status" aria-live="polite" id="quiz_timer_warning">
+                              {secondsLeft > 0 && secondsLeft <= 60 ? t("quiz.oneMinuteLeft") : ""}
+                            </span>
+                          </>
                         )}
                         <span>{t("quiz.level")} <strong className="text-cyan-400">{levelLabel(activeQuestions[currentQuestionIndex].level)}</strong> · {t("quiz.questionCounter", { i: currentQuestionIndex + 1, n: activeQuestions.length })}</span>
                       </span>
@@ -2236,6 +2255,12 @@ export default function App() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
+
+              {/* Transparency notice (OWASP LLM09 overreliance): always visible. */}
+              <p className="flex gap-2 px-4 py-2 text-[11px] leading-snug text-slate-400 border-b border-slate-800 bg-slate-950/60" id="ai_disclaimer">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+                <span>{t("chat.disclaimer")}</span>
+              </p>
 
               {/* Chat messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat_messages_area">
