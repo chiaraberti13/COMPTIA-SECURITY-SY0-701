@@ -1,0 +1,39 @@
+# Dependabot version updates.
+# Docs: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+#
+# Security updates (for dependencies with a published advisory) are opened as
+# soon as an advisory appears and are not delayed by the cooldown below; enable
+# them under Settings > Code security > Dependabot security updates.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Leave new releases a week to be noticed and pulled if compromised before
+    # they are proposed here (supply-chain protection).
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for all minor and patch bumps; major versions stay separate so
+      # each breaking change can be reviewed and tested on its own.
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
