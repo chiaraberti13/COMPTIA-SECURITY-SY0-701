@@ -320,6 +320,8 @@ const it = {
   "a11y.domainQuestionCount": "Numero di domande del dominio {n}",
   "a11y.closeTrainer": "Chiudi il Trainer AI",
   "a11y.chatInput": "Domanda per il Trainer AI",
+  "a11y.sendMessage": "Invia la domanda al Trainer AI",
+  "a11y.scrollableTable": "Tabella scorrevole: {title}",
 
 
   // Chat sidebar
@@ -617,6 +619,8 @@ const en: Record<UIKey, string> = {
   "a11y.domainQuestionCount": "Number of Domain {n} questions",
   "a11y.closeTrainer": "Close the AI Trainer",
   "a11y.chatInput": "Question for the AI Trainer",
+  "a11y.sendMessage": "Send the question to the AI Trainer",
+  "a11y.scrollableTable": "Scrollable table: {title}",
 
 
   // Chat sidebar

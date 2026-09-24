@@ -328,12 +328,12 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
             {/* Quick Stat Pill */}
             <div className="flex items-center gap-3 bg-slate-950/60 border border-slate-800 p-3 rounded-lg shrink-0">
-              <div className="p-2.5 bg-cyan-600/20 text-cyan-400 rounded-md border border-cyan-500/30">
+              <div className="p-2.5 bg-cyan-700/20 text-cyan-400 rounded-md border border-cyan-500/30">
                 <BookmarkCheck className="w-5 h-5" />
               </div>
               <div>
                 <div className="text-xs text-slate-400">{t("gloss.savedTerms")}</div>
-                <div className="text-base font-bold text-white">{bookmarkedIds.length} <span className="text-xs font-normal text-slate-500">{t("gloss.inBookmarks")}</span></div>
+                <div className="text-base font-bold text-white">{bookmarkedIds.length} <span className="text-xs font-normal text-slate-400">{t("gloss.inBookmarks")}</span></div>
               </div>
             </div>
           </div>
@@ -390,7 +390,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                 onClick={() => setSelectedDomain("ALL")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   selectedDomain === "ALL" 
-                    ? "bg-cyan-600 text-white font-bold shadow-md shadow-cyan-500/20" 
+                    ? "bg-cyan-700 text-white font-bold shadow-md shadow-cyan-500/20" 
                     : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/50"
                 }`}
               >
@@ -466,7 +466,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             
             {/* Alphabet Bar */}
             <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 max-w-full">
-              <span className="text-xs font-semibold text-slate-500 mr-1 shrink-0">{t("gloss.azIndex")}</span>
+              <span className="text-xs font-semibold text-slate-400 mr-1 shrink-0">{t("gloss.azIndex")}</span>
               {availableLetters.map((letter) => {
                 const isSelected = selectedLetter === letter;
                 return (
@@ -531,7 +531,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
         {/* GLOSSARY CARDS GRID */}
         {filteredTerms.length === 0 ? (
           <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-12 text-center my-8">
-            <div className="w-12 h-12 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto text-slate-500 mb-3">
+            <div className="w-12 h-12 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-3">
               <Search className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-200">{t("gloss.noTermsTitle")}</h3>
@@ -540,7 +540,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             </p>
             <button
               onClick={resetFilters}
-              className="mt-4 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition-all shadow-md shadow-cyan-600/20"
+              className="mt-4 px-4 py-2 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-semibold text-xs transition-all shadow-md shadow-cyan-600/20"
             >
               {t("gloss.resetAll")}
             </button>
@@ -590,7 +590,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                         className={`p-1.5 rounded-md transition-colors ${
                           isBookmarked 
                             ? "bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30" 
-                            : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
+                            : "text-slate-400 hover:text-slate-300 hover:bg-slate-800"
                         }`}
                         title={isBookmarked ? t("gloss.removeBookmark") : t("gloss.addBookmark")}
                         aria-label={isBookmarked ? t("gloss.removeBookmark") : t("gloss.addBookmark")}
@@ -604,7 +604,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
                       <span>{item.term}</span>
                     </h3>
 
-                    <div className="text-[11px] text-slate-500 font-medium mt-0.5 mb-2">
+                    <div className="text-[11px] text-slate-400 font-medium mt-0.5 mb-2">
                       {t("gloss.group", { title: item.groupTitle })}
                     </div>
 

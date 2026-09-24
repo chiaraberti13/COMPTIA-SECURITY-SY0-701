@@ -40,7 +40,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
 | Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; `CODE_OF_CONDUCT.md` assente |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
-| Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Nessun test automatico di accessibilità né di layout (il difetto mobile è stato scoperto solo con Playwright a mano); animazioni `motion` senza rispetto di `prefers-reduced-motion` |
+| Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Test end-to-end e axe in CI dal 2026-09-24; mancano test con screen reader reali e la verifica della schermata di remediation |
 
 ---
 
@@ -321,12 +321,13 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 #### Accessibilità e inclusione (obiettivo: WCAG 2.2 AA)
 
+- [x] **P0 — Struttura ARIA corretta (trovata da axe il 2026-09-24):** `role="tablist"` ristretto alle tre schede, pulsante di invio della chat con nome accessibile, voci della checklist non più annidate (casella e argomento sono controlli affiancati), caselle da 24 px (WCAG 2.2 target size), tabelle scorrevoli raggiungibili da tastiera, `aria-pressed` su AI Trainer e lingua.
 - [ ] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`.
 - [ ] **P0 — Non affidarsi solo al colore:** risposta corretta/errata, stato e rischio con etichetta testuale o icona (verificare il simulatore e i risultati).
-- [ ] **P0 — Contrasto e leggibilità:** verifica sul tema scuro attuale, inclusi testi `slate-500` su sfondo scuro.
-- [ ] **P0 — Navigazione completa da tastiera nel quiz:** focus visibile, ordine logico, opzioni selezionabili con tastiera, annuncio del risultato con `aria-live`. **M**
-- [ ] **P1 — Rispetto di `prefers-reduced-motion`** per le animazioni `motion` (`useReducedMotion` o `MotionConfig reducedMotion="user"`). **S**
-- [ ] **P1 — Test end-to-end di accessibilità e layout:** Playwright con `axe-core` su studio, guide, glossario e quiz, a 390 e 1280 px, integrato in CI; deve fallire se il pannello di studio torna ad altezza 0 o se la pagina scorre in orizzontale. **M**
+- [x] **P0 — Contrasto e leggibilità:** sfondi `bg-cyan-600` sotto testo bianco portati a `bg-cyan-700` e testo secondario `text-slate-500` portato a `text-slate-400` su sfondo scuro (da 3,6–4,2:1 a oltre 4,5:1); axe non rileva più problemi di contrasto su studio, glossario e simulatore — 2026-09-24.
+- [x] **P0 — Navigazione completa da tastiera nel quiz:** tasti numerici e Invio erano già supportati; aggiunta una regione `role="status"` sempre presente che annuncia l'esito della risposta, icone decorative nascoste, e un test end-to-end che svolge una domanda solo da tastiera — 2026-09-24.
+- [x] **P1 — Rispetto di `prefers-reduced-motion`:** `MotionConfig reducedMotion="user"` attorno all'app — 2026-09-24.
+- [x] **P1 — Test end-to-end di accessibilità e layout:** `e2e/app.spec.ts` con Playwright e `axe-core` a larghezza desktop e telefono: altezza del pannello, assenza di scorrimento orizzontale, WCAG 2.2 AA su studio (guida aperta), glossario e simulatore, quiz da tastiera. Job `End-to-end` in CI con tracce caricate in caso di errore. Verificato che fallisce se il pannello torna ad altezza 0 — 2026-09-24.
 - [ ] **P1 — Timer accessibile:** avviso prima della scadenza e possibilità di estendere o disattivare il tempo (WCAG 2.2.1).
 - [ ] **P1 — Versioni testuali dei diagrammi** e link descrittivi (niente "clicca qui").
 - [ ] **P1 — Limitare emoji decorative e badge** come unica fonte di informazione.
@@ -372,7 +373,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 6. [x] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`, arresto graduale (2026-09-24).
 7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
 8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
-9. [ ] Test end-to-end con Playwright e `axe-core` su telefono e desktop; poi quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion`. **M**
+9. [x] Test end-to-end con Playwright e `axe-core` su telefono e desktop; quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion` (2026-09-24).
 10. [ ] Aggiungere test API (Supertest) e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`. **M**
 11. [ ] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali. **M**
 
@@ -413,7 +414,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
 | Qualità | Avvio in produzione verificato automaticamente | Sì, dal 2026-09-24 (`npm run smoke` in CI) | Sì, a ogni pull request |
 | Laboratori | Lab con isolamento e cleanup verificati | Nessun lab | 100% dei lab pubblicati |
-| Accessibilità | Violazioni axe gravi o critiche sulle viste principali | Non misurato | 0 |
+| Accessibilità | Violazioni axe gravi o critiche sulle viste principali | 0 dal 2026-09-24 (erano 5 regole, 2 critiche) | 0 |
 | Localizzazione | Campi tradotti per domanda e sottovoce | 100% (verificato da test) | 100% |
 | Localizzazione | Coppie di frasi IT/EN con gli stessi numeri, sigle e token | 100% di 7.979, più tutte le guide (2 eccezioni revisionate) | 100% |
 | Contributor UX | Tempo di `npm ci && npm run check` | Non documentato | Documentato e ripetibile |
@@ -494,6 +495,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M3 | Hardening degli endpoint AI: timeout con `AbortSignal`, `maxOutputTokens` sulla chat, tetto giornaliero (`server/aiGuard.ts`), `/healthz`, arresto graduale, rimosso `User-Agent` del template; smoke test esteso a 8 controlli | Attività n. 6 | Completato |
 | 2026-09-24 | M1 | `CONTRIBUTING.md` bilingue con policy sulle dipendenze, `CHANGELOG.md`, moduli per issue, modello di PR, `CODEOWNERS` | Attività n. 7 | Completato |
 | 2026-09-24 | M5 | Tutte le 664 domande collegate agli obiettivi ufficiali (`src/questionObjectives.ts`), matrice di copertura generata e verificata in CI (`docs/coverage-matrix.md`) | Attività n. 8 | Completato |
+| 2026-09-24 | M6 | Test end-to-end con Playwright e axe (desktop e telefono) in CI; corrette 5 regole WCAG violate (2 critiche): tablist, nome del pulsante chat, controlli annidati, dimensione dei bersagli, contrasto, tabelle raggiungibili da tastiera; annuncio dell'esito nel quiz; `prefers-reduced-motion` | Attività n. 9 | Completato |
 
 ---
 

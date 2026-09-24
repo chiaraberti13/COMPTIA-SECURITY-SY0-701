@@ -30,7 +30,10 @@ npm run dev               # http://localhost:3000
 npm run check             # typecheck + lint + all tests (CI runs the same)
 npm run build             # production build
 npm run smoke             # starts the built server in production mode and probes it
+npm run e2e               # Playwright + axe at phone and desktop width (after build)
 ```
+
+For `npm run e2e`, install Chromium once with `npx playwright install chromium`, or point `PW_CHROMIUM_PATH` to an existing Chromium.
 
 CI runs these on Node 22 and 24, plus a separate security workflow (secret scan, `npm audit`, dependency review, CodeQL). A pull request is ready when all of them are green.
 
@@ -99,7 +102,10 @@ npm run dev               # http://localhost:3000
 npm run check             # typecheck + lint + tutti i test (la CI esegue gli stessi)
 npm run build             # build di produzione
 npm run smoke             # avvia il server compilato in modalità produzione e lo verifica
+npm run e2e               # Playwright + axe a larghezza telefono e desktop (dopo la build)
 ```
+
+Per `npm run e2e` installa Chromium una volta con `npx playwright install chromium`, oppure indica un Chromium già presente con `PW_CHROMIUM_PATH`.
 
 La CI li esegue su Node 22 e 24, insieme a un workflow di sicurezza separato (ricerca di segreti, `npm audit`, dependency review, CodeQL). Una pull request è pronta quando sono tutti verdi.
 
