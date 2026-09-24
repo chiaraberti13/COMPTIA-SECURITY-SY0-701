@@ -10,7 +10,7 @@ import { factDrift, strings } from "./helpers/languageFacts";
  */
 
 const DOMAIN_IDS = [1, 2, 3, 4, 5] as const;
-const ENRICHED_DOMAINS = [1, 2, 3, 4] as const;
+const ENRICHED_DOMAINS = [1, 2, 3, 4, 5] as const;
 
 /**
  * Official SY0-701 sub-topics per objective. Each must be named in the English
@@ -160,6 +160,41 @@ const OFFICIAL_SUBTOPICS: Record<string, string[]> = {
   "4.9": [
     "firewall logs", "application logs", "endpoint logs", "OS-specific security logs", "IPS/IDS logs",
     "network logs", "metadata", "vulnerability scans", "automated reports", "dashboards", "packet captures",
+  ],
+  "5.1": [
+    "guidelines", "AUP", "information security policies", "business continuity", "disaster recovery",
+    "incident response", "SDLC", "change management", "password", "access control", "physical security",
+    "encryption", "onboarding/offboarding", "playbooks", "regulatory", "legal", "industry", "local/regional",
+    "national", "global", "monitoring and revision", "boards", "committees", "government entities",
+    "centralized/decentralized", "owners", "controllers", "processors", "custodians/stewards",
+  ],
+  "5.2": [
+    "risk identification", "ad hoc", "recurring", "one-time", "continuous", "qualitative", "quantitative",
+    "SLE", "ALE", "ARO", "probability", "likelihood", "exposure factor", "impact", "key risk indicators",
+    "risk owners", "risk threshold", "risk tolerance", "risk appetite", "expansionary", "conservative", "neutral",
+    "transfer", "accept", "exemption", "exception", "avoid", "mitigate", "risk reporting",
+    "business impact analysis", "RTO", "RPO", "MTTR", "MTBF",
+  ],
+  "5.3": [
+    "penetration testing", "right-to-audit clause", "evidence of internal audits", "independent assessments",
+    "supply chain analysis", "due diligence", "conflict of interest", "SLA", "MOA", "MOU", "MSA", "WO/SOW",
+    "NDA", "BPA", "vendor monitoring", "questionnaires", "rules of engagement",
+  ],
+  "5.4": [
+    "internal", "external", "fines", "sanctions", "reputational damage", "loss of license", "contractual impacts",
+    "due diligence/care", "attestation and acknowledgement", "automation", "legal implications", "data subject",
+    "controller vs processor", "ownership", "data inventory and retention", "right to be forgotten",
+  ],
+  "5.5": [
+    "attestation", "compliance", "audit committee", "self-assessments", "regulatory", "examinations",
+    "assessment", "independent third-party audit", "physical", "offensive", "defensive", "integrated",
+    "known environment", "partially known environment", "unknown environment", "passive", "active",
+  ],
+  "5.6": [
+    "campaigns", "recognizing a phishing attempt", "responding to reported suspicious messages", "risky",
+    "unexpected", "unintentional", "policy/handbooks", "situational awareness", "insider threat",
+    "password management", "removable media and cables", "social engineering", "operational security",
+    "hybrid/remote work environments", "initial", "recurring", "development", "execution",
   ],
 };
 
