@@ -75,6 +75,14 @@ const checks: Check[] = [
     },
   },
   {
+    name: "POST /api/chat with no body at all is rejected with 400, not 500/502",
+    run: async () => {
+      // Express 5 leaves req.body undefined when no body parser matched.
+      const res = await fetch(`${BASE}/api/chat`, { method: "POST" });
+      assert(res.status === 400, `expected 400, got ${res.status}`);
+    },
+  },
+  {
     name: "POST /api/quiz/remediation without topics is rejected with 400",
     run: async () => {
       const res = await fetch(`${BASE}/api/quiz/remediation`, {

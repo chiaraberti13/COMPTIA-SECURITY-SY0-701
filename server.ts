@@ -99,7 +99,8 @@ async function startServer() {
   app.post("/api/chat", async (req, res) => {
     const isEn = req.body?.lang === "en";
     try {
-      const { message } = req.body;
+      // Express 5 leaves req.body undefined when the request carries no JSON.
+      const { message } = req.body ?? {};
 
       if (typeof message !== "string" || !message.trim()) {
         return res.status(400).json({
@@ -208,7 +209,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
   app.post("/api/quiz/remediation", async (req, res) => {
     const isEn = req.body?.lang === "en";
     try {
-      const { weakTopics } = req.body;
+      const { weakTopics } = req.body ?? {};
       if (!Array.isArray(weakTopics) || weakTopics.length === 0) {
         return res.status(400).json({
           error: isEn ? "Weak topics are required" : "Gli argomenti deboli sono obbligatori",
