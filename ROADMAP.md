@@ -35,8 +35,8 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Bilinguismo | Italiano sorgente di verità, overlay inglese con fallback, test di parità strutturale e **di contenuto** (stessi numeri, sigle e token in 7.979 coppie di frasi e in tutte le guide) | Il controllo automatico non coglie differenze di significato senza numeri o sigle; nessun segnale di traduzione da rivedere dopo una modifica al testo italiano |
 | Qualità contenuti | `tests/dataset.test.ts`: ID univoci, spiegazione di ogni distrattore, scenario obbligatorio, copertura di ogni obiettivo, pesi dei domini (±5%), maggioranza di domande di livello superiore | Nessun changelog/errata pubblico delle correzioni sostanziali |
 | Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI, esportazione/importazione e cancellazione dei progressi | Nessuna vista "exam readiness" per obiettivo; quiz non ancora filtrabile per obiettivo |
-| Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; mancano test API con un client Gemini simulato, log strutturati e validazione con schema |
-| Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | CSP con `'unsafe-inline'` per gli stili e dipendenza da Google Fonts esterni |
+| Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; test API con client Gemini simulato e log strutturati JSON dal 2026-09-24; manca la validazione con schema |
+| Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | ~~CSP con `'unsafe-inline'` e Google Fonts esterni~~ risolto il 2026-09-24: CSP solo `'self'`, font nel bundle |
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
 | Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; `CODE_OF_CONDUCT.md` assente |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
@@ -90,8 +90,8 @@ Un'attività è completata quando:
 - [ ] 🟡 **P0 — Analisi dei gap:** la matrice di copertura elenca gli obiettivi con meno domande (oggi 1.1 con 10, 2.3 e 5.6 con 13, 4.7 con 14, 4.4 con 16); restano da individuare sottovoci senza esempio pratico e contenuti non verificabili. **M**
 - [x] **P0 — Verifica linguistica strutturale:** test di parità IT/EN su ID, campi tradotti, intestazioni e annunci multi-risposta.
 - [ ] 🟡 **P0 — Baseline qualità:** registrare nel report numero di domande per dominio/obiettivo, stato Lighthouse (performance, accessibilità) e risultato di `npm audit`. **S**
-- [ ] **P0 — Threat model dell'applicazione e del repository:** STRIDE su browser → Express → Gemini, abuso dei costi AI, prompt injection, supply chain npm, workflow GitHub Actions, integrità dei progressi locali. **M**
-- [ ] **P1 — Registro decisionale:** ADR essenziali per dataset in TypeScript vs file di contenuto, strategia bilingue a overlay, scelta del provider AI e politica di persistenza solo locale. **S**
+- [x] **P0 — Threat model dell'applicazione e del repository:** [`docs/threat-model.md`](docs/threat-model.md), STRIDE su quattro confini (browser, Internet → server, server → Gemini, supply chain), con controlli, test che li verificano e rischi residui. Ha trovato un rischio reale: con `trust proxy` fisso a 1, un server esposto senza proxy permetteva di aggirare il rate limit con un `X-Forwarded-For` falso. Ora è configurabile con `TRUST_PROXY` e coperto da test — 2026-09-24.
+- [x] **P1 — Registro decisionale:** [`docs/adr/`](docs/adr/README.md) con modello e quattro ADR: dataset in TypeScript, bilingue a overlay, provider AI dietro proxy, persistenza solo locale — 2026-09-24.
 
 **Deliverable:** report di audit, matrice di copertura per obiettivo, threat model e backlog confermato.
 
@@ -115,8 +115,8 @@ Un'attività è completata quando:
   ├── CODEOWNERS                 # nuovo
   └── pull_request_template.md   # nuovo
   docs/
-  ├── adr/                       # nuovo: decisioni architetturali
-  ├── threat-model.md            # nuovo
+  ├── adr/                       # decisioni architetturali (dal 2026-09-24)
+  ├── threat-model.md            # STRIDE (dal 2026-09-24)
   └── coverage-matrix.md         # nuovo: generato da script
   labs/                          # nuovo, vedi "Laboratori pratici sicuri"
   scripts/                       # nuovo: generazione indici e report
@@ -139,8 +139,8 @@ Un'attività è completata quando:
 - [x] **P0 — Correggere l'identità del pacchetto:** `name` `comptia-security-sy0-701`, `version` `1.0.0`, `engines` `node ^22.13.0 || >=24.0.0` e `npm >=10` — 2026-09-24.
 - [ ] **P0 — Stabilire convenzioni di naming:** file in `kebab-case` per documenti e lab, componenti React in `PascalCase`, identificatori univoci e stabili per obiettivi, domande, voci di glossario e lab.
 - [x] **P0 — Separare contenuti, logica e automazioni:** dataset, logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`) e test sono già separati.
-- [ ] **P1 — Scomporre `src/App.tsx`:** estrarre una sezione per PR (Studio, Quiz, Risultati, AI Trainer) in `src/components/`, con hook dedicati (`useQuizSession`, `useProgress`) e nessun cambiamento visivo. **L**
-- [ ] **P1 — Scomporre `server.ts`:** separare configurazione, middleware di sicurezza, route `/api/chat`, route `/api/quiz/remediation` e client Gemini condiviso, così da poterli testare con Supertest. **M**
+- [ ] 🟡 **P1 — Scomporre `src/App.tsx`:** estratte la guida di dominio (`src/components/DomainGuidePanel.tsx`, HTML generato identico byte per byte prima e dopo su 5 domini × 2 lingue) e la sezione "I tuoi dati" (`DataControls.tsx`) — 2026-09-24; restano Studio, Quiz, Risultati e AI Trainer, una sezione per PR, con hook dedicati (`useQuizSession`, `useProgress`). **L**
+- [x] **P1 — Scomporre `server.ts`:** `server/app.ts` costruisce l'app con `createApp(opzioni)` (middleware di sicurezza, `/healthz`, le due rotte AI, file statici) e riceve il client Gemini come parametro; `server.ts` legge l'ambiente, aggiunge Vite in sviluppo e avvia il server. Comportamento invariato, verificato con smoke test, end-to-end e modalità sviluppo — 2026-09-24.
 - [ ] **P1 — Metadati di revisione dei contenuti:** aggiungere a dataset e glossario `lastReviewed`, `status` (`reviewed`/`needs-review`/`deprecated`) e, dove serve, `sources`. **M**
 - [ ] **P1 — Eliminare duplicazioni:** le definizioni presenti sia nel glossario sia nelle sottovoci devono puntare a una voce canonica tramite ID.
 - [x] **P1 — Glossario centralizzato:** ~550 voci con ricerca, filtri per dominio e categoria, indice A–Z e segnalibri (`src/components/GlossarySection.tsx`).
@@ -151,11 +151,11 @@ Un'attività è completata quando:
 - [x] **P0 — Pipeline di base:** typecheck, lint, test Vitest e build su ogni push a `main` e su ogni pull request.
 - [x] **P0 — Validazione dei dati strutturati:** i dataset sono tipizzati e verificati da `tests/dataset.test.ts` (ID, opzioni, risposte, spiegazioni, scenari, parità IT/EN).
 - [x] **P0 — Aggiornare Node.js in CI e in `engines`:** CI su matrice Node 22 + 24 (al posto di Node 20, fuori supporto da aprile 2026), `.nvmrc` a 24 e README IT/EN allineati — 2026-09-24. Togliere Node 22 dalla matrice alla sua fine vita (aprile 2027).
-- [ ] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` su README, ROADMAP, SECURITY e futuri `docs/` e `labs/`. **S**
-- [ ] **P0 — Aggiungere link checking:** `lychee` su file Markdown con cache, retry e allowlist motivata. **S**
+- [x] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` 0.23.2 (versione esatta) con `.markdownlint-cli2.jsonc` su tutti i `.md` della radice, di `docs/` e di `.github/`; `npm run lint:md`, incluso in `npm run check` e nel workflow `docs.yml`. La dipendenza `smol-toml` 1.7.0 (GHSA-7w5x-hrqm-74c2, DoS) è forzata a 1.8.0 con `overrides` — 2026-09-24.
+- [x] **P0 — Aggiungere link checking:** `lychee` 0.24.2 (`lychee.toml`, retry, esclusioni motivate): link interni e ancore `#sezione` offline a ogni push e PR, link esterni ogni lunedì e su richiesta, così un sito remoto irraggiungibile non blocca PR estranee — 2026-09-24.
 - [ ] **P1 — Aggiungere spell checking tecnico:** `cspell` con dizionari italiano e inglese e un dizionario di progetto per acronimi, protocolli e vendor. **M**
-- [ ] **P1 — Test dell'API server:** con Supertest e client Gemini simulato: validazione input, limiti di dimensione, rate limit, gestione errori senza fuga di dettagli del provider. **M**
-- [ ] **P1 — Test dei componenti principali:** Testing Library per il flusso quiz (selezione, multi-risposta, timer, risultato) e per il cambio lingua. **M**
+- [x] **P1 — Test dell'API server:** `tests/api.test.ts`, 15 test sull'app reale con un finto client Gemini (senza rete e senza costi): validazione e limiti degli input, cronologia ridotta e troncata, guardia anti-injection nel prompt di sistema, chiave mancante, budget esaurito (503) e non consumato dalle richieste invalide, timeout reale (504), errori del provider non esposti (502), output della remediation trattato come non attendibile, rate limit (429). Nessuna nuova dipendenza: `fetch` al posto di Supertest — 2026-09-24.
+- [ ] 🟡 **P1 — Test dei componenti principali:** Testing Library e jsdom configurati; `tests/DomainGuidePanel.test.tsx` verifica apertura, sotto-argomenti come liste etichettate, tabelle con didascalia in regioni raggiungibili da tastiera, errori comuni etichettati a parole, soluzioni nascoste e sezioni opzionali assenti — 2026-09-24. Il flusso del quiz è coperto dagli end-to-end; restano test di componenti per quiz e cambio lingua dopo la loro estrazione. **M**
 - [ ] **P1 — Soglia di copertura dei test** per la logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`), non per l'intero progetto. **S**
 - [x] **P1 — Generare automaticamente la matrice di copertura:** `npm run coverage-matrix` genera `docs/coverage-matrix.md` (domande per obiettivo e per livello cognitivo, esercizi guidati, priorità); un test fa fallire la CI se il file non è aggiornato — 2026-09-24.
 - [ ] **P1 — Job separati e con permessi minimi:** `quality` (typecheck, lint, test), `build`, `security`, `docs`, ognuno con messaggi d'errore leggibili.
@@ -229,8 +229,8 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Tetto di spesa globale (denial of wallet):** `server/aiGuard.ts` con budget giornaliero per giorno UTC (`AI_DAILY_LIMIT`, predefinito 500, `0` disattiva l'AI), controllato prima di ogni chiamata a Gemini, risposta 503 localizzata; valori non validi nella configurazione ricadono sul predefinito invece di togliere il limite. Test unitari in `tests/aiGuard.test.ts` e verifica dal vivo nello smoke test — 2026-09-24. Il contatore è per processo: con più istanze il tetto si moltiplica.
 - [x] **P1 — Rimuovere l'header `User-Agent: aistudio-build`:** rimosso; un unico `geminiClient()` crea il client per entrambi gli endpoint — 2026-09-24.
 - [x] **P1 — Endpoint `/healthz` e arresto graduale:** `GET /healthz` risponde `{"status":"ok"}` senza cache e senza dettagli di configurazione; su `SIGTERM`/`SIGINT` il server smette di accettare connessioni e chiude le richieste in corso. Entrambi verificati dallo smoke test — 2026-09-24.
-- [ ] **P1 — Log strutturati** (livello, route, esito, latenza) senza contenuto dei messaggi degli utenti e senza chiavi. **S**
-- [ ] **P1 — Irrigidire la CSP:** ospitare i font localmente per eliminare `fonts.googleapis.com`/`fonts.gstatic.com` e valutare la rimozione di `'unsafe-inline'` dagli stili; aggiungere `base-uri 'self'` e `form-action 'self'`. **M**
+- [x] **P1 — Log strutturati:** `server/log.ts` scrive una riga JSON per evento (avvio con la configurazione, ogni richiesta `/api/` con metodo, percorso senza query, stato e millisecondi, errori di Gemini con tipo e dettaglio ripulito dalle chiavi, arresto). Mai testo dell'utente, argomenti, IP o chiavi: test dedicati, e lo smoke test fallisce se una riga non è JSON o contiene la chiave. Senza nuove dipendenze; `dotenv` reso silenzioso perché la sua riga promozionale rompeva il formato — 2026-09-24.
+- [x] **P1 — Irrigidire la CSP:** font Inter e JetBrains Mono inclusi nel bundle (Fontsource 5.3.0, SIL OFL 1.1) al posto di Google Fonts, mai incorporati come `data:`; tolti `fonts.googleapis.com`, `fonts.gstatic.com` e `'unsafe-inline'`; aggiunti `base-uri 'self'` e `form-action 'self'`. Un test end-to-end percorre studio, guida, glossario e quiz e fallisce a ogni violazione della CSP o richiesta verso un'altra origine; lo smoke test verifica le direttive — 2026-09-24.
 - [ ] **P1 — Validazione degli input con schema** (es. Zod) condiviso tra client e server al posto dei controlli manuali. **M**
 - [ ] **P1 — Protezione minima degli endpoint AI in deploy pubblici:** opzione per richiedere un token d'accesso o disattivare l'AI via variabile d'ambiente. **M**
 - [ ] **P1 — Container di deploy sicuro:** `Dockerfile` multi-stage, utente non root, filesystem in sola lettura, immagine base minimale e versione fissata. **M**
@@ -242,8 +242,8 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **LLM05 — Gestione dell'output:** la remediation usa uno schema JSON e l'output è validato da `validateRemediationPayload` prima dell'uso.
 - [x] **LLM10 — Consumo illimitato:** rate limit per IP, limiti sugli input, timeout, `maxOutputTokens` su entrambi gli endpoint e tetto giornaliero complessivo — 2026-09-24.
 - [ ] **P1 — Suite di test anti-injection:** raccolta di prompt malevoli noti eseguita contro il client simulato per verificare che le regole non vengano aggirate e che l'output resti valido. **M**
-- [ ] **P1 — Avviso trasparente nell'interfaccia:** le risposte AI possono contenere errori e non sostituiscono i materiali ufficiali; i messaggi non vanno usati per dati personali. **S**
-- [ ] **P1 — Revisione umana delle domande AI:** le domande di remediation restano marcate come generate e non entrano mai nella banca domande senza revisione.
+- [x] **P1 — Avviso trasparente nell'interfaccia:** avviso sempre visibile nel pannello del Trainer AI (le risposte possono essere sbagliate, non sostituiscono gli obiettivi ufficiali, niente dati personali), verificato da un test end-to-end — 2026-09-24.
+- [ ] 🟡 **P1 — Revisione umana delle domande AI:** ogni domanda di remediation mostra che è generata dall'AI e non revisionata (2026-09-24); non entra nella banca domande, perché resta solo nella sessione del browser. Manca un flusso per proporre una domanda generata alla revisione.
 - [ ] **P2 — Astrazione del provider AI:** interfaccia unica per poter cambiare modello o fornitore senza toccare le route.
 
 #### Integrità e privacy dei dati locali
@@ -321,14 +321,14 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 #### Accessibilità e inclusione (obiettivo: WCAG 2.2 AA)
 
-- [x] **P0 — Struttura ARIA corretta (trovata da axe il 2026-09-24):** `role="tablist"` ristretto alle tre schede, pulsante di invio della chat con nome accessibile, voci della checklist non più annidate (casella e argomento sono controlli affiancati), caselle da 24 px (WCAG 2.2 target size), tabelle scorrevoli raggiungibili da tastiera, `aria-pressed` su AI Trainer e lingua.
-- [ ] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`.
-- [ ] **P0 — Non affidarsi solo al colore:** risposta corretta/errata, stato e rischio con etichetta testuale o icona (verificare il simulatore e i risultati).
+- [x] **P0 — Struttura ARIA corretta (trovata da axe il 2026-09-24):** `role="tablist"` ristretto alle tre schede, pulsante di invio della chat con nome accessibile, voci della checklist non più annidate (casella e argomento sono controlli affiancati), caselle da 24 px (WCAG 2.2 target size), tabelle scorrevoli raggiungibili da tastiera, `aria-pressed` su AI Trainer e lingua. Anche la schermata di remediation annuncia l'esito della risposta.
+- [x] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`: verificato il 2026-09-24, l'app non contiene immagini `<img>` e tutte le 88 icone SVG hanno `aria-hidden="true"`. Le icone che portano un significato (esatta o errata nel ripasso) sono ora affiancate da testo.
+- [x] **P0 — Non affidarsi solo al colore:** dopo la conferma, nel simulatore e nella remediation, ogni opzione giusta o scelta porta un'etichetta a parole con icona ("Risposta corretta", "La tua risposta"), letta anche dagli screen reader; il ripasso finale scrive "Esatta", "Errata" o "Nessuna risposta data" invece della sola icona colorata (WCAG 1.4.1). Componente `OptionVerdict` con test di componente e controllo end-to-end — 2026-09-24.
 - [x] **P0 — Contrasto e leggibilità:** sfondi `bg-cyan-600` sotto testo bianco portati a `bg-cyan-700` e testo secondario `text-slate-500` portato a `text-slate-400` su sfondo scuro (da 3,6–4,2:1 a oltre 4,5:1); axe non rileva più problemi di contrasto su studio, glossario e simulatore — 2026-09-24.
 - [x] **P0 — Navigazione completa da tastiera nel quiz:** tasti numerici e Invio erano già supportati; aggiunta una regione `role="status"` sempre presente che annuncia l'esito della risposta, icone decorative nascoste, e un test end-to-end che svolge una domanda solo da tastiera — 2026-09-24.
 - [x] **P1 — Rispetto di `prefers-reduced-motion`:** `MotionConfig reducedMotion="user"` attorno all'app — 2026-09-24.
 - [x] **P1 — Test end-to-end di accessibilità e layout:** `e2e/app.spec.ts` con Playwright e `axe-core` a larghezza desktop e telefono: altezza del pannello, assenza di scorrimento orizzontale, WCAG 2.2 AA su studio (guida aperta), glossario e simulatore, quiz da tastiera. Job `End-to-end` in CI con tracce caricate in caso di errore. Verificato che fallisce se il pannello torna ad altezza 0 — 2026-09-24.
-- [ ] **P1 — Timer accessibile:** avviso prima della scadenza e possibilità di estendere o disattivare il tempo (WCAG 2.2.1).
+- [x] **P1 — Timer accessibile:** il limite di tempo è facoltativo e si attiva solo su scelta dell'utente (WCAG 2.2.1); il conto alla rovescia non viene annunciato ogni secondo, ma un avviso per screen reader segnala l'ultimo minuto — 2026-09-24.
 - [ ] **P1 — Versioni testuali dei diagrammi** e link descrittivi (niente "clicca qui").
 - [ ] **P1 — Limitare emoji decorative e badge** come unica fonte di informazione.
 - [ ] **P2 — Test manuali periodici:** screen reader (NVDA, VoiceOver), zoom al 200%, viewport mobile.
@@ -354,7 +354,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 |---|---|---|---|---|
 | **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
 | **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | ✅ Completata il 2026-09-24 | Repository contribuibile |
-| **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA e Dependabot presenti; 6 PR di Dependabot da smistare | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
+| **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA, Dependabot, smoke test, controlli di sicurezza, lint del Markdown e link check presenti; 6 PR di Dependabot da smistare | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
 | **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
 | **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
 | **M5 — Content Quality** | Obiettivi per domanda, fonti, freschezza, errata, style guide | M0–M2 | 🟡 Guide complete per i 5 domini, parità IT/EN automatica; mancano obiettivi per domanda, fonti e date di revisione | Materiale coerente e verificabile |
@@ -374,7 +374,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
 8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
 9. [x] Test end-to-end con Playwright e `axe-core` su telefono e desktop; quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion` (2026-09-24).
-10. [ ] Aggiungere test API (Supertest) e i primi test di componenti, poi estrarre la prima sezione da `App.tsx`. **M**
+10. [x] Aggiungere test API e i primi test di componenti, poi estrarre la prima sezione da `App.tsx` (2026-09-24: 15 test API, 6 test di componente, guida di dominio estratta).
 11. [x] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali (2026-09-24).
 
 ---
@@ -401,14 +401,14 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Copertura | Obiettivi coperti da almeno una sottovoce | 100% (verificato da test) | 100% |
 | Copertura | Domande collegate esplicitamente a un obiettivo | 100% dal 2026-09-24 (era 0%) | 100% |
 | Qualità | Test automatici verdi su `main` | Sì | Sempre |
-| Qualità | Link interni validi | Non misurato | 100% |
+| Qualità | Link interni validi | 100% (lychee offline in CI dal 2026-09-24) | 100% |
 | Sicurezza | Segreti confermati nella branch principale | 0 su 130 commit (gitleaks 8.30.1, 2026-09-24) | 0 |
 | Sicurezza | Workflow con permessi espliciti | 100% | 100% |
 | Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
 | Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
 | Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 2 su 2 (2026-09-24; erano 0) | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
-| Manutenzione | Righe di `src/App.tsx` | ~2.640 (erano ~2.550 all'audit iniziale) | < 500 |
+| Manutenzione | Righe di `src/App.tsx` | ~2.480 (erano ~2.640; ~2.550 all'audit iniziale) | < 500 |
 | Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
 | Didattica | Domini con guida completa (ogni sotto-argomento ufficiale, tabelle, errori comuni, un esercizio per obiettivo) | 5 su 5 (verificato da test) | 5 su 5 |
 | Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
@@ -497,6 +497,14 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M5 | Tutte le 664 domande collegate agli obiettivi ufficiali (`src/questionObjectives.ts`), matrice di copertura generata e verificata in CI (`docs/coverage-matrix.md`) | Attività n. 8 | Completato |
 | 2026-09-24 | M6 | Test end-to-end con Playwright e axe (desktop e telefono) in CI; corrette 5 regole WCAG violate (2 critiche): tablist, nome del pulsante chat, controlli annidati, dimensione dei bersagli, contrasto, tabelle raggiungibili da tastiera; annuncio dell'esito nel quiz; `prefers-reduced-motion` | Attività n. 9 | Completato |
 | 2026-09-24 | M7 | Sezione "I tuoi dati": esportazione, importazione con conferma e cancellazione dei progressi locali; checklist e segnalibri ora sanificati alla lettura | Attività n. 11 | Completato |
+| 2026-09-24 | M4 | `server.ts` diviso in `server/app.ts` (`createApp`) e avvio; 15 test API con finto client Gemini | Attività n. 10 | Parziale |
+| 2026-09-24 | M4 | Guida di dominio estratta da `App.tsx` in `DomainGuidePanel.tsx` (HTML identico), Testing Library e jsdom con 6 test di componente | Attività n. 10 | Completato |
+| 2026-09-24 | M3/M6 | Avviso di trasparenza nel Trainer AI, etichetta sulle domande generate, annuncio dell'esito nella remediation, avviso di un minuto per il timer | Voci P1 AI e accessibilità | Completato |
+| 2026-09-24 | M2 | Workflow `docs.yml`: `markdownlint-cli2` e `lychee` (link interni offline a ogni modifica, esterni settimanali); README IT/EN con albero dell'architettura aggiornato | Voci P0 Markdown lint e link check | Completato |
+| 2026-09-24 | M3 | CSP senza `'unsafe-inline'` né origini esterne: font nel bundle, `base-uri` e `form-action`; test end-to-end sulle violazioni e sulle richieste verso altre origini | Voce P1 CSP | Completato |
+| 2026-09-24 | M0/M3 | Threat model STRIDE e quattro ADR; `TRUST_PROXY` configurabile contro l'aggiramento del rate limit con `X-Forwarded-For` falso | Voci P0 threat model e P1 registro decisionale | Completato |
+| 2026-09-24 | M3 | Log strutturati JSON senza dati degli utenti né chiavi, verificati da test e dallo smoke test | Voce P1 log strutturati | Completato |
+| 2026-09-24 | M6 | Esito delle risposte indicato a parole oltre che col colore; verificate icone decorative e assenza di immagini senza testo alternativo | Voci P0 accessibilità | Completato |
 
 ---
 

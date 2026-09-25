@@ -50,7 +50,12 @@ const checks: Check[] = [
       assert(res.status === 200, `expected 200, got ${res.status}`);
       assert(res.headers.get("content-type")?.includes("text/html"), "expected an HTML response");
       assert((await res.text()).includes('id="root"'), "the page does not contain the React root");
-      assert(res.headers.get("content-security-policy")?.includes("default-src 'self'"), "missing Content-Security-Policy");
+      const csp = res.headers.get("content-security-policy") ?? "";
+      assert(csp.includes("default-src 'self'"), "missing Content-Security-Policy");
+      for (const directive of ["base-uri 'self'", "form-action 'self'", "object-src 'none'"]) {
+        assert(csp.includes(directive), `CSP lacks ${directive}`);
+      }
+      assert(!/unsafe-inline|unsafe-eval|https:/.test(csp), `CSP allows inline code or another origin: ${csp}`);
       assert(res.headers.get("x-content-type-options") === "nosniff", "missing X-Content-Type-Options: nosniff");
       assert(!res.headers.has("x-powered-by"), "X-Powered-By reveals the framework");
     },
@@ -172,6 +177,23 @@ async function main(): Promise<void> {
     } else {
       console.log("  ok    SIGTERM stops the server cleanly");
     }
+  }
+
+  // Log collectors parse one JSON object per line; anything else breaks them.
+  // The fake key must not appear in the logs either.
+  const lines = output.split("\n").filter((line) => line.trim());
+  const notJson = lines.filter((line) => {
+    try {
+      return typeof JSON.parse(line) !== "object";
+    } catch {
+      return true;
+    }
+  });
+  if (lines.length === 0 || notJson.length > 0 || output.includes(env.GEMINI_API_KEY)) {
+    failed++;
+    console.error(`  FAIL  logs: expected JSON lines without the API key, got ${notJson.length} other lines`);
+  } else {
+    console.log(`  ok    the server logged ${lines.length} JSON lines and no API key`);
   }
 
   if (failed > 0) {

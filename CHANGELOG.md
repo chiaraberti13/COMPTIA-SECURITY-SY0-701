@@ -21,6 +21,11 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - End-to-end tests with Playwright and axe at phone and desktop width (`npm run e2e`), also run by CI.
 - "Your data" section in the simulator: export the progress to a JSON file, import it with confirmation, or delete everything stored in this browser.
 - The quiz announces whether an answer was right to screen readers, and animations follow the system "reduce motion" setting.
+- The AI Trainer always shows that answers can be wrong and must not contain personal data; AI-generated remediation questions are labelled as unreviewed.
+- The optional exam timer warns screen-reader users when one minute is left.
+- Structured JSON logs (`server/log.ts`): start-up configuration, every API request with path, status and duration, and failed Gemini calls with keys redacted. They never contain what the learner wrote, IP addresses or keys.
+- `docs/threat-model.md` (STRIDE analysis with controls, tests and residual risks) and `docs/adr/` with four architecture decision records.
+- `.github/workflows/docs.yml`: Markdown lint (`npm run lint:md`, also part of `npm run check`) and link checking with lychee: internal links and anchors on every change, external links weekly.
 
 ### Changed
 
@@ -30,13 +35,21 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 - `vite.config.ts` uses `import.meta.dirname` (ready for Vite 8) and a chunk-size limit that matches the real dataset size.
 - The roadmap reflects the audited state of the application.
 
+### Security
+
+- `TRUST_PROXY` sets how many reverse proxies the rate limit trusts (default 1). With `0`, a server that clients reach directly can no longer be tricked by a made-up `X-Forwarded-For` header into giving a fresh quota to every request.
+- The Content-Security-Policy allows styles, fonts and scripts from the app itself only: no `'unsafe-inline'`, no Google Fonts, plus `base-uri 'self'` and `form-action 'self'`. The fonts are bundled (Fontsource, SIL OFL 1.1), so no visitor's IP address reaches a third party. An end-to-end test fails on any policy violation or third-party request.
+
 ### Fixed
 
+- Right and wrong answers were shown by colour alone: options now say "Correct answer" and "Your answer" in words, and the answer review says "Correct", "Incorrect" or "Not answered" (WCAG 1.4.1).
 - The study area collapsed to zero height on phones; it now fills the screen below the checklist.
 - The SPA fallback route and the API body handling now work on both Express 4 and 5 (Express 5 refused to start with `app.get("*")` and answered 502 instead of 400 to requests without a body).
 - Nine IT/EN content drifts, among them WPA/TKIP vs WPA2/WPA3, Control Plane/SDN and a missing IBAN.
 - Five WCAG 2.2 AA violations found by axe, two critical: a tab list containing non-tab buttons, an unnamed chat button, nested checklist controls, 16 px touch targets, insufficient colour contrast and scrollable tables unreachable by keyboard.
 - Checklist and bookmarks read from the browser are now sanitised; a malformed bookmarks entry could crash the glossary.
+- The architecture section of both READMEs lists the current files (`server/`, `e2e/`, `scripts/`, `docs/`).
+- `smol-toml`, used by the Markdown linter, is forced to 1.8.0 (GHSA-7w5x-hrqm-74c2).
 - `src/data.ts` and `src/data.en.ts`, truncated by commit `9098ba5`, restored to their last intact version.
 
 ### Removed

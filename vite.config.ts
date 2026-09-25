@@ -19,6 +19,9 @@ export default defineConfig(() => {
       // fire on every build for something already handled. The limit sits just
       // above today's size, so an unexpected jump still warns.
       chunkSizeWarningLimit: 2600,
+      // Small assets are normally inlined as data: URIs. Fonts never are, so the
+      // Content-Security-Policy (server/app.ts) can keep font-src to 'self'.
+      assetsInlineLimit: (file: string) => (/\.(woff2?|ttf|otf)$/.test(file) ? false : undefined),
       rollupOptions: {
         output: {
           manualChunks(id: string) {

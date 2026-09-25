@@ -1,0 +1,19 @@
+// markdownlint configuration. Docs: https://github.com/DavidAnson/markdownlint
+// Default rules stay on; each exception below says why.
+{
+  "config": {
+    "default": true,
+    // Prose is written one paragraph per line and tables hold long cells:
+    // hard wrapping would make diffs noisier, not the text more readable.
+    "MD013": false,
+    // Tables use the compact "|---|" style; aligning pipes adds no meaning.
+    "MD060": false,
+    // The README banner, language links and footer are HTML on purpose. Only
+    // these presentational elements are allowed.
+    "MD033": { "allowed_elements": ["p", "a", "img", "sub", "strong", "br", "details", "summary"] },
+    // Files may open with that banner instead of a heading.
+    "MD041": false
+  },
+  "globs": ["*.md", "docs/**/*.md", ".github/**/*.md"],
+  "ignores": ["node_modules/**", "dist/**"]
+}

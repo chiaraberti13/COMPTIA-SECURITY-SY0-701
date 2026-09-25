@@ -106,12 +106,18 @@ APP_URL="http://localhost:3000"
 # Opzionali — limiti di costo e di resilienza per gli endpoint AI
 AI_DAILY_LIMIT=500        # chiamate AI totali per giorno UTC, tutti gli utenti insieme; 0 disattiva l'AI
 GEMINI_TIMEOUT_MS=30000   # una chiamata a Gemini più lunga viene abbandonata e riceve 504
+TRUST_PROXY=1             # reverse proxy davanti a Node; 0 se i browser si collegano direttamente
 ```
 
 `AI_DAILY_LIMIT` si aggiunge al limite per indirizzo IP (30 richieste ogni 15 minuti): in
 un'installazione pubblica limita ciò che molti indirizzi diversi possono spendere insieme.
 Il contatore vive nel processo del server, quindi con più istanze il tetto effettivo è il
 limite moltiplicato per il numero di istanze.
+
+`TRUST_PROXY` indica al limite per IP dove leggere l'indirizzo del client. Lascia `1` dietro
+un reverse proxy (Cloud Run, Vercel, Render, un solo nginx). Imposta `0` se i browser
+raggiungono Node direttamente: altrimenti un client può inviare un'intestazione
+`X-Forwarded-For` inventata e ottenere una quota nuova a ogni richiesta.
 
 > [!WARNING]
 > Non committare mai il file `.env` su un repository pubblico — contiene una credenziale API privata.
@@ -212,28 +218,38 @@ npm run build ; npm start
 
 Struttura **full-stack** integrata — un unico server Express serve il frontend e fa da proxy a Gemini:
 
-```
-├── server.ts                 # Server Express & proxy API Gemini (helmet, rate limit)
+```text
+├── server.ts                 # Avvio: legge l'ambiente, Vite in sviluppo, ascolto, arresto ordinato
+├── server/
+│   ├── app.ts                # createApp(): header di sicurezza, /healthz, rate limit, rotte AI, file statici
+│   └── aiGuard.ts            # Budget giornaliero AI e lettura sicura dei limiti numerici
 ├── src/
 │   ├── App.tsx               # Componente React principale (Studio, Glossario, Quiz, AI)
-│   ├── components/           # Sezioni UI (es. Glossario con ricerca e filtri)
-│   ├── main.tsx              # Entry point React 19
-│   ├── data.ts               # Fonte di verità italiana — 5 domini & banca domande
-│   ├── data.en.ts            # Overlay inglese, caricato on demand (ricade sull'italiano)
-│   ├── localizedData.ts      # Unisce le due lingue, rende univoci gli id delle domande
+│   ├── components/           # Guida di dominio, glossario, "I tuoi dati" (esporta/importa/cancella)
+│   ├── main.tsx              # Punto di ingresso React 19
+│   ├── data.ts               # Fonte di verità in italiano — 5 domini e banca domande
+│   ├── data.en.ts            # Sovrapposizione inglese caricata su richiesta (ripiega sull'italiano)
+│   ├── localizedData.ts      # Unisce le due lingue, assegna gli id alle domande
+│   ├── domainGuides.ts       # Guida ragionata per dominio (IT/EN)
+│   ├── questionObjectives.ts # Collega ogni domanda ai suoi obiettivi SY0-701
 │   ├── subgroups.ts          # Mappa checklistKey → sottogruppo tematico
-│   ├── quiz.ts               # Logica pura del quiz (shuffle, soglia, storico)
-│   ├── storage.ts            # Helper localStorage a prova di errore
-│   ├── i18n.tsx              # Localizzazione stringhe UI & cambio lingua
+│   ├── quiz.ts               # Logica pura del quiz (mescolamento, soglia, storico, ripasso spaziato)
+│   ├── progressBackup.ts     # Formato di backup e sanificatori dei progressi salvati
+│   ├── remediation.ts        # Validazione delle domande generate dall'AI
+│   ├── storage.ts            # Funzioni protette per localStorage
+│   ├── i18n.tsx              # Traduzione dell'interfaccia e cambio lingua
 │   ├── types.ts              # Interfacce TypeScript
 │   └── index.css             # Stili Tailwind CSS v4
-├── tests/                    # Suite Vitest (dataset, logica quiz, i18n)
+├── tests/                    # Vitest: integrità dei dati, parità IT/EN, API, componenti, logica
+├── e2e/                      # Playwright + axe a larghezza telefono e desktop
+├── scripts/                  # Smoke test e generatore della matrice di copertura
+├── docs/coverage-matrix.md   # Generato: domande per obiettivo
 ├── public/favicon.svg        # Icona dell'app
-├── .github/workflows/ci.yml  # Typecheck + lint + test + build a ogni push/PR
-├── .env.example              # Modello per le variabili d'ambiente
-├── eslint.config.js          # Configurazione flat di ESLint
-├── package.json              # Dipendenze & script
-├── vite.config.ts            # Configurazione Vite (split chunk dataset/vendor)
+├── .github/workflows/        # ci.yml (controlli, smoke, e2e) e security.yml (gitleaks, audit, CodeQL)
+├── .env.example              # Modello delle variabili d'ambiente
+├── eslint.config.js          # Configurazione ESLint (flat config)
+├── package.json              # Dipendenze e script
+├── vite.config.ts            # Configurazione Vite (chunk separati per dataset e vendor)
 └── tsconfig.json             # Configurazione TypeScript
 ```
 
@@ -245,6 +261,7 @@ con una chiave valida da Google AI Studio, poi riavvia il server (`npm run dev`)
 
 **`Error: listen EADDRINUSE: address already in use :::3000`**
 La porta 3000 è occupata. Liberala:
+
 - **Linux / macOS:** `npx kill-port 3000`
 - **Windows PowerShell:** `Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process`
 

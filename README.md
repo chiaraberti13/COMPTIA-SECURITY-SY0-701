@@ -106,12 +106,18 @@ APP_URL="http://localhost:3000"
 # Optional — cost and resilience limits for the AI endpoints
 AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 turns the AI off
 GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
+TRUST_PROXY=1             # reverse proxies in front of Node; 0 if browsers connect directly
 ```
 
 `AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
 public deployment it caps what many different addresses can spend together. The counter
 lives in the server process, so with several instances the effective cap is the limit
 multiplied by the number of instances.
+
+`TRUST_PROXY` tells the rate limit where to read the client address. Keep `1` behind one
+reverse proxy (Cloud Run, Vercel, Render, a single nginx). Set `0` when browsers reach
+Node directly: otherwise a client can send a made-up `X-Forwarded-For` header and get a
+fresh quota on every request.
 
 > [!WARNING]
 > Never commit your `.env` to a public repository — it holds a private API credential.
@@ -212,24 +218,34 @@ to `http://localhost:3000` in your Windows browser automatically.
 
 Integrated **full-stack** layout — one Express server serves the frontend and proxies Gemini:
 
-```
-├── server.ts                 # Express server & Gemini API proxy (helmet, rate limit)
+```text
+├── server.ts                 # Start-up: reads the environment, Vite in dev, listen, graceful shutdown
+├── server/
+│   ├── app.ts                # createApp(): security headers, /healthz, rate limit, AI routes, static files
+│   └── aiGuard.ts            # Daily AI budget and safe reading of numeric limits
 ├── src/
 │   ├── App.tsx               # Main React component (Studio, Glossary, Quiz, AI)
-│   ├── components/           # UI sections (e.g. Glossary with search & filters)
+│   ├── components/           # Domain guide, glossary, "Your data" (export/import/delete)
 │   ├── main.tsx              # React 19 entry point
 │   ├── data.ts               # Italian source of truth — 5 domains & question bank
 │   ├── data.en.ts            # English overlay, lazily loaded (falls back to Italian)
 │   ├── localizedData.ts      # Merges the two languages, namespaces question ids
+│   ├── domainGuides.ts       # Reasoned guide per domain (IT/EN)
+│   ├── questionObjectives.ts # Links every question to its SY0-701 objectives
 │   ├── subgroups.ts          # checklistKey → thematic subgroup map
-│   ├── quiz.ts               # Pure quiz logic (shuffle, threshold, history)
+│   ├── quiz.ts               # Pure quiz logic (shuffle, threshold, history, spaced review)
+│   ├── progressBackup.ts     # Backup format and sanitisers for the saved progress
+│   ├── remediation.ts        # Validation of AI-generated questions
 │   ├── storage.ts            # Guarded localStorage helpers
 │   ├── i18n.tsx              # UI-string localisation & language switch
 │   ├── types.ts              # TypeScript interfaces
 │   └── index.css             # Tailwind CSS v4 styles
-├── tests/                    # Vitest suite (dataset, quiz logic, i18n)
+├── tests/                    # Vitest: data integrity, IT/EN parity, API, components, logic
+├── e2e/                      # Playwright + axe at phone and desktop width
+├── scripts/                  # Smoke test and coverage-matrix generator
+├── docs/coverage-matrix.md   # Generated: questions per objective
 ├── public/favicon.svg        # App icon
-├── .github/workflows/ci.yml  # Typecheck + lint + test + build on every push/PR
+├── .github/workflows/        # ci.yml (checks, smoke, e2e) and security.yml (gitleaks, audit, CodeQL)
 ├── .env.example              # Environment variables template
 ├── eslint.config.js          # ESLint flat config
 ├── package.json              # Dependencies & scripts
@@ -245,6 +261,7 @@ from Google AI Studio, then restart the server (`npm run dev`).
 
 **`Error: listen EADDRINUSE: address already in use :::3000`**
 Port 3000 is taken. Free it:
+
 - **Linux / macOS:** `npx kill-port 3000`
 - **Windows PowerShell:** `Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process`
 
