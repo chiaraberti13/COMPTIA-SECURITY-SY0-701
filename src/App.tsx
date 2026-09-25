@@ -65,7 +65,10 @@ import {
   sanitizeQuizHistory,
   sanitizeQuestionProgress,
   summarizeWeakTopics,
+  examBlueprint,
 } from "./quiz";
+import StudyPathsPanel from "./components/StudyPathsPanel";
+import type { StudyAction } from "./studyPaths";
 
 
 export default function App() {
@@ -96,6 +99,13 @@ export default function App() {
   // Navigation & General App State
   const [activeTab, setActiveTab] = useState<"studio" | "quiz" | "glossary">("studio");
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  // Read once at start-up (the checklist state above is filled by an effect):
+  // the "Where do I start?" panel opens only for a learner with no progress.
+  const [isNewLearner] = useState(
+    () =>
+      Object.keys(sanitizeChecklist(readJSON<unknown>(STORAGE_KEYS.checklist, {}))).length === 0 &&
+      readJSON<unknown[]>(STORAGE_KEYS.quizHistory, []).length === 0
+  );
   const [activeDomain, setActiveDomain] = useState<1 | 2 | 3 | 4 | 5>(1);
   const DOMAIN_GUIDE = useMemo(() => getDomainGuide(activeDomain, lang), [activeDomain, lang]);
   const [selectedSubtopic, setSelectedSubtopic] = useState<Subtopic>(DOMAIN_1_TOPICS[0].subtopics[0]);
@@ -816,6 +826,72 @@ export default function App() {
     }
   };
 
+  /**
+   * Brings an element into view once it is rendered (a tab switch mounts it on
+   * the next frames) and moves keyboard focus to it or to `focusId`.
+   */
+  const revealElement = (id: string, focusId = id) => {
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    let frames = 0;
+    const tick = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+        document.getElementById(focusId)?.focus({ preventScroll: true });
+      } else if (++frames < 60) {
+        requestAnimationFrame(tick);
+      }
+    };
+    requestAnimationFrame(tick);
+  };
+
+  /** Performs the jump behind a step of the "Where do I start?" paths. */
+  const runStudyAction = (action: StudyAction) => {
+    switch (action.kind) {
+      case "guide": {
+        handleSwitchDomain(action.domain);
+        setActiveTab("studio");
+        const openGuide = () => {
+          const guide = document.getElementById(`domain_guide_${action.domain}`) as HTMLDetailsElement | null;
+          if (!guide) return requestAnimationFrame(openGuide);
+          guide.open = true;
+          revealElement(`domain_guide_${action.domain}`, `domain_guide_${action.domain}_summary`);
+        };
+        requestAnimationFrame(openGuide);
+        break;
+      }
+      case "glossary":
+        setActiveTab("glossary");
+        break;
+      case "quiz":
+        setActiveTab("quiz");
+        applyPreset(action.preset);
+        revealElement("custom_quiz_summary_box", "start_quiz_btn");
+        break;
+      case "exam": {
+        setActiveTab("quiz");
+        setQuizFocus("custom");
+        const weights = Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainGuide(d, lang).weight]));
+        setCustomCounts(examBlueprint(weights, maxQuestionsByDomain));
+        setTimerEnabled(true);
+        revealElement("custom_quiz_summary_box", "start_quiz_btn");
+        break;
+      }
+      case "review":
+        setActiveTab("quiz");
+        revealElement("smart_review_box", "smart_review_start_btn");
+        break;
+      case "objective":
+        setActiveTab("quiz");
+        revealElement("objective_quiz_box", "objective_select");
+        break;
+      case "ai":
+        setSidebarOpen(true);
+        revealElement("chat_text_input");
+        break;
+    }
+  };
+
   return (
     // reducedMotion="user": animations follow the operating-system setting
     // "reduce motion" (WCAG 2.3.3), transforms are skipped and only opacity fades.
@@ -1118,6 +1194,12 @@ export default function App() {
                 return (
                   <div className="max-w-3xl mx-auto space-y-8" id="study_content_container">
 
+                    {/* "Where do I start?": open until the learner has any progress. */}
+                    <StudyPathsPanel
+                      defaultOpen={isNewLearner}
+                      onAction={runStudyAction}
+                    />
+
                     {/* Domain-level learning guide: orientation before individual concepts. */}
                     <DomainGuidePanel guide={DOMAIN_GUIDE} />
                     
@@ -1367,6 +1449,7 @@ export default function App() {
                       </div>
                       <button
                         type="button"
+                        id="smart_review_start_btn"
                         onClick={handleStartSmartReview}
                         disabled={dueReviewQuestions.length === 0}
                         className="w-full sm:w-auto shrink-0 bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-600 text-white font-bold px-4 py-2 rounded text-[11px] transition-colors"

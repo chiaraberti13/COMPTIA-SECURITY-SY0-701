@@ -294,3 +294,35 @@ export function summarizeWeakTopics(
     )
     .slice(0, Math.max(0, limit));
 }
+
+/** Questions in a full exam simulation: the maximum of the real SY0-701 exam. */
+export const EXAM_QUESTION_COUNT = 90;
+
+/**
+ * Splits `total` questions across domains in proportion to their exam weights
+ * (percentages), without exceeding what each domain's bank holds. Uses the
+ * largest-remainder method, so the parts always add up to `total` when enough
+ * questions exist: 90 at 12/22/18/28/20 % gives 11/20/16/25/18.
+ */
+export function examBlueprint(
+  weights: Record<number, number>,
+  available: Record<number, number>,
+  total = EXAM_QUESTION_COUNT
+): Record<number, number> {
+  const domains = Object.keys(weights).map(Number);
+  const weightSum = domains.reduce((sum, d) => sum + weights[d], 0) || 1;
+  const exact = domains.map((d) => ({ d, share: (total * weights[d]) / weightSum }));
+  const counts: Record<number, number> = {};
+  for (const { d, share } of exact) counts[d] = Math.min(Math.floor(share), available[d] ?? 0);
+  let missing = total - domains.reduce((sum, d) => sum + counts[d], 0);
+  // Hand out the remaining questions by largest remainder, skipping full banks.
+  const byRemainder = [...exact].sort((a, b) => (b.share % 1) - (a.share % 1));
+  while (missing > 0) {
+    const next = byRemainder.find(({ d }) => counts[d] < (available[d] ?? 0));
+    if (!next) break;
+    counts[next.d]++;
+    missing--;
+    byRemainder.push(byRemainder.splice(byRemainder.indexOf(next), 1)[0]);
+  }
+  return counts;
+}
