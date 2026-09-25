@@ -29,6 +29,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- Dependencies: Express 4 → 5.2.1, Vite 6 → 8.3.0 with `@vitejs/plugin-react` 6.1.1, `motion` 12 → 13.4.0, React 19.3, esbuild 0.28 and the other minor/patch updates proposed by Dependabot; `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0. Every package in the lockfile, direct or indirect, was published at least 7 days earlier.
 - CI runs on Node 22 and 24 (Node 20 is end-of-life); `.nvmrc` pins 24 and `package.json` declares the supported engines.
 - The package is now `comptia-security-sy0-701` version `1.0.0` instead of the template's `react-example` `0.0.0`.
 - GitHub Actions are pinned to commit SHAs, and a test rejects unpinned ones.
