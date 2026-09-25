@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- "Objective only" quiz in the simulator: choose one of the 28 official SY0-701 objectives, see how many questions train it, and practise all of them, in Italian or English.
 - Production start-up smoke test (`npm run smoke`), also run by CI: starts the built server with `NODE_ENV=production` and checks the app shell, security headers, SPA fallback, `/healthz`, API input validation, the AI budget and a clean exit on `SIGTERM`.
 - `.github/workflows/security.yml`: gitleaks secret scan over the full history (with `.gitleaks.toml`), `npm audit` of production dependencies, dependency review on pull requests and CodeQL (`security-extended`).
 - Daily cap on AI calls across all clients (`AI_DAILY_LIMIT`, default 500, `0` turns the AI off), a timeout on every Gemini call (`GEMINI_TIMEOUT_MS`, default 30 s), a 2048-token cap on chat answers, `GET /healthz` and graceful shutdown.

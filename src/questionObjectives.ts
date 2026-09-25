@@ -168,3 +168,26 @@ export function objectivesOf(domainId: number, sourceId: number, topic: string):
 export function objectivesOfQuestion(domainId: number, question: Pick<Question, "id" | "topic">): readonly string[] {
   return objectivesOf(domainId, question.id, question.topic);
 }
+
+/** Every official objective code, in syllabus order. */
+export const ALL_OBJECTIVES: readonly string[] = Object.values(OFFICIAL_OBJECTIVES).flat();
+
+/**
+ * Groups the app's questions by the objectives they train, for the
+ * "objective only" quiz. `banks` must be the Italian source questions (their
+ * topics are the keys of TOPIC_OBJECTIVES) with app-wide ids, and `sourceIdOf`
+ * turns such an id back into the dataset id. The result lists app ids, which
+ * are the same in both languages, so the quiz can then be run in English too.
+ */
+export function questionIdsByObjective(
+  banks: Record<number, readonly Pick<Question, "id" | "topic">[]>,
+  sourceIdOf: (appId: number) => number
+): Map<string, number[]> {
+  const index = new Map<string, number[]>(ALL_OBJECTIVES.map((code) => [code, []]));
+  for (const [domain, questions] of Object.entries(banks)) {
+    for (const q of questions) {
+      for (const code of objectivesOf(Number(domain), sourceIdOf(q.id), q.topic)) index.get(code)?.push(q.id);
+    }
+  }
+  return index;
+}

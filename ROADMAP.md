@@ -338,7 +338,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Banca domande strutturata:** ID, argomento, livello cognitivo, scenario, opzioni, una o più risposte corrette e spiegazione; validata dai test.
 - [x] **P0 — Spiegare tutte le opzioni:** imposto da test in entrambe le lingue.
 - [x] **P0 — Contenuti originali, nessun dump:** dichiarato in README e verificato con controllo delle coppie di domande troppo simili.
-- [ ] 🟡 **P1 — Quiz per obiettivo:** oggi la selezione è per dominio; con il campo `objectives` diventa possibile filtrare per obiettivo e rimandare all'esercizio guidato e alla tabella della guida che lo trattano.
+- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. Resta da rimandare, a fine quiz, all'esercizio guidato e alla tabella della guida sullo stesso obiettivo.
 - [ ] **P1 — Scenari performance-based originali:** ordinamento, abbinamento, interpretazione di log, risposta a incidente e scelta del controllo. **L**
 - [x] **P1 — Livelli cognitivi bilanciati:** i test impongono che in ogni dominio prevalgano domande di livello superiore.
 - [x] **P1 — Ripasso spaziato locale:** intervalli 1-3-7-14-30 giorni, errori riproposti subito, nessuna raccolta di dati.
@@ -506,6 +506,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M3 | Log strutturati JSON senza dati degli utenti né chiavi, verificati da test e dallo smoke test | Voce P1 log strutturati | Completato |
 | 2026-09-24 | M6 | Esito delle risposte indicato a parole oltre che col colore; verificate icone decorative e assenza di immagini senza testo alternativo | Voci P0 accessibilità | Completato |
 | 2026-09-25 | M2 | Le 6 PR di Dependabot integrate in una: Express 5, Vite 8 con plugin-react 6, motion 13, gruppo minor/patch, Actions `checkout` v7.0.1 e `setup-node` v7.0.0; lockfile con soli pacchetti pubblicati da almeno 7 giorni | Attività n. 4 | Completato |
+| 2026-09-25 | M6 | Quiz per singolo obiettivo ufficiale (28 obiettivi, IT/EN); test del glossario con axe segnato come lento (superava i 30 s con test in parallelo) | Voce P1 quiz per obiettivo | Completato |
 
 ---
 
