@@ -144,6 +144,9 @@ export const questionUid = (domainId: number, sourceId: number): number =>
 /** The domain a namespaced question id belongs to. */
 export const domainOfQuestion = (uid: number): number => Math.floor(uid / 10000);
 
+/** The id a namespaced question has in its domain's dataset. */
+export const sourceQuestionId = (uid: number): number => uid % 10000;
+
 /** Localized topic groups for a domain. Italian is the source of truth. */
 export function getDomainTopics(domainId: number, lang: Lang): TopicGroup[] {
   const it = IT_TOPICS[domainId] || [];

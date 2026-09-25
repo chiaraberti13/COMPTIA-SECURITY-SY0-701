@@ -32,7 +32,9 @@ import {
   getInitialQuestions,
   questionUid,
   domainOfQuestion,
+  sourceQuestionId,
 } from "./localizedData";
+import { ALL_OBJECTIVES, questionIdsByObjective } from "./questionObjectives";
 import { Subtopic, Question, ChatMessage, QuizResult, QuestionProgress } from "./types";
 import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
@@ -119,7 +121,9 @@ export default function App() {
   };
 
   // Quiz state
-  const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review">("all");
+  const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review" | "objective">("all");
+  // Exam objective chosen for the "objective only" quiz ("" = none yet).
+  const [objectiveChoice, setObjectiveChoice] = useState("");
   const [customCounts, setCustomCounts] = useState<Record<number, number>>({
     1: 5,
     2: 5,
@@ -493,6 +497,25 @@ export default function App() {
     () => summarizeWeakTopics(ALL_QUESTIONS, questionProgress),
     [ALL_QUESTIONS, questionProgress]
   );
+
+  // Question ids per official objective. Built once from the Italian source,
+  // whose topics key the mapping; the ids are the same in both languages.
+  const questionsByObjective = useMemo(
+    () =>
+      questionIdsByObjective(
+        Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainQuestions(d, "it")])),
+        sourceQuestionId
+      ),
+    []
+  );
+
+  const handleStartObjectiveQuiz = () => {
+    const ids = new Set(questionsByObjective.get(objectiveChoice) ?? []);
+    const questions = ALL_QUESTIONS.filter(q => ids.has(q.id));
+    if (questions.length === 0) return;
+    setQuizFocus("objective");
+    beginQuizRun(shuffle(questions));
+  };
 
   const handleStartSmartReview = () => {
     if (dueReviewQuestions.length === 0) return;
@@ -1476,6 +1499,47 @@ export default function App() {
                           DOM {domNum}
                         </button>
                       ))}
+                    </div>
+
+                    {/* Drill one official objective, e.g. after a weak score on it. */}
+                    <div className="mt-2 pt-2 border-t border-slate-800/40 space-y-2" id="objective_quiz_box">
+                      <label htmlFor="objective_select" className="text-[9px] text-slate-400 font-mono block">
+                        {t("quiz.onlyObjective")}
+                      </label>
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <select
+                          id="objective_select"
+                          value={objectiveChoice}
+                          onChange={(e) => setObjectiveChoice(e.target.value)}
+                          aria-describedby="objective_hint"
+                          className="flex-1 min-w-0 min-h-[36px] bg-slate-900 border border-slate-800 rounded px-2 py-1.5 text-xs text-slate-200 focus:border-cyan-500 focus:outline-none"
+                        >
+                          <option value="">{t("quiz.objectivePlaceholder")}</option>
+                          {[1, 2, 3, 4, 5].map(domNum => (
+                            <optgroup key={domNum} label={t("sidebar.domShort", { n: domNum })}>
+                              {ALL_OBJECTIVES.filter(code => code.startsWith(`${domNum}.`)).map(code => (
+                                <option key={code} value={code}>
+                                  {t("quiz.objectiveOption", {
+                                    code,
+                                    name: t(`objective.${code}` as UIKey),
+                                    n: questionsByObjective.get(code)?.length ?? 0,
+                                  })}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          id="objective_start_btn"
+                          onClick={handleStartObjectiveQuiz}
+                          disabled={!objectiveChoice}
+                          className="shrink-0 min-h-[36px] bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold px-3 py-1.5 rounded text-[11px] transition-colors"
+                        >
+                          {t("quiz.startObjective")}
+                        </button>
+                      </div>
+                      <p id="objective_hint" className="text-[10px] text-slate-400">{t("quiz.objectiveHint")}</p>
                     </div>
                   </div>
 

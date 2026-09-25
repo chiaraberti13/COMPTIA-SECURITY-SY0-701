@@ -44,6 +44,9 @@ test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
   });
 
   test("glossary view", async ({ page }) => {
+    // axe walks all 550 glossary entries: ~25 s with parallel workers, close to
+    // the 30 s default. slow() triples the budget instead of hiding the check.
+    test.slow();
     await openApp(page);
     await page.locator("#tab_btn_glossary").click();
     await expect(page.locator("#glossary_root")).toBeVisible();
@@ -196,5 +199,26 @@ test.describe("Content-Security-Policy", () => {
     expect(await page.evaluate(() => document.fonts.check('16px "Inter Variable"'))).toBe(true);
     const csp = (await page.request.get("/")).headers()["content-security-policy"];
     expect(csp).not.toContain("unsafe-inline");
+  });
+});
+
+test.describe("quiz by objective", () => {
+  test("drills every question of one official objective, chosen with the keyboard", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    const select = page.locator("#objective_select");
+    await expect(page.locator("#objective_start_btn")).toBeDisabled();
+    expect(await select.locator("option[value]:not([value=''])").count()).toBe(28);
+    expect(await seriousViolations(page)).toEqual([]);
+
+    await select.selectOption("1.1");
+    const label = await select.locator("option[value='1.1']").textContent();
+    const expected = Number(label?.match(/\((\d+) /)?.[1]);
+    expect(expected).toBeGreaterThanOrEqual(10);
+
+    await page.locator("#objective_start_btn").focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await expect(page.getByText(`1 DI ${expected}`, { exact: false })).toBeVisible();
   });
 });
