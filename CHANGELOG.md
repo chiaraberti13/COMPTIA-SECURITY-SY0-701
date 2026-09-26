@@ -38,6 +38,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- The simulator set-up moved out of `App.tsx` into the `useQuizSetup` hook: presets, questions per domain, chosen objective and the random draw. 40 deterministic states are identical, including the random order of the drawn questions; 4 hook tests.
 - The study area state moved out of `App.tsx` into the `useStudySession` hook: domain, selected concept and saved checklist. The selected concept is kept by key and looked up in the active language, which removes the last effect that set state on a language switch. HTML and saved checklist are identical in 23 deterministic states; 4 hook tests.
 - The adaptive remediation moved out of `App.tsx` into the `useRemediation` hook, with 5 hook tests; HTML, API requests and saved progress are identical in 27 deterministic states.
 - The simulator run moved out of `App.tsx` into the `useQuizSession` hook: questions, answers, score, exam timer, review, history and saved progress. The questions follow the language as derived state instead of an effect, and the timer ends the run from its own callback. HTML and saved progress are identical in 15 deterministic states; 6 hook tests cover the run, the timer expiry and pause, and the language switch.

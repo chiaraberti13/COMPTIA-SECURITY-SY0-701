@@ -52,6 +52,7 @@ import { useAiChat } from "./hooks/useAiChat";
 import { useQuizSession } from "./hooks/useQuizSession";
 import { useRemediation } from "./hooks/useRemediation";
 import { useStudySession } from "./hooks/useStudySession";
+import { useQuizSetup, type QuizPreset } from "./hooks/useQuizSetup";
 import { getDomainRoute } from "./domainRoutes";
 import {
   SECONDS_PER_QUESTION,
@@ -137,18 +138,8 @@ export default function App() {
   const [toast, setToast] = useState<string | null>(null);
 
   // Quiz state
-  const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review" | "objective">("all");
-  // Exam objective chosen for the "objective only" quiz ("" = none yet).
-  const [objectiveChoice, setObjectiveChoice] = useState("");
   // Objective of the run in progress, when it is an objective quiz.
   const [activeObjective, setActiveObjective] = useState<string | null>(null);
-  const [customCounts, setCustomCounts] = useState<Record<number, number>>({
-    1: 5,
-    2: 5,
-    3: 5,
-    4: 5,
-    5: 5
-  });
   // The adaptive remediation; a 401 from the server opens the access-code form.
   const remediation = useRemediation({ onLocked: chat.lock });
   const {
@@ -271,26 +262,13 @@ export default function App() {
   };
 
   const handleStartQuiz = () => {
-    // Dynamically retrieve all questions for each domain
-    const d1All = DOMAIN_1_QUESTIONS;
-    const d2All = DOMAIN_2_QUESTIONS;
-    const d3All = DOMAIN_3_QUESTIONS;
-    const d4All = DOMAIN_4_QUESTIONS;
-    const d5All = DOMAIN_5_QUESTIONS;
-
-    const d1Selected = shuffle(d1All).slice(0, customCounts[1]);
-    const d2Selected = shuffle(d2All).slice(0, customCounts[2]);
-    const d3Selected = shuffle(d3All).slice(0, customCounts[3]);
-    const d4Selected = shuffle(d4All).slice(0, customCounts[4]);
-    const d5Selected = shuffle(d5All).slice(0, customCounts[5]);
-
-    const questionsToUse = [
-      ...d1Selected,
-      ...d2Selected,
-      ...d3Selected,
-      ...d4Selected,
-      ...d5Selected
-    ];
+    const questionsToUse = setup.draw({
+      1: DOMAIN_1_QUESTIONS,
+      2: DOMAIN_2_QUESTIONS,
+      3: DOMAIN_3_QUESTIONS,
+      4: DOMAIN_4_QUESTIONS,
+      5: DOMAIN_5_QUESTIONS,
+    });
 
     if (questionsToUse.length === 0) {
       setToast(t("quiz.selectAtLeastOne"));
@@ -400,6 +378,11 @@ export default function App() {
     5: DOMAIN_5_QUESTIONS.length,
   };
 
+  // The set-up screen: preset, questions per domain, chosen objective.
+  const setup = useQuizSetup({ maxByDomain: maxQuestionsByDomain });
+  const { quizFocus, setQuizFocus, objectiveChoice, setObjectiveChoice, customCounts, totalQuestionsSelected } = setup;
+  const applyPreset = setup.applyPreset;
+
   const domainMetadata = [
     { id: 1, name: t("domainMeta.1.name"), desc: t("domainMeta.1.desc") },
     { id: 2, name: t("domainMeta.2.name"), desc: t("domainMeta.2.desc") },
@@ -407,8 +390,6 @@ export default function App() {
     { id: 4, name: t("domainMeta.4.name"), desc: t("domainMeta.4.desc") },
     { id: 5, name: t("domainMeta.5.name"), desc: t("domainMeta.5.desc") }
   ];
-
-  const totalQuestionsSelected = (Object.values(customCounts) as number[]).reduce((sum, val) => sum + val, 0);
 
   // Single source of truth for "did this run pass?", used by the icon, the
   // badge and the remediation branch alike.
@@ -429,33 +410,6 @@ export default function App() {
           recentHistory.length
       )
     : 0;
-
-  const applyPreset = (preset: "domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom") => {
-    setQuizFocus(preset);
-    if (preset === "domain1") {
-      setCustomCounts({ 1: maxQuestionsByDomain[1], 2: 0, 3: 0, 4: 0, 5: 0 });
-    } else if (preset === "domain2") {
-      setCustomCounts({ 1: 0, 2: maxQuestionsByDomain[2], 3: 0, 4: 0, 5: 0 });
-    } else if (preset === "domain3") {
-      setCustomCounts({ 1: 0, 2: 0, 3: maxQuestionsByDomain[3], 4: 0, 5: 0 });
-    } else if (preset === "domain4") {
-      setCustomCounts({ 1: 0, 2: 0, 3: 0, 4: maxQuestionsByDomain[4], 5: 0 });
-    } else if (preset === "domain5") {
-      setCustomCounts({ 1: 0, 2: 0, 3: 0, 4: 0, 5: maxQuestionsByDomain[5] });
-    } else if (preset === "mini") {
-      setCustomCounts({ 1: 2, 2: 2, 3: 2, 4: 2, 5: 2 });
-    } else if (preset === "balanced") {
-      setCustomCounts({ 1: 5, 2: 5, 3: 5, 4: 5, 5: 5 });
-    } else if (preset === "all") {
-      setCustomCounts({
-        1: maxQuestionsByDomain[1],
-        2: maxQuestionsByDomain[2],
-        3: maxQuestionsByDomain[3],
-        4: maxQuestionsByDomain[4],
-        5: maxQuestionsByDomain[5]
-      });
-    }
-  };
 
   /**
    * Brings an element into view once it is rendered (a tab switch mounts it on
@@ -506,9 +460,8 @@ export default function App() {
         break;
       case "exam": {
         setActiveTab("quiz");
-        setQuizFocus("custom");
         const weights = Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainGuide(d, lang).weight]));
-        setCustomCounts(examBlueprint(weights, maxQuestionsByDomain));
+        setup.applyCounts(examBlueprint(weights, maxQuestionsByDomain));
         setTimerEnabled(true);
         revealElement("custom_quiz_summary_box", "start_quiz_btn");
         break;
@@ -1234,7 +1187,7 @@ export default function App() {
                         <button
                           key={domNum}
                           type="button"
-                          onClick={() => applyPreset(`domain${domNum}` as any)}
+                          onClick={() => applyPreset(`domain${domNum}` as QuizPreset)}
                           className={`px-2 py-1 rounded text-[10px] font-mono border transition-all ${quizFocus === `domain${domNum}` ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-300"}`}
                         >
                           DOM {domNum}
@@ -1293,28 +1246,15 @@ export default function App() {
                         const currentVal = customCounts[dom.id] || 0;
 
                         const handleDecrement = () => {
-                          setQuizFocus("custom");
-                          setCustomCounts(prev => ({
-                            ...prev,
-                            [dom.id]: Math.max(0, currentVal - 1)
-                          }));
+                          setup.setDomainCount(dom.id, Math.max(0, currentVal - 1));
                         };
 
                         const handleIncrement = () => {
-                          setQuizFocus("custom");
-                          setCustomCounts(prev => ({
-                            ...prev,
-                            [dom.id]: Math.min(maxVal, currentVal + 1)
-                          }));
+                          setup.setDomainCount(dom.id, Math.min(maxVal, currentVal + 1));
                         };
 
                         const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                          setQuizFocus("custom");
-                          const val = parseInt(e.target.value) || 0;
-                          setCustomCounts(prev => ({
-                            ...prev,
-                            [dom.id]: val
-                          }));
+                          setup.setDomainCount(dom.id, parseInt(e.target.value) || 0);
                         };
 
                         return (
