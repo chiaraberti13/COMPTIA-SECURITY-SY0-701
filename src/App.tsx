@@ -1733,7 +1733,7 @@ export default function App() {
                         <span className="text-cyan-400 font-mono text-lg">{totalQuestionsSelected}</span> {t("quiz.highStakesSelected")}
                       </div>
                       <div className="text-[10px] text-slate-400 font-mono">
-                        {t("quiz.thresholdTime", { min: totalQuestionsSelected * 2 })}
+                        {t("quiz.thresholdTime", { min: Math.ceil((totalQuestionsSelected * SECONDS_PER_QUESTION) / 60) })}
                       </div>
                     </div>
 

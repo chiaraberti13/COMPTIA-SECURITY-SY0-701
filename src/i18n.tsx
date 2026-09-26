@@ -328,7 +328,7 @@ const it = {
   // Quiz: timer d'esame
   "quiz.timerLabel": "Tempo",
   "quiz.oneMinuteLeft": "Resta un minuto: al termine le risposte vengono consegnate automaticamente.",
-  "quiz.timerEnable": "Timer d'esame (~2 min/domanda)",
+  "quiz.timerEnable": "Timer d'esame (1 min/domanda, come all'esame reale: 90 minuti per 90 domande)",
   "quiz.timerHint": "Allo scadere del tempo l'esame viene consegnato automaticamente.",
   "quiz.timeUpTitle": "TEMPO SCADUTO",
   "quiz.timeUpDesc": "Il tempo a disposizione è terminato: l'esame è stato consegnato automaticamente. Le domande senza risposta contano come errate.",
@@ -693,7 +693,7 @@ const en: Record<UIKey, string> = {
   // Quiz: exam timer
   "quiz.timerLabel": "Time",
   "quiz.oneMinuteLeft": "One minute left: when it ends, your answers are submitted automatically.",
-  "quiz.timerEnable": "Exam timer (~2 min/question)",
+  "quiz.timerEnable": "Exam timer (1 min/question, like the real exam: 90 minutes for 90 questions)",
   "quiz.timerHint": "When the time runs out the exam is submitted automatically.",
   "quiz.timeUpTitle": "TIME IS UP",
   "quiz.timeUpDesc": "Your time has run out and the exam was submitted automatically. Unanswered questions count as wrong.",

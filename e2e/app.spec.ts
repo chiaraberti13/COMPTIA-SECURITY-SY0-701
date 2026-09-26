@@ -242,6 +242,7 @@ test.describe("study paths (Where do I start?)", () => {
     await expect(page.locator("#start_quiz_btn")).toBeFocused();
     await expect(page.locator("#custom_quiz_summary_box")).toContainText("90");
     await expect(page.locator("#timer_toggle_input")).toBeChecked();
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("~90 min");
   });
 
   test("a guide step opens that domain's guide and moves focus to it", async ({ page }) => {

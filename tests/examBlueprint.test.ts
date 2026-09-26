@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EXAM_QUESTION_COUNT, examBlueprint } from "../src/quiz";
+import { EXAM_QUESTION_COUNT, SECONDS_PER_QUESTION, examBlueprint } from "../src/quiz";
 
 const WEIGHTS = { 1: 12, 2: 22, 3: 18, 4: 28, 5: 20 };
 const PLENTY = { 1: 100, 2: 100, 3: 100, 4: 100, 5: 100 };
@@ -9,6 +9,10 @@ describe("examBlueprint", () => {
   it("splits 90 questions by the official SY0-701 weights", () => {
     expect(examBlueprint(WEIGHTS, PLENTY)).toEqual({ 1: 11, 2: 20, 3: 16, 4: 25, 5: 18 });
     expect(EXAM_QUESTION_COUNT).toBe(90);
+  });
+
+  it("gives the full simulation the 90 minutes of the real exam", () => {
+    expect(EXAM_QUESTION_COUNT * SECONDS_PER_QUESTION).toBe(90 * 60);
   });
 
   it("always adds up to the total when enough questions exist", () => {

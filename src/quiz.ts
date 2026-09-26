@@ -3,8 +3,11 @@ import type { Question, QuestionProgress, QuizResult } from "./types";
 /** Passing threshold for the exam simulator, as a fraction of the total. */
 export const PASS_RATIO = 0.8;
 
-/** Seconds allotted per question when the exam timer is enabled. */
-export const SECONDS_PER_QUESTION = 120;
+/**
+ * Seconds allotted per question when the exam timer is enabled: the pace of the
+ * real SY0-701 exam, 90 minutes for at most 90 questions.
+ */
+export const SECONDS_PER_QUESTION = 60;
 
 /** How many past runs to keep in the local history. */
 export const HISTORY_LIMIT = 20;
