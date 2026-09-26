@@ -10,6 +10,12 @@
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
 }
 
+/* The header is sticky: scrolling to an element (anchors, focus, "jump to"
+   buttons) must stop below it, not under it. */
+html {
+  scroll-padding-top: 8rem;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: #0f172a; /* Deep slate background for a high-contrast premium feel */

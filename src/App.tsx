@@ -139,6 +139,8 @@ export default function App() {
   const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review" | "objective">("all");
   // Exam objective chosen for the "objective only" quiz ("" = none yet).
   const [objectiveChoice, setObjectiveChoice] = useState("");
+  // Objective of the run in progress, when it is an objective quiz.
+  const [activeObjective, setActiveObjective] = useState<string | null>(null);
   const [customCounts, setCustomCounts] = useState<Record<number, number>>({
     1: 5,
     2: 5,
@@ -467,6 +469,7 @@ export default function App() {
    */
   const beginQuizRun = (questions: Question[]) => {
     setActiveQuestions(questions);
+    setActiveObjective(null);
     setQuizStarted(true);
     setCurrentQuestionIndex(0);
     setQuizAnswers({});
@@ -540,6 +543,7 @@ export default function App() {
     if (questions.length === 0) return;
     setQuizFocus("objective");
     beginQuizRun(shuffle(questions));
+    setActiveObjective(objectiveChoice);
   };
 
   const handleStartSmartReview = () => {
@@ -874,7 +878,12 @@ export default function App() {
           const guide = document.getElementById(`domain_guide_${action.domain}`) as HTMLDetailsElement | null;
           if (!guide) return requestAnimationFrame(openGuide);
           guide.open = true;
-          revealElement(`domain_guide_${action.domain}`, `domain_guide_${action.domain}_summary`);
+          if (action.objective) {
+            const target = `guide_objective_${action.objective.replace(".", "_")}`;
+            revealElement(target, target);
+          } else {
+            revealElement(`domain_guide_${action.domain}`, `domain_guide_${action.domain}_summary`);
+          }
         };
         requestAnimationFrame(openGuide);
         break;
@@ -2045,6 +2054,33 @@ export default function App() {
                       </div>
                     )}
                   </div>
+
+                  {/* After an objective quiz: back to the guide on that objective. */}
+                  {activeObjective && (
+                    <div className="bg-cyan-950/20 border border-cyan-500/25 p-4 rounded-lg space-y-2 text-left" id="objective_followup_box">
+                      <h3 className="text-xs font-bold text-cyan-300">
+                        {t("quiz.objectiveDoneTitle", { code: activeObjective, name: t(`objective.${activeObjective}` as UIKey) })}
+                      </h3>
+                      <p className="text-[11px] text-slate-400 leading-relaxed">
+                        {t("quiz.objectiveDoneText", { n: Number(activeObjective[0]) })}
+                      </p>
+                      <button
+                        type="button"
+                        id="objective_followup_btn"
+                        onClick={() =>
+                          runStudyAction({
+                            kind: "guide",
+                            domain: Number(activeObjective[0]) as 1 | 2 | 3 | 4 | 5,
+                            objective: activeObjective,
+                          })
+                        }
+                        className="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded border border-cyan-800 bg-cyan-950/40 text-[11px] font-semibold text-cyan-300 hover:bg-cyan-900/40 transition-colors"
+                      >
+                        {t("quiz.objectiveDoneBtn", { code: activeObjective })}
+                        <ChevronRight className="w-3 h-3" aria-hidden="true" />
+                      </button>
+                    </div>
+                  )}
 
                   <div className="flex gap-4 justify-center" id="recompleted_buttons">
                     <button 

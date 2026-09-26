@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="TypeScript">
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="English and Italian">
   <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="MIT">
+  <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="OpenSSF Scorecard"></a>
 </p>
 
 > A bilingual, hands-on study environment for CompTIA Security+ SY0-701, combining structured objectives, realistic scenarios and an AI-assisted cybersecurity trainer.

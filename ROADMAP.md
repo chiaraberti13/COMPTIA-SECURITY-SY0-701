@@ -210,9 +210,9 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` (settimanale, attesa di 7 giorni, minor/patch raggruppati) e job `Dependency audit (npm)` con `npm audit --omit=dev --audit-level=high` — 2026-09-24. Esito attuale: 0 vulnerabilità nelle dipendenze di produzione.
 - [x] **P0 — SAST pertinente:** job `CodeQL (JavaScript/TypeScript)` con la suite `security-extended`, senza build, risultati nella scheda Security — 2026-09-24. Se nel repository è attivo il *default setup* di CodeQL, va disattivato perché va in conflitto con questa configurazione avanzata.
 - [ ] 🟡 **P1 — Dependency review sulle pull request:** job `Dependency review` che blocca le PR che introducono dipendenze con vulnerabilità `high` o `critical` — 2026-09-24. Manca il controllo delle licenze incompatibili con MIT, da aggiungere con un elenco `allow-licenses` verificato sulle dipendenze attuali.
-- [ ] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository.
+- [x] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository: `.github/workflows/scorecard.yml` (ossf/scorecard-action v2.4.4 a SHA) a ogni push su `main`, ogni lunedì e a ogni modifica della protezione del branch. I risultati arrivano nella scheda Security e nell'API pubblica, che serve il badge dei README — 2026-09-26. Da rivedere dopo il primo punteggio: i controlli con esito basso diventano voci della roadmap.
 - [ ] **P1 — Branch protection:** review obbligatoria, status check richiesti, conversazioni risolte, divieto di force push su `main`.
-- [ ] **P1 — SBOM (CycloneDX) allegato alle release** dell'app.
+- [ ] 🟡 **P1 — SBOM (CycloneDX) allegato alle release** dell'app: job `SBOM (CycloneDX)` in `security.yml` con `npm sbom` (nessuna nuova dipendenza). Elenca i circa 128 pacchetti di produzione con versione, licenza e purl, ed è conservato 90 giorni come artifact di ogni build — 2026-09-26. Resta da allegarlo alle release quando il progetto pubblicherà versioni con tag.
 - [ ] **P1 — Scansione container e IaC:** solo quando verrà aggiunto un `Dockerfile` o una configurazione di deploy (vedi sotto).
 - [ ] **P2 — Firma delle release e attestazione di provenienza** (GitHub artifact attestation / SLSA) per build e immagini.
 
@@ -250,7 +250,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **P0 — Persistenza solo nel browser:** progressi, storico e segnalibri restano in `localStorage`; nessun account.
 - [x] **P0 — Lettura difensiva:** `storage.ts` non lancia mai eccezioni; `sanitizeQuizHistory` e `sanitizeQuestionProgress` scartano dati corrotti o manipolati; dal 2026-09-24 anche checklist e segnalibri passano da `sanitizeChecklist` e `sanitizeBookmarks` (un valore non-array nei segnalibri bloccava il glossario).
-- [ ] 🟡 **P1 — Versionare lo schema dei dati salvati:** il file di backup ha un campo `schema` e rifiuta le versioni sconosciute (2026-09-24); le chiavi in `localStorage` restano da versionare con migrazioni testate. **S**
+- [x] **P1 — Versionare lo schema dei dati salvati:** il file di backup ha un campo `schema` e rifiuta le versioni sconosciute (2026-09-24). I dati in `localStorage` hanno una versione (`comptia_sy0701_schema`) e `migrateStorage()` applica all'avvio, una sola volta e in ordine, i passi mancanti di `STORAGE_MIGRATIONS`. Ogni passo riuscito viene registrato subito, così un errore a metà riprende dal punto giusto; i dati di una versione più recente non vengono toccati. 7 test; procedura documentata in `CONTRIBUTING.md` — 2026-09-26.
 - [x] **P1 — Esportazione e importazione dei progressi in JSON:** sezione "I tuoi dati" nel simulatore (`src/components/DataControls.tsx`, `src/progressBackup.ts`); l'importazione mostra un riepilogo e chiede conferma, valida il file con gli stessi sanificatori (dimensione massima, applicazione, schema, voci malformate, prototype pollution) e non invia nulla al server. 11 test unitari e 3 end-to-end — 2026-09-24.
 - [x] **P1 — Pulsante "Cancella tutti i miei dati":** con seconda conferma e annullamento, rimuove tutte le chiavi dell'app da questo browser; coperto da un test end-to-end — 2026-09-24.
 
@@ -338,7 +338,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Banca domande strutturata:** ID, argomento, livello cognitivo, scenario, opzioni, una o più risposte corrette e spiegazione; validata dai test.
 - [x] **P0 — Spiegare tutte le opzioni:** imposto da test in entrambe le lingue.
 - [x] **P0 — Contenuti originali, nessun dump:** dichiarato in README e verificato con controllo delle coppie di domande troppo simili.
-- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. Resta da rimandare, a fine quiz, all'esercizio guidato e alla tabella della guida sullo stesso obiettivo.
+- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. A fine quiz un riquadro rimanda alla guida del dominio e porta il focus sulla scheda di quell'obiettivo (risultato atteso e sotto-argomenti ufficiali) — 2026-09-26.
 - [ ] **P1 — Scenari performance-based originali:** ordinamento, abbinamento, interpretazione di log, risposta a incidente e scelta del controllo. **L**
 - [x] **P1 — Livelli cognitivi bilanciati:** i test impongono che in ogni dominio prevalgano domande di livello superiore.
 - [x] **P1 — Ripasso spaziato locale:** intervalli 1-3-7-14-30 giorni, errori riproposti subito, nessuna raccolta di dati.
@@ -510,6 +510,9 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
 | 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
 | 2026-09-26 | M3 | Codice di accesso facoltativo per le funzioni AI (`AI_ACCESS_TOKEN`) e chat accessibile da tastiera | Voce P1 protezione degli endpoint AI | Completato |
+| 2026-09-26 | M2 | OpenSSF Scorecard settimanale con badge, SBOM CycloneDX a ogni build | Voci P1 Scorecard e SBOM | Completato |
+| 2026-09-26 | M6 | Fine del quiz per obiettivo collegata alla guida; lo scorrimento verso un elemento si ferma sotto l'intestazione fissa | Voce P1 quiz per obiettivo | Completato |
+| 2026-09-26 | M7 | Versione e migrazioni testate per i dati salvati nel browser | Voce P1 schema dei dati salvati | Completato |
 
 ---
 
