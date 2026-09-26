@@ -38,6 +38,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- Main menu on phones and tablets: the four sections (Study, Glossary, Simulator, AI Trainer) are equal columns with an icon and a short label, all visible without scrolling the menu sideways; the language switch sits next to the title. The "S+" logo is replaced by a shield icon, the same one as the new favicon, now also served as `favicon.ico`, iOS home-screen icon and web app manifest icons. Before, `/favicon.ico` answered with the app page.
 - CI checks test coverage of the pure logic and the server (`npm run test:coverage`) against minimum thresholds; the browser storage helpers are now fully tested.
 - The exam timer follows the real SY0-701 pace: 1 minute per question, so the 90-question simulation lasts 90 minutes (it was 2 minutes per question).
 - Dependencies: Express 4 → 5.2.1, Vite 6 → 8.3.0 with `@vitejs/plugin-react` 6.1.1, `motion` 12 → 13.4.0, React 19.3, esbuild 0.28 and the other minor/patch updates proposed by Dependabot; `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0. Every package in the lockfile, direct or indirect, was published at least 7 days earlier.
