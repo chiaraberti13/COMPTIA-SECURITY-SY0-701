@@ -221,6 +221,30 @@ test.describe("quiz by objective", () => {
     await expect(page.locator("#quiz_options_list")).toBeVisible();
     await expect(page.getByText(`1 DI ${expected}`, { exact: false })).toBeVisible();
   });
+
+  test("at the end, points back to the guide section on that objective", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#objective_select").selectOption("1.1");
+    await page.locator("#objective_start_btn").click();
+
+    // Answer every question by keyboard until the results screen appears.
+    for (let i = 0; i < 60 && !(await page.locator("#quiz_completed_screen").isVisible()); i++) {
+      await expect(page.locator("#quiz_options_list")).toBeVisible();
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#objective_followup_box")).toContainText("1.1");
+
+    await page.locator("#objective_followup_btn").click();
+    await expect(page.locator("#domain_guide_1")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_1_1")).toBeFocused();
+    await expect(page.locator("#guide_objective_1_1")).toBeInViewport();
+  });
 });
 
 test.describe("study paths (Where do I start?)", () => {

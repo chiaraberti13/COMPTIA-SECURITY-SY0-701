@@ -338,7 +338,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Banca domande strutturata:** ID, argomento, livello cognitivo, scenario, opzioni, una o più risposte corrette e spiegazione; validata dai test.
 - [x] **P0 — Spiegare tutte le opzioni:** imposto da test in entrambe le lingue.
 - [x] **P0 — Contenuti originali, nessun dump:** dichiarato in README e verificato con controllo delle coppie di domande troppo simili.
-- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. Resta da rimandare, a fine quiz, all'esercizio guidato e alla tabella della guida sullo stesso obiettivo.
+- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. A fine quiz un riquadro rimanda alla guida del dominio e porta il focus sulla scheda di quell'obiettivo (risultato atteso e sotto-argomenti ufficiali) — 2026-09-26.
 - [ ] **P1 — Scenari performance-based originali:** ordinamento, abbinamento, interpretazione di log, risposta a incidente e scelta del controllo. **L**
 - [x] **P1 — Livelli cognitivi bilanciati:** i test impongono che in ogni dominio prevalgano domande di livello superiore.
 - [x] **P1 — Ripasso spaziato locale:** intervalli 1-3-7-14-30 giorni, errori riproposti subito, nessuna raccolta di dati.
@@ -511,6 +511,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
 | 2026-09-26 | M3 | Codice di accesso facoltativo per le funzioni AI (`AI_ACCESS_TOKEN`) e chat accessibile da tastiera | Voce P1 protezione degli endpoint AI | Completato |
 | 2026-09-26 | M2 | OpenSSF Scorecard settimanale con badge, SBOM CycloneDX a ogni build | Voci P1 Scorecard e SBOM | Completato |
+| 2026-09-26 | M6 | Fine del quiz per obiettivo collegata alla guida; lo scorrimento verso un elemento si ferma sotto l'intestazione fissa | Voce P1 quiz per obiettivo | Completato |
 
 ---
 

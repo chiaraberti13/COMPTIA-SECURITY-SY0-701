@@ -40,7 +40,12 @@ export default function DomainGuidePanel({ guide }: { guide: DomainGuide }) {
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.objectiveMap")}</h3>
           <div className="grid gap-2">
             {guide.objectives.map((objective) => (
-              <div key={objective.code} className="flex gap-3 bg-slate-950/70 border border-slate-800 rounded-md p-3">
+              <div
+                key={objective.code}
+                id={`guide_objective_${objective.code.replace(".", "_")}`}
+                tabIndex={-1}
+                className="flex gap-3 bg-slate-950/70 border border-slate-800 rounded-md p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              >
                 <span className="font-mono font-bold text-cyan-400 text-xs shrink-0">{objective.code}</span>
                 <div className="min-w-0 space-y-2">
                   <p className="text-xs text-slate-300 leading-relaxed">{objective.outcome}</p>

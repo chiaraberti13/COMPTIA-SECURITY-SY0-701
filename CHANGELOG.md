@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- After an objective quiz, a button opens the domain guide at that objective's outcome and official sub-topics.
 - OpenSSF Scorecard workflow with a badge in both READMEs, and a CycloneDX SBOM of the production dependencies saved with every security run.
 - "Where do I start?" panel with four study paths (beginner, quick refresh, exam preparation, hands-on consolidation). Each step can jump to the right part of the app; the exam path sets up a 90-question simulation split by the official domain weights, with the timer on.
 - "Objective only" quiz in the simulator: choose one of the 28 official SY0-701 objectives, see how many questions train it, and practise all of them, in Italian or English.
@@ -49,6 +50,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- Jumping to an element (links, focus, the new "go to" buttons) no longer leaves it hidden under the sticky header on phones.
 - The AI chat can be scrolled with the keyboard and announces new messages to screen readers (`role="log"`); the time under your own messages now has enough contrast.
 - Right and wrong answers were shown by colour alone: options now say "Correct answer" and "Your answer" in words, and the answer review says "Correct", "Incorrect" or "Not answered" (WCAG 1.4.1).
 - The study area collapsed to zero height on phones; it now fills the screen below the checklist.

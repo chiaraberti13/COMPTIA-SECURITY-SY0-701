@@ -7,7 +7,7 @@
 import type { Lang } from "./i18n";
 
 export type StudyAction =
-  | { kind: "guide"; domain: 1 | 2 | 3 | 4 | 5 }
+  | { kind: "guide"; domain: 1 | 2 | 3 | 4 | 5; /** Scroll to this objective, e.g. "4.3". */ objective?: string }
   | { kind: "glossary" }
   | { kind: "quiz"; preset: "mini" | "balanced" }
   | { kind: "exam" }
