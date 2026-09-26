@@ -72,3 +72,5 @@ export function useQuizSetup({ maxByDomain }: { maxByDomain: DomainCounts }) {
     draw,
   };
 }
+
+export type QuizSetup = ReturnType<typeof useQuizSetup>;

@@ -132,3 +132,5 @@ export function useRemediation({ onLocked }: { onLocked: () => void }) {
     exit,
   };
 }
+
+export type Remediation = ReturnType<typeof useRemediation>;

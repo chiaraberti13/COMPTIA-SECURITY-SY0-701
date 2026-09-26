@@ -70,3 +70,5 @@ export function useStudySession() {
     toggleGroupCheck,
   };
 }
+
+export type StudySession = ReturnType<typeof useStudySession>;
