@@ -46,6 +46,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Security
 
+- Prompt injection hardening (OWASP LLM01): every text from the browser enters the Gemini prompts inside a data tag that the text cannot close, even with disguised tags (other case, spaces, full-width brackets, invisible characters), and the rules say tagged text is data. A suite of 11 known attacks checks it, and an end-to-end test checks that HTML, scripts and `javascript:` links in an AI answer are shown as text and never run.
 - Optional access code for the AI features (`AI_ACCESS_TOKEN`). When it is set, the AI endpoints answer only requests with the right `X-Access-Token`: the code is compared in constant time, wrong guesses count against the rate limit, and it never appears in the logs. The app asks for the code in the AI Trainer and keeps it only for the current tab.
 - `TRUST_PROXY` sets how many reverse proxies the rate limit trusts (default 1). With `0`, a server that clients reach directly can no longer be tricked by a made-up `X-Forwarded-For` header into giving a fresh quota to every request.
 - The Content-Security-Policy allows styles, fonts and scripts from the app itself only: no `'unsafe-inline'`, no Google Fonts, plus `base-uri 'self'` and `form-action 'self'`. The fonts are bundled (Fontsource, SIL OFL 1.1), so no visitor's IP address reaches a third party. An end-to-end test fails on any policy violation or third-party request.

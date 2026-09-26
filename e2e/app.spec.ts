@@ -352,3 +352,22 @@ test.describe("glossary terms in context", () => {
     expect(await seriousViolations(page)).toEqual([]);
   });
 });
+
+test.describe("AI output is untrusted", () => {
+  test("HTML, scripts and javascript: links in an answer are shown as text, never run", async ({ page }) => {
+    const hostile =
+      'Here is **bold**. <img src="x" onerror="window.__pwned = true"> ' +
+      '<script>window.__pwned = true</script> [click me](javascript:window.__pwned=true)';
+    await page.route("**/api/chat", (route) => route.fulfill({ status: 200, json: { reply: hostile } }));
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await page.locator("#chat_text_input").fill("Explain XSS");
+    await page.locator("#chat_submit_btn").click();
+
+    const log = page.locator("#chat_messages_area");
+    await expect(log).toContainText("<img");
+    await expect(log.locator("img, script, a[href^='javascript' i], [onerror]")).toHaveCount(0);
+    expect(await page.evaluate(() => (window as unknown as { __pwned?: boolean }).__pwned)).toBeUndefined();
+  });
+});
