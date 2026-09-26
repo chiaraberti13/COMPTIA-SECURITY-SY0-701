@@ -53,9 +53,9 @@ updates:
     cooldown:
       default-days: 7
     ignore:
-      # The build stage must match the Node major of the distroless runtime
-      # (nodejs24) and of .nvmrc: a new major is a planned migration of all
-      # three together, not a routine bump. Patches and digests still flow.
+      # The runtime runs the Node binary of this build image, so its patches and
+      # digests must keep flowing (they carry Node security releases). A new
+      # major is a planned migration together with .nvmrc and "engines".
       - dependency-name: node
         update-types: ["version-update:semver-major"]
     commit-message:
