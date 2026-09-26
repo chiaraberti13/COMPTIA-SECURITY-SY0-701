@@ -153,6 +153,8 @@ jobs:
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
         with:
           image: comptia-sy0701:scan
+          # Narrow, justified exceptions: see the comments in .grype.yaml.
+          config: .grype.yaml
           fail-build: true
           severity-cutoff: high
           only-fixed: true
@@ -165,6 +167,7 @@ jobs:
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
         with:
           image: comptia-sy0701:scan
+          config: .grype.yaml
           fail-build: false
           only-fixed: true
           output-format: table
