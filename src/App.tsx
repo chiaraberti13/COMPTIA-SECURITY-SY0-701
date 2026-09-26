@@ -488,7 +488,8 @@ export default function App() {
    * Enter to confirm and to move on. Typing in the chat must not trigger them.
    * ---------------------------------------------------------------- */
   useEffect(() => {
-    if (activeTab !== "quiz" || !quizStarted || quizCompleted) return;
+    // After the run, the keys still drive the remediation questions.
+    if (activeTab !== "quiz" || !quizStarted || (quizCompleted && !remediationActive)) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1614,8 +1615,9 @@ export default function App() {
 
                   <DataControls />
                 </div>
-              ) : quizCompleted ? (
-                /* Completed Screen */
+              ) : quizCompleted && !remediationActive ? (
+                /* Completed Screen. The remediation starts from here, so while
+                   it runs its questions are shown instead (next branch). */
                 <div className="space-y-6" id="quiz_completed_screen">
                   <div className="text-center space-y-4">
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto ${hasPassed ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-400" : "bg-rose-500/10 border border-rose-500/30 text-rose-400"}`} id="completed_icon_box">
