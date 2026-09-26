@@ -29,19 +29,17 @@ import {
 import {
   getDomainTopics,
   getDomainQuestions,
-  getInitialQuestions,
   questionUid,
-  domainOfQuestion,
   sourceQuestionId,
 } from "./localizedData";
 import { ALL_OBJECTIVES, questionIdsByObjective } from "./questionObjectives";
-import { Subtopic, Question, QuizResult, QuestionProgress } from "./types";
+import { Subtopic, Question } from "./types";
 import { MotionConfig } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 import { getSubgroupForSubtopic } from "./subgroups";
 import { getDomainGuide } from "./domainGuides";
-import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
+import { STORAGE_KEYS, readJSON, writeJSON } from "./storage";
 import { sanitizeChecklist } from "./progressBackup";
 import DataControls from "./components/DataControls";
 import OptionVerdict from "./components/OptionVerdict";
@@ -52,6 +50,7 @@ import DomainGuidePanel from "./components/DomainGuidePanel";
 import AiTrainerPanel from "./components/AiTrainerPanel";
 import MarkdownText from "./components/MarkdownText";
 import { useAiChat } from "./hooks/useAiChat";
+import { useQuizSession } from "./hooks/useQuizSession";
 import { getDomainRoute } from "./domainRoutes";
 import {
   ApiErrorSchema,
@@ -64,18 +63,13 @@ import {
   shuffle,
   hasPassedRun,
   scorePercent,
-  appendHistory,
-  unansweredIds,
   correctIndexes,
   requiredSelections,
   isMultiResponse,
   toggleSelection,
   isSelectionComplete,
   isSelectionCorrect,
-  updateQuestionProgress,
   selectDueReviewQuestions,
-  sanitizeQuizHistory,
-  sanitizeQuestionProgress,
   summarizeWeakTopics,
   examBlueprint,
 } from "./quiz";
@@ -96,7 +90,6 @@ export default function App() {
   const DOMAIN_3_QUESTIONS = useMemo(() => getDomainQuestions(3, lang), [lang]);
   const DOMAIN_4_QUESTIONS = useMemo(() => getDomainQuestions(4, lang), [lang]);
   const DOMAIN_5_QUESTIONS = useMemo(() => getDomainQuestions(5, lang), [lang]);
-  const INITIAL_QUESTIONS = useMemo(() => getInitialQuestions(lang), [lang]);
   // Glossary acronyms (SIEM, ZTA, ...) linked from questions and concepts.
   const GLOSSARY_INDEX = useMemo(
     () =>
@@ -173,36 +166,6 @@ export default function App() {
     4: 5,
     5: 5
   });
-  const [activeQuestions, setActiveQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  // Options picked for the question on screen. A single-answer question
-  // holds at most one entry; a multi-response one holds up to the number of
-  // correct options it declares.
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, number[]>>({});
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [quizScore, setQuizScore] = useState(0);
-  const [wrongQuestions, setWrongQuestions] = useState<number[]>([]);
-
-  // Exam timer (opt-in): ~2 minutes per question, auto-submit on expiry.
-  const [timerEnabled, setTimerEnabled] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
-  const [timeUp, setTimeUp] = useState(false);
-
-  // End-of-quiz answer review, driven by the answers already collected.
-  const [showReview, setShowReview] = useState(false);
-  const [reviewWrongOnly, setReviewWrongOnly] = useState(true);
-
-  // Locally persisted history of completed runs.
-  const [quizHistory, setQuizHistory] = useState<QuizResult[]>(
-    () => sanitizeQuizHistory(readJSON<unknown>(STORAGE_KEYS.quizHistory, []))
-  );
-  const [questionProgress, setQuestionProgress] = useState<Record<number, QuestionProgress>>(
-    () => sanitizeQuestionProgress(readJSON<unknown>(STORAGE_KEYS.questionProgress, {}))
-  );
-
   // Remediation / Recovery State
   const [remediationActive, setRemediationActive] = useState(false);
   const [remediationQuestions, setRemediationQuestions] = useState<Question[]>([]);
@@ -214,6 +177,20 @@ export default function App() {
   const [isGeneratingRemediation, setIsGeneratingRemediation] = useState(false);
   const [remediationError, setRemediationError] = useState<string | null>(null);
   const [showNewQuestionsModal, setShowNewQuestionsModal] = useState(false);
+
+  // The simulator run and the progress it saves; the timer pauses during the remediation.
+  const quiz = useQuizSession({ paused: remediationActive });
+  const {
+    activeQuestions, quizStarted, currentQuestionIndex, selectedOptions, quizAnswers,
+    quizCompleted, showFeedback, quizScore, wrongQuestions,
+    timerEnabled, setTimerEnabled, secondsLeft, timeUp,
+    showReview, setShowReview, reviewWrongOnly, setReviewWrongOnly,
+    quizHistory, questionProgress,
+  } = quiz;
+  const handleSelectOption = quiz.select;
+  const handleConfirmAnswer = quiz.confirm;
+  const handleNextQuestion = quiz.next;
+  const handleClearHistory = quiz.clearHistory;
 
   const studyPanelRef = useRef<HTMLElement>(null);
   const studyTopRef = useRef<HTMLDivElement>(null);
@@ -288,16 +265,6 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
-  // Re-map dataset-backed quiz questions to the active language (by id).
-  // Remediation questions come from the AI and are left untouched.
-  useEffect(() => {
-    const byId = new Map(getInitialQuestions(lang).map(q => [q.id, q]));
-    // Reacting to a language switch; to become derived state when the quiz
-    // state moves into useQuizSession (ROADMAP, "Scomporre src/App.tsx").
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setActiveQuestions(prev => prev.map(q => byId.get(q.id) ?? q));
-  }, [lang]);
-
   // Localized label for a question difficulty level. Falls back to the raw
   // value for levels not in the dictionary (e.g. AI-generated English levels).
   const levelLabel = (lvl: string): string => {
@@ -345,27 +312,15 @@ export default function App() {
   // Quiz Handling
 
   /**
-   * Puts the simulator into a clean "question 1" state for the given set.
-   * Every entry point into a run goes through here so the twelve pieces of
-   * quiz state can never be reset only partially.
+   * Starts a simulator run on the given set. Every entry point into a run
+   * goes through here, so the session (useQuizSession) and the state kept in
+   * App (objective, remediation) are always reset together.
    */
   const beginQuizRun = (questions: Question[]) => {
-    setActiveQuestions(questions);
+    quiz.begin(questions);
     setActiveObjective(null);
-    setQuizStarted(true);
-    setCurrentQuestionIndex(0);
-    setQuizAnswers({});
-    setSelectedOptions([]);
-    setShowFeedback(false);
-    setQuizCompleted(false);
-    setQuizScore(0);
-    setWrongQuestions([]);
     setRemediationActive(false);
     setRemediationCompleted(false);
-    setShowReview(false);
-    setReviewWrongOnly(true);
-    setTimeUp(false);
-    setSecondsLeft(timerEnabled ? questions.length * SECONDS_PER_QUESTION : null);
   };
 
   const handleStartQuiz = () => {
@@ -439,77 +394,6 @@ export default function App() {
     if (mistakes.length === 0) return;
     setQuizFocus("review");
     beginQuizRun(shuffle(mistakes));
-  };
-
-  const handleSelectOption = (index: number) => {
-    if (showFeedback) return;
-    const current = activeQuestions[currentQuestionIndex];
-    if (!current) return;
-    setSelectedOptions(prev => toggleSelection(current, prev, index));
-  };
-
-  const handleConfirmAnswer = () => {
-    if (showFeedback) return;
-
-    const currentQuestion = activeQuestions[currentQuestionIndex];
-    if (!isSelectionComplete(currentQuestion, selectedOptions)) return;
-    const isCorrect = isSelectionCorrect(currentQuestion, selectedOptions);
-
-    setQuizAnswers(prev => ({ ...prev, [currentQuestion.id]: [...selectedOptions] }));
-    setShowFeedback(true);
-
-    if (isCorrect) {
-      setQuizScore(prev => prev + 1);
-    } else {
-      setWrongQuestions(prev => [...prev, currentQuestion.id]);
-    }
-  };
-
-  /**
-   * Closes the run and records it in the local history.
-   * `extraWrong` carries the questions never answered (timer expiry), which
-   * count as wrong but were never pushed by handleConfirmAnswer.
-   */
-  const finishQuiz = (extraWrong: number[] = []) => {
-    if (extraWrong.length > 0) {
-      setWrongQuestions(prev => Array.from(new Set([...prev, ...extraWrong])));
-    }
-    setQuizCompleted(true);
-    setSecondsLeft(null);
-
-    const total = activeQuestions.length;
-    const entry: QuizResult = {
-      at: Date.now(),
-      score: quizScore,
-      total,
-      domains: Array.from(new Set(activeQuestions.map(q => domainOfQuestion(q.id)))).sort(),
-      passed: hasPassedRun(quizScore, total),
-    };
-    setQuizHistory(prev => {
-      const next = appendHistory(prev, entry);
-      writeJSON(STORAGE_KEYS.quizHistory, next);
-      return next;
-    });
-    setQuestionProgress(prev => {
-      const next = updateQuestionProgress(prev, activeQuestions, quizAnswers);
-      writeJSON(STORAGE_KEYS.questionProgress, next);
-      return next;
-    });
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < activeQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedOptions([]);
-      setShowFeedback(false);
-    } else {
-      finishQuiz();
-    }
-  };
-
-  const handleClearHistory = () => {
-    setQuizHistory([]);
-    removeKey(STORAGE_KEYS.quizHistory);
   };
 
   // Remediation Generation
@@ -598,32 +482,6 @@ export default function App() {
       setRemediationCompleted(true);
     }
   };
-
-  /* ---------------------------------------------------------------- *
-   * Exam timer
-   * ---------------------------------------------------------------- */
-
-  // Ticks once per second while a main-quiz question is on screen.
-  useEffect(() => {
-    if (secondsLeft === null || secondsLeft <= 0) return;
-    if (!quizStarted || quizCompleted || remediationActive) return;
-    const id = window.setTimeout(
-      () => setSecondsLeft(prev => (prev === null ? null : prev - 1)),
-      1000
-    );
-    return () => window.clearTimeout(id);
-  }, [secondsLeft, quizStarted, quizCompleted, remediationActive]);
-
-  // Expiry: submit whatever has been answered; the rest counts as wrong.
-  useEffect(() => {
-    if (secondsLeft !== 0 || !quizStarted || quizCompleted) return;
-    // The timer reaching zero is the event; to move with the quiz state into
-    // useQuizSession (ROADMAP, "Scomporre src/App.tsx").
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTimeUp(true);
-    finishQuiz(unansweredIds(activeQuestions, quizAnswers));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondsLeft, quizStarted, quizCompleted]);
 
   /* ---------------------------------------------------------------- *
    * Keyboard shortcuts for the question screens: 1-4 to pick an option,
@@ -2045,7 +1903,7 @@ export default function App() {
                         id="remediation_end_btn"
                         onClick={() => {
                           setRemediationActive(false);
-                          setQuizCompleted(true);
+                          quiz.showResults();
                         }}
                         className="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-2.5 rounded text-sm transition-all"
                       >
