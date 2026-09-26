@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- "Glossary terms mentioned": after an answer, and under each concept, the glossary acronyms in the text (SIEM, ZTA, TACACS+, ...) open their definition and exam tip in place.
 - The progress saved in the browser has a format version, and `migrateStorage()` upgrades data from older versions once at start-up, so future format changes keep existing progress.
 - After an objective quiz, a button opens the domain guide at that objective's outcome and official sub-topics.
 - OpenSSF Scorecard workflow with a badge in both READMEs, and a CycloneDX SBOM of the production dependencies saved with every security run.
@@ -51,6 +52,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- The top of the simulator set-up could not be reached when the panel was taller than the screen, on phones and on short desktop windows: the vertical centring pushed it above the scroll origin.
 - Jumping to an element (links, focus, the new "go to" buttons) no longer leaves it hidden under the sticky header on phones.
 - The AI chat can be scrolled with the keyboard and announces new messages to screen readers (`role="log"`); the time under your own messages now has enough contrast.
 - Right and wrong answers were shown by colour alone: options now say "Correct answer" and "Your answer" in words, and the answer review says "Correct", "Incorrect" or "Not answered" (WCAG 1.4.1).

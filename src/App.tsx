@@ -46,6 +46,8 @@ import { sanitizeChecklist } from "./progressBackup";
 import DataControls from "./components/DataControls";
 import OptionVerdict from "./components/OptionVerdict";
 import AiAccessForm from "./components/AiAccessForm";
+import GlossaryHints from "./components/GlossaryHints";
+import { buildAcronymIndex } from "./glossaryIndex";
 import { ACCESS_REQUIRED, aiRequestHeaders } from "./aiAccess";
 import DomainGuidePanel from "./components/DomainGuidePanel";
 import {
@@ -87,6 +89,17 @@ export default function App() {
   const DOMAIN_4_QUESTIONS = useMemo(() => getDomainQuestions(4, lang), [lang]);
   const DOMAIN_5_QUESTIONS = useMemo(() => getDomainQuestions(5, lang), [lang]);
   const INITIAL_QUESTIONS = useMemo(() => getInitialQuestions(lang), [lang]);
+  // Glossary acronyms (SIEM, ZTA, ...) linked from questions and concepts.
+  const GLOSSARY_INDEX = useMemo(
+    () =>
+      buildAcronymIndex(
+        [DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS].flatMap(groups =>
+          groups.flatMap(g => g.subtopics)
+        )
+      ),
+    [DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS]
+  );
+
   const ALL_QUESTIONS = useMemo(
     () => [
       ...DOMAIN_1_QUESTIONS,
@@ -1382,6 +1395,13 @@ export default function App() {
                               </div>
                             </div>
 
+                            <GlossaryHints
+                              idPrefix={`concept_${sub.checklistKey}`}
+                              index={GLOSSARY_INDEX}
+                              exclude={sub.checklistKey}
+                              texts={[sub.definition, sub.details, sub.examTip ?? ""]}
+                            />
+
                             {/* Pre-filled Chat Helper for this sub-concept */}
                             <div className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800 rounded-lg" id={`concept_chat_trigger_${sub.checklistKey}`}>
                               <div className="flex items-center gap-2">
@@ -1435,9 +1455,13 @@ export default function App() {
       )}
 
         {/* TAB 2: HIGH-STAKES SIMULATOR - Sleek Interface Style */}
+        {/* Centred with my-auto, not items-center: in a scrolling flex container
+            items-center pushes the top of a tall panel out of reach (above the
+            scroll origin), which hid the quiz set-up on phones. Auto margins
+            centre when there is room and collapse to 0 when not. */}
         {activeTab === "quiz" && (
-          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-center justify-center" id="quiz_layout">
-            <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="quiz_panel_container">
+          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-start justify-center" id="quiz_layout">
+            <div className="w-full max-w-2xl my-auto bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="quiz_panel_container">
               
               {/* Animated subtle backdrop blur blobs */}
               <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
@@ -2394,6 +2418,18 @@ export default function App() {
                         </h4>
                         <div className="text-xs text-slate-400 leading-relaxed">
                           {renderMarkdownToJSX(activeQuestions[currentQuestionIndex].explanation)}
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-slate-800/70">
+                          <GlossaryHints
+                            key={activeQuestions[currentQuestionIndex].id}
+                            idPrefix="quiz"
+                            index={GLOSSARY_INDEX}
+                            texts={[
+                              activeQuestions[currentQuestionIndex].scenario ?? "",
+                              activeQuestions[currentQuestionIndex].question,
+                              activeQuestions[currentQuestionIndex].explanation,
+                            ]}
+                          />
                         </div>
                       </div>
 
