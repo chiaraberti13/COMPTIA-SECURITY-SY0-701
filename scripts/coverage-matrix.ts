@@ -17,6 +17,7 @@ import {
   DOMAIN_5_QUESTIONS,
 } from "../src/data";
 import { DOMAIN_GUIDES_IT, OFFICIAL_DOMAIN_WEIGHTS } from "../src/domainGuides";
+import { OBJECTIVE_REVIEW, SOURCES, SOURCES_MAPPED_ON, type ReviewStatus, type Source } from "../src/contentReview";
 import { OFFICIAL_OBJECTIVES, objectivesOfQuestion } from "../src/questionObjectives";
 import type { Question } from "../src/types";
 
@@ -31,6 +32,18 @@ const BANKS: Record<number, Question[]> = {
 };
 
 const LEVELS: Question["level"][] = ["RICORDO", "COMPRENSIONE", "APPLICAZIONE", "ANALISI"];
+
+const STATUS_LABEL: Record<ReviewStatus, string> = {
+  reviewed: "revisionato",
+  "needs-review": "da revisionare",
+  deprecated: "deprecato",
+};
+
+/** "NIST SP 800-53 Rev. 5" out of "SP 800-53 Rev. 5 — Security and Privacy Controls". */
+const shortName = (source: { title: string; publisher: string }) => {
+  const head = source.title.split(" — ")[0];
+  return head.startsWith(source.publisher) ? head : `${source.publisher} ${head}`;
+};
 
 /** How many of the thinnest objectives to list as priorities for new questions. */
 const WEAKEST = 5;
@@ -66,15 +79,23 @@ export function renderCoverageMatrix(): string {
       "",
       `Peso d'esame ${OFFICIAL_DOMAIN_WEIGHTS[domain - 1]}% · ${BANKS[domain].length} domande nel banco del dominio.`,
       "",
-      "| Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati |",
-      "|---|---|---|---|---|---|---|---|"
+      "| Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |",
+      "|---|---|---|---|---|---|---|---|---|---|"
     );
     for (const code of OFFICIAL_OBJECTIVES[domain]) {
       const questions = byObjective.get(code) ?? [];
       const perLevel = LEVELS.map((level) => questions.filter((q) => q.level === level).length);
       const outcome = guide.objectives.find((o) => o.code === code)?.outcome ?? "";
       const exercises = (guide.practiceScenarios ?? []).filter((s) => s.objective === code).length;
-      lines.push(`| ${code} | ${outcome} | ${questions.length} | ${perLevel.join(" | ")} | ${exercises} |`);
+      const review = OBJECTIVE_REVIEW[code];
+      const status = review.status === "reviewed"
+        ? `${STATUS_LABEL.reviewed} il ${review.lastReviewed} (@${review.reviewer})`
+        : STATUS_LABEL[review.status];
+      const sources = review.sources
+        .filter((id) => id !== "comptiaSecurityPlus")
+        .map((id) => `[${shortName(SOURCES[id])}](${SOURCES[id].url})`)
+        .join(", ");
+      lines.push(`| ${code} | ${outcome} | ${questions.length} | ${perLevel.join(" | ")} | ${exercises} | ${status} | ${sources} |`);
     }
     lines.push("");
   }
@@ -87,6 +108,28 @@ export function renderCoverageMatrix(): string {
     `I ${WEAKEST} obiettivi con meno domande, da rinforzare per primi:`,
     "",
     ...weakest.map((code) => `- **${code}**: ${count(code)} domande`),
+    ""
+  );
+
+  const all: Source[] = Object.values(SOURCES);
+  const primary = all.filter((source) => source.kind !== "reference");
+  const secondary = all.filter((source) => source.kind === "reference");
+  const item = (source: Source) => `- [${source.title}](${source.url}) — ${source.publisher}`;
+  lines.push(
+    "## Fonti e revisione",
+    "",
+    "Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il " + SOURCES_MAPPED_ON + "); gli obiettivi d'esame",
+    "CompTIA valgono per tutti e non sono ripetuti nella tabella. Un obiettivo diventa **revisionato** solo",
+    "quando una persona ha confrontato domande, glossario e guida con le fonti indicate: servono data e revisore.",
+    "I controlli automatici (parità IT/EN, struttura, copertura) non contano come revisione.",
+    "",
+    "### Fonti primarie: obiettivi d'esame, standard, specifiche e norme",
+    "",
+    ...primary.map(item),
+    "",
+    "### Fonti secondarie: riferimenti di comunità ed enti",
+    "",
+    ...secondary.map(item),
     ""
   );
   return lines.join("\n");

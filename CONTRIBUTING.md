@@ -47,6 +47,7 @@ The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is th
 3. **Cite the source** for regulatory statements, numbers that change over time and configuration advice: official CompTIA objectives, NIST, RFCs, OWASP, CIS or vendor documentation.
 4. **Separate exam theory from practice**: say when the exam simplifies something that works differently in real environments.
 5. Commands and examples must be safe to copy: no real credentials, no destructive command without a warning, no targets you are not authorized to test.
+6. **Reviewing an objective.** Every official objective has its sources and a review state in `src/contentReview.ts`, shown in each domain guide and in `docs/coverage-matrix.md`. To mark one as reviewed, compare its questions, glossary entries and guide section with the listed sources, fix what differs, then set `status: "reviewed"`, `lastReviewed` (today, `YYYY-MM-DD`) and `reviewer` (your GitHub handle) and run `npm run coverage-matrix`. Automated checks never count as a review; the tests refuse a "reviewed" state without date and reviewer.
 
 ### Changing code
 
@@ -120,6 +121,7 @@ Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è l
 3. **Cita la fonte** per affermazioni normative, numeri che cambiano nel tempo e consigli di configurazione: obiettivi ufficiali CompTIA, NIST, RFC, OWASP, CIS o documentazione dei produttori.
 4. **Separa teoria d'esame e pratica**: indica quando l'esame semplifica qualcosa che nella realtà funziona diversamente.
 5. Comandi ed esempi devono essere sicuri da copiare: nessuna credenziale reale, nessun comando distruttivo senza avvertenza, nessun bersaglio che non si è autorizzati a testare.
+6. **Revisionare un obiettivo.** Ogni obiettivo ufficiale ha le sue fonti e uno stato di revisione in `src/contentReview.ts`, mostrati in ogni guida di dominio e in `docs/coverage-matrix.md`. Per segnarne uno come revisionato, confronta domande, voci di glossario e sezione della guida con le fonti indicate, correggi ciò che non torna, poi imposta `status: "reviewed"`, `lastReviewed` (oggi, `AAAA-MM-GG`) e `reviewer` (il tuo nome utente GitHub) ed esegui `npm run coverage-matrix`. I controlli automatici non contano come revisione; i test rifiutano uno stato "reviewed" senza data e revisore.
 
 ### Modificare il codice
 

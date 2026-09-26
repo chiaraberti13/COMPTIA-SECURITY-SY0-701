@@ -1,8 +1,66 @@
-import { Activity, AlertTriangle, ArrowRight, CheckSquare, ChevronRight, Flag, GraduationCap, Sparkles } from "lucide-react";
+import type { ReactNode } from "react";
+import { Activity, AlertTriangle, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
+import { reviewSummary, sourcesOf, type Source } from "../contentReview";
 import type { DomainGuide } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
+
+const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
+
+/** A link that leaves the app: new tab, no referrer, said aloud to screen readers. */
+function ExternalAnchor({ href, children }: { href: string; children: ReactNode }) {
+  const { t } = useLang();
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-200 underline decoration-cyan-800 underline-offset-2">
+      {children}
+      <ExternalLink className="w-3 h-3 shrink-0" aria-hidden="true" />
+      <span className="sr-only">{t("a11y.newTab")}</span>
+    </a>
+  );
+}
+
+/** Sources of the domain's objectives and how many of them a person reviewed. */
+function SourcesAndReview({ guide }: { guide: DomainGuide }) {
+  const { t } = useLang();
+  const codes = guide.objectives.map((o) => o.code);
+  const sources = sourcesOf(codes);
+  const summary = reviewSummary(codes);
+  const list = (items: Source[]) => (
+    <ul className="space-y-1">
+      {items.map((source) => (
+        <li key={source.url} className="text-xs text-slate-300 leading-relaxed">
+          <ExternalAnchor href={source.url}>{source.title}</ExternalAnchor>
+          <span className="text-slate-400"> — {source.publisher}</span>
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <details className="group/sources border border-slate-800 rounded-lg" id={`guide_sources_${guide.domainId}`}>
+      <summary className="cursor-pointer list-none p-3 flex items-center gap-2 text-xs font-mono font-bold text-slate-300 uppercase tracking-wider focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500 rounded-lg">
+        <BookMarked className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+        {t("study.sourcesTitle")}
+        <ChevronRight className="w-3.5 h-3.5 ml-auto transition-transform group-open/sources:rotate-90" aria-hidden="true" />
+      </summary>
+      <div className="border-t border-slate-800 p-4 space-y-4">
+        <p className="text-xs text-slate-400 leading-relaxed">{t("study.sourcesNote")}</p>
+        <p className="text-xs text-slate-200 font-semibold" id={`guide_review_status_${guide.domainId}`}>
+          {t("study.reviewStatus", { reviewed: summary.reviewed, total: codes.length })}
+        </p>
+        <div className="space-y-2">
+          <h4 className="text-[11px] font-bold text-cyan-300">{t("study.primarySources")}</h4>
+          {list(sources.filter((s) => s.kind !== "reference"))}
+        </div>
+        <div className="space-y-2">
+          <h4 className="text-[11px] font-bold text-cyan-300">{t("study.secondarySources")}</h4>
+          {list(sources.filter((s) => s.kind === "reference"))}
+        </div>
+        <p className="text-xs"><ExternalAnchor href={ISSUES_URL}>{t("study.reportError")}</ExternalAnchor></p>
+      </div>
+    </details>
+  );
+}
 
 /** One list of the route: what to know before the domain, or where to go next. */
 function RouteList({
@@ -254,6 +312,8 @@ export default function DomainGuidePanel({
             ))}
           </ul>
         </section>
+
+        <SourcesAndReview guide={guide} />
 
         <div className="border-t border-slate-800 pt-6 flex gap-3">
           <Flag className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />

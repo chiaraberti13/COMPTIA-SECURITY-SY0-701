@@ -61,7 +61,9 @@ describe("DomainGuidePanel", () => {
 
   it("keeps each exercise's reasoning folded until the learner asks for it", () => {
     const panel = renderGuide(guide);
-    const exercises = Array.from(panel.querySelectorAll<HTMLDetailsElement>("details details"));
+    const exercises = Array.from(panel.querySelectorAll<HTMLDetailsElement>("details details")).filter(
+      (d) => !d.id.startsWith("guide_sources_")
+    );
     expect(exercises).toHaveLength(guide.practiceScenarios!.length);
     const first = exercises[0];
     expect(first.open).toBe(false);
@@ -98,5 +100,19 @@ describe("DomainGuidePanel", () => {
 
     fireEvent.click(within(next).getByRole("button", { name: "Vai all'obiettivo 3.3" }));
     expect(onAction).toHaveBeenCalledWith({ kind: "guide", domain: 3, objective: "3.3" });
+  });
+
+  it("lists the sources of the domain, primary before secondary, and says how many objectives a person reviewed", () => {
+    const panel = renderGuide(guide);
+    const section = panel.querySelector<HTMLDetailsElement>("#guide_sources_1")!;
+    expect(section.open).toBe(false);
+    expect(within(section).getByText(/revisionati da una persona: 0 su 4/)).toBeTruthy();
+    const primary = within(section).getByText(/^Fonti primarie/).nextElementSibling!;
+    expect(within(primary as HTMLElement).getByRole("link", { name: /CompTIA Security\+/ })).toBeTruthy();
+    for (const link of within(section).getAllByRole("link")) {
+      expect(link.getAttribute("href")).toMatch(/^https:\/\//);
+      expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+      expect(link.textContent).toMatch(/si apre in una nuova scheda/);
+    }
   });
 });
