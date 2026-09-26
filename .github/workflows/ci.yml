@@ -49,8 +49,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm test
+      # All unit, API and component tests, with the coverage thresholds of
+      # vitest.config.ts on the pure logic and the server.
+      - name: Test (with coverage thresholds)
+        run: npm run test:coverage
 
       - name: Build
         run: npm run build

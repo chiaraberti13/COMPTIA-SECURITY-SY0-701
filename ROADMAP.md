@@ -156,7 +156,7 @@ Un'attività è completata quando:
 - [ ] **P1 — Aggiungere spell checking tecnico:** `cspell` con dizionari italiano e inglese e un dizionario di progetto per acronimi, protocolli e vendor. **M**
 - [x] **P1 — Test dell'API server:** `tests/api.test.ts`, 15 test sull'app reale con un finto client Gemini (senza rete e senza costi): validazione e limiti degli input, cronologia ridotta e troncata, guardia anti-injection nel prompt di sistema, chiave mancante, budget esaurito (503) e non consumato dalle richieste invalide, timeout reale (504), errori del provider non esposti (502), output della remediation trattato come non attendibile, rate limit (429). Nessuna nuova dipendenza: `fetch` al posto di Supertest — 2026-09-24.
 - [ ] 🟡 **P1 — Test dei componenti principali:** Testing Library e jsdom configurati; `tests/DomainGuidePanel.test.tsx` verifica apertura, sotto-argomenti come liste etichettate, tabelle con didascalia in regioni raggiungibili da tastiera, errori comuni etichettati a parole, soluzioni nascoste e sezioni opzionali assenti — 2026-09-24. Il flusso del quiz è coperto dagli end-to-end; restano test di componenti per quiz e cambio lingua dopo la loro estrazione. **M**
-- [ ] **P1 — Soglia di copertura dei test** per la logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`), non per l'intero progetto. **S**
+- [x] **P1 — Soglia di copertura dei test** per la logica pura e il server (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`, `progressBackup.ts`, `questionObjectives.ts`, `server/`), non per le viste React coperte dagli end-to-end: `npm run test:coverage` in CI con soglie 92% istruzioni, 78% rami, 90% funzioni, 93% righe (valori al 2026-09-26: 94,8 / 82,2 / 93,6 / 96,0). `storage.ts` passato dal 7% al 100% con test sul blocco dell'archiviazione del browser — 2026-09-26.
 - [x] **P1 — Generare automaticamente la matrice di copertura:** `npm run coverage-matrix` genera `docs/coverage-matrix.md` (domande per obiettivo e per livello cognitivo, esercizi guidati, priorità); un test fa fallire la CI se il file non è aggiornato — 2026-09-24.
 - [ ] **P1 — Job separati e con permessi minimi:** `quality` (typecheck, lint, test), `build`, `security`, `docs`, ognuno con messaggi d'errore leggibili.
 - [ ] **P1 — Rendere obbligatori i controlli principali sulle pull request** tramite branch protection.
@@ -508,6 +508,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-25 | M2 | Le 6 PR di Dependabot integrate in una: Express 5, Vite 8 con plugin-react 6, motion 13, gruppo minor/patch, Actions `checkout` v7.0.1 e `setup-node` v7.0.0; lockfile con soli pacchetti pubblicati da almeno 7 giorni | Attività n. 4 | Completato |
 | 2026-09-25 | M6 | Quiz per singolo obiettivo ufficiale (28 obiettivi, IT/EN); test del glossario con axe segnato come lento (superava i 30 s con test in parallelo) | Voce P1 quiz per obiettivo | Completato |
 | 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
+| 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
 
 ---
 

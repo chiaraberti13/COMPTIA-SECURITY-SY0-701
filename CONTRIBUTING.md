@@ -28,6 +28,7 @@ npm run dev               # http://localhost:3000
 
 ```bash
 npm run check             # typecheck + lint (code and Markdown) + all tests (CI runs the same)
+npm run test:coverage     # the tests again, failing below the coverage thresholds of vitest.config.ts
 npm run build             # production build
 npm run smoke             # starts the built server in production mode and probes it
 npm run e2e               # Playwright + axe at phone and desktop width (after build)
@@ -100,6 +101,7 @@ npm run dev               # http://localhost:3000
 
 ```bash
 npm run check             # typecheck + lint (codice e Markdown) + tutti i test (la CI esegue gli stessi)
+npm run test:coverage     # di nuovo i test, falliscono sotto le soglie di copertura di vitest.config.ts
 npm run build             # build di produzione
 npm run smoke             # avvia il server compilato in modalità produzione e lo verifica
 npm run e2e               # Playwright + axe a larghezza telefono e desktop (dopo la build)
