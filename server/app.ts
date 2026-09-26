@@ -12,6 +12,11 @@ import path from "path";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { Type, type GenerateContentParameters } from "@google/genai";
+import {
+  ChatRequestSchema,
+  MAX_MESSAGE_CHARS,
+  RemediationRequestSchema,
+} from "../src/apiSchemas";
 import { validateRemediationPayload } from "../src/remediation";
 import { tokenMatches, type DailyBudget } from "./aiGuard";
 import { createJsonLogger, redact, requestLogger, type Logger } from "./log";
@@ -57,11 +62,8 @@ export interface AppOptions {
   accessToken?: string;
 }
 
-/** Upper bound on a single chat message, in characters. */
-export const MAX_MESSAGE_CHARS = 2000;
-
-/** How many previous turns are replayed to the model. */
-export const MAX_HISTORY_TURNS = 8;
+// The request limits live with the shared schemas; re-exported for the tests.
+export { MAX_HISTORY_TURNS, MAX_MESSAGE_CHARS } from "../src/apiSchemas";
 
 /** Upper bound on the length of a chat answer, in tokens. */
 export const CHAT_MAX_OUTPUT_TOKENS = 2048;
@@ -82,27 +84,6 @@ function budgetError(budget: DailyBudget, isEn: boolean): string {
 function isTimeout(error: unknown): boolean {
   const name = (error as { name?: unknown } | null)?.name;
   return name === "TimeoutError" || name === "AbortError";
-}
-
-interface HistoryTurn {
-  role: string;
-  content: string;
-}
-
-/**
- * Normalises the client-supplied conversation history: keeps only the last few
- * turns and caps each one, so the prompt sent to Gemini stays bounded no matter
- * what the client posts.
- */
-export function sanitizeHistory(history: unknown): HistoryTurn[] {
-  if (!Array.isArray(history)) return [];
-  return history.slice(-MAX_HISTORY_TURNS).map((h) => {
-    const turn = (h ?? {}) as { role?: unknown; content?: unknown };
-    return {
-      role: turn.role === "user" ? "user" : "trainer",
-      content: String(turn.content ?? "").slice(0, MAX_MESSAGE_CHARS),
-    };
-  });
 }
 
 export function createApp(opts: AppOptions): express.Express {
@@ -204,20 +185,21 @@ export function createApp(opts: AppOptions): express.Express {
     const isEn = req.body?.lang === "en";
     try {
       // Express 5 leaves req.body undefined when the request carries no JSON.
-      const { message } = req.body ?? {};
-
-      if (typeof message !== "string" || !message.trim()) {
+      const parsed = ChatRequestSchema.safeParse(req.body ?? {});
+      if (!parsed.success) {
+        const tooLong = parsed.error.issues.some((issue) => issue.path[0] === "message" && issue.code === "too_big");
+        if (tooLong) {
+          return res.status(413).json({
+            error: isEn
+              ? `Message too long (max ${MAX_MESSAGE_CHARS} characters)`
+              : `Messaggio troppo lungo (massimo ${MAX_MESSAGE_CHARS} caratteri)`,
+          });
+        }
         return res.status(400).json({
           error: isEn ? "Message is required" : "Il messaggio è obbligatorio",
         });
       }
-      if (message.length > MAX_MESSAGE_CHARS) {
-        return res.status(413).json({
-          error: isEn
-            ? `Message too long (max ${MAX_MESSAGE_CHARS} characters)`
-            : `Messaggio troppo lungo (massimo ${MAX_MESSAGE_CHARS} caratteri)`,
-        });
-      }
+      const { message, history } = parsed.data;
 
       const apiKey = opts.getApiKey();
       if (!apiKey) {
@@ -245,7 +227,7 @@ export function createApp(opts: AppOptions): express.Express {
       // Every turn is framed as data (server/promptSafety.ts): the text of a
       // message cannot close its tag or pose as a new turn of the dialogue.
       const conversationHistory =
-        sanitizeHistory(req.body?.history)
+        history
           .map((h) => asData(h.role === "user" ? "student_message" : "trainer_message", h.content))
           .join("\n") || (isEn ? "(none)" : "(nessuna)");
 
@@ -324,24 +306,14 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
   app.post("/api/quiz/remediation", async (req, res) => {
     const isEn = req.body?.lang === "en";
     try {
-      const { weakTopics } = req.body ?? {};
-      if (!Array.isArray(weakTopics) || weakTopics.length === 0) {
+      // At most MAX_TOPICS topics of MAX_TOPIC_CHARS characters reach the prompt.
+      const parsed = RemediationRequestSchema.safeParse(req.body ?? {});
+      if (!parsed.success) {
         return res.status(400).json({
           error: isEn ? "Weak topics are required" : "Gli argomenti deboli sono obbligatori",
         });
       }
-
-      // Bound what reaches the prompt: at most 10 topics, 120 characters each.
-      const safeTopics = weakTopics
-        .slice(0, 10)
-        .map((topic: unknown) => String(topic ?? "").slice(0, 120).trim())
-        .filter(Boolean);
-
-      if (safeTopics.length === 0) {
-        return res.status(400).json({
-          error: isEn ? "Weak topics are required" : "Gli argomenti deboli sono obbligatori",
-        });
-      }
+      const safeTopics = parsed.data.weakTopics;
 
       const apiKey = opts.getApiKey();
       if (!apiKey) {

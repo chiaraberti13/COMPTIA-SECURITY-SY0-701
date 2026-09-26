@@ -395,6 +395,18 @@ test.describe("AI output is untrusted", () => {
     await expect(log.locator("img, script, a[href^='javascript' i], [onerror]")).toHaveCount(0);
     expect(await page.evaluate(() => (window as unknown as { __pwned?: boolean }).__pwned)).toBeUndefined();
   });
+
+  test("an answer of the wrong shape is refused with a message, not shown", async ({ page }) => {
+    await page.route("**/api/chat", (route) => route.fulfill({ status: 200, json: { reply: { html: "<b>x</b>" } } }));
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await page.locator("#chat_text_input").fill("Explain XSS");
+    await page.locator("#chat_submit_btn").click();
+
+    await expect(page.locator("#chat_messages_area")).toContainText("risposta del server non valida");
+    await expect(page.locator("#chat_messages_area")).not.toContainText("[object Object]");
+  });
 });
 
 test.describe("domain routes (before you start, where to go next)", () => {

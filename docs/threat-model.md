@@ -1,7 +1,7 @@
 # Threat model
 
 Analisi delle minacce dell'applicazione e del repository con il metodo STRIDE.
-Rivista il 2026-09-24 sul codice del branch principale. Va aggiornata a ogni
+Rivista il 2026-09-26 sul codice del branch principale. Va aggiornata a ogni
 modifica che tocca un confine di fiducia, per esempio un nuovo endpoint, un
 nuovo servizio esterno, un nuovo dato salvato o un nuovo workflow.
 
@@ -62,7 +62,7 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 | STRIDE | Minaccia | Controlli presenti | Stato |
 |---|---|---|---|
 | Spoofing | Un client si fa passare per un altro indirizzo IP per aggirare il rate limit, inviando un'intestazione `X-Forwarded-For` falsa | `trust proxy` configurabile con `TRUST_PROXY` (predefinito 1 proxy; `0` se Node è esposto direttamente) in `server/app.ts`; test in `tests/api.test.ts` | ✅ |
-| Tampering | Corpo della richiesta enorme o malformato per esaurire la memoria | `express.json` con limite di 64 kB; messaggio al massimo di 2000 caratteri, cronologia di 8 turni troncati, 10 argomenti di 120 caratteri; richiesta senza corpo → 400 | ✅ |
+| Tampering | Corpo della richiesta enorme o malformato per esaurire la memoria | `express.json` con limite di 64 kB; schema dichiarativo condiviso con il browser (`src/apiSchemas.ts`, Zod): messaggio al massimo di 2000 caratteri, cronologia di 8 turni troncati con ruoli ammessi solo `user` e `trainer`, 10 argomenti testuali di 120 caratteri; richiesta senza corpo o di forma errata → 400. Test in `tests/apiSchemas.test.ts` e `tests/api.test.ts` | ✅ |
 | Tampering | XSS: testo dell'AI o dei dati che inietta HTML o script | Nessun `innerHTML` né `dangerouslySetInnerHTML`: il Markdown dell'AI è convertito in elementi React. La CSP ammette solo `'self'` per script, stili e font, senza `'unsafe-inline'`, e aggiunge `script-src-attr 'none'`, `object-src 'none'`, `base-uri 'self'` e `form-action 'self'`. Un test end-to-end fallisce a ogni violazione | ✅ |
 | Tampering | Clickjacking: l'app caricata in un iframe di un altro sito | `frame-ancestors 'self'` e `X-Frame-Options` di `helmet` | ✅ |
 | Repudiation | Abuso degli endpoint AI senza traccia per ricostruirlo | Log strutturati in JSON (`server/log.ts`): ogni richiesta `/api/` con percorso, stato e durata, e ogni chiamata a Gemini fallita con tipo ed esito. Mai testo dell'utente, argomenti, IP o chiavi: i test e lo smoke test lo verificano | ✅ |
@@ -80,7 +80,7 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 | STRIDE | Minaccia | Controlli presenti | Stato |
 |---|---|---|---|
 | Tampering | **Prompt injection diretta** (OWASP LLM01): l'utente chiede al modello di ignorare le regole, falsifica un turno del dialogo o chiude in anticipo il blocco dei propri dati | *Spotlighting* (`server/promptSafety.ts`): ogni testo del browser (domanda, cronologia, argomenti) entra nel prompt dentro un tag (`<student_message>`, `<trainer_message>`, `<topic>`), e il prompt di sistema dichiara che il contenuto dei tag è un dato e non un'istruzione. Dal testo vengono rimossi i tag falsificati, anche mascherati con maiuscole, spazi, parentesi a larghezza piena o caratteri invisibili. `tests/promptInjection.test.ts` prova 11 attacchi noti: le regole non cambiano e nessun attacco esce dal suo tag. Il danno possibile resta limitato: il modello non ha strumenti né dati riservati, e la risposta è solo testo mostrato a chi l'ha chiesta | 🟡 nessun filtro rende un modello immune; il confine tra regole e dati però non si può più falsificare |
-| Tampering | Output del modello malformato o ostile (OWASP LLM05): HTML, script o link `javascript:` in una risposta, JSON non valido nella remediation | `validateRemediationPayload` accetta solo 3 domande con 4 opzioni e un indice valido; gli ID li assegna il server; in caso contrario → 502. Test dedicato | ✅ |
+| Tampering | Output del modello malformato o ostile (OWASP LLM05): HTML, script o link `javascript:` in una risposta, JSON non valido nella remediation | Lo schema della remediation accetta solo 3 domande con 4 opzioni e un indice valido; gli ID li assegna il server; in caso contrario → 502. Anche il browser valida ogni risposta con gli stessi schemi e scarta quella di forma errata. Test dedicati | ✅ |
 | Information disclosure | Dati personali inviati al fornitore AI dall'utente | Avviso visibile nel Trainer AI: "non inserire dati personali"; nessun dato dei progressi viene inviato, solo il messaggio e gli argomenti deboli | 🟡 dipende dal comportamento dell'utente |
 | Repudiation / integrità | Risposta dell'AI sbagliata presa per vera (OWASP LLM09) | Avviso "le risposte possono contenere errori" e domande di remediation etichettate come non revisionate | ✅ |
 
@@ -108,7 +108,6 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 |---|---|---|
 | P1 | Attivare nel repository secret scanning, push protection e protezione del branch `main` | ROADMAP, attività n. 5 (impostazioni) |
 | P2 | Contatore del budget AI condiviso tra le istanze, per esempio Redis, se si distribuisce su più istanze | Questo documento |
-| P2 | Validazione degli input con uno schema dichiarativo al posto dei controlli manuali | ROADMAP, M3 |
 
 ## Come verificare in locale
 

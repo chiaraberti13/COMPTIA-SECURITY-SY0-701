@@ -178,6 +178,7 @@ describe("POST /api/quiz/remediation", () => {
     expect((await post("/api/quiz/remediation", {})).status).toBe(400);
     expect((await post("/api/quiz/remediation", { weakTopics: [] })).status).toBe(400);
     expect((await post("/api/quiz/remediation", { weakTopics: ["  ", ""] })).status).toBe(400);
+    expect((await post("/api/quiz/remediation", { weakTopics: [{ injected: "object" }] })).status).toBe(400);
     expect(calls).toHaveLength(0);
   });
 

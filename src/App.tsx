@@ -53,6 +53,15 @@ import { ACCESS_REQUIRED, aiRequestHeaders } from "./aiAccess";
 import DomainGuidePanel from "./components/DomainGuidePanel";
 import { getDomainRoute } from "./domainRoutes";
 import {
+  ApiErrorSchema,
+  ChatResponseSchema,
+  MAX_HISTORY_TURNS,
+  MAX_MESSAGE_CHARS,
+  RemediationResponseSchema,
+  type ChatRequest,
+  type RemediationRequest,
+} from "./apiSchemas";
+import {
   SECONDS_PER_QUESTION,
   formatClock,
   shuffle,
@@ -431,19 +440,23 @@ export default function App() {
     setIsChatLoading(true);
 
     try {
+      // Only what the server keeps is sent: the last turns, each cut to the
+      // message limit, so a long conversation never exceeds the body limit.
       const history = chatMessages
         .filter(m => m.id !== "welcome" && m.sender !== "system")
-        .slice(-8)
-        .map(m => ({ role: m.sender, content: m.text }));
+        .slice(-MAX_HISTORY_TURNS)
+        .map(m => ({ role: m.sender, content: m.text.slice(0, MAX_MESSAGE_CHARS) }));
+      const request: ChatRequest = { message: text, history, lang };
 
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: aiRequestHeaders(),
-        body: JSON.stringify({ message: text, history, lang })
+        body: JSON.stringify(request)
       });
 
-      const data = await res.json();
-      if (res.status === 401 && data.code === ACCESS_REQUIRED) {
+      const data: unknown = await res.json().catch(() => null);
+      const failure = ApiErrorSchema.safeParse(data);
+      if (res.status === 401 && failure.success && failure.data.code === ACCESS_REQUIRED) {
         setAiLocked(true);
         setChatMessages(prev => [...prev, {
           id: Math.random().toString(),
@@ -453,14 +466,19 @@ export default function App() {
         }]);
         return;
       }
-      if (data.error) {
-        throw new Error(data.error);
+      if (failure.success) {
+        throw new Error(failure.data.error);
+      }
+      // The answer is untrusted data: anything but { reply: string } is an error.
+      const answer = ChatResponseSchema.safeParse(data);
+      if (!res.ok || !answer.success) {
+        throw new Error(t("chat.invalidAnswer"));
       }
 
       setChatMessages(prev => [...prev, {
         id: Math.random().toString(),
         sender: "trainer",
-        text: data.reply,
+        text: answer.data.reply,
         timestamp: new Date()
       }]);
     } catch (err: any) {
@@ -664,23 +682,27 @@ export default function App() {
     setRemediationQuestions([]);
 
     try {
+      const request: RemediationRequest = { weakTopics: uniqueWeakTopics, lang };
       const res = await fetch("/api/quiz/remediation", {
         method: "POST",
         headers: aiRequestHeaders(),
-        body: JSON.stringify({ weakTopics: uniqueWeakTopics, lang })
+        body: JSON.stringify(request)
       });
 
-      const data = await res.json();
-      if (res.status === 401 && data.code === ACCESS_REQUIRED) {
+      const data: unknown = await res.json().catch(() => null);
+      const failure = ApiErrorSchema.safeParse(data);
+      if (res.status === 401 && failure.success && failure.data.code === ACCESS_REQUIRED) {
         setAiLocked(true);
         throw new Error(t("rem.accessRequired"));
       }
-      if (res.status !== 200 || data.error) {
-        throw new Error(data.error || t("rem.cannotRetrieve"));
+      if (res.status !== 200 || failure.success) {
+        throw new Error(failure.success ? failure.data.error : t("rem.cannotRetrieve"));
       }
 
-      if (data.questions && data.questions.length > 0) {
-        setRemediationQuestions(data.questions);
+      // Validated again in the browser: only well-formed questions are shown.
+      const payload = RemediationResponseSchema.safeParse(data);
+      if (payload.success) {
+        setRemediationQuestions(payload.data.questions);
         setRemediationActive(true);
         setRemediationIndex(0);
         setRemediationSelected([]);
