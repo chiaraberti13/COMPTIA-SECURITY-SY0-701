@@ -16,6 +16,11 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    ignore:
+      # jsdom 30 needs Node ^22.22.2 or ^24.15.0, above the floor declared in
+      # package.json "engines". Remove this when the engines floor is raised.
+      - dependency-name: jsdom
+        update-types: ["version-update:semver-major"]
     groups:
       # One PR for all minor and patch bumps; major versions stay separate so
       # each breaking change can be reviewed and tested on its own.
