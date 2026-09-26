@@ -12,7 +12,7 @@ export default function DomainGuidePanel({ guide }: { guide: DomainGuide }) {
   const { t } = useLang();
   return (
     <details className="group bg-slate-900 border border-cyan-900/50 rounded-lg shadow-md overflow-hidden" id={`domain_guide_${guide.domainId}`}>
-      <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500">
+      <summary id={`domain_guide_${guide.domainId}_summary`} className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500">
         <div className="flex items-center gap-3 min-w-0">
           <div className="p-2 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 shrink-0">
             <GraduationCap className="w-5 h-5" />

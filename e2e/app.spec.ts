@@ -222,3 +222,32 @@ test.describe("quiz by objective", () => {
     await expect(page.getByText(`1 DI ${expected}`, { exact: false })).toBeVisible();
   });
 });
+
+test.describe("study paths (Where do I start?)", () => {
+  test("open for a new learner, folded once there is progress", async ({ page }) => {
+    await openApp(page);
+    await expect(page.locator("#study_paths")).toHaveAttribute("open", "");
+    await expect(page.locator("#study_path_beginner")).toHaveAttribute("aria-pressed", "true");
+
+    await page.evaluate(() => localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true })));
+    await page.reload();
+    await expect(page.locator("#domain_guide_1")).toBeVisible();
+    await expect(page.locator("#study_paths")).not.toHaveAttribute("open", "");
+  });
+
+  test("the exam path prepares a 90-question simulation with the timer on", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#study_path_exam").click();
+    await page.locator("#study_path_steps").getByRole("button").first().click();
+    await expect(page.locator("#start_quiz_btn")).toBeFocused();
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("90");
+    await expect(page.locator("#timer_toggle_input")).toBeChecked();
+  });
+
+  test("a guide step opens that domain's guide and moves focus to it", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#study_path_steps").getByRole("button", { name: /Dominio 2/ }).click();
+    await expect(page.locator("#domain_guide_2")).toHaveAttribute("open", "");
+    await expect(page.locator("#domain_guide_2_summary")).toBeFocused();
+  });
+});

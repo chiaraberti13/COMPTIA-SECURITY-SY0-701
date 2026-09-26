@@ -298,7 +298,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Navigazione per i cinque domini:** stesso ordine e stessi nomi in checklist, guide, glossario e simulatore.
 - [ ] 🟡 **P0 — Rendere visibile la copertura:** la matrice per obiettivo è pubblicata e collegata dai README (2026-09-24); resta da mostrarla nell'app, per esempio nella futura vista "Exam readiness". **S**
 - [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi sotto).
-- [ ] **P0 — Percorsi di studio:** principiante, ripasso rapido, preparazione all'esame e consolidamento pratico, come pagina iniziale guidata ("Da dove inizio?"). **M**
+- [x] **P0 — Percorsi di studio:** pannello "Da dove inizio?" in cima all'area di studio (`src/studyPaths.ts`, `StudyPathsPanel`), aperto solo per chi non ha ancora progressi. Offre quattro percorsi (principiante, ripasso rapido, preparazione all'esame, consolidamento pratico) con passi ordinati; ogni pulsante porta alla funzione giusta e sposta lì il focus da tastiera. La preparazione all'esame imposta una simulazione di 90 domande ripartite con i pesi ufficiali (`examBlueprint`: 11/20/16/25/18) e il timer. Parità IT/EN verificata da test; test end-to-end con axe — 2026-09-25.
 - [ ] **P1 — Collegare prerequisiti e passi successivi:** ogni modulo indica cosa conoscere prima e dove proseguire.
 - [ ] 🟡 **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste; manca il collegamento contestuale dei termini dalle sottovoci, dalle spiegazioni dei quiz e dai sotto-argomenti ufficiali mostrati nelle guide.
 - [ ] **P1 — Separare contenuto principale e approfondimenti** con divulgazione progressiva coerente.
@@ -507,6 +507,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-24 | M6 | Esito delle risposte indicato a parole oltre che col colore; verificate icone decorative e assenza di immagini senza testo alternativo | Voci P0 accessibilità | Completato |
 | 2026-09-25 | M2 | Le 6 PR di Dependabot integrate in una: Express 5, Vite 8 con plugin-react 6, motion 13, gruppo minor/patch, Actions `checkout` v7.0.1 e `setup-node` v7.0.0; lockfile con soli pacchetti pubblicati da almeno 7 giorni | Attività n. 4 | Completato |
 | 2026-09-25 | M6 | Quiz per singolo obiettivo ufficiale (28 obiettivi, IT/EN); test del glossario con axe segnato come lento (superava i 30 s con test in parallelo) | Voce P1 quiz per obiettivo | Completato |
+| 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
 
 ---
 
