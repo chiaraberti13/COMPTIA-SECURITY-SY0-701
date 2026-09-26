@@ -50,6 +50,7 @@ import GlossaryHints from "./components/GlossaryHints";
 import { buildAcronymIndex } from "./glossaryIndex";
 import { ACCESS_REQUIRED, aiRequestHeaders } from "./aiAccess";
 import DomainGuidePanel from "./components/DomainGuidePanel";
+import { getDomainRoute } from "./domainRoutes";
 import {
   SECONDS_PER_QUESTION,
   formatClock,
@@ -1242,7 +1243,7 @@ export default function App() {
                     />
 
                     {/* Domain-level learning guide: orientation before individual concepts. */}
-                    <DomainGuidePanel guide={DOMAIN_GUIDE} />
+                    <DomainGuidePanel guide={DOMAIN_GUIDE} route={getDomainRoute(activeDomain, lang)} onAction={runStudyAction} />
                     
                     {/* Topic Header Card */}
                     <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg relative overflow-hidden shadow-md" id="topic_hero_card">

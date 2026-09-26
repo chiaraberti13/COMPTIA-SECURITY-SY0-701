@@ -4,7 +4,7 @@
  * the part of the app it talks about. The two languages must describe the same
  * steps with the same actions (tests/studyPaths.test.ts).
  */
-import type { Lang } from "./i18n";
+import type { Lang, UIKey } from "./i18n";
 
 export type StudyAction =
   | { kind: "guide"; domain: 1 | 2 | 3 | 4 | 5; /** Scroll to this objective, e.g. "4.3". */ objective?: string }
@@ -131,3 +131,25 @@ const EN: StudyPath[] = [
 ];
 
 export const STUDY_PATHS: Record<Lang, StudyPath[]> = { it: IT, en: EN };
+
+/** Label of the button that performs a step's action. */
+export function actionLabel(action: StudyAction, t: (key: UIKey, vars?: Record<string, string | number>) => string): string {
+  switch (action.kind) {
+    case "guide":
+      return action.objective
+        ? t("paths.actGuideObjective", { code: action.objective })
+        : t("paths.actGuide", { n: action.domain });
+    case "glossary":
+      return t("paths.actGlossary");
+    case "quiz":
+      return t(action.preset === "mini" ? "paths.actQuizMini" : "paths.actQuizBalanced");
+    case "exam":
+      return t("paths.actExam");
+    case "review":
+      return t("paths.actReview");
+    case "objective":
+      return t("paths.actObjective");
+    case "ai":
+      return t("paths.actAi");
+  }
+}

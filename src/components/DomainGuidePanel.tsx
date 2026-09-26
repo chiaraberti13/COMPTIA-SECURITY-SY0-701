@@ -1,14 +1,62 @@
-import { Activity, AlertTriangle, ArrowRight, CheckSquare, ChevronRight, GraduationCap, Sparkles } from "lucide-react";
+import { Activity, AlertTriangle, ArrowRight, CheckSquare, ChevronRight, Flag, GraduationCap, Sparkles } from "lucide-react";
 import type { DomainGuide } from "../domainGuides";
+import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
+import { actionLabel, type StudyAction } from "../studyPaths";
+
+/** One list of the route: what to know before the domain, or where to go next. */
+function RouteList({
+  id,
+  title,
+  steps,
+  onAction,
+}: {
+  id: string;
+  title: string;
+  steps: RouteStep[];
+  onAction: (action: StudyAction) => void;
+}) {
+  const { t } = useLang();
+  return (
+    <section className="space-y-3" aria-labelledby={`${id}_title`} id={id}>
+      <h3 id={`${id}_title`} className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{title}</h3>
+      <ul className="space-y-2">
+        {steps.map((step) => (
+          <li key={step.text} className="flex flex-col sm:flex-row sm:items-center gap-2 bg-slate-950/40 border border-slate-800 rounded-md p-3">
+            <p className="flex-1 text-xs text-slate-300 leading-relaxed">{step.text}</p>
+            {step.action && (
+              <button
+                type="button"
+                onClick={() => onAction(step.action!)}
+                className="self-start sm:self-auto shrink-0 min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded border border-cyan-800 bg-cyan-950/40 text-[11px] font-semibold text-cyan-300 hover:bg-cyan-900/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              >
+                {actionLabel(step.action, t)}
+                <ChevronRight className="w-3 h-3" aria-hidden="true" />
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 /**
  * The reasoned guide shown above a domain's study content: purpose, objectives
  * with their official sub-topics, study path, decision patterns, comparison
  * tables, common traps, applied scenario, guided exercises and mastery checks.
- * Optional sections render only when the guide provides them.
+ * Optional sections render only when the guide provides them. The route
+ * frames the guide: what to know before it and where to continue after it.
  */
-export default function DomainGuidePanel({ guide }: { guide: DomainGuide }) {
+export default function DomainGuidePanel({
+  guide,
+  route,
+  onAction,
+}: {
+  guide: DomainGuide;
+  route: DomainRoute;
+  onAction: (action: StudyAction) => void;
+}) {
   const { t } = useLang();
   return (
     <details className="group bg-slate-900 border border-cyan-900/50 rounded-lg shadow-md overflow-hidden" id={`domain_guide_${guide.domainId}`}>
@@ -35,6 +83,8 @@ export default function DomainGuidePanel({ guide }: { guide: DomainGuide }) {
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.guidePurpose")}</h3>
           <p className="text-sm text-slate-300 leading-relaxed border-l-2 border-cyan-500 pl-4">{guide.purpose}</p>
         </section>
+
+        <RouteList id={`guide_before_${guide.domainId}`} title={t("study.routeBefore")} steps={route.before} onAction={onAction} />
 
         <section className="space-y-3">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.objectiveMap")}</h3>
@@ -204,6 +254,13 @@ export default function DomainGuidePanel({ guide }: { guide: DomainGuide }) {
             ))}
           </ul>
         </section>
+
+        <div className="border-t border-slate-800 pt-6 flex gap-3">
+          <Flag className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />
+          <div className="flex-1 min-w-0">
+            <RouteList id={`guide_next_${guide.domainId}`} title={t("study.routeNext")} steps={route.next} onAction={onAction} />
+          </div>
+        </div>
       </div>
     </details>
   );

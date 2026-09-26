@@ -1,27 +1,7 @@
 import { useState } from "react";
 import { ChevronRight, Compass } from "lucide-react";
-import { useLang, type UIKey } from "../i18n";
-import { STUDY_PATHS, type StudyAction, type StudyPathId } from "../studyPaths";
-
-/** Label of the button that performs a step's action. */
-function actionLabel(action: StudyAction, t: (key: UIKey, vars?: Record<string, string | number>) => string): string {
-  switch (action.kind) {
-    case "guide":
-      return t("paths.actGuide", { n: action.domain });
-    case "glossary":
-      return t("paths.actGlossary");
-    case "quiz":
-      return t(action.preset === "mini" ? "paths.actQuizMini" : "paths.actQuizBalanced");
-    case "exam":
-      return t("paths.actExam");
-    case "review":
-      return t("paths.actReview");
-    case "objective":
-      return t("paths.actObjective");
-    case "ai":
-      return t("paths.actAi");
-  }
-}
+import { useLang } from "../i18n";
+import { STUDY_PATHS, actionLabel, type StudyAction, type StudyPathId } from "../studyPaths";
 
 /**
  * "Where do I start?": four guided study paths. Each step can jump to the part

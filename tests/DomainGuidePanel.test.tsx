@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import DomainGuidePanel from "../src/components/DomainGuidePanel";
 import { DOMAIN_GUIDES_IT, type DomainGuide } from "../src/domainGuides";
+import { getDomainRoute } from "../src/domainRoutes";
 import { LanguageProvider } from "../src/i18n";
 
 /*
@@ -13,10 +14,10 @@ import { LanguageProvider } from "../src/i18n";
 beforeEach(() => localStorage.setItem("comptia_sy0701_lang", "it"));
 afterEach(cleanup);
 
-function renderGuide(guide: DomainGuide) {
+function renderGuide(guide: DomainGuide, onAction = vi.fn()) {
   const view = render(
     <LanguageProvider>
-      <DomainGuidePanel guide={guide} />
+      <DomainGuidePanel guide={guide} route={getDomainRoute(guide.domainId, "it")} onAction={onAction} />
     </LanguageProvider>
   );
   return view.container.querySelector(`#domain_guide_${guide.domainId}`) as HTMLDetailsElement;
@@ -84,5 +85,18 @@ describe("DomainGuidePanel", () => {
     expect(within(panel).queryByRole("list", { name: /Argomenti ufficiali/ })).toBeNull();
     // The mandatory sections are still there.
     expect(within(panel).getByText(minimal.appliedScenario.title, { exact: false })).toBeTruthy();
+  });
+
+  it("frames the guide with what to know before and where to go next, each link a named button", () => {
+    const onAction = vi.fn();
+    renderGuide(guide, onAction);
+    const before = screen.getByRole("region", { name: "Prima di iniziare" });
+    const next = screen.getByRole("region", { name: "Dove proseguire" });
+    const route = getDomainRoute(1, "it");
+    expect(within(before).getAllByRole("listitem")).toHaveLength(route.before.length);
+    expect(within(next).getAllByRole("listitem")).toHaveLength(route.next.length);
+
+    fireEvent.click(within(next).getByRole("button", { name: "Vai all'obiettivo 3.3" }));
+    expect(onAction).toHaveBeenCalledWith({ kind: "guide", domain: 3, objective: "3.3" });
   });
 });
