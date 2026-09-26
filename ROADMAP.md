@@ -241,7 +241,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **LLM01 — Prompt injection (mitigazione di base):** il system prompt dichiara che i messaggi e gli argomenti dell'utente sono dati, non istruzioni.
 - [x] **LLM05 — Gestione dell'output:** la remediation usa uno schema JSON e l'output è validato da `validateRemediationPayload` prima dell'uso.
 - [x] **LLM10 — Consumo illimitato:** rate limit per IP, limiti sugli input, timeout, `maxOutputTokens` su entrambi gli endpoint e tetto giornaliero complessivo — 2026-09-24.
-- [ ] **P1 — Suite di test anti-injection:** raccolta di prompt malevoli noti eseguita contro il client simulato per verificare che le regole non vengano aggirate e che l'output resti valido. **M**
+- [x] **P1 — Suite di test anti-injection:** `tests/promptInjection.test.ts` invia 11 attacchi noti al server reale con un client Gemini simulato: sostituzione delle regole, cambio di ruolo, tag di chiusura falsificati (maiuscole, spazi, parentesi a larghezza piena, caratteri invisibili, frammenti annidati), turni di dialogo inventati, HTML e script, richieste di rivelare il prompt. Verifica che le regole restino identiche e che ogni attacco resti nel suo tag. Nuova difesa: *spotlighting* in `server/promptSafety.ts` per domanda, cronologia e argomenti della remediation. Con i test di mutazione, ogni difesa rimossa fa fallire la suite. Un test end-to-end verifica che HTML, script e link `javascript:` in una risposta AI siano mostrati come testo e mai eseguiti — 2026-09-26.
 - [x] **P1 — Avviso trasparente nell'interfaccia:** avviso sempre visibile nel pannello del Trainer AI (le risposte possono essere sbagliate, non sostituiscono gli obiettivi ufficiali, niente dati personali), verificato da un test end-to-end — 2026-09-24.
 - [ ] 🟡 **P1 — Revisione umana delle domande AI:** ogni domanda di remediation mostra che è generata dall'AI e non revisionata (2026-09-24); non entra nella banca domande, perché resta solo nella sessione del browser. Manca un flusso per proporre una domanda generata alla revisione.
 - [ ] **P2 — Astrazione del provider AI:** interfaccia unica per poter cambiare modello o fornitore senza toccare le route.
@@ -514,6 +514,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-26 | M6 | Fine del quiz per obiettivo collegata alla guida; lo scorrimento verso un elemento si ferma sotto l'intestazione fissa | Voce P1 quiz per obiettivo | Completato |
 | 2026-09-26 | M7 | Versione e migrazioni testate per i dati salvati nel browser | Voce P1 schema dei dati salvati | Completato |
 | 2026-09-26 | M6 | Termini del glossario nel quiz e nelle sottovoci; corretto il pannello del simulatore la cui parte alta era irraggiungibile | Voce P1 glossario | Completato |
+| 2026-09-26 | M3 | Spotlighting dei testi dell'utente nei prompt e suite anti-injection con 11 attacchi; output AI ostile verificato come testo inerte | Voce P1 suite anti-injection | Completato |
 
 ---
 
