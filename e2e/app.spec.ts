@@ -424,3 +424,51 @@ test.describe("domain routes (before you start, where to go next)", () => {
     await expect(page.locator("#guide_objective_1_4")).toBeFocused();
   });
 });
+
+test.describe("adaptive remediation", () => {
+  const aiQuestion = (i: number) => ({
+    id: 9_000_000 + i,
+    topic: `Topic ${i}`,
+    level: "ANALISI",
+    scenario: `A business scenario number ${i}.`,
+    question: `Which is the BEST option ${i}?`,
+    options: ["A", "B", "C", "D"],
+    answerIndex: 0,
+    explanation: `A is best in scenario ${i}.`,
+  });
+
+  test("after a run, the AI questions can be answered with the keyboard, then the results come back", async ({ page }) => {
+    await page.route("**/api/quiz/remediation", (route) =>
+      route.fulfill({ status: 200, json: { questions: [0, 1, 2].map(aiQuestion) } })
+    );
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.getByRole("button", { name: /Mini/ }).first().click();
+    await page.locator("#start_quiz_btn").click();
+
+    // Answer every question with the last options: some will be wrong.
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press("4");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("3");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+
+    await page.locator("#trigger_remediation_btn").click();
+    await expect(page.locator("#remediation_question_screen")).toBeVisible();
+    await expect(page.locator("#remediation_ai_notice")).toBeVisible();
+
+    for (let i = 0; i < 3; i++) {
+      await expect(page.locator("#remediation_q_header")).toContainText(`${i + 1}`);
+      await page.keyboard.press("1");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#remediation_ended_screen")).toBeVisible();
+    await expect(page.locator("#remediation_score_digits")).toHaveText("3 / 3");
+
+    await page.locator("#remediation_end_btn").click();
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+  });
+});
