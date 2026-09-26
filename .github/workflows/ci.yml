@@ -97,3 +97,37 @@ jobs:
           name: playwright-traces
           path: test-results/
           retention-days: 7
+
+  container:
+    name: Container image (build, hardened run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build the image
+        run: docker build --tag comptia-sy0701:ci .
+
+      # The same flags the README recommends: read-only root filesystem, no
+      # Linux capabilities, no privilege escalation. The app must work with
+      # all of them, and must not run as root.
+      - name: Run it hardened and probe it
+        run: |
+          docker run --detach --name app --publish 3000:3000 \
+            --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+            --env AI_DAILY_LIMIT=0 comptia-sy0701:ci
+          for i in $(seq 1 30); do curl --silent --fail http://127.0.0.1:3000/healthz && break; sleep 1; done
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/)" = 200
+          curl --silent --head http://127.0.0.1:3000/ | grep --ignore-case "content-security-policy: default-src 'self'"
+          test "$(docker inspect app --format '{{.Config.User}}')" = nonroot
+          docker exec app /nodejs/bin/node -e 'process.exit(process.getuid() === 0 ? 1 : 0)'
+
+      - name: Stops cleanly on SIGTERM
+        run: |
+          docker stop --time 10 app
+          test "$(docker inspect app --format '{{.State.ExitCode}}')" = 0
+
+      - name: Container logs
+        if: always()
+        run: docker logs app || true

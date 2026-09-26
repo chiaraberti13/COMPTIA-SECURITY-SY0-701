@@ -27,6 +27,7 @@
 - **[Gemini API key](#gemini-api-key)** — How to get the free key the AI features use.
 - **[Environment variables](#environment-variables)** — The `.env` file the app reads.
 - **[Installation](#installation)** — Step-by-step for Linux, macOS and Windows.
+- **[Container](#container)** — A hardened Docker image for self-hosting.
 - **[Scripts](#scripts)** — The npm commands and what each one does.
 - **[Architecture](#architecture)** — Where the code lives in the repo.
 - **[Troubleshooting](#troubleshooting)** — Fixes for the two errors you're most likely to hit.
@@ -206,6 +207,33 @@ npm run build ; npm start
 
 **WSL2:** open your WSL shell (e.g. Ubuntu) and follow the Linux steps above — the app maps
 to `http://localhost:3000` in your Windows browser automatically.
+
+## Container
+
+The `Dockerfile` builds a production image meant for self-hosting:
+
+- **multi-stage:** the build tools stay in the first stage; the image ships only
+  `dist/`, with the server bundled together with the libraries it uses;
+- **distroless runtime** (`gcr.io/distroless/nodejs24-debian12`): no shell, no package
+  manager, about 220 MB;
+- **non-root** user (`nonroot`, uid 65532), files owned by root, so the app cannot
+  modify its own code;
+- base images **pinned by digest** and updated by Dependabot;
+- a `HEALTHCHECK` on `/healthz` and a clean exit on `docker stop`.
+
+```bash
+docker build -t comptia-sy0701 .
+docker run --rm -p 3000:3000 \
+  --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  -e GEMINI_API_KEY=your-key \
+  comptia-sy0701
+```
+
+`--read-only` makes the whole filesystem read-only, `--cap-drop=ALL` removes every Linux
+capability and `no-new-privileges` blocks privilege escalation: the app works with all
+three, and CI checks it on every change. The environment variables are the ones listed in
+[Environment variables](#environment-variables); pass them with `-e` or `--env-file`,
+never bake them into the image.
 
 ## Scripts
 

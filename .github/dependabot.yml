@@ -37,3 +37,15 @@ updates:
         patterns: ["*"]
     commit-message:
       prefix: "ci"
+
+  # Base images of the Dockerfile, pinned by digest: Dependabot proposes the new
+  # digest (and tag) when the image is rebuilt with security fixes.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(docker)"
