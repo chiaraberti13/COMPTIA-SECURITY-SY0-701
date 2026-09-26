@@ -33,6 +33,7 @@ import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
+import { computeReadiness } from "./readiness";
 import {
   shuffle,
   selectDueReviewQuestions,
@@ -207,14 +208,25 @@ export default function App() {
   const NEW_QUESTIONS = DOMAIN_1_QUESTIONS.filter(q => q.id >= questionUid(1, 141) && q.id <= questionUid(1, 150));
   const handleStartNewQuestions = () => beginQuizRun(NEW_QUESTIONS);
 
-  const handleStartObjectiveQuiz = () => {
-    const ids = new Set(questionsByObjective.get(objectiveChoice) ?? []);
+  const handleStartObjectiveQuiz = (code: string = objectiveChoice) => {
+    const ids = new Set(questionsByObjective.get(code) ?? []);
     const questions = ALL_QUESTIONS.filter(q => ids.has(q.id));
     if (questions.length === 0) return;
     setQuizFocus("objective");
     beginQuizRun(shuffle(questions));
-    setActiveObjective(objectiveChoice);
+    setActiveObjective(code);
   };
+
+  // "Train objective X" from the readiness view: the same run as choosing it in the list.
+  const handleTrainObjective = (code: string) => {
+    setObjectiveChoice(code);
+    handleStartObjectiveQuiz(code);
+  };
+
+  const readiness = useMemo(
+    () => computeReadiness({ questions: ALL_QUESTIONS, progress: questionProgress, questionsByObjective }),
+    [ALL_QUESTIONS, questionProgress, questionsByObjective]
+  );
 
   const handleStartSmartReview = () => {
     if (dueReviewQuestions.length === 0) return;
@@ -288,7 +300,7 @@ export default function App() {
 
   // The set-up screen: preset, questions per domain, chosen objective.
   const setup = useQuizSetup({ maxByDomain: maxQuestionsByDomain });
-  const { setQuizFocus, objectiveChoice } = setup;
+  const { setQuizFocus, objectiveChoice, setObjectiveChoice } = setup;
   const applyPreset = setup.applyPreset;
 
   /**
@@ -404,7 +416,7 @@ export default function App() {
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
 
               {!quizStarted ? (
-                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} questionsByObjective={questionsByObjective} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={handleStartObjectiveQuiz} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} />
+                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} questionsByObjective={questionsByObjective} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
               ) : quizCompleted && !remediationActive ? (
                 /* Completed Screen. The remediation starts from here, so while
                    it runs its questions are shown instead (next branch). */

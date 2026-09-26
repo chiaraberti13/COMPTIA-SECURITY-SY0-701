@@ -472,3 +472,47 @@ test.describe("adaptive remediation", () => {
     await expect(page.locator("#quiz_completed_screen")).toBeVisible();
   });
 });
+
+test.describe("exam readiness", () => {
+  /** Answers every question of the run on screen with the first option(s). */
+  async function answerAll(page: Page) {
+    while (await page.locator("#quiz_confirm_btn").isVisible()) {
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+  }
+
+  test("before any answer it says so; after a run it shows progress and trains the weakest objective", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    const panel = page.locator("#readiness_panel");
+    await expect(panel).not.toHaveAttribute("open", "");
+    await panel.locator(":scope > summary").click();
+    await expect(page.locator("#readiness_empty")).toBeVisible();
+    await expect(page.locator("#readiness_accuracy")).toContainText("n.d.");
+
+    await page.locator("#objective_select").selectOption("1.1");
+    await page.locator("#objective_start_btn").click();
+    await answerAll(page);
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+
+    // Progress is read back from this browser's storage.
+    await page.reload();
+    await page.locator("#tab_btn_quiz").click();
+    await expect(panel).toHaveAttribute("open", "");
+    await expect(page.locator("#readiness_accuracy")).toContainText("%");
+    // Domain 1 now has answers, in the table (desktop) or the cards (phone).
+    await expect(page.locator("#readiness_domains tbody tr, #readiness_domain_cards li").filter({ visible: true }).first()).toContainText(/[1-9]\d* su \d+/);
+    await expect(page.locator("#readiness_untouched")).toContainText("su 28");
+    expect(await seriousViolations(page)).toEqual([]);
+
+    const train = page.locator("#readiness_weak_list").getByRole("button", { name: "Allena l'obiettivo 1.1" });
+    await expect(train).toBeVisible();
+    await train.click();
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await answerAll(page);
+    await expect(page.locator("#objective_followup_btn")).toContainText("1.1");
+  });
+});

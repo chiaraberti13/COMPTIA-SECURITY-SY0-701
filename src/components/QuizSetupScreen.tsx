@@ -4,6 +4,8 @@ import React from "react";
 import { TrendingUp, Check, ChevronRight, RefreshCw, Activity } from "lucide-react";
 import { ALL_OBJECTIVES } from "../questionObjectives";
 import type { Question } from "../types";
+import type { Readiness } from "../readiness";
+import ReadinessPanel from "./ReadinessPanel";
 import { useLang, type UIKey } from "../i18n";
 import DataControls from "./DataControls";
 import type { QuizPreset } from "../hooks/useQuizSetup";
@@ -14,7 +16,7 @@ import { SECONDS_PER_QUESTION, scorePercent, summarizeWeakTopics } from "../quiz
  * questions, presets and questions per domain, the exam timer, the start
  * button, the local history and "Your data".
  */
-export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, questionsByObjective, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions }: {
+export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, questionsByObjective, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
   quiz: QuizSession;
   setup: QuizSetup;
   maxQuestionsByDomain: DomainCounts;
@@ -27,6 +29,8 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
   onClearHistory: () => void;
   onStartNewQuestions: () => void;
   onShowNewQuestions: () => void;
+  readiness: Readiness;
+  onTrainObjective: (code: string) => void;
 }) {
   const { t, lang } = useLang();
   const { quizHistory, timerEnabled, setTimerEnabled } = quiz;
@@ -69,6 +73,9 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
           </p>
         </div>
       </div>
+
+      {/* Accuracy and coverage by domain and objective, from the saved progress. */}
+      <ReadinessPanel readiness={readiness} onTrainObjective={onTrainObjective} />
 
       {/* Local, privacy-first spaced repetition queue. */}
       <div className="bg-cyan-950/20 border border-cyan-500/25 p-4 rounded-lg" id="smart_review_box">
