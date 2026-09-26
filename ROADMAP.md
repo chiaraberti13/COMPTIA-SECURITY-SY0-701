@@ -300,7 +300,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi sotto).
 - [x] **P0 — Percorsi di studio:** pannello "Da dove inizio?" in cima all'area di studio (`src/studyPaths.ts`, `StudyPathsPanel`), aperto solo per chi non ha ancora progressi. Offre quattro percorsi (principiante, ripasso rapido, preparazione all'esame, consolidamento pratico) con passi ordinati; ogni pulsante porta alla funzione giusta e sposta lì il focus da tastiera. La preparazione all'esame imposta una simulazione di 90 domande ripartite con i pesi ufficiali (`examBlueprint`: 11/20/16/25/18) e il timer, al ritmo dell'esame reale: 1 minuto per domanda, 90 minuti in tutto (prima erano 2 minuti per domanda). Parità IT/EN verificata da test; test end-to-end con axe — 2026-09-25.
 - [ ] **P1 — Collegare prerequisiti e passi successivi:** ogni modulo indica cosa conoscere prima e dove proseguire.
-- [ ] 🟡 **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste; manca il collegamento contestuale dei termini dalle sottovoci, dalle spiegazioni dei quiz e dai sotto-argomenti ufficiali mostrati nelle guide.
+- [ ] 🟡 **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste. Dal 2026-09-26 gli acronimi del glossario citati in una domanda (scenario, testo, spiegazione) o in una sottovoce compaiono come "Termini del glossario citati"; un tocco mostra definizione e consiglio d'esame sul posto (`src/glossaryIndex.ts`, `GlossaryHints`). Sono 83 acronimi, quelli ambigui esclusi (per esempio MAC), e circa il 43% delle domande ha almeno un termine collegato. Restano i nomi completi, non solo gli acronimi, e i sotto-argomenti ufficiali delle guide.
 - [ ] **P1 — Separare contenuto principale e approfondimenti** con divulgazione progressiva coerente.
 - [ ] **P2 — Vista "Exam readiness":** progressi per dominio e per obiettivo, pesati con `OFFICIAL_DOMAIN_WEIGHTS`, punti deboli e domande in scadenza per il ripasso.
 
@@ -513,6 +513,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-26 | M2 | OpenSSF Scorecard settimanale con badge, SBOM CycloneDX a ogni build | Voci P1 Scorecard e SBOM | Completato |
 | 2026-09-26 | M6 | Fine del quiz per obiettivo collegata alla guida; lo scorrimento verso un elemento si ferma sotto l'intestazione fissa | Voce P1 quiz per obiettivo | Completato |
 | 2026-09-26 | M7 | Versione e migrazioni testate per i dati salvati nel browser | Voce P1 schema dei dati salvati | Completato |
+| 2026-09-26 | M6 | Termini del glossario nel quiz e nelle sottovoci; corretto il pannello del simulatore la cui parte alta era irraggiungibile | Voce P1 glossario | Completato |
 
 ---
 

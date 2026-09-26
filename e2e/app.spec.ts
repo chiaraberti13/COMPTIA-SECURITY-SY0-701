@@ -36,6 +36,21 @@ test.describe("layout", () => {
   });
 });
 
+test.describe("layout: simulator", () => {
+  test("the top of the quiz panel can always be reached by scrolling", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await expect(page.locator("#start_quiz_btn")).toBeAttached();
+    // Regression guard: a centred flex scroller once cut off the top of the
+    // set-up on phones, above the scroll origin where no scrolling reaches.
+    const [container, panel] = await Promise.all([
+      page.locator("#quiz_layout").boundingBox(),
+      page.locator("#quiz_panel_container").boundingBox(),
+    ]);
+    expect(panel!.y).toBeGreaterThanOrEqual(container!.y);
+  });
+});
+
 test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
   test("study view with the domain guide open", async ({ page }) => {
     await openApp(page);
@@ -307,5 +322,33 @@ test.describe("AI access code", () => {
     await page.locator("#chat_submit_btn").click();
     await expect(page.locator("#ai_sidebar")).toContainText("Risposta sbloccata");
     expect(sentCodes).toEqual([undefined, "correct-horse-battery-staple"]);
+  });
+});
+
+test.describe("glossary terms in context", () => {
+  test("after an answer, a glossary acronym shows its definition in place", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#objective_select").selectOption("4.4"); // alerting and monitoring: SIEM, SOAR, ...
+    await page.locator("#objective_start_btn").click();
+
+    const hints = page.locator("#quiz_glossary_hints");
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      if (await hints.isVisible()) break;
+      await page.keyboard.press("Enter");
+    }
+    await expect(hints).toBeVisible();
+
+    const chip = hints.getByRole("button").first();
+    await expect(chip).toHaveAttribute("aria-expanded", "false");
+    await chip.click();
+    await expect(chip).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#quiz_glossary_definition")).not.toBeEmpty();
+    expect(await seriousViolations(page)).toEqual([]);
   });
 });
