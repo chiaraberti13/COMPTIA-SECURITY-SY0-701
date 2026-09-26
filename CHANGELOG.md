@@ -38,6 +38,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- The adaptive remediation moved out of `App.tsx` into the `useRemediation` hook, with 5 hook tests; HTML, API requests and saved progress are identical in 27 deterministic states.
 - The simulator run moved out of `App.tsx` into the `useQuizSession` hook: questions, answers, score, exam timer, review, history and saved progress. The questions follow the language as derived state instead of an effect, and the timer ends the run from its own callback. HTML and saved progress are identical in 15 deterministic states; 6 hook tests cover the run, the timer expiry and pause, and the language switch.
 - The AI Trainer moved out of `App.tsx` into `AiTrainerPanel`, the `useAiChat` hook and a `MarkdownText` component, with 7 component tests; the rendered HTML is byte-for-byte identical in 8 states. The checklist progress is now read on the first render instead of in an effect.
 - Main menu on phones and tablets: the four sections (Study, Glossary, Simulator, AI Trainer) are equal columns with an icon and a short label, all visible without scrolling the menu sideways; the language switch sits next to the title. The "S+" logo is replaced by a shield icon, the same one as the new favicon, now also served as `favicon.ico`, iOS home-screen icon and web app manifest icons. Before, `/favicon.ico` answered with the app page.
