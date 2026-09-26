@@ -107,6 +107,7 @@ APP_URL="http://localhost:3000"
 AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 turns the AI off
 GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
 TRUST_PROXY=1             # reverse proxies in front of Node; 0 if browsers connect directly
+AI_ACCESS_TOKEN=          # optional: the AI answers only visitors who enter this code
 ```
 
 `AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
@@ -118,6 +119,11 @@ multiplied by the number of instances.
 reverse proxy (Cloud Run, Vercel, Render, a single nginx). Set `0` when browsers reach
 Node directly: otherwise a client can send a made-up `X-Forwarded-For` header and get a
 fresh quota on every request.
+
+`AI_ACCESS_TOKEN` protects the Gemini budget of a public site: visitors can study freely,
+but the AI Trainer and the adaptive remediation ask for the code first. Generate a long
+random one, for example with `openssl rand -base64 24`, and share it only with the people
+who should use the AI. The browser keeps it for the current tab only.
 
 > [!WARNING]
 > Never commit your `.env` to a public repository — it holds a private API credential.

@@ -39,6 +39,12 @@ const TRUST_PROXY_HOPS = readLimit(process.env.TRUST_PROXY, 1);
 
 const logger = createJsonLogger();
 
+/**
+ * Optional access code for the AI endpoints on a public deployment. Empty or
+ * unset: the AI stays open, protected by the rate limit and the daily budget.
+ */
+const AI_ACCESS_TOKEN = process.env.AI_ACCESS_TOKEN?.trim() || undefined;
+
 async function startServer() {
   // PaaS platforms (Cloud Run, Render, Railway, Heroku) impose the port through
   // the environment and health-check the container on it.
@@ -51,6 +57,7 @@ async function startServer() {
     budget: aiBudget,
     trustProxyHops: TRUST_PROXY_HOPS,
     logger,
+    accessToken: AI_ACCESS_TOKEN,
     getApiKey: () => process.env.GEMINI_API_KEY,
     createClient: (apiKey) => new GoogleGenAI({ apiKey }),
   });
@@ -74,7 +81,12 @@ async function startServer() {
       aiDailyLimit: aiBudget.limit,
       trustProxyHops: TRUST_PROXY_HOPS,
       apiKeyConfigured: Boolean(process.env.GEMINI_API_KEY),
+      aiAccessCodeRequired: Boolean(AI_ACCESS_TOKEN),
     });
+    // A short code can be guessed despite the rate limit.
+    if (AI_ACCESS_TOKEN && AI_ACCESS_TOKEN.length < 16) {
+      logger.log("warn", "ai_access_token_weak", { minLength: 16 });
+    }
   });
 
   // Graceful shutdown: PaaS platforms send SIGTERM before stopping a container.

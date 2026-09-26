@@ -45,6 +45,8 @@ import { STORAGE_KEYS, readJSON, writeJSON, removeKey } from "./storage";
 import { sanitizeChecklist } from "./progressBackup";
 import DataControls from "./components/DataControls";
 import OptionVerdict from "./components/OptionVerdict";
+import AiAccessForm from "./components/AiAccessForm";
+import { ACCESS_REQUIRED, aiRequestHeaders } from "./aiAccess";
 import DomainGuidePanel from "./components/DomainGuidePanel";
 import {
   SECONDS_PER_QUESTION,
@@ -114,6 +116,9 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth >= 1024
   );
+
+  // True after the server answered that the AI needs an access code.
+  const [aiLocked, setAiLocked] = useState(false);
 
   // Inline notification, replacing window.alert().
   const [toast, setToast] = useState<string | null>(null);
@@ -416,11 +421,21 @@ export default function App() {
 
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: aiRequestHeaders(),
         body: JSON.stringify({ message: text, history, lang })
       });
 
       const data = await res.json();
+      if (res.status === 401 && data.code === ACCESS_REQUIRED) {
+        setAiLocked(true);
+        setChatMessages(prev => [...prev, {
+          id: Math.random().toString(),
+          sender: "system",
+          text: t("chat.accessRequired"),
+          timestamp: new Date()
+        }]);
+        return;
+      }
       if (data.error) {
         throw new Error(data.error);
       }
@@ -632,11 +647,15 @@ export default function App() {
     try {
       const res = await fetch("/api/quiz/remediation", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: aiRequestHeaders(),
         body: JSON.stringify({ weakTopics: uniqueWeakTopics, lang })
       });
 
       const data = await res.json();
+      if (res.status === 401 && data.code === ACCESS_REQUIRED) {
+        setAiLocked(true);
+        throw new Error(t("rem.accessRequired"));
+      }
       if (res.status !== 200 || data.error) {
         throw new Error(data.error || t("rem.cannotRetrieve"));
       }
@@ -2419,7 +2438,15 @@ export default function App() {
               </p>
 
               {/* Chat messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat_messages_area">
+              <div
+                className="flex-1 overflow-y-auto p-4 space-y-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500"
+                id="chat_messages_area"
+                // A chat log: reachable by keyboard to scroll it, and new
+                // messages are announced politely to screen readers.
+                role="log"
+                aria-label={t("a11y.chatLog")}
+                tabIndex={0}
+              >
                 {chatMessages.map((msg, i) => {
                   const isTrainer = msg.sender === "trainer";
                   const isSystem = msg.sender === "system";
@@ -2439,7 +2466,7 @@ export default function App() {
                         ) : (
                           <p>{msg.text}</p>
                         )}
-                        <span className="block text-[9px] text-slate-400 mt-1 text-right font-mono select-none">
+                        <span className={`block text-[9px] mt-1 text-right font-mono select-none ${!isTrainer && !isSystem ? "text-cyan-100" : "text-slate-400"}`}>
                           {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
@@ -2505,6 +2532,20 @@ export default function App() {
                   </button>
                 </div>
               </div>
+
+              {aiLocked && (
+                <AiAccessForm
+                  onSaved={() => {
+                    setAiLocked(false);
+                    setChatMessages(prev => [...prev, {
+                      id: Math.random().toString(),
+                      sender: "system",
+                      text: t("chat.accessSaved"),
+                      timestamp: new Date()
+                    }]);
+                  }}
+                />
+              )}
 
               {/* Chat Input form */}
               <div className="p-3 border-t border-slate-800 bg-slate-950" id="chat_input_panel">

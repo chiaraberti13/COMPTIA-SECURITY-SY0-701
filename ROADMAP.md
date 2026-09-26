@@ -232,7 +232,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P1 — Log strutturati:** `server/log.ts` scrive una riga JSON per evento (avvio con la configurazione, ogni richiesta `/api/` con metodo, percorso senza query, stato e millisecondi, errori di Gemini con tipo e dettaglio ripulito dalle chiavi, arresto). Mai testo dell'utente, argomenti, IP o chiavi: test dedicati, e lo smoke test fallisce se una riga non è JSON o contiene la chiave. Senza nuove dipendenze; `dotenv` reso silenzioso perché la sua riga promozionale rompeva il formato — 2026-09-24.
 - [x] **P1 — Irrigidire la CSP:** font Inter e JetBrains Mono inclusi nel bundle (Fontsource 5.3.0, SIL OFL 1.1) al posto di Google Fonts, mai incorporati come `data:`; tolti `fonts.googleapis.com`, `fonts.gstatic.com` e `'unsafe-inline'`; aggiunti `base-uri 'self'` e `form-action 'self'`. Un test end-to-end percorre studio, guida, glossario e quiz e fallisce a ogni violazione della CSP o richiesta verso un'altra origine; lo smoke test verifica le direttive — 2026-09-24.
 - [ ] **P1 — Validazione degli input con schema** (es. Zod) condiviso tra client e server al posto dei controlli manuali. **M**
-- [ ] **P1 — Protezione minima degli endpoint AI in deploy pubblici:** opzione per richiedere un token d'accesso o disattivare l'AI via variabile d'ambiente. **M**
+- [x] **P1 — Protezione minima degli endpoint AI in deploy pubblici:** `AI_DAILY_LIMIT=0` spegne l'AI; `AI_ACCESS_TOKEN` la limita a chi conosce un codice, inviato nell'intestazione `X-Access-Token`. Il confronto avviene in tempo costante sugli hash SHA-256, dopo il rate limit (i tentativi sono limitati) e prima di Gemini; risponde 401 con un codice d'errore. L'app chiede il codice nel pannello del Trainer AI e lo conserva solo nella scheda (`sessionStorage`); il server avvisa nei log se il codice è più corto di 16 caratteri. 8 test API e un test end-to-end. Nello stesso lavoro, corretti due difetti di accessibilità della chat trovati dal test: contrasto dell'orario dei messaggi e area dei messaggi non raggiungibile da tastiera (ora `role="log"`) — 2026-09-26.
 - [ ] **P1 — Container di deploy sicuro:** `Dockerfile` multi-stage, utente non root, filesystem in sola lettura, immagine base minimale e versione fissata. **M**
 - [x] **P1 — Migrazione a Express 5:** completata il 2026-09-25, vedi [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze), perché Dependabot l'ha già proposta.
 
@@ -509,6 +509,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-25 | M6 | Quiz per singolo obiettivo ufficiale (28 obiettivi, IT/EN); test del glossario con axe segnato come lento (superava i 30 s con test in parallelo) | Voce P1 quiz per obiettivo | Completato |
 | 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
 | 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
+| 2026-09-26 | M3 | Codice di accesso facoltativo per le funzioni AI (`AI_ACCESS_TOKEN`) e chat accessibile da tastiera | Voce P1 protezione degli endpoint AI | Completato |
 
 ---
 

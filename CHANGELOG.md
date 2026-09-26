@@ -42,11 +42,13 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Security
 
+- Optional access code for the AI features (`AI_ACCESS_TOKEN`). When it is set, the AI endpoints answer only requests with the right `X-Access-Token`: the code is compared in constant time, wrong guesses count against the rate limit, and it never appears in the logs. The app asks for the code in the AI Trainer and keeps it only for the current tab.
 - `TRUST_PROXY` sets how many reverse proxies the rate limit trusts (default 1). With `0`, a server that clients reach directly can no longer be tricked by a made-up `X-Forwarded-For` header into giving a fresh quota to every request.
 - The Content-Security-Policy allows styles, fonts and scripts from the app itself only: no `'unsafe-inline'`, no Google Fonts, plus `base-uri 'self'` and `form-action 'self'`. The fonts are bundled (Fontsource, SIL OFL 1.1), so no visitor's IP address reaches a third party. An end-to-end test fails on any policy violation or third-party request.
 
 ### Fixed
 
+- The AI chat can be scrolled with the keyboard and announces new messages to screen readers (`role="log"`); the time under your own messages now has enough contrast.
 - Right and wrong answers were shown by colour alone: options now say "Correct answer" and "Your answer" in words, and the answer review says "Correct", "Incorrect" or "Not answered" (WCAG 1.4.1).
 - The study area collapsed to zero height on phones; it now fills the screen below the checklist.
 - The SPA fallback route and the API body handling now work on both Express 4 and 5 (Express 5 refused to start with `app.get("*")` and answered 502 instead of 400 to requests without a body).

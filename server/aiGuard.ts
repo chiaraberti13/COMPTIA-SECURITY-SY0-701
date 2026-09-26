@@ -8,6 +8,8 @@
  * per UTC day, whoever asks.
  */
 
+import { createHash, timingSafeEqual } from "node:crypto";
+
 /**
  * Reads a non-negative integer from an environment value. Anything missing,
  * empty, negative or not a whole number falls back to the default, so a typo in
@@ -60,4 +62,16 @@ export function createDailyBudget(limit: number): DailyBudget {
       return Math.max(0, limit - used);
     },
   };
+}
+
+/**
+ * Compares a presented access token with the configured one in constant time,
+ * so response timing does not reveal how many leading characters matched.
+ * Both sides are hashed first: timingSafeEqual needs equal lengths, and the
+ * length of the real token must not leak either.
+ */
+export function tokenMatches(presented: unknown, expected: string): boolean {
+  if (typeof presented !== "string" || presented.length === 0 || presented.length > 256) return false;
+  const digest = (value: string) => createHash("sha256").update(value, "utf8").digest();
+  return timingSafeEqual(digest(presented), digest(expected));
 }

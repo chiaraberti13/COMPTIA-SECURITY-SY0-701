@@ -252,3 +252,36 @@ test.describe("study paths (Where do I start?)", () => {
     await expect(page.locator("#domain_guide_2_summary")).toBeFocused();
   });
 });
+
+test.describe("AI access code", () => {
+  test("asks for the code when the server requires it, then sends it with the next question", async ({ page }) => {
+    const sentCodes: (string | undefined)[] = [];
+    await page.route("**/api/chat", async (route) => {
+      const code = route.request().headers()["x-access-token"];
+      sentCodes.push(code);
+      if (code !== "correct-horse-battery-staple") {
+        await route.fulfill({ status: 401, json: { code: "access_token_required", error: "code needed" } });
+      } else {
+        await route.fulfill({ status: 200, json: { reply: "Risposta sbloccata" } });
+      }
+    });
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await expect(page.locator("#ai_access_form")).toHaveCount(0);
+
+    await page.locator("#chat_text_input").fill("Che cos'è l'ALE?");
+    await page.locator("#chat_submit_btn").click();
+    await expect(page.locator("#ai_access_form")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+
+    await page.locator("#ai_access_input").fill("correct-horse-battery-staple");
+    await page.locator("#ai_access_submit").click();
+    await expect(page.locator("#ai_access_form")).toHaveCount(0);
+
+    await page.locator("#chat_text_input").fill("Che cos'è l'ALE?");
+    await page.locator("#chat_submit_btn").click();
+    await expect(page.locator("#ai_sidebar")).toContainText("Risposta sbloccata");
+    expect(sentCodes).toEqual([undefined, "correct-horse-battery-staple"]);
+  });
+});
