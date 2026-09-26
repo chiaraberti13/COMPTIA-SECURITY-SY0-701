@@ -371,3 +371,19 @@ test.describe("AI output is untrusted", () => {
     expect(await page.evaluate(() => (window as unknown as { __pwned?: boolean }).__pwned)).toBeUndefined();
   });
 });
+
+test.describe("domain routes (before you start, where to go next)", () => {
+  test("a next step jumps to the linked objective in another domain's guide", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1_summary").click();
+    await expect(page.locator("#guide_before_1")).toContainText("TCP/IP");
+    await page.locator("#guide_next_1").getByRole("button", { name: "Vai all'obiettivo 3.3" }).click();
+    await expect(page.locator("#domain_guide_3")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_3_3")).toBeFocused();
+    await expect(page.locator("#guide_objective_3_3")).toBeInViewport();
+
+    // And back: a prerequisite of Domain 3 points to cryptography in Domain 1.
+    await page.locator("#guide_before_3").getByRole("button", { name: "Vai all'obiettivo 1.4" }).click();
+    await expect(page.locator("#guide_objective_1_4")).toBeFocused();
+  });
+});
