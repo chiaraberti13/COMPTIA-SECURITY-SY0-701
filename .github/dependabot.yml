@@ -47,5 +47,11 @@ updates:
       day: monday
     cooldown:
       default-days: 7
+    ignore:
+      # The build stage must match the Node major of the distroless runtime
+      # (nodejs24) and of .nvmrc: a new major is a planned migration of all
+      # three together, not a routine bump. Patches and digests still flow.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "deps(docker)"
