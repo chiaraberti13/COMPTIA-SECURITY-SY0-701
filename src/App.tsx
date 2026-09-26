@@ -45,18 +45,13 @@ import DataControls from "./components/DataControls";
 import OptionVerdict from "./components/OptionVerdict";
 import GlossaryHints from "./components/GlossaryHints";
 import { buildAcronymIndex } from "./glossaryIndex";
-import { ACCESS_REQUIRED, aiRequestHeaders } from "./aiAccess";
 import DomainGuidePanel from "./components/DomainGuidePanel";
 import AiTrainerPanel from "./components/AiTrainerPanel";
 import MarkdownText from "./components/MarkdownText";
 import { useAiChat } from "./hooks/useAiChat";
 import { useQuizSession } from "./hooks/useQuizSession";
+import { useRemediation } from "./hooks/useRemediation";
 import { getDomainRoute } from "./domainRoutes";
-import {
-  ApiErrorSchema,
-  RemediationResponseSchema,
-  type RemediationRequest,
-} from "./apiSchemas";
 import {
   SECONDS_PER_QUESTION,
   formatClock,
@@ -66,7 +61,6 @@ import {
   correctIndexes,
   requiredSelections,
   isMultiResponse,
-  toggleSelection,
   isSelectionComplete,
   isSelectionCorrect,
   selectDueReviewQuestions,
@@ -166,16 +160,17 @@ export default function App() {
     4: 5,
     5: 5
   });
-  // Remediation / Recovery State
-  const [remediationActive, setRemediationActive] = useState(false);
-  const [remediationQuestions, setRemediationQuestions] = useState<Question[]>([]);
-  const [remediationIndex, setRemediationIndex] = useState(0);
-  const [remediationSelected, setRemediationSelected] = useState<number[]>([]);
-  const [remediationShowFeedback, setRemediationShowFeedback] = useState(false);
-  const [remediationCompleted, setRemediationCompleted] = useState(false);
-  const [remediationScore, setRemediationScore] = useState(0);
-  const [isGeneratingRemediation, setIsGeneratingRemediation] = useState(false);
-  const [remediationError, setRemediationError] = useState<string | null>(null);
+  // The adaptive remediation; a 401 from the server opens the access-code form.
+  const remediation = useRemediation({ onLocked: chat.lock });
+  const {
+    remediationActive, remediationQuestions, remediationIndex, remediationSelected,
+    remediationShowFeedback, remediationCompleted, remediationScore,
+    isGeneratingRemediation, remediationError,
+  } = remediation;
+  const handleRemediationSelect = remediation.select;
+  const handleRemediationConfirm = remediation.confirm;
+  const handleRemediationNext = remediation.next;
+  const handleStartRemediation = () => remediation.start(activeQuestions, wrongQuestions);
   const [showNewQuestionsModal, setShowNewQuestionsModal] = useState(false);
 
   // The simulator run and the progress it saves; the timer pauses during the remediation.
@@ -319,8 +314,7 @@ export default function App() {
   const beginQuizRun = (questions: Question[]) => {
     quiz.begin(questions);
     setActiveObjective(null);
-    setRemediationActive(false);
-    setRemediationCompleted(false);
+    remediation.exit();
   };
 
   const handleStartQuiz = () => {
@@ -394,93 +388,6 @@ export default function App() {
     if (mistakes.length === 0) return;
     setQuizFocus("review");
     beginQuizRun(shuffle(mistakes));
-  };
-
-  // Remediation Generation
-  const handleStartRemediation = async () => {
-    // Determine weak topics based on wrong answers
-    const weakTopics = activeQuestions
-      .filter(q => wrongQuestions.includes(q.id))
-      .map(q => q.topic);
-
-    // Filter duplicates
-    const uniqueWeakTopics = Array.from(new Set(weakTopics));
-    if (uniqueWeakTopics.length === 0) {
-      // If none, default to some core topics
-      uniqueWeakTopics.push("Quantitative Risk Calculation", "Risk Appetite vs Risk Tolerance", "Compliance & Privacy");
-    }
-
-    setIsGeneratingRemediation(true);
-    setRemediationError(null);
-    setRemediationQuestions([]);
-
-    try {
-      const request: RemediationRequest = { weakTopics: uniqueWeakTopics, lang };
-      const res = await fetch("/api/quiz/remediation", {
-        method: "POST",
-        headers: aiRequestHeaders(),
-        body: JSON.stringify(request)
-      });
-
-      const data: unknown = await res.json().catch(() => null);
-      const failure = ApiErrorSchema.safeParse(data);
-      if (res.status === 401 && failure.success && failure.data.code === ACCESS_REQUIRED) {
-        chat.lock();
-        throw new Error(t("rem.accessRequired"));
-      }
-      if (res.status !== 200 || failure.success) {
-        throw new Error(failure.success ? failure.data.error : t("rem.cannotRetrieve"));
-      }
-
-      // Validated again in the browser: only well-formed questions are shown.
-      const payload = RemediationResponseSchema.safeParse(data);
-      if (payload.success) {
-        setRemediationQuestions(payload.data.questions);
-        setRemediationActive(true);
-        setRemediationIndex(0);
-        setRemediationSelected([]);
-        setRemediationShowFeedback(false);
-        setRemediationCompleted(false);
-        setRemediationScore(0);
-      } else {
-        throw new Error(t("rem.noValidQuestions"));
-      }
-    } catch (err: any) {
-      setRemediationError(err.message || t("rem.unknownError"));
-    } finally {
-      setIsGeneratingRemediation(false);
-    }
-  };
-
-  const handleRemediationSelect = (index: number) => {
-    if (remediationShowFeedback) return;
-    const current = remediationQuestions[remediationIndex];
-    if (!current) return;
-    setRemediationSelected(prev => toggleSelection(current, prev, index));
-  };
-
-  const handleRemediationConfirm = () => {
-    if (remediationShowFeedback) return;
-
-    const currentQuestion = remediationQuestions[remediationIndex];
-    if (!isSelectionComplete(currentQuestion, remediationSelected)) return;
-    const isCorrect = isSelectionCorrect(currentQuestion, remediationSelected);
-
-    setRemediationShowFeedback(true);
-
-    if (isCorrect) {
-      setRemediationScore(prev => prev + 1);
-    }
-  };
-
-  const handleRemediationNext = () => {
-    if (remediationIndex < remediationQuestions.length - 1) {
-      setRemediationIndex(prev => prev + 1);
-      setRemediationSelected([]);
-      setRemediationShowFeedback(false);
-    } else {
-      setRemediationCompleted(true);
-    }
   };
 
   /* ---------------------------------------------------------------- *
@@ -1904,7 +1811,7 @@ export default function App() {
                       <button 
                         id="remediation_end_btn"
                         onClick={() => {
-                          setRemediationActive(false);
+                          remediation.exit();
                           quiz.showResults();
                         }}
                         className="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-2.5 rounded text-sm transition-all"
