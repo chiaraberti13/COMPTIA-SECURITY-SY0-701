@@ -38,6 +38,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- The AI Trainer moved out of `App.tsx` into `AiTrainerPanel`, the `useAiChat` hook and a `MarkdownText` component, with 7 component tests; the rendered HTML is byte-for-byte identical in 8 states. The checklist progress is now read on the first render instead of in an effect.
 - Main menu on phones and tablets: the four sections (Study, Glossary, Simulator, AI Trainer) are equal columns with an icon and a short label, all visible without scrolling the menu sideways; the language switch sits next to the title. The "S+" logo is replaced by a shield icon, the same one as the new favicon, now also served as `favicon.ico`, iOS home-screen icon and web app manifest icons. Before, `/favicon.ico` answered with the app page.
 - CI checks test coverage of the pure logic and the server (`npm run test:coverage`) against minimum thresholds; the browser storage helpers are now fully tested.
 - The exam timer follows the real SY0-701 pace: 1 minute per question, so the 90-question simulation lasts 90 minutes (it was 2 minutes per question).
