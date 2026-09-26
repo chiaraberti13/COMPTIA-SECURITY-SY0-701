@@ -53,7 +53,7 @@ The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is th
 - Keep pull requests small and focused; do not mix refactoring with new behaviour.
 - Validate and bound every new input on the server.
 - Never render user or AI text with `innerHTML` or `dangerouslySetInnerHTML`.
-- Data saved in `localStorage` must stay compatible, or ship with a tested migration.
+- Data saved in `localStorage` must stay compatible, or ship with a tested migration: bump `STORAGE_SCHEMA_VERSION` in `src/storage.ts`, add the step to `STORAGE_MIGRATIONS` and a test to `tests/storage.test.ts`. `migrateStorage()` runs it once at start-up.
 - New interactions must work with the keyboard and have labels in both languages.
 - A new dependency needs a reason, a licence compatible with MIT and an active maintainer.
 
@@ -126,7 +126,7 @@ Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è l
 - Pull request piccole e focalizzate; non mescolare refactoring e nuovi comportamenti.
 - Ogni nuovo input va validato e limitato lato server.
 - Mai mostrare testo di utenti o dell'AI con `innerHTML` o `dangerouslySetInnerHTML`.
-- I dati salvati in `localStorage` devono restare compatibili, oppure servono una migrazione e un test.
+- I dati salvati in `localStorage` devono restare compatibili, oppure servono una migrazione e un test: aumenta `STORAGE_SCHEMA_VERSION` in `src/storage.ts`, aggiungi il passo in `STORAGE_MIGRATIONS` e un test in `tests/storage.test.ts`. `migrateStorage()` lo esegue una sola volta all'avvio.
 - Le nuove interazioni devono funzionare da tastiera e avere etichette in entrambe le lingue.
 - Una nuova dipendenza richiede una motivazione, una licenza compatibile con MIT e un manutentore attivo.
 

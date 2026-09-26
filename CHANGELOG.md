@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- The progress saved in the browser has a format version, and `migrateStorage()` upgrades data from older versions once at start-up, so future format changes keep existing progress.
 - After an objective quiz, a button opens the domain guide at that objective's outcome and official sub-topics.
 - OpenSSF Scorecard workflow with a badge in both READMEs, and a CycloneDX SBOM of the production dependencies saved with every security run.
 - "Where do I start?" panel with four study paths (beginner, quick refresh, exam preparation, hands-on consolidation). Each step can jump to the right part of the app; the exam path sets up a 90-question simulation split by the official domain weights, with the timer on.
