@@ -280,6 +280,7 @@ Integrated **full-stack** layout — one Express server serves the frontend and 
 ├── e2e/                      # Playwright + axe at phone and desktop width
 ├── scripts/                  # Smoke test and coverage-matrix generator
 ├── docs/coverage-matrix.md   # Generated: questions per objective
+├── docs/errata.md            # Content errors already fixed
 ├── public/favicon.svg        # App icon
 ├── .github/workflows/        # ci.yml (checks, smoke, e2e) and security.yml (gitleaks, audit, CodeQL)
 ├── .env.example              # Environment variables template
@@ -335,6 +336,10 @@ documentation always prevails**.
 How every official objective is covered (number of questions by cognitive level and guided
 exercises) is published in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generated
 from the dataset and checked by CI.
+
+Substantive content errors already fixed (a wrong definition, a mismatched port, an
+answer that contradicted the explanation) are listed in [`docs/errata.md`](docs/errata.md),
+with the commit of each fix. To report a new one, open an issue.
 
 ---
 

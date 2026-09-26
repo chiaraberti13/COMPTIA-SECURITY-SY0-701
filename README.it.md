@@ -280,6 +280,7 @@ Struttura **full-stack** integrata — un unico server Express serve il frontend
 ├── e2e/                      # Playwright + axe a larghezza telefono e desktop
 ├── scripts/                  # Smoke test e generatore della matrice di copertura
 ├── docs/coverage-matrix.md   # Generato: domande per obiettivo
+├── docs/errata.md            # Errori di contenuto già corretti
 ├── public/favicon.svg        # Icona dell'app
 ├── .github/workflows/        # ci.yml (controlli, smoke, e2e) e security.yml (gitleaks, audit, CodeQL)
 ├── .env.example              # Modello delle variabili d'ambiente
@@ -335,6 +336,11 @@ sempre la documentazione ufficiale**.
 La copertura di ogni obiettivo ufficiale (numero di domande per livello cognitivo ed esercizi
 guidati) è pubblicata in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generata dal
 dataset e verificata dalla CI.
+
+Gli errori di contenuto sostanziali già corretti (una definizione sbagliata, una porta
+errata, una risposta che contraddiceva la spiegazione) sono elencati in
+[`docs/errata.md`](docs/errata.md), con il commit di ogni correzione. Per segnalarne uno
+nuovo apri una issue.
 
 ---
 
