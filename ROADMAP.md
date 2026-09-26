@@ -210,9 +210,9 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` (settimanale, attesa di 7 giorni, minor/patch raggruppati) e job `Dependency audit (npm)` con `npm audit --omit=dev --audit-level=high` — 2026-09-24. Esito attuale: 0 vulnerabilità nelle dipendenze di produzione.
 - [x] **P0 — SAST pertinente:** job `CodeQL (JavaScript/TypeScript)` con la suite `security-extended`, senza build, risultati nella scheda Security — 2026-09-24. Se nel repository è attivo il *default setup* di CodeQL, va disattivato perché va in conflitto con questa configurazione avanzata.
 - [ ] 🟡 **P1 — Dependency review sulle pull request:** job `Dependency review` che blocca le PR che introducono dipendenze con vulnerabilità `high` o `critical` — 2026-09-24. Manca il controllo delle licenze incompatibili con MIT, da aggiungere con un elenco `allow-licenses` verificato sulle dipendenze attuali.
-- [ ] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository.
+- [x] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository: `.github/workflows/scorecard.yml` (ossf/scorecard-action v2.4.4 a SHA) a ogni push su `main`, ogni lunedì e a ogni modifica della protezione del branch. I risultati arrivano nella scheda Security e nell'API pubblica, che serve il badge dei README — 2026-09-26. Da rivedere dopo il primo punteggio: i controlli con esito basso diventano voci della roadmap.
 - [ ] **P1 — Branch protection:** review obbligatoria, status check richiesti, conversazioni risolte, divieto di force push su `main`.
-- [ ] **P1 — SBOM (CycloneDX) allegato alle release** dell'app.
+- [ ] 🟡 **P1 — SBOM (CycloneDX) allegato alle release** dell'app: job `SBOM (CycloneDX)` in `security.yml` con `npm sbom` (nessuna nuova dipendenza). Elenca i circa 128 pacchetti di produzione con versione, licenza e purl, ed è conservato 90 giorni come artifact di ogni build — 2026-09-26. Resta da allegarlo alle release quando il progetto pubblicherà versioni con tag.
 - [ ] **P1 — Scansione container e IaC:** solo quando verrà aggiunto un `Dockerfile` o una configurazione di deploy (vedi sotto).
 - [ ] **P2 — Firma delle release e attestazione di provenienza** (GitHub artifact attestation / SLSA) per build e immagini.
 
@@ -510,6 +510,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
 | 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
 | 2026-09-26 | M3 | Codice di accesso facoltativo per le funzioni AI (`AI_ACCESS_TOKEN`) e chat accessibile da tastiera | Voce P1 protezione degli endpoint AI | Completato |
+| 2026-09-26 | M2 | OpenSSF Scorecard settimanale con badge, SBOM CycloneDX a ogni build | Voci P1 Scorecard e SBOM | Completato |
 
 ---
 
