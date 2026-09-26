@@ -122,6 +122,9 @@ jobs:
           curl --silent --head http://127.0.0.1:3000/ | grep --ignore-case "content-security-policy: default-src 'self'"
           test "$(docker inspect app --format '{{.Config.User}}')" = nonroot
           docker exec app /nodejs/bin/node -e 'process.exit(process.getuid() === 0 ? 1 : 0)'
+          # .grype.yaml ignores system libssl3 CVEs because Node does not load
+          # that library (it bundles its own OpenSSL). Keep that claim true.
+          docker exec app /nodejs/bin/node -e 'const maps = require("fs").readFileSync("/proc/self/maps", "utf8"); process.exit(/libssl|libcrypto/.test(maps) ? 1 : 0)'
 
       - name: Stops cleanly on SIGTERM
         run: |

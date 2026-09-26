@@ -127,3 +127,54 @@ jobs:
           name: sbom-cyclonedx
           path: sbom.cdx.json
           retention-days: 90
+
+  image-scan:
+    name: Container image scan (Grype)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Upload of the findings to the Security tab.
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build the image
+        run: docker build --tag comptia-sy0701:scan .
+
+      # Known vulnerabilities in the operating-system packages and libraries of
+      # the image. Only findings that already have a fix are reported, and the
+      # build fails for high or critical ones: an unfixed CVE in the base image
+      # cannot be acted on here, and Dependabot proposes the patched base image
+      # as soon as one is published.
+      - name: Scan with Grype
+        id: scan
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: comptia-sy0701:scan
+          # Narrow, justified exceptions: see the comments in .grype.yaml.
+          config: .grype.yaml
+          fail-build: true
+          severity-cutoff: high
+          only-fixed: true
+          output-format: sarif
+
+      # A readable list in the job log when the scan fails (the SARIF goes to
+      # the Security tab, which not everyone can open).
+      - name: List the findings
+        if: failure() && steps.scan.outcome == 'failure'
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: comptia-sy0701:scan
+          config: .grype.yaml
+          fail-build: false
+          only-fixed: true
+          output-format: table
+
+      - name: Upload the findings
+        if: always() && steps.scan.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+          category: container-image

@@ -214,8 +214,9 @@ Il `Dockerfile` crea un'immagine di produzione pensata per ospitare l'app in pro
 
 - **multi-stage:** gli strumenti di build restano nella prima fase; l'immagine contiene
   solo `dist/`, con il server impacchettato insieme alle librerie che usa;
-- **runtime distroless** (`gcr.io/distroless/nodejs24-debian12`): niente shell, niente
-  gestore di pacchetti, circa 220 MB;
+- **runtime distroless** (`gcr.io/distroless/cc-debian12`) con il binario di Node.js della
+  fase di build, così Node resta all'ultima release di sicurezza di Node 24: niente shell,
+  niente gestore di pacchetti, circa 225 MB;
 - utente **non root** (`nonroot`, uid 65532) e file di proprietà di root, così l'app non
   può modificare il proprio codice;
 - immagini base **fissate per digest** e aggiornate da Dependabot;

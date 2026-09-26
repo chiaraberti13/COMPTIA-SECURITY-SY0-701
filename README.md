@@ -214,8 +214,9 @@ The `Dockerfile` builds a production image meant for self-hosting:
 
 - **multi-stage:** the build tools stay in the first stage; the image ships only
   `dist/`, with the server bundled together with the libraries it uses;
-- **distroless runtime** (`gcr.io/distroless/nodejs24-debian12`): no shell, no package
-  manager, about 220 MB;
+- **distroless runtime** (`gcr.io/distroless/cc-debian12`) with the Node.js binary of the
+  build stage, so Node stays on the latest Node 24 security release: no shell, no package
+  manager, about 225 MB;
 - **non-root** user (`nonroot`, uid 65532), files owned by root, so the app cannot
   modify its own code;
 - base images **pinned by digest** and updated by Dependabot;

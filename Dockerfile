@@ -23,8 +23,12 @@ COPY . .
 # and only the code that actually runs.
 RUN npm run build && npm run build:standalone
 
-# --- Runtime: distroless Node.js, user 65532 (nonroot) -----------------------
-FROM gcr.io/distroless/nodejs24-debian12:nonroot@sha256:14d42e2511532589a7c7e01a753667a74fcc96266e137e8125006b87b0c32d0a
+# --- Runtime: distroless C runtime (glibc, libstdc++, CA certificates), user
+# 65532 (nonroot), plus the Node.js binary of the build stage. Distroless ships
+# its own Node image, but it trails the Node 24 security releases; copying the
+# binary keeps Node patched while the base stays minimal (no shell, no npm).
+FROM gcr.io/distroless/cc-debian12:nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f
+COPY --from=build /usr/local/bin/node /nodejs/bin/node
 WORKDIR /app
 ENV NODE_ENV=production \
     PORT=3000
@@ -36,4 +40,5 @@ EXPOSE 3000
 # No shell or curl in the image: the probe uses Node's own fetch.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD ["/nodejs/bin/node", "-e", "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/healthz').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+ENTRYPOINT ["/nodejs/bin/node"]
 CMD ["dist/server.cjs"]

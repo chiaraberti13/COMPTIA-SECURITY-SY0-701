@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Container image scan with Grype in the security workflow: it fails on high or critical vulnerabilities that have a fix and reports them in the Security tab. On its first run it found fixed high-severity vulnerabilities in the distroless Node image, which ships Node 24.14.0: the runtime is now `distroless/cc-debian12` with the Node 24.21.0 binary of the build stage. Six CVEs of the base image's system `libssl3` are ignored one by one in `.grype.yaml`: Node bundles its own OpenSSL and never loads that library, which CI checks on every run.
 - A hardened `Dockerfile` for self-hosting: multi-stage, distroless runtime without a shell, non-root user, base images pinned by digest (updated by Dependabot), health check, and a server bundle that needs no `node_modules`. CI builds it and runs it with `--read-only`, `--cap-drop=ALL` and `no-new-privileges`.
 - "Glossary terms mentioned": after an answer, and under each concept, the glossary acronyms in the text (SIEM, ZTA, TACACS+, ...) open their definition and exam tip in place.
 - The progress saved in the browser has a format version, and `migrateStorage()` upgrades data from older versions once at start-up, so future format changes keep existing progress.
