@@ -122,7 +122,7 @@ Un'attività è completata quando:
   scripts/                       # nuovo: generazione indici e report
   src/
   ├── components/                # esistente, da popolare con le sezioni di App.tsx
-  ├── hooks/                     # stato delle sezioni (useAiChat dal 2026-09-26)
+  ├── hooks/                     # stato delle sezioni (useAiChat, useQuizSession dal 2026-09-26)
   ├── data.ts / data.en.ts       # esistenti: sorgente IT e overlay EN
   ├── domainGuides.ts            # esistente
   ├── quiz.ts, remediation.ts,   # esistenti: logica pura testata
@@ -140,7 +140,7 @@ Un'attività è completata quando:
 - [x] **P0 — Correggere l'identità del pacchetto:** `name` `comptia-security-sy0-701`, `version` `1.0.0`, `engines` `node ^22.13.0 || >=24.0.0` e `npm >=10` — 2026-09-24.
 - [ ] **P0 — Stabilire convenzioni di naming:** file in `kebab-case` per documenti e lab, componenti React in `PascalCase`, identificatori univoci e stabili per obiettivi, domande, voci di glossario e lab.
 - [x] **P0 — Separare contenuti, logica e automazioni:** dataset, logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`) e test sono già separati.
-- [ ] 🟡 **P1 — Scomporre `src/App.tsx`:** estratte la guida di dominio (`src/components/DomainGuidePanel.tsx`, HTML generato identico byte per byte prima e dopo su 5 domini × 2 lingue) e la sezione "I tuoi dati" (`DataControls.tsx`) — 2026-09-24. Estratto l'AI Trainer: pannello `AiTrainerPanel.tsx`, conversazione nell'hook `src/hooks/useAiChat.ts` (il benvenuto è calcolato dalla lingua, non più sincronizzato con un effetto) e Markdown in `MarkdownText.tsx`; HTML identico byte per byte in 8 stati (benvenuto IT/EN, risposta, domanda digitata, accesso bloccato, errore, caricamento, area di studio), 7 test di componente; il caricamento della checklist ora avviene al primo rendering — 2026-09-26. Restano Studio, Quiz e Risultati, una sezione per PR, con hook dedicati (`useQuizSession`, `useProgress`); tre effetti che reagiscono al cambio di lingua o allo scadere del timer hanno un'eccezione motivata al lint e diventeranno stato derivato con `useQuizSession`. **L**
+- [ ] 🟡 **P1 — Scomporre `src/App.tsx`:** estratte la guida di dominio (`src/components/DomainGuidePanel.tsx`, HTML generato identico byte per byte prima e dopo su 5 domini × 2 lingue) e la sezione "I tuoi dati" (`DataControls.tsx`) — 2026-09-24. Estratto l'AI Trainer: pannello `AiTrainerPanel.tsx`, conversazione nell'hook `src/hooks/useAiChat.ts` (il benvenuto è calcolato dalla lingua, non più sincronizzato con un effetto) e Markdown in `MarkdownText.tsx`; HTML identico byte per byte in 8 stati (benvenuto IT/EN, risposta, domanda digitata, accesso bloccato, errore, caricamento, area di studio), 7 test di componente; il caricamento della checklist ora avviene al primo rendering — 2026-09-26. Estratta la sessione del simulatore in `src/hooks/useQuizSession.ts`: domande, risposte, punteggio, timer, revisione, cronologia e progressi salvati. Le domande nella lingua attiva sono ora derivate e non più sincronizzate con un effetto; la scadenza del timer chiude la prova dal callback del timer con `useEffectEvent`. HTML e `localStorage` identici prima e dopo in 15 stati resi deterministici (seme fisso per l'ordine delle domande, orologio fisso o finto per il timer), 6 test dell'hook — 2026-09-26. Restano la remediation AI, la schermata di studio (con l'ultimo effetto sul cambio di lingua) e la configurazione del quiz, una sezione per PR. **L**
 - [x] **P1 — Scomporre `server.ts`:** `server/app.ts` costruisce l'app con `createApp(opzioni)` (middleware di sicurezza, `/healthz`, le due rotte AI, file statici) e riceve il client Gemini come parametro; `server.ts` legge l'ambiente, aggiunge Vite in sviluppo e avvia il server. Comportamento invariato, verificato con smoke test, end-to-end e modalità sviluppo — 2026-09-24.
 - [ ] **P1 — Metadati di revisione dei contenuti:** aggiungere a dataset e glossario `lastReviewed`, `status` (`reviewed`/`needs-review`/`deprecated`) e, dove serve, `sources`. **M**
 - [ ] **P1 — Eliminare duplicazioni:** le definizioni presenti sia nel glossario sia nelle sottovoci devono puntare a una voce canonica tramite ID.
@@ -409,7 +409,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
 | Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 2 su 2 (2026-09-24; erano 0) | 2 su 2 |
 | Manutenzione | Voci con data e stato di revisione | 0% | 100% |
-| Manutenzione | Righe di `src/App.tsx` | ~2.490 (2026-09-26, erano ~2.810 dopo le ultime funzioni; ~2.550 all'audit iniziale) | < 500 |
+| Manutenzione | Righe di `src/App.tsx` | ~2.340 (2026-09-26, erano ~2.810 dopo le ultime funzioni; ~2.550 all'audit iniziale) | < 500 |
 | Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
 | Didattica | Domini con guida completa (ogni sotto-argomento ufficiale, tabelle, errori comuni, un esercizio per obiettivo) | 5 su 5 (verificato da test) | 5 su 5 |
 | Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
