@@ -27,6 +27,7 @@
 - **[Chiave API Gemini](#chiave-api-gemini)** — Come ottenere la chiave gratuita usata dall'AI.
 - **[Variabili d'ambiente](#variabili-dambiente)** — Il file `.env` letto dall'applicazione.
 - **[Installazione](#installazione)** — Passo-passo per Linux, macOS e Windows.
+- **[Container](#container)** — Un'immagine Docker irrobustita per ospitare l'app in proprio.
 - **[Script](#script)** — I comandi npm e cosa fa ciascuno.
 - **[Architettura](#architettura)** — Dove vive il codice nel repository.
 - **[Risoluzione dei problemi](#risoluzione-dei-problemi)** — I due errori più probabili e come risolverli.
@@ -206,6 +207,33 @@ npm run build ; npm start
 
 **WSL2:** apri la shell WSL (es. Ubuntu) e segui i passi Linux qui sopra — l'app risponde su
 `http://localhost:3000` anche nel browser di Windows.
+
+## Container
+
+Il `Dockerfile` crea un'immagine di produzione pensata per ospitare l'app in proprio:
+
+- **multi-stage:** gli strumenti di build restano nella prima fase; l'immagine contiene
+  solo `dist/`, con il server impacchettato insieme alle librerie che usa;
+- **runtime distroless** (`gcr.io/distroless/nodejs24-debian12`): niente shell, niente
+  gestore di pacchetti, circa 220 MB;
+- utente **non root** (`nonroot`, uid 65532) e file di proprietà di root, così l'app non
+  può modificare il proprio codice;
+- immagini base **fissate per digest** e aggiornate da Dependabot;
+- un `HEALTHCHECK` su `/healthz` e un arresto pulito con `docker stop`.
+
+```bash
+docker build -t comptia-sy0701 .
+docker run --rm -p 3000:3000 \
+  --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  -e GEMINI_API_KEY=la-tua-chiave \
+  comptia-sy0701
+```
+
+`--read-only` rende tutto il filesystem di sola lettura, `--cap-drop=ALL` toglie ogni
+capability di Linux e `no-new-privileges` impedisce l'escalation di privilegi: l'app
+funziona con tutti e tre, e la CI lo verifica a ogni modifica. Le variabili d'ambiente sono
+quelle di [Variabili d'ambiente](#variabili-dambiente); passale con `-e` o `--env-file`,
+mai dentro l'immagine.
 
 ## Script
 

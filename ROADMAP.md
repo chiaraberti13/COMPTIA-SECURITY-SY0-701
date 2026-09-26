@@ -213,7 +213,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository: `.github/workflows/scorecard.yml` (ossf/scorecard-action v2.4.4 a SHA) a ogni push su `main`, ogni lunedì e a ogni modifica della protezione del branch. I risultati arrivano nella scheda Security e nell'API pubblica, che serve il badge dei README — 2026-09-26. Da rivedere dopo il primo punteggio: i controlli con esito basso diventano voci della roadmap.
 - [ ] **P1 — Branch protection:** review obbligatoria, status check richiesti, conversazioni risolte, divieto di force push su `main`.
 - [ ] 🟡 **P1 — SBOM (CycloneDX) allegato alle release** dell'app: job `SBOM (CycloneDX)` in `security.yml` con `npm sbom` (nessuna nuova dipendenza). Elenca i circa 128 pacchetti di produzione con versione, licenza e purl, ed è conservato 90 giorni come artifact di ogni build — 2026-09-26. Resta da allegarlo alle release quando il progetto pubblicherà versioni con tag.
-- [ ] **P1 — Scansione container e IaC:** solo quando verrà aggiunto un `Dockerfile` o una configurazione di deploy (vedi sotto).
+- [ ] 🟡 **P1 — Scansione container e IaC:** il `Dockerfile` esiste ed è verificato in CI (build, esecuzione irrobustita, utente non root) e Dependabot ne aggiorna le immagini base (2026-09-26). Resta la scansione delle vulnerabilità dell'immagine (per esempio Trivy o Grype), da aggiungere con un'action fissata a SHA e verificata.
 - [ ] **P2 — Firma delle release e attestazione di provenienza** (GitHub artifact attestation / SLSA) per build e immagini.
 
 #### Sicurezza dell'applicazione (AppSec)
@@ -233,7 +233,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P1 — Irrigidire la CSP:** font Inter e JetBrains Mono inclusi nel bundle (Fontsource 5.3.0, SIL OFL 1.1) al posto di Google Fonts, mai incorporati come `data:`; tolti `fonts.googleapis.com`, `fonts.gstatic.com` e `'unsafe-inline'`; aggiunti `base-uri 'self'` e `form-action 'self'`. Un test end-to-end percorre studio, guida, glossario e quiz e fallisce a ogni violazione della CSP o richiesta verso un'altra origine; lo smoke test verifica le direttive — 2026-09-24.
 - [ ] **P1 — Validazione degli input con schema** (es. Zod) condiviso tra client e server al posto dei controlli manuali. **M**
 - [x] **P1 — Protezione minima degli endpoint AI in deploy pubblici:** `AI_DAILY_LIMIT=0` spegne l'AI; `AI_ACCESS_TOKEN` la limita a chi conosce un codice, inviato nell'intestazione `X-Access-Token`. Il confronto avviene in tempo costante sugli hash SHA-256, dopo il rate limit (i tentativi sono limitati) e prima di Gemini; risponde 401 con un codice d'errore. L'app chiede il codice nel pannello del Trainer AI e lo conserva solo nella scheda (`sessionStorage`); il server avvisa nei log se il codice è più corto di 16 caratteri. 8 test API e un test end-to-end. Nello stesso lavoro, corretti due difetti di accessibilità della chat trovati dal test: contrasto dell'orario dei messaggi e area dei messaggi non raggiungibile da tastiera (ora `role="log"`) — 2026-09-26.
-- [ ] **P1 — Container di deploy sicuro:** `Dockerfile` multi-stage, utente non root, filesystem in sola lettura, immagine base minimale e versione fissata. **M**
+- [x] **P1 — Container di deploy sicuro:** `Dockerfile` multi-stage. Il runtime è distroless Node 24 senza shell né gestore di pacchetti, con utente `nonroot` (uid 65532) e file di proprietà di root. Le immagini base sono fissate per digest e aggiornate da Dependabot. Contiene solo `dist/`, con il server impacchettato insieme alle sue librerie (`npm run build:standalone`): 219 MB invece di 481. `HEALTHCHECK` su `/healthz`; verificato con `--read-only`, `--cap-drop=ALL` e `no-new-privileges`, arresto pulito in 200 ms. Il job CI `Container image` ripete ogni volta queste verifiche; istruzioni nei README — 2026-09-26.
 - [x] **P1 — Migrazione a Express 5:** completata il 2026-09-25, vedi [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze), perché Dependabot l'ha già proposta.
 
 #### Sicurezza della componente AI (OWASP Top 10 for LLM Applications)
@@ -515,6 +515,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-26 | M7 | Versione e migrazioni testate per i dati salvati nel browser | Voce P1 schema dei dati salvati | Completato |
 | 2026-09-26 | M6 | Termini del glossario nel quiz e nelle sottovoci; corretto il pannello del simulatore la cui parte alta era irraggiungibile | Voce P1 glossario | Completato |
 | 2026-09-26 | M3 | Spotlighting dei testi dell'utente nei prompt e suite anti-injection con 11 attacchi; output AI ostile verificato come testo inerte | Voce P1 suite anti-injection | Completato |
+| 2026-09-26 | M3 | Immagine Docker irrobustita (distroless, non root, digest fissati, sola lettura) verificata in CI | Voce P1 container di deploy | Completato |
 
 ---
 
