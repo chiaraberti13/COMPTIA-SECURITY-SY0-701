@@ -36,6 +36,31 @@ test.describe("layout", () => {
   });
 });
 
+test.describe("layout: main menu", () => {
+  test("every section of the menu is visible at once, without scrolling it sideways", async ({ page }) => {
+    await openApp(page);
+    const nav = page.locator("#navigation_tabs");
+    expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+      await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
+    }
+    // Each tab keeps a readable name, short on phones and full on desktop.
+    await expect(page.getByRole("tab", { name: /Glossario/ })).toBeVisible();
+  });
+
+  test("the icons for browsers and phones are served", async ({ page, request }) => {
+    await openApp(page);
+    for (const href of ["/favicon.ico", "/favicon.svg", "/apple-touch-icon.png", "/manifest.webmanifest"]) {
+      expect(await page.locator(`link[href="${href}"]`).count(), href).toBe(1);
+      const res = await request.get(href);
+      expect(res.status(), href).toBe(200);
+      expect(res.headers()["content-type"], href).not.toContain("text/html");
+    }
+    const manifest = await (await request.get("/manifest.webmanifest")).json();
+    for (const icon of manifest.icons) expect((await request.get(icon.src)).status(), icon.src).toBe(200);
+  });
+});
+
 test.describe("layout: simulator", () => {
   test("the top of the quiz panel can always be reached by scrolling", async ({ page }) => {
     await openApp(page);
