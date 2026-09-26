@@ -13,7 +13,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { Type, type GenerateContentParameters } from "@google/genai";
 import { validateRemediationPayload } from "../src/remediation";
-import type { DailyBudget } from "./aiGuard";
+import { tokenMatches, type DailyBudget } from "./aiGuard";
 import { createJsonLogger, redact, requestLogger, type Logger } from "./log";
 
 /** The part of the Gemini SDK the endpoints use; tests provide a fake. */
@@ -48,6 +48,12 @@ export interface AppOptions {
   trustProxyHops?: number;
   /** Structured log sink; defaults to JSON lines on stdout. */
   logger?: Logger;
+  /**
+   * When set, the AI endpoints answer only requests carrying this value in the
+   * X-Access-Token header (AI_ACCESS_TOKEN). Unset: the AI is open to anyone
+   * who can reach the app, within the rate limit and the daily budget.
+   */
+  accessToken?: string;
 }
 
 /** Upper bound on a single chat message, in characters. */
@@ -172,6 +178,23 @@ export function createApp(opts: AppOptions): express.Express {
     message: { error: "Too many requests. Please try again in a few minutes." },
   });
   app.use("/api/", aiLimiter);
+
+  // Optional access code for public deployments. Registered after the rate
+  // limiter, so guessing codes is limited like any other request, and before
+  // the routes, so a request without the code never reaches Gemini.
+  if (opts.accessToken) {
+    const expected = opts.accessToken;
+    app.use("/api/", (req, res, next) => {
+      if (tokenMatches(req.get("x-access-token"), expected)) return next();
+      const isEn = req.body?.lang === "en";
+      res.status(401).json({
+        code: "access_token_required",
+        error: isEn
+          ? "The AI features on this site need an access code."
+          : "Le funzionalità AI di questo sito richiedono un codice di accesso.",
+      });
+    });
+  }
 
   // API endpoints FIRST
 

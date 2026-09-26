@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createDailyBudget, readLimit } from "../server/aiGuard";
+import { createDailyBudget, readLimit, tokenMatches } from "../server/aiGuard";
 
 const DAY = 24 * 60 * 60 * 1000;
 const MONDAY = Date.UTC(2026, 8, 21, 10, 0, 0);
@@ -48,5 +48,17 @@ describe("createDailyBudget", () => {
     budget.tryConsume(MONDAY);
     expect(budget.remaining(MONDAY)).toBe(4);
     expect(budget.remaining(MONDAY)).toBe(4);
+  });
+});
+
+describe("tokenMatches", () => {
+  it("accepts only the exact code", () => {
+    expect(tokenMatches("s3cret-code", "s3cret-code")).toBe(true);
+    expect(tokenMatches("s3cret-cod", "s3cret-code")).toBe(false);
+    expect(tokenMatches("S3CRET-CODE", "s3cret-code")).toBe(false);
+  });
+
+  it("rejects missing, non-string, empty and oversized values", () => {
+    for (const value of [undefined, null, 42, "", "x".repeat(257)]) expect(tokenMatches(value, "s3cret-code")).toBe(false);
   });
 });

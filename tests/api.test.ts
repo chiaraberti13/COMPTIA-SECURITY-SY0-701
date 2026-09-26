@@ -262,6 +262,59 @@ describe("structured logs", () => {
   });
 });
 
+describe("AI access code (AI_ACCESS_TOKEN)", () => {
+  const CODE = "correct-horse-battery-staple";
+  const send = (base: string, headers: Record<string, string> = {}) =>
+    fetch(`${base}/api/chat`, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...headers },
+      body: JSON.stringify({ message: "hi", lang: "en" }),
+    });
+
+  it("refuses requests without the code or with a wrong one, before Gemini is called", async () => {
+    const { base, calls } = await start(undefined, { accessToken: CODE });
+    for (const headers of [{}, { "x-access-token": "wrong" }, { "x-access-token": CODE + "x" }, { "x-access-token": "" }] as Record<string, string>[]) {
+      const res = await send(base, headers);
+      expect(res.status).toBe(401);
+      expect(await res.json()).toMatchObject({ code: "access_token_required" });
+    }
+    expect(calls).toHaveLength(0);
+  });
+
+  it("serves requests with the right code and leaves /healthz open", async () => {
+    const { base, calls } = await start(undefined, { accessToken: CODE });
+    expect((await send(base, { "x-access-token": CODE })).status).toBe(200);
+    expect(calls).toHaveLength(1);
+    expect((await fetch(`${base}/healthz`)).status).toBe(200);
+  });
+
+  it("also protects the remediation endpoint", async () => {
+    const { post } = await start(undefined, { accessToken: CODE });
+    expect((await post("/api/quiz/remediation", { weakTopics: ["x"] })).status).toBe(401);
+  });
+
+  it("counts wrong codes against the rate limit, so they cannot be guessed quickly", async () => {
+    const { base } = await start(undefined, { accessToken: CODE, rateLimit: { windowMs: 60_000, limit: 2 } });
+    expect((await send(base, { "x-access-token": "a" })).status).toBe(401);
+    expect((await send(base, { "x-access-token": "b" })).status).toBe(401);
+    expect((await send(base, { "x-access-token": CODE })).status).toBe(429);
+  });
+
+  it("never writes the code to the logs", async () => {
+    const { base, logs } = await start(undefined, { accessToken: CODE });
+    await send(base, { "x-access-token": CODE });
+    await send(base, { "x-access-token": "guess" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(JSON.stringify(logs)).not.toContain(CODE);
+    expect(logs.filter((l) => l.event === "http_request").map((l) => l.status)).toEqual([200, 401]);
+  });
+
+  it("is off when no code is configured", async () => {
+    const { base } = await start();
+    expect((await send(base)).status).toBe(200);
+  });
+});
+
 describe("rate limiting", () => {
   it("answers 429 after the per-IP limit", async () => {
     const { post } = await start(undefined, { rateLimit: { windowMs: 60_000, limit: 2 } });

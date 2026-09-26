@@ -71,7 +71,7 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 | Information disclosure | L'indirizzo IP del visitatore raggiunge terze parti | Nessuna richiesta verso altre origini: font nel bundle, niente CDN né analytics. Verificato dal test end-to-end sulla CSP | ✅ |
 | Denial of service | Molte richieste da un solo client | Rate limit di 30 richieste ogni 15 minuti per IP su `/api/` | ✅ |
 | Denial of service | Chiamata a Gemini che non risponde e tiene occupato il server | Timeout con `AbortSignal` (`GEMINI_TIMEOUT_MS`, 30 s) → 504 | ✅ |
-| Denial of service / costo | **Denial of wallet:** molti indirizzi diversi consumano il budget Gemini (OWASP LLM10) | Tetto giornaliero globale `AI_DAILY_LIMIT` (500, `0` spegne l'AI), `maxOutputTokens` 2048 sulla chat, input limitati. Il contatore è in memoria: si azzera al riavvio e si moltiplica per il numero di istanze | 🟡 documentato nel README; per più istanze serve un contatore condiviso |
+| Denial of service / costo | **Denial of wallet:** molti indirizzi diversi consumano il budget Gemini (OWASP LLM10) | Tetto giornaliero globale `AI_DAILY_LIMIT` (500, `0` spegne l'AI), `maxOutputTokens` 2048 sulla chat, input limitati. Il contatore è in memoria: si azzera al riavvio e si moltiplica per il numero di istanze. Per un sito pubblico, `AI_ACCESS_TOKEN` fa rispondere l'AI solo a chi conosce un codice: il codice è confrontato in tempo costante, i tentativi contano per il rate limit, non finisce mai nei log e nel browser resta solo nella scheda (`sessionStorage`) | 🟡 documentato nel README; per più istanze serve un contatore condiviso |
 | Elevation of privilege | Non applicabile: non esistono ruoli né funzioni amministrative | — | — |
 
 ### Confine 3 — Server e modello AI
