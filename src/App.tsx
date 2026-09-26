@@ -39,7 +39,7 @@ import { GlossarySection } from "./components/GlossarySection";
 import { useLang, localizeSubgroup, type UIKey } from "./i18n";
 import { getSubgroupForSubtopic } from "./subgroups";
 import { getDomainGuide } from "./domainGuides";
-import { STORAGE_KEYS, readJSON, writeJSON } from "./storage";
+import { STORAGE_KEYS, readJSON } from "./storage";
 import { sanitizeChecklist } from "./progressBackup";
 import DataControls from "./components/DataControls";
 import OptionVerdict from "./components/OptionVerdict";
@@ -51,6 +51,7 @@ import MarkdownText from "./components/MarkdownText";
 import { useAiChat } from "./hooks/useAiChat";
 import { useQuizSession } from "./hooks/useQuizSession";
 import { useRemediation } from "./hooks/useRemediation";
+import { useStudySession } from "./hooks/useStudySession";
 import { getDomainRoute } from "./domainRoutes";
 import {
   SECONDS_PER_QUESTION,
@@ -108,21 +109,21 @@ export default function App() {
 
   // Navigation & General App State
   const [activeTab, setActiveTab] = useState<"studio" | "quiz" | "glossary">("studio");
-  // Read once, on the first render. Sanitised: localStorage is user-controlled
-  // and may hold anything.
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(
-    () => sanitizeChecklist(readJSON<unknown>(STORAGE_KEYS.checklist, {}))
-  );
-  // Read once at start-up (the checklist state above is filled by an effect):
+  // The study area: domain, selected concept and ticked checklist.
+  const study = useStudySession();
+  const { activeDomain, selectedSubtopic, checkedItems } = study;
+  const setSelectedSubtopic = study.selectSubtopic;
+  const handleSwitchDomain = study.switchDomain;
+  const handleToggleCheck = study.toggleCheck;
+  const handleToggleGroupCheck = study.toggleGroupCheck;
+  // Read once at start-up:
   // the "Where do I start?" panel opens only for a learner with no progress.
   const [isNewLearner] = useState(
     () =>
       Object.keys(sanitizeChecklist(readJSON<unknown>(STORAGE_KEYS.checklist, {}))).length === 0 &&
       readJSON<unknown[]>(STORAGE_KEYS.quizHistory, []).length === 0
   );
-  const [activeDomain, setActiveDomain] = useState<1 | 2 | 3 | 4 | 5>(1);
   const DOMAIN_GUIDE = useMemo(() => getDomainGuide(activeDomain, lang), [activeDomain, lang]);
-  const [selectedSubtopic, setSelectedSubtopic] = useState<Subtopic>(DOMAIN_1_TOPICS[0].subtopics[0]);
   // The AI panel is 380px wide: opening it by default on a phone would leave
   // no room for the content it is supposed to comment on.
   const [sidebarOpen, setSidebarOpen] = useState(
@@ -134,18 +135,6 @@ export default function App() {
 
   // Inline notification, replacing window.alert().
   const [toast, setToast] = useState<string | null>(null);
-
-  // Switch domain in Studio and update selection
-  const handleSwitchDomain = (domain: 1 | 2 | 3 | 4 | 5) => {
-    setActiveDomain(domain);
-    const topics = 
-      domain === 1 ? DOMAIN_1_TOPICS :
-      domain === 2 ? DOMAIN_2_TOPICS :
-      domain === 3 ? DOMAIN_3_TOPICS :
-      domain === 4 ? DOMAIN_4_TOPICS :
-      DOMAIN_5_TOPICS;
-    setSelectedSubtopic(topics[0].subtopics[0]);
-  };
 
   // Quiz state
   const [quizFocus, setQuizFocus] = useState<"domain1" | "domain2" | "domain3" | "domain4" | "domain5" | "mini" | "balanced" | "all" | "custom" | "review" | "objective">("all");
@@ -243,48 +232,12 @@ export default function App() {
     return () => window.clearTimeout(id);
   }, [toast]);
 
-  // Re-resolve the selected subtopic in the active language (by checklistKey)
-  // so the study panel updates instantly when the user switches language.
-  useEffect(() => {
-    const topics = getDomainTopics(activeDomain, lang);
-    for (const g of topics) {
-      const found = g.subtopics.find(s => s.checklistKey === selectedSubtopic.checklistKey);
-      if (found) {
-        // Reacting to a language switch; to become derived state when the study
-        // state moves to its own hook (ROADMAP, "Scomporre src/App.tsx").
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSelectedSubtopic(found);
-        return;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang]);
-
   // Localized label for a question difficulty level. Falls back to the raw
   // value for levels not in the dictionary (e.g. AI-generated English levels).
   const levelLabel = (lvl: string): string => {
     const key = `level.${lvl}` as UIKey;
     const label = t(key);
     return label === key ? lvl : label;
-  };
-
-  // Toggle checklist checkbox
-  const handleToggleCheck = (key: string) => {
-    const updated = { ...checkedItems, [key]: !checkedItems[key] };
-    setCheckedItems(updated);
-    writeJSON(STORAGE_KEYS.checklist, updated);
-  };
-
-  // Bulk toggle for a group of keys
-  const handleToggleGroupCheck = (keys: string[]) => {
-    const allChecked = keys.every(k => !!checkedItems[k]);
-    const targetState = !allChecked;
-    const updated = { ...checkedItems };
-    keys.forEach(k => {
-      updated[k] = targetState;
-    });
-    setCheckedItems(updated);
-    writeJSON(STORAGE_KEYS.checklist, updated);
   };
 
   // Get matching icon for each topic group
