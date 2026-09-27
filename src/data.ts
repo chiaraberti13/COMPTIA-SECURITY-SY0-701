@@ -9272,6 +9272,66 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) Un cruscotto (dashboard)**.\n\n* **Le tre forme in cui un SIEM restituisce ciò che sa**, e la domanda a cui ciascuna risponde:\n  * **Alert** — *è successo qualcosa che richiede una decisione adesso?* Immediato, su evento singolo, con un destinatario che deve agire.\n  * **Dashboard** — *com'è la situazione in questo momento?* Visuale, continuamente aggiornata, pensata per essere **guardata** e per rendere evidente uno scostamento a colpo d'occhio.\n  * **Report** — *come stiamo andando nel tempo?* Periodico, aggregato, con un destinatario che deve decidere dove investire.\n  Lo scenario chiede una fotografia dello stato corrente da vedere all'inizio del turno: è la definizione di cruscotto.\n* **Un dettaglio che vale la pena notare:** fra le metriche richieste c'è *i sistemi che hanno smesso di inviare log*. È una delle più importanti e delle più trascurate: una sorgente che tace non genera alert — genera **silenzio**, che è indistinguibile dalla quiete. Solo un cruscotto che mostra esplicitamente la copertura delle sorgenti rende visibile un'assenza.\n* **Analisi dei distrattori:**\n  * **B) Il report settimanale** ha la cadenza sbagliata: lo stato corrente cambia di ora in ora, e a fine settimana la fotografia non serve più a chi entra in turno lunedì mattina.\n  * **C) Tre alert a inizio turno** snaturano lo strumento: l'alert segnala un **evento**, non uno stato, e usarlo come promemoria periodico contribuisce all'*alert fatigue* che rende gli analisti ciechi a quelli veri.\n  * **A) La query salvata** produce lo stesso dato, ma solo quando qualcuno si ricorda di eseguirla. Il punto del cruscotto è che l'informazione è **già lì**, senza che occorra decidere di cercarla."
+  },
+  {
+    id: 425,
+    topic: "Automation & Orchestration",
+    level: "APPLICAZIONE",
+    scenario: "In un'azienda di 800 dipendenti, quando una persona lascia l'organizzazione le risorse umane inviano un'email a sei team diversi, che disabilitano a mano account di dominio, VPN, posta, applicazioni SaaS e badge. Un audit scopre che in media gli accessi restano attivi per 9 giorni dopo l'uscita, e che un ex dipendente ha usato la VPN due settimane dopo il suo ultimo giorno.",
+    question: "Quale soluzione riduce MEGLIO questo rischio?",
+    options: [
+      "A) Una lista di controllo più dettagliata, allegata all'email inviata ai sei team",
+      "B) Un'integrazione via API fra il sistema delle risorse umane e il provider di identità, che alla cessazione disabilita l'account, revoca sessioni e token e apre un ticket con l'esito di ogni passaggio",
+      "C) Una revisione trimestrale di tutti gli accessi, condotta dai responsabili di reparto",
+      "D) Una scadenza delle password ridotta a 30 giorni per tutti gli utenti"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Un'integrazione via API fra il sistema delle risorse umane e il provider di identità**.\n\n* **Perché è la corretta:** L'obiettivo 4.7 cita fra i casi d'uso dell'automazione l'**abilitazione e disabilitazione di servizi e accessi** e le **integrazioni tramite API**. Qui il problema è il **tempo di reazione**: sei passaggi manuali producono in media 9 giorni di ritardo e qualche dimenticanza. Un'integrazione che parte dall'evento di cessazione agisce in pochi minuti, allo stesso modo ogni volta, e revocando anche sessioni e token chiude gli accessi già aperti. Il ticket registra ogni passaggio, così l'audit successivo può verificare che tutto sia avvenuto.\n* **Perché le altre non sono corrette:**\n  * **A) Una lista più dettagliata** migliora la completezza, ma il processo resta manuale e lento: non riduce i 9 giorni.\n  * **C) La revisione trimestrale** è un controllo utile ma rilevativo: trova gli accessi rimasti attivi fino a tre mesi dopo, non li impedisce.\n  * **D) La scadenza delle password** non disabilita l'account, e un ex dipendente con una sessione o un token attivo non ha nemmeno bisogno della password.\n\n* **Trappola d'esame:** quando lo scenario misura un **ritardo** fra un evento e la reazione, cerca l'opzione che collega direttamente l'evento all'azione. Revisioni periodiche e regole più severe restano utili, ma arrivano dopo.\n* **Piccolo Esempio Concentrato:** molti provider di identità ricevono dal sistema delle risorse umane gli eventi di assunzione e cessazione tramite il protocollo SCIM, e propagano la disattivazione a tutte le applicazioni collegate."
+  },
+  {
+    id: 426,
+    topic: "Automation & Orchestration",
+    level: "ANALISI",
+    scenario: "Un SOC usa una piattaforma SOAR con un playbook che, quando l'EDR segnala malware comune su una workstation, isola automaticamente l'host dalla rete e apre un ticket. Il responsabile vuole estendere lo stesso playbook a tutti gli host, compresi i controller di dominio e il server del gestionale di produzione, che non può fermarsi durante i turni.",
+    question: "Quale configurazione del playbook è la più appropriata per gli host critici?",
+    options: [
+      "A) Isolare automaticamente anche gli host critici, perché la coerenza dell'automazione è il suo vantaggio principale",
+      "B) Disattivare gli avvisi dell'EDR sugli host critici, per evitare che un falso positivo fermi la produzione",
+      "C) Arricchire l'avviso e scalarlo subito all'analista reperibile, che decide l'azione di contenimento; sulle workstation resta l'isolamento automatico",
+      "D) Chiudere automaticamente il ticket quando l'antivirus segnala di aver rimosso la minaccia"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Arricchire l'avviso e scalarlo subito all'analista reperibile**.\n\n* **Perché è la corretta:** L'**escalation** è uno dei casi d'uso dell'automazione dell'obiettivo 4.7. L'automazione è ideale per azioni frequenti, ripetibili e a basso impatto, come isolare una workstation. Isolare un controller di dominio o il server di produzione, invece, può causare un'interruzione più grave dell'attacco stesso, e un falso positivo avrebbe un costo altissimo. Il playbook può comunque fare il lavoro ripetitivo, raccogliendo il contesto (processi, connessioni, utente, reputazione dei file), e passare subito la decisione a una persona.\n* **Perché le altre non sono corrette:**\n  * **A) Isolare automaticamente anche gli host critici** ignora il rischio per la **disponibilità**: la coerenza è un vantaggio solo se l'azione è appropriata in tutti i casi.\n  * **B) Disattivare gli avvisi** lascia senza rilevazione proprio i sistemi più importanti, che sono i bersagli preferiti degli attaccanti.\n  * **D) Chiudere il ticket in automatico** dà per scontato che la rimozione sia completa, e su un host critico nessuno verificherebbe persistenza o movimento laterale.\n\n* **Trappola d'esame:** automazione non significa «automatizzare tutto allo stesso modo». Fra le considerazioni dell'obiettivo 4.7 ci sono la complessità, il costo e i **single point of failure**: una risposta automatica sbagliata su un sistema critico diventa essa stessa un incidente. La risposta migliore spesso combina azioni automatiche per i casi semplici ed escalation per quelli a impatto elevato.\n* **Piccolo Esempio Concentrato:** molti playbook SOAR usano un campo di criticità dell'asset preso dal CMDB: sotto una certa soglia l'isolamento è automatico, sopra la soglia il playbook chiama il reperibile e aspetta la sua approvazione."
+  },
+  {
+    id: 427,
+    topic: "Automation & Orchestration",
+    level: "APPLICAZIONE",
+    scenario: "Ogni settimana lo scanner di vulnerabilità produce un report di circa 400 risultati. Un analista li copia a mano nel sistema di ticketing, cerca in un foglio di calcolo chi è responsabile di ogni server e, settimane dopo, controlla a mano se la correzione è stata applicata. Spesso i ticket arrivano alla persona sbagliata o restano aperti anche dopo la correzione.",
+    question: "Quale progetto di automazione risolve MEGLIO questi problemi?",
+    options: [
+      "A) Ridurre la frequenza delle scansioni a una al mese, per avere meno risultati da copiare",
+      "B) Inviare il report completo in PDF a tutti gli amministratori di sistema ogni settimana",
+      "C) Assumere un secondo analista per dividere il lavoro di copia e verifica",
+      "D) Integrare scanner e ticketing tramite API: un ticket per ogni risultato con gravità e responsabile presi dall'inventario degli asset, e chiusura automatica quando una nuova scansione conferma la correzione"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Integrare scanner e ticketing tramite API**.\n\n* **Perché è la corretta:** L'obiettivo 4.7 cita la **creazione dei ticket** e le **integrazioni tramite API** fra i casi d'uso dell'automazione. L'integrazione elimina i tre problemi dello scenario: la copia manuale (i ticket nascono dai dati dello scanner), l'assegnazione sbagliata (il responsabile arriva dall'inventario degli asset, una sola fonte aggiornata) e i ticket dimenticati aperti (la chiusura dipende dall'evidenza della scansione successiva). L'analista può dedicarsi ai casi che richiedono giudizio, come le eccezioni e le priorità.\n* **Perché le altre non sono corrette:**\n  * **A) Scansioni mensili** riducono il lavoro nascondendo il problema: le vulnerabilità restano scoperte più a lungo.\n  * **B) Il PDF a tutti** non assegna nessuna responsabilità e non traccia la correzione: ognuno pensa che se ne occupi qualcun altro.\n  * **C) Un secondo analista** raddoppia il costo del processo manuale senza eliminarne gli errori.\n\n* **Trappola d'esame:** un buon progetto di automazione chiude il ciclo **dall'inizio alla fine**: rilevazione, assegnazione, correzione, verifica. Se un'opzione automatizza solo la distribuzione dei dati, come il PDF, il lavoro manuale si sposta ma non sparisce.\n* **Piccolo Esempio Concentrato:** molti scanner offrono connettori per i sistemi di ticketing più diffusi; quando manca, bastano poche decine di righe di script che leggono i risultati dall'API dello scanner e creano i ticket con l'API del sistema di ticketing."
+  },
+  {
+    id: 428,
+    topic: "Automation & Orchestration",
+    level: "ANALISI",
+    scenario: "In un anno, quattro analisti su dieci lasciano il SOC di un'azienda. Nei colloqui di uscita tutti citano la stessa causa: passare gran parte del turno a chiudere a mano avvisi ripetitivi, quasi sempre falsi positivi, cercando ogni volta le stesse informazioni in cinque console diverse.",
+    question: "Quale intervento affronta MEGLIO la causa indicata, e quale beneficio dell'automazione dell'obiettivo 4.7 sfrutta?",
+    options: [
+      "A) Automatizzare l'arricchimento e la chiusura degli avvisi ripetitivi a basso rischio, lasciando agli analisti le indagini: sfrutta il beneficio della permanenza del personale (employee retention)",
+      "B) Alzare le soglie di tutte le regole di rilevazione, per ridurre il numero di avvisi: sfrutta il beneficio della riduzione dei costi",
+      "C) Assumere altri quattro analisti per distribuire gli avvisi su più persone: sfrutta il beneficio del workforce multiplier",
+      "D) Introdurre una rotazione più frequente dei turni: sfrutta il beneficio del tempo di reazione"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Automatizzare l'arricchimento e la chiusura degli avvisi ripetitivi a basso rischio**.\n\n* **Perché è la corretta:** Fra i benefici dell'automazione l'obiettivo 4.7 elenca la **permanenza del personale** (*employee retention*): togliere alle persone il lavoro ripetitivo e noioso riduce il burnout e trattiene chi ha competenze preziose. Lo scenario indica una causa precisa, gli avvisi ripetitivi e la ricerca manuale delle stesse informazioni, e l'automazione la elimina: un playbook raccoglie il contesto da tutte le console e chiude i casi a basso rischio già noti, mentre gli analisti si dedicano alle indagini vere.\n* **Perché le altre non sono corrette:**\n  * **B) Alzare tutte le soglie** riduce gli avvisi ma anche le rilevazioni vere, e non è automazione: aumenta il rischio invece di ridurre il lavoro inutile.\n  * **C) Assumere altri analisti** non è un workforce multiplier, che significa far rendere di più le persone che ci sono. Distribuisce su più persone lo stesso lavoro che le fa andare via.\n  * **D) La rotazione dei turni** cambia gli orari ma non il contenuto del lavoro, che è la causa indicata. Il tempo di reazione, inoltre, non ha a che fare con la permanenza del personale.\n\n* **Trappola d'esame:** le opzioni accoppiano una misura a un beneficio: devono essere giusti **entrambi**. B e C citano benefici reali dell'automazione, ma le misure proposte non sono automazione o non li producono.\n* **Piccolo Esempio Concentrato:** un SOC che automatizza l'arricchimento con reputazione degli IP, geolocalizzazione e storico dell'utente può ridurre di molti minuti il tempo di ogni avviso. Su centinaia di avvisi al giorno, sono ore di lavoro ripetitivo restituite alle indagini."
   }
 ];
 

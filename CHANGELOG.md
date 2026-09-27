@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Four new questions for objective 4.7 (automation and orchestration), which had almost only comprehension questions: automatic disabling of access on termination, escalation instead of automatic isolation on critical hosts, scanner-to-ticketing integration through APIs, and employee retention. In Italian and English.
 - Five new questions for objective 5.6 (security awareness), on the sub-topics that had none: removable media and cables, hybrid and remote work, password management, reporting and monitoring of the programme, and unintentional behaviour. In Italian and English.
 - Four new questions for objective 2.3 (vulnerability types), on the official sub-topics that had none: memory injection, resource reuse in virtualisation, the service-provider side of the supply chain, and cryptographic vulnerabilities (obsolete TLS versions and ciphers). In Italian and English.
 - Five new questions for objective 1.1 (security control categories and types), which had the fewest: a physical control, a purely detective control, one measure with two types at once, a compensating control for separation of duties, and a multi-response question on managerial controls. In Italian and English.

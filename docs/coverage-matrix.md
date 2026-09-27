@@ -44,7 +44,7 @@ Peso d'esame 18% · 112 domande nel banco del dominio.
 
 ## Dominio 4 — Operazioni di sicurezza
 
-Peso d'esame 28% · 181 domande nel banco del dominio.
+Peso d'esame 28% · 185 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
@@ -54,7 +54,7 @@ Peso d'esame 28% · 181 domande nel banco del dominio.
 | 4.4 | Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore. | 16 | 0 | 9 | 3 | 4 | 1 | da revisionare | [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 4.5 | Configurare controlli enterprise quali firewall, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR e proxy. | 21 | 0 | 7 | 10 | 4 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.6 | Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning. | 32 | 0 | 18 | 11 | 3 | 1 | da revisionare | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
-| 4.7 | Usare automazione e orchestrazione valutando repeatability, velocità, integrazioni, errori e rischio di propagazione. | 14 | 0 | 12 | 1 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
+| 4.7 | Usare automazione e orchestrazione valutando repeatability, velocità, integrazioni, errori e rischio di propagazione. | 18 | 0 | 12 | 3 | 3 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.8 | Applicare incident response e forensics preservando evidenze, comunicazioni, contenimento e ritorno controllato in produzione. | 18 | 0 | 11 | 0 | 7 | 1 | da revisionare | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) |
 | 4.9 | Interpretare fonti dati e log di rete, autenticazione, endpoint, applicazioni, cloud, DNS ed email. | 23 | 0 | 6 | 3 | 14 | 1 | da revisionare | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final) |
 
@@ -75,11 +75,11 @@ Peso d'esame 20% · 142 domande nel banco del dominio.
 
 I 5 obiettivi con meno domande, da rinforzare per primi:
 
-- **4.7**: 14 domande
 - **1.1**: 15 domande
 - **4.4**: 16 domande
 - **2.3**: 17 domande
 - **5.5**: 17 domande
+- **4.2**: 18 domande
 
 ## Fonti e revisione
 
