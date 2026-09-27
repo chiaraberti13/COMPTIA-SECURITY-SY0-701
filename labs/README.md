@@ -17,6 +17,7 @@ durata e livello di rischio prima di qualsiasi comando.
 | Lab | Obiettivi | Rischio | Durata |
 |---|---|---|---|
 | [01 — Leggere gli header di sicurezza dell'app](01-security-headers/README.md) ([EN](01-security-headers/README.en.md)) | 2.5, 4.1 | `low` | 30 minuti |
+| [02 — Prompt injection e threat model dell'app](02-prompt-injection/README.md) ([EN](02-prompt-injection/README.en.md)) | 2.4, 4.1, 5.2 | `low` | 45 minuti |
 
 ## Regole d'ingaggio
 

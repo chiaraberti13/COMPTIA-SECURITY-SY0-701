@@ -10,7 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
-- Hands-on labs in `labs/`: rules of engagement, three risk levels, isolation and cleanup rules, and a standard template, all enforced by `tests/labs.test.ts`. Lab 01 (Italian and English) has the learner read this app's security headers, watch the CSP block an injected script and trip the API rate limit, all on `127.0.0.1`.
+- Hands-on labs in `labs/`: rules of engagement, three risk levels, isolation and cleanup rules, and a standard template, all enforced by `tests/labs.test.ts`. Lab 01 (Italian and English) has the learner read this app's security headers, watch the CSP block an injected script and trip the API rate limit, all on `127.0.0.1`. Lab 02 starts from the threat model, shows how the server neutralises prompt injection, switches the defence off to watch the tests fail and lets the learner try an attack of their own, with no API key.
 - `HOST` environment variable: the interface the server listens on (default `0.0.0.0`); `HOST=127.0.0.1` keeps a local run out of reach of the network.
 - Four new questions for objective 4.7 (automation and orchestration), which had almost only comprehension questions: automatic disabling of access on termination, escalation instead of automatic isolation on critical hosts, scanner-to-ticketing integration through APIs, and employee retention. In Italian and English.
 - Five new questions for objective 5.6 (security awareness), on the sub-topics that had none: removable media and cables, hybrid and remote work, password management, reporting and monitoring of the programme, and unintentional behaviour. In Italian and English.
