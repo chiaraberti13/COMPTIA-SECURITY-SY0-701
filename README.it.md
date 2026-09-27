@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="CompTIA-Security-SY0-701" width="100%">
+  <img src="assets/banner.svg" alt="Security+ Training Studio: preparazione pratica e bilingue a CompTIA Security+ SY0-701" width="100%">
 </p>
 
 <p align="center"><a href="README.md">🇬🇧 English</a> · <a href="README.it.md">🇮🇹 Italiano</a></p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-active-F2C94C?style=flat-square" alt="Project status: active">
-  <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="LEARNING">
-  <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="TypeScript">
-  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="English and Italian">
-  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="MIT">
-  <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="OpenSSF Scorecard"></a>
+  <img src="https://img.shields.io/badge/status-active-F2C94C?style=flat-square" alt="Stato del progetto: attivo">
+  <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="Categoria: apprendimento">
+  <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="Stack: TypeScript">
+  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="Lingue: inglese e italiano">
+  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="Licenza: MIT">
+  <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="Punteggio di sicurezza OpenSSF Scorecard"></a>
 </p>
 
 > Un ambiente di studio bilingue e pratico per CompTIA Security+ SY0-701, con obiettivi strutturati, scenari realistici e un trainer di cybersecurity assistito dall’IA.
@@ -34,7 +34,7 @@
 - **[Licenza](#licenza)** — MIT per il codice; i marchi CompTIA restano dei rispettivi proprietari.
 
 > [!TIP]
-> **Hai trovato un errore in una domanda o in una traduzione, o hai un'idea?** Apri una [issue](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingue, self-hosted e privacy-first è l'unico vero requisito.
+> **Hai trovato un errore in una domanda o in una traduzione, o hai un'idea?** Apri una [issue su GitHub](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingue, self-hosted e privacy-first è l'unico vero requisito.
 
 ---
 

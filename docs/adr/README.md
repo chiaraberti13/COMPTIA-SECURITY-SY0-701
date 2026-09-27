@@ -9,10 +9,10 @@ sostituisce e si aggiorna lo stato di quello vecchio a "Sostituito da ADR NNNN".
 
 | N. | Decisione | Stato |
 |---|---|---|
-| [0001](0001-dataset-in-typescript.md) | Contenuti di studio come dataset TypeScript tipizzati | Accettato |
-| [0002](0002-bilingue-a-overlay.md) | Inglese come overlay a chiavi sopra la fonte italiana | Accettato |
-| [0003](0003-provider-ai-dietro-proxy.md) | Gemini come provider AI, chiamato solo dal server | Accettato |
-| [0004](0004-persistenza-solo-locale.md) | Progressi salvati solo nel browser, senza account | Accettato |
+| 0001 | [Contenuti di studio come dataset TypeScript tipizzati](0001-dataset-in-typescript.md) | Accettato |
+| 0002 | [Inglese come overlay a chiavi sopra la fonte italiana](0002-bilingue-a-overlay.md) | Accettato |
+| 0003 | [Gemini come provider AI, chiamato solo dal server](0003-provider-ai-dietro-proxy.md) | Accettato |
+| 0004 | [Progressi salvati solo nel browser, senza account](0004-persistenza-solo-locale.md) | Accettato |
 
 ## Modello
 

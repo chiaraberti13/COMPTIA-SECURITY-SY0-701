@@ -6,7 +6,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/security-responsible%20disclosure-22D3EE?style=flat-square" alt="Responsible disclosure">
-  <img src="https://img.shields.io/badge/status-maintained-F2C94C?style=flat-square" alt="Maintained">
+  <img src="https://img.shields.io/badge/status-maintained-F2C94C?style=flat-square" alt="Project status: maintained">
 </p>
 
 <p align="center"><a href="README.md">Project README</a> · <a href="LICENSE">MIT Licence</a></p>

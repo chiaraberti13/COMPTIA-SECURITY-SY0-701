@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="CompTIA-Security-SY0-701" width="100%">
+  <img src="assets/banner.svg" alt="Security+ Training Studio: bilingual hands-on preparation for CompTIA Security+ SY0-701" width="100%">
 </p>
 
 <p align="center"><a href="README.md">🇬🇧 English</a> · <a href="README.it.md">🇮🇹 Italiano</a></p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/status-active-F2C94C?style=flat-square" alt="Project status: active">
-  <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="LEARNING">
-  <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="TypeScript">
-  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="English and Italian">
-  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="MIT">
-  <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="OpenSSF Scorecard"></a>
+  <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="Category: learning">
+  <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="Stack: TypeScript">
+  <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="Languages: English and Italian">
+  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="Licence: MIT">
+  <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="OpenSSF Scorecard security score"></a>
 </p>
 
 > A bilingual, hands-on study environment for CompTIA Security+ SY0-701, combining structured objectives, realistic scenarios and an AI-assisted cybersecurity trainer.
@@ -34,7 +34,7 @@
 - **[Licence](#licence)** — MIT for the code; CompTIA marks belong to their owners.
 
 > [!TIP]
-> **Found a mistake in a question or translation, or have a feature idea?** Open an [issue](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingual, self-hosted and privacy-first is the only real requirement.
+> **Found a mistake in a question or translation, or have a feature idea?** Open an [issue on GitHub](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingual, self-hosted and privacy-first is the only real requirement.
 
 ---
 

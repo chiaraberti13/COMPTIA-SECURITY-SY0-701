@@ -59,6 +59,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- Descriptive links and image alternatives: the ADR index links each decision by its title instead of its number, the lab list says "versione inglese" instead of "EN", and the banner and badges of the READMEs say what they show in the file's language. `tests/linkText.test.ts` checks link texts, image alternatives, SVG names and a text version under any future diagram.
 - No emoji as the only cue: the new-questions dialog says "Correct answer" in words instead of a green check mark alone, warnings use words or an icon hidden from screen readers instead of ⚠️, and the status emoji of the threat model and lab 02 are followed by what they mean. `tests/emojiCues.test.ts` enforces it.
 - The Dockerfile no longer starts with `# syntax=docker/dockerfile:1`: that floating, unpinned frontend image was pulled from Docker Hub on every build (a registry outage failed two CI jobs on it), and BuildKit's built-in frontend covers every instruction used.
 - Scenarios no longer involve real third parties: hostnames are reserved names (RFC 2606: `example.com`, `.example`, `.test`) and the company in the scenarios is the fictional Kestrelia instead of the real name of a training provider. `tests/contentSafety.test.ts` keeps real hostnames, commands that disable protections or destroy data, and credential-shaped strings out of the study content.
