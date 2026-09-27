@@ -38,7 +38,9 @@ export default function AiTrainerPanel({
   };
 
   return (
-    <AnimatePresence>
+    // No animation on the first render: the panel is already open when the page
+    // loads, and growing it from zero width would shift the whole layout.
+    <AnimatePresence initial={false}>
       {open && (
         <motion.div 
           id="ai_sidebar"

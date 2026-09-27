@@ -165,7 +165,6 @@ export default function ChecklistSidebar({ study, domainTopics }: {
                             type="button"
                             id={`unit_label_${groupIdx}_${unit.key}`}
                             aria-current={isSelected}
-                            aria-label={t("a11y.selectTopic", { name: unit.name })}
                             onClick={() => setSelectedSubtopic(unit.subtopics[0])}
                             className="flex items-center justify-between gap-2 min-w-0 flex-1 p-1 text-left rounded cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
                           >

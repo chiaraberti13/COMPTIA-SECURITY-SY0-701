@@ -428,7 +428,6 @@ const it = {
   "toast.dismiss": "Chiudi la notifica",
 
   // Accessibilità
-  "a11y.selectTopic": "Apri l'argomento {name}",
   "a11y.toggleCheck": "Segna {name} come completato",
   "a11y.optionsGroup": "Opzioni di risposta",
   "a11y.optionsGroupMulti": "Opzioni di risposta, scelta multipla",
@@ -848,7 +847,6 @@ const en: Record<UIKey, string> = {
   "toast.dismiss": "Dismiss notification",
 
   // Accessibility
-  "a11y.selectTopic": "Open topic {name}",
   "a11y.toggleCheck": "Mark {name} as completed",
   "a11y.optionsGroup": "Answer options",
   "a11y.optionsGroupMulti": "Answer options, multiple choice",

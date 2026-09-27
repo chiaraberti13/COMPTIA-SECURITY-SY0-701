@@ -10,6 +10,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- `docs/quality-baseline.md`: measured baseline of the question bank, tests, `npm audit` and Lighthouse (mobile and desktop), with the commands to repeat each measure.
+- The build writes Brotli and gzip copies of the front end (`scripts/precompress.ts`, no new dependency) and the server sends the one the browser accepts; hashed files under `/assets` are cached for a year. A visit now transfers 1.35 MB instead of 5.4 MB.
 - Naming conventions and stable identifiers, written in `CONTRIBUTING.md` and checked by `tests/conventions.test.ts`: every question id, concept key, objective code and lab ever published is recorded in `tests/fixtures/stable-ids.json`, so a change that would orphan the progress saved in learners' browsers fails the tests.
 - "Exam and real world" in every domain guide: three topics per domain where the exam simplifies (control categories, Zero Trust, vulnerability priorities, SIEM, quantitative risk, compliance…), each with what the exam expects and how it works in practice.
 - Standard callouts (note, exam, practice, warning, common mistake, deep dive), each with its own icon and a written title. In explanations, the recurring "Exam trap" and "Focused Mini-Example" paragraphs (and a few other labels) now show as callouts, with no change to the datasets; the exam tip of every concept uses the same component. `CONTRIBUTING.md` lists the labels.
@@ -78,6 +80,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- The AI Trainer panel, open on load, no longer grows from zero width and shifts the page (desktop CLS from 0.419 to 0.038).
+- Checklist buttons are named by their visible text (WCAG 2.5.3 Label in Name), so voice-control users can activate them by saying what they see.
+- `robots.txt` exists instead of returning the app page.
 - Inline code in the study content (`` `ssh admin@host` ``, file names, record values) is shown as code instead of text with stray backticks, in explanations, concept details, exam tips, scenarios and options. The new-questions dialog renders its explanations like the quiz does, without raw `**` and backticks.
 - Heading levels no longer skip a step, so screen-reader users navigating by headings find every section: the quiz and remediation question is an h2 (it followed the h1 directly as an h3), the AI Trainer and the new-questions dialog are h2, and the boxes of the results and of the readiness panel are h3. An end-to-end test walks every view.
 - The SPF example included `spf.google.com`, which is not Google's SPF record (that is `_spf.google.com`); it now uses a reserved name.

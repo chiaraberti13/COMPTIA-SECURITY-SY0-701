@@ -287,6 +287,7 @@ Struttura **full-stack** integrata — un unico server Express serve il frontend
 ├── scripts/                  # Smoke test e generatore della matrice di copertura
 ├── docs/coverage-matrix.md   # Generato: domande per obiettivo
 ├── docs/errata.md            # Errori di contenuto già corretti
+├── docs/quality-baseline.md  # Baseline misurata: domande, test, audit, Lighthouse
 ├── labs/                     # Laboratori pratici: regole d'ingaggio, template, esercizi
 ├── public/favicon.svg        # Icona dell'app
 ├── .github/workflows/        # ci.yml (controlli, smoke, e2e) e security.yml (gitleaks, audit, CodeQL)

@@ -287,6 +287,7 @@ Integrated **full-stack** layout — one Express server serves the frontend and 
 ├── scripts/                  # Smoke test and coverage-matrix generator
 ├── docs/coverage-matrix.md   # Generated: questions per objective
 ├── docs/errata.md            # Content errors already fixed
+├── docs/quality-baseline.md  # Measured baseline: questions, tests, audit, Lighthouse
 ├── labs/                     # Hands-on labs: rules of engagement, template, exercises
 ├── public/favicon.svg        # App icon
 ├── .github/workflows/        # ci.yml (checks, smoke, e2e) and security.yml (gitleaks, audit, CodeQL)

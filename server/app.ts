@@ -8,6 +8,7 @@
  * environment, adds the Vite dev middleware and starts listening.
  */
 import express from "express";
+import fs from "fs";
 import path from "path";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -84,6 +85,55 @@ function budgetError(budget: DailyBudget, isEn: boolean): string {
 function isTimeout(error: unknown): boolean {
   const name = (error as { name?: unknown } | null)?.name;
   return name === "TimeoutError" || name === "AbortError";
+}
+
+/** Whether an Accept-Encoding header allows `name` ("br, gzip;q=0.8"; q=0 refuses). */
+export function acceptsEncoding(header: string | undefined, name: string): boolean {
+  return (header ?? "").split(",").some((part) => {
+    const [token, ...params] = part.trim().toLowerCase().split(";");
+    if (token.trim() !== name) return false;
+    const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="));
+    return q === undefined || Number(q.slice(2)) > 0;
+  });
+}
+
+/**
+ * Sends the Brotli or gzip copy written by scripts/precompress.ts when the
+ * browser accepts it. The list of compressed files is read once at start-up
+ * and a request can only ever be answered with a file from that list, so a
+ * crafted path cannot reach anything outside the build folder.
+ */
+function precompressedStatic(distPath: string): express.RequestHandler {
+  const available = new Set<string>();
+  const walk = (dir: string) => {
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return; // no build folder (tests, or the app not built yet)
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (/\.(br|gz)$/.test(entry.name)) available.add(path.relative(distPath, full).split(path.sep).join("/"));
+    }
+  };
+  walk(distPath);
+  const encodings: [name: string, ext: string][] = [["br", ".br"], ["gzip", ".gz"]];
+
+  return (req, res, next) => {
+    if ((req.method !== "GET" && req.method !== "HEAD") || available.size === 0) return next();
+    const rel = req.path.replace(/^\/+/, "");
+    res.vary("Accept-Encoding");
+    for (const [name, ext] of encodings) {
+      if (!available.has(rel + ext) || !acceptsEncoding(req.get("accept-encoding"), name)) continue;
+      res.set("Content-Encoding", name);
+      res.type(path.extname(rel));
+      if (rel.startsWith("assets/")) res.set("Cache-Control", "public, max-age=31536000, immutable");
+      return res.sendFile(rel + ext, { root: distPath });
+    }
+    next();
+  };
 }
 
 export function createApp(opts: AppOptions): express.Express {
@@ -421,6 +471,10 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
 
   if (opts.isProduction) {
     const distPath = opts.distPath ?? path.join(process.cwd(), "dist");
+    app.use(precompressedStatic(distPath));
+    // File names under /assets carry a hash of their content: a new build means
+    // a new name, so browsers may keep them for a year without asking again.
+    app.use("/assets", express.static(path.join(distPath, "assets"), { immutable: true, maxAge: "1y" }));
     app.use(express.static(distPath));
     // SPA fallback: any other GET returns the app shell. A final middleware
     // instead of app.get("*") because Express 5 rejects an unnamed "*" route

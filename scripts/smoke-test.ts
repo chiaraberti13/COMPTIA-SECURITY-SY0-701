@@ -61,6 +61,18 @@ const checks: Check[] = [
     },
   },
   {
+    name: "the app's scripts are sent precompressed and cached for a year",
+    run: async () => {
+      const html = await (await fetch(`${BASE}/`)).text();
+      const script = html.match(/src="(\/assets\/[^"]+\.js)"/)?.[1];
+      assert(script, "no script under /assets in the app shell");
+      const res = await fetch(`${BASE}${script}`, { headers: { "accept-encoding": "br" } });
+      assert(res.status === 200, `expected 200, got ${res.status}`);
+      assert(res.headers.get("content-encoding") === "br", "the script was not sent with Brotli: run the build (scripts/precompress.ts)");
+      assert(res.headers.get("cache-control")?.includes("immutable") ?? false, "hashed assets should be cached as immutable");
+    },
+  },
+  {
     name: "a deep link falls back to the SPA shell",
     run: async () => {
       const res = await fetch(`${BASE}/studio/domain/3`);
