@@ -128,6 +128,7 @@ describe("DomainGuidePanel", () => {
       "Collegamenti tra domini",
       "Confronti chiave",
       "Errori comuni",
+      "Esame e realtà",
       "Scenario applicativo",
       "Esercizi guidati",
       "Verifica di padronanza",
@@ -147,7 +148,7 @@ describe("DomainGuidePanel", () => {
     expect(labels).not.toContain("Confronti chiave");
     expect(labels).not.toContain("Errori comuni");
     expect(labels).not.toContain("Esercizi guidati");
-    expect(labels).toHaveLength(9);
+    expect(labels).toHaveLength(10);
   });
 
   it("moves focus to the chosen section, opening the sources when they are folded", () => {
@@ -166,5 +167,19 @@ describe("DomainGuidePanel", () => {
     fireEvent.click(within(nav).getByRole("link", { name: "Fonti e revisione" }));
     expect(sources.open).toBe(true);
     expect(document.activeElement).toBe(sources.querySelector("summary"));
+  });
+
+  it("sets what the exam expects beside how it works in practice, each labelled in words", () => {
+    const panel = renderGuide(guide);
+    const list = panel.querySelector(`#guide_exam_vs_practice_${guide.domainId}`)!;
+    const items = within(list as HTMLElement).getAllByRole("listitem");
+    expect(items).toHaveLength(guide.examVsPractice!.length);
+    for (const [i, item] of items.entries()) {
+      const notes = within(item).getAllByRole("note");
+      expect(notes.map((n) => n.getAttribute("data-callout"))).toEqual(["exam", "practice"]);
+      expect(within(notes[0]).getByText("All'esame")).toBeTruthy();
+      expect(within(notes[1]).getByText("Nella pratica")).toBeTruthy();
+      expect(notes[1].textContent).toContain(guide.examVsPractice![i].practice);
+    }
   });
 });

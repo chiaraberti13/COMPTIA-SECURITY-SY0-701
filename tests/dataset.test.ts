@@ -659,6 +659,9 @@ describe("domain learning guides", () => {
       expect(enGuide.connections).toHaveLength(itGuide.connections.length);
       expect(enGuide.readinessChecks).toHaveLength(itGuide.readinessChecks.length);
       expect(Object.keys(enGuide.appliedScenario)).toEqual(Object.keys(itGuide.appliedScenario));
+      // Every domain says where the exam simplifies, in both languages.
+      expect(itGuide.examVsPractice?.length ?? 0).toBeGreaterThanOrEqual(3);
+      expect(enGuide.examVsPractice).toHaveLength(itGuide.examVsPractice!.length);
     }
   });
 

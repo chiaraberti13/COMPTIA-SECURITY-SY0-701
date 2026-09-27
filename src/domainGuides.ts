@@ -31,6 +31,8 @@ export interface DomainGuide {
   comparisons?: GuideComparison[];
   /** Frequent misconceptions, each paired with the correct reading. */
   commonTraps?: { misconception: string; correction: string }[];
+  /** Where the exam simplifies: what it expects, and how the topic works in practice. */
+  examVsPractice?: { topic: string; exam: string; practice: string }[];
   appliedScenario: GuideScenario;
   /** Extra exercises, each tied to the objective it trains. */
   practiceScenarios?: (GuideScenario & { objective: string })[];
@@ -179,6 +181,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Un honeypot blocca gli attacchi.", correction: "Un honeypot serve a rilevare e studiare l'attaccante: non ha valore di produzione e non impedisce l'attacco ai sistemi reali." },
       { misconception: "Una chiave più lunga è sempre più robusta, qualunque sia l'algoritmo.", correction: "La lunghezza si confronta all'interno della stessa famiglia: una chiave ECC da 256 bit offre una sicurezza paragonabile a RSA da 3072 bit." },
       { misconception: "Il backout plan si scrive se la modifica fallisce.", correction: "Il backout plan si prepara e si verifica prima della maintenance window, come condizione per l'approvazione del cambiamento." },
+    ],
+    examVsPractice: [
+      { topic: "Categorie e tipi di controllo", exam: "Ogni controllo ha una categoria (tecnico, gestionale, operativo, fisico) e un tipo (preventivo, rilevativo, correttivo…) da scegliere in base alle parole chiave dello scenario.", practice: "I cataloghi usati nelle aziende, come NIST SP 800-53, raggruppano i controlli per famiglie (accessi, audit, configurazione…) e la stessa misura svolge spesso più funzioni. Conta documentare quale rischio copre e verificare che funzioni, non l'etichetta." },
+      { topic: "Zero Trust", exam: "Zero Trust si riconosce dai suoi termini: control plane e data plane, policy decision point e policy enforcement point, verifica continua.", practice: "Non si compra un prodotto Zero Trust: è una migrazione graduale, descritta in NIST SP 800-207, in cui identità, dispositivi e applicazioni passano uno alla volta ai nuovi controlli e convivono a lungo con la rete tradizionale." },
+      { topic: "Crittografia", exam: "Si sceglie l'algoritmo giusto per l'uso: AES per i dati, RSA o ECC per lo scambio di chiavi e le firme, SHA-256 per l'integrità.", practice: "Nessuno implementa un algoritmo da zero: si usano librerie e protocolli standard, come TLS 1.3, con le configurazioni raccomandate. I problemi reali sono quasi sempre nella gestione di chiavi e certificati: scadenze, rotazione, chiavi private finite nel posto sbagliato." },
     ],
     appliedScenario: {
       title: "Pacchetto di configurazione alterato",
@@ -397,6 +404,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Reflected e amplified DDoS sono sinonimi.", correction: "Nel reflected l'attaccante falsifica l'indirizzo della vittima come mittente; nell'amplified sfrutta servizi che rispondono con molti più dati della richiesta. Spesso sono combinati." },
       { misconception: "Un sistema end-of-life si protegge con il patching regolare.", correction: "Un sistema end-of-life non riceve più patch: servono isolamento, controlli compensativi e un piano di dismissione." },
     ],
+    examVsPractice: [
+      { topic: "Attori della minaccia", exam: "Ogni attore ha motivazioni e risorse da manuale: lo stato nazionale conduce campagne APT, l'hacktivista cerca visibilità, l'insider sfrutta l'accesso che ha.", practice: "Attribuire un attacco è lento e incerto, e raramente cambia la difesa. I team di sicurezza ragionano sulle tecniche osservate, per esempio con MITRE ATT&CK, più che sull'identità di chi attacca." },
+      { topic: "Gestione delle vulnerabilità", exam: "Una vulnerabilità ha un nome, un punteggio CVSS e un rimedio: si applica la patch.", practice: "Le priorità nascono dal contesto: punteggio CVSS, sfruttamento reale (per esempio il catalogo CISA KEV) ed esposizione dell'asset. Molte vulnerabilità non si correggono subito, per compatibilità o fermo macchina, e restano a lungo coperte da controlli compensativi." },
+      { topic: "Indicatori di attività malevola", exam: "Un indicatore punta a un attacco preciso: tanti login falliti indicano un brute force, un picco di traffico un DDoS.", practice: "Lo stesso segnale ha spesso cause innocue: un servizio configurato male, un backup notturno, un aggiornamento. Servono una baseline del comportamento normale e la correlazione di più fonti, e i falsi positivi sono la normalità del lavoro quotidiano." },
+    ],
     appliedScenario: {
       title: "Compromissione cloud con persistenza",
       prompt: "Dopo un login anomalo, un account crea una regola di inoltro email e autorizza un'app OAuth. Quali elementi correlare e quali controlli interrompono davvero l'attacco?",
@@ -597,6 +609,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Un hot site garantisce di non perdere dati.", correction: "L'hot site riduce il tempo di ripristino (RTO); la perdita di dati (RPO) dipende da quanto spesso i dati vengono replicati o copiati." },
       { misconception: "Data sovereignty e geolocation sono sinonimi.", correction: "La data sovereignty dice quali leggi si applicano ai dati in base al paese in cui si trovano; la geolocation individua dove si trova un dispositivo o un utente e serve per applicare restrizioni geografiche." },
       { misconception: "Un UPS mantiene i sistemi accesi per tutto un blackout lungo.", correction: "L'UPS copre l'interruzione breve e il tempo necessario all'avvio del generatore, che sostiene i blackout lunghi." },
+    ],
+    examVsPractice: [
+      { topic: "Responsabilità condivisa nel cloud", exam: "La tabella IaaS, PaaS e SaaS dice con precisione che cosa gestisce il fornitore e che cosa il cliente.", practice: "Il confine cambia da servizio a servizio e dipende dal contratto. La maggior parte degli incidenti cloud nasce da configurazioni del cliente, come identità con troppi permessi o archivi resi pubblici per errore, non da falle del fornitore." },
+      { topic: "Segmentazione della rete", exam: "DMZ, VLAN e air gap sono disegnati con confini netti fra zone di fiducia.", practice: "Con cloud, lavoro remoto e servizi SaaS i confini si sfumano: si segmenta sempre più per identità e applicazione (microsegmentazione). Un diagramma non basta: la segmentazione va verificata con test, perché regole di eccezione aggiunte negli anni la erodono." },
+      { topic: "Backup e continuità", exam: "RPO e RTO sono numeri dati nello scenario, e il tipo di backup si sceglie di conseguenza.", practice: "RPO e RTO vengono dalla business impact analysis e valgono solo se il ripristino è stato provato. Un backup mai ripristinato è una speranza, non una garanzia; contro il ransomware servono anche copie immutabili o isolate dalla rete." },
     ],
     appliedScenario: {
       title: "Servizio ibrido con RPO stretto",
@@ -864,6 +881,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "L'automazione riduce sempre il rischio.", correction: "Un errore automatizzato si propaga ovunque in pochi secondi: servono test, guard rail, approvazioni e attenzione a complessità, single point of failure e debito tecnico." },
       { misconception: "Il degaussing cancella anche i dischi SSD.", correction: "Il degaussing agisce solo sui supporti magnetici; per SSD e memorie flash servono crypto erase, comandi di secure erase o distruzione fisica." },
     ],
+    examVsPractice: [
+      { topic: "Baseline di hardening", exam: "Si applica la baseline sicura e il sistema risulta protetto.", practice: "Le baseline, come i CIS Benchmarks, si adattano: alcune impostazioni rompono applicazioni e richiedono eccezioni documentate. Poi la configurazione si allontana dalla baseline con il tempo (drift), e va misurata di continuo." },
+      { topic: "Risposta agli incidenti", exam: "Le fasi seguono un ordine preciso: preparazione, rilevamento, analisi, contenimento, eradicazione, ripristino, lezioni apprese.", practice: "Nella realtà le fasi si sovrappongono e si ripetono: mentre si contiene si scoprono nuovi sistemi coinvolti. Decisioni come isolare un server di produzione spettano anche al business, e la documentazione accompagna tutto l'incidente, non solo la fine." },
+      { topic: "SIEM e monitoraggio", exam: "Il SIEM rileva l'attacco e genera l'allarme.", practice: "Un SIEM vede solo i log che riceve e riconosce solo ciò per cui esiste una regola. Il lavoro vero è scegliere le fonti, tarare le regole e gestire il volume degli allarmi, altrimenti gli analisti smettono di guardarli." },
+    ],
     appliedScenario: {
       title: "PowerShell e beacon DNS",
       prompt: "EDR segnala PowerShell offuscato su una workstation e il SIEM mostra query DNS periodiche verso un dominio appena registrato. Qual è la sequenza operativa corretta?",
@@ -1115,6 +1137,11 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "L'analisi qualitativa è inutile rispetto a quella quantitativa.", correction: "La qualitativa è rapida e adatta quando mancano dati economici affidabili; la quantitativa richiede valori monetari e frequenze credibili." },
       { misconception: "Un penetration test in unknown environment è sempre il migliore.", correction: "Simula meglio un attaccante esterno, ma a parità di tempo copre meno; il known environment trova più vulnerabilità. La scelta dipende dall'obiettivo del test." },
     ],
+    examVsPractice: [
+      { topic: "Analisi quantitativa del rischio", exam: "Con SLE, ARO e ALE si calcola una perdita annua precisa e la si confronta con il costo del controllo.", practice: "ARO ed exposure factor sono stime incerte, spesso basate su pochi dati. L'ALE serve a confrontare ordini di grandezza e a motivare una spesa davanti alla direzione, non a prevedere la perdita esatta." },
+      { topic: "Conformità e sicurezza", exam: "Rispettare una norma o superare un audit dimostra che i controlli richiesti sono presenti.", practice: "Un audit superato fotografa un momento e un perimetro definiti. La sicurezza richiede controlli che funzionino ogni giorno, anche fuori da quel perimetro: si può essere conformi e vulnerabili nello stesso momento." },
+      { topic: "Rischio delle terze parti", exam: "Questionari di sicurezza, SLA e clausole contrattuali gestiscono il rischio del fornitore.", practice: "Un questionario è un'autodichiarazione. Conta verificare evidenze indipendenti, come un report SOC 2 o i risultati di un test, e prevedere nel contratto l'obbligo di notificare gli incidenti e il diritto di audit." },
+    ],
     appliedScenario: {
       title: "Fornitore che tratta dati personali",
       prompt: "Un nuovo SaaS elaborerà dati personali critici. Il questionario è positivo, ma il contratto non specifica notifica degli incidenti né cancellazione dei dati. Si può approvare il rischio?",
@@ -1311,6 +1338,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "A honeypot blocks attacks.", correction: "A honeypot exists to detect and study the attacker: it has no production value and does not stop attacks on real systems." },
       { misconception: "A longer key is always stronger, whatever the algorithm.", correction: "Key length is compared within the same family: a 256-bit ECC key offers security comparable to 3072-bit RSA." },
       { misconception: "The backout plan is written if the change fails.", correction: "The backout plan is prepared and verified before the maintenance window, as a condition for approving the change." },
+    ],
+    examVsPractice: [
+      { topic: "Control categories and types", exam: "Every control has one category (technical, managerial, operational, physical) and one type (preventive, detective, corrective…) to pick from the keywords of the scenario.", practice: "The catalogues companies use, such as NIST SP 800-53, group controls into families (access, audit, configuration…) and the same measure often serves several functions. What counts is documenting which risk it covers and checking that it works, not the label." },
+      { topic: "Zero Trust", exam: "Zero Trust is recognised by its terms: control plane and data plane, policy decision point and policy enforcement point, continuous verification.", practice: "You cannot buy a Zero Trust product: it is a gradual migration, described in NIST SP 800-207, in which identities, devices and applications move to the new controls one at a time and live alongside the traditional network for a long time." },
+      { topic: "Cryptography", exam: "You pick the right algorithm for the use: AES for data, RSA or ECC for key exchange and signatures, SHA-256 for integrity.", practice: "Nobody implements an algorithm from scratch: you use standard libraries and protocols, such as TLS 1.3, with the recommended configurations. The real problems are almost always in managing keys and certificates: expiry, rotation, private keys ending up in the wrong place." },
     ],
     appliedScenario: {
       title: "Altered configuration package",
@@ -1529,6 +1561,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Reflected and amplified DDoS are synonyms.", correction: "In a reflected attack the attacker spoofs the victim's address as the sender; in an amplified attack it abuses services that reply with far more data than the request. They are often combined." },
       { misconception: "An end-of-life system is protected by regular patching.", correction: "An end-of-life system no longer receives patches: it needs isolation, compensating controls, and a decommissioning plan." },
     ],
+    examVsPractice: [
+      { topic: "Threat actors", exam: "Every actor has textbook motives and resources: the nation state runs APT campaigns, the hacktivist seeks visibility, the insider abuses the access they have.", practice: "Attributing an attack is slow and uncertain, and rarely changes the defence. Security teams reason about the observed techniques, for example with MITRE ATT&CK, more than about who is attacking." },
+      { topic: "Vulnerability management", exam: "A vulnerability has a name, a CVSS score and a fix: you apply the patch.", practice: "Priorities come from context: CVSS score, real-world exploitation (for example the CISA KEV catalogue) and exposure of the asset. Many vulnerabilities are not fixed straight away, because of compatibility or downtime, and stay covered by compensating controls for a long time." },
+      { topic: "Indicators of malicious activity", exam: "An indicator points to a specific attack: many failed logins mean brute force, a traffic spike means DDoS.", practice: "The same signal often has innocent causes: a misconfigured service, a nightly backup, an update. You need a baseline of normal behaviour and the correlation of several sources, and false positives are the everyday norm." },
+    ],
     appliedScenario: {
       title: "Cloud compromise with persistence",
       prompt: "After an anomalous sign-in, an account creates an email forwarding rule and authorizes an OAuth app. Which evidence should be correlated, and which controls actually interrupt the attack?",
@@ -1729,6 +1766,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "A hot site guarantees no data loss.", correction: "A hot site reduces restoration time (RTO); data loss (RPO) depends on how often data is replicated or copied." },
       { misconception: "Data sovereignty and geolocation are synonyms.", correction: "Data sovereignty states which laws apply to data based on the country where it resides; geolocation determines where a device or user is and is used to enforce geographic restrictions." },
       { misconception: "A UPS keeps systems running through a long blackout.", correction: "A UPS covers the short interruption and the time needed for the generator to start, which sustains long blackouts." },
+    ],
+    examVsPractice: [
+      { topic: "Shared responsibility in the cloud", exam: "The IaaS, PaaS and SaaS table states exactly what the provider manages and what the customer does.", practice: "The boundary changes from service to service and depends on the contract. Most cloud incidents come from customer configuration, such as identities with too many permissions or storage made public by mistake, not from provider flaws." },
+      { topic: "Network segmentation", exam: "DMZ, VLAN and air gap are drawn with sharp boundaries between trust zones.", practice: "With cloud, remote work and SaaS services the boundaries blur: segmentation increasingly follows identity and application (microsegmentation). A diagram is not enough: segmentation must be verified with tests, because exception rules added over the years erode it." },
+      { topic: "Backup and continuity", exam: "RPO and RTO are numbers given in the scenario, and the backup type follows from them.", practice: "RPO and RTO come from the business impact analysis and are worth something only if restoring has been tested. A backup never restored is a hope, not a guarantee; against ransomware you also need immutable copies or copies isolated from the network." },
     ],
     appliedScenario: {
       title: "Hybrid service with a tight RPO",
@@ -1996,6 +2038,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Automation always reduces risk.", correction: "An automated mistake spreads everywhere in seconds: it needs testing, guard rails, approvals, and attention to complexity, single point of failure, and technical debt." },
       { misconception: "Degaussing also erases SSD drives.", correction: "Degaussing works only on magnetic media; SSDs and flash memory need crypto erase, secure erase commands, or physical destruction." },
     ],
+    examVsPractice: [
+      { topic: "Hardening baselines", exam: "You apply the secure baseline and the system is protected.", practice: "Baselines, such as the CIS Benchmarks, get adapted: some settings break applications and need documented exceptions. Then the configuration drifts away from the baseline over time, and has to be measured continuously." },
+      { topic: "Incident response", exam: "The phases follow a precise order: preparation, detection, analysis, containment, eradication, recovery, lessons learned.", practice: "In reality the phases overlap and repeat: while containing, you discover new affected systems. Decisions such as isolating a production server also belong to the business, and documentation runs through the whole incident, not only the end." },
+      { topic: "SIEM and monitoring", exam: "The SIEM detects the attack and raises the alarm.", practice: "A SIEM sees only the logs it receives and recognises only what a rule exists for. The real work is choosing the sources, tuning the rules and managing the volume of alerts, otherwise analysts stop looking at them." },
+    ],
     appliedScenario: {
       title: "PowerShell and DNS beaconing",
       prompt: "EDR flags obfuscated PowerShell on a workstation, and the SIEM shows periodic DNS queries to a newly registered domain. What is the correct operational sequence?",
@@ -2246,6 +2293,11 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "MTBF measures the time needed to repair.", correction: "Repair time is MTTR; MTBF measures reliability, that is the average time between one failure and the next." },
       { misconception: "Qualitative analysis is useless compared with quantitative analysis.", correction: "Qualitative analysis is fast and suitable when reliable financial data is missing; quantitative analysis requires credible monetary values and frequencies." },
       { misconception: "An unknown-environment penetration test is always the best.", correction: "It better simulates an external attacker, but for the same time it covers less; a known environment finds more vulnerabilities. The choice depends on the goal of the test." },
+    ],
+    examVsPractice: [
+      { topic: "Quantitative risk analysis", exam: "With SLE, ARO and ALE you calculate a precise annual loss and compare it with the cost of the control.", practice: "ARO and exposure factor are uncertain estimates, often based on little data. ALE is for comparing orders of magnitude and justifying spending to management, not for predicting the exact loss." },
+      { topic: "Compliance and security", exam: "Meeting a standard or passing an audit shows that the required controls are in place.", practice: "A passed audit is a snapshot of a set moment and scope. Security needs controls that work every day, including outside that scope: you can be compliant and vulnerable at the same time." },
+      { topic: "Third-party risk", exam: "Security questionnaires, SLAs and contract clauses manage the supplier's risk.", practice: "A questionnaire is a self-declaration. What counts is checking independent evidence, such as a SOC 2 report or test results, and writing into the contract the duty to notify incidents and the right to audit." },
     ],
     appliedScenario: {
       title: "Vendor processing personal data",

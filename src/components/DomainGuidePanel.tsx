@@ -5,6 +5,7 @@ import type { DomainGuide } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
+import Callout from "./Callout";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
 
@@ -172,6 +173,7 @@ export default function DomainGuidePanel({
     { target: `guide_h_connections_${d}`, label: t("study.connections") },
     ...(has(guide.comparisons) ? [{ target: `guide_h_comparisons_${d}`, label: t("study.comparisons") }] : []),
     ...(has(guide.commonTraps) ? [{ target: `guide_h_traps_${d}`, label: t("study.commonTraps") }] : []),
+    ...(has(guide.examVsPractice) ? [{ target: `guide_h_practice_gap_${d}`, label: t("study.examVsPractice") }] : []),
     { target: `guide_h_scenario_${d}`, label: t("study.appliedScenario") },
     ...(has(guide.practiceScenarios) ? [{ target: `guide_h_practice_${d}`, label: t("study.practiceScenarios") }] : []),
     { target: `guide_h_readiness_${d}`, label: t("study.readiness") },
@@ -319,6 +321,24 @@ export default function DomainGuidePanel({
                     <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />
                     <span><span className="font-bold text-cyan-300">{t("study.trapRight")}:</span> {trap.correction}</span>
                   </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {has(guide.examVsPractice) && (
+          <section className="space-y-3">
+            <h3 {...headingProps("practice_gap")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.examVsPractice")}</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">{t("study.examVsPracticeIntro")}</p>
+            <ul className="space-y-4" id={`guide_exam_vs_practice_${d}`}>
+              {guide.examVsPractice!.map((item) => (
+                <li key={item.topic} className="space-y-2">
+                  <h4 className="text-xs font-bold text-slate-200">{item.topic}</h4>
+                  <div className="space-y-2">
+                    <Callout kind="exam" title={t("study.onTheExam")}>{item.exam}</Callout>
+                    <Callout kind="practice" title={t("study.inPractice")}>{item.practice}</Callout>
+                  </div>
                 </li>
               ))}
             </ul>
