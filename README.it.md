@@ -75,6 +75,9 @@ La filosofia, condivisa con gli altri repository:
   gli errori tornano subito e le risposte corrette seguono intervalli di 1–3–7–14–30 giorni.
 - **Localizzazione completa Inglese / Italiano** — ogni subtopic e domanda di quiz in
   entrambe le lingue, commutabile nell'app.
+- **Laboratori pratici** — esercizi da svolgere sul proprio computer, con regole d'ingaggio,
+  livello di rischio e cleanup verificato: vedi [`labs/`](labs/README.md). Il primo esamina
+  gli header di sicurezza e il limite di richieste di questa stessa app.
 
 ## Prerequisiti
 
@@ -110,6 +113,9 @@ AI_DAILY_LIMIT=500        # chiamate AI totali per giorno UTC, tutti gli utenti 
 GEMINI_TIMEOUT_MS=30000   # una chiamata a Gemini più lunga viene abbandonata e riceve 504
 TRUST_PROXY=1             # reverse proxy davanti a Node; 0 se i browser si collegano direttamente
 AI_ACCESS_TOKEN=          # facoltativo: l'AI risponde solo a chi inserisce questo codice
+
+# Opzionale — interfaccia di rete (predefinita 0.0.0.0, tutte le interfacce)
+HOST=127.0.0.1            # raggiungibile solo da questo computer: per i lab e le demo locali
 ```
 
 `AI_DAILY_LIMIT` si aggiunge al limite per indirizzo IP (30 richieste ogni 15 minuti): in
@@ -281,6 +287,7 @@ Struttura **full-stack** integrata — un unico server Express serve il frontend
 ├── scripts/                  # Smoke test e generatore della matrice di copertura
 ├── docs/coverage-matrix.md   # Generato: domande per obiettivo
 ├── docs/errata.md            # Errori di contenuto già corretti
+├── labs/                     # Laboratori pratici: regole d'ingaggio, template, esercizi
 ├── public/favicon.svg        # Icona dell'app
 ├── .github/workflows/        # ci.yml (controlli, smoke, e2e) e security.yml (gitleaks, audit, CodeQL)
 ├── .env.example              # Modello delle variabili d'ambiente

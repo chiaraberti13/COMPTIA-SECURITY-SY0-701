@@ -75,6 +75,9 @@ The philosophy, shared with the rest of these repositories:
   return immediately and correct answers reappear on a 1–3–7–14–30 day schedule.
 - **Full English / Italian localisation** — every subtopic and quiz question in both
   languages, switchable in-app.
+- **Hands-on labs** — exercises to run on your own machine, with rules of engagement, a
+  risk level and a tested cleanup: see [`labs/`](labs/README.md). The first one inspects
+  this app's own security headers and rate limit.
 
 ## Prerequisites
 
@@ -110,6 +113,9 @@ AI_DAILY_LIMIT=500        # total AI calls per UTC day, all users together; 0 tu
 GEMINI_TIMEOUT_MS=30000   # a Gemini call taking longer is abandoned and answered with 504
 TRUST_PROXY=1             # reverse proxies in front of Node; 0 if browsers connect directly
 AI_ACCESS_TOKEN=          # optional: the AI answers only visitors who enter this code
+
+# Optional — network interface (default 0.0.0.0, every interface)
+HOST=127.0.0.1            # reachable only from this computer: for labs and local demos
 ```
 
 `AI_DAILY_LIMIT` complements the per-IP rate limit (30 requests every 15 minutes): on a
@@ -281,6 +287,7 @@ Integrated **full-stack** layout — one Express server serves the frontend and 
 ├── scripts/                  # Smoke test and coverage-matrix generator
 ├── docs/coverage-matrix.md   # Generated: questions per objective
 ├── docs/errata.md            # Content errors already fixed
+├── labs/                     # Hands-on labs: rules of engagement, template, exercises
 ├── public/favicon.svg        # App icon
 ├── .github/workflows/        # ci.yml (checks, smoke, e2e) and security.yml (gitleaks, audit, CodeQL)
 ├── .env.example              # Environment variables template

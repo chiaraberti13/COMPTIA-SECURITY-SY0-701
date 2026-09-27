@@ -272,12 +272,12 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 #### Laboratori pratici sicuri
 
-- [ ] **P0 — Policy per i lab:** uso esclusivo in ambienti autorizzati e isolati; divieto di bersagli pubblici o sistemi di terzi.
-- [ ] **P0 — Template standard:** obiettivi e codice obiettivo SY0-701, scenario, prerequisiti, topologia, durata, rischio, setup, esercizio, evidenze, cleanup e domande finali.
-- [ ] **P0 — Isolamento e ripristino:** rete locale dedicata, dati sintetici, snapshot e comandi di cleanup testati.
-- [ ] **P0 — Classificazione del rischio:** `low`, `moderate`, `advanced-controlled`, con avvertenze prima dei passaggi sensibili.
+- [x] **P0 — Policy per i lab:** regole d'ingaggio in `labs/README.md` (solo sistemi propri o autorizzati per iscritto, nessun bersaglio pubblico, ambiente isolato, dati sintetici, cleanup verificato); `tests/labs.test.ts` rifiuta i comandi dei lab che puntano a host diversi da `127.0.0.1` o `localhost` — 2026-09-27.
+- [x] **P0 — Template standard:** obiettivi e codice obiettivo SY0-701, scenario, prerequisiti, topologia, durata, rischio, setup, esercizio, evidenze, cleanup e domande finali, in `labs/TEMPLATE.md`; ogni lab è in italiano e inglese e il test ne verifica sezioni, metadati e parità fra le lingue — 2026-09-27.
+- [ ] 🟡 **P0 — Isolamento e ripristino:** regole di isolamento e ripristino in `labs/README.md`; il server accetta `HOST=127.0.0.1` per restare fuori dalla rete durante un lab, e il primo lab verifica l'interfaccia di ascolto prima e dopo l'esercizio — 2026-09-27. Mancano snapshot e reti virtuali, che serviranno per i primi lab `moderate`.
+- [x] **P0 — Classificazione del rischio:** `low`, `moderate`, `advanced-controlled`, definiti in `labs/README.md` con ciò che ciascuno richiede; il test impone un avviso `> ⚠️` nei lab sopra `low` — 2026-09-27.
 - [ ] **P1 — Lab difensivi introduttivi:** analisi log, hardening Linux, IAM, gestione certificati, backup, segmentazione e incident triage.
-- [ ] **P1 — Lab "sul progetto stesso":** usare questa app come caso di studio (lettura degli header di sicurezza, test del rate limit in locale, analisi del threat model, prompt injection sul proprio server), collegandoli agli obiettivi 2.x, 3.x e 4.x.
+- [ ] 🟡 **P1 — Lab "sul progetto stesso":** il Lab 01 legge gli header di sicurezza, vede la CSP bloccare uno script e fa scattare il limite di richieste in locale (2026-09-27); restano l'analisi del threat model e la prompt injection sul proprio server. Voce originale: usare questa app come caso di studio (lettura degli header di sicurezza, test del rate limit in locale, analisi del threat model, prompt injection sul proprio server), collegandoli agli obiettivi 2.x, 3.x e 4.x.
 - [ ] **P1 — Scenari attack-to-defense:** osservare un comportamento malevolo simulato e poi configurare prevenzione, rilevazione e risposta.
 - [ ] **P1 — Dati sintetici versionati:** log, IOC fittizi, configurazioni volutamente vulnerabili ed expected output privi di dati personali.
 - [ ] **P1 — Validazione automatica dell'ambiente:** preflight per virtualizzazione, porte, risorse e assenza di esposizione pubblica involontaria.

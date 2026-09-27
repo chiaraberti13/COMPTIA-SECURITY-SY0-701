@@ -53,7 +53,7 @@ jobs:
         with:
           args: >-
             --config lychee.toml --offline --no-progress
-            './*.md' './docs/**/*.md' './.github/**/*.md'
+            './*.md' './docs/**/*.md' './labs/**/*.md' './.github/**/*.md'
           jobSummary: true
 
   external-links:
@@ -71,5 +71,5 @@ jobs:
         with:
           args: >-
             --config lychee.toml --no-progress
-            './*.md' './docs/**/*.md' './.github/**/*.md'
+            './*.md' './docs/**/*.md' './labs/**/*.md' './.github/**/*.md'
           jobSummary: true

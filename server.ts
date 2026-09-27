@@ -49,6 +49,9 @@ async function startServer() {
   // PaaS platforms (Cloud Run, Render, Railway, Heroku) impose the port through
   // the environment and health-check the container on it.
   const PORT = Number(process.env.PORT) || 3000;
+  // All interfaces by default, as containers and PaaS platforms need. HOST=127.0.0.1
+  // keeps a local run (a lab, a demo) out of reach of the rest of the network.
+  const HOST = process.env.HOST || "0.0.0.0";
 
   const app: express.Express = createApp({
     isProduction,
@@ -72,9 +75,10 @@ async function startServer() {
     app.use(vite.middlewares);
   }
 
-  const server = app.listen(PORT, "0.0.0.0", () => {
+  const server = app.listen(PORT, HOST, () => {
     // The configuration, never the key: only whether one is set.
     logger.log("info", "server_started", {
+      host: HOST,
       port: PORT,
       production: isProduction,
       model: GEMINI_MODEL,
