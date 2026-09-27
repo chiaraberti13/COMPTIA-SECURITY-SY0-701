@@ -19,3 +19,14 @@ regexes = [
   # checklistKey: "WPA3EnterpriseRes"   (identifiers of the study checklist)
   '''checklistKey:\s*"[A-Za-z0-9]+"''',
 ]
+
+[[allowlists]]
+description = "fingerprints of the Italian source texts, not credentials"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = [
+  # "concept D2 ChangePasswordsMiti": "0123456789abcdef"   (tests/fixtures/translation-sources.json:
+  # a truncated SHA-256 of public study text; the unit name may contain "password" or "key")
+  '''^\s*"(question|concept|group|guide) (?:[^"\\]|\\.)+": "[0-9a-f]{16}",?$''',
+]
+
