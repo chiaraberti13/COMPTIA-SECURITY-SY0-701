@@ -74,6 +74,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- Heading levels no longer skip a step, so screen-reader users navigating by headings find every section: the quiz and remediation question is an h2 (it followed the h1 directly as an h3), the AI Trainer and the new-questions dialog are h2, and the boxes of the results and of the readiness panel are h3. An end-to-end test walks every view.
 - The SPF example included `spf.google.com`, which is not Google's SPF record (that is `_spf.google.com`); it now uses a reserved name.
 - The adaptive remediation never showed its questions: the AI questions arrived, but the results screen stayed on top because the remediation starts from it. The results now give way to the remediation while it runs, and the 1-4 and Enter keys work there too. A new end-to-end test goes through the whole flow; it failed before the fix.
 - The top of the simulator set-up could not be reached when the panel was taller than the screen, on phones and on short desktop windows: the vertical centring pushed it above the scroll origin.

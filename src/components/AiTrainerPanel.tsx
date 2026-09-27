@@ -54,7 +54,7 @@ export default function AiTrainerPanel({
               <div className="bg-cyan-500/10 p-1.5 rounded text-cyan-400" id="sidebar_header_icon">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <h3 className="font-bold text-xs font-mono text-cyan-400 tracking-wider uppercase">{t("chat.title")}</h3>
+              <h2 className="font-bold text-xs font-mono text-cyan-400 tracking-wider uppercase">{t("chat.title")}</h2>
             </div>
             <button 
               id="close_sidebar_icon_btn"

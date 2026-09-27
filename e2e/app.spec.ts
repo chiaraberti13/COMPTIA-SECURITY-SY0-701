@@ -20,6 +20,27 @@ async function seriousViolations(page: Page): Promise<string[]> {
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes[0]?.target.join(" ")}`);
 }
 
+/**
+ * Problems in the visible heading outline: not exactly one h1, or a level that
+ * jumps more than one step down (h2 → h4), which leaves screen-reader users
+ * navigating by headings with a missing section (WCAG 1.3.1).
+ */
+async function headingProblems(page: Page): Promise<string[]> {
+  const outline = await page.$$eval("h1, h2, h3, h4, h5, h6", (els) =>
+    els
+      .filter((el) => el.getClientRects().length > 0)
+      .map((el) => ({ level: Number(el.tagName[1]), text: (el.textContent ?? "").trim().slice(0, 50) }))
+  );
+  const problems: string[] = [];
+  const h1 = outline.filter((h) => h.level === 1).length;
+  if (h1 !== 1) problems.push(`${h1} h1 elements`);
+  outline.forEach((h, i) => {
+    const previous = i === 0 ? 1 : outline[i - 1].level;
+    if (h.level > previous + 1) problems.push(`h${previous} → h${h.level}: ${h.text}`);
+  });
+  return problems;
+}
+
 test.describe("layout", () => {
   test("the study panel is usable and the page never scrolls sideways", async ({ page }) => {
     await openApp(page);
@@ -473,6 +494,63 @@ test.describe("adaptive remediation", () => {
 
     await page.locator("#remediation_end_btn").click();
     await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+  });
+});
+
+test.describe("heading structure", () => {
+  test("every view has one h1 and never skips a heading level", async ({ page }) => {
+    await page.route("**/api/quiz/remediation", (route) =>
+      route.fulfill({
+        status: 200,
+        json: {
+          questions: [0, 1, 2].map((i) => ({
+            id: 9_100_000 + i,
+            topic: `Topic ${i}`,
+            level: "ANALISI",
+            scenario: `A business scenario number ${i}.`,
+            question: `Which is the BEST option ${i}?`,
+            options: ["A", "B", "C", "D"],
+            answerIndex: 0,
+            explanation: `A is best in scenario ${i}.`,
+          })),
+        },
+      })
+    );
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    expect(await headingProblems(page), "study").toEqual([]);
+
+    await page.locator("#tab_btn_glossary").click();
+    await expect(page.locator("#glossary_root")).toBeVisible();
+    expect(await headingProblems(page), "glossary").toEqual([]);
+
+    await page.locator("#tab_btn_quiz").click();
+    expect(await headingProblems(page), "quiz set-up").toEqual([]);
+
+    await page.getByRole("button", { name: /Mini/ }).first().click();
+    await page.locator("#start_quiz_btn").click();
+    expect(await headingProblems(page), "question").toEqual([]);
+
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press("4");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("3");
+      await page.keyboard.press("Enter");
+      if (i === 0) expect(await headingProblems(page), "answer feedback").toEqual([]);
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+    expect(await headingProblems(page), "results").toEqual([]);
+
+    await page.locator("#trigger_remediation_btn").click();
+    await expect(page.locator("#remediation_question_screen")).toBeVisible();
+    expect(await headingProblems(page), "remediation question").toEqual([]);
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press("1");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#remediation_ended_screen")).toBeVisible();
+    expect(await headingProblems(page), "remediation results").toEqual([]);
   });
 });
 

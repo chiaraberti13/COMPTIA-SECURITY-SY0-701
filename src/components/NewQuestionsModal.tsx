@@ -19,7 +19,7 @@ export default function NewQuestionsModal({ questions, onClose, onStart }: {
         {/* Header */}
         <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950" id="new_questions_modal_header">
           <div>
-            <h3 className="text-sm font-bold text-slate-100" id="new_questions_modal_title">{t("modal.title")}</h3>
+            <h2 className="text-sm font-bold text-slate-100" id="new_questions_modal_title">{t("modal.title")}</h2>
             <p className="text-[10px] text-slate-400">{t("modal.subtitle")}</p>
           </div>
           <button

@@ -64,7 +64,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
         >
           <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
           <div className="space-y-1">
-            <h4 className="text-sm font-bold text-amber-400 font-mono">{t("quiz.timeUpTitle")}</h4>
+            <h3 className="text-sm font-bold text-amber-400 font-mono">{t("quiz.timeUpTitle")}</h3>
             <p className="text-xs text-slate-300 leading-relaxed">{t("quiz.timeUpDesc")}</p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-400 mt-0.5 flex-shrink-0" />
             <div className="space-y-1">
-              <h4 className="text-sm font-bold text-rose-400 font-mono" id="remediation_title">{t("quiz.weaknessAnalysis")}</h4>
+              <h3 className="text-sm font-bold text-rose-400 font-mono" id="remediation_title">{t("quiz.weaknessAnalysis")}</h3>
               <p className="text-xs text-slate-400 leading-relaxed" id="remediation_desc">
                 {t("quiz.weaknessDesc")}
               </p>
@@ -136,7 +136,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
         <div className="bg-cyan-950/20 border border-cyan-900/50 p-5 rounded flex gap-3 shadow-md" id="passed_box">
           <Award className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
           <div className="space-y-1">
-            <h4 className="text-sm font-bold text-cyan-400 font-mono" id="passed_title">{t("quiz.excellentTitle")}</h4>
+            <h3 className="text-sm font-bold text-cyan-400 font-mono" id="passed_title">{t("quiz.excellentTitle")}</h3>
             <p className="text-xs text-slate-300 leading-relaxed" id="passed_desc">
               {t("quiz.excellentDesc")}
             </p>
@@ -147,10 +147,10 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
       {/* Answer review: every answer given is already in quizAnswers. */}
       <div className="border-t border-slate-800 pt-5 space-y-4" id="quiz_review_section">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-cyan-400" />
             {t("quiz.reviewTitle")}
-          </h4>
+          </h3>
           <button
             type="button"
             id="toggle_review_btn"

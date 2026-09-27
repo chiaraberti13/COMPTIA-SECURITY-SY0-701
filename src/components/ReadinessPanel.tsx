@@ -111,10 +111,10 @@ export default function ReadinessPanel({ readiness, onTrainObjective }: {
         </div>
 
         <section className="space-y-2" aria-labelledby="readiness_weak_title">
-          <h4 id="readiness_weak_title" className="flex items-center gap-2 text-xs font-bold text-slate-200">
+          <h3 id="readiness_weak_title" className="flex items-center gap-2 text-xs font-bold text-slate-200">
             <Target className="w-3.5 h-3.5 text-rose-400" aria-hidden="true" />
             {t("ready.weakTitle")}
-          </h4>
+          </h3>
           <p className="text-[11px] text-slate-400">{t("ready.weakHint", { n: MIN_ATTEMPTS_FOR_SIGNAL })}</p>
           {weakestObjectives.length === 0 ? (
             <p className="text-xs text-slate-400" id="readiness_weak_none">{t("ready.weakNone")}</p>

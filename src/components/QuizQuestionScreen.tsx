@@ -77,9 +77,9 @@ export default function QuizQuestionScreen({ quiz, glossaryIndex, levelLabel }: 
       )}
 
       {/* Question text */}
-      <h3 className="font-bold text-sm text-slate-200 leading-relaxed" id="quiz_q_text">
+      <h2 className="font-bold text-sm text-slate-200 leading-relaxed" id="quiz_q_text">
         {activeQuestions[currentQuestionIndex].question}
-      </h3>
+      </h2>
 
       {/* A multi-response question says so up front: the learner
           must know two picks are expected before choosing one. */}
@@ -148,13 +148,13 @@ export default function QuizQuestionScreen({ quiz, glossaryIndex, levelLabel }: 
       {showFeedback ? (
         <div className="space-y-4" id="quiz_feedback_box">
           <div className={`p-4 rounded border ${isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? "bg-emerald-500/[0.02] border-emerald-500/20 text-slate-300" : "bg-rose-500/[0.02] border-rose-500/20 text-slate-300"}`} id="quiz_feedback_details">
-            <h4 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
+            <h3 className="text-xs font-mono font-bold uppercase mb-2 tracking-wider flex items-center gap-1.5 text-slate-200">
               {isSelectionCorrect(activeQuestions[currentQuestionIndex], selectedOptions) ? (
                 <><Check className="w-4 h-4 text-emerald-400" aria-hidden="true" /> <span className="text-emerald-400">{t("quiz.bestChoice")}</span></>
               ) : (
                 <><X className="w-4 h-4 text-rose-400" aria-hidden="true" /> <span className="text-rose-400">{t("quiz.distractor")}</span></>
               )}
-            </h4>
+            </h3>
             <div className="text-xs text-slate-400 leading-relaxed">
               <MarkdownText text={activeQuestions[currentQuestionIndex].explanation} />
             </div>

@@ -153,7 +153,7 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
             <div className="flex items-center gap-2">
               <span className="text-[9px] font-mono font-extrabold text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-2 py-0.5 rounded uppercase tracking-wider">{t("quiz.newBadge")}</span>
             </div>
-            <h4 className="text-xs font-bold text-slate-200">{t("quiz.newTitle")}</h4>
+            <h3 className="text-xs font-bold text-slate-200">{t("quiz.newTitle")}</h3>
             <p className="text-[11px] text-slate-400 leading-relaxed">
               {t("quiz.newDesc")}
             </p>

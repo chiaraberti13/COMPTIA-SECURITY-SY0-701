@@ -309,7 +309,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completate tutte e cinque le guide (2026-09-24).
 - [ ] **P0 — Template coerenti** per sottovoce, confronto, procedura, comando, domanda, scenario e lab.
-- [ ] **P0 — Gerarchia dei titoli corretta:** un solo H1, sezioni brevi, ancore stabili e sommario per le pagine lunghe.
+- [ ] 🟡 **P0 — Gerarchia dei titoli corretta:** un solo H1, sezioni brevi, ancore stabili e sommario per le pagine lunghe. Dal 2026-09-27 ogni vista ha un solo H1 e nessun livello saltato: la domanda del quiz e della remediation è un H2, il Trainer AI e la finestra delle nuove domande sono H2, i riquadri dei risultati e della preparazione H3. Un test end-to-end percorre studio, glossario, impostazione, domanda, feedback, risultati e remediation. Manca il sommario per le pagine lunghe (guide di dominio).
 - [ ] **P0 — Callout standard:** `Nota`, `Esame`, `Pratica`, `Attenzione`, `Errore comune`, `Approfondimento`.
 - [ ] **P0 — Blocchi di codice:** linguaggio dichiarato, prompt distinguibile, output separato e righe pericolose commentate.
 - [ ] 🟡 **P1 — Tabelle solo per confronti reali**, leggibili anche su mobile: le `comparativeTable` delle sottovoci e le tabelle delle guide scorrono già dentro il proprio riquadro; resta la revisione editoriale delle tabelle troppo dense.
