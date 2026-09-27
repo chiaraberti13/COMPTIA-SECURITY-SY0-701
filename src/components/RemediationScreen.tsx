@@ -3,7 +3,7 @@ import type { Remediation } from "../hooks/useRemediation";
 import { Check, X, ChevronRight, RefreshCw, Award, Sparkles } from "lucide-react";
 import { useLang } from "../i18n";
 import OptionVerdict from "./OptionVerdict";
-import MarkdownText from "./MarkdownText";
+import MarkdownText, { InlineText } from "./MarkdownText";
 import {
   correctIndexes,
   requiredSelections,
@@ -90,7 +90,7 @@ export default function RemediationScreen({ remediation, quiz, onRegenerate, lev
         {remediationQuestions[remediationIndex].scenario?.trim() && (
           <div className="bg-slate-950/80 p-4 border-l-2 border-rose-500 rounded-r space-y-2" id="remediation_scenario_box">
             <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("rem.analysisScenario")}</span>
-            <p className="text-xs text-slate-400 leading-relaxed italic">{remediationQuestions[remediationIndex].scenario}</p>
+            <p className="text-xs text-slate-400 leading-relaxed italic"><InlineText text={remediationQuestions[remediationIndex].scenario} /></p>
           </div>
         )}
 
@@ -143,7 +143,7 @@ export default function RemediationScreen({ remediation, quiz, onRegenerate, lev
                 className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
               >
                 <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
-                {opt}
+                <InlineText text={opt} />
                 {remediationShowFeedback && <OptionVerdict isCorrect={isCorrect} isSelected={isSelected} />}
               </button>
             );

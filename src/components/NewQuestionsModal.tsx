@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import type { Question } from "../types";
 import { useLang } from "../i18n";
 import { correctIndexes } from "../quiz";
+import MarkdownText, { InlineText } from "./MarkdownText";
 
 /**
  * The texts of the ten questions added last to Domain 1, with their answers
@@ -42,7 +43,7 @@ export default function NewQuestionsModal({ questions, onClose, onStart }: {
               </div>
               <div className="space-y-2">
                 {q.scenario?.trim() && (
-                  <p className="text-xs text-slate-400 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> {q.scenario}</p>
+                  <p className="text-xs text-slate-400 italic bg-slate-950/30 p-2.5 rounded border-l border-cyan-500/30 leading-relaxed"><strong>{t("modal.scenario")}</strong> <InlineText text={q.scenario} /></p>
                 )}
                 <p className="text-xs font-semibold text-slate-200">{q.question}</p>
               </div>
@@ -52,13 +53,13 @@ export default function NewQuestionsModal({ questions, onClose, onStart }: {
                     key={optIdx}
                     className={`p-2 rounded border ${correctIndexes(q).includes(optIdx) ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-medium" : "bg-slate-900/50 border-slate-800 text-slate-400"}`}
                   >
-                    {opt} {correctIndexes(q).includes(optIdx) && "✓"}
+                    <InlineText text={opt} /> {correctIndexes(q).includes(optIdx) && "✓"}
                   </div>
                 ))}
               </div>
               <div className="text-[11px] bg-slate-950/80 p-3 rounded border border-slate-800/60 text-slate-300 leading-relaxed space-y-1">
                 <strong className="text-cyan-400 block text-xs">{t("modal.detailedExplanation")}</strong>
-                <div className="whitespace-pre-line text-slate-400">{q.explanation}</div>
+                <MarkdownText text={q.explanation} />
               </div>
             </div>
           ))}

@@ -19,7 +19,7 @@ import { getSubgroupForSubtopic } from "../subgroups";
 import GlossaryHints from "./GlossaryHints";
 import DomainGuidePanel from "./DomainGuidePanel";
 import Callout from "./Callout";
-import MarkdownText from "./MarkdownText";
+import MarkdownText, { InlineText } from "./MarkdownText";
 import { getDomainRoute } from "../domainRoutes";
 import StudyPathsPanel from "./StudyPathsPanel";
 import type { StudyAction } from "../studyPaths";
@@ -271,7 +271,7 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
 
                     {/* Exam Tip */}
                     <Callout kind="exam" heading="h4" title={t("study.examTipTitle")} id={`concept_tip_${sub.checklistKey}`}>
-                      {sub.examTip}
+                      <InlineText text={sub.examTip} />
                     </Callout>
 
                     <GlossaryHints

@@ -2,7 +2,7 @@ import type { QuizSession } from "../hooks/useQuizSession";
 import type { Remediation } from "../hooks/useRemediation";
 import { Check, X, ChevronRight, RefreshCw, AlertTriangle, Award, BookOpen, Sparkles } from "lucide-react";
 import { useLang, type UIKey } from "../i18n";
-import MarkdownText from "./MarkdownText";
+import MarkdownText, { InlineText } from "./MarkdownText";
 import { hasPassedRun, correctIndexes, isSelectionCorrect } from "../quiz";
 import type { StudyAction } from "../studyPaths";
 
@@ -224,12 +224,12 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
                       <div className="space-y-1 text-[11px]">
                         <p className={correct ? "text-emerald-300" : "text-rose-300"}>
                           <span className="text-slate-400 font-mono uppercase mr-1">{t("quiz.reviewYourAnswer")}:</span>
-                          {answered ? given.map(i => q.options[i]).join(" · ") : t("quiz.reviewNoAnswer")}
+                          {answered ? <InlineText text={given.map(i => q.options[i]).join(" · ")} /> : t("quiz.reviewNoAnswer")}
                         </p>
                         {!correct && (
                           <p className="text-emerald-300">
                             <span className="text-slate-400 font-mono uppercase mr-1">{t("quiz.reviewCorrectAnswer")}:</span>
-                            {correctIndexes(q).map(i => q.options[i]).join(" · ")}
+                            <InlineText text={correctIndexes(q).map(i => q.options[i]).join(" · ")} />
                           </p>
                         )}
                       </div>

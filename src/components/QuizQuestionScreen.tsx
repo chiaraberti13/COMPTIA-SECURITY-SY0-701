@@ -4,7 +4,7 @@ import { Check, X, ChevronRight } from "lucide-react";
 import { useLang } from "../i18n";
 import OptionVerdict from "./OptionVerdict";
 import GlossaryHints from "./GlossaryHints";
-import MarkdownText from "./MarkdownText";
+import MarkdownText, { InlineText } from "./MarkdownText";
 import {
   formatClock,
   correctIndexes,
@@ -72,7 +72,7 @@ export default function QuizQuestionScreen({ quiz, glossaryIndex, levelLabel }: 
       {activeQuestions[currentQuestionIndex].scenario?.trim() && (
         <div className="bg-slate-950/80 p-4 border-l-2 border-cyan-500 rounded-r space-y-2" id="quiz_scenario_box">
           <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded uppercase font-semibold">{t("quiz.businessScenario")}</span>
-          <p className="text-xs text-slate-400 leading-relaxed italic">{activeQuestions[currentQuestionIndex].scenario}</p>
+          <p className="text-xs text-slate-400 leading-relaxed italic"><InlineText text={activeQuestions[currentQuestionIndex].scenario} /></p>
         </div>
       )}
 
@@ -127,7 +127,7 @@ export default function QuizQuestionScreen({ quiz, glossaryIndex, levelLabel }: 
               className={`w-full text-left p-3.5 rounded border text-xs transition-all duration-200 ${optionStyle}`}
             >
               <span className="font-mono text-[10px] text-slate-400 mr-2 select-none">{oIdx + 1}</span>
-              {opt}
+              <InlineText text={opt} />
               {showFeedback && <OptionVerdict isCorrect={isCorrect} isSelected={isSelected} />}
             </button>
           );

@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import MarkdownText from "../src/components/MarkdownText";
+import MarkdownText, { InlineText } from "../src/components/MarkdownText";
 import { LABEL_CALLOUTS } from "../src/components/Callout";
-import { DOMAIN_1_QUESTIONS } from "../src/data";
-import { QUESTION_EN } from "../src/data.en";
+import { DOMAIN_1_QUESTIONS, DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS, INITIAL_QUESTIONS } from "../src/data";
+import { QUESTION_EN, SUBTOPIC_EN } from "../src/data.en";
 
 afterEach(cleanup);
 
@@ -47,5 +47,39 @@ describe("MarkdownText callouts", () => {
       expect(LABEL_CALLOUTS[label]).toBeDefined();
       expect(english).toContain(`**${label}:**`);
     }
+  });
+});
+
+describe("MarkdownText inline code", () => {
+  it("shows `code` verbatim in a code element, without the backticks", () => {
+    const { container } = render(<MarkdownText text={"Run `nmap -sV **host**` then **read** the output."} />);
+    const code = container.querySelector("code")!;
+    expect(code.textContent).toBe("nmap -sV **host**");
+    expect(code.querySelector("strong")).toBeNull();
+    expect(container.textContent).not.toContain("`");
+    expect(screen.getByText("read").tagName).toBe("STRONG");
+  });
+
+  it("keeps markup inside code as text", () => {
+    const { container } = render(<InlineText text={"Try `<script>alert(1)</script>` in the field"} />);
+    expect(container.querySelector("script")).toBeNull();
+    expect(container.querySelector("code")!.textContent).toBe("<script>alert(1)</script>");
+  });
+
+  it("finds every backtick of the study content in a pair, so none is shown stray", () => {
+    const topics = [DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS].flat();
+    const texts: [string, string][] = [
+      ...INITIAL_QUESTIONS.flatMap((q) => [q.scenario, q.question, q.explanation, ...q.options].map((t): [string, string] => [`Q${q.id}`, t ?? ""])),
+      ...topics.flatMap((g) => g.subtopics.flatMap((s) => [s.definition, s.details, s.examTip].map((t): [string, string] => [s.checklistKey, t]))),
+      ...Object.values(QUESTION_EN).flatMap((d) =>
+        Object.entries(d).flatMap(([id, q]) => [q.scenario, q.question, q.explanation, ...(q.options ?? [])].map((t): [string, string] => [`EN Q${id}`, t ?? ""]))
+      ),
+      ...Object.values(SUBTOPIC_EN).flatMap((d) =>
+        Object.entries(d).flatMap(([key, s]) => [s.definition, s.details, s.examTip].map((t): [string, string] => [`EN ${key}`, t ?? ""]))
+      ),
+    ];
+    // Line by line, as MarkdownText renders them.
+    const odd = texts.filter(([, t]) => t.split("\n").some((line) => (line.match(/`/g) ?? []).length % 2 === 1)).map(([where]) => where);
+    expect(odd).toEqual([]);
   });
 });
