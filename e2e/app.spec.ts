@@ -7,6 +7,9 @@ const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 async function openApp(page: Page) {
   await page.goto("/");
   await expect(page.locator("#domain_guide_1")).toBeVisible();
+  // The bundled fonts use font-display: swap, so the layout reflows when they
+  // arrive: a click aimed before the swap can land beside its button.
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
 }
 
 /** Serious and critical axe violations, formatted for a readable failure. */
