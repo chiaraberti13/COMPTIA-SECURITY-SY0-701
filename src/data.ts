@@ -507,7 +507,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
   },
   {
     title: "8. Identity & Access Control Models (Obj 4.6)",
-    description: "Gestione delle identità, autenticazione a più fattori, servizi di directory e modelli di autorizzazione. ⚠️ Questi argomenti appartengono all'obiettivo 4.6 (Security Operations): sono raccolti qui perché servono fin da subito, ma all'esame contano come Dominio 4, non come Dominio 1.",
+    description: "Gestione delle identità, autenticazione a più fattori, servizi di directory e modelli di autorizzazione. Attenzione: questi argomenti appartengono all'obiettivo 4.6 (Security Operations): sono raccolti qui perché servono fin da subito, ma all'esame contano come Dominio 4, non come Dominio 1.",
     icon: "Users",
     subtopics: [
       {
@@ -4340,7 +4340,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
   },
   {
     title: "10. Secure Deconstruction & Disposal (Obj 4.2)",
-    description: "Ciclo di vita degli asset e smaltimento sicuro: acquisizione, assegnazione e titolarità, inventario e tracciamento, dismissione, sanitizzazione, distruzione certificata e conservazione dei dati. ⚠️ Questi argomenti appartengono all'obiettivo 4.2 (Security Operations): sono raccolti qui per continuità con la governance, ma all'esame contano come Dominio 4, non come Dominio 5.",
+    description: "Ciclo di vita degli asset e smaltimento sicuro: acquisizione, assegnazione e titolarità, inventario e tracciamento, dismissione, sanitizzazione, distruzione certificata e conservazione dei dati. Attenzione: questi argomenti appartengono all'obiettivo 4.2 (Security Operations): sono raccolti qui per continuità con la governance, ma all'esame contano come Dominio 4, non come Dominio 5.",
     icon: "CheckSquare",
     subtopics: [
       {

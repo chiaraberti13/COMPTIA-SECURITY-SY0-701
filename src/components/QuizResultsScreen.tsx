@@ -128,7 +128,10 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
           </div>
 
           {remediationError && (
-            <p className="text-xs text-rose-400 font-mono mt-1" id="remediation_err_text">⚠️ {remediationError}</p>
+            <p className="text-xs text-rose-400 font-mono mt-1 flex items-start gap-1.5" id="remediation_err_text" role="alert">
+              <AlertTriangle className="w-3.5 h-3.5 mt-px flex-shrink-0" aria-hidden="true" />
+              <span>{remediationError}</span>
+            </p>
           )}
         </div>
       ) : (

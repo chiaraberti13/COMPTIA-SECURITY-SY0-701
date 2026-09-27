@@ -73,7 +73,7 @@ Open [docs/threat-model.md](../../docs/threat-model.md) and find the table «Con
 e modello AI» (boundary 3, server and AI model). Answer in `~/lab02/notes.md`:
 
 - which STRIDE row describes prompt injection, and in which category;
-- which control mitigates it and why its status is 🟡 and not ✅.
+- which control mitigates it and why its status is 🟡 (partly mitigated) and not ✅ (mitigated).
 
 ```bash
 mkdir -p ~/lab02
@@ -216,7 +216,7 @@ The `~/lab02` folder must contain:
 
    </details>
 
-2. Why does prompt injection stay 🟡 in the threat model even with every test green?
+2. Why does prompt injection stay 🟡 (partly mitigated) in the threat model even with every test green?
 
    <details>
    <summary>Answer</summary>

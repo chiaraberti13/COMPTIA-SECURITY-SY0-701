@@ -76,7 +76,7 @@ Apri [docs/threat-model.md](../../docs/threat-model.md) e trova la tabella «Con
 e modello AI». Rispondi in `~/lab02/note.md`:
 
 - quale riga STRIDE descrive la prompt injection, e con quale categoria;
-- quale controllo la mitiga e perché lo stato è 🟡 e non ✅.
+- quale controllo la mitiga e perché lo stato è 🟡 (mitigato in parte) e non ✅ (mitigato).
 
 ```bash
 mkdir -p ~/lab02
@@ -219,7 +219,7 @@ Nella cartella `~/lab02` devono esserci:
 
    </details>
 
-2. Perché nel threat model la prompt injection resta 🟡 anche con tutti i test verdi?
+2. Perché nel threat model la prompt injection resta 🟡 (mitigata in parte) anche con tutti i test verdi?
 
    <details>
    <summary>Risposta</summary>

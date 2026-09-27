@@ -70,7 +70,7 @@ export const GROUP_EN: Record<string, GroupOverride> = {
   },
   "8. Identity & Access Control Models (Obj 4.6)": {
     title: "8. Identity & Access Control Models (Obj 4.6)",
-    description: "Identity management, multifactor authentication, directory services and authorization models. \u26a0\ufe0f These topics belong to objective 4.6 (Security Operations): they are gathered here because they are needed from the outset, but on the exam they count as Domain 4, not Domain 1."
+    description: "Identity management, multifactor authentication, directory services and authorization models. Caution: these topics belong to objective 4.6 (Security Operations): they are gathered here because they are needed from the outset, but on the exam they count as Domain 4, not Domain 1."
   },
 
   // Domain 2
@@ -222,7 +222,7 @@ export const GROUP_EN: Record<string, GroupOverride> = {
   },
   "10. Secure Deconstruction & Disposal (Obj 4.2)": {
     title: "10. Secure Deconstruction & Disposal (Obj 4.2)",
-    description: "Asset lifecycle and secure disposal: acquisition, assignment and ownership, inventory and tracking, decommissioning, sanitization, certified destruction and data retention. \u26a0\ufe0f These topics belong to objective 4.2 (Security Operations): they are gathered here for continuity with governance, but on the exam they count as Domain 4, not Domain 5."
+    description: "Asset lifecycle and secure disposal: acquisition, assignment and ownership, inventory and tracking, decommissioning, sanitization, certified destruction and data retention. Caution: these topics belong to objective 4.2 (Security Operations): they are gathered here for continuity with governance, but on the exam they count as Domain 4, not Domain 5."
   },
 };
 

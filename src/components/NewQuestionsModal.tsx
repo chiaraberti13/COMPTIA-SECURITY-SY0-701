@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import OptionVerdict from "./OptionVerdict";
 import type { Question } from "../types";
 import { useLang } from "../i18n";
 import { correctIndexes } from "../quiz";
@@ -53,7 +54,8 @@ export default function NewQuestionsModal({ questions, onClose, onStart }: {
                     key={optIdx}
                     className={`p-2 rounded border ${correctIndexes(q).includes(optIdx) ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-medium" : "bg-slate-900/50 border-slate-800 text-slate-400"}`}
                   >
-                    <InlineText text={opt} /> {correctIndexes(q).includes(optIdx) && "✓"}
+                    <InlineText text={opt} />
+                    {correctIndexes(q).includes(optIdx) && <OptionVerdict isCorrect isSelected={false} />}
                   </div>
                 ))}
               </div>
