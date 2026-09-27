@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- `docs/content-templates.md`: the templates of concepts, comparisons, procedures, commands, questions, scenarios and labs, each with its rules and the test that enforces it; `tests/contentTemplates.test.ts` checks the concept template in both languages.
 - `docs/quality-baseline.md`: measured baseline of the question bank, tests, `npm audit` and Lighthouse (mobile and desktop), with the commands to repeat each measure.
 - The build writes Brotli and gzip copies of the front end (`scripts/precompress.ts`, no new dependency) and the server sends the one the browser accepts; hashed files under `/assets` are cached for a year. A visit now transfers 1.35 MB instead of 5.4 MB.
 - Naming conventions and stable identifiers, written in `CONTRIBUTING.md` and checked by `tests/conventions.test.ts`: every question id, concept key, objective code and lab ever published is recorded in `tests/fixtures/stable-ids.json`, so a change that would orphan the progress saved in learners' browsers fails the tests.
@@ -80,6 +81,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- Three comparison tables (risk appetite, due diligence, barcode and RFID) had an empty first header, announced without a name by screen readers; it now reads "Aspect".
 - The AI Trainer panel, open on load, no longer grows from zero width and shifts the page (desktop CLS from 0.419 to 0.038).
 - Checklist buttons are named by their visible text (WCAG 2.5.3 Label in Name), so voice-control users can activate them by saying what they see.
 - `robots.txt` exists instead of returning the app page.

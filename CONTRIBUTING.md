@@ -40,7 +40,7 @@ CI runs these on Node 22 and 24, plus a separate security workflow (secret scan,
 
 ### Changing study content
 
-The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is the English overlay. Domain guides live in `src/domainGuides.ts`.
+The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is the English overlay. Domain guides live in `src/domainGuides.ts`. [`docs/content-templates.md`](docs/content-templates.md) describes the template of each kind of content (concept, comparison, procedure, command, question, scenario, lab) and the test that enforces it.
 
 1. **Change both languages in the same pull request.** The tests check that every Italian sentence and its translation carry the same numbers, acronyms and literal tokens (`tests/languageParity.test.ts`). If a difference is only idiomatic, add it to the reviewed list in that test with a one-line reason.
 2. **A new question** needs: a scenario, 2–6 options, the correct `answerIndex` (and `answerIndexes` for "choose TWO"), and an explanation that names the correct options and discusses **every** wrong one. `tests/dataset.test.ts` enforces all of this. Its `topic` must be linked to SY0-701 objectives in `src/questionObjectives.ts` (a new topic needs a new entry), then run `npm run coverage-matrix` and commit the updated `docs/coverage-matrix.md`.
@@ -120,7 +120,7 @@ La CI li esegue su Node 22 e 24, insieme a un workflow di sicurezza separato (ri
 
 ### Modificare i contenuti di studio
 
-Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è la sovrapposizione inglese. Le guide di dominio sono in `src/domainGuides.ts`.
+Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è la sovrapposizione inglese. Le guide di dominio sono in `src/domainGuides.ts`. [`docs/content-templates.md`](docs/content-templates.md) descrive il template di ogni tipo di contenuto (sottovoce, confronto, procedura, comando, domanda, scenario, lab) e il test che lo fa rispettare.
 
 1. **Modifica entrambe le lingue nella stessa pull request.** I test verificano che ogni frase italiana e la sua traduzione riportino gli stessi numeri, sigle e token letterali (`tests/languageParity.test.ts`). Se una differenza è solo idiomatica, aggiungila all'elenco revisionato di quel test con una riga di motivazione.
 2. **Una nuova domanda** richiede: uno scenario, da 2 a 6 opzioni, l'`answerIndex` corretto (e `answerIndexes` per le domande "scegli DUE") e una spiegazione che nomini le opzioni corrette e discuta **ogni** opzione errata. `tests/dataset.test.ts` impone tutto questo. Il suo `topic` deve essere collegato agli obiettivi SY0-701 in `src/questionObjectives.ts` (un topic nuovo richiede una nuova voce); poi esegui `npm run coverage-matrix` e includi nel commit `docs/coverage-matrix.md` aggiornato.
