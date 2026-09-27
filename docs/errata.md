@@ -14,7 +14,7 @@ and what it says now. Typos, style and translation fixes are left to the git his
 correzione); un nome in `monospazio` senza numero è una voce del glossario. Ogni correzione è stata applicata
 in italiano e in inglese nello stesso commit. Per segnalare un errore: [apri una issue](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues).
 
-Ultimo aggiornamento: 2026-09-26, dalla cronologia dei contenuti fino al 2026-09-24.
+Ultimo aggiornamento: 2026-09-27. Le correzioni precedenti al 2026-09-24 sono ricostruite dalla cronologia git.
 
 ## Dominio 1 — General Security Concepts
 
@@ -59,6 +59,7 @@ Ultimo aggiornamento: 2026-09-26, dalla cronologia dei contenuti fino al 2026-09
 
 | Data | Dove | Diceva | Dice ora | Commit |
 |---|---|---|---|---|
+| 2026-09-27 | Sottovoce SPF (`SPFConcept_New`) | Il record SPF d'esempio includeva `spf.google.com`, presentato come server di Google | `spf.google.com` non è il record SPF di Google (che è `_spf.google.com`); l'esempio usa ora un nome riservato, `_spf.example.net` | [7f459fa](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/7f459fa) |
 | 2026-09-14 | `D3#563` | IPsec opera al livello di trasporto OSI | IPsec opera al livello di rete (L3); la "modalità trasporto" non è il livello OSI | [1f99909](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/1f99909) |
 | 2026-09-14 | `D3#539`, `D3#533` | Stuxnet sfruttò "vulnerabilità non patchabili" dei PLC e arrivò da Internet | Riprogrammò i PLC sfruttando l'assenza di autenticazione ed entrò via USB in una rete air-gapped | [1f99909](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/1f99909) |
 | 2026-09-14 | `D3#21` | PCI DSS impone hardware dedicato | Lo standard non lo impone; lo scenario usa una policy interna | [1f99909](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/1f99909) |
