@@ -42,6 +42,18 @@ function currentIds(): StableIds {
 const files = (dir: string, ext: RegExp) =>
   existsSync(dir) ? readdirSync(dir).filter((f) => ext.test(f)) : [];
 
+describe("repository layout", () => {
+  it("keeps the community and governance files of the reference structure", () => {
+    const required = [
+      "README.md", "README.it.md", "LICENSE", "CHANGELOG.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md",
+      "SECURITY.md", "ROADMAP.md", ".github/CODEOWNERS", ".github/pull_request_template.md",
+      ".github/dependabot.yml", ".github/ISSUE_TEMPLATE", "docs/adr", "docs/threat-model.md",
+      "docs/coverage-matrix.md", "docs/content-templates.md", "docs/quality-baseline.md", "labs/TEMPLATE.md",
+    ];
+    expect(required.filter((p) => !existsSync(p))).toEqual([]);
+  });
+});
+
 describe("naming conventions", () => {
   it("names documents in kebab-case, ADRs with their number", () => {
     const docs = files("docs", /\.md$/).map((f) => basename(f, ".md"));

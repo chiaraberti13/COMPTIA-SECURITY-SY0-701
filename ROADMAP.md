@@ -38,7 +38,7 @@ Il progetto ha già una base solida (app funzionante, dataset bilingue, test di 
 | Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; test API con client Gemini simulato e log strutturati JSON dal 2026-09-24; manca la validazione con schema |
 | Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | ~~CSP con `'unsafe-inline'` e Google Fonts esterni~~ risolto il 2026-09-24: CSP solo `'self'`, font nel bundle |
 | CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
-| Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; `CODE_OF_CONDUCT.md` assente |
+| Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; ~~`CODE_OF_CONDUCT.md` assente~~ aggiunto il 2026-09-27 |
 | Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
 | Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Test end-to-end e axe in CI dal 2026-09-24; mancano test con screen reader reali e la verifica della schermata di remediation |
 
@@ -105,35 +105,33 @@ Un'attività è completata quando:
 
 #### Struttura e convenzioni
 
-- [ ] **P0 — Consolidare la struttura esistente** invece di riorganizzarla da zero. Struttura di riferimento (in grassetto le aggiunte):
+- [x] **P0 — Consolidare la struttura esistente** invece di riorganizzarla da zero. Completata il 2026-09-27 con `CODE_OF_CONDUCT.md`, l'ultimo file mancante; `tests/conventions.test.ts` verifica che i file di community e governance restino al loro posto. Struttura attuale:
 
   ```text
   .github/
-  ├── ISSUE_TEMPLATE/            # nuovo
-  ├── workflows/                 # ci.yml esistente + security.yml nuovo
-  ├── dependabot.yml             # nuovo
-  ├── CODEOWNERS                 # nuovo
-  └── pull_request_template.md   # nuovo
+  ├── ISSUE_TEMPLATE/            # errore di contenuto, bug, proposta di studio
+  ├── workflows/                 # ci.yml, security.yml, docs.yml, scorecard.yml
+  ├── dependabot.yml
+  ├── CODEOWNERS
+  └── pull_request_template.md
   docs/
-  ├── adr/                       # decisioni architetturali (dal 2026-09-24)
-  ├── threat-model.md            # STRIDE (dal 2026-09-24)
-  └── coverage-matrix.md         # nuovo: generato da script
-  labs/                          # nuovo, vedi "Laboratori pratici sicuri"
-  scripts/                       # nuovo: generazione indici e report
+  ├── adr/                       # decisioni architetturali
+  ├── threat-model.md            # STRIDE
+  ├── coverage-matrix.md         # generato da scripts/coverage-matrix.ts
+  ├── content-templates.md       # template dei contenuti
+  ├── quality-baseline.md        # misure di riferimento
+  └── errata.md                  # errori di contenuto già corretti
+  labs/                          # regole d'ingaggio, template e laboratori
+  scripts/                       # matrice di copertura, smoke test, precompressione
   src/
-  ├── components/                # viste e pannelli estratti da App.tsx (2026-09-26)
-  ├── hooks/                     # stato delle sezioni (useAiChat, useQuizSession, useQuizSetup, useRemediation, useStudySession dal 2026-09-26)
-  ├── data.ts / data.en.ts       # esistenti: sorgente IT e overlay EN
-  ├── domainGuides.ts            # esistente
-  ├── quiz.ts, remediation.ts,   # esistenti: logica pura testata
-  │   storage.ts, localizedData.ts
-  └── ...
-  server/                        # nuovo (P1): route e servizi estratti da server.ts
-  tests/
-  CHANGELOG.md                   # nuovo
-  CONTRIBUTING.md                # nuovo
-  CODE_OF_CONDUCT.md             # nuovo
-  SECURITY.md                    # esistente
+  ├── components/                # viste e pannelli
+  ├── hooks/                     # stato delle sezioni
+  ├── data.ts / data.en.ts       # sorgente IT e overlay EN
+  ├── domainGuides.ts, contentReview.ts, questionObjectives.ts
+  └── quiz.ts, readiness.ts, remediation.ts, storage.ts, localizedData.ts  # logica pura testata
+  server/                        # app Express, guardie AI, log, difesa dalla prompt injection
+  tests/                         # Vitest; e2e/ per Playwright
+  CHANGELOG.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md
   LICENSE, README.md, README.it.md, ROADMAP.md
   ```
 

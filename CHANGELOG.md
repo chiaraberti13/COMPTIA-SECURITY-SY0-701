@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- `CODE_OF_CONDUCT.md` in Italian and English: expected behaviour, what is not acceptable (including help to attack third-party systems) and how to report; linked from `CONTRIBUTING.md`. A test keeps the community and governance files in place.
 - `docs/content-templates.md`: the templates of concepts, comparisons, procedures, commands, questions, scenarios and labs, each with its rules and the test that enforces it; `tests/contentTemplates.test.ts` checks the concept template in both languages.
 - `docs/quality-baseline.md`: measured baseline of the question bank, tests, `npm audit` and Lighthouse (mobile and desktop), with the commands to repeat each measure.
 - The build writes Brotli and gzip copies of the front end (`scripts/precompress.ts`, no new dependency) and the server sends the one the browser accepts; hashed files under `/assets` are cached for a year. A visit now transfers 1.35 MB instead of 5.4 MB.

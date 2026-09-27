@@ -13,6 +13,7 @@ Thank you for helping improve this study platform. Corrections to the study cont
 - **Security issues** go through [GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new), never a public issue. See [`SECURITY.md`](SECURITY.md).
 - For anything larger than a typo, open an issue first so the approach can be agreed.
 - The study material must stay **original**: no questions copied from the real exam, from commercial question banks or from other courses.
+- Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ### Local setup
 
@@ -93,6 +94,7 @@ Grazie per aiutare a migliorare questa piattaforma di studio. Le correzioni ai c
 - **I problemi di sicurezza** vanno segnalati tramite [GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new), mai con una issue pubblica. Vedi [`SECURITY.md`](SECURITY.md).
 - Per qualsiasi modifica più grande di un refuso, apri prima una issue per concordare l'approccio.
 - Il materiale deve restare **originale**: nessuna domanda copiata dall'esame reale, da banche domande commerciali o da altri corsi.
+- Chi partecipa segue il [Codice di condotta](CODE_OF_CONDUCT.md).
 
 ### Installazione locale
 
