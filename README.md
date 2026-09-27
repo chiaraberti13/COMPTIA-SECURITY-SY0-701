@@ -289,6 +289,7 @@ Integrated **full-stack** layout — one Express server serves the frontend and 
 ├── docs/errata.md            # Content errors already fixed
 ├── docs/quality-baseline.md  # Measured baseline: questions, tests, audit, Lighthouse
 ├── docs/content-templates.md # How each kind of content is written, and its test
+├── docs/style-guide.md       # Tone, terminology, acronyms and approved translations
 ├── labs/                     # Hands-on labs: rules of engagement, template, exercises
 ├── public/favicon.svg        # App icon
 ├── .github/workflows/        # ci.yml (checks, smoke, e2e) and security.yml (gitleaks, audit, CodeQL)

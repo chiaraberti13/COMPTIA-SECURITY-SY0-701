@@ -7,7 +7,8 @@ fa rispettare. Ogni contenuto va scritto in italiano (la fonte) e in inglese nel
 > **English summary.** The seven content templates of the project (concept, comparison,
 > procedure, command, question, scenario, lab): where each lives, its fields, its rules and the
 > test that enforces them. Italian is the source, English goes in the overlay in the same commit.
-> See also [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+> See also [`CONTRIBUTING.md`](../CONTRIBUTING.md) and, for tone and terminology,
+> [`style-guide.md`](style-guide.md).
 
 ## Sottovoce
 
