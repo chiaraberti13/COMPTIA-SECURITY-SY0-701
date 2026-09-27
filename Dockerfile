@@ -1,8 +1,9 @@
-# syntax=docker/dockerfile:1
-#
 # Production image: multi-stage build, minimal runtime without shell or package
 # manager, non-root user. Both base images are pinned by digest (a tag can be
 # moved to other content); Dependabot proposes updates (.github/dependabot.yml).
+# No "# syntax=" line: the frontend built into BuildKit covers every instruction
+# used here, and a floating docker/dockerfile tag would be pulled, unpinned, on
+# every build.
 #
 #   docker build -t comptia-sy0701 .
 #   docker run --rm -p 3000:3000 --read-only --cap-drop=ALL \

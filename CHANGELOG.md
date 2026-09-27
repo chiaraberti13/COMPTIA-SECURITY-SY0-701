@@ -55,6 +55,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- The Dockerfile no longer starts with `# syntax=docker/dockerfile:1`: that floating, unpinned frontend image was pulled from Docker Hub on every build (a registry outage failed two CI jobs on it), and BuildKit's built-in frontend covers every instruction used.
 - Scenarios no longer involve real third parties: hostnames are reserved names (RFC 2606: `example.com`, `.example`, `.test`) and the company in the scenarios is the fictional Kestrelia instead of the real name of a training provider. `tests/contentSafety.test.ts` keeps real hostnames, commands that disable protections or destroy data, and credential-shaped strings out of the study content.
 - `App.tsx` is down to 485 lines: its JSX is split into eight view components (`AppHeader`, `ChecklistSidebar`, `StudyContent`, `QuizSetupScreen`, `QuizQuestionScreen`, `QuizResultsScreen`, `RemediationScreen`, `NewQuestionsModal`), and it now only wires the hooks to the views. The rendered HTML is identical in 72 deterministic states.
 - The simulator set-up moved out of `App.tsx` into the `useQuizSetup` hook: presets, questions per domain, chosen objective and the random draw. 40 deterministic states are identical, including the random order of the drawn questions; 4 hook tests.
