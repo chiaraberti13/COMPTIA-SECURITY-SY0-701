@@ -318,6 +318,11 @@ The code in this repository is distributed under the **MIT licence** — see
 it, including commercially, as long as the copyright notice is kept; it's provided as-is,
 with no warranty.
 
+The bundled fonts, Inter and JetBrains Mono, are under the SIL Open Font License 1.1: their
+notices and licence ship with the app in [`public/licenses/`](public/licenses/). The
+licences of every dependency are in the SBOM the Security workflow builds, and pull requests
+are checked against an allow-list of licences compatible with MIT.
+
 This project is an independent, educational study aid. **CompTIA** and **Security+** are
 registered trademarks of CompTIA, Inc.; this project is not affiliated with or endorsed by
 CompTIA, and all such trademarks belong to their respective owners.

@@ -46,3 +46,40 @@ describe("GitHub Actions workflows", () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe("dependency licences", () => {
+  /** The licences the Dependency review job accepts on a pull request. */
+  const allowed = new Set(
+    (readFileSync(".github/workflows/security.yml", "utf8").match(/allow-licenses:\s*(.+)/)?.[1] ?? "")
+      .split(",")
+      .map((l) => l.trim())
+      .filter(Boolean)
+  );
+  const lock = JSON.parse(readFileSync("package-lock.json", "utf8")) as {
+    packages: Record<string, { license?: string | { type?: string }; dev?: boolean }>;
+  };
+
+  it("are all in the Dependency review allow-list, so an update with a new one is noticed here first", () => {
+    expect(allowed.size).toBeGreaterThan(0);
+    const outside = Object.entries(lock.packages)
+      .filter(([path]) => path !== "")
+      .map(([path, p]) => [path, typeof p.license === "object" ? p.license?.type : p.license] as const)
+      .filter(([, license]) => !license || !allowed.has(license))
+      .map(([path, license]) => `${path}: ${license ?? "no licence"}`);
+    expect(outside).toEqual([]);
+  });
+
+  it("never allow a strong copyleft licence", () => {
+    expect([...allowed].filter((l) => /^(A|L)?GPL|SSPL|EUPL/i.test(l))).toEqual([]);
+  });
+});
+
+describe("bundled font licences", () => {
+  // OFL-1.1 requires every copy of the fonts to carry their copyright notice
+  // and licence: public/ is copied into the build next to them.
+  it.each(["inter", "jetbrains-mono"])("ships the OFL notice of %s with the app", (font) => {
+    const text = readFileSync(`public/licenses/${font}-OFL-1.1.txt`, "utf8");
+    expect(text).toMatch(/^Copyright \d{4} /);
+    expect(text).toContain("SIL Open Font License, Version 1.1");
+  });
+});

@@ -70,10 +70,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Blocks a pull request that adds or upgrades to a dependency with a known
-      # high or critical vulnerability.
+      # high or critical vulnerability, or under a licence not listed here. The
+      # list is exactly the licences already in package-lock.json, all
+      # compatible with distributing the app under MIT: permissive ones, MPL-2.0
+      # (file-level copyleft, only lightningcss, a build tool), OFL-1.1 (the
+      # bundled fonts), CC-BY-4.0 (caniuse-lite data) and Python-2.0 (argparse,
+      # development only). No GPL, LGPL, AGPL or SSPL. tests/workflows.test.ts
+      # keeps the list and the lockfile in step.
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
+          allow-licenses: MIT, MIT-0, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause, 0BSD, BlueOak-1.0.0, CC0-1.0, CC-BY-4.0, OFL-1.1, MPL-2.0, Python-2.0
 
   codeql:
     name: CodeQL (JavaScript/TypeScript)
