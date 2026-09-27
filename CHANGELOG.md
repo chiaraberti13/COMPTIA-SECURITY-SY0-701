@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Four new questions for objective 2.3 (vulnerability types), on the official sub-topics that had none: memory injection, resource reuse in virtualisation, the service-provider side of the supply chain, and cryptographic vulnerabilities (obsolete TLS versions and ciphers). In Italian and English.
 - Five new questions for objective 1.1 (security control categories and types), which had the fewest: a physical control, a purely detective control, one measure with two types at once, a compensating control for separation of duties, and a multi-response question on managerial controls. In Italian and English.
 - `docs/errata.md`: the substantive content errors already fixed, by domain, with what the text said, what it says now and the commit of the fix, reconstructed from the git history and linked from the READMEs.
 - Sources and review state for every SY0-701 objective (`src/contentReview.ts`): the exam objectives plus at least one more primary source (NIST, RFC, ISO, GDPR, PCI DSS) and secondary references (OWASP, CIS, MITRE ATT&CK, CISA, FIRST). Each domain guide has a "Sources and review" section and the coverage matrix two new columns plus the source catalogue, whose links the weekly link check verifies. All objectives start as "needs review"; the tests refuse "reviewed" without a date and a reviewer, and `CONTRIBUTING.md` describes the review.

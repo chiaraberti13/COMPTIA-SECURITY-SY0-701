@@ -12820,6 +12820,66 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) Cambio delle password predefinite**.\n\n* **Perché è la corretta:** Il **cambio delle password predefinite** è una tecnica di hardening che aiuta a prevenire alcuni attacchi alle password su sistemi e dispositivi. Le password di fabbrica (es. 'admin', 'password', '1234') sono spesso incluse nelle liste dei dizionari usate negli attacchi automatizzati; cambiarle con password forti e uniche rende inefficaci gli attacchi a dizionario.\n* **Analisi dei distrattori:**\n  * **A) L'isolamento del dispositivo** previene la diffusione del malware da un sistema all'altro; non impedisce specificamente il cracking delle password tramite dizionari.\n  * **B) La Disabilitazione di porte e protocolli** riduce l'esposizione ad attacchi potenziali chiudendo canali di rete non necessari; non impedisce il cracking delle password.\n  * **C) L'Installazione di endpoint protection** (antivirus, anti-malware) protegge da vulnerabilità note e può rilevare tentativi di cracking, ma il cambio delle password predefinite è più direttamente efficace contro gli attacchi a dizionario."
+  },
+  {
+    id: 535,
+    topic: "Vulnerability Types",
+    level: "APPLICAZIONE",
+    scenario: "L'EDR di una workstation segnala che un processo appena avviato da un allegato ha aperto un handle sul processo `explorer.exe`, ha scritto un blocco di codice eseguibile nella sua memoria e vi ha creato un thread remoto. Sul disco non compare nessun nuovo file eseguibile, e l'attività di rete successiva parte da `explorer.exe`.",
+    question: "Quale vulnerabilità descrive questo comportamento?",
+    options: [
+      "A) Buffer overflow nello stack di `explorer.exe`",
+      "B) Iniezione in memoria (memory injection) in un processo legittimo",
+      "C) Race condition di tipo TOCTOU su un file temporaneo",
+      "D) Aggiornamento malevolo distribuito dal produttore"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Iniezione in memoria (memory injection) in un processo legittimo**.\n\n* **Perché è la corretta:** Nella **memory injection** un processo malevolo scrive il proprio codice nello spazio di memoria di un processo legittimo e lo fa eseguire lì, per esempio creando un thread remoto. Il codice gira con l'identità e i privilegi del processo ospite, e i controlli che guardano solo i file su disco non vedono nulla: per questo il traffico di rete sembra partire da `explorer.exe`. Varianti note sono la DLL injection e il process hollowing.\n* **Perché le altre non sono corrette:**\n  * **A) Il buffer overflow** sfrutta un input troppo lungo che sovrascrive la memoria adiacente dello stesso programma. Qui nessun input viene passato a `explorer.exe`: è un altro processo a scriverci dentro con le API del sistema operativo.\n  * **C) La race condition TOCTOU** sfrutta l'intervallo fra il controllo e l'uso di una risorsa. Lo scenario non descrive nessuna verifica seguita da un uso.\n  * **D) L'aggiornamento malevolo** arriva dai canali ufficiali del produttore. Qui il codice arriva da un allegato aperto dall'utente.\n\n* **Trappola d'esame:** il segnale decisivo è la combinazione «**scrive nella memoria di un altro processo**» + «**nessun file su disco**». Buffer overflow e memory injection toccano entrambi la memoria, ma il primo corrompe il programma vulnerabile dall'interno, tramite un input; la seconda usa un processo sano come contenitore.\n* **Piccolo Esempio Concentrato:** molti EDR danno l'allarme quando un processo chiama in sequenza `OpenProcess`, `VirtualAllocEx`, `WriteProcessMemory` e `CreateRemoteThread` su un altro processo. È la firma comportamentale classica di un'iniezione."
+  },
+  {
+    id: 536,
+    topic: "Vulnerability Types",
+    level: "ANALISI",
+    scenario: "Un cliente di un piccolo fornitore IaaS crea una nuova macchina virtuale e, analizzando per curiosità i settori non ancora scritti del disco appena assegnato, trova frammenti di fatture e indirizzi email di un'altra azienda. Il fornitore conferma che i dischi dei clienti cessati vengono riassegnati senza essere azzerati. Nessuno ha superato l'isolamento dell'hypervisor.",
+    question: "Quale vulnerabilità della virtualizzazione è all'origine dell'esposizione?",
+    options: [
+      "A) Fuga dalla macchina virtuale (VM escape) verso l'hypervisor",
+      "B) Installazione di applicazioni da fonti non ufficiali (side loading)",
+      "C) Riutilizzo delle risorse (resource reuse) senza cancellazione dei dati",
+      "D) Vulnerabilità zero-day nel sistema operativo ospite"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Riutilizzo delle risorse (resource reuse) senza cancellazione dei dati**.\n\n* **Perché è la corretta:** In un ambiente virtualizzato memoria, dischi e altre risorse fisiche vengono condivisi e riassegnati continuamente fra clienti diversi. Se una risorsa passa a un nuovo cliente senza essere prima **azzerata**, i dati del precedente restano leggibili: è la vulnerabilità di **resource reuse**. Lo scenario lo dice in modo esplicito: i dischi vengono riassegnati senza essere azzerati. Il rimedio spetta al fornitore: cancellazione sicura prima della riassegnazione, oppure cifratura per cliente con distruzione della chiave (*crypto-shredding*).\n* **Perché le altre non sono corrette:**\n  * **A) La VM escape** richiede di uscire dalla macchina virtuale e raggiungere l'hypervisor o le altre VM. Lo scenario esclude che l'isolamento sia stato superato: il cliente ha letto il proprio disco.\n  * **B) Il side loading** riguarda l'installazione di applicazioni da fonti non ufficiali, tipicamente sui dispositivi mobili. Non c'entra con i dischi virtuali.\n  * **D) Una zero-day** è una falla sconosciuta al produttore. Qui il problema è una procedura del fornitore, nota e documentata.\n\n* **Trappola d'esame:** VM escape e resource reuse sono le due vulnerabilità di virtualizzazione dell'obiettivo 2.3, e si distinguono chiedendosi **se l'isolamento è stato violato**. Nella VM escape l'attaccante rompe il confine; nel resource reuse il confine regge, ma la risorsa arriva già «sporca» dal cliente precedente.\n* **Piccolo Esempio Concentrato:** i grandi provider cloud documentano che un volume di storage a blocchi viene azzerato prima di essere riassegnato, e che la memoria di una VM viene ripulita prima di passare a un'altra istanza. È una garanzia da verificare anche nei fornitori più piccoli."
+  },
+  {
+    id: 537,
+    topic: "Vulnerability Types",
+    level: "ANALISI",
+    scenario: "Un fornitore di servizi IT gestiti (MSP) amministra i server di quaranta piccole aziende tramite uno strumento di gestione remota, con un account che ha privilegi di amministratore permanenti su tutti i clienti. Un attaccante ruba le credenziali di un tecnico del fornitore e, nella stessa notte, distribuisce un ransomware ai server di tutti i clienti. Nessuno dei clienti aveva vulnerabilità non corrette nei propri sistemi.",
+    question: "Quale vulnerabilità ha reso possibile l'attacco, e quale misura la riduce MEGLIO dal lato dei clienti?",
+    options: [
+      "A) Catena di fornitura, lato fornitore di servizi: limitare e monitorare gli accessi dell'MSP, con MFA e privilegi concessi solo quando servono",
+      "B) Catena di fornitura, lato fornitore di hardware: verificare l'autenticità dei componenti acquistati",
+      "C) Catena di fornitura, lato fornitore di software: controllare la firma di ogni aggiornamento prima di installarlo",
+      "D) Vulnerabilità zero-day nello strumento di gestione remota: attendere la patch del produttore"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Catena di fornitura, lato fornitore di servizi: limitare e monitorare gli accessi dell'MSP**.\n\n* **Perché è la corretta:** L'obiettivo 2.3 distingue tre fonti di rischio nella catena di fornitura: fornitori di **servizi**, di **hardware** e di **software**. Qui la debolezza non è nei sistemi dei clienti ma nella **fiducia concessa al fornitore di servizi**: un unico account con privilegi permanenti su quaranta aziende trasforma una sola credenziale rubata in quaranta incidenti. I clienti possono ridurre il rischio chiedendo per contratto l'autenticazione a più fattori, accessi limitati nel tempo (*just-in-time*), account distinti per cliente e la registrazione delle sessioni del fornitore nei propri log.\n* **Perché le altre non sono corrette:**\n  * **B) Il fornitore di hardware** è il rischio di componenti contraffatti o manomessi. Lo scenario non coinvolge nessun dispositivo fisico.\n  * **C) Il fornitore di software** è il rischio di un aggiornamento malevolo distribuito dal produttore. Qui lo strumento funziona come previsto: sono le credenziali del tecnico a essere state rubate.\n  * **D) Una zero-day** è una falla sconosciuta nel software. L'attaccante non ha sfruttato un difetto, ha usato un accesso legittimo.\n\n* **Trappola d'esame:** quando l'attacco passa da un terzo, chiediti **che cosa** del terzo è stato compromesso. Credenziali o accessi di chi gestisce i tuoi sistemi portano al fornitore di **servizi**; un aggiornamento firmato ma malevolo porta al fornitore di **software**; un componente alterato porta al fornitore di **hardware**.\n* **Piccolo Esempio Concentrato:** diversi attacchi ransomware reali hanno colpito decine di clienti in un colpo solo passando dagli strumenti di gestione remota dei loro MSP. Le agenzie di sicurezza raccomandano ai clienti di pretendere MFA e registrazione delle attività del fornitore, e di rivedere periodicamente i suoi privilegi."
+  },
+  {
+    id: 538,
+    topic: "Vulnerability Types",
+    level: "APPLICAZIONE",
+    scenario: "Una scansione delle vulnerabilità segnala che il portale clienti di un'azienda accetta ancora connessioni TLS 1.0 e TLS 1.1 e offre suite di cifratura con 3DES e RC4. Il certificato è valido e firmato da una CA pubblica, il software del server è aggiornato e tutti i browser moderni si connettono usando TLS 1.3.",
+    question: "Di quale tipo di vulnerabilità si tratta, e come si corregge?",
+    options: [
+      "A) Una vulnerabilità zero-day nel server web: va isolato il portale fino alla patch del produttore",
+      "B) Un certificato non valido: va sostituito con uno firmato da un'altra CA pubblica",
+      "C) Una iniezione in memoria (memory injection): va installato un EDR sul server",
+      "D) Una vulnerabilità crittografica: vanno disabilitati i protocolli e gli algoritmi obsoleti, accettando solo TLS 1.2 e TLS 1.3"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Una vulnerabilità crittografica: vanno disabilitati i protocolli e gli algoritmi obsoleti**.\n\n* **Perché è la corretta:** Le **vulnerabilità crittografiche** nascono da algoritmi deboli, protocolli superati, chiavi troppo corte o implementazioni errate. TLS 1.0 e TLS 1.1 sono deprecati dal 2021 (RFC 8996), 3DES e RC4 hanno debolezze note. Il fatto che i browser moderni usino TLS 1.3 non basta: finché il server accetta le versioni vecchie, un client obsoleto o un attaccante in posizione di intercettazione può negoziarle (attacco di *downgrade*). La correzione è nella configurazione del server: accettare solo TLS 1.2 e TLS 1.3 con suite di cifratura robuste.\n* **Perché le altre non sono corrette:**\n  * **A) Una zero-day** è una falla sconosciuta al produttore. Qui le debolezze sono note da anni e il software è aggiornato: il problema è la configurazione.\n  * **B) Il certificato** è valido e firmato da una CA pubblica. Cambiare CA non modifica i protocolli e gli algoritmi accettati dal server.\n  * **C) La memory injection** riguarda codice scritto nella memoria di un altro processo. Lo scenario non descrive nessuna esecuzione di codice.\n\n* **Trappola d'esame:** «software aggiornato» non significa «configurazione sicura». Molti server mantengono attivi protocolli vecchi per compatibilità: la vulnerabilità crittografica sta in ciò che il server **accetta**, non in ciò che i client migliori **usano**.\n* **Piccolo Esempio Concentrato:** con `nmap --script ssl-enum-ciphers -p 443 portale.example.com` si elencano versioni e suite accettate; dopo la correzione l'elenco deve mostrare solo TLS 1.2 e TLS 1.3."
   }
 ];
 
