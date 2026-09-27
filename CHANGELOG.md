@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Naming conventions and stable identifiers, written in `CONTRIBUTING.md` and checked by `tests/conventions.test.ts`: every question id, concept key, objective code and lab ever published is recorded in `tests/fixtures/stable-ids.json`, so a change that would orphan the progress saved in learners' browsers fails the tests.
 - "Exam and real world" in every domain guide: three topics per domain where the exam simplifies (control categories, Zero Trust, vulnerability priorities, SIEM, quantitative risk, compliance…), each with what the exam expects and how it works in practice.
 - Standard callouts (note, exam, practice, warning, common mistake, deep dive), each with its own icon and a written title. In explanations, the recurring "Exam trap" and "Focused Mini-Example" paragraphs (and a few other labels) now show as callouts, with no change to the datasets; the exam tip of every concept uses the same component. `CONTRIBUTING.md` lists the labels.
 - Every domain guide opens with "In this guide": a link to each section the guide has, which jumps there and moves focus to the section heading, opening "Sources and review" when it is folded.

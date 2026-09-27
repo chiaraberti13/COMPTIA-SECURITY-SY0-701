@@ -50,6 +50,11 @@ The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is th
 6. **Reviewing an objective.** Every official objective has its sources and a review state in `src/contentReview.ts`, shown in each domain guide and in `docs/coverage-matrix.md`. To mark one as reviewed, compare its questions, glossary entries and guide section with the listed sources, fix what differs, then set `status: "reviewed"`, `lastReviewed` (today, `YYYY-MM-DD`) and `reviewer` (your GitHub handle) and run `npm run coverage-matrix`. Automated checks never count as a review; the tests refuse a "reviewed" state without date and reviewer.
 7. **Callouts.** A bullet that opens with a standard label becomes a titled box with its own icon: `* **Exam trap:** …` / `* **Trappola d'esame:** …` (exam), `* **Focused Mini-Example:** …` / `* **Piccolo Esempio Concentrato:** …` (practice), `* **Danger:** …` / `* **Pericolo:** …` (warning), `* **Remember:** …` / `* **Da ricordare:** …` (note). The full list is `LABEL_CALLOUTS` in `src/components/Callout.tsx`; use exactly these labels, in both languages, so the box appears in each.
 
+### Naming and identifiers
+
+- **Files:** documents and labs in `kebab-case` (`docs/threat-model.md`, `labs/01-security-headers/`, ADRs as `docs/adr/NNNN-title.md`); React components in `PascalCase` (`DomainGuidePanel.tsx`); hooks as `useSomething.ts`; other modules in `camelCase` (`contentReview.ts`); scripts in `kebab-case`.
+- **Identifiers are forever.** What learners save in their browser points to question ids (namespaced as `domain × 10000 + id`) and to concept `checklistKey`s. Never rename or reuse one: a new question gets a new id, and outdated content is marked deprecated instead of being deleted. `tests/fixtures/stable-ids.json` records every published identifier and `tests/conventions.test.ts` fails if one disappears. After adding questions, concepts or labs, record them with `UPDATE_STABLE_IDS=1 npx vitest run tests/conventions.test.ts` and commit the fixture.
+
 ### Changing code
 
 - Keep pull requests small and focused; do not mix refactoring with new behaviour.
@@ -124,6 +129,11 @@ Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è l
 5. Comandi ed esempi devono essere sicuri da copiare: nessuna credenziale reale, nessun comando distruttivo senza avvertenza, nessun bersaglio che non si è autorizzati a testare. I nomi di host sono riservati (`example.com`, `*.example`, `*.test`) e le aziende sono di fantasia; `tests/contentSafety.test.ts` lo verifica.
 6. **Revisionare un obiettivo.** Ogni obiettivo ufficiale ha le sue fonti e uno stato di revisione in `src/contentReview.ts`, mostrati in ogni guida di dominio e in `docs/coverage-matrix.md`. Per segnarne uno come revisionato, confronta domande, voci di glossario e sezione della guida con le fonti indicate, correggi ciò che non torna, poi imposta `status: "reviewed"`, `lastReviewed` (oggi, `AAAA-MM-GG`) e `reviewer` (il tuo nome utente GitHub) ed esegui `npm run coverage-matrix`. I controlli automatici non contano come revisione; i test rifiutano uno stato "reviewed" senza data e revisore.
 7. **Callout.** Un punto elenco che inizia con un'etichetta standard diventa un riquadro con titolo e icona propri: `* **Trappola d'esame:** …` / `* **Exam trap:** …` (esame), `* **Piccolo Esempio Concentrato:** …` / `* **Focused Mini-Example:** …` (pratica), `* **Pericolo:** …` / `* **Danger:** …` (attenzione), `* **Da ricordare:** …` / `* **Remember:** …` (nota). L'elenco completo è `LABEL_CALLOUTS` in `src/components/Callout.tsx`; usa esattamente queste etichette, in entrambe le lingue, perché il riquadro compaia in tutte e due.
+
+### Nomi e identificatori
+
+- **File:** documenti e lab in `kebab-case` (`docs/threat-model.md`, `labs/01-security-headers/`, ADR come `docs/adr/NNNN-titolo.md`); componenti React in `PascalCase` (`DomainGuidePanel.tsx`); hook come `useQualcosa.ts`; gli altri moduli in `camelCase` (`contentReview.ts`); script in `kebab-case`.
+- **Gli identificatori sono per sempre.** Ciò che gli studenti salvano nel browser punta agli ID delle domande (con namespace `dominio × 10000 + id`) e alle `checklistKey` delle sottovoci. Non rinominarli né riusarli: una nuova domanda riceve un nuovo ID, e un contenuto superato si marca come deprecato invece di cancellarlo. `tests/fixtures/stable-ids.json` registra ogni identificatore pubblicato e `tests/conventions.test.ts` fallisce se uno sparisce. Dopo aver aggiunto domande, sottovoci o lab, registrali con `UPDATE_STABLE_IDS=1 npx vitest run tests/conventions.test.ts` e includi il file nel commit.
 
 ### Modificare il codice
 
