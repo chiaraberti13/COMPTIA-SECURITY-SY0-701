@@ -14399,6 +14399,82 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     ],
     answerIndex: 1,
     explanation: "La risposta corretta è la **B) Cifratura a livello di record o di campo**.\n\n* **Perché è la corretta:** la chiave per rispondere sta nel capire **contro quale minaccia** ciascun livello protegge e, soprattutto, **dove si trova la chiave** che rimette il dato in chiaro. La **cifratura integrale del disco**, già presente, protegge i dati **a riposo** contro il furto fisico del server o del disco: a macchina accesa il volume è montato e decifrato in modo trasparente, e il **DBMS in esecuzione legge normalmente** i dati, che quindi arrivano in chiaro a chi ha i permessi per interrogare la tabella. È esattamente per questo che l'auditor dice che non basta. La **cifratura a livello di record o di campo** agisce invece sul singolo dato: le tre colonne restano cifrate **dentro** il database.\n* **La condizione che rende efficace la soluzione:** proteggere il dato **dal DBA** non dipende dalla sola granularità, ma dal fatto che la **chiave resti fuori dal suo controllo**, tipicamente custodita dall'applicazione o in un KMS/HSM, con decifratura solo per gli utenti autorizzati. Se la chiave fosse gestita dal database stesso, l'amministratore potrebbe usarla e la cifratura di colonna non lo fermerebbe.\n* **Il costo, che esiste:** cifrare tre colonne ha un prezzo. Su quei campi si perdono di norma ricerche e indici: una ricerca per uguaglianza richiederebbe cifratura deterministica, che a sua volta espone schemi ricorrenti, e le ricerche per intervallo diventano impraticabili. Il requisito dell'auditor resta comunque soddisfatto perché le **altre colonne non sono cifrate** e restano indicizzabili e ricercabili come prima.\n* **Analisi dei distrattori:**\n  * **A) Cifratura di volume:** protegge l'intera unità logica a riposo, ma a sistema avviato il volume è montato e decifrato: il DBMS continua a leggere tutto, quindi non oppone nulla a chi interroga legittimamente la tabella.\n  * **C) Cifratura di partizione:** cambia soltanto **quale area** del disco è protetta a riposo. Non tocca il modo in cui si accede alla tabella e, come la A, esce di scena appena il sistema è avviato.\n  * **D) TLS fra client e database:** protegge i dati **in transito** dall'intercettazione lungo il percorso. Il dato viene decifrato all'estremità: l'amministratore che interroga il database lo riceve in chiaro esattamente come prima.\n\n* **Trappola d'esame:** impara la scala dei livelli di cifratura dal più ampio al più selettivo. **Disco intero**, **volume** e **partizione** = protezione contro il furto fisico, decifratura trasparente a sistema avviato · **File** = protezione del singolo documento, anche da altri utenti della stessa macchina · **Database** = l'intero archivio cifrato a riposo, ma leggibile da chi vi accede · **Record o campo** = la granularità più fine, quella che può proteggere il dato anche da chi ha accesso legittimo al sistema, **a condizione che la chiave sia fuori dalla sua portata**. Quando lo scenario dice che la cifratura del disco «non basta» e nomina un amministratore, guarda alla granularità fine: cifratura di campo, ma anche **tokenizzazione** o **masking** rispondono allo stesso bisogno in scenari diversi."
+  },
+  {
+    id: 226,
+    topic: "Security Controls",
+    level: "APPLICAZIONE",
+    scenario: "Un'azienda apre un piccolo data center al piano terra di un edificio che affaccia su un parcheggio. L'analisi dei rischi segnala che un veicolo lanciato contro la vetrata dell'ingresso potrebbe raggiungere direttamente la sala server, e chiede una misura che fermi materialmente il veicolo prima dell'edificio.",
+    question: "Quale misura appartiene alla categoria dei controlli fisici e risponde a questo rischio?",
+    options: [
+      "A) Un corso di sensibilizzazione per gli addetti alla reception",
+      "B) Una regola del firewall perimetrale che blocca il traffico dal parcheggio",
+      "C) Dissuasori in acciaio (bollard) fissati nel terreno davanti all'ingresso",
+      "D) Una procedura di change management per le modifiche all'edificio"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Dissuasori in acciaio (bollard) fissati nel terreno davanti all'ingresso**.\n\n* **Perché è la corretta:** Le **categorie** di controllo rispondono alla domanda «*chi o che cosa* applica la misura?». Un **controllo fisico** agisce sul mondo materiale: recinzioni, serrature, tornelli, illuminazione, bollard. Qui il rischio è un oggetto fisico, un veicolo, e l'unica misura che lo ferma è una barriera fisica. Per **tipo**, i bollard sono anche **preventivi**: impediscono l'evento invece di rilevarlo o rimediare dopo.\n* **Perché le altre non sono corrette:**\n  * **A) La formazione** è un controllo **operativo**, perché la eseguono persone. Può aiutare il personale a reagire, ma non ferma un veicolo.\n  * **B) La regola del firewall** è un controllo **tecnico**: filtra pacchetti, non automobili. Confonde la vicinanza al parcheggio con una minaccia di rete.\n  * **D) Il change management** è un processo **gestionale**/operativo che governa le modifiche. Non protegge l'ingresso.\n\n* **Trappola d'esame:** categoria e tipo sono due assi diversi e vanno letti entrambi. La **categoria** dice *chi* applica il controllo (tecnico, gestionale, operativo, fisico); il **tipo** dice *quando e come* agisce rispetto all'evento (preventivo, deterrente, investigativo, correttivo, compensativo, direttivo). Un bollard è **fisico** per categoria e **preventivo** per tipo: una domanda può chiederti l'uno o l'altro.\n* **Piccolo Esempio Concentrato:** davanti a molti uffici pubblici i bollard sono spesso travestiti da fioriere in cemento. Sembrano arredo urbano, ma sono dimensionati per fermare un'auto: sono un controllo fisico e preventivo."
+  },
+  {
+    id: 227,
+    topic: "Security Controls",
+    level: "ANALISI",
+    scenario: "Un magazzino installa sopra la porta del reparto resi una telecamera ben visibile, con una spia rossa accesa e un cartello «Area videoregistrata». Le immagini vengono conservate per 30 giorni e consultate dalla sicurezza quando mancano merci dall'inventario. La telecamera non comanda la serratura e non impedisce a nessuno di entrare.",
+    question: "Quale combinazione di categoria e tipi descrive MEGLIO la telecamera?",
+    options: [
+      "A) Categoria tecnica; tipi preventivo e correttivo insieme",
+      "B) Categoria fisica; tipi deterrente e rilevativo insieme",
+      "C) Categoria operativa; tipo direttivo",
+      "D) Categoria gestionale; tipo compensativo"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Categoria fisica; tipi deterrente e rilevativo insieme**.\n\n* **Perché è la corretta:** Una stessa misura può avere **più tipi** contemporaneamente, a seconda dell'effetto che si considera. La telecamera **ben visibile**, con spia e cartello, scoraggia chi pensa di rubare: effetto **deterrente**. Le registrazioni consultate dopo un ammanco permettono di scoprire che cosa è successo e chi è stato: effetto **rilevativo** (investigativo, *detective*). La categoria è **fisica**, perché la telecamera sorveglia uno spazio fisico; alcuni testi la collocano fra i controlli tecnici, ma nessuna delle altre opzioni ha i tipi giusti, ed è sui tipi che la domanda si decide.\n* **Perché le altre non sono corrette:**\n  * **A)** La telecamera **non è preventiva**: lo scenario dice esplicitamente che non comanda la serratura e non impedisce l'ingresso. Non è nemmeno **correttiva**, perché non ripristina nulla dopo il furto.\n  * **C)** Un controllo **direttivo** indica che cosa fare, come una policy o un cartello «Vietato l'ingresso». Il cartello qui annuncia la registrazione, cioè rafforza la deterrenza, non dà un'istruzione.\n  * **D)** Un controllo **compensativo** sostituisce un controllo primario che non si può applicare. Lo scenario non parla di nessun controllo mancante.\n\n* **Trappola d'esame:** le domande sui controlli premiano chi legge l'**effetto dichiarato** nello scenario. Parole come *visibile*, *cartello*, *scoraggiare* indicano deterrenza; *registrare*, *rivedere*, *allertare*, *scoprire* indicano rilevazione; *impedire*, *bloccare* indicano prevenzione. Se lo scenario nega esplicitamente un effetto («non impedisce a nessuno di entrare»), scarta subito le opzioni che lo contengono.\n* **Piccolo Esempio Concentrato:** una telecamera finta, senza registrazione, è **solo deterrente**; una telecamera nascosta che registra è **solo rilevativa**. Quella dello scenario, visibile e registrante, è entrambe le cose."
+  },
+  {
+    id: 228,
+    topic: "Security Controls",
+    level: "APPLICAZIONE",
+    scenario: "Gli amministratori di un'azienda modificano spesso, e legittimamente, i file di configurazione dei server web. Dopo un audit, la direzione chiede di sapere entro pochi minuti quando uno di quei file cambia, per poter verificare che la modifica sia autorizzata. Bloccare le modifiche non è accettabile, perché fermerebbe il lavoro degli amministratori.",
+    question: "Quale controllo soddisfa la richiesta?",
+    options: [
+      "A) Un job notturno che ripristina i file dall'ultimo backup",
+      "B) Rendere i file di configurazione di sola lettura per tutti gli account",
+      "C) Una policy che vieta le modifiche non approvate dal change advisory board",
+      "D) Un monitoraggio dell'integrità dei file (FIM) che confronta gli hash e avvisa il SOC a ogni cambiamento"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Un monitoraggio dell'integrità dei file (FIM) che confronta gli hash e avvisa il SOC**.\n\n* **Perché è la corretta:** La richiesta è **sapere** quando un file cambia, non impedirlo: è la definizione di un controllo **rilevativo** (investigativo, *detective*). Il **FIM** calcola un hash di riferimento di ogni file e lo ricalcola a intervalli o a ogni evento del file system; se l'hash cambia, genera un avviso. È anche un controllo **tecnico** per categoria, perché è il software ad applicarlo.\n* **Perché le altre non sono corrette:**\n  * **A) Il ripristino notturno** è un controllo **correttivo**: cancella anche le modifiche autorizzate e interviene ore dopo, senza avvisare nessuno.\n  * **B) Sola lettura per tutti** è un controllo **preventivo**: blocca anche le modifiche legittime, esattamente ciò che la direzione ha escluso.\n  * **C) La policy** è un controllo **direttivo**: dice che cosa si deve fare, ma da sola non segnala nulla se qualcuno la viola.\n\n* **Trappola d'esame:** quando lo scenario esclude esplicitamente il blocco («non è accettabile impedire…»), la risposta non può essere preventiva, anche se il controllo preventivo sembra «più sicuro». Cerca il verbo della richiesta: *sapere*, *essere avvisati*, *scoprire* portano a un controllo rilevativo.\n* **Piccolo Esempio Concentrato:** su Linux strumenti come AIDE salvano un database di hash dei file di `/etc`. Un controllo pianificato lo confronta con lo stato attuale e invia al SIEM l'elenco dei file cambiati, che l'analista confronta con i change approvati."
+  },
+  {
+    id: 229,
+    topic: "Security Controls",
+    level: "COMPRENSIONE",
+    scenario: "Un'azienda classifica le proprie misure di sicurezza per categoria in vista di un audit. I controlli gestionali (managerial) sono quelli che orientano il programma di sicurezza attraverso decisioni, piani e regole stabilite dalla direzione, invece di essere applicati da una tecnologia o eseguiti quotidianamente dal personale.",
+    question: "Quali misure sono controlli gestionali? (scegline due)",
+    options: [
+      "A) L'addetto dell'help desk che verifica l'identità del chiamante prima di un reset della password",
+      "B) La politica di sicurezza delle informazioni approvata dal consiglio di amministrazione",
+      "C) La cifratura completa del disco con chiave protetta dal TPM",
+      "D) Un programma di valutazione dei fornitori, con criteri di selezione e riesame annuale"
+    ],
+    answerIndex: 1,
+    answerIndexes: [1, 3],
+    explanation: "Le risposte corrette sono la **B)** e la **D)**.\n\n* **Perché sono le corrette:** I **controlli gestionali** (o amministrativi) definiscono *come* l'organizzazione governa la sicurezza: politiche, valutazioni del rischio, piani, programmi e criteri decisi dalla direzione. La **politica di sicurezza** approvata dal consiglio fissa gli obiettivi e le responsabilità; il **programma di valutazione dei fornitori** stabilisce con quali criteri si scelgono e si riesaminano le terze parti. Nessuno dei due è applicato da una macchina o eseguito come routine da un operatore: orientano le decisioni.\n* **Analisi dei distrattori:**\n  * **A) La verifica dell'identità da parte dell'help desk** è un controllo **operativo**: è una procedura eseguita da persone, ogni giorno, nel lavoro ordinario.\n  * **C) La cifratura del disco con TPM** è un controllo **tecnico**: una volta configurata, è la tecnologia ad applicarla senza intervento umano.\n\n* **Trappola d'esame:** la stessa parola «procedura» può ingannare. La **scrittura** di una procedura o di una politica è gestionale; la sua **esecuzione** quotidiana da parte del personale è operativa; la sua **applicazione automatica** da parte di un sistema è tecnica. Chiediti sempre chi agisce, e con quale orizzonte: la direzione che decide, la persona che esegue, la macchina che impone.\n* **Piccolo Esempio Concentrato:** la direzione approva la regola «password di almeno 14 caratteri» (gestionale); l'help desk spiega la regola ai nuovi assunti (operativo); Active Directory rifiuta le password più corte (tecnico)."
+  },
+  {
+    id: 230,
+    topic: "Security Controls",
+    level: "ANALISI",
+    scenario: "Un negozio online ha tre dipendenti. Il controllo interno richiede la separazione dei compiti fra chi approva un pagamento a un fornitore e chi lo esegue, ma l'unica persona in amministrazione deve fare entrambe le cose e l'azienda non può assumere nessun altro. Il titolare chiede come ridurre comunque il rischio di pagamenti fraudolenti.",
+    question: "Quale misura è un controllo compensativo appropriato?",
+    options: [
+      "A) Una revisione mensile, da parte del titolare, di ogni pagamento eseguito confrontato con i log delle approvazioni",
+      "B) Una policy scritta che vieta a chiunque di approvare i pagamenti che esegue",
+      "C) Un cartello nell'ufficio amministrativo che avvisa che le transazioni sono monitorate",
+      "D) Una polizza assicurativa che rimborsa le perdite dopo una frode"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Una revisione mensile, da parte del titolare, di ogni pagamento eseguito confrontato con i log delle approvazioni**.\n\n* **Perché è la corretta:** Il controllo primario, la **separazione dei compiti**, non si può applicare: c'è una sola persona. Un **controllo compensativo** è una misura alternativa che riduce lo stesso rischio in un altro modo. La revisione indipendente del titolare reintroduce il **secondo paio d'occhi** che la separazione avrebbe garantito: un pagamento anomalo viene scoperto al più tardi entro un mese. Per funzione è rilevativa, ma il suo ruolo è compensare il controllo mancante.\n* **Perché le altre non sono corrette:**\n  * **B) La policy** è un controllo **direttivo**, e qui è inapplicabile: l'unica addetta deve per forza approvare ed eseguire, quindi la regola verrebbe violata ogni giorno senza ridurre il rischio.\n  * **C) Il cartello** è **deterrente**: può scoraggiare, ma nessuno controlla davvero, e quindi non sostituisce la verifica indipendente.\n  * **D) L'assicurazione** **trasferisce** il rischio economico e interviene dopo il danno: non riduce la probabilità della frode e non compensa la separazione dei compiti.\n\n* **Trappola d'esame:** per riconoscere un controllo compensativo chiediti «**quale controllo manca, e che cosa faceva?**». La risposta giusta deve ottenere, almeno in parte, lo **stesso effetto** del controllo mancante. La separazione dei compiti serve a far sì che una seconda persona veda ogni operazione: solo la revisione indipendente fa lo stesso.\n* **Piccolo Esempio Concentrato:** lo standard PCI DSS ammette esplicitamente i controlli compensativi quando un requisito non è applicabile per vincoli tecnici o di business documentati, a patto che soddisfino l'intento del requisito originale."
   }
 ];
 

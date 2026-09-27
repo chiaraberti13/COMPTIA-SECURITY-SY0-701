@@ -10,11 +10,11 @@ Livelli cognitivi: **R** ricordo · **C** comprensione · **Ap** applicazione ·
 
 ## Dominio 1 — Concetti generali di sicurezza
 
-Peso d'esame 12% · 105 domande nel banco del dominio.
+Peso d'esame 12% · 110 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
-| 1.1 | Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato. | 10 | 0 | 3 | 3 | 4 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
+| 1.1 | Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato. | 15 | 0 | 4 | 5 | 6 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.2 | Applicare CIA, autenticazione, autorizzazione, accounting, non ripudio, zero trust, gap analysis, sicurezza fisica e deception a uno scenario. | 35 | 1 | 14 | 9 | 11 | 2 | da revisionare | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.3 | Valutare un cambiamento sicuro: ownership, impatto, approvazione, test, rollback, documentazione e monitoraggio. | 20 | 1 | 3 | 8 | 8 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 2 | da revisionare | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446) |
@@ -75,10 +75,10 @@ Peso d'esame 20% · 137 domande nel banco del dominio.
 
 I 5 obiettivi con meno domande, da rinforzare per primi:
 
-- **1.1**: 10 domande
 - **2.3**: 13 domande
 - **5.6**: 13 domande
 - **4.7**: 14 domande
+- **1.1**: 15 domande
 - **4.4**: 16 domande
 
 ## Fonti e revisione
