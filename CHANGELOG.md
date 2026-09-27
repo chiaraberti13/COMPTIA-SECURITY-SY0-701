@@ -59,6 +59,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- No emoji as the only cue: the new-questions dialog says "Correct answer" in words instead of a green check mark alone, warnings use words or an icon hidden from screen readers instead of ⚠️, and the status emoji of the threat model and lab 02 are followed by what they mean. `tests/emojiCues.test.ts` enforces it.
 - The Dockerfile no longer starts with `# syntax=docker/dockerfile:1`: that floating, unpinned frontend image was pulled from Docker Hub on every build (a registry outage failed two CI jobs on it), and BuildKit's built-in frontend covers every instruction used.
 - Scenarios no longer involve real third parties: hostnames are reserved names (RFC 2606: `example.com`, `.example`, `.test`) and the company in the scenarios is the fictional Kestrelia instead of the real name of a training provider. `tests/contentSafety.test.ts` keeps real hostnames, commands that disable protections or destroy data, and credential-shaped strings out of the study content.
 - `App.tsx` is down to 485 lines: its JSX is split into eight view components (`AppHeader`, `ChecklistSidebar`, `StudyContent`, `QuizSetupScreen`, `QuizQuestionScreen`, `QuizResultsScreen`, `RemediationScreen`, `NewQuestionsModal`), and it now only wires the hooks to the views. The rendered HTML is identical in 72 deterministic states.
