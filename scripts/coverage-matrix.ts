@@ -18,17 +18,19 @@ import {
 } from "../src/data";
 import { DOMAIN_GUIDES_IT, OFFICIAL_DOMAIN_WEIGHTS } from "../src/domainGuides";
 import { OBJECTIVE_REVIEW, SOURCES, SOURCES_MAPPED_ON, type ReviewStatus, type Source } from "../src/contentReview";
+import { isActive } from "../src/localizedData";
 import { OFFICIAL_OBJECTIVES, objectivesOfQuestion } from "../src/questionObjectives";
 import type { Question } from "../src/types";
 
 export const COVERAGE_MATRIX_PATH = path.join("docs", "coverage-matrix.md");
 
+/** The banks as the app uses them: deprecated questions are not counted. */
 const BANKS: Record<number, Question[]> = {
-  1: DOMAIN_1_QUESTIONS,
-  2: DOMAIN_2_QUESTIONS,
-  3: DOMAIN_3_QUESTIONS,
-  4: DOMAIN_4_QUESTIONS,
-  5: DOMAIN_5_QUESTIONS,
+  1: DOMAIN_1_QUESTIONS.filter(isActive),
+  2: DOMAIN_2_QUESTIONS.filter(isActive),
+  3: DOMAIN_3_QUESTIONS.filter(isActive),
+  4: DOMAIN_4_QUESTIONS.filter(isActive),
+  5: DOMAIN_5_QUESTIONS.filter(isActive),
 };
 
 const LEVELS: Question["level"][] = ["RICORDO", "COMPRENSIONE", "APPLICAZIONE", "ANALISI"];

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getDomainQuestions, questionUid, sourceQuestionId } from "../src/localizedData";
+import { getDomainQuestions, questionUid, sourceQuestionId, isActive } from "../src/localizedData";
+import type { Question } from "../src/types";
 import { ALL_OBJECTIVES, OFFICIAL_OBJECTIVES, objectivesOfQuestion, questionIdsByObjective } from "../src/questionObjectives";
 import * as data from "../src/data";
 
@@ -21,12 +22,12 @@ describe("questions by objective", () => {
   });
 
   it("agrees with the source mapping used by the coverage matrix", () => {
-    const banks: Record<number, { id: number; topic: string }[]> = {
+    const banks: Record<number, Pick<Question, "id" | "topic" | "deprecated">[]> = {
       1: data.DOMAIN_1_QUESTIONS, 2: data.DOMAIN_2_QUESTIONS, 3: data.DOMAIN_3_QUESTIONS,
       4: data.DOMAIN_4_QUESTIONS, 5: data.DOMAIN_5_QUESTIONS,
     };
     for (const d of DOMAINS) {
-      for (const q of banks[d]) {
+      for (const q of banks[d].filter(isActive)) {
         for (const code of objectivesOfQuestion(d, q)) expect(index.get(code)).toContain(questionUid(d, q.id));
       }
     }

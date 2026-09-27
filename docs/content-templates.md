@@ -100,6 +100,8 @@ Una sequenza di passi da seguire in ordine.
 - **Regole:** uno scenario realistico, una sola risposta difendibile (salvo le multiple); ogni
   distrattore discusso, nessuna risposta corretta fra i distrattori; lettere corrette distribuite
   fra A, B, C e D; almeno metà delle domande di un dominio di livello applicazione o analisi.
+- **Per ritirarla:** non si cancella; si aggiunge `deprecated: { since, reason }` (vedi
+  [`CONTRIBUTING.md`](../CONTRIBUTING.md)). Lo stesso vale per le sottovoci.
 - **Dopo averla aggiunta:** `npm run coverage-matrix` e
   `UPDATE_STABLE_IDS=1 npx vitest run tests/conventions.test.ts`.
 - **Test:** `tests/dataset.test.ts`, `tests/questionObjectives.test.ts`,

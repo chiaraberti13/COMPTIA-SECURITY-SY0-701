@@ -55,6 +55,7 @@ The Italian text in `src/data.ts` is the source of truth; `src/data.en.ts` is th
 
 - **Files:** documents and labs in `kebab-case` (`docs/threat-model.md`, `labs/01-security-headers/`, ADRs as `docs/adr/NNNN-title.md`); React components in `PascalCase` (`DomainGuidePanel.tsx`); hooks as `useSomething.ts`; other modules in `camelCase` (`contentReview.ts`); scripts in `kebab-case`.
 - **Identifiers are forever.** What learners save in their browser points to question ids (namespaced as `domain × 10000 + id`) and to concept `checklistKey`s. Never rename or reuse one: a new question gets a new id, and outdated content is marked deprecated instead of being deleted. `tests/fixtures/stable-ids.json` records every published identifier and `tests/conventions.test.ts` fails if one disappears. After adding questions, concepts or labs, record them with `UPDATE_STABLE_IDS=1 npx vitest run tests/conventions.test.ts` and commit the fixture.
+- **Deprecating content.** To retire a question or a concept, add `deprecated: { since: "YYYY-MM-DD", reason: "why it is out of date, and what replaces it" }` to it in `src/data.ts`, then run `npm run coverage-matrix`. It stays in the dataset, so its id keeps existing, but the app no longer shows it, draws it in a quiz or counts it; `tests/deprecation.test.ts` requires the date and a real reason.
 
 ### Changing code
 
@@ -136,6 +137,7 @@ Il testo italiano in `src/data.ts` è la fonte di verità; `src/data.en.ts` è l
 
 - **File:** documenti e lab in `kebab-case` (`docs/threat-model.md`, `labs/01-security-headers/`, ADR come `docs/adr/NNNN-titolo.md`); componenti React in `PascalCase` (`DomainGuidePanel.tsx`); hook come `useQualcosa.ts`; gli altri moduli in `camelCase` (`contentReview.ts`); script in `kebab-case`.
 - **Gli identificatori sono per sempre.** Ciò che gli studenti salvano nel browser punta agli ID delle domande (con namespace `dominio × 10000 + id`) e alle `checklistKey` delle sottovoci. Non rinominarli né riusarli: una nuova domanda riceve un nuovo ID, e un contenuto superato si marca come deprecato invece di cancellarlo. `tests/fixtures/stable-ids.json` registra ogni identificatore pubblicato e `tests/conventions.test.ts` fallisce se uno sparisce. Dopo aver aggiunto domande, sottovoci o lab, registrali con `UPDATE_STABLE_IDS=1 npx vitest run tests/conventions.test.ts` e includi il file nel commit.
+- **Deprecare un contenuto.** Per ritirare una domanda o una sottovoce, aggiungi `deprecated: { since: "AAAA-MM-GG", reason: "perché è superata e che cosa la sostituisce" }` in `src/data.ts`, poi esegui `npm run coverage-matrix`. Resta nel dataset, quindi il suo ID continua a esistere, ma l'app non la mostra, non la estrae nei quiz e non la conta; `tests/deprecation.test.ts` richiede la data e una motivazione vera.
 
 ### Modificare il codice
 

@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename } from "node:path";
 import { describe, expect, it } from "vitest";
-import { getAllTopics, getDomainQuestions, sourceQuestionId } from "../src/localizedData";
+import * as data from "../src/data";
+import { getDomainQuestions, questionUid, sourceQuestionId } from "../src/localizedData";
+import type { Question, TopicGroup } from "../src/types";
 import { ALL_OBJECTIVES } from "../src/questionObjectives";
 
 /**
@@ -29,11 +31,14 @@ interface StableIds {
   labs: string[];
 }
 
+/** The whole dataset, deprecated content included: its ids must stay too. */
+const sourceQuestions = (d: number) => (data as unknown as Record<string, Question[]>)[`DOMAIN_${d}_QUESTIONS`];
+const sourceTopics = (d: number) => (data as unknown as Record<string, TopicGroup[]>)[`DOMAIN_${d}_TOPICS`];
+
 function currentIds(): StableIds {
-  const topics = getAllTopics("it");
   return {
-    questions: DOMAINS.flatMap((d) => getDomainQuestions(d, "it").map((q) => q.id)).sort((a, b) => a - b),
-    concepts: DOMAINS.flatMap((d) => topics[d].flatMap((g) => g.subtopics.map((s) => s.checklistKey))).sort(),
+    questions: DOMAINS.flatMap((d) => sourceQuestions(d).map((q) => questionUid(d, q.id))).sort((a, b) => a - b),
+    concepts: DOMAINS.flatMap((d) => sourceTopics(d).flatMap((g) => g.subtopics.map((s) => s.checklistKey))).sort(),
     objectives: [...ALL_OBJECTIVES],
     labs: readdirSync("labs", { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort(),
   };

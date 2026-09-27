@@ -188,7 +188,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P0 — Creare `CHANGELOG.md`** nel formato *Keep a Changelog*, con la sezione *Unreleased* per questo ciclo e la cronologia precedente ricostruita dal log git per temi — 2026-09-24.
 - [x] **P1 — Definire `CODEOWNERS`:** aree separate (contenuti, sicurezza, CI e dipendenze) già pronte per un secondo revisore; nota sul limite della revisione obbligatoria con un solo owner — 2026-09-24.
 - [x] **P1 — Policy di versionamento:** SemVer dichiarato in `CHANGELOG.md` (correzioni di contenuto = patch, nuove domande o sezioni = minor, formato dei progressi salvati o syllabus = major) — 2026-09-24.
-- [ ] **P1 — Processo di deprecazione:** contenuti superati marcati `deprecated` con motivazione, senza rimozione immediata.
+- [x] **P1 — Processo di deprecazione:** contenuti superati marcati `deprecated` con motivazione, senza rimozione immediata. Domande e sottovoci accettano `deprecated: { since, reason }`: restano nel dataset, così gli ID a cui puntano i progressi salvati continuano a esistere, ma l'app non le mostra, non le estrae nei quiz e non le conta, come la matrice di copertura. `tests/deprecation.test.ts` impone data e motivazione; il processo è descritto in `CONTRIBUTING.md` — 2026-09-27.
 - [ ] **P2 — Automatizzare le issue ricorrenti:** revisione link, aggiornamento fonti, audit dipendenze e parità linguistica.
 
 **Criteri di accettazione:** una nuova domanda o pagina si aggiunge seguendo un template e un test la valida; la pull request riceve feedback automatico chiaro; indice e matrice di copertura non richiedono aggiornamenti manuali.

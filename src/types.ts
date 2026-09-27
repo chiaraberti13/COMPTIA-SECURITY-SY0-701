@@ -1,3 +1,15 @@
+/**
+ * Content that is out of date but keeps its id: learners' saved progress may
+ * point to it (tests/conventions.test.ts), so it is marked instead of deleted.
+ * Deprecated content is no longer shown, drawn in quizzes or counted.
+ */
+export interface Deprecation {
+  /** ISO date (YYYY-MM-DD) of the deprecation. */
+  since: string;
+  /** Why it is out of date, and what replaces it if anything. */
+  reason: string;
+}
+
 export interface Subtopic {
   name: string;
   checklistKey: string;
@@ -9,6 +21,7 @@ export interface Subtopic {
     rows: string[][];
   };
   examTip: string;
+  deprecated?: Deprecation;
 }
 
 export interface TopicGroup {
@@ -40,6 +53,7 @@ export interface Question {
    */
   answerIndexes?: number[];
   explanation: string;
+  deprecated?: Deprecation;
 }
 
 export interface ChatMessage {

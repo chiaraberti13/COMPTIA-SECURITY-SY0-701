@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Deprecation of content: questions and concepts accept `deprecated: { since, reason }`. They stay in the dataset, so the ids learners' progress points to keep existing, but are no longer shown, drawn in quizzes or counted (coverage matrix included). `tests/deprecation.test.ts` requires the date and a reason; `CONTRIBUTING.md` describes the process.
 - `CODE_OF_CONDUCT.md` in Italian and English: expected behaviour, what is not acceptable (including help to attack third-party systems) and how to report; linked from `CONTRIBUTING.md`. A test keeps the community and governance files in place.
 - `docs/content-templates.md`: the templates of concepts, comparisons, procedures, commands, questions, scenarios and labs, each with its rules and the test that enforces it; `tests/contentTemplates.test.ts` checks the concept template in both languages.
 - `docs/quality-baseline.md`: measured baseline of the question bank, tests, `npm audit` and Lighthouse (mobile and desktop), with the commands to repeat each measure.

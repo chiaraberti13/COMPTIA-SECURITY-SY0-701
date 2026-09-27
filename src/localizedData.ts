@@ -1,4 +1,4 @@
-import { TopicGroup, Subtopic, Question } from "./types";
+import { TopicGroup, Subtopic, Question, type Deprecation } from "./types";
 import {
   DOMAIN_1_TOPICS,
   DOMAIN_2_TOPICS,
@@ -14,20 +14,31 @@ import {
 import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.en";
 import type { Lang } from "./i18n";
 
+/**
+ * Deprecated content stays in the dataset, so its id keeps pointing at
+ * something, but the app no longer shows it, draws it in a quiz or counts it.
+ */
+export const isActive = (item: { deprecated?: Deprecation }): boolean => !item.deprecated;
+
+const activeTopics = (groups: TopicGroup[]): TopicGroup[] =>
+  groups
+    .map((g) => (g.subtopics.every(isActive) ? g : { ...g, subtopics: g.subtopics.filter(isActive) }))
+    .filter((g) => g.subtopics.length > 0);
+
 const IT_TOPICS: Record<number, TopicGroup[]> = {
-  1: DOMAIN_1_TOPICS,
-  2: DOMAIN_2_TOPICS,
-  3: DOMAIN_3_TOPICS,
-  4: DOMAIN_4_TOPICS,
-  5: DOMAIN_5_TOPICS,
+  1: activeTopics(DOMAIN_1_TOPICS),
+  2: activeTopics(DOMAIN_2_TOPICS),
+  3: activeTopics(DOMAIN_3_TOPICS),
+  4: activeTopics(DOMAIN_4_TOPICS),
+  5: activeTopics(DOMAIN_5_TOPICS),
 };
 
 const IT_QUESTIONS: Record<number, Question[]> = {
-  1: DOMAIN_1_QUESTIONS,
-  2: DOMAIN_2_QUESTIONS,
-  3: DOMAIN_3_QUESTIONS,
-  4: DOMAIN_4_QUESTIONS,
-  5: DOMAIN_5_QUESTIONS,
+  1: DOMAIN_1_QUESTIONS.filter(isActive),
+  2: DOMAIN_2_QUESTIONS.filter(isActive),
+  3: DOMAIN_3_QUESTIONS.filter(isActive),
+  4: DOMAIN_4_QUESTIONS.filter(isActive),
+  5: DOMAIN_5_QUESTIONS.filter(isActive),
 };
 
 /* ------------------------------------------------------------------ *
