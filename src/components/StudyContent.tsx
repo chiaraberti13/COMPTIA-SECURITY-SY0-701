@@ -9,7 +9,6 @@ import {
   BookOpen,
   HelpCircle,
   ArrowRight,
-  Sparkles,
   Info,
   ArrowUp,
   ArrowDown,
@@ -19,6 +18,7 @@ import { useLang, localizeSubgroup, type UIKey } from "../i18n";
 import { getSubgroupForSubtopic } from "../subgroups";
 import GlossaryHints from "./GlossaryHints";
 import DomainGuidePanel from "./DomainGuidePanel";
+import Callout from "./Callout";
 import MarkdownText from "./MarkdownText";
 import { getDomainRoute } from "../domainRoutes";
 import StudyPathsPanel from "./StudyPathsPanel";
@@ -270,15 +270,9 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                     )}
 
                     {/* Exam Tip */}
-                    <div className="bg-slate-950 border border-slate-800 p-4 rounded-lg flex gap-3.5 items-start" id={`concept_tip_${sub.checklistKey}`}>
-                      <div className="p-1.5 bg-cyan-500/10 rounded-full border border-cyan-500/20 text-cyan-400 shrink-0">
-                        <Sparkles className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-slate-200 font-semibold text-xs mb-1">{t("study.examTipTitle")}</h4>
-                        <p className="text-slate-400 text-xs leading-relaxed">{sub.examTip}</p>
-                      </div>
-                    </div>
+                    <Callout kind="exam" heading="h4" title={t("study.examTipTitle")} id={`concept_tip_${sub.checklistKey}`}>
+                      {sub.examTip}
+                    </Callout>
 
                     <GlossaryHints
                       idPrefix={`concept_${sub.checklistKey}`}

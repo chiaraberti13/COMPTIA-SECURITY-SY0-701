@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Standard callouts (note, exam, practice, warning, common mistake, deep dive), each with its own icon and a written title. In explanations, the recurring "Exam trap" and "Focused Mini-Example" paragraphs (and a few other labels) now show as callouts, with no change to the datasets; the exam tip of every concept uses the same component. `CONTRIBUTING.md` lists the labels.
 - Every domain guide opens with "In this guide": a link to each section the guide has, which jumps there and moves focus to the section heading, opening "Sources and review" when it is folded.
 - Hands-on labs in `labs/`: rules of engagement, three risk levels, isolation and cleanup rules, and a standard template, all enforced by `tests/labs.test.ts`. Lab 01 (Italian and English) has the learner read this app's security headers, watch the CSP block an injected script and trip the API rate limit, all on `127.0.0.1`. Lab 02 starts from the threat model, shows how the server neutralises prompt injection, switches the defence off to watch the tests fail and lets the learner try an attack of their own, with no API key.
 - `HOST` environment variable: the interface the server listens on (default `0.0.0.0`); `HOST=127.0.0.1` keeps a local run out of reach of the network.
