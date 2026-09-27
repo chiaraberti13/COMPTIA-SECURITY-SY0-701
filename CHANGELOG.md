@@ -47,6 +47,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- Scenarios no longer involve real third parties: hostnames are reserved names (RFC 2606: `example.com`, `.example`, `.test`) and the company in the scenarios is the fictional Kestrelia instead of the real name of a training provider. `tests/contentSafety.test.ts` keeps real hostnames, commands that disable protections or destroy data, and credential-shaped strings out of the study content.
 - `App.tsx` is down to 485 lines: its JSX is split into eight view components (`AppHeader`, `ChecklistSidebar`, `StudyContent`, `QuizSetupScreen`, `QuizQuestionScreen`, `QuizResultsScreen`, `RemediationScreen`, `NewQuestionsModal`), and it now only wires the hooks to the views. The rendered HTML is identical in 72 deterministic states.
 - The simulator set-up moved out of `App.tsx` into the `useQuizSetup` hook: presets, questions per domain, chosen objective and the random draw. 40 deterministic states are identical, including the random order of the drawn questions; 4 hook tests.
 - The study area state moved out of `App.tsx` into the `useStudySession` hook: domain, selected concept and saved checklist. The selected concept is kept by key and looked up in the active language, which removes the last effect that set state on a language switch. HTML and saved checklist are identical in 23 deterministic states; 4 hook tests.
@@ -73,6 +74,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- The SPF example included `spf.google.com`, which is not Google's SPF record (that is `_spf.google.com`); it now uses a reserved name.
 - The adaptive remediation never showed its questions: the AI questions arrived, but the results screen stayed on top because the remediation starts from it. The results now give way to the remediation while it runs, and the 1-4 and Enter keys work there too. A new end-to-end test goes through the whole flow; it failed before the fix.
 - The top of the simulator set-up could not be reached when the panel was taller than the screen, on phones and on short desktop windows: the vertical centring pushed it above the scroll origin.
 - Jumping to an element (links, focus, the new "go to" buttons) no longer leaves it hidden under the sticky header on phones.

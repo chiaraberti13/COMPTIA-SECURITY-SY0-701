@@ -255,7 +255,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         name: "PKI",
         checklistKey: "PKIFundamentals",
         definition: "Public Key Infrastructure: l'insieme di ruoli, politiche, hardware, software e procedure necessari per gestire certificati digitali.",
-        details: "Fornisce la struttura di fiducia distribuita per abilitare la crittografia asimmetrica su internet:\n* **Certificate Authority (CA):** L'ente di terze parti fiduciario che convalida le identità e firma digitalmente i certificati (es. DigiCert, Let's Encrypt).\n* **Registration Authority (RA):** Un'entità ausiliaria responsabile di verificare la validità dei dati e l'identità del richiedente prima che la CA emetta effettivamente il certificato.\n* **CRL e OCSP, due meccanismi diversi:** servono entrambi a scoprire se un certificato è stato **revocato** prima della scadenza naturale (tipicamente per compromissione della chiave privata), ma funzionano in modo opposto. La **CRL** (*Certificate Revocation List*) è un **elenco** che la CA pubblica periodicamente e che il client scarica: semplice, ma può essere grande e aggiornata solo al successivo rilascio. L'**OCSP** (*Online Certificate Status Protocol*) è invece una **interrogazione** puntuale a un responder sullo stato di **un singolo** certificato: più tempestiva, ma introduce una dipendenza dalla disponibilità del responder e rivela quali siti il client sta visitando. L'**OCSP stapling** risolve entrambi i problemi: è il server stesso ad allegare all'handshake una risposta OCSP firmata e recente. **Per l'esame: elenco contro interrogazione.**\n\n* **Piccolo Esempio Concentrato:** Quando un browser si connette a `https://banca.it`, verifica tramite PKI che il certificato SSL mostrato dal server sia stato firmato da una CA fidata (es. Let's Encrypt) presente nel database dei certificati radice del sistema operativo, e che il nome del dominio corrisponda. **Attenzione a che cosa questo prova davvero:** il certificato lega una chiave pubblica a un **nome di dominio verificato**, non alla legittimità dell'azienda o dei contenuti. Un sito di phishing può registrare un proprio dominio somigliante e ottenere per esso un certificato valido: il browser mostrerà la connessione come sicura, e lo sarà: cifrata verso il server dell'attaccante.",
+        details: "Fornisce la struttura di fiducia distribuita per abilitare la crittografia asimmetrica su internet:\n* **Certificate Authority (CA):** L'ente di terze parti fiduciario che convalida le identità e firma digitalmente i certificati (es. DigiCert, Let's Encrypt).\n* **Registration Authority (RA):** Un'entità ausiliaria responsabile di verificare la validità dei dati e l'identità del richiedente prima che la CA emetta effettivamente il certificato.\n* **CRL e OCSP, due meccanismi diversi:** servono entrambi a scoprire se un certificato è stato **revocato** prima della scadenza naturale (tipicamente per compromissione della chiave privata), ma funzionano in modo opposto. La **CRL** (*Certificate Revocation List*) è un **elenco** che la CA pubblica periodicamente e che il client scarica: semplice, ma può essere grande e aggiornata solo al successivo rilascio. L'**OCSP** (*Online Certificate Status Protocol*) è invece una **interrogazione** puntuale a un responder sullo stato di **un singolo** certificato: più tempestiva, ma introduce una dipendenza dalla disponibilità del responder e rivela quali siti il client sta visitando. L'**OCSP stapling** risolve entrambi i problemi: è il server stesso ad allegare all'handshake una risposta OCSP firmata e recente. **Per l'esame: elenco contro interrogazione.**\n\n* **Piccolo Esempio Concentrato:** Quando un browser si connette a `https://banca.example`, verifica tramite PKI che il certificato SSL mostrato dal server sia stato firmato da una CA fidata (es. Let's Encrypt) presente nel database dei certificati radice del sistema operativo, e che il nome del dominio corrisponda. **Attenzione a che cosa questo prova davvero:** il certificato lega una chiave pubblica a un **nome di dominio verificato**, non alla legittimità dell'azienda o dei contenuti. Un sito di phishing può registrare un proprio dominio somigliante e ottenere per esso un certificato valido: il browser mostrerà la connessione come sicura, e lo sarà: cifrata verso il server dell'attaccante.",
         examTip: "Se un browser riceve un certificato che non risale a una CA presente nel proprio archivio radici, mostra un avviso. In TLS il client verifica quattro cose: **nome del dominio**, **periodo di validità**, **catena** fino a una radice attendibile e, secondo la policy, **stato di revoca**. **Trappola d'esame:** un certificato valido dimostra che stai parlando con il server di *quel dominio* e che il canale è cifrato; **non** dimostra che l'organizzazione dietro il sito sia onesta. Usa sempre **TLS** come nome del protocollo: «SSL» è deprecato da anni e all'esame la risposta corretta è TLS."
       },
       {
@@ -297,7 +297,7 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         name: "CSR",
         checklistKey: "CSRConcept",
         definition: "Certificate Signing Request: un blocco di testo codificato generato dal richiedente del certificato e inviato a una CA.",
-        details: "Il file formale necessario per avviare l'emissione di un certificato SSL/TLS ufficiale:\n* **Contenuto Chiave:** Include la **chiave pubblica** del richiedente (generata localmente sul server insieme alla chiave privata) e i dettagli identificativi del richiedente (es. Common Name - CN: `www.azienda.com`, località, organizzazione).\n* **Firma di Controllo:** Il file CSR viene firmato con la chiave privata del richiedente per dimostrare alla CA che possiede effettivamente il controllo del set di chiavi asimmetriche creato.\n\n* **Piccolo Esempio Concentrato:** Un webmaster genera localmente sul server web IIS una coppia di chiavi crittografiche. Genera quindi il file CSR contenente solo la chiave pubblica e lo carica sul portale di DigiCert per richiedere l'emissione del certificato ufficiale, mantenendo la chiave privata al sicuro sul server.",
+        details: "Il file formale necessario per avviare l'emissione di un certificato SSL/TLS ufficiale:\n* **Contenuto Chiave:** Include la **chiave pubblica** del richiedente (generata localmente sul server insieme alla chiave privata) e i dettagli identificativi del richiedente (es. Common Name - CN: `www.azienda.example`, località, organizzazione).\n* **Firma di Controllo:** Il file CSR viene firmato con la chiave privata del richiedente per dimostrare alla CA che possiede effettivamente il controllo del set di chiavi asimmetriche creato.\n\n* **Piccolo Esempio Concentrato:** Un webmaster genera localmente sul server web IIS una coppia di chiavi crittografiche. Genera quindi il file CSR contenente solo la chiave pubblica e lo carica sul portale di DigiCert per richiedere l'emissione del certificato ufficiale, mantenendo la chiave privata al sicuro sul server.",
         examTip: "La chiave privata non viene mai inclusa o inviata alla CA all'interno del file CSR."
       },
       {
@@ -311,8 +311,8 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         name: "Wildcard Certificates",
         checklistKey: "WildcardCertificates",
         definition: "Un tipo flessibile di certificato digitale che protegge un dominio principale e tutti i suoi sottodomini di primo livello.",
-        details: "Ottimizza la gestione dei certificati in infrastrutture con molteplici server web:\n* **Sintassi di Emissione:** Viene emesso utilizzando un asterisco prima del dominio principale (es. `*.azienda.it`).\n* **Copertura Estesa:** Protegge contemporaneamente `mail.azienda.it`, `shop.azienda.it`, `portal.azienda.it` e qualsiasi altro sottodominio di primo livello.\n* **Svantaggio di Sicurezza:** Se la chiave privata associata al certificato wildcard viene compromessa, tutti i sottodomini associati diventano vulnerabili simultaneamente all'intercettazione.\n\n* **Piccolo Esempio Concentrato:** Un'università con centinaia di dipartimenti acquista un certificato wildcard `*.universita.edu`. Questo consente di implementare l'HTTPS sicuro su `ingegneria.universita.edu` e `medicina.universita.edu` usando un unico file di certificato e risparmiando significativi costi di acquisto.",
-        examTip: "I certificati wildcard coprono solo un livello di sottodominio (es. non coprono `sub.mail.azienda.it` se emesso per `*.azienda.it`)."
+        details: "Ottimizza la gestione dei certificati in infrastrutture con molteplici server web:\n* **Sintassi di Emissione:** Viene emesso utilizzando un asterisco prima del dominio principale (es. `*.azienda.example`).\n* **Copertura Estesa:** Protegge contemporaneamente `mail.azienda.example`, `shop.azienda.example`, `portal.azienda.example` e qualsiasi altro sottodominio di primo livello.\n* **Svantaggio di Sicurezza:** Se la chiave privata associata al certificato wildcard viene compromessa, tutti i sottodomini associati diventano vulnerabili simultaneamente all'intercettazione.\n\n* **Piccolo Esempio Concentrato:** Un'università con centinaia di dipartimenti acquista un certificato wildcard `*.universita.example`. Questo consente di implementare l'HTTPS sicuro su `ingegneria.universita.example` e `medicina.universita.example` usando un unico file di certificato e risparmiando significativi costi di acquisto.",
+        examTip: "I certificati wildcard coprono solo un livello di sottodominio (es. non coprono `sub.mail.azienda.example` se emesso per `*.azienda.example`)."
       },
       {
         name: "Hashing",
@@ -917,7 +917,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         name: "Typosquatting",
         checklistKey: "TyposquattingSE",
         definition: "Registrazione di nomi di dominio errati ma molto simili a quelli di marchi famosi, sfruttando i refusi di digitazione degli utenti.",
-        details: "Esempi:\n* Registrare `goggle.com` al posto di `google.com`, o `paypa1.com` al posto di `paypal.com`.\n* **Utilizzo:** Ospitare pagine di login identiche a quelle originali per rubare le credenziali degli utenti distratti.\n\n* **Piccolo Esempio Concentrato:** Un utente vuole accedere al proprio conto bancario ma digita accidentalmente `bancaun1credit.it` anziché `bancaunicredit.it`. Si trova di fronte a una copia identica del portale che acquisisce le sue credenziali per inoltrarle ai truffatori.",
+        details: "Esempi:\n* Registrare `saerchly.example` al posto di `searchly.example`, o `shopva1ley.example` al posto di `shopvalley.example`.\n* **Utilizzo:** Ospitare pagine di login identiche a quelle originali per rubare le credenziali degli utenti distratti.\n\n* **Piccolo Esempio Concentrato:** Un utente vuole accedere al proprio conto bancario ma digita accidentalmente `bancaesemp1o.example` anziché `bancaesempio.example`. Si trova di fronte a una copia identica del portale che acquisisce le sue credenziali per inoltrarle ai truffatori.",
         examTip: "Chiamato anche URL Hijacking, sfrutta l'errore umano di battitura sulla barra degli indirizzi del browser."
       },
       {
@@ -952,14 +952,14 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
         name: "Business Email Compromise (BEC)",
         checklistKey: "BECSocialEngineering",
         definition: "Truffa mirata in cui l'attaccante impersona (o controlla realmente) la casella di posta di un dirigente o di un fornitore fidato per indurre un dipendente ad autorizzare un bonifico o a divulgare dati riservati.",
-        details: "Il **Business Email Compromise (BEC)** è la frode via e-mail economicamente più dannosa secondo l'FBI, ed è esplicitamente citata negli obiettivi SY0-701 (Obj 2.2 - Human vectors).\n* **Nessun malware:** Il BEC non usa allegati o link malevoli, quindi i filtri antivirus e i gateway anti-malware non lo intercettano. L'arma è esclusivamente la manipolazione psicologica (autorità + urgenza + riservatezza).\n* **Le tre varianti d'esame:**\n  1. **CEO fraud:** un'e-mail che sembra provenire dall'amministratore delegato chiede un bonifico urgente e 'confidenziale'.\n  2. **Vendor/Invoice fraud:** l'attaccante intercetta una corrispondenza reale con un fornitore e invia una fattura autentica con l'IBAN modificato.\n  3. **Account takeover:** l'attaccante entra davvero nella casella del dirigente (via phishing o credential stuffing) e scrive dal dominio legittimo, superando SPF, DKIM e DMARC.\n* **Tecniche di inganno del mittente:** spoofing del campo `From`, domini *lookalike* (`ranco.it` invece di `banco.it`), o semplice modifica del `Reply-To`.\n\n* **Piccolo Esempio Concentrato:** La contabile di un\'azienda riceve venerdì alle 17:50 un\'e-mail dal 'CEO' in viaggio: chiede un bonifico immediato di 48.000 € per chiudere un\'acquisizione riservata e raccomanda di non parlarne con nessuno fino a lunedì. Il dominio mittente è `azienda-spa.com` invece di `aziendaspa.com`. La procedura aziendale di *callback verification* (richiamare il richiedente su un numero già noto in rubrica, mai su quello indicato nell\'e-mail) blocca la truffa.",
+        details: "Il **Business Email Compromise (BEC)** è la frode via e-mail economicamente più dannosa secondo l'FBI, ed è esplicitamente citata negli obiettivi SY0-701 (Obj 2.2 - Human vectors).\n* **Nessun malware:** Il BEC non usa allegati o link malevoli, quindi i filtri antivirus e i gateway anti-malware non lo intercettano. L'arma è esclusivamente la manipolazione psicologica (autorità + urgenza + riservatezza).\n* **Le tre varianti d'esame:**\n  1. **CEO fraud:** un'e-mail che sembra provenire dall'amministratore delegato chiede un bonifico urgente e 'confidenziale'.\n  2. **Vendor/Invoice fraud:** l'attaccante intercetta una corrispondenza reale con un fornitore e invia una fattura autentica con l'IBAN modificato.\n  3. **Account takeover:** l'attaccante entra davvero nella casella del dirigente (via phishing o credential stuffing) e scrive dal dominio legittimo, superando SPF, DKIM e DMARC.\n* **Tecniche di inganno del mittente:** spoofing del campo `From`, domini *lookalike* (`ranco.example` invece di `banco.example`), o semplice modifica del `Reply-To`.\n\n* **Piccolo Esempio Concentrato:** La contabile di un\'azienda riceve venerdì alle 17:50 un\'e-mail dal 'CEO' in viaggio: chiede un bonifico immediato di 48.000 € per chiudere un\'acquisizione riservata e raccomanda di non parlarne con nessuno fino a lunedì. Il dominio mittente è `azienda-spa.example` invece di `aziendaspa.example`. La procedura aziendale di *callback verification* (richiamare il richiedente su un numero già noto in rubrica, mai su quello indicato nell\'e-mail) blocca la truffa.",
         examTip: "Il controllo più efficace contro il BEC NON è tecnologico ma procedurale: la verifica *out-of-band* (callback su un recapito già censito) e la doppia autorizzazione (dual control) per i pagamenti sopra una certa soglia. All\'esame, se lo scenario descrive una richiesta di pagamento urgente e riservata da parte di un dirigente e NON menziona né allegati né link, la risposta è Business Email Compromise, non phishing generico."
       },
       {
         name: "Brand Impersonation",
         checklistKey: "BrandImpersonationSE",
         definition: "Attacco in cui l'aggressore riproduce fedelmente il marchio, il logo, i colori e il tono comunicativo di un'azienda nota per far apparire legittimo un messaggio, un sito o un'applicazione fraudolenta.",
-        details: "La **Brand Impersonation** sfrutta la fiducia che la vittima ripone in un marchio conosciuto, non in una persona specifica.\n* **Bersagli tipici:** banche, corrieri (avvisi di consegna), servizi cloud (Microsoft 365, Google), fornitori di energia e agenzie fiscali.\n* **Canali:** e-mail HTML clonate pixel per pixel, SMS (in combinazione con lo smishing), annunci sponsorizzati sui motori di ricerca che portano a portali di login contraffatti, app mobili fasulle negli store.\n* **Danno doppio:** la vittima perde le credenziali o il denaro, mentre il marchio impersonato subisce un danno reputazionale che non ha causato né può controllare direttamente.\n* **Contromisure lato azienda impersonata:** pubblicazione di record **DMARC** in policy `reject`, monitoraggio dei **Certificate Transparency log** e del typosquatting sui domini simili, servizi di *brand protection* e takedown.\n\n* **Piccolo Esempio Concentrato:** Un dipendente riceve un\'e-mail con il logo, il piè di pagina e i caratteri esatti del corriere aziendale: 'Pacco in giacenza, paga 2,90 € di dogana'. Il link porta a un sito identico all\'originale ospitato su `corriere-tracking-it.net`. Il pagamento serve solo a far digitare alla vittima i dati completi della carta di credito.",
+        details: "La **Brand Impersonation** sfrutta la fiducia che la vittima ripone in un marchio conosciuto, non in una persona specifica.\n* **Bersagli tipici:** banche, corrieri (avvisi di consegna), servizi cloud (Microsoft 365, Google), fornitori di energia e agenzie fiscali.\n* **Canali:** e-mail HTML clonate pixel per pixel, SMS (in combinazione con lo smishing), annunci sponsorizzati sui motori di ricerca che portano a portali di login contraffatti, app mobili fasulle negli store.\n* **Danno doppio:** la vittima perde le credenziali o il denaro, mentre il marchio impersonato subisce un danno reputazionale che non ha causato né può controllare direttamente.\n* **Contromisure lato azienda impersonata:** pubblicazione di record **DMARC** in policy `reject`, monitoraggio dei **Certificate Transparency log** e del typosquatting sui domini simili, servizi di *brand protection* e takedown.\n\n* **Piccolo Esempio Concentrato:** Un dipendente riceve un\'e-mail con il logo, il piè di pagina e i caratteri esatti del corriere aziendale: 'Pacco in giacenza, paga 2,90 € di dogana'. Il link porta a un sito identico all\'originale ospitato su `corriere-tracking-it.test`. Il pagamento serve solo a far digitare alla vittima i dati completi della carta di credito.",
         examTip: "Distingui bene le tre 'impersonificazioni' d'esame: **Impersonation** = ci si finge una *persona* (il nuovo tecnico, un collega); **Brand impersonation** = ci si finge un *marchio/azienda*; **Typosquatting** = si registra un *dominio* con un refuso per intercettare chi sbaglia a digitare. Le tre tecniche vengono spesso combinate nello stesso attacco."
       }
     ]
@@ -1739,7 +1739,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         name: "SPF",
         checklistKey: "SPFConcept_New",
         definition: "Sender Policy Framework: Un protocollo di validazione e-mail basato su DNS che consente ai proprietari di un dominio di specificare quali host o indirizzi IP sono autorizzati a inviare e-mail per loro conto.",
-        details: "Funzionamento di SPF:\n* **Record DNS TXT:** Il proprietario del dominio pubblica un record DNS TXT contenente la lista dei server autorizzati (es. `v=spf1 ip4:192.168.1.1 include:spf.google.com ~all`).\n* **Verifica del destinatario:** Quando un server riceve un'e-mail, estrae l'IP del server mittente e verifica se è presente nel record SPF del dominio dichiarato. Se non è presente, il messaggio può essere contrassegnato come spam o rifiutato.\n* **Limite:** SPF verifica solo l'indirizzo del mittente a livello di busta (Return-Path), non l'indirizzo visualizzato dall'utente finale nell'intestazione 'From:', rendendolo parzialmente aggirabile.\n\n* **Piccolo Esempio Concentrato:** Un hacker tenta di inviare un'e-mail fraudolenta spacciandosi per la ditta `sicurezza.com` utilizzando un proprio server. Il server di posta del destinatario riceve il messaggio, consulta il record **SPF** di `sicurezza.com` nei DNS pubblici e rileva che l'IP del server dell'hacker non è autorizzato, bloccando o contrassegnando l'e-mail come phishing.",
+        details: "Funzionamento di SPF:\n* **Record DNS TXT:** Il proprietario del dominio pubblica un record DNS TXT contenente la lista dei server autorizzati (es. `v=spf1 ip4:192.168.1.1 include:_spf.example.net ~all`).\n* **Verifica del destinatario:** Quando un server riceve un'e-mail, estrae l'IP del server mittente e verifica se è presente nel record SPF del dominio dichiarato. Se non è presente, il messaggio può essere contrassegnato come spam o rifiutato.\n* **Limite:** SPF verifica solo l'indirizzo del mittente a livello di busta (Return-Path), non l'indirizzo visualizzato dall'utente finale nell'intestazione 'From:', rendendolo parzialmente aggirabile.\n\n* **Piccolo Esempio Concentrato:** Un hacker tenta di inviare un'e-mail fraudolenta spacciandosi per la ditta `sicurezza.example` utilizzando un proprio server. Il server di posta del destinatario riceve il messaggio, consulta il record **SPF** di `sicurezza.example` nei DNS pubblici e rileva che l'IP del server dell'hacker non è autorizzato, bloccando o contrassegnando l'e-mail come phishing.",
         examTip: "SPF aiuta a prevenire l'e-mail spoofing memorizzando nei record DNS TXT del dominio l'elenco dei server e degli indirizzi IP formalmente autorizzati a spedire posta."
       },
       {
@@ -4983,7 +4983,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 78,
     topic: "Risk Management & Analysis",
     level: "APPLICAZIONE",
-    scenario: "Presso Dion Defenders, il team di gestione del rischio ha completato il processo di valutazione dei rischi per i sistemi informativi aziendali. Ora si preparano a comunicare le informazioni relative ai rischi agli stakeholder aziendali e al management per supportare decisioni strategiche informate.",
+    scenario: "Presso Kestrelia Defenders, il team di gestione del rischio ha completato il processo di valutazione dei rischi per i sistemi informativi aziendali. Ora si preparano a comunicare le informazioni relative ai rischi agli stakeholder aziendali e al management per supportare decisioni strategiche informate.",
     question: "Quale fase del processo di gestione del rischio stanno affrontando?",
     options: [
       "A) Risk reporting (Reporting del rischio)",
@@ -5013,7 +5013,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 80,
     topic: "Risk Management & Analysis",
     level: "APPLICAZIONE",
-    scenario: "Presso DionTraining, il team di gestione del rischio ha completato una valutazione approfondita e ha identificato potenziali minacce in vari dipartimenti. Per garantire un monitoraggio continuo e una tracciabilità nel tempo di queste minacce, desiderano implementare uno strumento centralizzato che elenchi i rischi, il loro impatto e i rispettivi proprietari.",
+    scenario: "Presso Kestrelia Training, il team di gestione del rischio ha completato una valutazione approfondita e ha identificato potenziali minacce in vari dipartimenti. Per garantire un monitoraggio continuo e una tracciabilità nel tempo di queste minacce, desiderano implementare uno strumento centralizzato che elenchi i rischi, il loro impatto e i rispettivi proprietari.",
     question: "Quale elemento del processo di gestione del rischio dovrebbe implementare il team per tracciare i rischi nel tempo?",
     options: [
       "A) Business impact analysis (BIA - Analisi dell'impatto sul business)",
@@ -5088,8 +5088,8 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 85,
     topic: "Agreements & Contracts",
     level: "ANALISI",
-    scenario: "Dion Training sta valutando una collaborazione con un nuovo fornitore di servizi IT. Per garantire la conformità e l'adesione agli standard di settore, Dion Training desidera esaminare valutazioni verificabili dei controlli e delle pratiche di sicurezza del fornitore. Nello specifico, l'azienda vuole analizzare le valutazioni interne che il fornitore stesso ha eseguito sulle proprie misure di sicurezza.",
-    question: "Quale delle seguenti opzioni fornirebbe a Dion Training informazioni dettagliate sulle valutazioni interne condotte dal fornitore?",
+    scenario: "Kestrelia Training sta valutando una collaborazione con un nuovo fornitore di servizi IT. Per garantire la conformità e l'adesione agli standard di settore, Kestrelia Training desidera esaminare valutazioni verificabili dei controlli e delle pratiche di sicurezza del fornitore. Nello specifico, l'azienda vuole analizzare le valutazioni interne che il fornitore stesso ha eseguito sulle proprie misure di sicurezza.",
+    question: "Quale delle seguenti opzioni fornirebbe a Kestrelia Training informazioni dettagliate sulle valutazioni interne condotte dal fornitore?",
     options: [
       "A) Customer testimonials (Testimonianze dei clienti)",
       "B) Regulatory compliance certificates (Certificati di conformità normativa)",
@@ -5163,7 +5163,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 90,
     topic: "Compliance, Privacy, Due Diligence & Due Care",
     level: "APPLICAZIONE",
-    scenario: "Presso Dion Training, un'azienda tecnologica, il team di sicurezza sta conducendo una revisione delle misure di sicurezza per migliorare la protezione delle proprie strutture fisiche. Desiderano identificare la componente di governance essenziale per garantire che l'accesso agli edifici e alle aree sensibili sia adeguatamente limitato.",
+    scenario: "Presso Kestrelia Training, un'azienda tecnologica, il team di sicurezza sta conducendo una revisione delle misure di sicurezza per migliorare la protezione delle proprie strutture fisiche. Desiderano identificare la componente di governance essenziale per garantire che l'accesso agli edifici e alle aree sensibili sia adeguatamente limitato.",
     question: "Quale delle seguenti opzioni rappresenta un elemento fondamentale della governance aziendale per definire e applicare restrizioni di accesso fisico agli edifici e alle aree protette?",
     options: [
       "A) Physical security standards (Standard di sicurezza fisica)",
@@ -5208,7 +5208,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 93,
     topic: "Risk Management & Analysis",
     level: "ANALISI",
-    scenario: "Dion Training Solutions si è tradizionalmente concentrata su prodotti con rendimenti prevedibili e mercati con ambienti normativi stabili, preferendo evitare iniziative imprevedibili.",
+    scenario: "Kestrelia Training Solutions si è tradizionalmente concentrata su prodotti con rendimenti prevedibili e mercati con ambienti normativi stabili, preferendo evitare iniziative imprevedibili.",
     question: "Come può essere descritta al MEGLIO la propensione al rischio (risk appetite) di questa istituzione?",
     options: [
       "A) Conservative (Conservativa)",
@@ -5673,8 +5673,8 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 124,
     topic: "Security Policies & Lifecycle",
     level: "APPLICAZIONE",
-    scenario: "Presso la Dion Training, il team IT sta lavorando al miglioramento del proprio piano di continuità aziendale (BCP). Per fare ciò, necessitano di calcolare e documentare il tempo medio richiesto per riparare un sistema o ripristinarne la funzionalità a seguito di un disservizio imprevisto.",
-    question: "Quale delle seguenti metriche il team della Dion Training intende determinare?",
+    scenario: "Presso la Kestrelia Training, il team IT sta lavorando al miglioramento del proprio piano di continuità aziendale (BCP). Per fare ciò, necessitano di calcolare e documentare il tempo medio richiesto per riparare un sistema o ripristinarne la funzionalità a seguito di un disservizio imprevisto.",
+    question: "Quale delle seguenti metriche il team della Kestrelia Training intende determinare?",
     options: [
       "A) MTTR (Mean Time to Repair - Tempo medio di riparazione)",
       "B) MTBF (Mean Time Between Failures - Tempo medio tra i guasti)",
@@ -5913,7 +5913,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 140,
     topic: "Security Policies & Lifecycle",
     level: "APPLICAZIONE",
-    scenario: "Jamario, uno specialista IT presso Dion Training, ha il compito di garantire che i dipendenti che lavorano da casa possano accedere in modo sicuro alla rete aziendale. Raccomanda l'uso di VPN, autenticazione a più fattori e comunicazioni crittografate per tutte le connessioni remote.",
+    scenario: "Jamario, uno specialista IT presso Kestrelia Training, ha il compito di garantire che i dipendenti che lavorano da casa possano accedere in modo sicuro alla rete aziendale. Raccomanda l'uso di VPN, autenticazione a più fattori e comunicazioni crittografate per tutte le connessioni remote.",
     question: "Quale tipo di ambiente di lavoro sta affrontando Jamario?",
     options: [
       "A) Centralized (Centralizzato)",
@@ -5988,7 +5988,7 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     id: 145,
     topic: "Security Awareness",
     level: "APPLICAZIONE",
-    scenario: "Susan, dipendente presso Dion Training, riceve un'e-mail da un mittente apparentemente familiare. L'e-mail le chiede di cliccare su un link per reimpostare la password a causa di 'attività insolita'. Trova la cosa strana poiché non ha richiesto alcun reset della password.",
+    scenario: "Susan, dipendente presso Kestrelia Training, riceve un'e-mail da un mittente apparentemente familiare. L'e-mail le chiede di cliccare su un link per reimpostare la password a causa di 'attività insolita'. Trova la cosa strana poiché non ha richiesto alcun reset della password.",
     question: "Quale delle seguenti azioni dovrebbe intraprendere Susan?",
     options: [
       "A) Inoltrare l'e-mail ai colleghi per verificare se ne hanno ricevuta una simile.",
@@ -6906,7 +6906,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 404,
     topic: "Identity & Access Management",
     level: "COMPRENSIONE",
-    scenario: "Dion Training Solutions ha stretto una partnership con diverse aziende più piccole. Hanno configurato un sistema che consente ai dipendenti di qualsiasi azienda partner di accedere alle risorse delle altre società senza richiedere un nome utente e una password separati.",
+    scenario: "Kestrelia Training Solutions ha stretto una partnership con diverse aziende più piccole. Hanno configurato un sistema che consente ai dipendenti di qualsiasi azienda partner di accedere alle risorse delle altre società senza richiedere un nome utente e una password separati.",
     question: "Quale dei seguenti concetti è descritto in questo scenario?",
     options: [
       "A) RBAC (Role-Based Access Control)",
@@ -7132,7 +7132,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 195,
     topic: "Data Sanitization & Destruction",
     level: "APPLICAZIONE",
-    scenario: "La Dion Training dismette un lotto misto di supporti: venti hard disk magnetici tradizionali e quindici unità SSD, tutti contenenti dati di clienti. Il responsabile IT propone di passare l'intero lotto al degausser industriale già presente in azienda, per poi rivendere i supporti sul mercato dell'usato.",
+    scenario: "La Kestrelia Training dismette un lotto misto di supporti: venti hard disk magnetici tradizionali e quindici unità SSD, tutti contenenti dati di clienti. Il responsabile IT propone di passare l'intero lotto al degausser industriale già presente in azienda, per poi rivendere i supporti sul mercato dell'usato.",
     question: "Qual è il problema principale della proposta e come va corretta?",
     options: [
       "A) Il degaussing non ha effetto sugli SSD, che usano celle NAND: vanno distrutti o sanificati con il secure erase del produttore",
@@ -7477,7 +7477,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 218,
     topic: "Identity & Access Management",
     level: "ANALISI",
-    scenario: "Dion Training vuole che i dipendenti accedano a un'applicazione SaaS di terze parti usando le credenziali del proprio identity provider aziendale. Il requisito posto dalla sicurezza è che la password non venga mai trasmessa né conosciuta dal fornitore SaaS: quest'ultimo deve limitarsi a ricevere, da un provider di cui si fida, un'asserzione firmata che attesta l'identità dell'utente e i suoi attributi.",
+    scenario: "Kestrelia Training vuole che i dipendenti accedano a un'applicazione SaaS di terze parti usando le credenziali del proprio identity provider aziendale. Il requisito posto dalla sicurezza è che la password non venga mai trasmessa né conosciuta dal fornitore SaaS: quest'ultimo deve limitarsi a ricevere, da un provider di cui si fida, un'asserzione firmata che attesta l'identità dell'utente e i suoi attributi.",
     question: "Quale standard è progettato specificamente per questo scambio fra identity provider e applicazione?",
     options: [
       "A) LDAP, interrogando la directory aziendale per verificare le credenziali",
@@ -7507,7 +7507,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 220,
     topic: "Vulnerability Scanning",
     level: "APPLICAZIONE",
-    scenario: "La Dion Training Solutions ha recentemente rimediato una vulnerabilità critica sui propri server.",
+    scenario: "La Kestrelia Training Solutions ha recentemente rimediato una vulnerabilità critica sui propri server.",
     question: "Quale delle seguenti azioni è il MIGLIORE passo successivo per verificare che gli sforzi di remediation siano stati efficaci?",
     options: [
       "A) Scansione intrusiva (Intrusive scanning)",
@@ -7522,7 +7522,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 221,
     topic: "Web Content Filtering",
     level: "ANALISI",
-    scenario: "Jamario, amministratore IT presso la Dion Training Solutions, sta valutando l'implementazione di un filtro web basato su agente per gestire e monitorare il traffico web dei dipendenti in remoto.",
+    scenario: "Jamario, amministratore IT presso la Kestrelia Training Solutions, sta valutando l'implementazione di un filtro web basato su agente per gestire e monitorare il traffico web dei dipendenti in remoto.",
     question: "Quale dei seguenti è il vantaggio PIÙ importante dell'implementazione di filtri web basati su agente rispetto ai filtri tradizionali basati su gateway per questo scopo?",
     options: [
       "A) Riduce il costo totale di proprietà (TCO) grazie all'assenza di hardware",
@@ -7537,7 +7537,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 222,
     topic: "Mobile Device Security",
     level: "APPLICAZIONE",
-    scenario: "Mary, amministratrice di rete presso la Dion Training, sta discutendo con Enrique le modalità per rafforzare la sicurezza dei dispositivi mobili aziendali.",
+    scenario: "Mary, amministratrice di rete presso la Kestrelia Training, sta discutendo con Enrique le modalità per rafforzare la sicurezza dei dispositivi mobili aziendali.",
     question: "Quale tecnica sarebbe la PIÙ efficace da implementare per prima?",
     options: [
       "A) Abilitare la modalità rilevabile Bluetooth (Enable Bluetooth discoverable mode)",
@@ -7612,7 +7612,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 227,
     topic: "Authentication Methods",
     level: "COMPRENSIONE",
-    scenario: "La Dion Solutions, una piattaforma e-commerce, ha deciso di rinnovare il proprio sistema di autenticazione utente. Invece di affidarsi alle password tradizionali, vuole fornire agli utenti un'opzione in cui le credenziali del loro account online vengono verificate solo quando sbloccano i loro laptop abilitati alla biometria, il tutto basato sulla crittografia a chiave pubblica.",
+    scenario: "La Kestrelia Solutions, una piattaforma e-commerce, ha deciso di rinnovare il proprio sistema di autenticazione utente. Invece di affidarsi alle password tradizionali, vuole fornire agli utenti un'opzione in cui le credenziali del loro account online vengono verificate solo quando sbloccano i loro laptop abilitati alla biometria, il tutto basato sulla crittografia a chiave pubblica.",
     question: "Quale delle seguenti descrive MEGLIO questa soluzione di autenticazione?",
     options: [
       "A) Passkey",
@@ -7957,7 +7957,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 250,
     topic: "Web Content Filtering",
     level: "APPLICAZIONE",
-    scenario: "Jason, il CTO della Dion Training Solutions, vuole standardizzare e semplificare le soluzioni di filtraggio web attualmente in uso nelle varie filiali dell'organizzazione. Vuole anche avere una vista consolidata dei report sul traffico web.",
+    scenario: "Jason, il CTO della Kestrelia Training Solutions, vuole standardizzare e semplificare le soluzioni di filtraggio web attualmente in uso nelle varie filiali dell'organizzazione. Vuole anche avere una vista consolidata dei report sul traffico web.",
     question: "Quale delle seguenti soluzioni soddisferebbe MEGLIO le esigenze di Jason?",
     options: [
       "A) Distribuire firewall locali in ogni filiale",
@@ -8107,7 +8107,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 260,
     topic: "System & Device Hardening",
     level: "APPLICAZIONE",
-    scenario: "Sasha, amministratrice di sistema presso la Dion Training Solutions, vuole rafforzare la sicurezza dei propri server Linux limitando i processi ai privilegi minimi necessari e definendo il loro comportamento consentito.",
+    scenario: "Sasha, amministratrice di sistema presso la Kestrelia Training Solutions, vuole rafforzare la sicurezza dei propri server Linux limitando i processi ai privilegi minimi necessari e definendo il loro comportamento consentito.",
     question: "Quale funzionalità Linux dovrebbe MOLTO probabilmente implementare Sasha?",
     options: [
       "A) SELinux (Security-Enhanced Linux)",
@@ -8167,7 +8167,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 264,
     topic: "Password Security",
     level: "APPLICAZIONE",
-    scenario: "Jamario, il CISO della Dion Training Solutions, ha notato che molti dipendenti usano password semplici facili da indovinare. Vuole migliorare la sicurezza degli account dei dipendenti.",
+    scenario: "Jamario, il CISO della Kestrelia Training Solutions, ha notato che molti dipendenti usano password semplici facili da indovinare. Vuole migliorare la sicurezza degli account dei dipendenti.",
     question: "Quale sarebbe il metodo PIÙ efficace per migliorare la sicurezza delle password contro gli attacchi brute force?",
     options: [
       "A) Utilizzare canali di comunicazione crittografati",
@@ -8272,7 +8272,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 271,
     topic: "Vulnerability Management",
     level: "APPLICAZIONE",
-    scenario: "La Dion Training ha implementato correzioni per le vulnerabilità di buffer overflow nella propria applicazione. Il team deve ora dimostrare, con evidenza verificabile, che le correzioni hanno davvero eliminato le vulnerabilità.",
+    scenario: "La Kestrelia Training ha implementato correzioni per le vulnerabilità di buffer overflow nella propria applicazione. Il team deve ora dimostrare, con evidenza verificabile, che le correzioni hanno davvero eliminato le vulnerabilità.",
     question: "Quale approccio è il MIGLIORE per validare che le correzioni ai buffer overflow siano state efficaci?",
     options: [
       "A) Abbonarsi a un feed di threat intelligence per aggiornamenti in tempo reale",
@@ -8437,7 +8437,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 282,
     topic: "Password Security",
     level: "APPLICAZIONE",
-    scenario: "Un audit sugli account di dominio della Dion Training Solutions rileva 60 utenze la cui password non viene cambiata da oltre quattro anni. Alcune di queste password compaiono in raccolte pubbliche di credenziali sottratte ad altri servizi. La direzione IT vuole che nessuna password possa restare valida a tempo indeterminato.",
+    scenario: "Un audit sugli account di dominio della Kestrelia Training Solutions rileva 60 utenze la cui password non viene cambiata da oltre quattro anni. Alcune di queste password compaiono in raccolte pubbliche di credenziali sottratte ad altri servizi. La direzione IT vuole che nessuna password possa restare valida a tempo indeterminato.",
     question: "Quale impostazione della policy delle password risponde a questo requisito?",
     options: [
       "A) Password history: impedisce di riutilizzare le ultime N password",
@@ -8557,7 +8557,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 290,
     topic: "Password Security",
     level: "APPLICAZIONE",
-    scenario: "Sasha, analista di cybersecurity presso la Dion Training Solutions, ha notato che i dipendenti tendono a usare le stesse password su più piattaforme lavorative. È preoccupata per i rischi di sicurezza che questo comportamento presenta.",
+    scenario: "Sasha, analista di cybersecurity presso la Kestrelia Training Solutions, ha notato che i dipendenti tendono a usare le stesse password su più piattaforme lavorative. È preoccupata per i rischi di sicurezza che questo comportamento presenta.",
     question: "Cosa dovrebbe raccomandare Sasha per MITIGARE MEGLIO il rischio che una password compromessa porti a violazioni multiple?",
     options: [
       "A) Condurre audit di sicurezza più frequenti",
@@ -8632,7 +8632,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 295,
     topic: "Web Content Filtering",
     level: "APPLICAZIONE",
-    scenario: "Reed, CTO presso la Dion Training Solutions, è preoccupato per potenziali minacce come malware command and control e data exfiltration dal traffico degli utenti. Vuole una soluzione che filtri gli URL presenti nelle deny list e applichi restrizioni basate sul tempo, eseguendo anche analisi delle minacce sul traffico degli utenti.",
+    scenario: "Reed, CTO presso la Kestrelia Training Solutions, è preoccupato per potenziali minacce come malware command and control e data exfiltration dal traffico degli utenti. Vuole una soluzione che filtri gli URL presenti nelle deny list e applichi restrizioni basate sul tempo, eseguendo anche analisi delle minacce sul traffico degli utenti.",
     question: "Quale soluzione sarebbe PIÙ efficace per soddisfare questi requisiti?",
     options: [
       "A) Implementare un sistema DLP standalone",
@@ -8647,7 +8647,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 296,
     topic: "Asset Management",
     level: "COMPRENSIONE",
-    scenario: "Enrique sta preparando un elenco dettagliato di ogni applicazione installata sul server della Dion Training.",
+    scenario: "Enrique sta preparando un elenco dettagliato di ogni applicazione installata sul server della Kestrelia Training.",
     question: "Quale dei seguenti compiti descrive MEGLIO l'attività di Enrique?",
     options: [
       "A) Software enumeration (censimento del software installato)",
@@ -8782,7 +8782,7 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     id: 305,
     topic: "System & Device Hardening",
     level: "APPLICAZIONE",
-    scenario: "La Dion Training ha recentemente configurato un nuovo web server per la propria piattaforma di e-learning. Il team IT ha il compito di implementare misure di sicurezza per mitigare potenziali attacchi.",
+    scenario: "La Kestrelia Training ha recentemente configurato un nuovo web server per la propria piattaforma di e-learning. Il team IT ha il compito di implementare misure di sicurezza per mitigare potenziali attacchi.",
     question: "Quale delle seguenti pratiche sarebbe PIÙ efficace per l'hardening del server?",
     options: [
       "A) Identificare tutto il software e l'hardware che si avvicina alla fine del ciclo di vita (end of life)",
@@ -9424,7 +9424,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
       "D) Controllando la sola data di scadenza (Expiration Date) riportata all'interno del certificato"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Tramite il protocollo OCSP con meccanismo di 'OCSP Stapling' fornito direttamente dal web server**. \n\n* **Perché è la BEST:** L'**OCSP (Online Certificate Status Protocol) Stapling** risolve sia i problemi di latenza che quelli di scalabilità e privacy legati alla verifica dei certificati. Invece di richiedere al client (il browser) di contattare la CA ad ogni connessione per verificare lo stato di revoca (rivelando quale sito l'utente sta visitando), è il web server stesso che interroga periodicamente la CA, ottiene una risposta OCSP firmata e con marca temporale, e la 'spilla' (staple) direttamente insieme al certificato TLS durante l'handshake col client. Il browser verifica semplicemente la firma della CA sulla risposta ricevuta, riducendo a zero la latenza e il carico sulla CA.\n* **Analisi dei distrattori:**\n  * **A)** Scaricare una CRL di grandi dimensioni introdurrebbe una latenza di rete insostenibile per la normale navigazione web.\n  * **B) La RA** si occupa di verificare l'identità dei richiedenti all'inizio del processo di emissione, ma non gestisce le query in tempo reale sullo stato di revoca.\n  * **D) La data di scadenza** indica solo se il certificato è scaduto nel tempo fisiologico, ma non fornisce informazioni sul fatto che sia stato esplicitamente revocato in anticipo a causa di una compromissione delle chiavi.\n\n* **Piccolo Esempio Concentrato:** Un browser si collega a `https://bancaria.it`. Se viene utilizzato l'OCSP Stapling, il server di `bancaria.it` invia, insieme al proprio certificato X.509, anche un'attestazione firmata dalla CA (es. Let's Encrypt) risalente a poche ore prima che certifica: *'Questo certificato è ancora valido'*. Il browser dell'utente non deve effettuare nessuna chiamata di rete aggiuntiva verso i server della CA, velocizzando il caricamento della pagina e proteggendo la privacy dell'utente."
+    explanation: "La risposta corretta è la **C) Tramite il protocollo OCSP con meccanismo di 'OCSP Stapling' fornito direttamente dal web server**. \n\n* **Perché è la BEST:** L'**OCSP (Online Certificate Status Protocol) Stapling** risolve sia i problemi di latenza che quelli di scalabilità e privacy legati alla verifica dei certificati. Invece di richiedere al client (il browser) di contattare la CA ad ogni connessione per verificare lo stato di revoca (rivelando quale sito l'utente sta visitando), è il web server stesso che interroga periodicamente la CA, ottiene una risposta OCSP firmata e con marca temporale, e la 'spilla' (staple) direttamente insieme al certificato TLS durante l'handshake col client. Il browser verifica semplicemente la firma della CA sulla risposta ricevuta, riducendo a zero la latenza e il carico sulla CA.\n* **Analisi dei distrattori:**\n  * **A)** Scaricare una CRL di grandi dimensioni introdurrebbe una latenza di rete insostenibile per la normale navigazione web.\n  * **B) La RA** si occupa di verificare l'identità dei richiedenti all'inizio del processo di emissione, ma non gestisce le query in tempo reale sullo stato di revoca.\n  * **D) La data di scadenza** indica solo se il certificato è scaduto nel tempo fisiologico, ma non fornisce informazioni sul fatto che sia stato esplicitamente revocato in anticipo a causa di una compromissione delle chiavi.\n\n* **Piccolo Esempio Concentrato:** Un browser si collega a `https://bancaria.example`. Se viene utilizzato l'OCSP Stapling, il server di `bancaria.example` invia, insieme al proprio certificato X.509, anche un'attestazione firmata dalla CA (es. Let's Encrypt) risalente a poche ore prima che certifica: *'Questo certificato è ancora valido'*. Il browser dell'utente non deve effettuare nessuna chiamata di rete aggiuntiva verso i server della CA, velocizzando il caricamento della pagina e proteggendo la privacy dell'utente."
   },
   {
     id: 27,
@@ -9580,7 +9580,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 178,
     topic: "Fail-Safe vs. Fail-Secure Design",
     level: "APPLICAZIONE",
-    scenario: "La 'Dion Training Solutions' sta installando un sistema di controllo degli accessi fisici per un proprio laboratorio di ricerca riservato in cui sono custoditi dati ad alta sensibilità. Se il lettore di badge elettronico o il software di controllo subiscono un blackout o un guasto, la priorità assoluta dell'azienda è impedire l'ingresso a personale non autorizzato, anche a costo di bloccare temporaneamente lo staff legittimo.",
+    scenario: "La 'Kestrelia Training Solutions' sta installando un sistema di controllo degli accessi fisici per un proprio laboratorio di ricerca riservato in cui sono custoditi dati ad alta sensibilità. Se il lettore di badge elettronico o il software di controllo subiscono un blackout o un guasto, la priorità assoluta dell'azienda è impedire l'ingresso a personale non autorizzato, anche a costo di bloccare temporaneamente lo staff legittimo.",
     question: "Quale modalità operativa di gestione dei guasti deve essere implementata per garantire questo livello di sicurezza fisica?",
     options: [
       "A) Apertura sicura / Fail-open",
@@ -9610,7 +9610,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 180,
     topic: "Network Security Devices",
     level: "COMPRENSIONE",
-    scenario: "La 'Dion Training Solutions' desidera aggiornare la propria infrastruttura perimetrale sostituendo il vecchio firewall con uno in grado di rilevare e bloccare minacce avanzate, integrare controlli applicativi (DPI), includere funzionalità di prevenzione delle intrusioni (IPS) e offrire una visibilità granulare profonda sul traffico dati transito.",
+    scenario: "La 'Kestrelia Training Solutions' desidera aggiornare la propria infrastruttura perimetrale sostituendo il vecchio firewall con uno in grado di rilevare e bloccare minacce avanzate, integrare controlli applicativi (DPI), includere funzionalità di prevenzione delle intrusioni (IPS) e offrire una visibilità granulare profonda sul traffico dati transito.",
     question: "Quale delle seguenti tipologie di firewall risponde MEGLIO alle caratteristiche descritte?",
     options: [
       "A) Firewall a filtraggio di pacchetti (Packet-filtering firewall)",
@@ -9625,7 +9625,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 415,
     topic: "Network Security Devices",
     level: "COMPRENSIONE",
-    scenario: "Dion Training sta implementando un dispositivo di sicurezza con il compito di ispezionare il traffico di rete in tempo reale e intraprendere azioni immediate per mitigare le potenziali minacce.",
+    scenario: "Kestrelia Training sta implementando un dispositivo di sicurezza con il compito di ispezionare il traffico di rete in tempo reale e intraprendere azioni immediate per mitigare le potenziali minacce.",
     question: "Quale dei seguenti elementi di sicurezza soddisfarebbe nel modo PIÙ efficace questo requisito?",
     options: [
       "A) Modalità fail-open (Fail-open mode)",
@@ -9640,7 +9640,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 416,
     topic: "OSI Model & Traffic Filtering",
     level: "APPLICAZIONE",
-    scenario: "Dion Training Solutions necessita di un'apparecchiatura di rete in grado di filtrare il traffico in base a URL, intestazioni HTTP e funzionalità specifiche delle applicazioni web.",
+    scenario: "Kestrelia Training Solutions necessita di un'apparecchiatura di rete in grado di filtrare il traffico in base a URL, intestazioni HTTP e funzionalità specifiche delle applicazioni web.",
     question: "A quale livello del modello OSI opererebbe principalmente questa apparecchiatura?",
     options: [
       "A) Livello 3 (Layer 3)",
@@ -9670,7 +9670,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 418,
     topic: "Backup & Recovery",
     level: "COMPRENSIONE",
-    scenario: "Enrique presso la Dion Training è responsabile di garantire che i dati dei progetti aziendali siano protetti da potenziali perdite, specialmente considerando che l'ufficio si trova in una regione soggetta a disastri naturali.",
+    scenario: "Enrique presso la Kestrelia Training è responsabile di garantire che i dati dei progetti aziendali siano protetti da potenziali perdite, specialmente considerando che l'ufficio si trova in una regione soggetta a disastri naturali.",
     question: "Quale metodo di backup offrirebbe la protezione più sicura mantenendo una copia dei dati fisicamente separata dalla sede aziendale?",
     options: [
       "A) Replica su un NAS secondario nella stessa sala server",
@@ -10091,7 +10091,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 530,
     topic: "Infrastructure Segmentations & Topologies",
     level: "APPLICAZIONE",
-    scenario: "Dion Training sta implementando un'architettura di sicurezza che richiede livelli di accesso distinti: differenziare tra accesso dipendenti e accesso ospiti, garantendo che solo il personale autorizzato possa accedere ai dati sensibili.",
+    scenario: "Kestrelia Training sta implementando un'architettura di sicurezza che richiede livelli di accesso distinti: differenziare tra accesso dipendenti e accesso ospiti, garantendo che solo il personale autorizzato possa accedere ai dati sensibili.",
     question: "Quale dei seguenti design infrastrutturali sta implementando?",
     options: [
       "A) Layer 7 Firewall",
@@ -10106,7 +10106,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 531,
     topic: "Network Security Devices",
     level: "APPLICAZIONE",
-    scenario: "Dion Training deve regolare quali dispositivi possono connettersi alla propria rete. Per aumentare la sicurezza, i dispositivi devono essere regolati in base ai loro indirizzi fisici univoci (indirizzi MAC).",
+    scenario: "Kestrelia Training deve regolare quali dispositivi possono connettersi alla propria rete. Per aumentare la sicurezza, i dispositivi devono essere regolati in base ai loro indirizzi fisici univoci (indirizzi MAC).",
     question: "Quale delle seguenti funzionalità soddisfa MEGLIO questa esigenza?",
     options: [
       "A) Fail-open",
@@ -10271,7 +10271,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 526,
     topic: "Network Security Devices",
     level: "COMPRENSIONE",
-    scenario: "Dion Training Solutions ha recentemente integrato nella propria rete una singola soluzione di sicurezza che fornisce molteplici funzioni di protezione, tra cui intrusion prevention, gateway anti-virus e VPN.",
+    scenario: "Kestrelia Training Solutions ha recentemente integrato nella propria rete una singola soluzione di sicurezza che fornisce molteplici funzioni di protezione, tra cui intrusion prevention, gateway anti-virus e VPN.",
     question: "Quale delle seguenti opzioni descrive MEGLIO questa soluzione?",
     options: [
       "A) VPN gateway",
@@ -10361,7 +10361,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 540,
     topic: "Secure Network Protocols",
     level: "COMPRENSIONE",
-    scenario: "Dion Training Solutions vuole ottimizzare la propria wide-area network garantendo al tempo stesso una gestione avanzata della rete e l'ottimizzazione delle performance. Stanno valutando una soluzione che possa essere distribuita sia on-premises che nel cloud.",
+    scenario: "Kestrelia Training Solutions vuole ottimizzare la propria wide-area network garantendo al tempo stesso una gestione avanzata della rete e l'ottimizzazione delle performance. Stanno valutando una soluzione che possa essere distribuita sia on-premises che nel cloud.",
     question: "Quale delle seguenti tecnologie soddisfa MEGLIO questi requisiti?",
     options: [
       "A) TLS (Transport Layer Security)",
@@ -10451,7 +10451,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 546,
     topic: "Network Security Devices",
     level: "APPLICAZIONE",
-    scenario: "Un consulente esterno collega il proprio portatile alla presa di rete di una sala riunioni e ottiene immediatamente un indirizzo IP e l'accesso completo alla LAN di produzione. Dion Training vuole che nessun dispositivo riceva accesso prima di essere stato autenticato e verificato (antivirus aggiornato, patch di sicurezza applicate, disco cifrato), e che i dispositivi non conformi finiscano automaticamente in una rete isolata dove poter essere sistemati.",
+    scenario: "Un consulente esterno collega il proprio portatile alla presa di rete di una sala riunioni e ottiene immediatamente un indirizzo IP e l'accesso completo alla LAN di produzione. Kestrelia Training vuole che nessun dispositivo riceva accesso prima di essere stato autenticato e verificato (antivirus aggiornato, patch di sicurezza applicate, disco cifrato), e che i dispositivi non conformi finiscano automaticamente in una rete isolata dove poter essere sistemati.",
     question: "Quale soluzione soddisfa MEGLIO questi requisiti?",
     options: [
       "A) Un WAF davanti ai server applicativi ospitati nella LAN di produzione",
@@ -10511,7 +10511,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 550,
     topic: "Data Classification & Security",
     level: "APPLICAZIONE",
-    scenario: "Sasha è un amministratore di sistema presso Dion Training e ha ricevuto la direttiva di garantire che tutti i backup dei dati siano conformi alle normative sulla privacy. Poiché questi backup devono essere periodicamente trasportati fuori sede, deve implementare la misura di sicurezza più critica.",
+    scenario: "Sasha è un amministratore di sistema presso Kestrelia Training e ha ricevuto la direttiva di garantire che tutti i backup dei dati siano conformi alle normative sulla privacy. Poiché questi backup devono essere periodicamente trasportati fuori sede, deve implementare la misura di sicurezza più critica.",
     question: "Quale delle seguenti misure è la PIÙ critica da implementare per i backup che vengono trasportati fisicamente fuori sede?",
     options: [
       "A) Digital signatures (Firme digitali)",
@@ -10721,7 +10721,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     id: 564,
     topic: "Secure Network Protocols",
     level: "ANALISI",
-    scenario: "Dion Training sta pianificando di implementare una TLS VPN per facilitare l'accesso remoto sicuro dei dipendenti. La VPN usa la porta 443, autentica il server al client e opzionalmente autentica il certificato client. Crea un tunnel cifrato per l'autenticazione utente e tunnella le comunicazioni della rete locale sulla socket sicura una volta stabilita la connessione.",
+    scenario: "Kestrelia Training sta pianificando di implementare una TLS VPN per facilitare l'accesso remoto sicuro dei dipendenti. La VPN usa la porta 443, autentica il server al client e opzionalmente autentica il certificato client. Crea un tunnel cifrato per l'autenticazione utente e tunnella le comunicazioni della rete locale sulla socket sicura una volta stabilita la connessione.",
     question: "In questo scenario, quale delle seguenti considerazioni rappresenta MEGLIO una potenziale limitazione nell'applicare i principi di sicurezza a causa della soluzione di accesso remoto scelta?",
     options: [
       "A) Utilizing network segmentation (Utilizzo della segmentazione di rete)",
@@ -11015,7 +11015,7 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
       "D) Jump server"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Jump server**.\n\n* **Perché è la corretta:** Un **jump server** (noto anche come jump host o bastion host) è un server intermediario attraverso cui gli amministratori si connettono ad altri server. Questo strato fornisce un mezzo di accesso controllato, riducendo l'esposizione dell'infrastruttura sottostante: gli amministratori si connettono prima al jump server, poi da lì ai server target, senza esporre direttamente questi ultimi a internet.\n* **Analisi dei distrattori:**\n  * **A) Il proxy server** funge principalmente da intermediario per le richieste dei client verso risorse server, con focus sul controllo e ottimizzazione del traffico internet, non sull'accesso amministrativo sicuro ai server interni.\n  * **B) Il firewall** filtra il traffico in entrata e uscita in base a policy configurate, non è progettato per fornire un punto di accesso intermediario per la gestione amministrativa.\n  * **C) La VPN** crea connessioni cifrate sicure per l'accesso remoto, ma non fornisce il controllo centralizzato e l'auditing delle sessioni amministrative che un jump server offre.\n\n* **Piccolo Esempio Concentrato:** Kelly Innovations configura un jump server (bastion host) in una DMZ: tutti gli amministratori SSH prima al jump server (`ssh admin@jumphost.kelly.it`), poi da lì ai server interni (`ssh server-prod-01`). Il jump server registra ogni sessione (audit trail completo), ha MFA obbligatoria, e le porte SSH dei server interni sono accessibili SOLO dall'IP del jump server. Se le credenziali di un amministratore vengono compromesse, l'attaccante può accedere solo al jump server, non direttamente ai server di produzione."
+    explanation: "La risposta corretta è la **D) Jump server**.\n\n* **Perché è la corretta:** Un **jump server** (noto anche come jump host o bastion host) è un server intermediario attraverso cui gli amministratori si connettono ad altri server. Questo strato fornisce un mezzo di accesso controllato, riducendo l'esposizione dell'infrastruttura sottostante: gli amministratori si connettono prima al jump server, poi da lì ai server target, senza esporre direttamente questi ultimi a internet.\n* **Analisi dei distrattori:**\n  * **A) Il proxy server** funge principalmente da intermediario per le richieste dei client verso risorse server, con focus sul controllo e ottimizzazione del traffico internet, non sull'accesso amministrativo sicuro ai server interni.\n  * **B) Il firewall** filtra il traffico in entrata e uscita in base a policy configurate, non è progettato per fornire un punto di accesso intermediario per la gestione amministrativa.\n  * **C) La VPN** crea connessioni cifrate sicure per l'accesso remoto, ma non fornisce il controllo centralizzato e l'auditing delle sessioni amministrative che un jump server offre.\n\n* **Piccolo Esempio Concentrato:** Kelly Innovations configura un jump server (bastion host) in una DMZ: tutti gli amministratori SSH prima al jump server (`ssh admin@jumphost.kelly.example`), poi da lì ai server interni (`ssh server-prod-01`). Il jump server registra ogni sessione (audit trail completo), ha MFA obbligatoria, e le porte SSH dei server interni sono accessibili SOLO dall'IP del jump server. Se le credenziali di un amministratore vengono compromesse, l'attaccante può accedere solo al jump server, non direttamente ai server di produzione."
   }
 ];
 
@@ -11264,7 +11264,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 168,
     topic: "Indicators of Malicious Activity",
     level: "APPLICAZIONE",
-    scenario: "Durante l'analisi del traffico di rete presso la 'Dion Training Solutions', Carlos, un analista di sicurezza, scopre che una specifica workstation sta inviando ripetutamente richieste HTTPS verso indirizzi IP esterni insoliti e sconosciuti. Analizzando queste richieste, nota che contengono dati codificati che corrispondono a informazioni aziendali altamente riservate. Carlos rileva inoltre che la workstation scarica file eseguibili sconosciuti da vari domini web.",
+    scenario: "Durante l'analisi del traffico di rete presso la 'Kestrelia Training Solutions', Carlos, un analista di sicurezza, scopre che una specifica workstation sta inviando ripetutamente richieste HTTPS verso indirizzi IP esterni insoliti e sconosciuti. Analizzando queste richieste, nota che contengono dati codificati che corrispondono a informazioni aziendali altamente riservate. Carlos rileva inoltre che la workstation scarica file eseguibili sconosciuti da vari domini web.",
     question: "Quale dei seguenti termini descrive MEGLIO l'attività dannosa primaria di estrazione di informazioni sensibili rilevata da Carlos?",
     options: [
       "A) Propagazione di malware (Malware Propagation)",
@@ -11429,7 +11429,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 433,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "La Dion Training Solutions, un'azienda SaaS, inizia a riscontrare gravi problemi di latenza e interruzioni di servizio. Il team IT rileva che un'enorme quantità di traffico sta inondando i server aziendali. La particolarità è che tutti i pacchetti in entrata sembrano essere delle 'risposte' a richieste HTTP/DNS che l'azienda non ha mai effettuato, e provengono da migliaia di server legittimi e indirizzi IP differenti sparsi in tutto il mondo.",
+    scenario: "La Kestrelia Training Solutions, un'azienda SaaS, inizia a riscontrare gravi problemi di latenza e interruzioni di servizio. Il team IT rileva che un'enorme quantità di traffico sta inondando i server aziendali. La particolarità è che tutti i pacchetti in entrata sembrano essere delle 'risposte' a richieste HTTP/DNS che l'azienda non ha mai effettuato, e provengono da migliaia di server legittimi e indirizzi IP differenti sparsi in tutto il mondo.",
     question: "Quale tipo di attività dannosa descrive MEGLIO questo scenario?",
     options: [
       "A) Attacco DDoS di amplificazione (Amplified DDoS attack)",
@@ -11444,7 +11444,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 434,
     topic: "Mitigation Techniques & Controls",
     level: "APPLICAZIONE",
-    scenario: "Tina, una dipendente di Dion Training Solutions, sta navigando su Internet dal suo PC dell'ufficio. Tenta di accedere a un link di un sito Web esterno che utilizza solitamente per ricerche di mercato. Tuttavia, anziché visualizzare il sito, compare una schermata del reparto sicurezza che dichiara che l'accesso a tale indirizzo URL è stato negato per violazione delle policy aziendali.",
+    scenario: "Tina, una dipendente di Kestrelia Training Solutions, sta navigando su Internet dal suo PC dell'ufficio. Tenta di accedere a un link di un sito Web esterno che utilizza solitamente per ricerche di mercato. Tuttavia, anziché visualizzare il sito, compare una schermata del reparto sicurezza che dichiara che l'accesso a tale indirizzo URL è stato negato per violazione delle policy aziendali.",
     question: "Quale dei seguenti termini descrive MEGLIO l'azione o l'evento riscontrato da Tina?",
     options: [
       "A) Filtraggio dei contenuti (Content filtering)",
@@ -11564,7 +11564,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 442,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "John, un dirigente senior della Dion Training Solutions, ha effettuato l'accesso alla sua e-mail aziendale da New York alle 10:00. I log mostrano anche un tentativo di accesso allo stesso account da Tokyo alle 10:15 e un altro da Parigi alle 10:30. Il team IT della Dion Training Solutions si è allarmato per questa attività.",
+    scenario: "John, un dirigente senior della Kestrelia Training Solutions, ha effettuato l'accesso alla sua e-mail aziendale da New York alle 10:00. I log mostrano anche un tentativo di accesso allo stesso account da Tokyo alle 10:15 e un altro da Parigi alle 10:30. Il team IT della Kestrelia Training Solutions si è allarmato per questa attività.",
     question: "Quale delle seguenti affermazioni descrive MEGLIO l'attività relativa all'account di John?",
     options: [
       "A) Manutenzione programmata del sistema.",
@@ -11609,7 +11609,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 445,
     topic: "Threat Actors & Motivations",
     level: "APPLICAZIONE",
-    scenario: "Un ex tecnico della Dion Innovations, recentemente licenziato, lancia una serie di attacchi DDoS (Distributed Denial of Service) contro il sito web principale dell'azienda. Molti credono che gli attacchi siano una risposta diretta al licenziamento del tecnico.",
+    scenario: "Un ex tecnico della Kestrelia Innovations, recentemente licenziato, lancia una serie di attacchi DDoS (Distributed Denial of Service) contro il sito web principale dell'azienda. Molti credono che gli attacchi siano una risposta diretta al licenziamento del tecnico.",
     question: "Qual è la probabile motivazione alla base di questi attacchi?",
     options: [
       "A) Guadagno finanziario (Financial gain)",
@@ -11783,7 +11783,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Impersonation"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Typosquatting**.\n\n* **Perché è la corretta:** Il **Typosquatting** è un tipo di attacco di ingegneria sociale che consiste nel registrare domini con errori ortografici o varianti tipografiche di siti legittimi (es. 'gooogle.com' invece di 'google.com') per ingannare gli utenti che commettono errori di digitazione.\n* **Analisi dei distrattori:**\n  * **A) Il Business email compromise (BEC)** compromette o falsifica un'email aziendale legittima per richiedere pagamenti o trasferimenti fraudolenti; non riguarda la creazione di falsi domini.\n  * **B) Il Pretexting** crea uno scenario fabbricato per indurre la vittima a fornire informazioni o compiere azioni; non riguarda specificatamente la registrazione di domini con errori tipografici.\n  * **D) L'Impersonation** consiste nel fingersi qualcun altro per persuadere gli utenti a condividere informazioni; non implica la creazione di falsi domini."
+    explanation: "La risposta corretta è la **C) Typosquatting**.\n\n* **Perché è la corretta:** Il **Typosquatting** è un tipo di attacco di ingegneria sociale che consiste nel registrare domini con errori ortografici o varianti tipografiche di siti legittimi (es. 'searchlly.example' invece di 'searchly.example') per ingannare gli utenti che commettono errori di digitazione.\n* **Analisi dei distrattori:**\n  * **A) Il Business email compromise (BEC)** compromette o falsifica un'email aziendale legittima per richiedere pagamenti o trasferimenti fraudolenti; non riguarda la creazione di falsi domini.\n  * **B) Il Pretexting** crea uno scenario fabbricato per indurre la vittima a fornire informazioni o compiere azioni; non riguarda specificatamente la registrazione di domini con errori tipografici.\n  * **D) L'Impersonation** consiste nel fingersi qualcun altro per persuadere gli utenti a condividere informazioni; non implica la creazione di falsi domini."
   },
   {
     id: 457,
@@ -11999,7 +11999,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 471,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Il team IT della Dion Training Solutions nota che uno dei loro server sta improvvisamente usando il 95% della potenza di elaborazione. Questo è molto insolito, poiché il consumo tipico è intorno al 40%. Dalle indagini trovano un processo non riconosciuto che sta consumando una grande parte delle risorse.",
+    scenario: "Il team IT della Kestrelia Training Solutions nota che uno dei loro server sta improvvisamente usando il 95% della potenza di elaborazione. Questo è molto insolito, poiché il consumo tipico è intorno al 40%. Dalle indagini trovano un processo non riconosciuto che sta consumando una grande parte delle risorse.",
     question: "Quale delle seguenti affermazioni descrive MEGLIO la situazione più probabile affrontata dal team IT?",
     options: [
       "A) Hardware malfunction.",
@@ -12405,7 +12405,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 498,
     topic: "Threat Vectors & Attack Surfaces",
     level: "ANALISI",
-    scenario: "In un venerdì lavorativo molto occupato, Jennifer riceve un'email con una richiesta urgente da Robert, il CEO di Cornerstone Design. L'importo, la fattura e i dettagli di pagamento sono inclusi nell'email. L'indirizzo email è Robert@cornerslonedesign.com. Robert ha l'abitudine di aspettare troppo a lungo per il pagamento e poi inviare un'email frettolosa a Jennifer richiedendo il pagamento.",
+    scenario: "In un venerdì lavorativo molto occupato, Jennifer riceve un'email con una richiesta urgente da Robert, il CEO di Cornerstone Design. L'importo, la fattura e i dettagli di pagamento sono inclusi nell'email. L'indirizzo email è Robert@cornerslonedesign.example. Robert ha l'abitudine di aspettare troppo a lungo per il pagamento e poi inviare un'email frettolosa a Jennifer richiedendo il pagamento.",
     question: "Che tipo di attacco sta avendo luogo?",
     options: [
       "A) Pretexting",
@@ -12414,13 +12414,13 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Phishing"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) Business email compromise (BEC)**.\n\n* **Perché è la corretta:** Gli attaccanti nel **Business email compromise** spesso prendono di mira persone chiave all'interno di un'azienda. L'attaccante ha fatto i 'compiti a casa', conoscendo le abitudini di Robert e il ruolo di Jennifer. Nota l'errore nell'indirizzo email: 'cornerslonedesign.com' invece di 'cornerstonedesign.com' — un tipico indicatore di BEC tramite dominio simile (typosquatting).\n* **Analisi dei distrattori:**\n  * **A) Il Pretexting** è la creazione di una storia plausibile usata come strumento nell'attacco; è lo strumento, non la forma dell'attacco richiesta.\n  * **B) Il Watering hole** compromette siti web frequentati da un gruppo target; non è pertinente a questo scenario di email.\n  * **D) Il Phishing** è un tipo più generale di attacco che non include necessariamente il targeting di una persona specifica; il BEC è la risposta più precisa per questo scenario mirato."
+    explanation: "La risposta corretta è la **C) Business email compromise (BEC)**.\n\n* **Perché è la corretta:** Gli attaccanti nel **Business email compromise** spesso prendono di mira persone chiave all'interno di un'azienda. L'attaccante ha fatto i 'compiti a casa', conoscendo le abitudini di Robert e il ruolo di Jennifer. Nota l'errore nell'indirizzo email: 'cornerslonedesign.example' invece di 'cornerstonedesign.example' — un tipico indicatore di BEC tramite dominio simile (typosquatting).\n* **Analisi dei distrattori:**\n  * **A) Il Pretexting** è la creazione di una storia plausibile usata come strumento nell'attacco; è lo strumento, non la forma dell'attacco richiesta.\n  * **B) Il Watering hole** compromette siti web frequentati da un gruppo target; non è pertinente a questo scenario di email.\n  * **D) Il Phishing** è un tipo più generale di attacco che non include necessariamente il targeting di una persona specifica; il BEC è la risposta più precisa per questo scenario mirato."
   },
   {
     id: 499,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Il team IT della Dion Training Solutions esamina i log del firewall perimetrale. Nelle ultime 48 ore compaiono decine di migliaia di connessioni respinte, dirette a tre soli servizi — 3389/TCP, 445/TCP e 1433/TCP — che la policy aziendale blocca deliberatamente al confine. Gli indirizzi di origine sono centinaia e cambiano di continuo. Nessuna sorgente enumera l'intervallo delle porte: ognuna bussa direttamente a quelle tre, ripetutamente. Il sito pubblico e la posta restano raggiungibili e i tempi di risposta sono normali.",
+    scenario: "Il team IT della Kestrelia Training Solutions esamina i log del firewall perimetrale. Nelle ultime 48 ore compaiono decine di migliaia di connessioni respinte, dirette a tre soli servizi — 3389/TCP, 445/TCP e 1433/TCP — che la policy aziendale blocca deliberatamente al confine. Gli indirizzi di origine sono centinaia e cambiano di continuo. Nessuna sorgente enumera l'intervallo delle porte: ognuna bussa direttamente a quelle tre, ripetutamente. Il sito pubblico e la posta restano raggiungibili e i tempi di risposta sono normali.",
     question: "Quale delle seguenti affermazioni descrive MEGLIO l'attività osservata?",
     options: [
       "A) Attività di port scanning.",
@@ -12795,8 +12795,8 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 524,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "Enrique, il responsabile IT di Dion Consultants, ha ricevuto frenetiche chiamate da più reparti. Gli utenti riportavano che i loro file cruciali erano stati cifrati e vedevano un timer conto alla rovescia. Il messaggio che accompagnava il timer indicava che a meno che una certa somma in criptovaluta non fosse trasferita a un indirizzo specifico prima che il conto alla rovescia finisse, la chiave di decrittazione sarebbe stata distrutta permanentemente.",
-    question: "Quale forma di malware ha PIÙ probabilmente preso di mira la Dion Consultants?",
+    scenario: "Enrique, il responsabile IT di Kestrelia Consultants, ha ricevuto frenetiche chiamate da più reparti. Gli utenti riportavano che i loro file cruciali erano stati cifrati e vedevano un timer conto alla rovescia. Il messaggio che accompagnava il timer indicava che a meno che una certa somma in criptovaluta non fosse trasferita a un indirizzo specifico prima che il conto alla rovescia finisse, la chiave di decrittazione sarebbe stata distrutta permanentemente.",
+    question: "Quale forma di malware ha PIÙ probabilmente preso di mira la Kestrelia Consultants?",
     options: [
       "A) Crypto-malware ransomware",
       "B) Adware",
@@ -12804,7 +12804,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Screen-locking ransomware"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) Crypto-malware ransomware**.\n\n* **Perché è la corretta:** Il **Crypto-malware** prende di mira i dati degli utenti cifrando i file e chiedendo un riscatto in cambio della chiave di decrittazione. I sintomi alla Dion Consultants — file cifrati con richiesta di riscatto e timer conto alla rovescia — sono coerenti con questo tipo di ransomware.\n* **Analisi dei distrattori:**\n  * **B) L'Adware** visualizza pubblicità indesiderate; non corrisponde ai sintomi descritti.\n  * **C) Un Rootkit** è un insieme di strumenti software che consente l'accesso non autorizzato a un computer; gli eventi specifici non corrispondono al comportamento primario di un rootkit.\n  * **D) Lo Screen-locking ransomware** blocca gli utenti fuori dal loro dispositivo e visualizza messaggi minacciosi; gli utenti avevano ancora accesso ai loro sistemi e si trovavano davanti a file cifrati, il che è incoerente con lo screen-locking."
+    explanation: "La risposta corretta è la **A) Crypto-malware ransomware**.\n\n* **Perché è la corretta:** Il **Crypto-malware** prende di mira i dati degli utenti cifrando i file e chiedendo un riscatto in cambio della chiave di decrittazione. I sintomi alla Kestrelia Consultants — file cifrati con richiesta di riscatto e timer conto alla rovescia — sono coerenti con questo tipo di ransomware.\n* **Analisi dei distrattori:**\n  * **B) L'Adware** visualizza pubblicità indesiderate; non corrisponde ai sintomi descritti.\n  * **C) Un Rootkit** è un insieme di strumenti software che consente l'accesso non autorizzato a un computer; gli eventi specifici non corrispondono al comportamento primario di un rootkit.\n  * **D) Lo Screen-locking ransomware** blocca gli utenti fuori dal loro dispositivo e visualizza messaggi minacciosi; gli utenti avevano ancora accesso ai loro sistemi e si trovavano davanti a file cifrati, il che è incoerente con lo screen-locking."
   },
   {
     id: 525,
@@ -12930,7 +12930,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
     id: 533,
     topic: "Indicators of Malicious Activity",
     level: "ANALISI",
-    scenario: "La Dion Training ha recentemente implementato un nuovo web portal per i suoi clienti. Durante una revisione di sicurezza di routine, il team IT nota che alcune attività sospette sono state registrate. Un utente sconosciuto ha tentato di accedere al sistema con uno schema strano: quando richiedeva un file utente specifico, invece della solita struttura URL (/users/[username]/profile) il sistema registrava richieste come /users/../admin/config. In breve tempo, sono stati identificati diversi schemi simili, ognuno cercando di raggiungere file e directory sensibili diversi.",
+    scenario: "La Kestrelia Training ha recentemente implementato un nuovo web portal per i suoi clienti. Durante una revisione di sicurezza di routine, il team IT nota che alcune attività sospette sono state registrate. Un utente sconosciuto ha tentato di accedere al sistema con uno schema strano: quando richiedeva un file utente specifico, invece della solita struttura URL (/users/[username]/profile) il sistema registrava richieste come /users/../admin/config. In breve tempo, sono stati identificati diversi schemi simili, ognuno cercando di raggiungere file e directory sensibili diversi.",
     question: "Dato questo scenario, quale dei seguenti tipi di attacco sta probabilmente tentando l'utente?",
     options: [
       "A) Tentativo di escalation dei privilegi.",
@@ -13014,7 +13014,7 @@ export const DOMAIN_2_QUESTIONS: Question[] = [
       "D) Una vulnerabilità crittografica: vanno disabilitati i protocolli e gli algoritmi obsoleti, accettando solo TLS 1.2 e TLS 1.3"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Una vulnerabilità crittografica: vanno disabilitati i protocolli e gli algoritmi obsoleti**.\n\n* **Perché è la corretta:** Le **vulnerabilità crittografiche** nascono da algoritmi deboli, protocolli superati, chiavi troppo corte o implementazioni errate. TLS 1.0 e TLS 1.1 sono deprecati dal 2021 (RFC 8996), 3DES e RC4 hanno debolezze note. Il fatto che i browser moderni usino TLS 1.3 non basta: finché il server accetta le versioni vecchie, un client obsoleto o un attaccante in posizione di intercettazione può negoziarle (attacco di *downgrade*). La correzione è nella configurazione del server: accettare solo TLS 1.2 e TLS 1.3 con suite di cifratura robuste.\n* **Perché le altre non sono corrette:**\n  * **A) Una zero-day** è una falla sconosciuta al produttore. Qui le debolezze sono note da anni e il software è aggiornato: il problema è la configurazione.\n  * **B) Il certificato** è valido e firmato da una CA pubblica. Cambiare CA non modifica i protocolli e gli algoritmi accettati dal server.\n  * **C) La memory injection** riguarda codice scritto nella memoria di un altro processo. Lo scenario non descrive nessuna esecuzione di codice.\n\n* **Trappola d'esame:** «software aggiornato» non significa «configurazione sicura». Molti server mantengono attivi protocolli vecchi per compatibilità: la vulnerabilità crittografica sta in ciò che il server **accetta**, non in ciò che i client migliori **usano**.\n* **Piccolo Esempio Concentrato:** con `nmap --script ssl-enum-ciphers -p 443 portale.example.com` si elencano versioni e suite accettate; dopo la correzione l'elenco deve mostrare solo TLS 1.2 e TLS 1.3."
+    explanation: "La risposta corretta è la **D) Una vulnerabilità crittografica: vanno disabilitati i protocolli e gli algoritmi obsoleti**.\n\n* **Perché è la corretta:** Le **vulnerabilità crittografiche** nascono da algoritmi deboli, protocolli superati, chiavi troppo corte o implementazioni errate. TLS 1.0 e TLS 1.1 sono deprecati dal 2021 (RFC 8996), 3DES e RC4 hanno debolezze note. Il fatto che i browser moderni usino TLS 1.3 non basta: finché il server accetta le versioni vecchie, un client obsoleto o un attaccante in posizione di intercettazione può negoziarle (attacco di *downgrade*). La correzione è nella configurazione del server: accettare solo TLS 1.2 e TLS 1.3 con suite di cifratura robuste.\n* **Perché le altre non sono corrette:**\n  * **A) Una zero-day** è una falla sconosciuta al produttore. Qui le debolezze sono note da anni e il software è aggiornato: il problema è la configurazione.\n  * **B) Il certificato** è valido e firmato da una CA pubblica. Cambiare CA non modifica i protocolli e gli algoritmi accettati dal server.\n  * **C) La memory injection** riguarda codice scritto nella memoria di un altro processo. Lo scenario non descrive nessuna esecuzione di codice.\n\n* **Trappola d'esame:** «software aggiornato» non significa «configurazione sicura». Molti server mantengono attivi protocolli vecchi per compatibilità: la vulnerabilità crittografica sta in ciò che il server **accetta**, non in ciò che i client migliori **usano**.\n* **Piccolo Esempio Concentrato:** su un server che sei autorizzato a verificare, `nmap --script ssl-enum-ciphers -p 443 portale.example.com` elenca versioni e suite accettate; dopo la correzione l'elenco deve mostrare solo TLS 1.2 e TLS 1.3."
   }
 ];
 
@@ -13308,7 +13308,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 140,
     topic: "Cryptography",
     level: "APPLICAZIONE",
-    scenario: "La scuola di formazione professionale 'Dion Training' vuole incrementare la fiducia e la sicurezza del proprio portale web per gli studenti esterni, eliminando i fastidiosi avvisi di sicurezza generati dai browser moderni quando gli utenti vi si collegano tramite HTTPS. A tal fine, l'azienda necessita di un certificato digitale firmato e convalidato da un'autorità di certificazione autorevole e riconosciuta a livello globale.",
+    scenario: "La scuola di formazione professionale 'Kestrelia Training' vuole incrementare la fiducia e la sicurezza del proprio portale web per gli studenti esterni, eliminando i fastidiosi avvisi di sicurezza generati dai browser moderni quando gli utenti vi si collegano tramite HTTPS. A tal fine, l'azienda necessita di un certificato digitale firmato e convalidato da un'autorità di certificazione autorevole e riconosciuta a livello globale.",
     question: "Quale tipologia di certificato risponde meglio a questa esigenza organizzativa?",
     options: [
       "A) Self-signed certificate (Certificato autofirmato)",
@@ -13317,7 +13317,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Third-party certificate (Certificato di terze parti)"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Third-party certificate (Certificato di terze parti)**.\n\n* **Perché è la corretta:** Un **certificato di terze parti** (emesso da una Certificate Authority pubblica fidata, a pagamento come DigiCert e Sectigo oppure gratuita come Let's Encrypt) è firmato da una CA i cui certificati radice sono preinstallati e considerati attendibili da tutti i browser moderni. Questo elimina qualsiasi avviso di sicurezza per gli utenti esterni e aumenta la credibilità del sito.\n* **Analisi dei distrattori:**\n  * **A) Self-signed certificate (Certificato autofirmato)** è generato e firmato internamente dall'organizzazione stessa. Poiché non è supportato da una CA fidata pubblica, provoca la comparsa di vistosi avvisi di errore sul browser dei visitatori esterni.\n  * **B) CSR (Richiesta di firma del certificato)** non è un certificato di sicurezza, bensì il file di testo formale che contiene le informazioni sull'organizzazione e la chiave pubblica, inviato alla CA per richiedere l'emissione del certificato effettivo.\n  * **C) Wildcard certificate** consente di proteggere un dominio principale e tutti i suoi sottodomini di primo livello (es. *.diontraining.com), ma di per sé non garantisce l'autorevolezza a meno che non sia stato firmato da una CA di terze parti.\n\n* **Piccolo Esempio Concentrato:** Il portale studenti di un'accademia decide di sostituire il vecchio certificato autofirmato con un certificato emesso da Let's Encrypt. Da quel momento, tutti i browser riconoscono nativamente la connessione HTTPS come fidata e sicura, eliminando il minaccioso messaggio rosso di avviso."
+    explanation: "La risposta corretta è la **D) Third-party certificate (Certificato di terze parti)**.\n\n* **Perché è la corretta:** Un **certificato di terze parti** (emesso da una Certificate Authority pubblica fidata, a pagamento come DigiCert e Sectigo oppure gratuita come Let's Encrypt) è firmato da una CA i cui certificati radice sono preinstallati e considerati attendibili da tutti i browser moderni. Questo elimina qualsiasi avviso di sicurezza per gli utenti esterni e aumenta la credibilità del sito.\n* **Analisi dei distrattori:**\n  * **A) Self-signed certificate (Certificato autofirmato)** è generato e firmato internamente dall'organizzazione stessa. Poiché non è supportato da una CA fidata pubblica, provoca la comparsa di vistosi avvisi di errore sul browser dei visitatori esterni.\n  * **B) CSR (Richiesta di firma del certificato)** non è un certificato di sicurezza, bensì il file di testo formale che contiene le informazioni sull'organizzazione e la chiave pubblica, inviato alla CA per richiedere l'emissione del certificato effettivo.\n  * **C) Wildcard certificate** consente di proteggere un dominio principale e tutti i suoi sottodomini di primo livello (es. *.example.com), ma di per sé non garantisce l'autorevolezza a meno che non sia stato firmato da una CA di terze parti.\n\n* **Piccolo Esempio Concentrato:** Il portale studenti di un'accademia decide di sostituire il vecchio certificato autofirmato con un certificato emesso da Let's Encrypt. Da quel momento, tutti i browser riconoscono nativamente la connessione HTTPS come fidata e sicura, eliminando il minaccioso messaggio rosso di avviso."
   },
   {
     id: 141,
@@ -13368,7 +13368,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 144,
     topic: "Change Management",
     level: "ANALISI",
-    scenario: "Carlos viene assunto come consulente di cybersecurity esterno presso Dion Training Solutions con l'incarico di individuare e mappare le falle e le vulnerabilità dell'infrastruttura del data center. Carlos richiede formalmente un diagramma aggiornato dell'architettura di rete e dei server fisici, ma il team di supporto tecnico gli fornisce una planimetria risalente a più di un anno prima.",
+    scenario: "Carlos viene assunto come consulente di cybersecurity esterno presso Kestrelia Training Solutions con l'incarico di individuare e mappare le falle e le vulnerabilità dell'infrastruttura del data center. Carlos richiede formalmente un diagramma aggiornato dell'architettura di rete e dei server fisici, ma il team di supporto tecnico gli fornisce una planimetria risalente a più di un anno prima.",
     question: "Perché l'utilizzo di questo vecchio diagramma architetturale è potenzialmente problematico per il compito assegnato a Carlos?",
     options: [
       "A) Potrebbe non riflettere la topologia e i server attuali, portando a trascurare delle vulnerabilità critiche introdotte di recente.",
@@ -13413,16 +13413,16 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 147,
     topic: "Cryptography",
     level: "ANALISI",
-    scenario: "Un cliente esterno desidera trasmettere un ordine sensibile altamente confidenziale alla sede centrale di 'Dion Training' utilizzando la crittografia asimmetrica, garantendo che solo e soltanto Dion Training sia in grado di decifrare e leggere il contenuto del messaggio.",
+    scenario: "Un cliente esterno desidera trasmettere un ordine sensibile altamente confidenziale alla sede centrale di 'Kestrelia Training' utilizzando la crittografia asimmetrica, garantendo che solo e soltanto Kestrelia Training sia in grado di decifrare e leggere il contenuto del messaggio.",
     question: "Quale chiave crittografica deve utilizzare il client per cifrare il messaggio in modo da garantirne la massima riservatezza?",
     options: [
-      "A) La chiave pubblica di Dion Training (Public key)",
+      "A) La chiave pubblica di Kestrelia Training (Public key)",
       "B) La chiave privata del client (Private key)",
       "C) La chiave di escrow (Key escrow)",
       "D) Il certificato wildcard (Wildcard certificate)"
     ],
     answerIndex: 0,
-    explanation: "La risposta corretta è la **A) La chiave pubblica di Dion Training (Public key)**.\n\n* **Perché è la corretta:** Nella crittografia asimmetrica, per garantire la **riservatezza** (Confidentiality) di una comunicazione, il mittente deve sempre cifrare il messaggio utilizzando la **chiave pubblica del destinatario** (in questo caso di Dion Training). Poiché un messaggio cifrato con la chiave pubblica può essere decifrato esclusivamente tramite la corrispondente chiave privata segreta e accoppiata in modo univoco, e solo Dion Training possiede tale chiave privata, nessun altro potrà decifrare il messaggio.\n* **Analisi dei distrattori:**\n  * **B) La chiave privata del client** non deve essere utilizzata per cifrare se l'obiettivo è la riservatezza: se il client cifrasse con la propria chiave privata, chiunque potrebbe decifrarlo usando la chiave pubblica del client (che è di pubblico dominio), garantendo solo l'autenticità e il non-ripudio (firma digitale) ma nessuna riservatezza.\n  * **C) La chiave di escrow** non è una chiave operativa utilizzata nei flussi di cifratura diretta, bensì una procedura di backup per le chiavi private.\n  * **D) Il certificato wildcard** viene impiegato per proteggere domini web e connessioni HTTPS, non rappresenta la chiave asimmetrica per cifrare un messaggio di testo.\n\n* **Piccolo Esempio Concentrato:** Se Alice vuole inviare il proprio IBAN bancario confidenziale a Dion Training, lo cifra utilizzando la chiave pubblica di Dion Training. Solo l'accademia, tramite la sua chiave privata esclusiva, potrà decifrare e leggere tale IBAN."
+    explanation: "La risposta corretta è la **A) La chiave pubblica di Kestrelia Training (Public key)**.\n\n* **Perché è la corretta:** Nella crittografia asimmetrica, per garantire la **riservatezza** (Confidentiality) di una comunicazione, il mittente deve sempre cifrare il messaggio utilizzando la **chiave pubblica del destinatario** (in questo caso di Kestrelia Training). Poiché un messaggio cifrato con la chiave pubblica può essere decifrato esclusivamente tramite la corrispondente chiave privata segreta e accoppiata in modo univoco, e solo Kestrelia Training possiede tale chiave privata, nessun altro potrà decifrare il messaggio.\n* **Analisi dei distrattori:**\n  * **B) La chiave privata del client** non deve essere utilizzata per cifrare se l'obiettivo è la riservatezza: se il client cifrasse con la propria chiave privata, chiunque potrebbe decifrarlo usando la chiave pubblica del client (che è di pubblico dominio), garantendo solo l'autenticità e il non-ripudio (firma digitale) ma nessuna riservatezza.\n  * **C) La chiave di escrow** non è una chiave operativa utilizzata nei flussi di cifratura diretta, bensì una procedura di backup per le chiavi private.\n  * **D) Il certificato wildcard** viene impiegato per proteggere domini web e connessioni HTTPS, non rappresenta la chiave asimmetrica per cifrare un messaggio di testo.\n\n* **Piccolo Esempio Concentrato:** Se Alice vuole inviare il proprio IBAN bancario confidenziale a Kestrelia Training, lo cifra utilizzando la chiave pubblica di Kestrelia Training. Solo l'accademia, tramite la sua chiave privata esclusiva, potrà decifrare e leggere tale IBAN."
   },
   {
     id: 148,
@@ -13527,7 +13527,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Certificato wildcard; non deve mai contenere i dati dell'organizzazione, che sono pubblici"
     ],
     answerIndex: 2,
-    explanation: "La risposta corretta è la **C) CSR (Certificate Signing Request)**.\n\n* **Perché è la corretta:** Il **CSR** è il blocco di testo codificato che il richiedente genera e invia alla CA. Contiene le informazioni identificative (Common Name, SAN, organizzazione, paese) e la **chiave pubblica**, ed è firmato con la chiave privata corrispondente per dimostrare che il richiedente la possiede davvero. La **chiave privata non lascia mai il server**: se finisse nel CSR, chiunque lo intercettasse potrebbe impersonare il sito, e il certificato andrebbe immediatamente revocato.\n* **Analisi dei distrattori:**\n  * **B) La CRL** è l'elenco dei certificati revocati che la CA **pubblica** perché i client lo consultino: viaggia nella direzione opposta e non ha nulla a che fare con la richiesta di emissione.\n  * **A) Il certificato radice** è il certificato autofirmato della CA, che sta alla base della catena di fiducia ed è preinstallato nei browser. Non è qualcosa che il richiedente invia.\n  * **D) Il certificato wildcard** è un tipo di certificato **emesso** (copre `*.dominio.it`), non il documento con cui lo si richiede; e i dati dell'organizzazione sono proprio ciò che la CA deve validare.\n\n* **Trappola d'esame:** memorizza il flusso completo: **genero la coppia di chiavi sul server → creo il CSR con la sola chiave pubblica → la CA valida l'identità → la CA firma ed emette il certificato → lo installo accanto alla chiave privata che non si è mai mossa**. Qualsiasi opzione d'esame in cui una chiave privata viene trasmessa, esportata o condivisa è sbagliata."
+    explanation: "La risposta corretta è la **C) CSR (Certificate Signing Request)**.\n\n* **Perché è la corretta:** Il **CSR** è il blocco di testo codificato che il richiedente genera e invia alla CA. Contiene le informazioni identificative (Common Name, SAN, organizzazione, paese) e la **chiave pubblica**, ed è firmato con la chiave privata corrispondente per dimostrare che il richiedente la possiede davvero. La **chiave privata non lascia mai il server**: se finisse nel CSR, chiunque lo intercettasse potrebbe impersonare il sito, e il certificato andrebbe immediatamente revocato.\n* **Analisi dei distrattori:**\n  * **B) La CRL** è l'elenco dei certificati revocati che la CA **pubblica** perché i client lo consultino: viaggia nella direzione opposta e non ha nulla a che fare con la richiesta di emissione.\n  * **A) Il certificato radice** è il certificato autofirmato della CA, che sta alla base della catena di fiducia ed è preinstallato nei browser. Non è qualcosa che il richiedente invia.\n  * **D) Il certificato wildcard** è un tipo di certificato **emesso** (copre `*.dominio.example`), non il documento con cui lo si richiede; e i dati dell'organizzazione sono proprio ciò che la CA deve validare.\n\n* **Trappola d'esame:** memorizza il flusso completo: **genero la coppia di chiavi sul server → creo il CSR con la sola chiave pubblica → la CA valida l'identità → la CA firma ed emette il certificato → lo installo accanto alla chiave privata che non si è mai mossa**. Qualsiasi opzione d'esame in cui una chiave privata viene trasmessa, esportata o condivisa è sbagliata."
   },
   {
     id: 155,
@@ -13608,7 +13608,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 160,
     topic: "Public Key Infrastructure",
     level: "APPLICAZIONE",
-    scenario: "Dion Training deve proteggere con un solo certificato quattro nomi che non condividono lo stesso dominio: `diontraining.com`, `www.diontraining.com`, `portale.diontraining.it` e `login.dion-academy.org`. Un collega propone un certificato wildcard `*.diontraining.com`, sostenendo che \"copre tutto\".",
+    scenario: "Kestrelia Training deve proteggere con un solo certificato quattro nomi che non condividono lo stesso dominio: `example.com`, `www.example.com`, `portale.example.net` e `login.example.org`. Un collega propone un certificato wildcard `*.example.com`, sostenendo che \"copre tutto\".",
     question: "Perché il wildcard non basta, e quale certificato risolve il problema?",
     options: [
       "A) Il wildcard scade prima degli altri certificati: serve un certificato a validazione estesa",
@@ -13617,7 +13617,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Il wildcard copre solo i sottodomini di un unico dominio: serve un certificato SAN multi-dominio"
     ],
     answerIndex: 3,
-    explanation: "La risposta corretta è la **D) Il wildcard copre solo i sottodomini di un unico dominio: serve un certificato SAN multi-dominio**.\n\n* **Perché è la corretta:** Un certificato **wildcard** come `*.diontraining.com` vale per i sottodomini di **un solo livello** di **quel solo dominio**. Nell'elenco dello scenario ne copre quindi uno soltanto, `www.diontraining.com`, e fallisce su tutti gli altri per ragioni diverse: `diontraining.com` è il dominio nudo, che l'asterisco non comprende e va elencato a parte; `portale.diontraining.it` ha un'estensione diversa; `login.dion-academy.org` è un dominio del tutto estraneo. La soluzione è un certificato **SAN** (*Subject Alternative Name*), detto anche multi-dominio o UCC, che elenca esplicitamente nel campo SAN tutti i nomi da coprire, anche di domini diversi fra loro. È peraltro il meccanismo su cui i browser moderni si basano davvero: il vecchio campo Common Name è considerato obsoleto, e la validazione avviene sul campo SAN.\n* **Analisi dei distrattori:**\n  * **A) Scadenza e validazione estesa:** la durata non dipende dal tipo di copertura dei nomi, e la **validazione estesa** riguarda quanto a fondo la CA verifica l'identità legale dell'organizzazione, non quanti nomi il certificato protegge.\n  * **B) Non riconosciuto dai browser:** falso. I certificati wildcard sono pienamente supportati da tutti i browser; il loro limite è l'ambito dei nomi, non la fiducia.\n  * **C) Non può essere autofirmato:** falso, e comunque irrilevante. Un wildcard può benissimo essere autofirmato, esattamente come qualunque altro certificato; sarebbe semplicemente non fidato all'esterno.\n\n* **Trappola d'esame:** ricorda che l'asterisco di un wildcard copre **un solo livello**. `*.esempio.com` vale per `www.esempio.com` ma **non** per `esempio.com` né per `a.b.esempio.com`. E tieni presente il rovescio della medaglia del wildcard, che le domande amano: una sola chiave privata per tutti i sottodomini significa che la sua compromissione li espone **tutti insieme**, ed è la ragione per cui in ambienti sensibili si preferiscono certificati separati o SAN per i soli nomi realmente necessari."
+    explanation: "La risposta corretta è la **D) Il wildcard copre solo i sottodomini di un unico dominio: serve un certificato SAN multi-dominio**.\n\n* **Perché è la corretta:** Un certificato **wildcard** come `*.example.com` vale per i sottodomini di **un solo livello** di **quel solo dominio**. Nell'elenco dello scenario ne copre quindi uno soltanto, `www.example.com`, e fallisce su tutti gli altri per ragioni diverse: `example.com` è il dominio nudo, che l'asterisco non comprende e va elencato a parte; `portale.example.net` ha un'estensione diversa; `login.example.org` è un dominio del tutto estraneo. La soluzione è un certificato **SAN** (*Subject Alternative Name*), detto anche multi-dominio o UCC, che elenca esplicitamente nel campo SAN tutti i nomi da coprire, anche di domini diversi fra loro. È peraltro il meccanismo su cui i browser moderni si basano davvero: il vecchio campo Common Name è considerato obsoleto, e la validazione avviene sul campo SAN.\n* **Analisi dei distrattori:**\n  * **A) Scadenza e validazione estesa:** la durata non dipende dal tipo di copertura dei nomi, e la **validazione estesa** riguarda quanto a fondo la CA verifica l'identità legale dell'organizzazione, non quanti nomi il certificato protegge.\n  * **B) Non riconosciuto dai browser:** falso. I certificati wildcard sono pienamente supportati da tutti i browser; il loro limite è l'ambito dei nomi, non la fiducia.\n  * **C) Non può essere autofirmato:** falso, e comunque irrilevante. Un wildcard può benissimo essere autofirmato, esattamente come qualunque altro certificato; sarebbe semplicemente non fidato all'esterno.\n\n* **Trappola d'esame:** ricorda che l'asterisco di un wildcard copre **un solo livello**. `*.esempio.example` vale per `www.esempio.example` ma **non** per `esempio.example` né per `a.b.esempio.example`. E tieni presente il rovescio della medaglia del wildcard, che le domande amano: una sola chiave privata per tutti i sottodomini significa che la sua compromissione li espone **tutti insieme**, ed è la ragione per cui in ambienti sensibili si preferiscono certificati separati o SAN per i soli nomi realmente necessari."
   },
   {
     id: 161,
@@ -14028,7 +14028,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 188,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "Dion Training ha adottato un'architettura Zero Trust. Nel piano di controllo convivono più componenti: uno valuta ogni singola richiesta confrontandola con le regole, un altro scrive e mantiene quelle regole e comunica la decisione al punto che la applica sul traffico.",
+    scenario: "Kestrelia Training ha adottato un'architettura Zero Trust. Nel piano di controllo convivono più componenti: uno valuta ogni singola richiesta confrontandola con le regole, un altro scrive e mantiene quelle regole e comunica la decisione al punto che la applica sul traffico.",
     question: "Quale componente ha la responsabilità di definire e gestire le policy di sicurezza che regolano i controlli di accesso?",
     options: [
       "A) Policy enforcement point (PEP)",
@@ -14119,7 +14119,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 194,
     topic: "Identity & Access Control Models",
     level: "COMPRENSIONE",
-    scenario: "Dion Training ha implementato un modello Zero Trust, in cui il piano di controllo prende le decisioni di accesso e il piano dati le esegue sul traffico reale.",
+    scenario: "Kestrelia Training ha implementato un modello Zero Trust, in cui il piano di controllo prende le decisioni di accesso e il piano dati le esegue sul traffico reale.",
     question: "Quale componente del piano dati applica la decisione, verificando utente e dispositivo prima che raggiungano la risorsa?",
     options: [
       "A) Policy Administrator",
@@ -14239,8 +14239,8 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
     id: 202,
     topic: "Public Key Infrastructure",
     level: "APPLICAZIONE",
-    scenario: "Dion Training intende espandere i propri servizi online, lanciando molteplici sotto-domini per diversi corsi (ad esempio corsi.diontraining.com, labs.diontraining.com, test.diontraining.com). Desiderano un unico certificato digitale in grado di proteggere contemporaneamente tutti questi sotto-domini.",
-    question: "Quale tipo di certificato dovrebbe prendere in considerazione Dion Training?",
+    scenario: "Kestrelia Training intende espandere i propri servizi online, lanciando molteplici sotto-domini per diversi corsi (ad esempio corsi.example.com, labs.example.com, test.example.com). Desiderano un unico certificato digitale in grado di proteggere contemporaneamente tutti questi sotto-domini.",
+    question: "Quale tipo di certificato dovrebbe prendere in considerazione Kestrelia Training?",
     options: [
       "A) CSR (Certificate Signing Request)",
       "B) Wildcard certificate",
@@ -14248,7 +14248,7 @@ export const DOMAIN_1_QUESTIONS: Question[] = [
       "D) Self-signed certificate"
     ],
     answerIndex: 1,
-    explanation: "La risposta corretta è la **B) Wildcard certificate**.\n\n* **Perché è la corretta:** Un **certificato jolly (wildcard certificate)** permette di proteggere un dominio principale e un numero illimitato di suoi sotto-domini correlati di primo livello (es. `*.diontraining.com`) utilizzando un unico certificato. È la soluzione più efficiente e conveniente per questo scenario.\n* **Analisi dei distrattori:**\n  * **A) CSR (Certificate Signing Request)** è la richiesta inviata a una Certificate Authority per ottenere un certificato, non un certificato esso stesso.\n  * **C) Third-party certificate** si riferisce a un certificato emesso da una CA terza attendibile, ma non specifica la funzionalità tecnica jolly necessaria per coprire molteplici sotto-domini.\n  * **D) Self-signed certificate** è un certificato firmato dall'entità stessa che lo ha generato; provocherebbe avvisi di sicurezza nei browser degli utenti e non è raccomandato per siti pubblici."
+    explanation: "La risposta corretta è la **B) Wildcard certificate**.\n\n* **Perché è la corretta:** Un **certificato jolly (wildcard certificate)** permette di proteggere un dominio principale e un numero illimitato di suoi sotto-domini correlati di primo livello (es. `*.example.com`) utilizzando un unico certificato. È la soluzione più efficiente e conveniente per questo scenario.\n* **Analisi dei distrattori:**\n  * **A) CSR (Certificate Signing Request)** è la richiesta inviata a una Certificate Authority per ottenere un certificato, non un certificato esso stesso.\n  * **C) Third-party certificate** si riferisce a un certificato emesso da una CA terza attendibile, ma non specifica la funzionalità tecnica jolly necessaria per coprire molteplici sotto-domini.\n  * **D) Self-signed certificate** è un certificato firmato dall'entità stessa che lo ha generato; provocherebbe avvisi di sicurezza nei browser degli utenti e non è raccomandato per siti pubblici."
   },
   {
     id: 203,
