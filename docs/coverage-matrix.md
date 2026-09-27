@@ -60,7 +60,7 @@ Peso d'esame 28% · 181 domande nel banco del dominio.
 
 ## Dominio 5 — Gestione e supervisione del programma di sicurezza
 
-Peso d'esame 20% · 137 domande nel banco del dominio.
+Peso d'esame 20% · 142 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
@@ -69,17 +69,17 @@ Peso d'esame 20% · 137 domande nel banco del dominio.
 | 5.3 | Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding. | 19 | 2 | 5 | 7 | 5 | 1 | da revisionare | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final) |
 | 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 1 | da revisionare | [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/), [ISO/IEC 27001](https://www.iso.org/standard/27001) |
 | 5.5 | Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting. | 17 | 1 | 6 | 5 | 5 | 1 | da revisionare | [NIST SP 800-115](https://csrc.nist.gov/pubs/sp/800/115/final) |
-| 5.6 | Costruire awareness e training misurabili, specifici per ruolo e adattati a comportamento, minacce e cultura. | 13 | 1 | 1 | 7 | 4 | 1 | da revisionare | [NIST SP 800-50 Rev. 1](https://csrc.nist.gov/pubs/sp/800/50/r1/final) |
+| 5.6 | Costruire awareness e training misurabili, specifici per ruolo e adattati a comportamento, minacce e cultura. | 18 | 1 | 2 | 9 | 6 | 1 | da revisionare | [NIST SP 800-50 Rev. 1](https://csrc.nist.gov/pubs/sp/800/50/r1/final) |
 
 ## Priorità per nuove domande
 
 I 5 obiettivi con meno domande, da rinforzare per primi:
 
-- **5.6**: 13 domande
 - **4.7**: 14 domande
 - **1.1**: 15 domande
 - **4.4**: 16 domande
 - **2.3**: 17 domande
+- **5.5**: 17 domande
 
 ## Fonti e revisione
 

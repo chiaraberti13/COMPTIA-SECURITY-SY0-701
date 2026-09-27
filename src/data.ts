@@ -6478,6 +6478,81 @@ export const DOMAIN_5_QUESTIONS: Question[] = [
     ],
     answerIndex: 1,
     explanation: "La risposta corretta è la **B) La consapevolezza situazionale (situational awareness)**.\n\n* **Perché è la corretta:** La consapevolezza situazionale è la capacità di riconoscere che **il contesto in cui ci si trova cambia il livello di rischio**, e di adeguare di conseguenza il proprio comportamento. Qui non c'è nulla di tecnicamente anomalo da notare: a insospettire il dipendente è il contesto — una fiera, cioè il momento in cui si è più esposti e più distratti — unito a una richiesta urgente arrivata da un **canale insolito**. È ciò che copre i casi che nessun corso aveva previsto.\n* **Analisi dei distrattori:**\n  * **A)** Il riconoscimento del phishing si fonda su **indicatori osservabili**: mittente contraffatto, link mascherati, allegati inattesi, errori di dominio. Lo scenario li esclude esplicitamente, ed è proprio questo a rendere insufficiente quel tipo di addestramento.\n  * **C)** L'**OPSEC** riguarda le informazioni che l'organizzazione lascia trapelare e che un attaccante può ricomporre — organigrammi, annunci di lavoro, foto di badge. Spiega semmai come l'attaccante abbia saputo nome e ruolo del responsabile, non perché il dipendente si sia fermato.\n  * **D)** Il riconoscimento dei comportamenti anomali riguarda ciò che fanno **le persone interne**, ed è il presidio contro la minaccia insider. Qui non c'è alcun insider: c'è un estraneo che si finge un interno.\n\n* **Trappola d'esame:** distingui l'oggetto dell'attenzione. **Consapevolezza situazionale** → la *situazione* in cui ci si trova · **OPSEC** → le *informazioni* che si lasciano in giro · **comportamenti anomali** → ciò che *fanno le persone*."
+  },
+  {
+    id: 178,
+    topic: "Security Awareness",
+    level: "APPLICAZIONE",
+    scenario: "Un lunedì mattina, nel parcheggio aziendale, un dipendente trova una chiavetta USB con l'etichetta «Stipendi 2026 – riservato». Vorrebbe restituirla al proprietario e pensa di aprirne il contenuto per capire di chi sia.",
+    question: "Secondo la formazione sui supporti rimovibili, che cosa dovrebbe fare il dipendente?",
+    options: [
+      "A) Collegarla a un computer aziendale con l'antivirus aggiornato e aprire solo i documenti",
+      "B) Collegarla al proprio computer di casa, così da non mettere a rischio la rete aziendale",
+      "C) Consegnarla al team di sicurezza senza collegarla a nessun computer",
+      "D) Formattarla e riutilizzarla, perché i dati di un supporto smarrito non sono più affidabili"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Consegnarla al team di sicurezza senza collegarla a nessun computer**.\n\n* **Perché è la corretta:** Lasciare chiavette in un parcheggio è una tecnica di ingegneria sociale nota come *USB drop* o *baiting*: l'etichetta allettante sfrutta la curiosità o la buona volontà di chi la trova. Basta collegarla perché un dispositivo malevolo agisca, per esempio presentandosi al computer come tastiera e digitando comandi da solo. La formazione sui **supporti rimovibili e cavi** insegna a non collegare mai supporti di origine sconosciuta e a consegnarli a chi può analizzarli in un ambiente isolato.\n* **Perché le altre non sono corrette:**\n  * **A) L'antivirus** non protegge da un dispositivo che si finge tastiera o che sfrutta una vulnerabilità del sistema al momento del collegamento. Il danno può avvenire prima di aprire qualsiasi documento.\n  * **B) Il computer di casa** sposta il rischio senza eliminarlo: spesso contiene credenziali aziendali, accessi VPN o dati personali, ed è meno protetto.\n  * **D) Formattarla** richiede comunque di collegarla, e il firmware malevolo sopravvive alla formattazione. Inoltre si distruggono prove utili al team di sicurezza.\n\n* **Trappola d'esame:** le opzioni sbagliate sembrano prudenti perché aggiungono una precauzione (antivirus, computer separato, formattazione). Tutte però richiedono di **collegare** il supporto, ed è il collegamento il momento dell'attacco. La regola della formazione è semplice: supporto sconosciuto, nessun collegamento, consegna alla sicurezza.\n* **Piccolo Esempio Concentrato:** lo stesso vale per i **cavi**: un cavo di ricarica trovato o regalato può contenere un chip che inietta comandi. Per questo molte aziende forniscono cavi ufficiali e adattatori di sola ricarica per le porte USB pubbliche."
+  },
+  {
+    id: 179,
+    topic: "Security Awareness",
+    level: "ANALISI",
+    scenario: "Una consulente lavora due giorni alla settimana da un bar vicino a casa. Si collega alla rete Wi-Fi gratuita del locale, discute al telefono i contratti dei clienti e, quando va al bancone, lascia il portatile aperto sul tavolo. Lo schermo è visibile ai tavoli vicini.",
+    question: "Quale contenuto formativo affronta MEGLIO i rischi di questo scenario?",
+    options: [
+      "A) Una campagna di phishing simulato, per insegnare a riconoscere le email sospette",
+      "B) Il divieto assoluto di lavorare fuori dall'ufficio, comunicato a tutto il personale",
+      "C) Una regola sulle password più lunghe, da cambiare ogni 90 giorni",
+      "D) Una guida al lavoro ibrido e remoto: VPN aziendale sulle reti pubbliche, filtro privacy sullo schermo, niente conversazioni riservate in pubblico e blocco dello schermo quando ci si allontana"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Una guida al lavoro ibrido e remoto**.\n\n* **Perché è la corretta:** L'obiettivo 5.6 include esplicitamente la formazione per gli **ambienti di lavoro ibridi e remoti**. Lo scenario contiene quattro rischi distinti, e la guida li copre tutti: la rete Wi-Fi pubblica (traffico intercettabile, risolto dalla VPN), lo schermo visibile (*shoulder surfing*, risolto dal filtro privacy), le telefonate sui contratti (fuga di informazioni riservate a voce) e il portatile incustodito e sbloccato (accesso diretto o furto, ridotto dal blocco dello schermo).\n* **Perché le altre non sono corrette:**\n  * **A) Il phishing simulato** è utile, ma riguarda le email: nessuno dei rischi dello scenario passa dalla posta.\n  * **B) Il divieto assoluto** non è formazione e ignora un modello di lavoro che l'azienda ha scelto. Elimina il rischio a un costo spesso inaccettabile, invece di insegnare a gestirlo.\n  * **C) Le password più lunghe** non proteggono un portatile già sbloccato, né una conversazione ascoltata o uno schermo visibile.\n\n* **Trappola d'esame:** quando uno scenario elenca più comportamenti rischiosi, la risposta migliore è quella che li copre **tutti**, non quella che ne risolve bene uno. Conta i rischi nello scenario e verifica quanti ne affronta ogni opzione.\n* **Piccolo Esempio Concentrato:** molte aziende consegnano ai lavoratori ibridi un kit con portatile a disco cifrato, VPN che si attiva da sola fuori dalla rete aziendale, filtro privacy e una breve guida con le regole per i luoghi pubblici."
+  },
+  {
+    id: 180,
+    topic: "Security Awareness",
+    level: "ANALISI",
+    scenario: "Dopo 12 mesi di campagne di phishing simulato, il report ricorrente del programma di sensibilizzazione mostra che la percentuale di dipendenti che clicca sui link è scesa dal 18% al 4%. Nello stesso periodo, la percentuale di dipendenti che segnala le email simulate al team di sicurezza è rimasta ferma al 3%.",
+    question: "Quale conclusione e quale intervento sono i più corretti?",
+    options: [
+      "A) Il programma ha raggiunto il suo scopo: le simulazioni si possono sospendere",
+      "B) Gli utenti non cliccano più ma quasi nessuno segnala: bisogna insegnare e semplificare la segnalazione e misurarla nei report ricorrenti",
+      "C) Il 4% di clic è ancora troppo alto: bisogna sanzionare chi clicca, anche alla prima volta",
+      "D) Il tasso di segnalazione non è rilevante: il report dovrebbe misurare solo i clic"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Gli utenti non cliccano più ma quasi nessuno segnala**.\n\n* **Perché è la corretta:** Il **reporting e monitoraggio** del programma (iniziale e ricorrente) serve a capire se il comportamento cambia davvero. Un tasso di clic in calo dice che gli utenti evitano la trappola; un tasso di segnalazione fermo al 3% dice che quasi nessuno avvisa la sicurezza. In un attacco reale basta un collega che clicca: se nessuno segnala, il team di sicurezza lo scopre tardi. Il programma deve quindi insegnare **come** segnalare, rendere la segnalazione facile, per esempio con un pulsante nel client di posta, e seguire questo indicatore nei report successivi.\n* **Perché le altre non sono corrette:**\n  * **A) Sospendere le simulazioni** fa risalire il tasso di clic con il tempo, e ignora l'indicatore che non è migliorato.\n  * **C) Sanzionare alla prima volta** crea paura e scoraggia proprio la segnalazione, compresa quella degli errori commessi: l'opposto di ciò che serve.\n  * **D) Misurare solo i clic** nasconde il problema che il report ha appena mostrato.\n\n* **Trappola d'esame:** un solo indicatore non basta a valutare un programma di sensibilizzazione. Il clic misura ciò che l'utente **evita**, la segnalazione misura ciò che l'utente **fa** per difendere l'organizzazione: servono entrambi, confrontati nel tempo con la misura iniziale.\n* **Piccolo Esempio Concentrato:** un indicatore utile è il tempo fra l'arrivo dell'email e la prima segnalazione. Se il primo collega segnala entro 5 minuti, il team di sicurezza può rimuovere il messaggio dalle altre caselle prima che molti lo aprano."
+  },
+  {
+    id: 181,
+    topic: "Security Awareness",
+    level: "APPLICAZIONE",
+    scenario: "Un forum di appassionati di fotografia subisce una violazione e le credenziali dei suoi utenti finiscono in rete. Pochi giorni dopo, alcuni account aziendali vengono violati con gli stessi indirizzi email e le stesse password: diversi dipendenti usavano la password del forum anche al lavoro.",
+    question: "Quale indicazione della formazione sulla gestione delle password previene MEGLIO questo tipo di attacco?",
+    options: [
+      "A) Usare un password manager approvato, con una password lunga e diversa per ogni servizio, e attivare l'MFA dove disponibile",
+      "B) Cambiare la password ogni 30 giorni aggiungendo un numero progressivo alla fine",
+      "C) Usare ovunque la stessa password, purché lunga e con simboli",
+      "D) Annotare le password su un quaderno tenuto nel cassetto della scrivania"
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Usare un password manager approvato, con una password lunga e diversa per ogni servizio, e attivare l'MFA**.\n\n* **Perché è la corretta:** L'attacco descritto è il *credential stuffing*: le credenziali rubate a un servizio vengono provate automaticamente su altri servizi, e funzionano ovunque la password sia stata **riutilizzata**. La difesa decisiva è una password **diversa per ogni servizio**, e un **password manager** è ciò che la rende praticabile, perché genera e ricorda password lunghe e casuali. L'**MFA** aggiunge un secondo livello: anche una password rubata da sola non basta.\n* **Perché le altre non sono corrette:**\n  * **B) Il cambio ogni 30 giorni con un numero progressivo** produce password prevedibili, che gli strumenti di attacco provano per prime, e non impedisce il riutilizzo fra servizi. Le linee guida attuali, come NIST SP 800-63B, sconsigliano le scadenze periodiche senza motivo.\n  * **C) La stessa password ovunque**, per quanto robusta, è esattamente la condizione che il credential stuffing sfrutta.\n  * **D) Il quaderno nel cassetto** espone le password a chiunque abbia accesso fisico alla scrivania, e non risolve il riutilizzo.\n\n* **Trappola d'esame:** la robustezza di una password non protegge dal **riutilizzo**. Una password lunghissima rubata a un forum è inutile quanto una debole, se è la stessa usata al lavoro.\n* **Piccolo Esempio Concentrato:** servizi come Have I Been Pwned permettono di sapere se un indirizzo email compare in una violazione nota; molti password manager avvisano da soli quando una password salvata è stata esposta o è usata su più siti."
+  },
+  {
+    id: 182,
+    topic: "Security Awareness",
+    level: "COMPRENSIONE",
+    scenario: "Un'impiegata dell'ufficio del personale deve inviare il foglio con gli stipendi al collega Marco Rossi. Il completamento automatico del client di posta propone un altro Marco Rossi, un fornitore esterno, e lei invia il file senza accorgersene. Appena se ne rende conto, avvisa il suo responsabile.",
+    question: "Come classifica questo comportamento la formazione sul riconoscimento dei comportamenti anomali?",
+    options: [
+      "A) Comportamento rischioso (risky), perché ha scelto consapevolmente di aggirare una regola",
+      "B) Comportamento inatteso (unexpected), come un accesso alle 3 di notte da un paese insolito",
+      "C) Comportamento involontario (unintentional), un errore senza intenzione di nuocere",
+      "D) Minaccia interna malevola, perché i dati sono usciti dall'azienda"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Comportamento involontario (unintentional)**.\n\n* **Perché è la corretta:** L'obiettivo 5.6 chiede di riconoscere tre tipi di comportamento anomalo. Quello **involontario** è un errore commesso senza volerlo e senza intenzione di nuocere: il completamento automatico ha scelto il destinatario sbagliato e l'impiegata non se n'è accorta. Il fatto che abbia avvisato subito il responsabile è esattamente la reazione che la formazione vuole ottenere, perché permette di contenere il danno.\n* **Perché le altre non sono corrette:**\n  * **A) Il comportamento rischioso** è una scelta consapevole che aggira le regole, per esempio inviare dati a un indirizzo personale per lavorare da casa. Qui non c'è nessuna scelta.\n  * **B) Il comportamento inatteso** è un'attività fuori dallo schema abituale, come un accesso in orari o luoghi insoliti, che può indicare un account compromesso. Qui l'attività è normale, è sbagliato solo il destinatario.\n  * **D) La minaccia interna malevola** richiede l'intenzione di danneggiare. L'uscita dei dati da sola non basta a definirla.\n\n* **Trappola d'esame:** classifica il comportamento dall'**intenzione** e dalla **consapevolezza**, non dalla gravità della conseguenza. Una fuga di dati può nascere da un errore (involontario), da una scorciatoia scelta (rischioso) o da una volontà di nuocere (minaccia interna malevola).\n* **Piccolo Esempio Concentrato:** molte aziende riducono questi errori con un avviso che compare quando un messaggio con allegati va a un dominio esterno, e con una breve finestra per annullare l'invio."
   }
 ];
 
