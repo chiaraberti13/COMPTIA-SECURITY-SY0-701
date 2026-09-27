@@ -447,6 +447,14 @@ test.describe("domain routes (before you start, where to go next)", () => {
     await page.locator("#guide_before_3").getByRole("button", { name: "Vai all'obiettivo 1.4" }).click();
     await expect(page.locator("#guide_objective_1_4")).toBeFocused();
   });
+
+  test("the table of contents jumps to a section and moves focus to its heading", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#guide_contents_1").getByRole("link", { name: "Errori comuni" }).click();
+    await expect(page.locator("#guide_h_traps_1")).toBeFocused();
+    await expect(page.locator("#guide_h_traps_1")).toBeInViewport();
+  });
 });
 
 test.describe("adaptive remediation", () => {

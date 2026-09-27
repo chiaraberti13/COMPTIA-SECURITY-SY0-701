@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { Activity, AlertTriangle, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
 import { reviewSummary, sourcesOf, type Source } from "../contentReview";
 import type { DomainGuide } from "../domainGuides";
@@ -77,7 +77,7 @@ function RouteList({
   const { t } = useLang();
   return (
     <section className="space-y-3" aria-labelledby={`${id}_title`} id={id}>
-      <h3 id={`${id}_title`} className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{title}</h3>
+      <h3 id={`${id}_title`} tabIndex={-1} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{title}</h3>
       <ul className="space-y-2">
         {steps.map((step) => (
           <li key={step.text} className="flex flex-col sm:flex-row sm:items-center gap-2 bg-slate-950/40 border border-slate-800 rounded-md p-3">
@@ -99,6 +99,50 @@ function RouteList({
   );
 }
 
+/** One entry of the guide's table of contents. */
+interface ContentsEntry {
+  /** The heading, or the <details>, the entry jumps to. */
+  target: string;
+  label: string;
+}
+
+/**
+ * "In this guide": links to every section the guide actually has. A jump
+ * moves focus to the section heading, so keyboard and screen-reader users
+ * carry on reading from there; a folded section (the sources) opens first.
+ */
+function GuideContents({ domainId, entries }: { domainId: number; entries: ContentsEntry[] }) {
+  const { t } = useLang();
+  const jump = (event: MouseEvent, target: string) => {
+    const el = document.getElementById(target);
+    if (!el) return;
+    event.preventDefault();
+    if (el instanceof HTMLDetailsElement) el.open = true;
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+    const focusable = el instanceof HTMLDetailsElement ? el.querySelector("summary") : el;
+    focusable?.focus({ preventScroll: true });
+  };
+  return (
+    <nav aria-labelledby={`guide_contents_${domainId}_title`} id={`guide_contents_${domainId}`} className="bg-slate-950/40 border border-slate-800 rounded-lg p-4 space-y-2">
+      <h3 id={`guide_contents_${domainId}_title`} className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.contents")}</h3>
+      <ol className="grid sm:grid-cols-2 gap-x-4 gap-y-1 list-decimal list-inside text-xs text-slate-300">
+        {entries.map((entry) => (
+          <li key={entry.target}>
+            <a
+              href={`#${entry.target}`}
+              onClick={(event) => jump(event, entry.target)}
+              className="text-cyan-300 hover:text-cyan-200 underline decoration-cyan-900 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded"
+            >
+              {entry.label}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
 /**
  * The reasoned guide shown above a domain's study content: purpose, objectives
  * with their official sub-topics, study path, decision patterns, comparison
@@ -116,6 +160,24 @@ export default function DomainGuidePanel({
   onAction: (action: StudyAction) => void;
 }) {
   const { t } = useLang();
+  const d = guide.domainId;
+  /** Id and focusability of a section heading, the target of the table of contents. */
+  const headingProps = (key: string) => ({ id: `guide_h_${key}_${d}`, tabIndex: -1 });
+  const has = (list?: unknown[]) => Boolean(list && list.length > 0);
+  const contents: ContentsEntry[] = [
+    { target: `guide_before_${d}_title`, label: t("study.routeBefore") },
+    { target: `guide_h_objectives_${d}`, label: t("study.objectiveMap") },
+    { target: `guide_h_path_${d}`, label: t("study.studyPath") },
+    { target: `guide_h_patterns_${d}`, label: t("study.decisionPatterns") },
+    { target: `guide_h_connections_${d}`, label: t("study.connections") },
+    ...(has(guide.comparisons) ? [{ target: `guide_h_comparisons_${d}`, label: t("study.comparisons") }] : []),
+    ...(has(guide.commonTraps) ? [{ target: `guide_h_traps_${d}`, label: t("study.commonTraps") }] : []),
+    { target: `guide_h_scenario_${d}`, label: t("study.appliedScenario") },
+    ...(has(guide.practiceScenarios) ? [{ target: `guide_h_practice_${d}`, label: t("study.practiceScenarios") }] : []),
+    { target: `guide_h_readiness_${d}`, label: t("study.readiness") },
+    { target: `guide_sources_${d}`, label: t("study.sourcesTitle") },
+    { target: `guide_next_${d}_title`, label: t("study.routeNext") },
+  ];
   return (
     <details className="group bg-slate-900 border border-cyan-900/50 rounded-lg shadow-md overflow-hidden" id={`domain_guide_${guide.domainId}`}>
       <summary id={`domain_guide_${guide.domainId}_summary`} className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500">
@@ -138,14 +200,16 @@ export default function DomainGuidePanel({
 
       <div className="border-t border-slate-800 p-5 sm:p-6 space-y-7">
         <section className="space-y-2">
-          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.guidePurpose")}</h3>
+          <h3 {...headingProps("purpose")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.guidePurpose")}</h3>
           <p className="text-sm text-slate-300 leading-relaxed border-l-2 border-cyan-500 pl-4">{guide.purpose}</p>
         </section>
+
+        <GuideContents domainId={d} entries={contents} />
 
         <RouteList id={`guide_before_${guide.domainId}`} title={t("study.routeBefore")} steps={route.before} onAction={onAction} />
 
         <section className="space-y-3">
-          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.objectiveMap")}</h3>
+          <h3 {...headingProps("objectives")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.objectiveMap")}</h3>
           <div className="grid gap-2">
             {guide.objectives.map((objective) => (
               <div
@@ -171,7 +235,7 @@ export default function DomainGuidePanel({
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.studyPath")}</h3>
+          <h3 {...headingProps("path")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.studyPath")}</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {guide.studyPath.map((step) => (
               <div key={step.title} className="bg-slate-950/40 border border-slate-800 rounded-md p-3.5">
@@ -184,7 +248,7 @@ export default function DomainGuidePanel({
 
         <div className="grid md:grid-cols-2 gap-5">
           <section className="space-y-3">
-            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.decisionPatterns")}</h3>
+            <h3 {...headingProps("patterns")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.decisionPatterns")}</h3>
             <ul className="space-y-2">
               {guide.decisionPatterns.map((pattern) => (
                 <li key={pattern} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
@@ -196,7 +260,7 @@ export default function DomainGuidePanel({
           </section>
 
           <section className="space-y-3">
-            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.connections")}</h3>
+            <h3 {...headingProps("connections")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.connections")}</h3>
             <ul className="space-y-2">
               {guide.connections.map((connection) => (
                 <li key={connection} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
@@ -210,7 +274,7 @@ export default function DomainGuidePanel({
 
         {guide.comparisons && guide.comparisons.length > 0 && (
           <section className="space-y-3">
-            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.comparisons")}</h3>
+            <h3 {...headingProps("comparisons")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.comparisons")}</h3>
             <div className="space-y-4">
               {guide.comparisons.map((comparison) => (
                 // A scrollable region must be reachable from the keyboard to scroll it.
@@ -243,7 +307,7 @@ export default function DomainGuidePanel({
 
         {guide.commonTraps && guide.commonTraps.length > 0 && (
           <section className="space-y-3">
-            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.commonTraps")}</h3>
+            <h3 {...headingProps("traps")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.commonTraps")}</h3>
             <ul className="grid sm:grid-cols-2 gap-3">
               {guide.commonTraps.map((trap) => (
                 <li key={trap.misconception} className="bg-slate-950/40 border border-slate-800 rounded-md p-3.5 space-y-2">
@@ -264,7 +328,7 @@ export default function DomainGuidePanel({
         <section className="bg-slate-950/70 border border-slate-700 rounded-lg p-4 space-y-3">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">{t("study.appliedScenario")} · {guide.appliedScenario.title}</h3>
+            <h3 {...headingProps("scenario")} className="focus:outline-none text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">{t("study.appliedScenario")} · {guide.appliedScenario.title}</h3>
           </div>
           <div className="space-y-1">
             <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{t("study.scenarioChallenge")}</div>
@@ -278,7 +342,7 @@ export default function DomainGuidePanel({
 
         {guide.practiceScenarios && guide.practiceScenarios.length > 0 && (
           <section className="space-y-3">
-            <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.practiceScenarios")}</h3>
+            <h3 {...headingProps("practice")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.practiceScenarios")}</h3>
             <div className="space-y-3">
               {guide.practiceScenarios.map((scenario) => (
                 <div key={scenario.title} className="bg-slate-950/70 border border-slate-800 rounded-lg p-4 space-y-2">
@@ -302,7 +366,7 @@ export default function DomainGuidePanel({
         )}
 
         <section className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-3">
-          <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>
+          <h3 {...headingProps("readiness")} className="focus:outline-none text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>
           <ul className="grid sm:grid-cols-2 gap-2">
             {guide.readinessChecks.map((check) => (
               <li key={check} className="flex gap-2 text-xs text-slate-300 leading-relaxed">

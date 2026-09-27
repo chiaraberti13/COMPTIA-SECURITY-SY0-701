@@ -115,4 +115,56 @@ describe("DomainGuidePanel", () => {
       expect(link.textContent).toMatch(/si apre in una nuova scheda/);
     }
   });
+
+  it("opens with a table of contents whose every entry points at a section of this guide", () => {
+    const panel = renderGuide(guide);
+    const nav = within(panel).getByRole("navigation", { name: "In questa guida" });
+    const links = within(nav).getAllByRole("link");
+    expect(links.map((a) => a.textContent)).toEqual([
+      "Prima di iniziare",
+      "Obiettivi e risultati attesi",
+      "Percorso di studio consigliato",
+      "Pattern decisionali d'esame",
+      "Collegamenti tra domini",
+      "Confronti chiave",
+      "Errori comuni",
+      "Scenario applicativo",
+      "Esercizi guidati",
+      "Verifica di padronanza",
+      "Fonti e revisione",
+      "Dove proseguire",
+    ]);
+    for (const link of links) {
+      const target = link.getAttribute("href")!.slice(1);
+      expect(panel.querySelector(`#${target}`), target).not.toBeNull();
+    }
+  });
+
+  it("lists only the sections a guide has", () => {
+    const minimal: DomainGuide = { ...guide, comparisons: undefined, commonTraps: undefined, practiceScenarios: undefined };
+    const nav = within(renderGuide(minimal)).getByRole("navigation", { name: "In questa guida" });
+    const labels = within(nav).getAllByRole("link").map((a) => a.textContent);
+    expect(labels).not.toContain("Confronti chiave");
+    expect(labels).not.toContain("Errori comuni");
+    expect(labels).not.toContain("Esercizi guidati");
+    expect(labels).toHaveLength(9);
+  });
+
+  it("moves focus to the chosen section, opening the sources when they are folded", () => {
+    // jsdom does not lay out the page, so it has no scrollIntoView.
+    Element.prototype.scrollIntoView = vi.fn();
+    const panel = renderGuide(guide);
+    panel.open = true;
+    const nav = within(panel).getByRole("navigation", { name: "In questa guida" });
+
+    fireEvent.click(within(nav).getByRole("link", { name: "Errori comuni" }));
+    expect(document.activeElement?.textContent).toBe("Errori comuni");
+    expect(document.activeElement?.tagName).toBe("H3");
+
+    const sources = panel.querySelector(`#guide_sources_${guide.domainId}`) as HTMLDetailsElement;
+    expect(sources.open).toBe(false);
+    fireEvent.click(within(nav).getByRole("link", { name: "Fonti e revisione" }));
+    expect(sources.open).toBe(true);
+    expect(document.activeElement).toBe(sources.querySelector("summary"));
+  });
 });
