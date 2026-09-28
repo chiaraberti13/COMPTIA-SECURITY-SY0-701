@@ -62,6 +62,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Changed
 
+- All six callouts are now used: the common traps of the domain guides are "common mistake" callouts, and explanations that go back to first principles are "deep dive" callouts. The English warning "no replication is a backup" was a plain note while the Italian was a warning callout; both are warnings now.
 - Style guide (`docs/style-guide.md`): tone, the terminology of the SY0-701 objectives, acronyms, capitalisation, numbers and approved translations. The content now says *allow list* and *deny list* instead of whitelist and blacklist, "sanitizzazione" instead of "sanificazione", and the English study content uses American spelling as the CompTIA objectives do (*behavior*, *organization*, *defense*). `tests/styleGuide.test.ts` applies the guide's tables to both languages.
 - Descriptive links and image alternatives: the ADR index links each decision by its title instead of its number, the lab list says "versione inglese" instead of "EN", and the banner and badges of the READMEs say what they show in the file's language. `tests/linkText.test.ts` checks link texts, image alternatives, SVG names and a text version under any future diagram.
 - No emoji as the only cue: the new-questions dialog says "Correct answer" in words instead of a green check mark alone, warnings use words or an icon hidden from screen readers instead of ⚠️, and the status emoji of the threat model and lab 02 are followed by what they mean. `tests/emojiCues.test.ts` enforces it.

@@ -1,5 +1,5 @@
 import type { MouseEvent, ReactNode } from "react";
-import { Activity, AlertTriangle, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
+import { Activity, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
 import { reviewSummary, sourcesOf, type Source } from "../contentReview";
 import type { DomainGuide } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
@@ -312,15 +312,16 @@ export default function DomainGuidePanel({
             <h3 {...headingProps("traps")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.commonTraps")}</h3>
             <ul className="grid sm:grid-cols-2 gap-3">
               {guide.commonTraps.map((trap) => (
-                <li key={trap.misconception} className="bg-slate-950/40 border border-slate-800 rounded-md p-3.5 space-y-2">
-                  <p className="flex gap-2 text-xs text-slate-300 leading-relaxed">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
-                    <span><span className="font-bold text-amber-300">{t("study.trapWrong")}:</span> {trap.misconception}</span>
-                  </p>
-                  <p className="flex gap-2 text-xs text-slate-400 leading-relaxed">
-                    <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />
-                    <span><span className="font-bold text-cyan-300">{t("study.trapRight")}:</span> {trap.correction}</span>
-                  </p>
+                <li key={trap.misconception}>
+                  <Callout kind="mistake" title={t("study.commonMistake")}>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      <span className="font-bold text-rose-300">{t("study.trapWrong")}:</span> {trap.misconception}
+                    </p>
+                    <p className="flex gap-2 mt-2 text-xs text-slate-400 leading-relaxed">
+                      <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />
+                      <span><span className="font-bold text-cyan-300">{t("study.trapRight")}:</span> {trap.correction}</span>
+                    </p>
+                  </Callout>
                 </li>
               ))}
             </ul>

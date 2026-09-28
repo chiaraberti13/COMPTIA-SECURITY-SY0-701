@@ -59,6 +59,13 @@ describe("DomainGuidePanel", () => {
     expect(screen.getAllByText("Corretto:")).toHaveLength(guide.commonTraps!.length);
   });
 
+  it("shows each common trap as a \"common mistake\" callout", () => {
+    const panel = renderGuide(guide);
+    const mistakes = panel.querySelectorAll('[data-callout="mistake"]');
+    expect(mistakes).toHaveLength(guide.commonTraps!.length);
+    for (const box of mistakes) expect(within(box as HTMLElement).getByText("Errore comune")).toBeTruthy();
+  });
+
   it("keeps each exercise's reasoning folded until the learner asks for it", () => {
     const panel = renderGuide(guide);
     const exercises = Array.from(panel.querySelectorAll<HTMLDetailsElement>("details details")).filter(

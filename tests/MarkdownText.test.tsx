@@ -48,6 +48,24 @@ describe("MarkdownText callouts", () => {
       expect(english).toContain(`**${label}:**`);
     }
   });
+
+  it("uses every callout label somewhere in the content, and all six kinds", async () => {
+    const data = await import("../src/data");
+    const en = await import("../src/data.en");
+    const guides = await import("../src/domainGuides");
+    const everything = JSON.stringify([data, en.QUESTION_EN, en.SUBTOPIC_EN, guides]);
+    const unused = Object.keys(LABEL_CALLOUTS).filter((label) => !everything.includes(`**${label}:**`));
+    expect(unused, "a label no content uses is dead code").toEqual([]);
+    // "mistake" comes from the common traps of the domain guides (DomainGuidePanel).
+    expect(new Set([...Object.values(LABEL_CALLOUTS), "mistake"])).toEqual(new Set(["note", "exam", "practice", "warning", "mistake", "deepDive"]));
+  });
+
+  it("shows an explanation from first principles as a deep dive", () => {
+    render(<MarkdownText text={"* **Il concetto, dal principio:** una chiave pubblica si può distribuire a chiunque."} />);
+    const note = screen.getByRole("note");
+    expect(note.getAttribute("data-callout")).toBe("deepDive");
+    expect(within(note).getByText("Il concetto, dal principio")).toBeTruthy();
+  });
 });
 
 describe("MarkdownText inline code", () => {

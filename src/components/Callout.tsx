@@ -62,4 +62,17 @@ export const LABEL_CALLOUTS: Record<string, CalloutKind> = {
   "Warning": "warning",
   "Da ricordare": "note",
   "Remember": "note",
+  // Explanations that go back to first principles: a deep dive, optional for the exam.
+  "Il concetto, dal principio": "deepDive",
+  "The concept, from first principles": "deepDive",
+  "Il criterio, dal principio": "deepDive",
+  "The criterion, from first principles": "deepDive",
+  "Il criterio di scelta, dal principio": "deepDive",
+  "The selection criterion, from first principles": "deepDive",
+  "Il principio, dal principio": "deepDive",
+  "The principle, from first principles": "deepDive",
+  "Il problema, dal principio": "deepDive",
+  "The problem, from first principles": "deepDive",
+  "La distinzione, dal principio": "deepDive",
+  "The distinction, from first principles": "deepDive",
 };
