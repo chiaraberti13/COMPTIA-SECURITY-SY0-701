@@ -53,7 +53,7 @@ describe("repository layout", () => {
       "README.md", "README.it.md", "LICENSE", "CHANGELOG.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md",
       "SECURITY.md", "ROADMAP.md", ".github/CODEOWNERS", ".github/pull_request_template.md",
       ".github/dependabot.yml", ".github/ISSUE_TEMPLATE", "docs/adr", "docs/threat-model.md",
-      "docs/coverage-matrix.md", "docs/content-templates.md", "docs/style-guide.md", "docs/quality-baseline.md", "labs/TEMPLATE.md",
+      "docs/coverage-matrix.md", "docs/content-templates.md", "docs/style-guide.md", "docs/gap-analysis.md", "docs/quality-baseline.md", "labs/TEMPLATE.md",
     ];
     expect(required.filter((p) => !existsSync(p))).toEqual([]);
   });

@@ -16,6 +16,7 @@
     "check": "npm run typecheck && npm run lint && npm run lint:md && npm run test",
     "smoke": "tsx scripts/smoke-test.ts",
     "coverage-matrix": "tsx scripts/coverage-matrix.ts",
+    "gap-analysis": "tsx scripts/gap-analysis.ts",
     "e2e": "playwright test",
     "lint:md": "markdownlint-cli2",
     "test:coverage": "vitest run --coverage"

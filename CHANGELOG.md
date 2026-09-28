@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Gap analysis (`docs/gap-analysis.md`, `npm run gap-analysis`): the concepts without a practical example and the legal figures without a source. Thirteen concepts of Domains 1 and 2 got an example in both languages, so those domains have none left; 141 remain in Domains 3 to 5. `tests/gapAnalysis.test.ts` refuses a new concept without an example and lets the list only shrink.
 - Stable links to the study content: `#studio/4/CVE` opens that concept (domain, concept and focus on its title), `#guida/1/1.4` that objective of a guide; each concept has a "permanent link" button. Links use the stable identifiers, so they work in both languages and survive edits; the hash is validated strictly and never written into the page. Concept analyses are limited to 400 words (the longest is 366).
 - Run-time schema of the study content (`src/contentSchema.ts`, zod, not in the browser bundle): the contract of the types plus the rules they cannot express (answer inside the options, consistent multiple answers, no unknown field, ISO dates, rectangular tables). `tests/contentSchema.test.ts` validates every dataset in both languages. [ADR 0005](docs/adr/0005-formato-dei-dataset.md) records the evaluation of JSON or YAML datasets: they stay in TypeScript until there is a reason to move, and the schema makes the move mechanical.
 - One definition per concept: the 10 concepts defined twice in two domains (least privilege, hashing, encryption, CVE, CVSS, false positive and negative, insider threat, penetration test, rules of engagement) now have their definition written once, in a canonical entry (`src/canonicalTerms.ts`); the other domain keeps its own analysis and exam tip and shows the shared definition. The glossary lists each concept once, with "Also studied in", and moves bookmarks on a duplicate to the canonical entry. Homonyms with different meanings (Zero Trust and SDN planes, Recovery, Reporting, PBQ scenarios) are declared with a reason; `tests/canonicalTerms.test.ts` refuses a new repeated name that is neither linked nor declared.
@@ -95,6 +96,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- GDPR figures now cite their article and say it right: fines up to 20 million euros or 4% of worldwide turnover, whichever is higher (Art. 83(5)); breach notification to the supervisory authority within 72 hours (Art. 33) and to data subjects without undue delay when the risk is high (Art. 34), where the text had applied the 72 hours to customers too.
 - Three comparison tables (risk appetite, due diligence, barcode and RFID) had an empty first header, announced without a name by screen readers; it now reads "Aspect".
 - The AI Trainer panel, open on load, no longer grows from zero width and shifts the page (desktop CLS from 0.419 to 0.038).
 - Checklist buttons are named by their visible text (WCAG 2.5.3 Label in Name), so voice-control users can activate them by saying what they see.
