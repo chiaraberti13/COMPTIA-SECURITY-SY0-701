@@ -13,6 +13,7 @@ sostituisce e si aggiorna lo stato di quello vecchio a "Sostituito da ADR NNNN".
 | 0002 | [Inglese come overlay a chiavi sopra la fonte italiana](0002-bilingue-a-overlay.md) | Accettato |
 | 0003 | [Gemini come provider AI, chiamato solo dal server](0003-provider-ai-dietro-proxy.md) | Accettato |
 | 0004 | [Progressi salvati solo nel browser, senza account](0004-persistenza-solo-locale.md) | Accettato |
+| 0005 | [Dataset in TypeScript con schema a runtime, estrazione in JSON rimandata](0005-formato-dei-dataset.md) | Accettato |
 
 ## Modello
 
