@@ -39,7 +39,9 @@ raggiungibile da fuori. Un piccolo schema testuale aiuta:
 
 I comandi per preparare l'ambiente, ognuno con una frase che dice che cosa fa, e il
 controllo finale che l'ambiente è isolato (per esempio la verifica dell'interfaccia di
-ascolto).
+ascolto). Sopra il livello `low`: lo snapshot `prima-del-lab` della macchina virtuale e, per
+`advanced-controlled`, la verifica che `ip route show default` non stampi nulla (vedi
+[Isolamento e ripristino](README.md#isolamento-e-ripristino)).
 
 ## Esercizio
 
@@ -54,7 +56,8 @@ di log) e dove salvarlo.
 ## Cleanup
 
 I comandi per fermare ciò che è stato avviato, cancellare i file temporanei e verificare
-che non sia rimasto nulla in ascolto.
+che non sia rimasto nulla in ascolto. Per `advanced-controlled`, sempre il ripristino dello
+snapshot.
 
 ## Domande finali
 

@@ -10,7 +10,9 @@ durata e livello di rischio prima di qualsiasi comando.
 > below apply to every lab: only systems you own or are explicitly authorised to test, an
 > isolated environment, synthetic data, and a tested cleanup. `tests/labs.test.ts` checks
 > the structure of every lab and that its commands never target a host other than your own
-> machine.
+> machine. Labs above the `low` risk level run in a virtual machine on an isolated virtual
+> network, with a snapshot taken before and restored after, using the commands below for
+> VirtualBox, libvirt/KVM and Hyper-V.
 
 ## Elenco dei laboratori
 
@@ -56,10 +58,74 @@ difficoltà dell'esercizio.
 - **Porte e interfacce.** Prima dell'esercizio, controlla su quale interfaccia ascolta il
   servizio: `ss -ltn` (Linux), `lsof -nP -iTCP -sTCP:LISTEN` (macOS e Linux) o
   `netstat -ano` (Windows). Deve comparire `127.0.0.1`, non `0.0.0.0`.
-- **Macchine virtuali.** Per i livelli `moderate` e `advanced-controlled` usa una rete
-  *host-only* o interna dell'hypervisor e fai uno snapshot prima di iniziare.
+- **Macchine virtuali.** Per i livelli `moderate` e `advanced-controlled` il laboratorio gira in
+  una macchina virtuale collegata a una rete virtuale isolata, con uno snapshot fatto prima di
+  iniziare: le due procedure qui sotto sono obbligatorie e `tests/labs.test.ts` verifica che il
+  laboratorio le citi nel Setup e nel Cleanup.
 - **Cartella di lavoro.** Le evidenze di ogni laboratorio vanno in una cartella dedicata fuori
   dal repository (per esempio `~/lab01`), che il cleanup cancella.
+
+Negli esempi la macchina virtuale si chiama `lab-vm` e lo snapshot `prima-del-lab`: usa gli
+stessi nomi, così i comandi del laboratorio si copiano senza modifiche.
+
+### Rete virtuale isolata
+
+Una rete *interna* (VirtualBox), *isolata* (libvirt) o *privata* (Hyper-V) collega le macchine
+virtuali fra loro senza passare dall'host verso Internet. Con la macchina virtuale spenta:
+
+```bash
+# VirtualBox: collega la prima scheda di rete a una rete interna chiamata lab-net
+VBoxManage modifyvm "lab-vm" --nic1 intnet --intnet1 "lab-net"
+
+# libvirt/KVM: una rete senza elemento <forward> non instrada nulla verso l'esterno
+cat > lab-isolated.xml <<'EOF'
+<network>
+  <name>lab-isolated</name>
+  <bridge name="virbr-lab"/>
+  <ip address="192.168.100.1" netmask="255.255.255.0"/>
+</network>
+EOF
+virsh net-define lab-isolated.xml
+virsh net-start lab-isolated
+```
+
+```powershell
+# Hyper-V: uno switch privato collega solo le macchine virtuali fra loro
+New-VMSwitch -Name "lab-private" -SwitchType Private
+Connect-VMNetworkAdapter -VMName "lab-vm" -SwitchName "lab-private"
+```
+
+**Verifica senza mandare traffico a nessuno.** Dentro la macchina virtuale, `ip route show
+default` non deve stampare nulla: senza una rotta predefinita nessun pacchetto può uscire dalla
+rete del laboratorio. Non si verifica l'isolamento provando a contattare un sito esterno,
+perché se l'isolamento non funziona quel traffico arriva davvero a un terzo.
+
+### Snapshot e ripristino
+
+Lo snapshot fotografa la macchina virtuale prima dell'esercizio; il ripristino la riporta
+esattamente a quel punto, qualunque cosa sia stata modificata.
+
+```bash
+# VirtualBox
+VBoxManage snapshot "lab-vm" take "prima-del-lab"
+VBoxManage snapshot "lab-vm" restore "prima-del-lab"   # a macchina spenta
+
+# libvirt/KVM
+virsh snapshot-create-as lab-vm prima-del-lab
+virsh snapshot-revert lab-vm prima-del-lab
+```
+
+```powershell
+# Hyper-V
+Checkpoint-VM -Name "lab-vm" -SnapshotName "prima-del-lab"
+Restore-VMCheckpoint -VMName "lab-vm" -Name "prima-del-lab" -Confirm:$false
+```
+
+- `moderate`: snapshot nel **Setup**; nel **Cleanup** ripristino oppure verifica che le
+  modifiche siano state annullate.
+- `advanced-controlled`: snapshot e verifica della rete (`ip route show default` vuoto) nel
+  **Setup**, ripristino dello snapshot sempre nel **Cleanup**: una macchina su cui è stata
+  sfruttata una vulnerabilità non si considera mai pulita.
 
 ## Scrivere un nuovo laboratorio
 

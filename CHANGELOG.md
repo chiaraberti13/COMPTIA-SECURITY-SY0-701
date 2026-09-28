@@ -10,6 +10,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Lab isolation and recovery for labs above the `low` risk level (`labs/README.md`): an isolated virtual network and a snapshot taken before and restored after, with the commands for VirtualBox, libvirt/KVM and Hyper-V. Isolation is checked with an empty `ip route show default`, never by contacting an outside site. `tests/labs.test.ts` requires the snapshot in the Setup of a `moderate` lab, and for `advanced-controlled` also the route check and the restore in the Cleanup.
 - Verifiable citations for single statements: the 50 concepts that name a law, a standard or a scoring system cite it (`src/citations.ts`), with the article when the text states a precise rule (GDPR Art. 3(2), 17, 33, 34, 37–39, 44–49, 58, 83(5)). Each concept lists its "Cited sources" with links; the URLs are in `docs/gap-analysis.md` for the weekly link check. Six documents joined the source catalogue (NIST SP 800-37, 800-56A, 800-63B, 800-88, HIPAA, SOC 2). `tests/citations.test.ts` refuses a concept that names a document without citing it.
 
 - Gap analysis (`docs/gap-analysis.md`, `npm run gap-analysis`): the concepts without a practical example and the legal figures without a source. Thirteen concepts of Domains 1 and 2 got an example in both languages, so those domains have none left; 141 remain in Domains 3 to 5. `tests/gapAnalysis.test.ts` refuses a new concept without an example and lets the list only shrink.

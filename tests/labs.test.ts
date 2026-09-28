@@ -43,6 +43,40 @@ function commandHosts(text: string): string[] {
   return blocks.flatMap((block) => [...block.matchAll(/https?:\/\/([^/:\s'"]+)/g)].map((m) => m[1]));
 }
 
+/** Text of a "## heading" section, up to the next one. */
+function section(text: string, heading: string): string {
+  const lines = `\n${text}`;
+  const start = lines.indexOf(`\n## ${heading}\n`);
+  if (start < 0) return "";
+  const next = lines.indexOf("\n## ", start + heading.length + 4);
+  return lines.slice(start, next < 0 ? undefined : next);
+}
+
+/** The snapshot restore commands of labs/README.md: VirtualBox, libvirt/KVM, Hyper-V. */
+const RESTORE_COMMANDS = ["snapshot \"lab-vm\" restore", "virsh snapshot-revert", "Restore-VMCheckpoint"];
+
+/**
+ * What a lab above the low risk level is missing from the isolation rules of
+ * labs/README.md ("Isolamento e ripristino"): a snapshot in the Setup; for
+ * advanced-controlled also the check that no default route leaves the lab
+ * network, and the restore of the snapshot in the Cleanup.
+ */
+function isolationProblems(text: string, risk: string): string[] {
+  if (risk === "low") return [];
+  // "Setup" and "Cleanup" are the same words in both templates.
+  const setup = section(text, "Setup");
+  const cleanup = section(text, "Cleanup");
+  const problems: string[] = [];
+  if (!/snapshot|Checkpoint-VM/i.test(setup)) problems.push("Setup: no snapshot");
+  if (risk === "advanced-controlled") {
+    if (!setup.includes("ip route show default")) problems.push("Setup: no check that the default route is gone");
+    if (!RESTORE_COMMANDS.some((c) => cleanup.includes(c))) problems.push("Cleanup: snapshot not restored");
+  } else if (!/snapshot|ripristin|restore|revert|annull|undo/i.test(cleanup)) {
+    problems.push("Cleanup: changes neither restored nor undone");
+  }
+  return problems;
+}
+
 describe("labs", () => {
   it("each live in a folder named NN-short-name, in Italian and English", () => {
     expect(labs.length).toBeGreaterThan(0);
@@ -97,6 +131,35 @@ describe("labs", () => {
         expect(text, `${lab}/${FILES[lang]}`).toMatch(/^> ⚠️/m);
       }
     }
+  });
+
+  it("above the low risk level, take a snapshot and isolate the network as labs/README.md prescribes", () => {
+    for (const lab of labs) {
+      for (const lang of Object.keys(FILES) as Lang[]) {
+        const text = read(lab, lang);
+        const risk = field(text, FIELDS[lang].risk)?.replace(/`/g, "") ?? "";
+        expect(isolationProblems(text, risk), `${lab}/${FILES[lang]}`).toEqual([]);
+      }
+    }
+  });
+
+  it("check isolation the way a real lab would be written", () => {
+    const lab = (setup: string, cleanup: string) =>
+      `## Setup\n\n${setup}\n\n## Esercizio\n\n...\n\n## Cleanup\n\n${cleanup}\n\n## Domande finali\n`;
+    const snapshot = 'VBoxManage snapshot "lab-vm" take "prima-del-lab"';
+    const restore = 'VBoxManage snapshot "lab-vm" restore "prima-del-lab"';
+    expect(isolationProblems(lab("", ""), "low")).toEqual([]);
+    expect(isolationProblems(lab("", restore), "moderate")).toEqual(["Setup: no snapshot"]);
+    expect(isolationProblems(lab(snapshot, restore), "moderate")).toEqual([]);
+    expect(isolationProblems(lab(snapshot, restore), "advanced-controlled")).toEqual(["Setup: no check that the default route is gone"]);
+    expect(isolationProblems(lab(`${snapshot}\nip route show default`, "fatto"), "advanced-controlled")).toEqual(["Cleanup: snapshot not restored"]);
+    expect(isolationProblems(lab(`${snapshot}\nip route show default`, restore), "advanced-controlled")).toEqual([]);
+  });
+
+  it("have the isolation procedures in labs/README.md for the three hypervisors", () => {
+    const index = readFileSync(join(LABS_DIR, "README.md"), "utf8");
+    for (const command of ["--nic1 intnet", "virsh net-define", "New-VMSwitch", "ip route show default"]) expect(index).toContain(command);
+    for (const command of RESTORE_COMMANDS) expect(index).toContain(command);
   });
 
   it("are all listed in labs/README.md, in both languages", () => {
