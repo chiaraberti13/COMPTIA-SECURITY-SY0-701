@@ -8,6 +8,7 @@ import type { Lang, UIKey } from "./i18n";
 
 export type StudyAction =
   | { kind: "guide"; domain: 1 | 2 | 3 | 4 | 5; /** Scroll to this objective, e.g. "4.3". */ objective?: string }
+  | { kind: "concept"; domain: 1 | 2 | 3 | 4 | 5; checklistKey: string }
   | { kind: "glossary" }
   | { kind: "quiz"; preset: "mini" | "balanced" }
   | { kind: "exam" }
@@ -139,6 +140,8 @@ export function actionLabel(action: StudyAction, t: (key: UIKey, vars?: Record<s
       return action.objective
         ? t("paths.actGuideObjective", { code: action.objective })
         : t("paths.actGuide", { n: action.domain });
+    case "concept":
+      return t("paths.actConcept", { n: action.domain });
     case "glossary":
       return t("paths.actGlossary");
     case "quiz":

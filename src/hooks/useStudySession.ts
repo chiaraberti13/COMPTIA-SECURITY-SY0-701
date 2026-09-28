@@ -47,6 +47,12 @@ export function useStudySession() {
     setSelectedKey(getDomainTopics(domain, lang)[0].subtopics[0].checklistKey);
   };
 
+  /** Shows one concept of a domain, e.g. from a stable link (src/studyAnchors.ts). */
+  const openConcept = (domain: DomainNumber, checklistKey: string) => {
+    setActiveDomain(domain);
+    setSelectedKey(checklistKey);
+  };
+
   /** Ticks or unticks one concept. */
   const toggleCheck = (key: string) => save({ ...checkedItems, [key]: !checkedItems[key] });
 
@@ -65,6 +71,7 @@ export function useStudySession() {
     selectedSubtopic,
     selectSubtopic: (subtopic: Subtopic) => setSelectedKey(subtopic.checklistKey),
     switchDomain,
+    openConcept,
     checkedItems,
     toggleCheck,
     toggleGroupCheck,

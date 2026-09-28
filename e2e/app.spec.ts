@@ -515,6 +515,31 @@ test.describe("adaptive remediation", () => {
   });
 });
 
+test.describe("stable links", () => {
+  test("a concept link opens that concept, and each concept offers its own link", async ({ page }) => {
+    // Opened from another tab and domain: the link must switch both.
+    await page.goto("/#studio/4/CVE");
+    await expect(page.locator("#concept_card_CVE")).toBeVisible();
+    await expect(page.locator("#concept_title_CVE")).toBeFocused();
+    await expect(page.locator("#concept_link_CVE")).toHaveAttribute("href", "#studio/4/CVE");
+
+    // A link inside the app works too (the hash changes, the page does not reload).
+    await page.evaluate(() => (window.location.hash = "#studio/1/HashingConcept"));
+    await expect(page.locator("#concept_title_HashingConcept")).toBeFocused();
+
+    // An unknown or forged link leaves the page as it is.
+    await page.evaluate(() => (window.location.hash = "#studio/1/<img src=x onerror=alert(1)>"));
+    await expect(page.locator("#concept_card_HashingConcept")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("a guide link opens the guide at that objective", async ({ page }) => {
+    await page.goto("/#guida/2/2.4");
+    await expect(page.locator("#domain_guide_2")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_2_4")).toBeInViewport();
+  });
+});
+
 test.describe("heading structure", () => {
   test("every view has one h1 and never skips a heading level", async ({ page }) => {
     await page.route("**/api/quiz/remediation", (route) =>

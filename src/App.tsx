@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useEffectEvent, useMemo } from "react";
 import {
   X,
   AlertTriangle,
@@ -10,7 +10,7 @@ import {
   questionUid,
   sourceQuestionId,
 } from "./localizedData";
-import { questionIdsByObjective } from "./questionObjectives";
+import { ALL_OBJECTIVES, questionIdsByObjective } from "./questionObjectives";
 import { Question } from "./types";
 import { MotionConfig } from "motion/react";
 import { GlossarySection } from "./components/GlossarySection";
@@ -41,6 +41,7 @@ import {
   examBlueprint,
 } from "./quiz";
 import type { StudyAction } from "./studyPaths";
+import { parseStudyAnchor } from "./studyAnchors";
 
 export default function App() {
   // Localization
@@ -342,6 +343,11 @@ export default function App() {
         requestAnimationFrame(openGuide);
         break;
       }
+      case "concept":
+        study.openConcept(action.domain, action.checklistKey);
+        setActiveTab("studio");
+        revealElement(`concept_card_${action.checklistKey}`, `concept_title_${action.checklistKey}`);
+        break;
       case "glossary":
         setActiveTab("glossary");
         break;
@@ -372,6 +378,28 @@ export default function App() {
         break;
     }
   };
+
+  // Stable links (src/studyAnchors.ts): "#studio/4/CVE" opens that concept,
+  // "#guida/1/1.4" that objective of a guide, on load and whenever the hash
+  // changes (a link inside the app, the back button, a pasted address).
+  const followAnchor = useEffectEvent(() => {
+    const action = parseStudyAnchor(
+      window.location.hash,
+      (domain, key) => getDomainTopics(domain, "it").some((g) => g.subtopics.some((s) => s.checklistKey === key)),
+      (objective) => ALL_OBJECTIVES.includes(objective)
+    );
+    if (action) runStudyAction(action);
+  });
+  useEffect(() => {
+    // The first read waits one frame, so the study area it targets is mounted.
+    const frame = requestAnimationFrame(() => followAnchor());
+    const onHashChange = () => followAnchor();
+    window.addEventListener("hashchange", onHashChange);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", onHashChange);
+    };
+  }, []);
 
   return (
     // reducedMotion="user": animations follow the operating-system setting

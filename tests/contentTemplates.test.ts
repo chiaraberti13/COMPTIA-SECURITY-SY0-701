@@ -11,6 +11,8 @@ import type { Subtopic } from "../src/types";
 /** A definition is one or two sentences; the analysis goes in `details`. */
 const MAX_DEFINITION_CHARS = 400;
 const ENDS_A_SENTENCE = /[.!?)»”]$/;
+/** Short sections (ROADMAP: "Gerarchia dei titoli corretta"): about two minutes of reading. */
+const MAX_DETAILS_WORDS = 400;
 
 beforeAll(async () => {
   await loadEnglishOverlay();
@@ -32,6 +34,15 @@ describe.each(["it", "en"] as const)("concept template (%s)", (lang) => {
       return problems.map((p) => `${s.checklistKey}: ${p}`);
     });
     expect(broken).toEqual([]);
+  });
+
+  it("keeps each analysis short enough to read in about two minutes", () => {
+    // Longest on 2026-09-28: 366 words (InabilityToPatchConcept, Italian).
+    const long = concepts(lang)
+      .map((s) => ({ key: s.checklistKey, words: s.details.split(/\s+/).filter(Boolean).length }))
+      .filter((s) => s.words > MAX_DETAILS_WORDS)
+      .map((s) => `${s.key}: ${s.words} words`);
+    expect(long, "split the concept, or move the extra into a deep dive").toEqual([]);
   });
 
   it("keeps comparison tables rectangular, with no empty cell", () => {

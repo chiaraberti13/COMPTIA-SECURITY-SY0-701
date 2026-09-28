@@ -12,6 +12,7 @@ import {
   Info,
   ArrowUp,
   ArrowDown,
+  Link2,
 } from "lucide-react";
 import type { Subtopic } from "../types";
 import { useLang, localizeSubgroup, type UIKey } from "../i18n";
@@ -23,6 +24,7 @@ import MarkdownText, { InlineText } from "./MarkdownText";
 import { getDomainRoute } from "../domainRoutes";
 import StudyPathsPanel from "./StudyPathsPanel";
 import type { StudyAction } from "../studyPaths";
+import { conceptAnchor } from "../studyAnchors";
 
 /**
  * The right pane of the study area: "Where do I start?", the domain guide,
@@ -184,7 +186,17 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                         <span className="text-[10px] font-mono font-bold text-cyan-400 bg-cyan-950/40 px-2 py-1 border border-cyan-900 rounded select-none">
                           {t("study.conceptOf", { i: idx + 1, n: totalInGroup })}
                         </span>
-                        <h3 className="text-lg font-bold text-slate-100">{sub.name}</h3>
+                        <h3 id={`concept_title_${sub.checklistKey}`} tabIndex={-1} className="text-lg font-bold text-slate-100 focus:outline-none">{sub.name}</h3>
+                        {/* Stable link: survives edits and works in both languages (src/studyAnchors.ts). */}
+                        <a
+                          href={conceptAnchor(activeDomain, sub.checklistKey)}
+                          id={`concept_link_${sub.checklistKey}`}
+                          className="p-1 rounded text-slate-500 hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-500"
+                          aria-label={t("study.conceptLink", { name: sub.name })}
+                          title={t("study.conceptLink", { name: sub.name })}
+                        >
+                          <Link2 className="w-3.5 h-3.5" aria-hidden="true" />
+                        </a>
                       </div>
 
                       {/* Individual checklist checkbox */}

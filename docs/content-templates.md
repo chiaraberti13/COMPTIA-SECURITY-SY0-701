@@ -22,7 +22,7 @@ Una voce di studio della checklist, che compare anche nel glossario.
   | `name` | sì | Il termine come compare all'esame, con la sigla fra parentesi se esiste |
   | `checklistKey` | sì | Identificatore stabile, mai rinominato (vedi [Nomi e identificatori](../CONTRIBUTING.md)) |
   | `definition` | sì | Una o due frasi, al massimo 400 caratteri, chiuse da un punto; `""` se il concetto è già definito in un altro dominio (vedi sotto) |
-  | `details` | sì | L'analisi: paragrafi ed elenchi, con **grassetto**, `codice` e callout |
+  | `details` | sì | L'analisi: paragrafi ed elenchi, con **grassetto**, `codice` e callout; al massimo 400 parole, circa due minuti di lettura |
   | `keyFormulas` | no | Solo se ci sono formule, ognuna scritta per intero |
   | `comparativeTable` | no | Vedi [Confronto](#confronto) |
   | `examTip` | sì | Una frase su come l'argomento compare nelle domande |
