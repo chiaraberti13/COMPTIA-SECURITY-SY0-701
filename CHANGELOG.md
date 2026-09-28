@@ -96,6 +96,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Fixed
 
+- The weekly full-history secret scan failed on three identifiers (a `localStorage` key name, a checklist key, a text fingerprint): gitleaks-action installed gitleaks 8.24.3, which silently ignores the top-level `[[allowlists]]` of `.gitleaks.toml` (supported from 8.25.0). The workflow now pins gitleaks 8.30.1; reproduced locally with both versions, and a real-looking key is still detected. A test keeps the pin.
 - GDPR figures now cite their article and say it right: fines up to 20 million euros or 4% of worldwide turnover, whichever is higher (Art. 83(5)); breach notification to the supervisory authority within 72 hours (Art. 33) and to data subjects without undue delay when the risk is high (Art. 34), where the text had applied the 72 hours to customers too.
 - Three comparison tables (risk appetite, due diligence, barcode and RFID) had an empty first header, announced without a name by screen readers; it now reads "Aspect".
 - The AI Trainer panel, open on load, no longer grows from zero width and shifts the page (desktop CLS from 0.419 to 0.038).

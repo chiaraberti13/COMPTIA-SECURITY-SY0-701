@@ -47,6 +47,20 @@ describe("GitHub Actions workflows", () => {
   });
 });
 
+describe("secret scan", () => {
+  // .gitleaks.toml uses top-level [[allowlists]] with targetRules, read only
+  // from gitleaks 8.25.0. An older binary ignores them without an error, and
+  // the weekly full-history scan fails on identifiers (2026-09-28).
+  it("pins a gitleaks version that understands the allowlists of .gitleaks.toml", () => {
+    const config = readFileSync(".gitleaks.toml", "utf8");
+    const security = workflows.find((w) => w.name === "security.yml")!.text;
+    const pinned = security.match(/GITLEAKS_VERSION:\s*"?(\d+)\.(\d+)\.(\d+)"?/);
+    expect(pinned, "set GITLEAKS_VERSION on the gitleaks step").not.toBeNull();
+    const [major, minor] = [Number(pinned![1]), Number(pinned![2])];
+    if (/^\[\[allowlists\]\]/m.test(config)) expect(major > 8 || (major === 8 && minor >= 25), `gitleaks ${pinned![0]}`).toBe(true);
+  });
+});
+
 describe("dependency licences", () => {
   /** The licences the Dependency review job accepts on a pull request. */
   const allowed = new Set(

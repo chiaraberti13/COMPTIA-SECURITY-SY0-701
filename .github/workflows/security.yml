@@ -46,6 +46,12 @@ jobs:
           # Commenting on the PR would need pull-requests: write; the job
           # summary and the failed check are enough.
           GITLEAKS_ENABLE_COMMENTS: false
+          # Pinned: .gitleaks.toml uses top-level [[allowlists]] with
+          # targetRules, which gitleaks reads only from 8.25.0. The action's
+          # default (8.24.3) ignored them silently, so the weekly full-history
+          # scan reported identifiers as secrets. tests/workflows.test.ts
+          # keeps the pin.
+          GITLEAKS_VERSION: "8.30.1"
 
   audit:
     name: Dependency audit (npm)
