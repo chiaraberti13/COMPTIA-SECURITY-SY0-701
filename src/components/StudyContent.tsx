@@ -18,6 +18,7 @@ import type { Subtopic } from "../types";
 import { useLang, localizeSubgroup, type UIKey } from "../i18n";
 import { getSubgroupForSubtopic } from "../subgroups";
 import GlossaryHints from "./GlossaryHints";
+import ConceptSources from "./ConceptSources";
 import DomainGuidePanel from "./DomainGuidePanel";
 import Callout from "./Callout";
 import MarkdownText, { InlineText } from "./MarkdownText";
@@ -290,6 +291,8 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                     <Callout kind="exam" heading="h4" title={t("study.examTipTitle")} id={`concept_tip_${sub.checklistKey}`}>
                       <InlineText text={sub.examTip} />
                     </Callout>
+
+                    <ConceptSources domainId={activeDomain} checklistKey={sub.checklistKey} />
 
                     <GlossaryHints
                       idPrefix={`concept_${sub.checklistKey}`}

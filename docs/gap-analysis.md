@@ -185,3 +185,61 @@ sono inventati per l'esercizio. Per chiudere una voce aggiungi la fonte nella fr
 «GDPR, art. 83, par. 5») oppure riformula senza la cifra.
 
 Nessuna.
+
+## Fonti delle affermazioni normative
+
+50 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
+compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
+indirizzi qui sotto.
+
+- `1:AsymmetricEncryption`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final)
+- `1:DirectiveControl`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `1:GapAnalysis`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
+- `1:ImpactAnalysis`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `1:MFAImplementationsTokens`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
+- `1:PasswordPoliciesAccount`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
+- `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
+- `2:CVSSVuln`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `3:APIArchitecture`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- `3:BackupEncryptionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `3:DataMaskingSec`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+- `3:DataTypesConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `3:PaaSCloud`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- `3:SaaSCloud`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `3:WAFFire`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- `4:CISBenchmarkRes`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `4:CVSS`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:IncidentResponseGeneralConcept`: [SP 800-61 Rev. 3 — Incident Response Recommendations](https://csrc.nist.gov/pubs/sp/800/61/r3/final)
+- `4:LegalHoldForensics`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17, par. 3, lett. e
+- `4:PackageMonitoringRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:PatchAvailabilityConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:PreparationPhase`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 34
+- `4:SCAP`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:ThreatHuntingIR`: [MITRE ATT&CK](https://attack.mitre.org/)
+- `4:VulnerabilityAssessmentConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:VulnerabilityScannerRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `5:AttestationConcept`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+- `5:Compliance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `5:DataRetentionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17
+- `5:DataRolesGovernance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 24 e artt. 37–39
+- `5:DataSovereigntyConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), artt. 44–49
+- `5:DueDiligence`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:ExternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:GDPRComplianceConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 3, par. 2, e art. 83, par. 5
+- `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
+- `5:MediaSanitizationRes`: [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+- `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
+- `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+- `5:Questionnaires`: [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:RegulatoryAudit`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 58 e art. 83, par. 5; [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `5:ReportingRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `5:RightToAuditClause`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:RiskAppetite`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `5:RiskTransferConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
+- `5:SelfAssessmentConcept`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
+- `5:Transfer`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
+- `5:VendorAssessment`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:VendorMonitoring`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)

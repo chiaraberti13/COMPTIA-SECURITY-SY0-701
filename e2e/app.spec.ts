@@ -533,6 +533,16 @@ test.describe("stable links", () => {
     expect(await seriousViolations(page)).toEqual([]);
   });
 
+  test("a concept that names a law lists it as a cited source, with the article", async ({ page }) => {
+    await page.goto("/#studio/5/GDPRComplianceConcept");
+    const sources = page.locator("#concept_sources_GDPRComplianceConcept");
+    await expect(sources).toBeVisible();
+    const link = sources.getByRole("link", { name: /General Data Protection Regulation/ });
+    await expect(link).toHaveAttribute("href", "https://eur-lex.europa.eu/eli/reg/2016/679/oj");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(sources).toContainText("art. 83, par. 5");
+  });
+
   test("a guide link opens the guide at that objective", async ({ page }) => {
     await page.goto("/#guida/2/2.4");
     await expect(page.locator("#domain_guide_2")).toHaveAttribute("open", "");

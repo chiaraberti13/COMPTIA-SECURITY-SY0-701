@@ -28,6 +28,10 @@ export const SOURCES = {
   comptiaSecurityPlus: { title: "CompTIA Security+ (SY0-701) — exam objectives", publisher: "CompTIA", url: "https://www.comptia.org/certifications/security", kind: "exam" },
   nist80053: { title: "SP 800-53 Rev. 5 — Security and Privacy Controls", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", kind: "standard" },
   nist800207: { title: "SP 800-207 — Zero Trust Architecture", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/207/final", kind: "standard" },
+  nist80056a: { title: "SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/a/r3/final", kind: "standard" },
+  nist80063b: { title: "SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/63/b/4/final", kind: "standard" },
+  nist80037: { title: "SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", kind: "standard" },
+  nist80088: { title: "SP 800-88 Rev. 1 — Guidelines for Media Sanitization", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/88/r1/final", kind: "standard" },
   nist80057: { title: "SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", kind: "standard" },
   nist800145: { title: "SP 800-145 — The NIST Definition of Cloud Computing", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/145/final", kind: "standard" },
   nist80034: { title: "SP 800-34 Rev. 1 — Contingency Planning Guide", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final", kind: "standard" },
@@ -42,6 +46,8 @@ export const SOURCES = {
   rfc8446: { title: "RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc8446", kind: "standard" },
   iso27001: { title: "ISO/IEC 27001 — Information security management systems", publisher: "ISO", url: "https://www.iso.org/standard/27001", kind: "standard" },
   gdpr: { title: "Regulation (EU) 2016/679 — General Data Protection Regulation", publisher: "EUR-Lex", url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj", kind: "standard" },
+  hipaa: { title: "HIPAA — Health Insurance Portability and Accountability Act", publisher: "U.S. Department of Health and Human Services", url: "https://www.hhs.gov/hipaa/index.html", kind: "standard" },
+  soc2: { title: "SOC 2 — Trust Services Criteria", publisher: "AICPA", url: "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2", kind: "standard" },
   pciDss: { title: "PCI Data Security Standard", publisher: "PCI Security Standards Council", url: "https://www.pcisecuritystandards.org/", kind: "standard" },
   owaspTop10: { title: "OWASP Top 10", publisher: "OWASP Foundation", url: "https://owasp.org/www-project-top-ten/", kind: "reference" },
   cisControls: { title: "CIS Critical Security Controls", publisher: "Center for Internet Security", url: "https://www.cisecurity.org/controls", kind: "reference" },
@@ -65,7 +71,7 @@ export interface ObjectiveReview {
 }
 
 /** When the sources below were assigned to the objectives. */
-export const SOURCES_MAPPED_ON = "2026-09-26";
+export const SOURCES_MAPPED_ON = "2026-09-28";
 
 const pending = (...sources: SourceId[]): ObjectiveReview => ({
   status: "needs-review",
@@ -78,7 +84,7 @@ export const OBJECTIVE_REVIEW: Record<string, ObjectiveReview> = {
   "1.1": pending("nist80053"),
   "1.2": pending("nist800207", "nist80053"),
   "1.3": pending("nist80053", "cisControls"),
-  "1.4": pending("nist80057", "rfc8446"),
+  "1.4": pending("nist80057", "nist80056a", "rfc8446"),
   "2.1": pending("nist80030", "mitreAttack"),
   "2.2": pending("nist800161", "mitreAttack"),
   "2.3": pending("nist80053", "owaspTop10", "cisaKev"),
@@ -89,19 +95,19 @@ export const OBJECTIVE_REVIEW: Record<string, ObjectiveReview> = {
   "3.3": pending("nist80057", "gdpr"),
   "3.4": pending("nist80034"),
   "4.1": pending("nist80053", "cisControls"),
-  "4.2": pending("nist80053", "cisControls"),
+  "4.2": pending("nist80053", "nist80088", "cisControls"),
   "4.3": pending("nist80040", "firstCvss", "cisaKev"),
   "4.4": pending("nist80092", "mitreAttack"),
   "4.5": pending("nist80053", "cisControls"),
-  "4.6": pending("nist800207", "nist80053"),
+  "4.6": pending("nist800207", "nist80053", "nist80063b"),
   "4.7": pending("nist80053", "cisControls"),
   "4.8": pending("nist80061"),
   "4.9": pending("nist80061", "nist80092"),
-  "5.1": pending("nistCsf", "iso27001"),
+  "5.1": pending("nistCsf", "iso27001", "nist80037"),
   "5.2": pending("nist80030"),
-  "5.3": pending("nist800161"),
-  "5.4": pending("gdpr", "pciDss", "iso27001"),
-  "5.5": pending("nist800115"),
+  "5.3": pending("nist800161", "soc2"),
+  "5.4": pending("gdpr", "pciDss", "iso27001", "hipaa"),
+  "5.5": pending("nist800115", "soc2"),
   "5.6": pending("nist80050"),
 };
 

@@ -17,7 +17,7 @@ Peso d'esame 12% · 110 domande nel banco del dominio.
 | 1.1 | Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato. | 15 | 0 | 4 | 5 | 6 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.2 | Applicare CIA, autenticazione, autorizzazione, accounting, non ripudio, zero trust, gap analysis, sicurezza fisica e deception a uno scenario. | 35 | 1 | 14 | 9 | 11 | 2 | da revisionare | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.3 | Valutare un cambiamento sicuro: ownership, impatto, approvazione, test, rollback, documentazione e monitoraggio. | 20 | 1 | 3 | 8 | 8 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 2 | da revisionare | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446) |
+| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 2 | da revisionare | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [NIST SP 800-56A Rev. 3](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446) |
 
 ## Dominio 2 — Minacce, vulnerabilità e mitigazioni
 
@@ -49,11 +49,11 @@ Peso d'esame 28% · 185 domande nel banco del dominio.
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
 | 4.1 | Applicare baseline, hardening, patching, secure configuration e protezioni per endpoint, mobile, wireless, applicazioni e cloud. | 23 | 0 | 5 | 17 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 4.2 | Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset. | 18 | 0 | 13 | 4 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
+| 4.2 | Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset. | 18 | 0 | 13 | 4 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-88 Rev. 1](https://csrc.nist.gov/pubs/sp/800/88/r1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.3 | Eseguire vulnerability management dal discovery alla prioritizzazione, remediation, rescansione, reporting ed eccezioni. | 24 | 0 | 12 | 7 | 5 | 1 | da revisionare | [NIST SP 800-40 Rev. 4](https://csrc.nist.gov/pubs/sp/800/40/r4/final), [FIRST Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
 | 4.4 | Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore. | 16 | 0 | 9 | 3 | 4 | 1 | da revisionare | [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 4.5 | Configurare controlli enterprise quali firewall, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR e proxy. | 21 | 0 | 7 | 10 | 4 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 4.6 | Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning. | 32 | 0 | 18 | 11 | 3 | 1 | da revisionare | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
+| 4.6 | Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning. | 32 | 0 | 18 | 11 | 3 | 1 | da revisionare | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-63B](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) |
 | 4.7 | Usare automazione e orchestrazione valutando repeatability, velocità, integrazioni, errori e rischio di propagazione. | 18 | 0 | 12 | 3 | 3 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.8 | Applicare incident response e forensics preservando evidenze, comunicazioni, contenimento e ritorno controllato in produzione. | 18 | 0 | 11 | 0 | 7 | 1 | da revisionare | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) |
 | 4.9 | Interpretare fonti dati e log di rete, autenticazione, endpoint, applicazioni, cloud, DNS ed email. | 23 | 0 | 6 | 3 | 14 | 1 | da revisionare | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final) |
@@ -64,11 +64,11 @@ Peso d'esame 20% · 142 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
-| 5.1 | Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia. | 31 | 7 | 12 | 11 | 1 | 1 | da revisionare | [NIST Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework), [ISO/IEC 27001](https://www.iso.org/standard/27001) |
+| 5.1 | Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia. | 31 | 7 | 12 | 11 | 1 | 1 | da revisionare | [NIST Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework), [ISO/IEC 27001](https://www.iso.org/standard/27001), [NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final) |
 | 5.2 | Gestire il rischio: identificazione, analisi, registro, appetite/tolerance, risposte, owner, monitoraggio e BIA. | 37 | 7 | 8 | 10 | 12 | 1 | da revisionare | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final) |
-| 5.3 | Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding. | 19 | 2 | 5 | 7 | 5 | 1 | da revisionare | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final) |
-| 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 1 | da revisionare | [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/), [ISO/IEC 27001](https://www.iso.org/standard/27001) |
-| 5.5 | Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting. | 17 | 1 | 6 | 5 | 5 | 1 | da revisionare | [NIST SP 800-115](https://csrc.nist.gov/pubs/sp/800/115/final) |
+| 5.3 | Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding. | 19 | 2 | 5 | 7 | 5 | 1 | da revisionare | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
+| 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 1 | da revisionare | [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/), [ISO/IEC 27001](https://www.iso.org/standard/27001), [U.S. Department of Health and Human Services HIPAA](https://www.hhs.gov/hipaa/index.html) |
+| 5.5 | Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting. | 17 | 1 | 6 | 5 | 5 | 1 | da revisionare | [NIST SP 800-115](https://csrc.nist.gov/pubs/sp/800/115/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
 | 5.6 | Costruire awareness e training misurabili, specifici per ruolo e adattati a comportamento, minacce e cultura. | 18 | 1 | 2 | 9 | 6 | 1 | da revisionare | [NIST SP 800-50 Rev. 1](https://csrc.nist.gov/pubs/sp/800/50/r1/final) |
 
 ## Priorità per nuove domande
@@ -83,7 +83,7 @@ I 5 obiettivi con meno domande, da rinforzare per primi:
 
 ## Fonti e revisione
 
-Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-09-26); gli obiettivi d'esame
+Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-09-28); gli obiettivi d'esame
 CompTIA valgono per tutti e non sono ripetuti nella tabella. Un obiettivo diventa **revisionato** solo
 quando una persona ha confrontato domande, glossario e guida con le fonti indicate: servono data e revisore.
 I controlli automatici (parità IT/EN, struttura, copertura) non contano come revisione.
@@ -93,6 +93,10 @@ I controlli automatici (parità IT/EN, struttura, copertura) non contano come re
 - [CompTIA Security+ (SY0-701) — exam objectives](https://www.comptia.org/certifications/security) — CompTIA
 - [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) — NIST
 - [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) — NIST
+- [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final) — NIST
+- [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) — NIST
+- [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final) — NIST
+- [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final) — NIST
 - [SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final) — NIST
 - [SP 800-145 — The NIST Definition of Cloud Computing](https://csrc.nist.gov/pubs/sp/800/145/final) — NIST
 - [SP 800-34 Rev. 1 — Contingency Planning Guide](https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final) — NIST
@@ -107,6 +111,8 @@ I controlli automatici (parità IT/EN, struttura, copertura) non contano come re
 - [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446) — IETF
 - [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001) — ISO
 - [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj) — EUR-Lex
+- [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html) — U.S. Department of Health and Human Services
+- [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) — AICPA
 - [PCI Data Security Standard](https://www.pcisecuritystandards.org/) — PCI Security Standards Council
 
 ### Fonti secondarie: riferimenti di comunità ed enti

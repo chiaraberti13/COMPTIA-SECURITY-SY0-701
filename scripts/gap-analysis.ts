@@ -16,6 +16,8 @@ import { pathToFileURL } from "node:url";
 import { getAllTopics } from "../src/localizedData";
 import { DOMAIN_GUIDES_IT } from "../src/domainGuides";
 import type { Lang } from "../src/i18n";
+import { CONCEPT_CITATIONS } from "../src/citations";
+import { SOURCES } from "../src/contentReview";
 
 export const GAP_ANALYSIS_PATH = path.join("docs", "gap-analysis.md");
 
@@ -121,6 +123,22 @@ export function renderGapAnalysis(): string {
   );
   if (figures.length === 0) lines.push("Nessuna.", "");
   else lines.push(...figures.map((f) => `- ${f.where}: «${f.sentence}»`), "");
+  const cited = Object.entries(CONCEPT_CITATIONS).sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true }));
+  lines.push(
+    "## Fonti delle affermazioni normative",
+    "",
+    `${cited.length} concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,`,
+    "e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e",
+    "compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli",
+    "indirizzi qui sotto.",
+    "",
+    ...cited.map(
+      ([ref, citations]) =>
+        `- \`${ref}\`: ` +
+        citations!.map((c) => `[${SOURCES[c.source].title}](${SOURCES[c.source].url})${c.locator ? `, ${c.locator.it}` : ""}`).join("; ")
+    ),
+    ""
+  );
   return lines.join("\n");
 }
 
