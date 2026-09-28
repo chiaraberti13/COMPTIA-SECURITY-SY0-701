@@ -47,7 +47,8 @@ export function buildAcronymIndex(subtopics: readonly Subtopic[]): Map<string, G
       if (existing && normalize(existing.term) !== normalize(sub.name)) ambiguous.add(acronym);
       if (!existing) {
         byAcronym.set(acronym, {
-          id: sub.checklistKey,
+          // A duplicate concept is one glossary entry with its canonical one.
+          id: sub.canonical?.checklistKey ?? sub.checklistKey,
           acronym,
           term: sub.name,
           definition: sub.definition,

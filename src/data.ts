@@ -1049,14 +1049,14 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
       {
         name: "CVE",
         checklistKey: "CVEVuln",
-        definition: "Common Vulnerabilities and Exposures: l'elenco pubblico standardizzato delle falle di sicurezza note.",
+        definition: "", // canonical: 4:CVE (src/canonicalTerms.ts)
         details: "Caratteristiche del CVE:\n* **Identificazione:** Fornisce un ID univoco a ciascuna vulnerabilità scoperta (es. `CVE-2017-0144` per EternalBlue).\n* **Scopo:** Consente ai professionisti della sicurezza e ai vendor di scambiarsi informazioni precise sulla stessa identica falla usando una denominazione comune internazionale.\n\n* **Piccolo Esempio Concentrato:** Un analista legge che il proprio firewall Fortinet è affetto dalla vulnerabilità denominata `CVE-2023-27997` e può pianificare l'applicazione della patch correttiva indicando esattamente la scheda tecnica ufficiale.",
         examTip: "Il CVE è un dizionario di vulnerabilità pubbliche e note, non un database proprietario o segreto."
       },
       {
         name: "CVSS",
         checklistKey: "CVSSVuln",
-        definition: "Common Vulnerability Scoring System: un framework standard per valutare e comunicare la gravità di una vulnerabilità.",
+        definition: "", // canonical: 4:CVSS (src/canonicalTerms.ts)
         details: "Il punteggio CVSS va da 0.0 a 10.0 (Critico):\n* **Metriche Principali:**\n  - *Base Metrics:* Caratteristiche intrinseche della falla (vettore d'attacco, complessità d'attacco, privilegi richiesti, interazione utente, impatto su C-I-A).\n  - *Temporal Metrics:* Come evolve la falla nel tempo (es. disponibilità di codice exploit pubblico, disponibilità di una patch ufficiale).\n  - *Environmental Metrics:* L'importanza del sistema colpito nell'infrastruttura reale dell'azienda.\n* **Attenzione alla versione:** i tre gruppi qui sopra sono quelli di **CVSS v3.1**. In **v4.0** l'impianto cambia: i gruppi sono **Base, Threat, Environmental e Supplemental**, e *Threat* prende il posto di *Temporal*. Le **fasce di severità restano identiche** nelle due versioni. Se una domanda nomina le metriche *Temporal*, sta parlando di v3.1.\n\n* **Piccolo Esempio Concentrato:** Uno scanner di vulnerabilità trova una falla CVSS v3 con punteggio `9.8` sul server Apache esposto sul web dell'azienda, forzando gli analisti ad attivarsi per un patching immediato fuori dall'orario lavorativo.",
         examTip: "Nella scala CVSS v3.x un punteggio da 9.0 a 10.0 ricade nella severità 'Critical' e richiede intervento immediato (tipicamente si tratta di falle sfruttabili da remoto, senza autenticazione e senza interazione dell'utente). Ricorda le fasce, **identiche in v3.1 e in v4.0**: 0.0 None, 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Attenzione: il punteggio CVSS misura la gravità tecnica, NON il rischio aziendale; la priorità di remediation nasce dal CVSS combinato con la criticità dell'asset e con l'esposizione reale."
       },
@@ -1070,14 +1070,14 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
       {
         name: "False Positive",
         checklistKey: "FalsePositiveVuln",
-        definition: "La segnalazione errata da parte di uno scanner o di un IDS di una vulnerabilità o attacco inesistente.",
+        definition: "", // canonical: 4:FalsePositiveRes (src/canonicalTerms.ts)
         details: "Impatto aziendale:\n* Genera rumore e spreco di tempo per gli analisti della sicurezza che indagano su alert fittizi.\n* **Soluzione:** Ottimizzare e personalizzare le regole di scansione e le firme dell'IDS/SIEM.\n\n* **Piccolo Esempio Concentrato:** L'antivirus centrale invia un allarme critico di rilevamento Trojan su un'applicazione personalizzata sviluppata internamente, ma un'analisi manuale rivela che si tratta solo di codice innocuo mal catalogato dal motore euristico.",
         examTip: "All'esame, una scansione autenticata (Credentialed Scan) riduce drasticamente i Falsi Positivi perché accede direttamente al registro e ai file di configurazione locali."
       },
       {
         name: "False Negative",
         checklistKey: "FalseNegativeVuln",
-        definition: "La mancata segnalazione da parte degli strumenti di difesa di una vulnerabilità o di un attacco realmente esistente.",
+        definition: "", // canonical: 4:FalseNegativeRes (src/canonicalTerms.ts)
         details: "Il pericolo più grave:\n* Lo scanner di vulnerabilità riporta che il sistema è sicuro, ma in realtà ospita una falla critica aperta. Questo lascia l'organizzazione esposta senza alcuna consapevolezza del rischio.\n* Tipico degli attacchi Zero-Day o di malware polimorfici.\n\n* **Piccolo Esempio Concentrato:** Un malware programmato per mutare la firma binaria scavalca silente le difese aziendali poiché il software antivirus locale non rileva alcuna corrispondenza e dichiara la workstation 'protetta e pulita'.",
         examTip: "I Falsi Negativi espongono l'azienda al massimo livello di rischio poiché creano un falso senso di sicurezza."
       },
@@ -1161,7 +1161,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
       {
         name: "Least Privilege",
         checklistKey: "LeastPrivilegeMiti",
-        definition: "Il principio fondamentale che prevede di assegnare a ciascun utente, processo o sistema solo i permessi minimi indispensabili.",
+        definition: "", // canonical: 1:LeastPrivilegeConcept (src/canonicalTerms.ts)
         details: "Applicazione:\n* Evita che utenti ordinari abbiano diritti amministrativi locali sui loro laptop.\n* Riduce l'impatto di un'infezione malware: se l'utente infettato non è amministratore, il malware non potrà installarsi a livello profondo o disattivare l'antivirus.\n\n* **Piccolo Esempio Concentrato:** Un impiegato delle risorse umane riceve i permessi per accedere esclusivamente alla cartella dei contratti dei dipendenti, ma non a quella del bilancio finanziario (**Least Privilege**), riducendo l'esposizione dei dati aziendali.",
         examTip: "Least Privilege è la regola aurea per contrastare minacce interne e contenere la compromissione degli account."
       },
@@ -1189,7 +1189,7 @@ export const DOMAIN_2_TOPICS: TopicGroup[] = [
       {
         name: "Encryption",
         checklistKey: "EncryptionMiti",
-        definition: "L'uso della crittografia per proteggere la riservatezza dei dati sia a riposo che in transito.",
+        definition: "", // canonical: 3:EncryptionSec (src/canonicalTerms.ts)
         details: "Tipologie:\n* **Data-at-rest (A riposo):** Cifratura di hard disk (FDE, BitLocker), database, file e backup.\n* **Data-in-transit (In movimento):** Cifratura dei pacchetti di rete (HTTPS/TLS, IPsec VPN) per evitare l'intercettazione.\n\n* **Piccolo Esempio Concentrato:** Un dipendente perde il computer portatile aziendale in aeroporto, ma i dati rimangono inaccessibili a chiunque trovi il dispositivo poiché l'intero hard disk è protetto da cifratura completa (**Data-at-rest Encryption**).",
         examTip: "**Attenzione a che cosa la cifratura protegge davvero.** Protegge il dato quando finisce in mano a chi **non ha la chiave**: un disco rubato, un backup smarrito, un pacchetto intercettato in transito. **Non protegge** dall'attaccante che opera **dentro una sessione già autenticata**: in un ransomware con doppia estorsione il malware gira con i privilegi di un utente o di un servizio legittimo, e il sistema gli decifra i file in modo trasparente, esattamente come farebbe per il proprietario. La cifratura del disco non impedisce l'esfiltrazione.\n* **Contro l'esfiltrazione servono altri controlli:** minimo privilegio, DLP, segmentazione e monitoraggio dei volumi in uscita. **Contro il ransomware la difesa è il backup** offline o immutabile, e la verifica periodica del ripristino. **Trappola d'esame:** se lo scenario parla di un dispositivo **smarrito o rubato**, la risposta è la cifratura; se parla di dati **esfiltrati da un sistema in funzione**, non lo è."
       },
@@ -2085,7 +2085,7 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
       {
         name: "Hashing",
         checklistKey: "HashingSec",
-        definition: "Algoritmo unidirezionale che converte un input di lunghezza arbitraria in una stringa di caratteri di lunghezza fissa (l'Hash).",
+        definition: "", // canonical: 1:HashingConcept (src/canonicalTerms.ts)
         details: "L'Hashing è la spina dorsale della convalida dell'integrità e dell'autenticità:\n* **Hashing (Funzione Hash):** Algoritmo matematico deterministico non invertibile che mappa dati di qualsiasi dimensione in una stringa fissa.\n* **One-Way Function (Funzione Unidirezionale):** Una proprietà fondamentale per cui è computazionalmente impossibile ricavare l'input originale partendo esclusivamente dal valore hash ottenuto.\n* **Message Digest (Impronta digitale / Digest):** La stringa di output univoca e di lunghezza fissa prodotta dall'algoritmo di hashing su un determinato input.\n* **SHA-256 (Secure Hash Algorithm 256-bit):** Uno standard crittografico moderno e sicuro che produce un digest di 256 bit (64 caratteri esadecimali).\n* **Integrity (Integrità):** La garanzia che il dato non sia stato modificato, alterato o corrotto durante l'archiviazione o il transito (convalidata confrontando i message digest).\n* **Collision (Collisione):** Una falla critica di un algoritmo in cui due input diversi producono lo stesso identico hash (MD5 e SHA-1 sono deprecati a causa di collisioni note).\n* **Avalanche Effect (Effetto Valanga):** Comportamento per cui anche la minima variazione dell'input (es. un singolo carattere o spazio) produce un valore di digest completamente e radicalmente differente, rendendo l'output imprevedibile.\n* **Digital Signature (Firma Digitale):** Meccanismo crittografico asimmetrico ottenuto cifrando il message digest di un documento con la chiave privata del mittente. Garantisce:\n  - **Authentication (Autenticazione):** Certifica in modo matematico l'identità del firmatario.\n  - **Integrity (Integrità):** Dimostra che il messaggio non è stato modificato dopo la firma.\n  - **Non-Repudiation (Non-ripudio):** Impedisce al firmatario di negare di aver inviato il messaggio, poiché solo lui possiede la chiave privata corrispondente.",
         examTip: "All'esame, ricorda che l'Hashing garantisce esclusivamente l'Integrità (Integrity) ed è una One-Way Function priva di chiave di decifratura, mentre la Firma Digitale (Digital Signature) unisce Hashing e crittografia asimmetrica per garantire anche Autenticazione e Non-ripudio."
       },
@@ -2851,7 +2851,7 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
       {
         name: "Rules of Engagement (RoE)",
         checklistKey: "RulesOfEngagementRes",
-        definition: "Regole di Ingaggio: Documento formale e vincolante che definisce i limiti operativi, i confini, le autorizzazioni, i contatti di emergenza e i vincoli legali di un penetration test.",
+        definition: "", // canonical: 5:RulesOfEngagement (src/canonicalTerms.ts)
         details: "Il documento di **Rules of Engagement** specifica:\n* **Scope (Perimetro):** Quali host, indirizzi IP, sottoreti, servizi o applicazioni possono essere scansionati o attaccati, e quali sono esplicitamente esclusi (es. server di produzione critici o sistemi di terze parti in cloud).\n* **Tempistiche:** Finestre temporali autorizzate per l'esecuzione dei test (es. solo nei fine settimana o di notte per ridurre l'impatto sul business).\n* **Tecniche permesse:** Se è consentito l'uso di attacchi DDoS, ingegneria sociale sul personale (phishing) o attacchi fisici ai locali.\n* **Comunicazioni:** Chi avvisare in caso di crash imprevisto dei sistemi o in caso di scoperta di una vulnerabilità di livello critico (Zero-Day).\n\n* **Piccolo Esempio Concentrato:** Prima di avviare il test annuale, la banca e la società di cybersecurity firmano le **Rules of Engagement** (RoE), dove viene stabilito che il portale home banking può essere attaccato solo tra le 02:00 e le 05:00 del mattino, e che è tassativamente vietato effettuare attacchi Denial of Service (DoS) per non interrompere le operazioni reali dei clienti.",
         examTip: "Le Rules of Engagement (RoE) sono indispensabili a livello legale ed operativo prima di condurre qualsiasi penetration test per evitare sanzioni penali e danni accidentali ai sistemi."
       },
@@ -4185,7 +4185,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
       {
         name: "Penetration Test",
         checklistKey: "PenetrationTestAudit",
-        definition: "Un attacco simulato autorizzato contro l'infrastruttura IT dell'organizzazione per scoprire e sfruttare attivamente le vulnerabilità.",
+        definition: "", // canonical: 4:PenetrationTest (src/canonicalTerms.ts)
         details: "Condotto da professionisti di sicurezza (Ethical Hackers) simulando le tattiche, tecniche e procedure (TTP) dei veri attaccanti. L'obiettivo è bypassare attivamente i controlli difensivi per verificare la resilienza sul campo e produrre un report di remediation dettagliato.",
         examTip: "A differenza di un semplice Vulnerability Scan (che si limita a scansionare e trovare vulnerabilità teoriche), il Penetration Test tenta attivamente di sfruttarle (exploit) per misurare l'impatto reale."
       },
@@ -4290,7 +4290,7 @@ export const DOMAIN_5_TOPICS: TopicGroup[] = [
       {
         name: "Insider Threat",
         checklistKey: "InsiderThreat",
-        definition: "Il rischio derivante da individui interni all'organizzazione (dipendenti, ex dipendenti, partner) che abusano del proprio accesso autorizzato.",
+        definition: "", // canonical: 2:InsiderThreatActor (src/canonicalTerms.ts)
         details: "Le minacce interne possono essere dolose (es. dipendente infedele che ruba proprietà intellettuale per rivenderla) o accidentali/negligenti (es. dipendente che invia per errore dati sensibili alla persona sbagliata). Si mitiga tramite Least Privilege, Separation of Duties e monitoraggio comportamentale (UBA).",
         examTip: "L'insider d'esame più pericoloso è colui che ha già credenziali d'accesso legittime e conosce l'architettura dei sistemi; la separazione delle funzioni è un controllo di contenimento chiave."
       },

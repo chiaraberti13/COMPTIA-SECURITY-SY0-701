@@ -400,6 +400,16 @@ test.describe("glossary terms in context", () => {
     await expect(page.locator("#quiz_glossary_definition")).not.toBeEmpty();
     expect(await seriousViolations(page)).toEqual([]);
   });
+
+  test("a concept studied in two domains is one glossary entry, with the other domain named", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_search_input").fill("CVSS");
+    // CVSS is defined in Domain 4 (canonical) and studied again in Domain 2.
+    await expect(page.locator("#glossary_card_CVSS")).toHaveCount(1);
+    await expect(page.locator("#glossary_card_CVSSVuln")).toHaveCount(0);
+    await expect(page.locator("#glossary_also_in_CVSS")).toContainText("Dom 2");
+  });
 });
 
 test.describe("AI output is untrusted", () => {

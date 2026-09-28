@@ -208,6 +208,11 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                       <p className="text-slate-300 text-sm leading-relaxed font-medium">
                         {sub.definition}
                       </p>
+                      {sub.canonical && (
+                        <p className="text-[11px] text-slate-400 mt-1.5" id={`concept_canonical_${sub.checklistKey}`}>
+                          {t("study.canonicalDefinition", { name: sub.canonical.name, n: sub.canonical.domainId })}
+                        </p>
+                      )}
                     </div>
 
                     {/* Detailed Analysis */}
@@ -277,7 +282,7 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                     <GlossaryHints
                       idPrefix={`concept_${sub.checklistKey}`}
                       index={GLOSSARY_INDEX}
-                      exclude={sub.checklistKey}
+                      exclude={sub.canonical?.checklistKey ?? sub.checklistKey}
                       texts={[sub.definition, sub.details, sub.examTip ?? ""]}
                     />
 

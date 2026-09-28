@@ -20,6 +20,7 @@ import { TopicGroup, Subtopic } from "../types";
 import { useLang, translate, type Lang, type UIKey } from "../i18n";
 import { STORAGE_KEYS, readJSON, writeJSON } from "../storage";
 import { sanitizeBookmarks } from "../progressBackup";
+import { canonicalBookmark, conceptRef } from "../canonicalTerms";
 
 export interface GlossaryTerm {
   id: string;
@@ -35,6 +36,8 @@ export interface GlossaryTerm {
   isAcronym: boolean;
   firstLetter: string;
   keyFormulas?: string[];
+  /** Other domains where this concept is studied, sharing this definition (src/canonicalTerms.ts). */
+  alsoIn: number[];
 }
 
 /**
@@ -145,6 +148,19 @@ function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
 
   const termsMap = new Map<string, GlossaryTerm>();
 
+  // A concept studied in several domains appears once, as its canonical entry,
+  // with the other domains listed: "domain:checklistKey" -> those domains.
+  const alsoIn = new Map<string, number[]>();
+  domains.forEach(({ id, groups }) => {
+    groups.forEach((g) =>
+      g.subtopics.forEach((sub) => {
+        if (!sub.canonical) return;
+        const ref = conceptRef(sub.canonical.domainId, sub.canonical.checklistKey);
+        alsoIn.set(ref, [...(alsoIn.get(ref) ?? []), id]);
+      })
+    );
+  });
+
   domains.forEach(({ id, groups, source }) => {
     // checklistKey -> Italian subtopic and its Italian group title.
     const sourceByKey = new Map<string, { sub: Subtopic; groupTitle: string }>();
@@ -154,6 +170,7 @@ function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
 
     groups.forEach((group) => {
       group.subtopics.forEach((sub) => {
+        if (sub.canonical) return;
         const key = `${id}_${sub.name.toLowerCase().trim()}`;
         if (!termsMap.has(key)) {
           const isAcr = checkIfAcronym(sub.name);
@@ -175,7 +192,8 @@ function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
             category: cat,
             isAcronym: isAcr,
             firstLetter,
-            keyFormulas: sub.keyFormulas
+            keyFormulas: sub.keyFormulas,
+            alsoIn: alsoIn.get(conceptRef(id, sub.checklistKey)) ?? [],
           });
         }
       });
@@ -184,6 +202,9 @@ function buildGlossaryDataset(lang: Lang): GlossaryTerm[] {
 
   return Array.from(termsMap.values()).sort((a, b) => a.term.localeCompare(b.term, lang, { sensitivity: "base" }));
 }
+
+/** A term belongs to its own domain and to those where it is studied as a duplicate. */
+const inDomain = (term: GlossaryTerm, domainId: number) => term.domainId === domainId || term.alsoIn.includes(domainId);
 
 interface GlossarySectionProps {
   onAskAI?: (prompt: string) => void;
@@ -211,7 +232,9 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
   // UI States
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(
     // Sanitised: a non-array value here would crash the glossary on .includes().
-    () => sanitizeBookmarks(readJSON<unknown>(STORAGE_KEYS.bookmarks, []))
+    // A bookmark on a duplicate concept moves to its canonical entry, the one
+    // the glossary now shows.
+    () => [...new Set(sanitizeBookmarks(readJSON<unknown>(STORAGE_KEYS.bookmarks, [])).map(canonicalBookmark))]
   );
 
   const [expandedTermId, setExpandedTermId] = useState<string | null>(null);
@@ -272,7 +295,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
   const filteredTerms = useMemo(() => {
     return allTerms.filter((item) => {
       // Domain filter
-      if (selectedDomain !== "ALL" && item.domainId !== selectedDomain) return false;
+      if (selectedDomain !== "ALL" && !inDomain(item, selectedDomain)) return false;
 
       // Category filter
       if (selectedCategory !== "ALL" && item.category !== selectedCategory) return false;
@@ -401,7 +424,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
               {[1, 2, 3, 4, 5].map((domNum) => {
                 const info = DOMAIN_INFO[domNum];
-                const count = allTerms.filter(t => t.domainId === domNum).length;
+                const count = allTerms.filter(t => inDomain(t, domNum)).length;
                 const isSelected = selectedDomain === domNum;
 
                 return (
@@ -608,6 +631,11 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
 
                     <div className="text-[11px] text-slate-400 font-medium mt-0.5 mb-2">
                       {t("gloss.group", { title: item.groupTitle })}
+                      {item.alsoIn.length > 0 && (
+                        <span className="block" id={`glossary_also_in_${item.id}`}>
+                          {t("gloss.alsoIn", { domains: item.alsoIn.map((n) => t("sidebar.domShort", { n })).join(", ") })}
+                        </span>
+                      )}
                     </div>
 
                     {/* SHORT DEFINITION */}

@@ -1069,13 +1069,11 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   /* ---- Group 8: Vulnerabilities ---- */
   CVEVuln: {
     name: "CVE",
-    definition: "Common Vulnerabilities and Exposures: the standardized public list of known security flaws.",
     details: "Characteristics of the CVE:\n* **Identification:** It provides a unique ID for each discovered vulnerability (e.g. `CVE-2017-0144` for EternalBlue).\n* **Purpose:** It allows security professionals and vendors to exchange precise information about the same exact flaw using a common international naming.\n\n* **Focused Mini-Example:** An analyst reads that their Fortinet firewall is affected by the vulnerability named `CVE-2023-27997` and can plan the application of the corrective patch pointing exactly to the official datasheet.",
     examTip: "The CVE is a dictionary of public, known vulnerabilities, not a proprietary or secret database.",
   },
   CVSSVuln: {
     name: "CVSS",
-    definition: "Common Vulnerability Scoring System: a standard framework for assessing and communicating the severity of a vulnerability.",
     details: "The CVSS score ranges from 0.0 to 10.0 (Critical):\n* **Main Metrics:**\n  - *Base Metrics:* Intrinsic characteristics of the flaw (attack vector, attack complexity, privileges required, user interaction, impact on C-I-A).\n  - *Temporal Metrics:* How the flaw evolves over time (e.g. availability of public exploit code, availability of an official patch).\n  - *Environmental Metrics:* The importance of the affected system in the company's real infrastructure.\n* **Mind the version:** the three groups above are those of **CVSS v3.1**. In **v4.0** the layout changes: the groups are **Base, Threat, Environmental and Supplemental**, and *Threat* takes the place of *Temporal*. The **severity bands stay identical** across the two versions. If a question names the *Temporal* metrics, it is talking about v3.1.\n\n* **Focused Mini-Example:** A vulnerability scanner finds a CVSS v3 flaw with a score of `9.8` on the company's web-facing Apache server, forcing the analysts to act for immediate patching outside working hours.",
     examTip: "On the CVSS v3.x scale a score from 9.0 to 10.0 falls in the 'Critical' severity band and demands immediate action (typically flaws exploitable remotely, without authentication and without user interaction). Remember the bands, **identical in v3.1 and v4.0**: 0.0 None, 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical. Note: the CVSS score measures technical severity, NOT business risk; remediation priority comes from CVSS combined with asset criticality and real exposure.",
   },
@@ -1087,13 +1085,11 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   FalsePositiveVuln: {
     name: "False Positive",
-    definition: "The erroneous reporting by a scanner or an IDS of a nonexistent vulnerability or attack.",
     details: "Business impact:\n* It generates noise and wastes time for the security analysts who investigate fictitious alerts.\n* **Solution:** Optimizing and customizing the scan rules and the IDS/SIEM signatures.\n\n* **Focused Mini-Example:** The central antivirus sends a critical Trojan-detection alert on a custom internally developed application, but a manual analysis reveals that it is only harmless code miscataloged by the heuristic engine.",
     examTip: "On the exam, a credentialed scan drastically reduces False Positives because it directly accesses the registry and local configuration files.",
   },
   FalseNegativeVuln: {
     name: "False Negative",
-    definition: "The failure of the defense tools to report a truly existing vulnerability or attack.",
     details: "The most serious danger:\n* The vulnerability scanner reports that the system is secure, but in reality it hosts a critical open flaw. This leaves the organization exposed without any awareness of the risk.\n* Typical of Zero-Day attacks or polymorphic malware.\n\n* **Focused Mini-Example:** A malware programmed to mutate its binary signature silently bypasses the corporate defenses because the local antivirus software detects no match and declares the workstation 'protected and clean'.",
     examTip: "False Negatives expose the company to the maximum level of risk because they create a false sense of security.",
   },
@@ -1161,7 +1157,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   LeastPrivilegeMiti: {
     name: "Least Privilege",
-    definition: "The fundamental principle of assigning each user, process or system only the minimum indispensable permissions.",
     details: "Application:\n* It prevents ordinary users from having local administrative rights on their laptops.\n* It reduces the impact of a malware infection: if the infected user is not an administrator, the malware cannot install itself deeply or disable the antivirus.\n\n* **Focused Mini-Example:** An HR employee is granted permission to access exclusively the employee-contracts folder, but not the financial-statements one (**Least Privilege**), reducing the exposure of corporate data.",
     examTip: "Least Privilege is the golden rule for countering insider threats and containing account compromise.",
   },
@@ -1185,7 +1180,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   EncryptionMiti: {
     name: "Encryption",
-    definition: "The use of cryptography to protect the confidentiality of data both at rest and in transit.",
     details: "Types:\n* **Data-at-rest:** Encryption of hard disks (FDE, BitLocker), databases, files and backups.\n* **Data-in-transit:** Encryption of network packets (HTTPS/TLS, IPsec VPN) to avoid interception.\n\n* **Focused Mini-Example:** An employee loses the corporate laptop at the airport, but the data remains inaccessible to whoever finds the device because the entire hard disk is protected by full encryption (**Data-at-rest Encryption**).",
     examTip: "**Mind what encryption actually protects.** It protects data once it reaches someone who **does not hold the key**: a stolen disk, a mislaid backup, a packet intercepted in transit. It does **not** protect against an attacker operating **inside an already authenticated session**: in a double-extortion ransomware case the malware runs with the privileges of a legitimate user or service, and the system decrypts the files for it transparently, exactly as it would for the owner. Disk encryption does not prevent exfiltration.\n* **Exfiltration calls for other controls:** least privilege, DLP, segmentation and monitoring of outbound volumes. **Against ransomware the defense is backup** — offline or immutable — and periodic restore testing. **Exam trap:** if the scenario involves a **lost or stolen device**, the answer is encryption; if it involves data **exfiltrated from a running system**, it is not.",
   },
@@ -1929,7 +1923,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   HashingSec: {
     name: "Hashing",
-    definition: "A one-way algorithm that converts an input of arbitrary length into a fixed-length string of characters (the Hash).",
     details: "Hashing is the backbone of integrity and authenticity validation:\n* **Hashing (Hash Function):** A deterministic, non-invertible mathematical algorithm that maps data of any size into a fixed string.\n* **One-Way Function:** A fundamental property whereby it is computationally impossible to derive the original input starting solely from the resulting hash value.\n* **Message Digest:** The unique, fixed-length output string produced by the hashing algorithm on a given input.\n* **SHA-256 (Secure Hash Algorithm 256-bit):** A modern and secure cryptographic standard that produces a 256-bit digest (64 hexadecimal characters).\n* **Integrity:** The guarantee that the data has not been modified, altered or corrupted during storage or transit (validated by comparing the message digests).\n* **Collision:** A critical flaw of an algorithm in which two different inputs produce the same identical hash (MD5 and SHA-1 are deprecated due to known collisions).\n* **Avalanche Effect:** Behavior whereby even the slightest variation of the input (e.g. a single character or space) produces a completely and radically different digest value, making the output unpredictable.\n* **Digital Signature:** An asymmetric cryptographic mechanism obtained by encrypting the message digest of a document with the sender's private key. It guarantees:\n  - **Authentication:** It mathematically certifies the signer's identity.\n  - **Integrity:** It proves that the message was not modified after signing.\n  - **Non-Repudiation:** It prevents the signer from denying having sent the message, because only they possess the corresponding private key.",
     examTip: "On the exam, remember that Hashing guarantees exclusively Integrity and is a One-Way Function with no decryption key, while the Digital Signature combines Hashing and asymmetric cryptography to also guarantee Authentication and Non-repudiation.",
   },
@@ -2554,7 +2547,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   RulesOfEngagementRes: {
     name: "Rules of Engagement (RoE)",
-    definition: "Rules of Engagement: Formal and binding document that defines the operational limits, boundaries, authorizations, emergency contacts and legal constraints of a penetration test.",
     details: "The **Rules of Engagement** document specifies:\n* **Scope:** Which hosts, IP addresses, subnets, services or applications can be scanned or attacked, and which are explicitly excluded (e.g. critical production servers or third-party cloud systems).\n* **Timing:** Authorized time windows for executing the tests (e.g. only on weekends or at night to reduce the impact on the business).\n* **Permitted techniques:** Whether the use of DDoS attacks, social engineering on staff (phishing) or physical attacks on the premises is allowed.\n* **Communications:** Who to notify in case of an unexpected system crash or the discovery of a critical-level vulnerability (Zero-Day).\n\n* **Focused Mini-Example:** Before starting the annual test, the bank and the cybersecurity company sign the **Rules of Engagement** (RoE), which establishes that the home banking portal can be attacked only between 02:00 and 05:00 in the morning, and that carrying out Denial of Service (DoS) attacks is strictly forbidden so as not to interrupt customers' real operations.",
     examTip: "The Rules of Engagement (RoE) are indispensable legally and operationally before conducting any penetration test to avoid criminal penalties and accidental damage to systems.",
   },
@@ -3629,7 +3621,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   PenetrationTestAudit: {
     name: "Penetration Test",
-    definition: "An authorized simulated attack against the organization's IT infrastructure to discover and actively exploit vulnerabilities.",
     details: "Conducted by security professionals (Ethical Hackers) simulating the tactics, techniques and procedures (TTP) of real attackers. The goal is to actively bypass the defensive controls to verify field resilience and produce a detailed remediation report.",
     examTip: "Unlike a simple Vulnerability Scan (which merely scans and finds theoretical vulnerabilities), the Penetration Test actively attempts to exploit them to measure the real impact.",
   },
@@ -3713,7 +3704,6 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   InsiderThreat: {
     name: "Insider Threat",
-    definition: "The risk arising from individuals internal to the organization (employees, former employees, partners) who abuse their authorized access.",
     details: "Insider threats can be malicious (e.g. a disloyal employee who steals intellectual property to resell it) or accidental/negligent (e.g. an employee who mistakenly sends sensitive data to the wrong person). It is mitigated through Least Privilege, Separation of Duties and behavioral monitoring (UBA).",
     examTip: "The most dangerous exam insider is the one who already has legitimate access credentials and knows the systems architecture; separation of duties is a key containment control.",
   },

@@ -13,6 +13,7 @@ import {
 } from "./data";
 import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.en";
 import type { Lang } from "./i18n";
+import { CANONICAL_TERMS, conceptRef, parseConceptRef } from "./canonicalTerms";
 
 /**
  * Deprecated content stays in the dataset, so its id keeps pointing at
@@ -158,18 +159,54 @@ export const domainOfQuestion = (uid: number): number => Math.floor(uid / 10000)
 /** The id a namespaced question has in its domain's dataset. */
 export const sourceQuestionId = (uid: number): number => uid % 10000;
 
-/** Localized topic groups for a domain. Italian is the source of truth. */
-export function getDomainTopics(domainId: number, lang: Lang): TopicGroup[] {
+/**
+ * Localized topic groups before canonical definitions are filled in. A
+ * canonical entry is never itself a duplicate, so resolving reads from this
+ * layer and cannot loop (Domain 4 points to Domain 5 and Domain 5 to Domain 4).
+ */
+function getBaseTopics(domainId: number, lang: Lang): TopicGroup[] {
   const it = IT_TOPICS[domainId] || [];
   // Falls back to Italian if the overlay chunk has not landed yet; the
   // LanguageProvider awaits it before switching, so this is a safety net.
   if (lang === "it" || !englishOverlay) return it;
-  const cache = (topicsCache[lang] ??= {});
+  const cache = (baseTopicsCache[lang] ??= {});
   if (!cache[domainId]) {
     // English subtopic overrides are scoped per domain because checklistKeys
     // are not globally unique across domains.
     const subOverrides = englishOverlay.SUBTOPIC_EN[domainId] || {};
     cache[domainId] = it.map((g) => localizeGroup(g, englishOverlay!.GROUP_EN, subOverrides));
+  }
+  return cache[domainId];
+}
+
+const baseTopicsCache: Partial<Record<Lang, Record<number, TopicGroup[]>>> = {};
+
+/** A duplicate concept with the definition of its canonical entry (src/canonicalTerms.ts). */
+function withCanonicalDefinition(domainId: number, sub: Subtopic, lang: Lang): Subtopic {
+  const target = CANONICAL_TERMS[conceptRef(domainId, sub.checklistKey)];
+  if (!target) return sub;
+  const { domainId: canonicalDomain, checklistKey } = parseConceptRef(target);
+  const canonical = getBaseTopics(canonicalDomain, lang)
+    .flatMap((g) => g.subtopics)
+    .find((s) => s.checklistKey === checklistKey);
+  // tests/canonicalTerms.test.ts guarantees the target exists and is active.
+  if (!canonical) return sub;
+  return {
+    ...sub,
+    definition: canonical.definition,
+    canonical: { domainId: canonicalDomain, checklistKey, name: canonical.name },
+  };
+}
+
+/** Localized topic groups for a domain. Italian is the source of truth. */
+export function getDomainTopics(domainId: number, lang: Lang): TopicGroup[] {
+  const effectiveLang: Lang = lang === "en" && englishOverlay ? "en" : "it";
+  const cache = (topicsCache[effectiveLang] ??= {});
+  if (!cache[domainId]) {
+    cache[domainId] = getBaseTopics(domainId, effectiveLang).map((g) => ({
+      ...g,
+      subtopics: g.subtopics.map((s) => withCanonicalDefinition(domainId, s, effectiveLang)),
+    }));
   }
   return cache[domainId];
 }

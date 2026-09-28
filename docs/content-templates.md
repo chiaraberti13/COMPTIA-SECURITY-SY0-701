@@ -21,7 +21,7 @@ Una voce di studio della checklist, che compare anche nel glossario.
   |---|---|---|
   | `name` | sì | Il termine come compare all'esame, con la sigla fra parentesi se esiste |
   | `checklistKey` | sì | Identificatore stabile, mai rinominato (vedi [Nomi e identificatori](../CONTRIBUTING.md)) |
-  | `definition` | sì | Una o due frasi, al massimo 400 caratteri, chiuse da un punto |
+  | `definition` | sì | Una o due frasi, al massimo 400 caratteri, chiuse da un punto; `""` se il concetto è già definito in un altro dominio (vedi sotto) |
   | `details` | sì | L'analisi: paragrafi ed elenchi, con **grassetto**, `codice` e callout |
   | `keyFormulas` | no | Solo se ci sono formule, ognuna scritta per intero |
   | `comparativeTable` | no | Vedi [Confronto](#confronto) |
@@ -30,8 +30,15 @@ Una voce di studio della checklist, che compare anche nel glossario.
 - **Callout nei `details`:** un punto elenco che inizia con un'etichetta standard diventa un
   riquadro, per esempio `* **Piccolo Esempio Concentrato:** …` o `* **Trappola d'esame:** …`.
   L'elenco completo è in [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+- **Un concetto in più domini:** la definizione si scrive una volta sola, nella voce canonica.
+  Nell'altro dominio la sottovoce ha `definition: ""` (e nessuna `definition` in
+  `src/data.en.ts`), mantiene la propria analisi e il proprio consiglio d'esame, e si aggiunge a
+  `CANONICAL_TERMS` in `src/canonicalTerms.ts` con il riferimento `dominio:checklistKey`, per
+  esempio `"2:CVEVuln": "4:CVE"`. Due sottovoci con lo stesso nome ma significati diversi vanno
+  in `HOMONYMS`, con il motivo.
 - **Test:** `tests/contentTemplates.test.ts` (campi, lunghezza, tabelle, formule),
-  `tests/dataset.test.ts` (chiavi univoche, sottogruppi), `tests/languageParity.test.ts`.
+  `tests/dataset.test.ts` (chiavi univoche, sottogruppi), `tests/languageParity.test.ts`,
+  `tests/canonicalTerms.test.ts` (voci canoniche e omonimi).
 
 ## Confronto
 

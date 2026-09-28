@@ -10,6 +10,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- One definition per concept: the 10 concepts defined twice in two domains (least privilege, hashing, encryption, CVE, CVSS, false positive and negative, insider threat, penetration test, rules of engagement) now have their definition written once, in a canonical entry (`src/canonicalTerms.ts`); the other domain keeps its own analysis and exam tip and shows the shared definition. The glossary lists each concept once, with "Also studied in", and moves bookmarks on a duplicate to the canonical entry. Homonyms with different meanings (Zero Trust and SDN planes, Recovery, Reporting, PBQ scenarios) are declared with a reason; `tests/canonicalTerms.test.ts` refuses a new repeated name that is neither linked nor declared.
+
 - Licence check on pull requests: Dependency review now also fails on a licence outside an allow-list of the licences already in use, all compatible with MIT (no GPL, LGPL, AGPL or SSPL); a test keeps the list and `package-lock.json` in step.
 - The SIL Open Font License notices of the bundled fonts (Inter, JetBrains Mono) now ship with the app in `public/licenses/`, as the licence requires.
 - Translations to review after a change: `tests/translationFreshness.test.ts` keeps a fingerprint of the Italian text each English translation was made from and lists the translations to reread when the Italian changes (questions, concepts, groups and guide sections, 1,348 units).

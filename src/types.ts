@@ -22,6 +22,19 @@ export interface Subtopic {
   };
   examTip: string;
   deprecated?: Deprecation;
+  /**
+   * Never written in the dataset: src/localizedData.ts sets it on a concept
+   * whose definition lives in another entry (src/canonicalTerms.ts), which
+   * then has `definition: ""` in the source.
+   */
+  canonical?: CanonicalLink;
+}
+
+/** The entry a duplicate concept takes its definition from. */
+export interface CanonicalLink {
+  domainId: number;
+  checklistKey: string;
+  name: string;
 }
 
 export interface TopicGroup {
