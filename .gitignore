@@ -13,3 +13,6 @@ coverage/
 # Playwright output
 test-results/
 playwright-report/
+
+# Extracted English texts checked by npm run spellcheck
+.spellcheck/

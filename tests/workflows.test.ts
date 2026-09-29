@@ -69,6 +69,11 @@ describe("dependency licences", () => {
       .map((l) => l.trim())
       .filter(Boolean)
   );
+  /** Packages exempted by name (allow-dependencies-licenses), as npm names. */
+  const exempted = (readFileSync(".github/workflows/security.yml", "utf8").match(/allow-dependencies-licenses:\s*(.+)/)?.[1] ?? "")
+    .split(",")
+    .map((purl) => decodeURIComponent(purl.trim().replace(/^pkg:npm\//, "")))
+    .filter(Boolean);
   const lock = JSON.parse(readFileSync("package-lock.json", "utf8")) as {
     packages: Record<string, { license?: string | { type?: string }; dev?: boolean }>;
   };
@@ -76,11 +81,19 @@ describe("dependency licences", () => {
   it("are all in the Dependency review allow-list, so an update with a new one is noticed here first", () => {
     expect(allowed.size).toBeGreaterThan(0);
     const outside = Object.entries(lock.packages)
-      .filter(([path]) => path !== "")
+      .filter(([path]) => path !== "" && !exempted.includes(path.replace(/^.*node_modules\//, "")))
       .map(([path, p]) => [path, typeof p.license === "object" ? p.license?.type : p.license] as const)
       .filter(([, license]) => !license || !allowed.has(license))
       .map(([path, license]) => `${path}: ${license ?? "no licence"}`);
     expect(outside).toEqual([]);
+  });
+
+  it("exempt only named development packages, never something the app ships", () => {
+    for (const name of exempted) {
+      const entries = Object.entries(lock.packages).filter(([path]) => path.endsWith(`node_modules/${name}`));
+      expect(entries.length, name).toBeGreaterThan(0);
+      for (const [path, p] of entries) expect(p.dev, `${path} must be a development dependency`).toBe(true);
+    }
   });
 
   it("never allow a strong copyleft licence", () => {

@@ -58,10 +58,10 @@ repository può restare in inglese britannico.
 
 | Da usare | Da evitare |
 |---|---|
-| -ize, -ization (organization, recognize, authorize) | `\b(organ\|recogn\|author\|minim\|priorit\|categor\|normal\|standard\|optim\|summar\|central\|synchron\|virtual\|special\|sanit\|initial\|character\|memor\|penal\|real\|maxim\|analy)[sz]?is(e\|ed\|es\|ing\|ation\|ations\|ational\|able)\b\|\banalys(e\|ed\|ing)\b` |
-| behavior, color, favor, labor, neighbor | `\b(behavi\|col\|fav\|lab\|neighb\|harb)our` |
+| -ize, -ization (organization, recognize, unauthorized) | `\b(?:un\|re\|de\|para)?(organ\|recogn\|author\|minim\|priorit\|categor\|normal\|standard\|optim\|summar\|central\|synchron\|virtual\|special\|sanit\|initial\|character\|memor\|penal\|real\|maxim\|analy\|annual\|formal\|general\|material\|parallel\|militar\|token)[sz]?is(e\|ed\|es\|ing\|ation\|ations\|ational\|able)\b\|\banalys(e\|ed\|ing)\b` |
+| behavior, color, unfavorable, labor, neighbor | `\b(?:un)?(behavi\|col\|fav\|lab\|neighb\|harb)our` |
 | center, defense, offense, license | `\b(centre\|defence\|offence\|licence)s?\b` |
-| catalog, gray, judgment | `\b(catalogue[sd]?\|grey\|judgement)\b` |
+| catalog, gray, judgment, artifact, kilometer, paralyzed, preemptive | `\b(catalogue[sd]?\|grey\|judgement\|artefacts?\|(?:centi\|kilo\|milli)?metres?\|paralys(?:e\|ed\|es\|ing)\|pre-empt\w*)\b` |
 | labeled, traveling, signaling, leveling | `\b(label\|travel\|signal\|level\|cancel\|model)l(ed\|ing)\b` |
 
 ## Sigle

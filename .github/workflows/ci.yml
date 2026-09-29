@@ -49,6 +49,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # English content only: the Italian dictionaries for cspell are GPL.
+      - name: Spell check (English content)
+        run: npm run spellcheck
+
       # All unit, API and component tests, with the coverage thresholds of
       # vitest.config.ts on the pure logic and the server.
       - name: Test (with coverage thresholds)

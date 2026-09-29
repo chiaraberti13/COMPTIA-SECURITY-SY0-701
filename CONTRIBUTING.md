@@ -28,7 +28,7 @@ npm run dev               # http://localhost:3000
 ### Checks to run before a pull request
 
 ```bash
-npm run check             # typecheck + lint (code and Markdown) + all tests (CI runs the same)
+npm run check             # typecheck + lint (code and Markdown) + English spell check + all tests (CI runs the same)
 npm run test:coverage     # the tests again, failing below the coverage thresholds of vitest.config.ts
 npm run build             # production build
 npm run smoke             # starts the built server in production mode and probes it
@@ -36,6 +36,8 @@ npm run e2e               # Playwright + axe at phone and desktop width (after b
 ```
 
 For `npm run e2e`, install Chromium once with `npx playwright install chromium`, or point `PW_CHROMIUM_PATH` to an existing Chromium.
+
+`npm run spellcheck` checks the English content with cspell and names the text that holds an unknown word: fix it, or add a real term (an acronym, a product, a fictional name) to `cspell/project-words.txt`.
 
 CI runs these on Node 22 and 24, plus a separate security workflow (secret scan, `npm audit`, dependency review, CodeQL). A pull request is ready when all of them are green.
 
@@ -112,7 +114,7 @@ npm run dev               # http://localhost:3000
 ### Controlli da eseguire prima di una pull request
 
 ```bash
-npm run check             # typecheck + lint (codice e Markdown) + tutti i test (la CI esegue gli stessi)
+npm run check             # typecheck + lint (codice e Markdown) + controllo ortografico inglese + tutti i test (la CI esegue gli stessi)
 npm run test:coverage     # di nuovo i test, falliscono sotto le soglie di copertura di vitest.config.ts
 npm run build             # build di produzione
 npm run smoke             # avvia il server compilato in modalità produzione e lo verifica
@@ -120,6 +122,8 @@ npm run e2e               # Playwright + axe a larghezza telefono e desktop (dop
 ```
 
 Per `npm run e2e` installa Chromium una volta con `npx playwright install chromium`, oppure indica un Chromium già presente con `PW_CHROMIUM_PATH`.
+
+`npm run spellcheck` controlla con cspell i contenuti in inglese e indica il testo che contiene una parola sconosciuta: correggila, oppure aggiungi un termine vero (una sigla, un prodotto, un nome di fantasia) a `cspell/project-words.txt`.
 
 La CI li esegue su Node 22 e 24, insieme a un workflow di sicurezza separato (ricerca di segreti, `npm audit`, dependency review, CodeQL). Una pull request è pronta quando sono tutti verdi.
 
