@@ -19,6 +19,10 @@ import { useLang, localizeSubgroup, type UIKey } from "../i18n";
 import { getSubgroupForSubtopic } from "../subgroups";
 import GlossaryHints from "./GlossaryHints";
 import ConceptSources from "./ConceptSources";
+import Disclosure, { DeepenTag } from "./Disclosure";
+import { CONCEPT_CITATIONS } from "../citations";
+import { conceptRef } from "../canonicalTerms";
+import { findGlossaryTerms } from "../glossaryIndex";
 import DomainGuidePanel from "./DomainGuidePanel";
 import Callout from "./Callout";
 import MarkdownText, { InlineText } from "./MarkdownText";
@@ -292,14 +296,31 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                       <InlineText text={sub.examTip} />
                     </Callout>
 
-                    <ConceptSources domainId={activeDomain} checklistKey={sub.checklistKey} />
-
-                    <GlossaryHints
-                      idPrefix={`concept_${sub.checklistKey}`}
-                      index={GLOSSARY_INDEX}
-                      exclude={sub.canonical?.checklistKey ?? sub.checklistKey}
-                      texts={[sub.definition, sub.details, sub.examTip ?? ""]}
-                    />
+                    {/* Reference material, folded: the core of the concept is above. */}
+                    {(() => {
+                      const hintTexts = [sub.definition, sub.details, sub.examTip ?? ""];
+                      const exclude = sub.canonical?.checklistKey ?? sub.checklistKey;
+                      const parts = [
+                        ...(CONCEPT_CITATIONS[conceptRef(activeDomain, sub.checklistKey)]?.length ? [t("study.sources")] : []),
+                        ...(findGlossaryTerms(hintTexts, GLOSSARY_INDEX, 6, exclude).length ? [t("gloss.hintsTitle")] : []),
+                      ];
+                      if (parts.length === 0) return null;
+                      return (
+                        <Disclosure
+                          variant="deepen"
+                          id={`concept_more_${sub.checklistKey}`}
+                          summary={
+                            <>
+                              <DeepenTag>{t("study.deepen")}</DeepenTag>
+                              <span className="text-xs text-slate-300">{parts.join(" · ")}</span>
+                            </>
+                          }
+                        >
+                          <ConceptSources domainId={activeDomain} checklistKey={sub.checklistKey} />
+                          <GlossaryHints idPrefix={`concept_${sub.checklistKey}`} index={GLOSSARY_INDEX} exclude={exclude} texts={hintTexts} />
+                        </Disclosure>
+                      );
+                    })()}
 
                     {/* Pre-filled Chat Helper for this sub-concept */}
                     <div className="flex items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800 rounded-lg" id={`concept_chat_trigger_${sub.checklistKey}`}>

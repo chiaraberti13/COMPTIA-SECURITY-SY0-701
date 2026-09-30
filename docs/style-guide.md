@@ -97,6 +97,22 @@ repository può restare in inglese britannico.
 - Nessuna emoji come unica informazione e link che dicono dove portano: vedi i punti 8 e 9 delle
   regole sui contenuti in [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
+## Divulgazione progressiva
+
+Il contenuto principale si legge senza aprire nulla; il resto si apre su richiesta, sempre nello stesso modo.
+
+| Livello | Che cosa contiene | Come appare |
+| --- | --- | --- |
+| 1. Pannello | Un blocco intero: la guida di dominio, «Da dove comincio», «Preparazione all'esame» | Riquadro con titolo e freccia, chiuso finché non serve |
+| 2. Approfondimento | Ciò che va oltre il nucleo: collegamenti tra domini, confronti, «Esame e realtà», fonti, termini del glossario, tabella di tutti gli obiettivi | `<Disclosure variant="deepen">`, con l'etichetta «Approfondimento» e il nome di ciò che contiene |
+| 3. Risposta | Il ragionamento di un esercizio | `<Disclosure variant="answer">`, «Mostra il ragionamento» |
+
+- **Nucleo di un concetto:** definizione, analisi con l'esempio pratico, formule, tabella comparativa e suggerimento d'esame. Restano sempre aperti.
+- **Nucleo di una guida:** scopo, obiettivi, percorso di studio, pattern decisionali, errori comuni, scenario applicativo, esercizi guidati e riepilogo di fine modulo.
+- Un approfondimento dice sempre che cosa contiene: niente pulsanti «Altro» generici.
+- L'indice della guida apre l'approfondimento che raggiunge e porta il focus sul suo titolo.
+- Un nuovo contenuto piegato usa `Disclosure`; `tests/disclosure.test.tsx` rifiuta un nuovo `<details>` scritto a mano fuori dai pannelli di primo livello.
+
 ## Traduzioni approvate
 
 | Italiano | Inglese | Nota |

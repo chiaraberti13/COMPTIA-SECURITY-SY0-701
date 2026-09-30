@@ -2,6 +2,7 @@ import { ChevronRight, Gauge, Target } from "lucide-react";
 import { useLang, type UIKey } from "../i18n";
 import { PASS_RATIO } from "../quiz";
 import { MIN_ATTEMPTS_FOR_SIGNAL, type AreaReadiness, type Readiness } from "../readiness";
+import Disclosure, { DeepenTag } from "./Disclosure";
 
 /** A horizontal bar with the value also written as text next to it. */
 function Bar({ value, tone }: { value: number; tone: "cyan" | "amber" | "rose" }) {
@@ -142,12 +143,17 @@ export default function ReadinessPanel({ readiness, onTrainObjective }: {
           </p>
         </section>
 
-        <details className="group/objectives border-t border-slate-800 pt-3" id="readiness_objectives">
-          <summary className="cursor-pointer list-none inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-400 hover:text-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded">
-            <ChevronRight className="w-3.5 h-3.5 transition-transform group-open/objectives:rotate-90" aria-hidden="true" />
-            {t("ready.allObjectives", { n: objectives.length })}
-          </summary>
-          <div className="mt-3 overflow-x-auto border border-slate-800 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500" tabIndex={0} role="region" aria-label={t("a11y.scrollableTable", { title: t("ready.objectivesCaption") })}>
+        <Disclosure
+          variant="deepen"
+          id="readiness_objectives"
+          summary={
+            <>
+              <DeepenTag>{t("study.deepen")}</DeepenTag>
+              <span className="text-xs text-slate-300">{t("ready.allObjectives", { n: objectives.length })}</span>
+            </>
+          }
+        >
+          <div className="overflow-x-auto border border-slate-800 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500" tabIndex={0} role="region" aria-label={t("a11y.scrollableTable", { title: t("ready.objectivesCaption") })}>
             <table className="w-full text-left text-xs">
               <caption className="text-left text-xs font-bold text-cyan-300 bg-slate-950/70 px-3 py-2 border-b border-slate-800">{t("ready.objectivesCaption")}</caption>
               <thead>
@@ -170,7 +176,7 @@ export default function ReadinessPanel({ readiness, onTrainObjective }: {
               </tbody>
             </table>
           </div>
-        </details>
+        </Disclosure>
       </div>
     </details>
   );

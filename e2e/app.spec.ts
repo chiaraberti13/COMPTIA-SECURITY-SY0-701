@@ -54,6 +54,8 @@ test.describe("layout", () => {
   test("the domain guide opens and keeps its tables inside their box", async ({ page }) => {
     await openApp(page);
     await page.locator("#domain_guide_1 > summary").click();
+    // The comparison tables are a deepening, folded until asked for.
+    await page.locator("#guide_h_comparisons_1 > summary").click();
     await expect(page.locator("#domain_guide_1 table").first()).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
     expect(overflow).toBe(false);
@@ -103,7 +105,11 @@ test.describe("layout: simulator", () => {
 test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
   test("study view with the domain guide open", async ({ page }) => {
     await openApp(page);
-    await page.locator("#domain_guide_1").evaluate((el) => ((el as HTMLDetailsElement).open = true));
+    // Open the guide and every deepening in it, so axe checks the folded content too.
+    await page.locator("#domain_guide_1").evaluate((el) => {
+      (el as HTMLDetailsElement).open = true;
+      for (const details of el.querySelectorAll("details")) details.open = true;
+    });
     expect(await seriousViolations(page)).toEqual([]);
   });
 
@@ -535,7 +541,10 @@ test.describe("stable links", () => {
 
   test("a concept that names a law lists it as a cited source, with the article", async ({ page }) => {
     await page.goto("/#studio/5/GDPRComplianceConcept");
+    // Sources are reference material: folded in the concept's deepening until asked for.
     const sources = page.locator("#concept_sources_GDPRComplianceConcept");
+    await expect(sources).toBeHidden();
+    await page.locator("#concept_more_GDPRComplianceConcept > summary").click();
     await expect(sources).toBeVisible();
     const link = sources.getByRole("link", { name: /General Data Protection Regulation/ });
     await expect(link).toHaveAttribute("href", "https://eur-lex.europa.eu/eli/reg/2016/679/oj");

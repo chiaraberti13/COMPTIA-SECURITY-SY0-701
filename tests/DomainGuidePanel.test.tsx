@@ -68,8 +68,9 @@ describe("DomainGuidePanel", () => {
 
   it("keeps each exercise's reasoning folded until the learner asks for it", () => {
     const panel = renderGuide(guide);
+    // The folded answers, told apart from the deepenings by their summary.
     const exercises = Array.from(panel.querySelectorAll<HTMLDetailsElement>("details details")).filter(
-      (d) => !d.id.startsWith("guide_sources_")
+      (d) => d.querySelector("summary")?.textContent === "Mostra il ragionamento"
     );
     expect(exercises).toHaveLength(guide.practiceScenarios!.length);
     const first = exercises[0];
@@ -179,6 +180,28 @@ describe("DomainGuidePanel", () => {
     expect(labels).toHaveLength(10);
   });
 
+  it("keeps the core open and folds the deepenings, each tagged as such", () => {
+    const panel = renderGuide(guide);
+    const folded = ["connections", "comparisons", "practice_gap"].map(
+      (key) => panel.querySelector(`#guide_h_${key}_${guide.domainId}`) as HTMLDetailsElement
+    );
+    folded.push(panel.querySelector(`#guide_sources_${guide.domainId}`) as HTMLDetailsElement);
+    for (const section of folded) {
+      expect(section.tagName).toBe("DETAILS");
+      expect(section.open).toBe(false);
+      // The summary says it is a deepening and names the section with a heading.
+      const summary = section.querySelector(":scope > summary")!;
+      expect(summary.textContent).toMatch(/^Approfondimento/);
+      expect(summary.querySelector("h3")).not.toBeNull();
+    }
+    // The core sections are plain headings, never folded.
+    for (const key of ["objectives", "path", "patterns", "traps", "scenario", "practice", "summary"]) {
+      const heading = panel.querySelector(`#guide_h_${key}_${guide.domainId}`)!;
+      expect(heading.tagName, key).toBe("H3");
+      expect(heading.closest("details")?.id, key).toBe(`domain_guide_${guide.domainId}`);
+    }
+  });
+
   it("moves focus to the chosen section, opening the sources when they are folded", () => {
     // jsdom does not lay out the page, so it has no scrollIntoView.
     Element.prototype.scrollIntoView = vi.fn();
@@ -195,6 +218,12 @@ describe("DomainGuidePanel", () => {
     fireEvent.click(within(nav).getByRole("link", { name: "Fonti e revisione" }));
     expect(sources.open).toBe(true);
     expect(document.activeElement).toBe(sources.querySelector("summary"));
+
+    // A folded deepening opens the same way.
+    const comparisons = panel.querySelector(`#guide_h_comparisons_${guide.domainId}`) as HTMLDetailsElement;
+    fireEvent.click(within(nav).getByRole("link", { name: "Confronti chiave" }));
+    expect(comparisons.open).toBe(true);
+    expect(document.activeElement).toBe(comparisons.querySelector("summary"));
   });
 
   it("sets what the exam expects beside how it works in practice, each labelled in words", () => {

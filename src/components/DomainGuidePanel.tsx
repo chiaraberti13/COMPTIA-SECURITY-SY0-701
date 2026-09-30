@@ -6,9 +6,21 @@ import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
 import Callout from "./Callout";
+import Disclosure, { DeepenTag } from "./Disclosure";
 import ModuleSummary from "./ModuleSummary";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
+
+/** The summary of a guide section folded as a deepening: the tag, then the section heading. */
+function DeepenSummary({ title }: { title: string }) {
+  const { t } = useLang();
+  return (
+    <>
+      <DeepenTag>{t("study.deepen")}</DeepenTag>
+      <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{title}</h3>
+    </>
+  );
+}
 
 /** The attack in a scenario, read from the defender's side: five labelled steps. */
 function AttackChainList({ chain }: { chain: AttackChain }) {
@@ -64,13 +76,19 @@ function SourcesAndReview({ guide }: { guide: DomainGuide }) {
     </ul>
   );
   return (
-    <details className="group/sources border border-slate-800 rounded-lg" id={`guide_sources_${guide.domainId}`}>
-      <summary className="cursor-pointer list-none p-3 flex items-center gap-2 text-xs font-mono font-bold text-slate-300 uppercase tracking-wider focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500 rounded-lg">
-        <BookMarked className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
-        {t("study.sourcesTitle")}
-        <ChevronRight className="w-3.5 h-3.5 ml-auto transition-transform group-open/sources:rotate-90" aria-hidden="true" />
-      </summary>
-      <div className="border-t border-slate-800 p-4 space-y-4">
+    <Disclosure
+      variant="deepen"
+      id={`guide_sources_${guide.domainId}`}
+      summary={
+        <>
+          <DeepenTag>{t("study.deepen")}</DeepenTag>
+          <h3 className="flex items-center gap-2 text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
+            <BookMarked className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
+            {t("study.sourcesTitle")}
+          </h3>
+        </>
+      }
+    >
         <p className="text-xs text-slate-400 leading-relaxed">{t("study.sourcesNote")}</p>
         <p className="text-xs text-slate-200 font-semibold" id={`guide_review_status_${guide.domainId}`}>
           {t("study.reviewStatus", { reviewed: summary.reviewed, total: codes.length })}
@@ -84,8 +102,7 @@ function SourcesAndReview({ guide }: { guide: DomainGuide }) {
           {list(sources.filter((s) => s.kind === "reference"))}
         </div>
         <p className="text-xs"><ExternalAnchor href={ISSUES_URL}>{t("study.reportError")}</ExternalAnchor></p>
-      </div>
-    </details>
+    </Disclosure>
   );
 }
 
@@ -274,35 +291,31 @@ export default function DomainGuidePanel({
           </div>
         </section>
 
-        <div className="grid md:grid-cols-2 gap-5">
-          <section className="space-y-3">
-            <h3 {...headingProps("patterns")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.decisionPatterns")}</h3>
-            <ul className="space-y-2">
-              {guide.decisionPatterns.map((pattern) => (
-                <li key={pattern} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                  <span>{pattern}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+        <section className="space-y-3">
+          <h3 {...headingProps("patterns")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.decisionPatterns")}</h3>
+          <ul className="space-y-2">
+            {guide.decisionPatterns.map((pattern) => (
+              <li key={pattern} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                <span>{pattern}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-          <section className="space-y-3">
-            <h3 {...headingProps("connections")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.connections")}</h3>
-            <ul className="space-y-2">
-              {guide.connections.map((connection) => (
-                <li key={connection} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
-                  <ArrowRight className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                  <span>{connection}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
+        <Disclosure variant="deepen" id={`guide_h_connections_${d}`} summary={<DeepenSummary title={t("study.connections")} />}>
+          <ul className="space-y-2">
+            {guide.connections.map((connection) => (
+              <li key={connection} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
+                <ArrowRight className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                <span>{connection}</span>
+              </li>
+            ))}
+          </ul>
+        </Disclosure>
 
         {guide.comparisons && guide.comparisons.length > 0 && (
-          <section className="space-y-3">
-            <h3 {...headingProps("comparisons")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.comparisons")}</h3>
+          <Disclosure variant="deepen" id={`guide_h_comparisons_${d}`} summary={<DeepenSummary title={t("study.comparisons")} />}>
             <div className="space-y-4">
               {guide.comparisons.map((comparison) => (
                 // A scrollable region must be reachable from the keyboard to scroll it.
@@ -330,7 +343,7 @@ export default function DomainGuidePanel({
                 </div>
               ))}
             </div>
-          </section>
+          </Disclosure>
         )}
 
         {guide.commonTraps && guide.commonTraps.length > 0 && (
@@ -355,8 +368,7 @@ export default function DomainGuidePanel({
         )}
 
         {has(guide.examVsPractice) && (
-          <section className="space-y-3">
-            <h3 {...headingProps("practice_gap")} className="focus:outline-none text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">{t("study.examVsPractice")}</h3>
+          <Disclosure variant="deepen" id={`guide_h_practice_gap_${d}`} summary={<DeepenSummary title={t("study.examVsPractice")} />}>
             <p className="text-xs text-slate-400 leading-relaxed">{t("study.examVsPracticeIntro")}</p>
             <ul className="space-y-4" id={`guide_exam_vs_practice_${d}`}>
               {guide.examVsPractice!.map((item) => (
@@ -369,7 +381,7 @@ export default function DomainGuidePanel({
                 </li>
               ))}
             </ul>
-          </section>
+          </Disclosure>
         )}
 
         <section className="bg-slate-950/70 border border-slate-700 rounded-lg p-4 space-y-3">
@@ -400,14 +412,10 @@ export default function DomainGuidePanel({
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">{scenario.prompt}</p>
                   {/* The reasoning stays folded so the learner commits to an answer first. */}
-                  <details className="group/answer border-t border-slate-800 pt-2">
-                    <summary className="cursor-pointer list-none inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-400 hover:text-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded">
-                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-open/answer:rotate-90" aria-hidden="true" />
-                      {t("study.showReasoning")}
-                    </summary>
-                    <p className="mt-2 text-xs text-slate-400 leading-relaxed">{scenario.reasoning}</p>
+                  <Disclosure variant="answer" summary={t("study.showReasoning")}>
+                    <p className="text-xs text-slate-400 leading-relaxed">{scenario.reasoning}</p>
                     {scenario.attackChain && <AttackChainList chain={scenario.attackChain} />}
-                  </details>
+                  </Disclosure>
                 </div>
               ))}
             </div>
