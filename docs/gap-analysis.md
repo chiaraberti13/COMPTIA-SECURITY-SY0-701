@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-73 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -22,85 +22,9 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 |---|---|---|
 | 1 | 88 | 0 |
 | 2 | 74 | 0 |
-| 3 | 174 | 73 |
+| 3 | 174 | 0 |
 | 4 | 132 | 0 |
 | 5 | 94 | 0 |
-
-### Dominio 3
-
-- On-premises (`3:OnPremisesArchitecture`)
-- Centralized (`3:CentralizedArchitecture`)
-- Decentralized (`3:DecentralizedArchitecture`)
-- Responsibility matrix (`3:ResponsibilityMatrixConcept`)
-- Monolithic (`3:MonolithicArchitecture`)
-- Hypervisor (`3:HypervisorConcept`)
-- Virtual Machine (VM) (`3:VirtualMachineConcept`)
-- Host OS (`3:HostOSConcept`)
-- Container (`3:ContainerConcept`)
-- Docker (`3:DockerConcept`)
-- Cost (`3:CostCloud`)
-- CAPEX (`3:CAPEXCloud`)
-- Layer 1 (`3:Layer1Physical`)
-- Layer 2 (`3:Layer2DataLink`)
-- Layer 3 (`3:Layer3Network`)
-- Layer 5 (`3:Layer5Session`)
-- Layer 7 (`3:Layer7Application`)
-- Proxy server (`3:ProxyServerConcept`)
-- IPS (`3:IPS_New`)
-- Passive mode (`3:PassiveMode_New`)
-- VPN gateway (`3:VPNGateway_New`)
-- VPN Concentrator (`3:VPNConcentratorConcept`)
-- SSL/TLS VPN (`3:SSLTLSTunnelVPNConcept`)
-- IPSec Tunnel vs. Transport Mode (`3:IPSecTunnelTransportModes`)
-- PSK (`3:PSKConcept`)
-- WEP (`3:WEPConcept`)
-- WPA (`3:WPAWirelessConcept`)
-- WPA2 (`3:WPA2Net`)
-- GCMP (`3:GCMPConcept`)
-- SAE (`3:SAEConcept`)
-- WPA3-Personal (`3:WPA3PersonalRes`)
-- WPA3-Enterprise (`3:WPA3EnterpriseRes`)
-- Logical Segmentation (`3:LogicalSegmentationConcept`)
-- VLAN (`3:VLANConcept`)
-- Layer 3 Switch (`3:Layer3SwitchConcept`)
-- Inter-VLAN Routing (`3:InterVLANRoutingConcept`)
-- Control Plane (`3:ControlPlaneConcept`)
-- Management Plane (`3:ManagementPlaneConcept`)
-- Responsiveness (`3:ResponsivenessPerformance`)
-- Advanced Proxy Types (Forward, Reverse, Open) (`3:ProxyTypesAdvancedConcept`)
-- Packet-filtering firewall (`3:PacketFilteringFirewall_New`)
-- Stateless (`3:StatelessFirewallConcept`)
-- DPI (`3:DPIFire`)
-- Ease of Recovery (`3:EaseOfRecoveryConcept`)
-- Corporate Image (`3:CorporateImageConcept`)
-- Restore (`3:RestoreAction`)
-- Backup Power (`3:BackupPowerConcept`)
-- Redundancy (`3:RedundancyConcept`)
-- Availability (`3:AvailabilityRes`)
-- Active/Active vs. Active/Passive (`3:ActiveActivePassiveRes`)
-- Failover & Failback (`3:FailoverFailbackRes`)
-- Shared Storage (`3:SharedStorageRes`)
-- Disaster Recovery Site (`3:DisasterRecoverySiteRes`)
-- Platform Diversity (`3:PlatformDiversityRes`)
-- Synchronization (`3:SynchronizationRes`)
-- Manual Procedures (`3:ManualProceduresRes`)
-- Capacity Planning (`3:CapacityPlanningRes`)
-- Recovery Testing (`3:RecoveryTestingRes`)
-- Parallel Processing (`3:ParallelProcessingRes`)
-- On-site Backup (`3:OnSiteBackupRes`)
-- Off-site Backup (`3:OffSiteBackupRes`)
-- Journaling (`3:JournalingRes`)
-- Power Resiliency (`3:PowerResiliencyRes`)
-- Offline UPS (`3:OfflineUPSRes`)
-- Line-interactive UPS (`3:LineInteractiveUPSRes`)
-- Online (Double Conversion) UPS (`3:OnlineUPSRes`)
-- Disaster Recovery (`3:DisasterRecoveryRes`)
-- Business Continuity (`3:BusinessContinuityRes`)
-- Generator (`3:GeneratorRes`)
-- Embedded System (`3:EmbeddedSystemConcept_New`)
-- RTOS (`3:RTOSConcept_New`)
-- SCADA (`3:SCADAConcept_New`)
-- ICS (`3:ICSConcept_New`)
 
 ## Cifre senza fonte
 
