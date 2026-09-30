@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-116 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+73 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -23,7 +23,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 | 1 | 88 | 0 |
 | 2 | 74 | 0 |
 | 3 | 174 | 73 |
-| 4 | 132 | 43 |
+| 4 | 132 | 0 |
 | 5 | 94 | 0 |
 
 ### Dominio 3
@@ -101,52 +101,6 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 - RTOS (`3:RTOSConcept_New`)
 - SCADA (`3:SCADAConcept_New`)
 - ICS (`3:ICSConcept_New`)
-
-### Dominio 4
-
-- Security Baseline (`4:SecurityBaselineRes`)
-- Patch Management (Hardening dei Sistemi) (`4:PatchManagementRes`)
-- Group Policy (`4:GroupPolicyRes`)
-- Benchmark (`4:BenchmarkRes`)
-- Antivirus (`4:AntivirusRes`)
-- Quarantine (`4:QuarantineRes`)
-- CYOD (`4:CYOD`)
-- Penetration Test (`4:PenetrationTest`)
-- CVSS (`4:CVSS`)
-- Patch Management Lifecycle (`4:PatchManagement`)
-- Passive (`4:PassiveTestingConcept`)
-- Vulnerability Assessment Lifecycle (Fasi) (`4:VulnerabilityAssessmentRes`)
-- SNMP (`4:SNMP`)
-- DNS Filtering (`4:DNSFilteringConcept`)
-- Web Filtering & Content Categorization (`4:WebFilteringConcept`)
-- File Integrity Monitoring (FIM) (`4:FileIntegrityMonitoringConcept`)
-- Security Monitoring (`4:SecurityMonitoringRes`)
-- Dashboard (`4:DashboardRes`)
-- Alert Tuning (`4:AlertTuningRes`)
-- Agent (`4:AgentRes`)
-- UDP 161 (SNMP Poll) (`4:SNMPPollRes`)
-- Trap (`4:TrapRes`)
-- Flow Records (`4:FlowRecordsRes`)
-- IDS Logs (`4:IDSLogs`)
-- IPS Logs (`4:IPSLogs`)
-- Network Logs (`4:NetworkLogs`)
-- OS-Specific Security Logs (`4:OSSecurityLogs`)
-- Metadata (`4:MetadataSource`)
-- Packet Captures (`4:PacketCaptureSource`)
-- Automated Reports (`4:AutomatedReports`)
-- Analysis (`4:AnalysisPhase`)
-- Eradication (`4:EradicationPhase`)
-- Lessons Learned (`4:LessonsLearnedPhase`)
-- Tabletop exercises (`4:TabletopExercisesConcept`)
-- Simulations (`4:SimulationsConcept`)
-- Functional exercises (`4:FunctionalExercisesConcept`)
-- Live drills (`4:LiveDrillsConcept`)
-- Chain of Custody (`4:ChainOfCustody`)
-- Acquisition (`4:AcquisitionForensics`)
-- Reporting (`4:ReportingForensics`)
-- Scripting (`4:ScriptingAutomation`)
-- Ease of Deployment (`4:EaseOfDeploymentConcept`)
-- Automation (`4:AutomationConcept`)
 
 ## Cifre senza fonte
 
