@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState, useCallback } from "react";
 import { loadEnglishOverlay, isEnglishOverlayReady } from "./localizedData";
 import { STORAGE_KEYS } from "./storage";
 
@@ -57,7 +57,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   }, [initialLang]);
 
-  useEffect(() => {
+  // A layout effect, not a passive one: the document language must change in
+  // the same commit as the text, before the browser paints, or a screen reader
+  // reads the first English frame with Italian pronunciation.
+  useLayoutEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch {
