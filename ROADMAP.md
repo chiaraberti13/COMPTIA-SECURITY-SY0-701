@@ -266,7 +266,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [ ] **P1 — Peer review tecnica** sui contenuti ad alto impatto: una revisione per accuratezza, una per chiarezza.
 - [x] **P1 — Etichettare la freschezza dei contenuti** (`reviewed`, `needs-review`, `deprecated`) con data e responsabile: per obiettivo in `src/contentReview.ts`, visibile nelle guide e nella matrice; processo di revisione in `CONTRIBUTING.md` — 2026-09-26.
 - [x] **P1 — Errata e storico correzioni:** `docs/errata.md` elenca per dominio gli errori sostanziali già corretti (cosa diceva, cosa dice ora, commit della correzione), ricostruiti dalla cronologia git; collegato dai README, con l'invito a segnalare nuovi errori tramite issue — 2026-09-26.
-- [ ] **P1 — Collegare attacchi, controlli e rilevazione:** per ogni scenario indicare vettore, impatto, mitigazione, evidenza e limite del controllo.
+- [x] **P1 — Collegare attacchi, controlli e rilevazione:** per ogni scenario indicare vettore, impatto, mitigazione, evidenza e limite del controllo. I 12 scenari d'attacco delle guide (domini 1–4) hanno la catena completa in italiano e inglese, mostrata dentro il ragionamento; `tests/domainGuides.test.ts` elenca gli scenari d'attacco e rifiuta una catena incompleta. Gli scenari di governance del dominio 5 non descrivono un attacco e restano senza.
 - [ ] **P2 — Mappare i contenuti a framework complementari:** NIST CSF 2.0, MITRE ATT&CK, CIS Controls v8 o NICE, senza sostituire gli obiettivi CompTIA.
 
 #### Laboratori pratici sicuri

@@ -224,6 +224,12 @@ const it = {
   "study.practiceScenarios": "Esercizi guidati",
   "study.objectiveTag": "Obiettivo {code}",
   "study.showReasoning": "Mostra il ragionamento",
+  "study.attackChain": "Attacco, controlli e rilevazione",
+  "study.chainVector": "Vettore",
+  "study.chainImpact": "Impatto",
+  "study.chainMitigation": "Mitigazione",
+  "study.chainEvidence": "Evidenza",
+  "study.chainLimit": "Limite del controllo",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",
@@ -649,6 +655,12 @@ const en: Record<UIKey, string> = {
   "study.practiceScenarios": "Guided practice",
   "study.objectiveTag": "Objective {code}",
   "study.showReasoning": "Show the reasoning",
+  "study.attackChain": "Attack, controls and detection",
+  "study.chainVector": "Vector",
+  "study.chainImpact": "Impact",
+  "study.chainMitigation": "Mitigation",
+  "study.chainEvidence": "Evidence",
+  "study.chainLimit": "Limit of the control",
 
   // Quiz start
   "quiz.title": "High-Stakes Exam Simulator",

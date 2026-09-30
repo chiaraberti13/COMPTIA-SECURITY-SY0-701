@@ -1,13 +1,38 @@
 import type { MouseEvent, ReactNode } from "react";
 import { Activity, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
 import { reviewSummary, sourcesOf, type Source } from "../contentReview";
-import type { DomainGuide } from "../domainGuides";
+import type { AttackChain, DomainGuide } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
 import Callout from "./Callout";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
+
+/** The attack in a scenario, read from the defender's side: five labelled steps. */
+function AttackChainList({ chain }: { chain: AttackChain }) {
+  const { t } = useLang();
+  const steps = [
+    ["study.chainVector", chain.vector],
+    ["study.chainImpact", chain.impact],
+    ["study.chainMitigation", chain.mitigation],
+    ["study.chainEvidence", chain.evidence],
+    ["study.chainLimit", chain.limit],
+  ] as const;
+  return (
+    <div className="mt-3 space-y-1.5">
+      <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{t("study.attackChain")}</div>
+      <dl className="grid sm:grid-cols-[10rem_1fr] gap-x-3 gap-y-1.5 text-xs leading-relaxed">
+        {steps.map(([label, text]) => (
+          <div key={label} className="contents">
+            <dt className="font-bold text-slate-300">{t(label)}</dt>
+            <dd className="text-slate-400">{text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
 
 /** A link that leaves the app: new tab, no referrer, said aloud to screen readers. */
 function ExternalAnchor({ href, children }: { href: string; children: ReactNode }) {
@@ -358,6 +383,7 @@ export default function DomainGuidePanel({
           <div className="space-y-1 border-t border-slate-800 pt-3">
             <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">{t("study.scenarioReasoning")}</div>
             <p className="text-xs text-slate-400 leading-relaxed">{guide.appliedScenario.reasoning}</p>
+            {guide.appliedScenario.attackChain && <AttackChainList chain={guide.appliedScenario.attackChain} />}
           </div>
         </section>
 
@@ -379,6 +405,7 @@ export default function DomainGuidePanel({
                       {t("study.showReasoning")}
                     </summary>
                     <p className="mt-2 text-xs text-slate-400 leading-relaxed">{scenario.reasoning}</p>
+                    {scenario.attackChain && <AttackChainList chain={scenario.attackChain} />}
                   </details>
                 </div>
               ))}

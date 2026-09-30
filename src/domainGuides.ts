@@ -1,9 +1,24 @@
 import type { Lang } from "./i18n";
 
+/**
+ * How an attack scenario connects to defense: the way in, the damage, the
+ * controls that stop it, the evidence that shows it, and what those controls
+ * cannot do.
+ */
+export interface AttackChain {
+  vector: string;
+  impact: string;
+  mitigation: string;
+  evidence: string;
+  limit: string;
+}
+
 export interface GuideScenario {
   title: string;
   prompt: string;
   reasoning: string;
+  /** Present on scenarios that describe an attack. */
+  attackChain?: AttackChain;
 }
 
 /** A compact comparison table; every row has one cell per header. */
@@ -191,6 +206,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "Pacchetto di configurazione alterato",
       prompt: "Un team distribuisce configurazioni firmate agli appliance. L'hash del file ricevuto non coincide e la firma non è valida. Quale problema è dimostrato e qual è la FIRST action sicura?",
       reasoning: "Integrità e autenticità non sono dimostrate: il pacchetto non va applicato. Blocca la distribuzione, preserva file e log, verifica certificato/catena e provenienza, quindi riparti dall'artefatto approvato tramite il processo di change management. Cifrare il file non correggerebbe una firma non valida.",
+      attackChain: {
+        vector: "Manomissione del pacchetto lungo la catena di distribuzione o nel repository degli artefatti.",
+        impact: "Configurazione malevola sugli appliance: backdoor, regole disattivate, perdita di integrità dell'intera flotta.",
+        mitigation: "Verifica obbligatoria di firma e hash prima dell'applicazione, chiavi di firma protette in un HSM, distribuzione solo tramite change management.",
+        evidence: "Hash non corrispondente, errore di verifica della firma, log del sistema di distribuzione e del repository.",
+        limit: "La firma prova solo che il pacchetto viene da chi possiede la chiave: se la chiave o la pipeline di build sono compromesse, un pacchetto malevolo risulta valido.",
+      },
     },
     practiceScenarios: [
       {
@@ -210,6 +232,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Chiave cloud esca nel repository",
         prompt: "Il team inserisce in un repository interno una chiave di accesso cloud finta, senza permessi reali, e configura un allarme se qualcuno prova a usarla. Tre mesi dopo l'allarme scatta da un indirizzo esterno. Che tecnologia è stata usata e che cosa dimostra l'allarme?",
         reasoning: "È un honeytoken, una tecnica di deception. Nessun utente legittimo ha motivo di usarlo, quindi l'allarme è un indicatore ad alta affidabilità che il contenuto del repository è stato esposto o copiato. La risposta corretta è avviare l'incident response sul repository e sulle credenziali reali, non limitarsi a eliminare il token.",
+        attackChain: {
+          vector: "Esposizione o copia del repository interno: credenziali rubate, repository reso pubblico, insider.",
+          impact: "Chi ha la copia può cercarvi segreti reali, codice e informazioni sull'infrastruttura.",
+          mitigation: "Rotazione dei segreti reali presenti nel repository, revisione degli accessi, secret scanning, repository privati con MFA.",
+          evidence: "Alert del honeytoken con indirizzo di origine e orario, log di accesso e di clonazione del repository.",
+          limit: "Il honeytoken rileva solo chi prova a usarlo: non impedisce l'esposizione, non dice quando è avvenuta e un attaccante prudente può ignorarlo.",
+        },
       },
       {
         objective: "1.3",
@@ -413,6 +442,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "Compromissione cloud con persistenza",
       prompt: "Dopo un login anomalo, un account crea una regola di inoltro email e autorizza un'app OAuth. Quali elementi correlare e quali controlli interrompono davvero l'attacco?",
       reasoning: "Correla sign-in, MFA, audit della mailbox, consenso OAuth, IP/device e timeline. Contieni revocando sessioni e token, disabilitando o limitando l'account e rimuovendo regola e app malevola; poi correggi la causa con credenziali, policy di consenso, MFA resistente al phishing e monitoring. Il solo reset password può lasciare validi token e persistenza.",
+      attackChain: {
+        vector: "Credenziali o sessione rubate, per esempio con phishing o furto di token, seguite dal consenso a un'app OAuth malevola.",
+        impact: "Esfiltrazione continua della posta tramite la regola di inoltro e accesso persistente tramite l'app, anche dopo il cambio della password.",
+        mitigation: "Revoca di sessioni e token, rimozione di regola e app, MFA resistente al phishing, policy che limita il consenso alle app, blocco dell'inoltro esterno.",
+        evidence: "Log di accesso e MFA, audit della mailbox con la creazione della regola, log di consenso OAuth, IP e dispositivo.",
+        limit: "La MFA protegge l'accesso con password, ma non un token di sessione già rubato né un consenso concesso dall'utente stesso.",
+      },
     },
     practiceScenarios: [
       {
@@ -432,24 +468,52 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Controllo e uso non atomici",
         prompt: "Un servizio verifica che un file temporaneo appartenga all'utente e, qualche millisecondo dopo, lo apre con privilegi elevati. Un attaccante sostituisce il file con un collegamento a un file di sistema tra le due operazioni. Quale vulnerabilità viene sfruttata?",
         reasoning: "È una race condition di tipo time-of-check to time-of-use (TOCTOU): lo stato verificato cambia prima dell'uso. La correzione è rendere l'operazione atomica, per esempio aprendo il file una sola volta e verificando i permessi sul descrittore già aperto, ed eseguire il servizio con i privilegi minimi necessari.",
+        attackChain: {
+          vector: "Sostituzione del file con un link tra il controllo e l'uso: una race condition.",
+          impact: "Il servizio con privilegi elevati legge o scrive un file di sistema: privilege escalation.",
+          mitigation: "Operazione atomica (aprire una volta e controllare il descrittore già aperto), rifiuto dei link simbolici, directory temporanee private, privilegi minimi.",
+          evidence: "Log di audit del file system con la creazione del link e l'accesso al file di sistema, log del servizio, modifiche ai file di sistema.",
+          limit: "I privilegi minimi riducono il danno ma non chiudono la race, che solo l'operazione atomica elimina; l'attacco dura millisecondi e lascia poche tracce.",
+        },
       },
       {
         objective: "2.4",
         title: "Un tentativo per account",
         prompt: "In venti minuti il sistema di autenticazione registra un solo login fallito per ciascuno di 900 account diversi, tutti dalla stessa rete esterna e con la stessa password stagionale. Nessun account viene bloccato, uno riesce ad accedere. Quale attacco è in corso e quale indicatore lo rivela?",
         reasoning: "È password spraying: poche password comuni su molti account per restare sotto la soglia di blocco. L'indicatore non è l'account lockout, ma la distribuzione dei tentativi falliti per origine e password. La risposta è bloccare l'origine, reimpostare le credenziali dell'account compromesso revocandone le sessioni, imporre MFA e vietare le password comuni.",
+        attackChain: {
+          vector: "Password spraying: poche password comuni provate su molti account dalla stessa rete esterna.",
+          impact: "Accesso con l'account compromesso e movimento successivo con i suoi permessi.",
+          mitigation: "MFA, divieto di password comuni o stagionali, blocco dell'origine, revoca delle sessioni e reset delle credenziali dell'account compromesso.",
+          evidence: "Log di autenticazione aggregati per origine: un tentativo fallito per account, molti account, stessa rete, un accesso riuscito.",
+          limit: "Il blocco dell'account dopo N tentativi non scatta, perché ogni account riceve un solo tentativo; il blocco dell'origine si aggira cambiando rete.",
+        },
       },
       {
         objective: "2.4",
         title: "Un'ora mancante nei log",
         prompt: "Durante un'indagine su un server, il registro locale non contiene eventi tra le 02:00 e le 03:00, mentre il SIEM ha ricevuto da quel server un'ondata di eventi di amministrazione subito prima del vuoto. Che cosa suggeriscono questi indicatori e come procedi?",
         reasoning: "Missing logs dopo attività amministrativa fuori orario suggeriscono che qualcuno ha cancellato le tracce. Preserva l'immagine del server e i log centrali, che fanno fede perché inoltrati prima della cancellazione, ricostruisci la timeline dal SIEM e verifica quali account amministrativi erano attivi. Il vuoto nei log è esso stesso un'evidenza.",
+        attackChain: {
+          vector: "Accesso amministrativo al server con un account privilegiato compromesso o abusato, seguito dalla cancellazione dei log locali.",
+          impact: "Attività non tracciata sul server e indagine ostacolata: una tecnica di anti-forensics.",
+          mitigation: "Inoltro in tempo reale dei log a un SIEM, log centrali immutabili, PAM con sessioni registrate, alert sulla cancellazione dei log.",
+          evidence: "Buco nel log locale, eventi amministrativi nel SIEM prima del buco, eventi di cancellazione dei log se inoltrati, immagine del server.",
+          limit: "Il SIEM conserva solo ciò che è stato inoltrato prima della cancellazione: quello che l'attaccante ha fatto dopo aver fermato l'agente di inoltro non c'è.",
+        },
       },
       {
         objective: "2.5",
         title: "Chiosco in un'area pubblica",
         prompt: "Un chiosco informativo per il pubblico usa un sistema operativo generico con credenziali di default, porte USB accessibili, software di prova preinstallato e servizi di rete non necessari. Quale insieme di misure di hardening è il più appropriato?",
         reasoning: "Cambiare le credenziali di default, disabilitare le porte e i protocolli non necessari compresi USB e servizi di rete, rimuovere il software superfluo, applicare un application allow list che consenta solo l'app del chiosco, attivare firewall host-based e protezione endpoint e isolare il chiosco in un segmento dedicato. Ogni misura elimina un vettore specifico dello scenario.",
+        attackChain: {
+          vector: "Accesso fisico e locale: credenziali predefinite, porte USB, software e servizi di rete superflui.",
+          impact: "Controllo del chiosco, installazione di malware e punto d'appoggio verso la rete interna.",
+          mitigation: "Credenziali cambiate, USB e servizi disattivati, allow list delle applicazioni, firewall host, protezione endpoint, segmento di rete dedicato.",
+          evidence: "Log di accesso locale, eventi di collegamento USB, applicazioni bloccate dall'allow list, traffico anomalo dal segmento del chiosco.",
+          limit: "L'hardening non protegge dalla manomissione fisica dell'hardware, come aprire il case o collegare un dispositivo interno: servono anche controlli fisici e sorveglianza.",
+        },
       },
     ],
     readinessChecks: [
@@ -656,6 +720,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Ransomware sul database replicato",
         prompt: "Un ransomware cifra il database principale. La replica sincrona nel secondo data center risulta cifrata anch'essa pochi secondi dopo. Che cosa è mancato nell'architettura di resilienza e come si ripristina?",
         reasoning: "La replication garantisce disponibilità, ma copia immediatamente anche la cifratura. È mancata una copia con versioni e isolata: snapshot immutabili, backup offline o offsite, o journaling che consenta di tornare a un istante precedente all'attacco. Il ripristino parte dall'ultimo punto integro verificato, dopo aver eliminato la causa dell'infezione.",
+        attackChain: {
+          vector: "Ransomware che cifra il database primario; la replica sincrona propaga la cifratura.",
+          impact: "Dati indisponibili in entrambi i data center: la ridondanza non offre alcun punto di ripristino.",
+          mitigation: "Snapshot immutabili, backup offline o offsite, journaling con ripristino a un istante precedente, rimozione della causa prima del ripristino.",
+          evidence: "Alert dell'EDR sul processo di cifratura, picco di scritture sul database, nota di riscatto, log di replica con l'orario di propagazione.",
+          limit: "La replica protegge dalla perdita di un sito, non dalla corruzione logica: copia fedelmente anche la cifratura, in pochi secondi.",
+        },
       },
     ],
     readinessChecks: [
@@ -890,6 +961,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "PowerShell e beacon DNS",
       prompt: "EDR segnala PowerShell offuscato su una workstation e il SIEM mostra query DNS periodiche verso un dominio appena registrato. Qual è la sequenza operativa corretta?",
       reasoning: "Valida e correla processo, utente, parent process, DNS, proxy e autenticazioni; se l'attività è confermata, isola l'host preservando le evidenze richieste. Determina lo scope su altri endpoint, eradica persistenza e causa iniziale, ripristina da stato fidato e monitora recidive. Cancellare subito il file può distruggere evidenza e non interrompere credenziali o persistenza altrove.",
+      attackChain: {
+        vector: "PowerShell offuscato eseguito sulla postazione, tipicamente dopo un phishing, con un canale di comando e controllo via DNS.",
+        impact: "Controllo remoto della postazione, furto di credenziali e movimento laterale.",
+        mitigation: "Isolamento dell'host, eradicazione della persistenza, reset delle credenziali esposte, logging degli script block di PowerShell e constrained language mode, filtro DNS sui domini appena registrati.",
+        evidence: "Alert dell'EDR con processo padre e utente, query DNS periodiche nel SIEM, log del proxy e di autenticazione.",
+        limit: "Il filtro DNS blocca il dominio noto, ma l'attaccante ne registra un altro; l'EDR vede il processo sull'host, non le credenziali già usate altrove.",
+      },
     },
     practiceScenarios: [
       {
@@ -921,6 +999,13 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Email false a nome dell'azienda",
         prompt: "I clienti ricevono email di phishing che sembrano inviate dal dominio aziendale. Il dominio pubblica un record SPF ma non usa DKIM e non ha una policy DMARC. Che cosa va configurato?",
         reasoning: "Firmare la posta in uscita con DKIM e pubblicare un record DMARC, partendo da p=none per raccogliere i report e arrivando a quarantine o reject quando tutti i flussi legittimi risultano allineati. DMARC dice ai server riceventi che cosa fare dei messaggi che falliscono SPF e DKIM, e i report mostrano chi sta usando il dominio.",
+        attackChain: {
+          vector: "Spoofing del dominio aziendale nel mittente delle email di phishing.",
+          impact: "Clienti ingannati, con furto di credenziali o pagamenti, e danno alla reputazione del marchio.",
+          mitigation: "Firma DKIM, record DMARC portato da p=none a quarantine o reject, allineamento di tutti i flussi legittimi.",
+          evidence: "Rapporti aggregati DMARC e intestazioni delle email segnalate dai clienti, con i risultati di SPF, DKIM e DMARC.",
+          limit: "DMARC protegge solo il dominio esatto: non ferma domini simili (typosquatting) né un nome visualizzato falso con un altro indirizzo.",
+        },
       },
       {
         objective: "4.6",
@@ -939,12 +1024,26 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Indagine su un insider",
         prompt: "L'ufficio legale sospetta che un dirigente stia copiando progetti riservati prima di passare a un concorrente, e prevede una causa. Quali attività di digital forensics vanno avviate per prime?",
         reasoning: "Attivare un legal hold su mailbox, file e log rilevanti, così che la retention ordinaria non li cancelli; acquisire le evidenze con metodi forensi, calcolando gli hash e lavorando su copie; documentare la catena di custodia fin dalla prima acquisizione. L'indagine va coordinata con legale e HR, senza allertare il dirigente prima della preservazione.",
+        attackChain: {
+          vector: "Un insider con accesso legittimo copia progetti riservati tramite email personale, cloud o supporti rimovibili.",
+          impact: "Perdita di proprietà intellettuale a favore di un concorrente, con probabile contenzioso.",
+          mitigation: "Legal hold, DLP sui canali di uscita, privilegi minimi sui progetti, revoca degli accessi alla cessazione del rapporto.",
+          evidence: "Log di accesso ai file, alert DLP, log di email e proxy, eventi USB, copie forensi con hash e catena di custodia.",
+          limit: "L'accesso è autorizzato, quindi i controlli di accesso non scattano; la DLP non vede ciò che viene fotografato o copiato su canali che non ispeziona.",
+        },
       },
       {
         objective: "4.9",
         title: "Quanto è uscito, e che cosa",
         prompt: "Un server di file ha inviato 12 GB verso un indirizzo estero durante la notte. Il team vuole sapere subito l'entità del trasferimento e poi, se possibile, che cosa contenesse. Quali fonti dati usare?",
         reasoning: "Per volume, orari, indirizzi e porte bastano NetFlow e i log del firewall, disponibili subito e leggeri da analizzare. Per il contenuto serve una packet capture, utile solo se il traffico era già registrato e non cifrato; altrimenti si ricorre ai log dell'endpoint e ai metadata dei file letti in quell'intervallo.",
+        attackChain: {
+          vector: "Esfiltrazione notturna dal file server verso un indirizzo estero.",
+          impact: "Violazione della riservatezza, con possibili obblighi di notifica secondo la natura dei dati.",
+          mitigation: "Filtro del traffico in uscita (egress filtering), DLP, alert sui volumi anomali, segmentazione del file server.",
+          evidence: "NetFlow e log del firewall per volume, orari e destinazioni; PCAP per il contenuto, se disponibile; log dell'endpoint e metadati dei file letti.",
+          limit: "NetFlow mostra quanto e verso dove, non che cosa: con traffico cifrato nemmeno il PCAP rivela il contenuto.",
+        },
       },
     ],
     readinessChecks: [
@@ -1348,6 +1447,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "Altered configuration package",
       prompt: "A team distributes signed configurations to appliances. The received file's hash does not match and its signature is invalid. What problem is demonstrated, and what is the safe FIRST action?",
       reasoning: "Integrity and authenticity have not been established, so the package must not be applied. Stop distribution, preserve the file and logs, verify the certificate, chain, and origin, then restart from the approved artifact through change management. Encrypting the file would not correct an invalid signature.",
+      attackChain: {
+        vector: "Tampering with the package in the distribution chain or in the artifact repository.",
+        impact: "Malicious configuration on the appliances: backdoors, disabled rules, loss of integrity across the fleet.",
+        mitigation: "Mandatory signature and hash verification before applying, signing keys protected in an HSM, distribution only through change management.",
+        evidence: "Mismatched hash, signature verification failure, distribution system and repository logs.",
+        limit: "A signature proves only that the package comes from whoever holds the key: if the key or the build pipeline is compromised, a malicious package verifies as valid.",
+      },
     },
     practiceScenarios: [
       {
@@ -1367,6 +1473,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Decoy cloud key in the repository",
         prompt: "The team places a fake cloud access key with no real permissions in an internal repository and configures an alert if anyone tries to use it. Three months later the alert fires from an external address. What technology was used, and what does the alert prove?",
         reasoning: "It is a honeytoken, a deception technique. No legitimate user has any reason to use it, so the alert is a high-confidence indicator that the repository content has been exposed or copied. The correct response is to start incident response on the repository and the real credentials, not just to delete the token.",
+        attackChain: {
+          vector: "Exposure or copying of the internal repository: stolen credentials, a repository made public, an insider.",
+          impact: "Whoever holds the copy can search it for real secrets, code and infrastructure details.",
+          mitigation: "Rotate the real secrets found in the repository, review access, secret scanning, private repositories with MFA.",
+          evidence: "Honeytoken alert with source address and time, repository access and clone logs.",
+          limit: "The honeytoken detects only someone who tries to use it: it does not prevent the exposure, does not say when it happened, and a careful attacker may ignore it.",
+        },
       },
       {
         objective: "1.3",
@@ -1570,6 +1683,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "Cloud compromise with persistence",
       prompt: "After an anomalous sign-in, an account creates an email forwarding rule and authorizes an OAuth app. Which evidence should be correlated, and which controls actually interrupt the attack?",
       reasoning: "Correlate sign-in and MFA events, mailbox audit, OAuth consent, IP/device, and timeline. Contain by revoking sessions and tokens, disabling or restricting the account, and removing the malicious rule and app; then correct the cause with credential action, consent policy, phishing-resistant MFA, and monitoring. A password reset alone may leave tokens and persistence valid.",
+      attackChain: {
+        vector: "Stolen credentials or session, for example through phishing or token theft, followed by consent to a malicious OAuth app.",
+        impact: "Ongoing mail exfiltration through the forwarding rule and persistent access through the app, even after a password change.",
+        mitigation: "Revoke sessions and tokens, remove the rule and the app, phishing-resistant MFA, a policy restricting app consent, block external forwarding.",
+        evidence: "Sign-in and MFA logs, the mailbox audit showing the rule creation, OAuth consent logs, IP and device.",
+        limit: "MFA protects sign-in with a password, but not a session token already stolen or a consent granted by the user themselves.",
+      },
     },
     practiceScenarios: [
       {
@@ -1589,24 +1709,52 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Non-atomic check and use",
         prompt: "A service checks that a temporary file belongs to the user and, a few milliseconds later, opens it with elevated privileges. Between the two operations an attacker replaces the file with a link to a system file. Which vulnerability is being exploited?",
         reasoning: "It is a time-of-check to time-of-use (TOCTOU) race condition: the verified state changes before use. The fix is to make the operation atomic, for example opening the file once and checking permissions on the already open descriptor, and to run the service with the minimum privileges required.",
+        attackChain: {
+          vector: "Replacing the file with a link between the check and the use: a race condition.",
+          impact: "The privileged service reads or writes a system file: privilege escalation.",
+          mitigation: "An atomic operation (open once and check the already open descriptor), refusing symbolic links, private temporary directories, least privilege.",
+          evidence: "File system audit logs showing the link creation and the access to the system file, service logs, changes to system files.",
+          limit: "Least privilege reduces the damage but does not close the race, which only the atomic operation removes; the attack lasts milliseconds and leaves few traces.",
+        },
       },
       {
         objective: "2.4",
         title: "One attempt per account",
         prompt: "Within twenty minutes the authentication system records a single failed sign-in for each of 900 different accounts, all from the same external network and with the same seasonal password. No account is locked out, and one succeeds. Which attack is under way, and which indicator reveals it?",
         reasoning: "It is password spraying: a few common passwords against many accounts to stay below the lockout threshold. The indicator is not account lockout but the distribution of failed attempts by origin and password. The response is to block the origin, reset the compromised account's credentials while revoking its sessions, enforce MFA, and ban common passwords.",
+        attackChain: {
+          vector: "Password spraying: a few common passwords tried against many accounts from the same external network.",
+          impact: "Access with the compromised account and further movement with its permissions.",
+          mitigation: "MFA, a ban on common or seasonal passwords, blocking the origin, revoking sessions and resetting the compromised account's credentials.",
+          evidence: "Authentication logs aggregated by origin: one failed attempt per account, many accounts, the same network, one successful sign-in.",
+          limit: "Account lockout after N attempts never triggers, because each account gets one attempt; blocking the origin is bypassed by changing network.",
+        },
       },
       {
         objective: "2.4",
         title: "A missing hour in the logs",
         prompt: "During an investigation of a server, the local log has no events between 02:00 and 03:00, while the SIEM received a burst of administrative events from that server just before the gap. What do these indicators suggest, and how do you proceed?",
         reasoning: "Missing logs after out-of-hours administrative activity suggest someone deleted their tracks. Preserve the server image and the central logs, which are authoritative because they were forwarded before the deletion, rebuild the timeline from the SIEM, and check which administrative accounts were active. The gap in the logs is itself evidence.",
+        attackChain: {
+          vector: "Administrative access to the server with a compromised or abused privileged account, followed by deletion of the local logs.",
+          impact: "Untracked activity on the server and a hindered investigation: an anti-forensics technique.",
+          mitigation: "Real-time log forwarding to a SIEM, immutable central logs, PAM with recorded sessions, alerts on log clearing.",
+          evidence: "The gap in the local log, administrative events in the SIEM before the gap, log-clearing events if forwarded, the server image.",
+          limit: "The SIEM holds only what was forwarded before the deletion: whatever the attacker did after stopping the forwarding agent is missing.",
+        },
       },
       {
         objective: "2.5",
         title: "Kiosk in a public area",
         prompt: "A public information kiosk runs a general-purpose operating system with default credentials, accessible USB ports, preinstalled trial software, and unnecessary network services. Which set of hardening measures is most appropriate?",
         reasoning: "Change the default credentials, disable unneeded ports and protocols including USB and network services, remove unnecessary software, apply an application allow list that permits only the kiosk app, enable a host-based firewall and endpoint protection, and isolate the kiosk in a dedicated segment. Each measure removes a specific vector from the scenario.",
+        attackChain: {
+          vector: "Physical and local access: default credentials, USB ports, unnecessary software and network services.",
+          impact: "Control of the kiosk, malware installation and a foothold toward the internal network.",
+          mitigation: "Changed credentials, USB and services disabled, an application allow list, a host firewall, endpoint protection, a dedicated network segment.",
+          evidence: "Local sign-in logs, USB connection events, applications blocked by the allow list, unusual traffic from the kiosk segment.",
+          limit: "Hardening does not protect against physical tampering with the hardware, such as opening the case or attaching an internal device: physical controls and surveillance are needed too.",
+        },
       },
     ],
     readinessChecks: [
@@ -1813,6 +1961,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Ransomware on the replicated database",
         prompt: "Ransomware encrypts the primary database. The synchronous replica in the second data center turns out to be encrypted as well a few seconds later. What was missing from the resilience architecture, and how is it restored?",
         reasoning: "Replication guarantees availability, but it immediately copies the encryption too. A versioned, isolated copy was missing: immutable snapshots, offline or offsite backups, or journaling that allows returning to an instant before the attack. Restoration starts from the last verified clean point, after removing the cause of the infection.",
+        attackChain: {
+          vector: "Ransomware that encrypts the primary database; synchronous replication propagates the encryption.",
+          impact: "Data unavailable in both data centers: the redundancy offers no restore point.",
+          mitigation: "Immutable snapshots, offline or offsite backups, journaling with point-in-time restore, removing the cause before restoring.",
+          evidence: "An EDR alert on the encryption process, a spike of writes on the database, the ransom note, replication logs with the propagation time.",
+          limit: "Replication protects against the loss of a site, not against logical corruption: it faithfully copies the encryption too, within seconds.",
+        },
       },
     ],
     readinessChecks: [
@@ -2047,6 +2202,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       title: "PowerShell and DNS beaconing",
       prompt: "EDR flags obfuscated PowerShell on a workstation, and the SIEM shows periodic DNS queries to a newly registered domain. What is the correct operational sequence?",
       reasoning: "Validate and correlate the process, user, parent process, DNS, proxy, and authentication data; if confirmed, isolate the host while preserving required evidence. Scope other endpoints, eradicate persistence and the initial cause, restore from trusted state, and monitor for recurrence. Immediately deleting the file can destroy evidence and may not interrupt stolen credentials or persistence elsewhere.",
+      attackChain: {
+        vector: "Obfuscated PowerShell running on the workstation, typically after phishing, with a command-and-control channel over DNS.",
+        impact: "Remote control of the workstation, credential theft and lateral movement.",
+        mitigation: "Host isolation, eradicating persistence, resetting exposed credentials, PowerShell script block logging and constrained language mode, DNS filtering of newly registered domains.",
+        evidence: "An EDR alert with parent process and user, periodic DNS queries in the SIEM, proxy and authentication logs.",
+        limit: "DNS filtering blocks the known domain, but the attacker registers another; EDR sees the process on the host, not credentials already used elsewhere.",
+      },
     },
     practiceScenarios: [
       {
@@ -2078,6 +2240,13 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Fake email in the company's name",
         prompt: "Customers receive phishing emails that appear to come from the company domain. The domain publishes an SPF record but does not use DKIM and has no DMARC policy. What must be configured?",
         reasoning: "Sign outgoing mail with DKIM and publish a DMARC record, starting with p=none to collect reports and moving to quarantine or reject once all legitimate flows are aligned. DMARC tells receiving servers what to do with messages that fail SPF and DKIM, and the reports show who is using the domain.",
+        attackChain: {
+          vector: "Spoofing the company domain in the sender of phishing emails.",
+          impact: "Deceived customers, with stolen credentials or payments, and damage to the brand's reputation.",
+          mitigation: "DKIM signing, a DMARC record moved from p=none to quarantine or reject, alignment of all legitimate flows.",
+          evidence: "DMARC aggregate reports and the headers of the emails reported by customers, with the SPF, DKIM and DMARC results.",
+          limit: "DMARC protects only the exact domain: it does not stop lookalike domains (typosquatting) or a fake display name with a different address.",
+        },
       },
       {
         objective: "4.6",
@@ -2096,12 +2265,26 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Insider investigation",
         prompt: "The legal department suspects an executive is copying confidential designs before joining a competitor, and expects litigation. Which digital forensics activities must start first?",
         reasoning: "Place a legal hold on the relevant mailboxes, files, and logs so that routine retention does not delete them; acquire evidence with forensic methods, computing hashes and working on copies; document chain of custody from the first acquisition. The investigation must be coordinated with legal and HR, without alerting the executive before preservation.",
+        attackChain: {
+          vector: "An insider with legitimate access copies confidential designs through personal email, cloud storage or removable media.",
+          impact: "Loss of intellectual property to a competitor, with likely litigation.",
+          mitigation: "Legal hold, DLP on exit channels, least privilege on the designs, revoking access when employment ends.",
+          evidence: "File access logs, DLP alerts, email and proxy logs, USB events, forensic copies with hashes and chain of custody.",
+          limit: "The access is authorized, so access controls do not trigger; DLP does not see what is photographed or copied over channels it does not inspect.",
+        },
       },
       {
         objective: "4.9",
         title: "How much left, and what",
         prompt: "A file server sent 12 GB to a foreign address overnight. The team wants to know the size of the transfer immediately and then, if possible, what it contained. Which data sources should be used?",
         reasoning: "For volume, times, addresses, and ports, NetFlow and firewall logs are enough, available immediately and light to analyze. The content requires a packet capture, useful only if the traffic was already being recorded and was not encrypted; otherwise rely on endpoint logs and the metadata of files read in that window.",
+        attackChain: {
+          vector: "Overnight exfiltration from the file server to a foreign address.",
+          impact: "A confidentiality breach, with possible notification duties depending on the nature of the data.",
+          mitigation: "Egress filtering, DLP, alerts on anomalous volumes, file server segmentation.",
+          evidence: "NetFlow and firewall logs for volume, times and destinations; PCAP for content, if available; endpoint logs and metadata of the files read.",
+          limit: "NetFlow shows how much and where, not what: with encrypted traffic even a PCAP does not reveal the content.",
+        },
       },
     ],
     readinessChecks: [

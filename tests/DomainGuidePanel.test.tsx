@@ -79,6 +79,27 @@ describe("DomainGuidePanel", () => {
     expect(within(first).getByText(guide.practiceScenarios![0].reasoning)).toBeTruthy();
   });
 
+  it("shows the attack chain of an exercise inside its folded reasoning, each step labelled", () => {
+    const panel = renderGuide(guide);
+    const scenario = guide.practiceScenarios!.find((s) => s.attackChain)!;
+    const exercise = Array.from(panel.querySelectorAll<HTMLDetailsElement>("details details")).find((d) =>
+      d.textContent?.includes(scenario.attackChain!.limit)
+    )!;
+    expect(exercise.open).toBe(false);
+    fireEvent.click(within(exercise).getByText("Mostra il ragionamento"));
+    expect(within(exercise).getByText("Attacco, controlli e rilevazione")).toBeTruthy();
+    const labels = Array.from(exercise.querySelectorAll("dt")).map((dt) => dt.textContent);
+    expect(labels).toEqual(["Vettore", "Impatto", "Mitigazione", "Evidenza", "Limite del controllo"]);
+    const values = Array.from(exercise.querySelectorAll("dd")).map((dd) => dd.textContent);
+    const { vector, impact, mitigation, evidence, limit } = scenario.attackChain!;
+    expect(values).toEqual([vector, impact, mitigation, evidence, limit]);
+  });
+
+  it("shows the attack chain of the applied scenario after its reasoning", () => {
+    renderGuide(guide);
+    expect(screen.getByText(guide.appliedScenario.attackChain!.mitigation)).toBeTruthy();
+  });
+
   it("omits the optional sections when a guide does not provide them", () => {
     const minimal: DomainGuide = {
       ...guide,

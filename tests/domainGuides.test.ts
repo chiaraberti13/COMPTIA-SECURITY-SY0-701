@@ -298,3 +298,51 @@ describe("domain guide optional sections", () => {
     expect(missing).toEqual([]);
   });
 });
+
+/**
+ * Scenarios that describe an attack, by Italian title. Each links the attack to
+ * defense: vector, impact, mitigation, evidence and the limit of the control.
+ */
+const ATTACK_SCENARIOS = [
+  "Pacchetto di configurazione alterato",
+  "Chiave cloud esca nel repository",
+  "Compromissione cloud con persistenza",
+  "Controllo e uso non atomici",
+  "Un tentativo per account",
+  "Un'ora mancante nei log",
+  "Chiosco in un'area pubblica",
+  "Ransomware sul database replicato",
+  "PowerShell e beacon DNS",
+  "Email false a nome dell'azienda",
+  "Indagine su un insider",
+  "Quanto è uscito, e che cosa",
+];
+
+describe("attack chains in the guide scenarios", () => {
+  const scenarios = (guides: Record<number, DomainGuide>) =>
+    DOMAIN_IDS.flatMap((d) => [guides[d].appliedScenario, ...(guides[d].practiceScenarios ?? [])]);
+
+  it("are present on exactly the listed attack scenarios", () => {
+    const withChain = scenarios(DOMAIN_GUIDES_IT).filter((s) => s.attackChain).map((s) => s.title);
+    expect(withChain.sort()).toEqual([...ATTACK_SCENARIOS].sort());
+  });
+
+  it("fill every step with a full sentence, in both languages", () => {
+    const thin: string[] = [];
+    for (const [lang, guides] of [["it", DOMAIN_GUIDES_IT], ["en", DOMAIN_GUIDES_EN]] as const) {
+      for (const s of scenarios(guides)) {
+        for (const [step, text] of Object.entries(s.attackChain ?? {})) {
+          if (text.trim().length < 50 || !/[.!?]$/.test(text.trim())) thin.push(`${lang} "${s.title}" ${step}`);
+        }
+      }
+    }
+    expect(thin).toEqual([]);
+  });
+
+  it("cover every domain that trains attacks and responses", () => {
+    for (const d of [1, 2, 3, 4] as const) {
+      const guide = DOMAIN_GUIDES_IT[d];
+      expect([guide.appliedScenario, ...(guide.practiceScenarios ?? [])].some((s) => s.attackChain), `domain ${d}`).toBe(true);
+    }
+  });
+});
