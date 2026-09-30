@@ -12,6 +12,8 @@ export const STORAGE_KEYS = {
   quizHistory: "comptia_sy0701_quiz_history",
   questionProgress: "comptia_sy0701_question_progress_v1",
   lang: "comptia_sy0701_lang",
+  /** Self-assessment points of the guides the learner ticked, by readinessCheckId(). */
+  selfAssessment: "comptia_sy0701_self_assessment",
   /** Format version of everything above, see migrateStorage(). */
   schema: "comptia_sy0701_schema",
 } as const;

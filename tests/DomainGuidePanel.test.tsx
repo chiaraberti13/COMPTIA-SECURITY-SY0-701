@@ -159,7 +159,7 @@ describe("DomainGuidePanel", () => {
       "Esame e realtà",
       "Scenario applicativo",
       "Esercizi guidati",
-      "Verifica di padronanza",
+      "Riepilogo di fine modulo",
       "Fonti e revisione",
       "Dove proseguire",
     ]);

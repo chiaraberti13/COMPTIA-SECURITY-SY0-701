@@ -51,8 +51,102 @@ export interface DomainGuide {
   appliedScenario: GuideScenario;
   /** Extra exercises, each tied to the objective it trains. */
   practiceScenarios?: (GuideScenario & { objective: string })[];
+  /** End-of-module summary: the ideas to keep after studying the domain. */
+  keyPoints: string[];
+  /** End-of-module summary: the acronyms of the domain, the same in both languages. */
+  acronyms: GuideAcronym[];
+  /** Self-assessment: what the learner should be able to do. */
   readinessChecks: string[];
 }
+
+/** An exam acronym with its official English expansion. */
+export interface GuideAcronym {
+  acronym: string;
+  expansion: string;
+}
+
+const acronymList = (entries: [string, string][]): GuideAcronym[] =>
+  entries.map(([acronym, expansion]) => ({ acronym, expansion }));
+
+/*
+ * The acronyms of each domain, as the CompTIA acronym list expands them. They
+ * are shared by the Italian and English guides: the exam uses the English
+ * expansion in both.
+ */
+const DOMAIN_1_ACRONYMS = acronymList([
+  ["AAA", "Authentication, Authorization, and Accounting"],
+  ["AES", "Advanced Encryption Standard"],
+  ["CIA", "Confidentiality, Integrity, and Availability"],
+  ["CRL", "Certificate Revocation List"],
+  ["CSR", "Certificate Signing Request"],
+  ["ECC", "Elliptic Curve Cryptography"],
+  ["HSM", "Hardware Security Module"],
+  ["OCSP", "Online Certificate Status Protocol"],
+  ["PKI", "Public Key Infrastructure"],
+  ["RSA", "Rivest, Shamir, and Adleman"],
+  ["SHA", "Secure Hash Algorithm"],
+  ["TPM", "Trusted Platform Module"],
+]);
+const DOMAIN_2_ACRONYMS = acronymList([
+  ["ACL", "Access Control List"],
+  ["APT", "Advanced Persistent Threat"],
+  ["BEC", "Business Email Compromise"],
+  ["CSRF", "Cross-Site Request Forgery"],
+  ["CVE", "Common Vulnerabilities and Exposures"],
+  ["CVSS", "Common Vulnerability Scoring System"],
+  ["DDoS", "Distributed Denial of Service"],
+  ["OSINT", "Open-Source Intelligence"],
+  ["TOCTOU", "Time-of-Check to Time-of-Use"],
+  ["XSS", "Cross-Site Scripting"],
+]);
+const DOMAIN_3_ACRONYMS = acronymList([
+  ["IaaS", "Infrastructure as a Service"],
+  ["ICS", "Industrial Control System"],
+  ["IDS", "Intrusion Detection System"],
+  ["IPS", "Intrusion Prevention System"],
+  ["MTD", "Maximum Tolerable Downtime"],
+  ["NGFW", "Next-Generation Firewall"],
+  ["PaaS", "Platform as a Service"],
+  ["RPO", "Recovery Point Objective"],
+  ["RTO", "Recovery Time Objective"],
+  ["SaaS", "Software as a Service"],
+  ["SCADA", "Supervisory Control and Data Acquisition"],
+  ["SDN", "Software-Defined Networking"],
+  ["UTM", "Unified Threat Management"],
+  ["VLAN", "Virtual Local Area Network"],
+  ["VPN", "Virtual Private Network"],
+  ["WAF", "Web Application Firewall"],
+]);
+const DOMAIN_4_ACRONYMS = acronymList([
+  ["ABAC", "Attribute-Based Access Control"],
+  ["DAC", "Discretionary Access Control"],
+  ["DKIM", "DomainKeys Identified Mail"],
+  ["DLP", "Data Loss Prevention"],
+  ["DMARC", "Domain-based Message Authentication, Reporting, and Conformance"],
+  ["EDR", "Endpoint Detection and Response"],
+  ["MAC", "Mandatory Access Control"],
+  ["MDM", "Mobile Device Management"],
+  ["RBAC", "Role-Based Access Control"],
+  ["SAML", "Security Assertion Markup Language"],
+  ["SIEM", "Security Information and Event Management"],
+  ["SOAR", "Security Orchestration, Automation, and Response"],
+  ["SPF", "Sender Policy Framework"],
+]);
+const DOMAIN_5_ACRONYMS = acronymList([
+  ["ALE", "Annualized Loss Expectancy"],
+  ["ARO", "Annualized Rate of Occurrence"],
+  ["AUP", "Acceptable Use Policy"],
+  ["AV", "Asset Value"],
+  ["BIA", "Business Impact Analysis"],
+  ["EF", "Exposure Factor"],
+  ["MOA", "Memorandum of Agreement"],
+  ["MOU", "Memorandum of Understanding"],
+  ["MSA", "Master Service Agreement"],
+  ["NDA", "Non-Disclosure Agreement"],
+  ["SLA", "Service-Level Agreement"],
+  ["SLE", "Single Loss Expectancy"],
+  ["SOW", "Statement of Work"],
+]);
 
 const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
   1: {
@@ -259,6 +353,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         reasoning: "OCSP stapling: il server allega alla connessione una risposta OCSP firmata e recente, così il client conosce lo stato del certificato senza scaricare una CRL, che viene aggiornata solo periodicamente. Va comunque generata una nuova coppia di chiavi con una nuova CSR: riemettere il certificato con la stessa chiave non risolve la compromissione.",
       },
     ],
+    keyPoints: [
+      "Ogni controllo ha una categoria (tecnico, gestionale, operativo, fisico) e un tipo (preventivo, deterrente, rilevativo, correttivo, compensativo, direttivo): sono due domande diverse sullo stesso controllo.",
+      "La triade CIA dice che cosa proteggere; il non ripudio richiede una firma digitale, perché un hash o un MAC non legano il messaggio a una sola persona.",
+      "Zero Trust non si fida della posizione in rete: il Policy Engine decide, il Policy Administrator trasmette la decisione e il Policy Enforcement Point la applica, a ogni richiesta.",
+      "Il change management protegge la disponibilità: approvazione, analisi d'impatto, finestra di manutenzione, piano di backout e test dopo la modifica.",
+      "La crittografia simmetrica (AES) cifra i dati, quella asimmetrica (RSA, ECC) scambia chiavi e firma, l'hashing (SHA-256) verifica l'integrità.",
+      "Le chiavi valgono quanto la loro custodia: TPM nel singolo dispositivo, HSM per le chiavi dell'organizzazione, revoca dei certificati tramite CRL o OCSP.",
+    ],
+    acronyms: DOMAIN_1_ACRONYMS,
     readinessChecks: [
       "Sai distinguere categoria e tipo dello stesso controllo senza confonderli.",
       "Sai motivare la scelta tra hashing, MAC, firma digitale e cifratura.",
@@ -516,6 +619,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "Un attore si riconosce da motivazione e risorse: lo stato nazionale conduce campagne APT, il crimine organizzato cerca profitto, l'hacktivist visibilità, l'insider abusa dell'accesso che ha.",
+      "Vettore e superficie d'attacco non coincidono: il vettore è la via d'ingresso (email, supporto rimovibile, fornitore), la superficie è tutto ciò che è esposto.",
+      "Una vulnerabilità è una debolezza, un indicatore è la traccia del suo sfruttamento: CVE identifica la vulnerabilità, CVSS ne misura la gravità tecnica.",
+      "Il malware si distingue dal comportamento: il virus ha bisogno di un ospite, il worm si propaga da solo, il trojan si traveste, il rootkit si nasconde, la logic bomb aspetta una condizione.",
+      "Gli attacchi alle credenziali si leggono nei log: il password spraying è un tentativo su molti account, il brute force molti tentativi su un account, il credential replay riusa credenziali valide.",
+      "La mitigazione parte dal controllo primario (patch, configurazione sicura, segmentazione, privilegi minimi) e ricorre a un controllo compensativo quando il primario non è applicabile.",
+    ],
+    acronyms: DOMAIN_2_ACRONYMS,
     readinessChecks: [
       "Sai ricostruire una kill chain essenziale partendo da log e sintomi.",
       "Sai distinguere una vulnerabilità da un indicatore della sua exploitation.",
@@ -729,6 +841,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "Nel cloud la responsabilità è condivisa: in IaaS il cliente gestisce sistema operativo, applicazioni e dati, in PaaS applicazioni e dati, in SaaS soprattutto dati e accessi.",
+      "L'architettura limita il raggio d'azione di un attacco: segmentazione, VLAN e zone separano ciò che non deve comunicare, e un dispositivo in linea può fallire aperto (fail-open) o chiuso (fail-closed).",
+      "Ogni dispositivo ha uno scopo: l'IDS rileva, l'IPS in linea blocca, il WAF protegge le applicazioni web, l'NGFW filtra per applicazione, il jump server concentra l'accesso amministrativo.",
+      "Il dato si protegge secondo stato (a riposo, in transito, in uso), classificazione e giurisdizione: cifratura, hashing, tokenizzazione e mascheramento rispondono a esigenze diverse.",
+      "RTO è il tempo entro cui ripristinare, RPO la quantità di dati che si può perdere: da questi dipendono il tipo di backup e il sito alternativo (hot, warm, cold).",
+      "La replica garantisce disponibilità ma copia anche gli errori e la cifratura di un ransomware: servono copie versionate, immutabili o offline.",
+    ],
+    acronyms: DOMAIN_3_ACRONYMS,
     readinessChecks: [
       "Sai delimitare responsabilità cliente/provider in IaaS, PaaS e SaaS.",
       "Sai scegliere tra segmentazione, isolamento, ridondanza e recovery in base al requisito.",
@@ -1046,6 +1167,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "La risposta agli incidenti segue un ordine: preparazione, rilevazione, analisi, contenimento, eradicazione, ripristino e lezioni apprese; la FIRST action dipende dalla fase in cui ci si trova.",
+      "Un'indagine correla più fonti su una sola timeline: log di endpoint, rete, autenticazione e applicazioni, raccolti nel SIEM e conservati con la catena di custodia.",
+      "La gestione delle vulnerabilità è un ciclo: identificare, analizzare, dare priorità (non solo con il CVSS, anche con esposizione e valore dell'asset), correggere e verificare con una nuova scansione.",
+      "Identità e accessi sono passi distinti: autenticazione, autorizzazione, federazione (SAML, OpenID Connect), provisioning e revisione periodica degli accessi.",
+      "Il modello di accesso si sceglie dallo scenario: MAC per etichette imposte, DAC per decisione del proprietario, RBAC per ruolo, ABAC per attributi e contesto.",
+      "La posta si protegge con SPF, DKIM e DMARC insieme: SPF autorizza i server, DKIM firma i messaggi, DMARC dice che cosa fare di quelli che non superano i controlli.",
+    ],
+    acronyms: DOMAIN_4_ACRONYMS,
     readinessChecks: [
       "Sai ordinare le fasi di incident response e giustificare la FIRST action.",
       "Sai correlare almeno tre fonti di log su una timeline coerente.",
@@ -1284,6 +1414,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         reasoning: "Formazione immediata e breve per chi ha cliccato, un pulsante di segnalazione semplice e campagne ricorrenti per misurare l'andamento. L'indicatore principale è il tasso di segnalazione, che deve crescere, insieme al calo dei clic nel tempo. Sanzionare gli errori riduce le segnalazioni e nasconde gli incidenti reali; le misure disciplinari vanno riservate ai casi di negligenza ripetuta prevista dalla policy.",
       },
     ],
+    keyPoints: [
+      "Il rischio si quantifica con SLE = AV × EF e ALE = SLE × ARO; il risultato orienta la decisione, ma dipende da stime.",
+      "Il rischio si tratta in quattro modi: mitigare, trasferire (per esempio con un'assicurazione), evitare o accettare, entro l'appetito e la tolleranza al rischio decisi dalla direzione.",
+      "Ogni accordo ha il suo scopo: SLA per i livelli di servizio, NDA per la riservatezza, MOU per un'intesa di solito non vincolante, MSA per le condizioni generali e SOW per il lavoro specifico.",
+      "Nei dati personali i ruoli sono distinti: il titolare (controller) decide finalità e mezzi, il responsabile (processor) tratta per suo conto, il custode gestisce la tecnologia.",
+      "Audit e valutazioni producono evidenze: un finding diventa un'azione con un owner, una scadenza e una prova di chiusura.",
+      "Un penetration test richiede autorizzazione scritta e rules of engagement: ambito, orari, tecniche ammesse e contatti definiti prima di iniziare.",
+    ],
+    acronyms: DOMAIN_5_ACRONYMS,
     readinessChecks: [
       "Sai calcolare SLE, ARO e ALE e interpretarne i limiti decisionali.",
       "Sai distinguere risk appetite, tolerance, threshold, rischio inerente e residuo.",
@@ -1500,6 +1639,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         reasoning: "OCSP stapling: the server attaches a recent, signed OCSP response to the connection, so the client learns the certificate status without downloading a CRL, which is only updated periodically. A new key pair with a new CSR is still required: reissuing the certificate with the same key does not fix the compromise.",
       },
     ],
+    keyPoints: [
+      "Every control has a category (technical, managerial, operational, physical) and a type (preventive, deterrent, detective, corrective, compensating, directive): two different questions about the same control.",
+      "The CIA triad says what to protect; non-repudiation needs a digital signature, because a hash or a MAC does not bind the message to a single person.",
+      "Zero Trust does not trust network location: the Policy Engine decides, the Policy Administrator relays the decision and the Policy Enforcement Point applies it, on every request.",
+      "Change management protects availability: approval, impact analysis, a maintenance window, a backout plan and testing after the change.",
+      "Symmetric cryptography (AES) encrypts data, asymmetric cryptography (RSA, ECC) exchanges keys and signs, hashing (SHA-256) checks integrity.",
+      "Keys are only as safe as their storage: a TPM in a single device, an HSM for the organization's keys, certificate revocation through CRL or OCSP.",
+    ],
+    acronyms: DOMAIN_1_ACRONYMS,
     readinessChecks: [
       "You can distinguish the category and type of the same control without confusing them.",
       "You can justify a choice among hashing, MAC, digital signature, and encryption.",
@@ -1757,6 +1905,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "An actor is recognized by motivation and resources: a nation state runs APT campaigns, organized crime seeks profit, a hacktivist visibility, an insider abuses the access they have.",
+      "Attack vector and attack surface differ: the vector is the way in (email, removable media, a supplier), the surface is everything that is exposed.",
+      "A vulnerability is a weakness, an indicator is the trace of its exploitation: CVE identifies the vulnerability, CVSS scores its technical severity.",
+      "Malware is told apart by behavior: a virus needs a host, a worm spreads by itself, a trojan disguises itself, a rootkit hides, a logic bomb waits for a condition.",
+      "Credential attacks show in the logs: password spraying is one attempt on many accounts, brute force many attempts on one account, credential replay reuses valid credentials.",
+      "Mitigation starts from the primary control (patching, secure configuration, segmentation, least privilege) and falls back on a compensating control when the primary one cannot be applied.",
+    ],
+    acronyms: DOMAIN_2_ACRONYMS,
     readinessChecks: [
       "You can reconstruct an essential attack chain from logs and symptoms.",
       "You can distinguish a vulnerability from an indicator of its exploitation.",
@@ -1970,6 +2127,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "In the cloud, responsibility is shared: in IaaS the customer manages the operating system, applications and data, in PaaS the applications and data, in SaaS mainly data and access.",
+      "Architecture limits an attack's blast radius: segmentation, VLANs and zones separate what must not communicate, and an inline device can fail open or fail closed.",
+      "Each device has one purpose: an IDS detects, an inline IPS blocks, a WAF protects web applications, an NGFW filters by application, a jump server funnels administrative access.",
+      "Data is protected according to its state (at rest, in transit, in use), classification and jurisdiction: encryption, hashing, tokenization and masking answer different needs.",
+      "RTO is the time within which to restore, RPO the amount of data that can be lost: they decide the kind of backup and of alternate site (hot, warm, cold).",
+      "Replication provides availability but also copies mistakes and ransomware encryption: versioned, immutable or offline copies are needed.",
+    ],
+    acronyms: DOMAIN_3_ACRONYMS,
     readinessChecks: [
       "You can delimit customer and provider responsibilities in IaaS, PaaS, and SaaS.",
       "You can choose among segmentation, isolation, redundancy, and recovery based on the requirement.",
@@ -2287,6 +2453,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         },
       },
     ],
+    keyPoints: [
+      "Incident response follows an order: preparation, detection, analysis, containment, eradication, recovery and lessons learned; the FIRST action depends on the current phase.",
+      "An investigation correlates several sources on one timeline: endpoint, network, authentication and application logs, gathered in the SIEM and kept with chain of custody.",
+      "Vulnerability management is a cycle: identify, analyze, prioritize (not only by CVSS, also by exposure and asset value), remediate and verify with a new scan.",
+      "Identity and access are distinct steps: authentication, authorization, federation (SAML, OpenID Connect), provisioning and periodic access review.",
+      "The access model follows from the scenario: MAC for enforced labels, DAC for owner decisions, RBAC for roles, ABAC for attributes and context.",
+      "Email is protected by SPF, DKIM and DMARC together: SPF authorizes servers, DKIM signs messages, DMARC says what to do with those that fail the checks.",
+    ],
+    acronyms: DOMAIN_4_ACRONYMS,
     readinessChecks: [
       "You can order incident-response phases and justify the FIRST action.",
       "You can correlate at least three log sources into a coherent timeline.",
@@ -2525,6 +2700,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         reasoning: "Short, immediate training for those who clicked, a simple report button, and recurring campaigns to measure the trend. The main indicator is the reporting rate, which should rise, together with clicks falling over time. Sanctioning mistakes reduces reporting and hides real incidents; disciplinary measures should be reserved for repeated negligence as defined by policy.",
       },
     ],
+    keyPoints: [
+      "Risk is quantified with SLE = AV × EF and ALE = SLE × ARO; the result guides the decision, but it rests on estimates.",
+      "Risk is handled in four ways: mitigate, transfer (for example through insurance), avoid or accept, within the risk appetite and tolerance set by leadership.",
+      "Each agreement has its purpose: an SLA for service levels, an NDA for confidentiality, an MOU for a usually non-binding understanding, an MSA for general terms and an SOW for the specific work.",
+      "For personal data the roles are distinct: the controller decides purposes and means, the processor processes data on its behalf, the custodian manages the technology.",
+      "Audits and assessments produce evidence: a finding becomes an action with an owner, a deadline and proof of closure.",
+      "A penetration test requires written authorization and rules of engagement: scope, hours, allowed techniques and contacts defined before starting.",
+    ],
+    acronyms: DOMAIN_5_ACRONYMS,
     readinessChecks: [
       "You can calculate SLE, ARO, and ALE and interpret their decision limits.",
       "You can distinguish risk appetite, tolerance, threshold, and inherent and residual risk.",
@@ -2545,3 +2729,18 @@ export function getDomainGuide(domainId: number, lang: Lang): DomainGuide {
 
 export const DOMAIN_GUIDES_IT = IT_DOMAIN_GUIDES;
 export const DOMAIN_GUIDES_EN = EN_DOMAIN_GUIDES;
+
+/**
+ * A stable identifier for a self-assessment point, the same in both languages.
+ * It hashes the Italian text (FNV-1a), so a rewritten point starts unticked
+ * instead of inheriting the answer given to the old one.
+ */
+export function readinessCheckId(domainId: number, index: number): string {
+  const text = IT_DOMAIN_GUIDES[domainId]?.readinessChecks[index] ?? "";
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return `D${domainId}-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}

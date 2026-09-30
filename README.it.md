@@ -67,6 +67,9 @@ La filosofia, condivisa con gli altri repository:
 - **Trainer AI Senior di Cybersecurity** — basato sull'**API Google Gemini** per
   spiegazioni passo-passo, confronti concettuali e chiarimenti sulle metriche d'esame
   (ALE, SLE, ARO, RTO, RPO e altre).
+- **Riepiloghi di fine modulo** — ogni guida di dominio si chiude con i concetti chiave,
+  gli acronimi del dominio, la lettura corretta degli errori frequenti e un'autovalutazione
+  da spuntare, salvata nel browser e nel backup dei progressi.
 - **Simulatore d'esame high-stakes** — domande basate su scenari di livello
   Analisi/Applicazione con motivazioni dettagliate e analisi dei distrattori.
 - **Generatore AI di domande di recupero** — dopo una sessione di pratica, l'AI genera

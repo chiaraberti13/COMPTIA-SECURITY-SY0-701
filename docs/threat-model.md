@@ -98,7 +98,7 @@ Legenda dello stato: ✅ mitigato e verificato da un test, 🟡 mitigato in part
 
 | STRIDE | Minaccia | Controlli presenti | Stato |
 |---|---|---|---|
-| Tampering | `localStorage` modificato a mano o da un'altra versione dell'app: l'app si blocca | Lettura difensiva e sanificatori per checklist, segnalibri, cronologia e progressi | ✅ mitigato |
+| Tampering | `localStorage` modificato a mano o da un'altra versione dell'app: l'app si blocca | Lettura difensiva e sanificatori per checklist, segnalibri, cronologia, progressi e autovalutazione | ✅ mitigato |
 | Tampering | File di backup importato ostile: troppo grande, di un'altra app o con valori anomali | `parseBackup`: limite di 1 MB, identificativo dell'app, versione dello schema, sanificazione di ogni campo, riepilogo e conferma prima di sostituire | ✅ mitigato |
 | Information disclosure | Un'altra persona sullo stesso computer vede i progressi | Rischio accettato: i progressi non sono dati sensibili; "Cancella tutto" li elimina | ⬜ accettato |
 

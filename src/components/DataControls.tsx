@@ -25,6 +25,7 @@ export default function DataControls() {
       bookmarks: readJSON<unknown>(STORAGE_KEYS.bookmarks, []),
       quizHistory: readJSON<unknown>(STORAGE_KEYS.quizHistory, []),
       questionProgress: readJSON<unknown>(STORAGE_KEYS.questionProgress, {}),
+      selfAssessment: readJSON<unknown>(STORAGE_KEYS.selfAssessment, {}),
     });
 
   const handleExport = () => {
@@ -62,7 +63,8 @@ export default function DataControls() {
       writeJSON(STORAGE_KEYS.checklist, data.checklist) &&
       writeJSON(STORAGE_KEYS.bookmarks, data.bookmarks) &&
       writeJSON(STORAGE_KEYS.quizHistory, data.quizHistory) &&
-      writeJSON(STORAGE_KEYS.questionProgress, data.questionProgress);
+      writeJSON(STORAGE_KEYS.questionProgress, data.questionProgress) &&
+      writeJSON(STORAGE_KEYS.selfAssessment, data.selfAssessment);
     if (!saved) {
       setPending(null);
       setMessage({ text: t("data.errorStorage"), error: true });

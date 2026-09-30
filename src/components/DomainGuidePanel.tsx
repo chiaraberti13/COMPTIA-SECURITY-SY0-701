@@ -6,6 +6,7 @@ import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
 import Callout from "./Callout";
+import ModuleSummary from "./ModuleSummary";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
 
@@ -201,7 +202,7 @@ export default function DomainGuidePanel({
     ...(has(guide.examVsPractice) ? [{ target: `guide_h_practice_gap_${d}`, label: t("study.examVsPractice") }] : []),
     { target: `guide_h_scenario_${d}`, label: t("study.appliedScenario") },
     ...(has(guide.practiceScenarios) ? [{ target: `guide_h_practice_${d}`, label: t("study.practiceScenarios") }] : []),
-    { target: `guide_h_readiness_${d}`, label: t("study.readiness") },
+    { target: `guide_h_summary_${d}`, label: t("study.moduleSummary") },
     { target: `guide_sources_${d}`, label: t("study.sourcesTitle") },
     { target: `guide_next_${d}_title`, label: t("study.routeNext") },
   ];
@@ -413,17 +414,7 @@ export default function DomainGuidePanel({
           </section>
         )}
 
-        <section className="bg-cyan-950/20 border border-cyan-900/40 rounded-lg p-4 space-y-3">
-          <h3 {...headingProps("readiness")} className="focus:outline-none text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">{t("study.readiness")}</h3>
-          <ul className="grid sm:grid-cols-2 gap-2">
-            {guide.readinessChecks.map((check) => (
-              <li key={check} className="flex gap-2 text-xs text-slate-300 leading-relaxed">
-                <CheckSquare className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                <span>{check}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <ModuleSummary guide={guide} headingProps={headingProps("summary")} />
 
         <SourcesAndReview guide={guide} />
 

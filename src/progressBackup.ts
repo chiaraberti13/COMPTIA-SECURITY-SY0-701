@@ -25,6 +25,11 @@ export interface ProgressData {
   bookmarks: string[];
   quizHistory: QuizResult[];
   questionProgress: Record<number, QuestionProgress>;
+  /**
+   * Added after schema 1 was published, without a new schema version: older
+   * backups lack it and import as "nothing ticked", older app versions ignore it.
+   */
+  selfAssessment: Record<string, true>;
 }
 
 export interface ProgressBackup {
@@ -61,6 +66,7 @@ export function sanitizeProgress(raw: Partial<Record<keyof ProgressData, unknown
     bookmarks: sanitizeBookmarks(raw.bookmarks),
     quizHistory: sanitizeQuizHistory(raw.quizHistory),
     questionProgress: sanitizeQuestionProgress(raw.questionProgress),
+    selfAssessment: sanitizeChecklist(raw.selfAssessment),
   };
 }
 

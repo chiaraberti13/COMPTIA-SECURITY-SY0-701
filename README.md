@@ -67,6 +67,9 @@ The philosophy, shared with the rest of these repositories:
 - **AI Senior Cybersecurity Trainer** — backed by the **Google Gemini API** for
   step-by-step explanations, concept comparisons and exam-metric clarifications
   (ALE, SLE, ARO, RTO, RPO, and more).
+- **End-of-module summaries** — every domain guide closes with its key points, the
+  domain's acronyms, the correct reading of the frequent mistakes and a self-assessment
+  you tick, kept in the browser and in the progress backup.
 - **High-stakes exam simulator** — scenario-based, Analysis/Application-level questions
   with detailed rationale and distractor analysis.
 - **AI remediation generator** — after a practice set, the AI dynamically generates

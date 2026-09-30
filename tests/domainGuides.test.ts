@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { DOMAIN_GUIDES_EN, DOMAIN_GUIDES_IT, type DomainGuide } from "../src/domainGuides";
+import { beforeAll, describe, expect, it } from "vitest";
+import { DOMAIN_GUIDES_EN, DOMAIN_GUIDES_IT, readinessCheckId, type DomainGuide } from "../src/domainGuides";
+import { getDomainTopics, loadEnglishOverlay } from "../src/localizedData";
 import { factDrift, strings } from "./helpers/languageFacts";
 
 /*
@@ -344,5 +345,58 @@ describe("attack chains in the guide scenarios", () => {
       const guide = DOMAIN_GUIDES_IT[d];
       expect([guide.appliedScenario, ...(guide.practiceScenarios ?? [])].some((s) => s.attackChain), `domain ${d}`).toBe(true);
     }
+  });
+});
+
+describe("end-of-module summaries", () => {
+  // The English study content is a separate chunk.
+  beforeAll(() => loadEnglishOverlay());
+
+  it("give every domain five to eight key points, as many in both languages", () => {
+    for (const d of DOMAIN_IDS) {
+      const it = DOMAIN_GUIDES_IT[d].keyPoints;
+      expect(it.length, `domain ${d}`).toBeGreaterThanOrEqual(5);
+      expect(it.length, `domain ${d}`).toBeLessThanOrEqual(8);
+      expect(DOMAIN_GUIDES_EN[d].keyPoints).toHaveLength(it.length);
+      for (const point of [...it, ...DOMAIN_GUIDES_EN[d].keyPoints]) expect(point.trim()).toMatch(/^.{40,260}[.]$/);
+    }
+  });
+
+  it("list each acronym once, with an expansion that starts like it", () => {
+    const problems: string[] = [];
+    for (const d of DOMAIN_IDS) {
+      const { acronyms } = DOMAIN_GUIDES_IT[d];
+      expect(DOMAIN_GUIDES_EN[d].acronyms).toEqual(acronyms);
+      expect(new Set(acronyms.map((a) => a.acronym)).size).toBe(acronyms.length);
+      for (const { acronym, expansion } of acronyms) {
+        // The first letter of the acronym starts the expansion ("SIEM", "Security…"),
+        // except where X stands for "cross", as in XSS.
+        const first = acronym[0] === "X" && expansion.startsWith("Cross") ? "C" : acronym[0];
+        if (expansion[0] !== first) problems.push(`D${d} ${acronym}: ${expansion}`);
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+
+  it("list only acronyms that the domain's study content uses, in both languages", () => {
+    const unused: string[] = [];
+    for (const lang of ["it", "en"] as const) {
+      for (const d of DOMAIN_IDS) {
+        const guide = (lang === "it" ? DOMAIN_GUIDES_IT : DOMAIN_GUIDES_EN)[d];
+        const { acronyms, ...rest } = guide;
+        const text = [...strings(rest), ...strings(getDomainTopics(d, lang))].map(([, value]) => value).join(" ");
+        for (const { acronym } of acronyms) {
+          if (!new RegExp(`(?<![A-Za-z])${acronym}(?![a-z])`).test(text)) unused.push(`${lang} D${d} ${acronym}`);
+        }
+      }
+    }
+    expect(unused).toEqual([]);
+  });
+
+  it("identify each self-assessment point stably and uniquely", () => {
+    const ids = DOMAIN_IDS.flatMap((d) => DOMAIN_GUIDES_IT[d].readinessChecks.map((_, i) => readinessCheckId(d, i)));
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const id of ids) expect(id).toMatch(/^D[1-5]-[0-9a-f]{8}$/);
+    expect(readinessCheckId(1, 0)).toBe(readinessCheckId(1, 0));
   });
 });

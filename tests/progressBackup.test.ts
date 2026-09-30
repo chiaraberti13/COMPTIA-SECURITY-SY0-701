@@ -15,6 +15,7 @@ const SAMPLE: ProgressData = {
   bookmarks: ["term-1", "term-2"],
   quizHistory: [{ at: 1_758_700_000_000, score: 20, total: 25, domains: [1, 2], passed: true }],
   questionProgress: { 10_001: { attempts: 2, correct: 1, streak: 0, lastSeenAt: 1_758_700_000_000, dueAt: 1_758_786_400_000 } },
+  selfAssessment: { "D1-0a1b2c3d": true },
 };
 
 describe("sanitizeChecklist", () => {
@@ -42,6 +43,14 @@ describe("backup round trip", () => {
     const text = buildBackup(SAMPLE, new Date("2026-09-24T10:00:00Z"));
     const result = parseBackup(text);
     expect(result).toEqual({ ok: true, data: SAMPLE, exportedAt: "2026-09-24T10:00:00.000Z" });
+  });
+
+  it("imports a backup made before the self-assessment existed, with nothing ticked", () => {
+    const { selfAssessment: _omitted, ...older } = SAMPLE;
+    const text = JSON.stringify({ app: BACKUP_APP_ID, schema: 1, exportedAt: "2026-09-24T10:00:00.000Z", data: older });
+    const result = parseBackup(text);
+    expect(result.ok && result.data.selfAssessment).toEqual({});
+    expect(result.ok && result.data.checklist).toEqual(SAMPLE.checklist);
   });
 
   it("names the file after the export date", () => {
@@ -79,13 +88,14 @@ describe("parseBackup rejects untrusted files", () => {
         bookmarks: "not-an-array",
         quizHistory: [{ at: -1, score: 99, total: 1 }],
         questionProgress: { "-5": {}, abc: { attempts: 1 } },
+        selfAssessment: { "D1-0a1b2c3d": true, "D2 <b>": true, D3: "yes" },
         __proto__: { polluted: true },
       },
     });
     const result = parseBackup(text);
     expect(result).toEqual({
       ok: true,
-      data: { checklist: { good: true }, bookmarks: [], quizHistory: [], questionProgress: {} },
+      data: { checklist: { good: true }, bookmarks: [], quizHistory: [], questionProgress: {}, selfAssessment: { "D1-0a1b2c3d": true } },
       exportedAt: "",
     });
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();
