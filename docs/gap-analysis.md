@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-141 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+116 concetti su 562 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -24,7 +24,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 | 2 | 74 | 0 |
 | 3 | 174 | 73 |
 | 4 | 132 | 43 |
-| 5 | 94 | 25 |
+| 5 | 94 | 0 |
 
 ### Dominio 3
 
@@ -148,34 +148,6 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 - Ease of Deployment (`4:EaseOfDeploymentConcept`)
 - Automation (`4:AutomationConcept`)
 
-### Dominio 5
-
-- Boards (`5:Boards`)
-- SDLC (`5:SDLC`)
-- Change Management (`5:ChangeManagement`)
-- Technical debt (`5:TechnicalDebtConcept`)
-- Risk Assessment (`5:RiskAssessment`)
-- Risk Register (`5:RiskRegister`)
-- ALE (`5:ALE`)
-- Likelihood (`5:LikelihoodConcept`)
-- Residual Risk Analysis (`5:ResidualRiskAnalysisConcept`)
-- Qualitative Risk Assessment (`5:QualitativeRiskAssessmentConcept`)
-- Cyber Insurance (`5:CyberInsuranceConcept`)
-- Privacy (`5:Privacy`)
-- NIST (National Institute of Standards and Technology) (`5:NISTRes`)
-- Questionnaires (`5:Questionnaires`)
-- SOW (`5:SOW`)
-- Penetration Test (`5:PenetrationTestAudit`)
-- Continuous assessment (`5:ContinuousAssessmentConcept`)
-- Audit Committee (`5:AuditCommitteeConcept`)
-- Self-Assessment (`5:SelfAssessmentConcept`)
-- Examinations (`5:ExaminationConcept`)
-- Phishing Awareness (`5:PhishingAwareness`)
-- Social Engineering (`5:SocialEngineering`)
-- Asset Management (`5:AssetManagementRes`)
-- Physical Destruction (`5:PhysicalDestructionRes`)
-- Degaussing (`5:DegaussingRes`)
-
 ## Cifre senza fonte
 
 Frasi dei contenuti di studio con una cifra stabilita da una norma o da un regolatore (sanzioni in
@@ -239,7 +211,7 @@ indirizzi qui sotto.
 - `5:RightToAuditClause`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:RiskAppetite`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
 - `5:RiskTransferConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
-- `5:SelfAssessmentConcept`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
+- `5:SelfAssessmentConcept`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
 - `5:Transfer`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
 - `5:VendorAssessment`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:VendorMonitoring`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)

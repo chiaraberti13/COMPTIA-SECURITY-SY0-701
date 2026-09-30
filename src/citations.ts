@@ -89,7 +89,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "5:RegulatoryAudit": [{ source: "gdpr", locator: { it: "art. 58 e art. 83, par. 5", en: "Art. 58 and Art. 83(5)" } }, { source: "hipaa" }],
   "5:ReportingRes": [{ source: "firstCvss" }],
   "5:AttestationConcept": [{ source: "iso27001" }, { source: "soc2" }],
-  "5:SelfAssessmentConcept": [{ source: "nistCsf" }],
+  "5:SelfAssessmentConcept": [{ source: "nistCsf" }, { source: "iso27001" }],
   "5:MediaSanitizationRes": [{ source: "nist80088" }],
   "5:CertificateOfDestructionRes": [{ source: "nist80088" }],
   "5:DataRetentionRes": [{ source: "gdpr", locator: { it: "art. 17", en: "Art. 17" } }],
