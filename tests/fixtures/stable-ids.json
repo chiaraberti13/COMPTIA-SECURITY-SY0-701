@@ -1279,6 +1279,10 @@
   ],
   "labs": [
     "01-security-headers",
-    "02-prompt-injection"
+    "02-prompt-injection",
+    "03-log-analysis",
+    "04-certificates",
+    "05-backup-restore",
+    "06-incident-triage"
   ]
 }

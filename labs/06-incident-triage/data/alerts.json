@@ -1,0 +1,14 @@
+[
+  {"id": "A-101", "time": "2026-09-29T01:58:12Z", "source": "IDS", "severity": "medium", "host": "WEB-01", "rule": "Port scan detected", "detail": "src=10.0.9.5 ports=1-1024"},
+  {"id": "A-102", "time": "2026-09-29T02:03:40Z", "source": "IDS", "severity": "medium", "host": "DB-01", "rule": "Port scan detected", "detail": "src=10.0.9.5 ports=1-1024"},
+  {"id": "A-103", "time": "2026-09-29T02:30:05Z", "source": "DLP", "severity": "high", "host": "FS-01", "rule": "Large outbound transfer", "detail": "dst=203.0.113.99 bytes=6442450944 proto=https"},
+  {"id": "A-104", "time": "2026-09-29T07:41:19Z", "source": "IdP", "severity": "medium", "host": "IDP", "rule": "Impossible travel", "detail": "user=m.rossi from=IT to=DE minutes=35 via=corporate-vpn"},
+  {"id": "A-105", "time": "2026-09-29T09:12:02Z", "source": "Mail", "severity": "low", "host": "MAIL", "rule": "Phishing reported by user", "detail": "user=l.bianchi subject=\"Fattura in ritardo\" attachment=fattura.docm"},
+  {"id": "A-106", "time": "2026-09-29T09:14:37Z", "source": "EDR", "severity": "high", "host": "WS-042", "rule": "Office spawned PowerShell", "detail": "user=l.bianchi parent=WINWORD.EXE child=powershell.exe args=-enc"},
+  {"id": "A-107", "time": "2026-09-29T09:15:02Z", "source": "DNS", "severity": "medium", "host": "WS-042", "rule": "Newly registered domain", "detail": "query=update-check.example age_days=1"},
+  {"id": "A-108", "time": "2026-09-29T09:16:02Z", "source": "DNS", "severity": "medium", "host": "WS-042", "rule": "Periodic beaconing", "detail": "query=update-check.example interval_s=60 count=12"},
+  {"id": "A-109", "time": "2026-09-29T10:02:55Z", "source": "AV", "severity": "low", "host": "WS-017", "rule": "Malware quarantined", "detail": "file=setup_crack.exe action=quarantined"},
+  {"id": "A-110", "time": "2026-09-29T10:20:44Z", "source": "EDR", "severity": "critical", "host": "WS-042", "rule": "Credential dumping", "detail": "user=l.bianchi process=rundll32.exe target=lsass.exe"},
+  {"id": "A-111", "time": "2026-09-29T10:23:10Z", "source": "IdP", "severity": "high", "host": "IDP", "rule": "Admin sign-in from unusual host", "detail": "user=adm.verdi from=WS-042"},
+  {"id": "A-112", "time": "2026-09-29T11:05:31Z", "source": "IDS", "severity": "low", "host": "WEB-01", "rule": "Old TLS version", "detail": "client=10.0.4.12 version=TLSv1.0"}
+]

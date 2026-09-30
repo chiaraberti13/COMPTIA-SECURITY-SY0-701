@@ -20,6 +20,10 @@ durata e livello di rischio prima di qualsiasi comando.
 |---|---|---|---|
 | [01 — Leggere gli header di sicurezza dell'app](01-security-headers/README.md) ([versione inglese](01-security-headers/README.en.md)) | 2.5, 4.1 | `low` | 30 minuti |
 | [02 — Prompt injection e threat model dell'app](02-prompt-injection/README.md) ([versione inglese](02-prompt-injection/README.en.md)) | 2.4, 4.1, 5.2 | `low` | 45 minuti |
+| [03 — Trovare un attacco nei log di autenticazione](03-log-analysis/README.md) ([versione inglese](03-log-analysis/README.en.md)) | 2.4, 4.4, 4.9 | `low` | 40 minuti |
+| [04 — Una piccola PKI: CSR, catena, scadenza e revoca](04-certificates/README.md) ([versione inglese](04-certificates/README.en.md)) | 1.4 | `low` | 45 minuti |
+| [05 — Backup completo, incrementale e prova di ripristino](05-backup-restore/README.md) ([versione inglese](05-backup-restore/README.en.md)) | 3.4 | `low` | 35 minuti |
+| [06 — Triage di dodici allarmi del SIEM](06-incident-triage/README.md) ([versione inglese](06-incident-triage/README.en.md)) | 4.4, 4.8, 4.9 | `low` | 45 minuti |
 
 ## Regole d'ingaggio
 
