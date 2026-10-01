@@ -1283,6 +1283,9 @@
     "03-log-analysis",
     "04-certificates",
     "05-backup-restore",
-    "06-incident-triage"
+    "06-incident-triage",
+    "07-linux-hardening",
+    "08-linux-iam",
+    "09-network-segmentation"
   ]
 }
