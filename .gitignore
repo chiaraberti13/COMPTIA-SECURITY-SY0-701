@@ -4,6 +4,8 @@ dist/
 coverage/
 .DS_Store
 *.log
+# Synthetic lab datasets are versioned on purpose (labs/README.md, "Dati sintetici").
+!labs/*/data/*.log
 .env*
 !.env.example
 

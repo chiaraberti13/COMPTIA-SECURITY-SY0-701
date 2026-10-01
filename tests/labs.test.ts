@@ -162,6 +162,18 @@ describe("labs", () => {
     for (const command of RESTORE_COMMANDS) expect(index).toContain(command);
   });
 
+  it("ship every data file they use, and version it (CI checks out only what git tracks)", () => {
+    const missing: string[] = [];
+    for (const lab of labs) {
+      for (const lang of Object.keys(FILES) as Lang[]) {
+        for (const [path] of read(lab, lang).matchAll(/labs\/[a-z0-9-]+\/data\/[\w.-]+/g)) {
+          if (!existsSync(path)) missing.push(`${lab}/${FILES[lang]}: ${path}`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
+  });
+
   it("are all listed in labs/README.md, in both languages", () => {
     const index = readFileSync(join(LABS_DIR, "README.md"), "utf8");
     for (const lab of labs) {
