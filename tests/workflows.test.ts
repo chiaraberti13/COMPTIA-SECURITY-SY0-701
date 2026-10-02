@@ -110,3 +110,21 @@ describe("bundled font licences", () => {
     expect(text).toContain("SIL Open Font License, Version 1.1");
   });
 });
+
+
+describe("release safeguards", () => {
+  it("checks the tagged build before creating a draft with its SBOM", () => {
+    const release = workflows.find((w) => w.name === "release.yml")!.text;
+    expect(release).toContain("git merge-base --is-ancestor HEAD origin/main");
+    expect(release).toContain("npx tsx scripts/release.ts");
+    for (const check of ["npm run check", "npm audit --omit=dev", "npm run build", "npm run smoke"]) {
+      expect(release.indexOf(check)).toBeGreaterThan(0);
+      expect(release.indexOf(check)).toBeLessThan(release.indexOf("gh release create"));
+    }
+    expect(release).toContain("npm sbom --omit dev --sbom-format cyclonedx");
+    expect(release).toContain("--verify-tag --draft");
+    expect(release).toContain("app.tar.gz sbom.cdx.json SHA256SUMS");
+    expect(release).toContain('RELEASE_TAG: ${{ github.ref_name }}');
+    expect(release).not.toMatch(/run:.*\$\{\{ github\.ref_name/);
+  });
+});

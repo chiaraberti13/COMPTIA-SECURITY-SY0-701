@@ -367,3 +367,5 @@ with the commit of each fix. To report a new one, open an issue.
 </p>
 
 ---
+
+[Release versionate · Versioned releases](docs/releases.md)

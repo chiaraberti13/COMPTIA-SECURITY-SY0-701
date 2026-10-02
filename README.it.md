@@ -368,3 +368,5 @@ nuovo apri una issue.
 </p>
 
 ---
+
+[Release versionate · Versioned releases](docs/releases.md)
