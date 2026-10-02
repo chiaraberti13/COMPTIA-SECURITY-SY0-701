@@ -40,8 +40,9 @@ case "$lab" in
   08) risk=moderate; cmds="setfacl getfacl useradd visudo chage";            ports="" ;;
   09) risk=moderate; cmds="ip nft ss nc ping python3";                       ports="" ;;
   10) risk=low;      cmds="awk jq curl sha256sum nginx";                     ports="8090" ;;
+  11) risk=low;      cmds="jq sha256sum";                                    ports="" ;;
   *)
-    printf '%s\n' "$(t 'Uso: bash labs/preflight.sh NN [--en], con NN fra 01 e 10.' 'Usage: bash labs/preflight.sh NN [--en], with NN between 01 and 10.')" >&2
+    printf '%s\n' "$(t 'Uso: bash labs/preflight.sh NN [--en], con NN fra 01 e 11.' 'Usage: bash labs/preflight.sh NN [--en], with NN between 01 and 11.')" >&2
     exit 2 ;;
 esac
 

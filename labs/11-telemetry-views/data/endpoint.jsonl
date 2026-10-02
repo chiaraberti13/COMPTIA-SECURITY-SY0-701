@@ -1,0 +1,8 @@
+{"time": "2026-09-29T02:12:02Z", "host": "web01", "type": "process", "user": "deploy", "parent": "sshd", "command": "-bash"}
+{"time": "2026-09-29T02:13:02Z", "host": "web01", "type": "process", "user": "root", "parent": "sudo", "command": "useradd -m -s /bin/bash svc-update"}
+{"time": "2026-09-29T02:13:02Z", "host": "web01", "type": "file", "path": "/etc/passwd", "process": "useradd"}
+{"time": "2026-09-29T02:13:02Z", "host": "web01", "type": "file", "path": "/etc/shadow", "process": "useradd"}
+{"time": "2026-09-29T02:13:40Z", "host": "web01", "type": "process", "user": "root", "parent": "sudo", "command": "usermod -aG sudo svc-update"}
+{"time": "2026-09-29T02:13:40Z", "host": "web01", "type": "file", "path": "/etc/group", "process": "usermod"}
+{"time": "2026-09-29T08:02:06Z", "host": "web01", "type": "process", "user": "alice", "parent": "sshd", "command": "-bash"}
+{"time": "2026-09-29T08:03:40Z", "host": "web01", "type": "process", "user": "alice", "parent": "-bash", "command": "vim /srv/app/config.yml"}

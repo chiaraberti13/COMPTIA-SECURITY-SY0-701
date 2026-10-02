@@ -17,7 +17,7 @@ const source = readFileSync(SCRIPT, "utf8");
 
 const stubs = mkdtempSync(join(tmpdir(), "preflight-"));
 for (const command of ["node", "npm", "curl", "git", "grep", "awk", "sort", "uniq", "sha256sum", "openssl", "tar", "jq",
-  "sshd", "nft", "ip", "ss", "nc", "python3", "dpkg-statoverride", "setfacl", "getfacl", "useradd", "visudo", "chage", "ping"]) {
+  "sshd", "nft", "ip", "ss", "nc", "python3", "dpkg-statoverride", "setfacl", "getfacl", "useradd", "visudo", "chage", "ping", "nginx"]) {
   // Real tools the script itself uses (awk, grep, sort, head, sed, df) must keep working.
   if (["awk", "grep", "sort"].includes(command)) continue;
   writeFileSync(join(stubs, command), "#!/bin/sh\nexit 0\n");

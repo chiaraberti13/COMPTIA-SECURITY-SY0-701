@@ -73,6 +73,10 @@ describe("lab datasets", () => {
     for (const name of ["access.log", "auth-events.jsonl"]) {
       expect(sha256(readFileSync(join(scratch, name))), name).toBe(catalogued.get(`10-attack-to-defense/data/${name}`));
     }
+    execFileSync("python3", [resolve(LABS, "11-telemetry-views/data/genera_telemetria.py")], { cwd: scratch });
+    for (const name of ["rete.jsonl", "identita.jsonl", "endpoint.jsonl"]) {
+      expect(sha256(readFileSync(join(scratch, name))), name).toBe(catalogued.get(`11-telemetry-views/data/${name}`));
+    }
     rmSync(scratch, { recursive: true, force: true });
   });
 
@@ -187,5 +191,46 @@ describe("expected output of Lab 10, recomputed from the traces", () => {
     expect(alert).toBe("2026-09-29T10:31:09Z");
     expect(alert < takeover).toBe(true);
     for (const lang of LANGS) expect(readme("10-attack-to-defense", lang)).toContain(`ALLARME ${alert} 198.51.100.50 10 login`);
+  });
+});
+
+describe("expected output of Lab 11, recomputed from the telemetry", () => {
+  const jsonl = (name: string): Record<string, string | number>[] =>
+    read(`11-telemetry-views/data/${name}`).trim().split("\n").map((l) => JSON.parse(l));
+  const rete = jsonl("rete.jsonl");
+  const identita = jsonl("identita.jsonl");
+  const endpoint = jsonl("endpoint.jsonl");
+
+  it("prints the flows per source and duration", () => {
+    const counts = new Map<string, number>();
+    for (const f of rete) counts.set(`${f.src} ${f.duration_s}s`, (counts.get(`${f.src} ${f.duration_s}s`) ?? 0) + 1);
+    expect(counts.size).toBe(4);
+    for (const lang of LANGS) {
+      const text = readme("11-telemetry-views", lang);
+      for (const [key, n] of counts) expect(text, key).toContain(`${String(n).padStart(7)} ${key}`);
+    }
+    // The network sensor carries no usernames: the lab draws its first lesson from that.
+    expect(rete.every((f) => !("user" in f))).toBe(true);
+  });
+
+  it("prints the failures per source and the accounts tried", () => {
+    const failures = identita.filter((e) => e.result === "failure");
+    for (const src of new Set(failures.map((e) => e.src))) {
+      const mine = failures.filter((e) => e.src === src);
+      const line = `{"src":"${src}","falliti":${mine.length},"account":${new Set(mine.map((e) => e.user)).size}}`;
+      for (const lang of LANGS) expect(readme("11-telemetry-views", lang), line).toContain(line);
+    }
+  });
+
+  it("raises one correlated alert with the sudo commands that followed", () => {
+    const ok = identita.find((e) => e.result === "success" && e.src === "203.0.113.45")!;
+    const failed = identita.filter((e) => e.result === "failure" && e.user === ok.user && e.src === ok.src && e.time < ok.time).length;
+    const after = endpoint
+      .filter((e) => e.parent === "sudo" && Date.parse(String(e.time)) - Date.parse(String(ok.time)) >= 0 && Date.parse(String(e.time)) - Date.parse(String(ok.time)) <= 300_000)
+      .map((e) => e.command);
+    const alert = `ALLARME ${String(ok.time).slice(11, 19)} ${ok.user} da ${ok.src}: accesso dopo ${failed} falliti, poi con sudo: ${after.join("; ")}`;
+    expect(failed).toBe(24);
+    expect(after).toHaveLength(2);
+    for (const lang of LANGS) expect(readme("11-telemetry-views", lang)).toContain(alert);
   });
 });

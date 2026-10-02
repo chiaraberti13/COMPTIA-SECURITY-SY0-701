@@ -20,6 +20,10 @@ SHA-256. Sono tutti **sintetici**: nessuna persona, azienda, indirizzo o credenz
 | `10-attack-to-defense/data/access.log` | 10 | 57 richieste al web server: traffico normale, una ricognizione di file esposti, un credential stuffing | generato da `genera_tracce.py` | `9afa5c4cb0bd3d312114d95d80f097708bb56e6c3ce582f12925a9ee194affde` |
 | `10-attack-to-defense/data/auth-events.jsonl` | 10 | 43 eventi di login dell'applicazione, con l'account compromesso | generato da `genera_tracce.py` | `dfe106eee0eadb7505d872ac039a0151ae7a6970eac1f781623e2dfd8a6645a9` |
 | `10-attack-to-defense/data/genera_tracce.py` | 10 | il generatore delle due tracce, deterministico | scritto a mano | `45c14ba31e22a014b8437bcccc6540cd3e588fc11d5e6e53a6e5bfd8a9c3dab0` |
+| `11-telemetry-views/data/endpoint.jsonl` | 11 | 8 eventi dell'agente sull'endpoint: processi e file modificati, con la persistenza | generato da `genera_telemetria.py` | `5c102a3b0b76e60aeb653f10360d602f757163cd51460107f46296f299fe0219` |
+| `11-telemetry-views/data/identita.jsonl` | 11 | 38 autenticazioni: un accesso normale, un brute force riuscito, un password spraying | generato da `genera_telemetria.py` | `7c05f0a5071cb30841745e5663a9d3f5081a68d90ad1b866541452f3501a5156` |
+| `11-telemetry-views/data/rete.jsonl` | 11 | 38 flussi di rete SSH dello stesso incidente, senza nomi utente | generato da `genera_telemetria.py` | `162ab091bd2c31722588e9d87d4e4a548f607edf286c0067815e5674808fa1c7` |
+| `11-telemetry-views/data/genera_telemetria.py` | 11 | il generatore delle tre fonti, deterministico | scritto a mano | `40a3d0bca27a9ce70c54ec3cf001cd82e4fecf0c7c3b3db181cdc0fe91152a28` |
 
 Gli altri laboratori creano i propri dati durante l'esercizio (chiavi e certificati nel Lab 04,
 file d'ufficio nel Lab 05, utenti nel Lab 08) e li cancellano nel cleanup: nel repository non

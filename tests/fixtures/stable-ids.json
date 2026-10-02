@@ -1287,6 +1287,7 @@
     "07-linux-hardening",
     "08-linux-iam",
     "09-network-segmentation",
-    "10-attack-to-defense"
+    "10-attack-to-defense",
+    "11-telemetry-views"
   ]
 }
