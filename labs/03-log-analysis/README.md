@@ -33,7 +33,8 @@ una volta dentro. Alla fine consegni una timeline e le azioni consigliate.
 ```
 
 Nessuna rete, nessun servizio: lavori solo su un file. Il log è **sintetico**, generato per
-l'esercizio. Gli indirizzi esterni appartengono ai blocchi riservati alla documentazione
+l'esercizio da `data/genera_auth_log.py`, che lo ricrea identico (vedi
+[Dati sintetici dei laboratori](../DATI.md)). Gli indirizzi esterni appartengono ai blocchi riservati alla documentazione
 (`203.0.113.0/24` e `198.51.100.0/24`, RFC 5737), quelli interni a una rete privata, e le chiavi
 sono finte.
 
