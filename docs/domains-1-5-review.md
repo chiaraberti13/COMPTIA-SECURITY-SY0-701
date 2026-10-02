@@ -152,8 +152,7 @@ restano obbligatori anche senza approvazioni personali.
   dataset, analisi di ogni distrattore e parità delle traduzioni.
 - Build di produzione, precompressione e smoke test superati.
 - Script `tsx` eseguiti con `node --import tsx` per il limite IPC locale.
-- La CI della PR #81 è risultata verde (Docs, CI e Security). I check della
-  nuova PR, inclusi E2E/axe, vanno verificati sul nuovo commit.
+- CI delle PR #81 e #82 superata: Docs, CI e Security, inclusi E2E/axe.
 
 ## English summary
 

@@ -72,7 +72,7 @@ una nuova verifica completa del PDF ufficiale degli obiettivi.
   parità IT/EN e prove del controllo ortografico con refusi introdotti.
 - Build di produzione e smoke test riusciti; `tsx` avviato tramite
   `node --import tsx` per un limite IPC dell'ambiente locale.
-- E2E/axe e controlli GitHub della PR restano da eseguire in CI.
+- E2E/axe e controlli GitHub della PR #81 superati in CI.
 
 ## Chiusura
 
