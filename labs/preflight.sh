@@ -39,8 +39,9 @@ case "$lab" in
   07) risk=moderate; cmds="sshd nft ip ss nc python3 dpkg-statoverride";     ports="8080" ;;
   08) risk=moderate; cmds="setfacl getfacl useradd visudo chage";            ports="" ;;
   09) risk=moderate; cmds="ip nft ss nc ping python3";                       ports="" ;;
+  10) risk=low;      cmds="awk jq curl sha256sum nginx";                     ports="8090" ;;
   *)
-    printf '%s\n' "$(t 'Uso: bash labs/preflight.sh NN [--en], con NN fra 01 e 09.' 'Usage: bash labs/preflight.sh NN [--en], with NN between 01 and 09.')" >&2
+    printf '%s\n' "$(t 'Uso: bash labs/preflight.sh NN [--en], con NN fra 01 e 10.' 'Usage: bash labs/preflight.sh NN [--en], with NN between 01 and 10.')" >&2
     exit 2 ;;
 esac
 

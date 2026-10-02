@@ -17,6 +17,9 @@ SHA-256. Sono tutti **sintetici**: nessuna persona, azienda, indirizzo o credenz
 | `03-log-analysis/data/genera_auth_log.py` | 03 | il generatore di `auth.log`, deterministico | scritto a mano | `df86e5360ed77cb2c183727840910d203dcca07563bb33ead938c23af77b2bb6` |
 | `06-incident-triage/data/alerts.json` | 06 | 12 allarmi di un SIEM in una giornata | scritto a mano | `a029e348605707ca19f63f4406fb40e9bee02a7a4a62575250083512d3e37350` |
 | `06-incident-triage/data/inventory.json` | 06 | inventario degli asset ed eccezioni approvate | scritto a mano | `c67751204e667eefe1024d4ae69079d968f51ef52fd184d51aef72e635a56c95` |
+| `10-attack-to-defense/data/access.log` | 10 | 57 richieste al web server: traffico normale, una ricognizione di file esposti, un credential stuffing | generato da `genera_tracce.py` | `9afa5c4cb0bd3d312114d95d80f097708bb56e6c3ce582f12925a9ee194affde` |
+| `10-attack-to-defense/data/auth-events.jsonl` | 10 | 43 eventi di login dell'applicazione, con l'account compromesso | generato da `genera_tracce.py` | `dfe106eee0eadb7505d872ac039a0151ae7a6970eac1f781623e2dfd8a6645a9` |
+| `10-attack-to-defense/data/genera_tracce.py` | 10 | il generatore delle due tracce, deterministico | scritto a mano | `45c14ba31e22a014b8437bcccc6540cd3e588fc11d5e6e53a6e5bfd8a9c3dab0` |
 
 Gli altri laboratori creano i propri dati durante l'esercizio (chiavi e certificati nel Lab 04,
 file d'ufficio nel Lab 05, utenti nel Lab 08) e li cancellano nel cleanup: nel repository non

@@ -1,7 +1,8 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 /*
@@ -66,6 +67,13 @@ describe("lab datasets", () => {
   it("are reproduced byte for byte by their generator", () => {
     const generated = execFileSync("python3", [join(LABS, "03-log-analysis/data/genera_auth_log.py")]);
     expect(sha256(generated)).toBe(catalogued.get("03-log-analysis/data/auth.log"));
+    // The Lab 10 generator writes its two files into the current folder: run it in a scratch one.
+    const scratch = mkdtempSync(join(tmpdir(), "lab10-"));
+    execFileSync("python3", [resolve(LABS, "10-attack-to-defense/data/genera_tracce.py")], { cwd: scratch });
+    for (const name of ["access.log", "auth-events.jsonl"]) {
+      expect(sha256(readFileSync(join(scratch, name))), name).toBe(catalogued.get(`10-attack-to-defense/data/${name}`));
+    }
+    rmSync(scratch, { recursive: true, force: true });
   });
 
   it("use only private or documentation addresses, reserved domains and no email", () => {
@@ -79,7 +87,9 @@ describe("lab datasets", () => {
         const domain = match[0];
         if (/\.(json|log|exe|docm|txt)$/i.test(domain)) continue; // file names, not hosts
         // User names such as l.bianchi look like domains: skip the fields that hold people.
-        if (/(user=|"owner": ")$/.test(text.slice(Math.max(0, match.index - 10), match.index))) continue;
+        if (/(user=|"owner": "|"user": ")$/.test(text.slice(Math.max(0, match.index - 10), match.index))) continue;
+        // URL paths (/app.js, /backup.zip) and user agents (Firefox/131.0) are not hosts.
+        if (/[/(]$/.test(text.slice(match.index - 1, match.index))) continue;
         if (!RESERVED_DOMAIN.test(domain.toLowerCase())) problems.push(`${file}: domain ${domain}`);
       }
       for (const [email] of text.matchAll(/\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g)) problems.push(`${file}: email ${email}`);
@@ -145,5 +155,37 @@ describe("expected output of Lab 06, recomputed from alerts.json", () => {
       .map((a) => `${a.time.slice(11, 19)} ${a.source} ${a.rule}`);
     expect(story).toHaveLength(6);
     for (const lang of LANGS) expect(readme("06-incident-triage", lang)).toContain(story.map((s) => `   ${s}`).join("\n"));
+  });
+});
+
+describe("expected output of Lab 10, recomputed from the traces", () => {
+  const access = read("10-attack-to-defense/data/access.log").trim().split("\n").map((l) => l.split(" "));
+  const events: { time: string; ip: string; user: string; result: string }[] = read("10-attack-to-defense/data/auth-events.jsonl")
+    .trim().split("\n").map((l) => JSON.parse(l));
+
+  it("prints the requests per address and status", () => {
+    const counts = new Map<string, number>();
+    for (const f of access) counts.set(`${f[0]} ${f[8]}`, (counts.get(`${f[0]} ${f[8]}`) ?? 0) + 1);
+    for (const lang of LANGS) {
+      const text = readme("10-attack-to-defense", lang);
+      for (const [key, n] of counts) expect(text, key).toContain(`${String(n).padStart(7)} ${key}`);
+    }
+  });
+
+  it("prints forty accounts tried once each, one of them taken over", () => {
+    const stuffing = events.filter((e) => e.ip === "198.51.100.50");
+    expect(stuffing).toHaveLength(40);
+    expect(new Set(stuffing.map((e) => e.user)).size).toBe(40);
+    expect(stuffing.filter((e) => e.result === "success").map((e) => e.user)).toEqual(["m.conti"]);
+  });
+
+  it("raises the sign-in alert at the time the lab states, before the takeover", () => {
+    const failures = events.filter((e) => e.result === "failure" && e.ip === "198.51.100.50").map((e) => Date.parse(e.time));
+    const index = failures.findIndex((t, i) => failures.filter((u, j) => j <= i && t - u < 60_000).length >= 10);
+    const alert = new Date(failures[index]).toISOString().replace(".000", "");
+    const takeover = events.find((e) => e.result === "success" && e.ip === "198.51.100.50")!.time;
+    expect(alert).toBe("2026-09-29T10:31:09Z");
+    expect(alert < takeover).toBe(true);
+    for (const lang of LANGS) expect(readme("10-attack-to-defense", lang)).toContain(`ALLARME ${alert} 198.51.100.50 10 login`);
   });
 });

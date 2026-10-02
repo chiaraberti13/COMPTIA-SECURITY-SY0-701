@@ -29,6 +29,7 @@ durata e livello di rischio prima di qualsiasi comando.
 | [07 — Hardening di un server Linux: SSH, SUID e firewall](07-linux-hardening/README.md) ([versione inglese](07-linux-hardening/README.en.md)) | 2.5, 4.1, 4.5 | `moderate` | 60 minuti |
 | [08 — Identità e accessi su Linux: gruppi, ACL, sudo e uscita di un dipendente](08-linux-iam/README.md) ([versione inglese](08-linux-iam/README.en.md)) | 2.5, 4.6 | `moderate` | 50 minuti |
 | [09 — Segmentare una rete: uffici, server e ospiti dietro un router con nftables](09-network-segmentation/README.md) ([versione inglese](09-network-segmentation/README.en.md)) | 2.5, 3.2 | `moderate` | 50 minuti |
+| [10 — Dalla traccia alla difesa: ricognizione e credential stuffing](10-attack-to-defense/README.md) ([versione inglese](10-attack-to-defense/README.en.md)) | 2.4, 4.4, 4.5, 4.8 | `low` | 60 minuti |
 
 ## Regole d'ingaggio
 

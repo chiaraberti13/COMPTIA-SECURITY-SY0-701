@@ -1286,6 +1286,7 @@
     "06-incident-triage",
     "07-linux-hardening",
     "08-linux-iam",
-    "09-network-segmentation"
+    "09-network-segmentation",
+    "10-attack-to-defense"
   ]
 }
