@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode } from "react";
 import { Activity, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
-import { reviewSummary, sourcesOf, type Source } from "../contentReview";
+import { sourcesOf, type Source } from "../contentReview";
 import type { AttackChain, DomainGuide } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
@@ -59,12 +59,11 @@ function ExternalAnchor({ href, children }: { href: string; children: ReactNode 
   );
 }
 
-/** Sources of the domain's objectives and how many of them a person reviewed. */
-function SourcesAndReview({ guide }: { guide: DomainGuide }) {
+/** Sources of the domain's objectives. */
+function SourcesSection({ guide }: { guide: DomainGuide }) {
   const { t } = useLang();
   const codes = guide.objectives.map((o) => o.code);
   const sources = sourcesOf(codes);
-  const summary = reviewSummary(codes);
   const list = (items: Source[]) => (
     <ul className="space-y-1">
       {items.map((source) => (
@@ -90,9 +89,6 @@ function SourcesAndReview({ guide }: { guide: DomainGuide }) {
       }
     >
         <p className="text-xs text-slate-400 leading-relaxed">{t("study.sourcesNote")}</p>
-        <p className="text-xs text-slate-200 font-semibold" id={`guide_review_status_${guide.domainId}`}>
-          {t("study.reviewStatus", { reviewed: summary.reviewed, total: codes.length })}
-        </p>
         <div className="space-y-2">
           <h4 className="text-[11px] font-bold text-cyan-300">{t("study.primarySources")}</h4>
           {list(sources.filter((s) => s.kind !== "reference"))}
@@ -334,7 +330,7 @@ export default function DomainGuidePanel({
                         <tr key={row[0]} className="border-t border-slate-800 align-top">
                           <th scope="row" className="px-3 py-2 font-semibold text-slate-200 min-w-[6rem]">{row[0]}</th>
                           {row.slice(1).map((cell, cellIdx) => (
-                            <td key={cellIdx} className="px-3 py-2 text-slate-400 leading-relaxed min-w-[7rem]">{cell}</td>
+                            <td key={cellIdx} className="px-3 py-2 text-slate-400 leading-relaxed min-w-[12rem] max-w-[24rem] whitespace-normal break-words">{cell}</td>
                           ))}
                         </tr>
                       ))}
@@ -424,7 +420,7 @@ export default function DomainGuidePanel({
 
         <ModuleSummary guide={guide} headingProps={headingProps("summary")} />
 
-        <SourcesAndReview guide={guide} />
+        <SourcesSection guide={guide} />
 
         <div className="border-t border-slate-800 pt-6 flex gap-3">
           <Flag className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" aria-hidden="true" />

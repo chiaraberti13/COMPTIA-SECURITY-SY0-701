@@ -660,13 +660,13 @@ test.describe("exam readiness", () => {
   });
 });
 
-test.describe("sources and review", () => {
-  test("every domain guide lists its sources and the human review status", async ({ page }) => {
+test.describe("sources", () => {
+  test("the domain guide lists its sources without a human approval counter", async ({ page }) => {
     await openApp(page);
     await page.locator("#domain_guide_1_summary").click();
     const sources = page.locator("#guide_sources_1");
     await sources.locator(":scope > summary").click();
-    await expect(page.locator("#guide_review_status_1")).toContainText("0 su 4");
+    await expect(page.locator("[id^=guide_review_status_]")).toHaveCount(0);
     await expect(sources.getByRole("link", { name: /SP 800-53/ })).toHaveAttribute("href", /^https:\/\/csrc\.nist\.gov\//);
     await expect(sources.getByRole("link", { name: /Segnalalo con una issue/ })).toHaveAttribute("rel", "noopener noreferrer");
     expect(await seriousViolations(page)).toEqual([]);

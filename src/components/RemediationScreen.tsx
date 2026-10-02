@@ -78,7 +78,7 @@ export default function RemediationScreen({ remediation, quiz, onRegenerate, lev
           <span>{t("rem.headerLevel", { level: levelLabel(remediationQuestions[remediationIndex].level) })}</span>
           <span>{t("rem.questionOf", { i: remediationIndex + 1, n: remediationQuestions.length })}</span>
         </div>
-        {/* Generated questions are never reviewed: say so next to each one. */}
+        {/* Identify dynamically generated questions next to each one. */}
         <p className="flex gap-2 text-[11px] text-slate-400 leading-snug" id="remediation_ai_notice">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" aria-hidden="true" />
           <span>{t("rem.aiGenerated")}</span>

@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Removed mandatory human-review metadata and second-reviewer requirements; retained sources and mandatory CI.
+- Standardized email spelling in both languages and improved comparative-table readability and accessibility.
+
 ### Content quality / Qualità dei contenuti — 2026-10-02
 
 - AI-assisted Domain 1 report; six bilingual fixes (wildcards, block modes,

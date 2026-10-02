@@ -1,15 +1,15 @@
 # Rapporto di revisione — Dominio 1
 
 **Data:** 2026-10-02. **Base:** `e09342f` (`main`, dopo PR #80).
-**Revisore:** Codex, analisi assistita dall'AI. **Validazione umana:** da eseguire.
+**Revisore:** Codex, analisi assistita dall'AI. **Stato:** correzioni autorizzate dalla proprietaria; nessuna validazione umana obbligatoria.
 
 ## Esito
 
 Il primo passaggio rileva **sei problemi tecnici/didattici** e un refuso nel
 materiale collocato nel Dominio 1. Le correzioni sono applicate in IT e EN;
 identificatori, risposte attese e progressi salvati restano compatibili.
-I 28 obiettivi del registro mantengono `needs-review`: questo rapporto non
-attribuisce una revisione umana a Chiara e non certifica l'assenza di altri errori.
+Il requisito di approvazione umana è stato ritirato dalla proprietaria il 2026-10-02.
+Il rapporto documenta un passaggio assistito dall’AI, senza certificare l’assenza di altri errori.
 
 ## Perimetro e metodo
 
@@ -29,9 +29,9 @@ di accuratezza semantica.
 
 | Obiettivo | Valutazione del primo passaggio | Azione |
 |---|---|---|
-| 1.1 — Controlli | Categorie e funzioni distinte; già chiarito il ruolo compensativo del firewall | Confermare gli esempi durante la revisione umana |
+| 1.1 — Controlli | Categorie e funzioni distinte; già chiarito il ruolo compensativo del firewall | Nessuna nuova correzione rilevata |
 | 1.2 — Principi | Zero Trust distingue decisione e trasporto; restavano assoluti sul vestibolo e sul non ripudio | Correzioni R3 e R4 |
-| 1.3 — Change management | Guida strutturata con approvazione, impatto, test, backout, finestre e documentazione | Nessuna nuova correzione tecnica in questo passaggio; resta la validazione umana |
+| 1.3 — Change management | Guida strutturata con approvazione, impatto, test, backout, finestre e documentazione | Nessuna nuova correzione tecnica in questo passaggio |
 | 1.4 — Crittografia | Diverse spiegazioni ancora incoerenti con distinzioni già corrette nel glossario | Correzioni R1, R2, R5 e R6 |
 
 ## Problemi e correzioni
@@ -74,13 +74,10 @@ una nuova verifica completa del PDF ufficiale degli obiettivi.
   `node --import tsx` per un limite IPC dell'ambiente locale.
 - E2E/axe e controlli GitHub della PR restano da eseguire in CI.
 
-## Per la validazione umana
+## Chiusura
 
-- [ ] Confermare le sei correzioni e le traduzioni.
-- [ ] Controllare sistematicamente tutte le spiegazioni e i distrattori 1.1–1.4.
-- [ ] Esaminare gli assoluti residui negli esempi (in particolare sicurezza fisica,
-      prestazioni dei cifrari, firma e attribuzione dell'identità).
-- [ ] Registrare data e revisore in `src/contentReview.ts` solo dopo il controllo.
+Correzioni autorizzate il 2026-10-02. Eliminato il requisito di una revisione
+indipendente e del relativo registro; restano fonti e controlli automatici.
 
 ## English review summary
 
@@ -90,6 +87,6 @@ sentence-by-sentence certification. Six technical/educational issues were fixed
 in both languages: wildcard scope, padding versus block cipher modes, vestibule
 limitations, evidence supporting non-repudiation, signing versus encryption,
 and the CRL/OCSP question. Answer indices and content identifiers are unchanged.
-All objective review states remain `needs-review`. The official CompTIA page
+Human approval is no longer required, following the owner’s authorization. The official CompTIA page
 was unavailable during this pass; objective mapping follows the existing project
-inventory. Human review of all explanations and distractors remains outstanding.
+inventory. This report does not certify every explanation and distractor.
