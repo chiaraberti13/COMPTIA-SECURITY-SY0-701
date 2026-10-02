@@ -8,6 +8,15 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+### Content quality / Qualità dei contenuti — 2026-10-02
+
+- AI-assisted Domain 1 report; six bilingual fixes (wildcards, block modes,
+  vestibules, non-repudiation, signatures, CRL/OCSP). Human sign-off remains pending.
+- Italian spelling of the full study corpus using MIT project vocabulary,
+  without new dependencies or license policy changes; English checked separately.
+- Rapporto assistito dall’AI sul Dominio 1, sei correzioni IT/EN; revisione umana
+  ancora aperta. Ortografia italiana del corpus con lessico MIT del progetto.
+
 ### Added
 
 - Versioned release workflow: validates the tag against the package version, dated changelog notes and main ancestry; runs checks, production audit, build and smoke before creating a draft with the application archive, production CycloneDX SBOM and SHA-256 checksums. Bilingual instructions in `docs/releases.md`; no release is published automatically.

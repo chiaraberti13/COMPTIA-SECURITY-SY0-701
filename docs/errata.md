@@ -14,12 +14,17 @@ and what it says now. Typos, style and translation fixes are left to the git his
 correzione); un nome in `monospazio` senza numero è una voce del glossario. Ogni correzione è stata applicata
 in italiano e in inglese nello stesso commit. Per segnalare un errore: [apri una issue](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues).
 
-Ultimo aggiornamento: 2026-09-27. Le correzioni precedenti al 2026-09-24 sono ricostruite dalla cronologia git.
+Ultimo aggiornamento: 2026-10-02. Le correzioni precedenti al 2026-09-24 sono ricostruite dalla cronologia git.
 
 ## Dominio 1 — General Security Concepts
 
 | Data | Dove | Diceva | Dice ora | Commit |
 |---|---|---|---|---|
+| 2026-10-02 | `WildcardCertificates` | Wildcard includeva il dominio principale | Dominio principale e livelli ulteriori richiedono SAN separati | [Rapporto](domain-1-review.md) |
+| 2026-10-02 | `BlockCipherConcept`, `D1#131` | Ogni cifrario a blocchi richiedeva padding | Dipende dalla modalità; CTR/GCM non richiedono padding del testo in chiaro | [Rapporto](domain-1-review.md) |
+| 2026-10-02 | `AccessControlVestibule` | Interblocco come garanzia assoluta contro tailgating | Necessari progetto e controllo della presenza; nessuna garanzia dal solo interblocco | [Rapporto](domain-1-review.md) |
+| 2026-10-02 | `D1#44`, `D1#147` | Non ripudio assoluto e firma come cifratura con chiave privata | Prova dalla chiave e custodia; firma distinta dalla cifratura | [Rapporto](domain-1-review.md) |
+| 2026-10-02 | `D1#221` | CRL scelta perché mancava il nome del certificato | Scenario richiede elenco firmato; identificazione con emittente e seriale | [Rapporto](domain-1-review.md) |
 | 2026-09-14 | `D1#136` | bcrypt "configurato con 12.000 iterazioni" | bcrypt si configura con un *cost factor* esponenziale: cost 12 = 2^12 = 4.096 iterazioni | [609fa7c](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/609fa7c) |
 | 2026-09-14 | `D1#140` | Let's Encrypt fra le "CA commerciali" | CA gratuita e senza scopo di lucro | [609fa7c](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/609fa7c) |
 | 2026-09-14 | `D1#143` | Certificato "autofirmato" firmato con la chiave di una root locale | Quello descrive un certificato emesso da una CA privata; l'autofirmato è firmato con la propria chiave. Il 15/09 chiarita anche la differenza con il certificato radice | [609fa7c](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/609fa7c), [ded6e70](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/commit/ded6e70) |

@@ -49,8 +49,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # English content only: the Italian dictionaries for cspell are GPL.
-      - name: Spell check (English content)
+      # Both languages; Italian uses the project MIT vocabulary.
+      - name: Spell check (Italian and English content)
         run: npm run spellcheck
 
       # All unit, API and component tests, with the coverage thresholds of
