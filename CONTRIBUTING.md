@@ -28,7 +28,7 @@ npm run dev               # http://localhost:3000
 ### Checks to run before a pull request
 
 ```bash
-npm run check             # typecheck + lint (code and Markdown) + English spell check + all tests (CI runs the same)
+npm run check             # typecheck + lint (code and Markdown) + Italian/English spell check + all tests (CI runs the same)
 npm run test:coverage     # the tests again, failing below the coverage thresholds of vitest.config.ts
 npm run build             # production build
 npm run smoke             # starts the built server in production mode and probes it
@@ -37,7 +37,7 @@ npm run e2e               # Playwright + axe at phone and desktop width (after b
 
 For `npm run e2e`, install Chromium once with `npx playwright install chromium`, or point `PW_CHROMIUM_PATH` to an existing Chromium.
 
-`npm run spellcheck` checks the English content with cspell and names the text that holds an unknown word: fix it, or add a real term (an acronym, a product, a fictional name) to `cspell/project-words.txt`.
+`npm run spellcheck` checks Italian and English content separately with cspell and names the text that holds an unknown word: fix it, or add a real term (an acronym, a product, a fictional name) to `cspell/project-words.txt`.
 
 CI runs these on Node 22 and 24, plus a separate security workflow (secret scan, `npm audit`, dependency review, CodeQL). A pull request is ready when all of them are green.
 
@@ -123,7 +123,7 @@ npm run e2e               # Playwright + axe a larghezza telefono e desktop (dop
 
 Per `npm run e2e` installa Chromium una volta con `npx playwright install chromium`, oppure indica un Chromium già presente con `PW_CHROMIUM_PATH`.
 
-`npm run spellcheck` controlla con cspell i contenuti in inglese e indica il testo che contiene una parola sconosciuta: correggila, oppure aggiungi un termine vero (una sigla, un prodotto, un nome di fantasia) a `cspell/project-words.txt`.
+`npm run spellcheck` controlla separatamente con cspell i contenuti italiani e inglesi e indica il testo che contiene una parola sconosciuta: correggila, oppure aggiungi un termine vero (una sigla, un prodotto, un nome di fantasia) a `cspell/project-words.txt`.
 
 La CI li esegue su Node 22 e 24, insieme a un workflow di sicurezza separato (ricerca di segreti, `npm audit`, dependency review, CodeQL). Una pull request è pronta quando sono tutti verdi.
 
@@ -173,3 +173,5 @@ Per una versione principale la CI verde non basta: Express 5, per esempio, compi
 - Messaggi di commit: un oggetto breve all'imperativo (`fix(server): ...`, `feat(guides): ...`, `docs: ...`), poi il *perché* della modifica.
 - Compila il modello della pull request, compreso come hai verificato la modifica.
 - Aggiorna [`CHANGELOG.md`](CHANGELOG.md) nella sezione *Unreleased* e, quando una voce cambia stato, [`ROADMAP.md`](ROADMAP.md).
+
+Italian vocabulary / Vocabolario italiano: [policy and scope / politica e perimetro](docs/italian-spelling.md).
