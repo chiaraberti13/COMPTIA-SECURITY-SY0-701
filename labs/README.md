@@ -183,6 +183,20 @@ inglese. Per i laboratori `moderate` lo script va copiato nella macchina virtual
 bisogno del resto del repository. `tests/preflight.test.ts` lo esegue in ogni scenario, con
 strumenti finti e letture del sistema sostituite dalle variabili `PREFLIGHT_*`.
 
+## Laboratori in container
+
+I laboratori `low` che lavorano su file locali (03, 04, 05, 06, 10 e 11) si possono svolgere anche
+in un container usa e getta, con gli strumenti già installati a versioni fissate:
+
+```bash
+docker build -t comptia-labs labs/container
+bash labs/container/run.sh 11
+```
+
+Il container non ha rete, capability né privilegi, legge i laboratori in sola lettura e, all'uscita,
+sparisce con la sua home. Che cosa garantisce, come si verifica e come si aggiorna è in
+[Laboratori in container](container/README.md). Per i laboratori `moderate` resta la VM.
+
 ## Scrivere un nuovo laboratorio
 
 1. Copia [TEMPLATE.md](TEMPLATE.md) in `labs/NN-nome-breve/README.md` e scrivi la versione
@@ -193,5 +207,8 @@ strumenti finti e letture del sistema sostituite dalle variabili `PREFLIGHT_*`.
 4. Se il laboratorio analizza dei file, mettili in `labs/NN-nome-breve/data/` e registrali
    nel [catalogo dei dati sintetici](DATI.md), con l'impronta e, se generati, con il generatore.
 5. Aggiungi i requisiti del laboratorio (rischio, comandi, porte) a `labs/preflight.sh`.
-6. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
+6. Se il laboratorio è `low` e usa solo file locali, aggiungilo a `supported` in
+   `labs/container/run.sh` e i suoi strumenti al `Dockerfile` accanto, poi esegui
+   `bash labs/container/verify.sh`.
+7. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
    verifica sezioni, metadati, parità fra le due lingue e indirizzi usati nei comandi.

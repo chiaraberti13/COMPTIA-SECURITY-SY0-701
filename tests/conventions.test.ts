@@ -40,7 +40,7 @@ function currentIds(): StableIds {
     questions: DOMAINS.flatMap((d) => sourceQuestions(d).map((q) => questionUid(d, q.id))).sort((a, b) => a - b),
     concepts: DOMAINS.flatMap((d) => sourceTopics(d).flatMap((g) => g.subtopics.map((s) => s.checklistKey))).sort(),
     objectives: [...ALL_OBJECTIVES],
-    labs: readdirSync("labs", { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort(),
+    labs: readdirSync("labs", { withFileTypes: true }).filter((e) => e.isDirectory() && /^\d{2}-/.test(e.name)).map((e) => e.name).sort(),
   };
 }
 

@@ -25,7 +25,8 @@ const FILES = { it: "README.md", en: "README.en.md" } as const;
 type Lang = keyof typeof FILES;
 
 const labs = readdirSync(LABS_DIR, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
+  // Only NN-name folders are labs; labs/container holds the image they can run in.
+  .filter((entry) => entry.isDirectory() && /^\d{2}-/.test(entry.name))
   .map((entry) => entry.name)
   .sort();
 

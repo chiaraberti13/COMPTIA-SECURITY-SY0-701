@@ -18,7 +18,7 @@ const CATALOG = readFileSync(join(LABS, "DATI.md"), "utf8");
 const LANGS = ["README.md", "README.en.md"];
 
 const dataFiles = readdirSync(LABS, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
+  .filter((d) => d.isDirectory() && /^\d{2}-/.test(d.name))
   .flatMap((d) => {
     try {
       return readdirSync(join(LABS, d.name, "data")).map((f) => `${d.name}/data/${f}`);

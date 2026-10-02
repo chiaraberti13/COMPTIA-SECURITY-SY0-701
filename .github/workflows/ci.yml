@@ -157,3 +157,22 @@ jobs:
       - name: Container logs
         if: always()
         run: docker logs app || true
+
+  labs-container:
+    name: Lab container (build, isolation, labs inside)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Base pinned by digest and exact package versions: a version withdrawn
+      # from the Ubuntu archive makes this step fail instead of drifting.
+      - name: Build the lab image
+        run: docker build --tag comptia-labs labs/container
+
+      # Preflight of every supported lab inside the container, then the
+      # isolation run.sh promises (user, capabilities, read-only, no network),
+      # nginx of Lab 10 on a read-only root and no container left behind.
+      - name: Verify the labs inside the container
+        run: bash labs/container/verify.sh

@@ -60,3 +60,15 @@ updates:
         update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "deps(docker)"
+
+  # Base image of the lab container (labs/container/Dockerfile), pinned by
+  # digest. Its apt package versions are updated by hand.
+  - package-ecosystem: docker
+    directory: /labs/container
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(docker)"

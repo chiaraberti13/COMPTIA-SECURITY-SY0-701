@@ -42,7 +42,7 @@ function run(lab: string, overrides: Record<string, string> = {}, extra: string[
   return { code: result.status, out: result.stdout + result.stderr };
 }
 
-const labs = readdirSync("labs", { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+const labs = readdirSync("labs", { withFileTypes: true }).filter((d) => d.isDirectory() && /^\d{2}-/.test(d.name)).map((d) => d.name);
 
 describe("labs/preflight.sh", () => {
   it("knows every lab, with the risk level the lab declares", () => {
