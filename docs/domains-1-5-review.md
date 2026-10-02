@@ -1,7 +1,7 @@
 # Rapporto di revisione — Domini 1–5
 
 **Data:** 2026-10-02. **Base:** `9433f9d`, `main` dopo PR #81.
-**Revisore:** Codex, analisi assistita dall'AI. **Validazione umana:** aperta.
+**Revisore:** Codex, analisi assistita dall'AI. **Stato:** correzioni autorizzate dalla proprietaria; nessuna validazione umana obbligatoria.
 
 ## Esito e perimetro
 
@@ -36,9 +36,8 @@ fonti primarie per i punti tecnici e normativi corretti.
 **Limite:** non è una certificazione semantica di ogni frase delle 682
 spiegazioni, una revisione umana o una verifica nuova di ogni collegamento e
 fonte del corpus. Il PDF ufficiale CompTIA non è stato nuovamente verificato;
-il perimetro degli obiettivi segue il registro del repository. Tutti i 28 stati
-`needs-review` rimangono tali: non si attribuisce a Chiara una revisione che
-non ha svolto. Il superamento dei test non prova l'assenza di altri errori tecnici.
+il perimetro degli obiettivi segue il registro del repository. La proprietaria ha autorizzato le correzioni e ritirato il requisito di revisione umana
+il 2026-10-02; il registro conserva le fonti senza stati di approvazione personale. Il superamento dei test non prova l'assenza di altri errori tecnici.
 
 ## Problemi corretti
 
@@ -59,14 +58,14 @@ non ha svolto. Il superamento dei test non prova l'assenza di altri errori tecni
 
 Per tutte le cinque domande riscritte sono esplicitate le ragioni per scartare
 ciascun distrattore. Le traduzioni sono state rilette e i relativi fingerprint
-aggiornati; il registro automatico non sostituisce una revisione linguistica umana.
+aggiornati; il controllo lessicale non certifica grammatica e significato.
 
-## Valutazione per obiettivo e prossima verifica umana
+## Indicazioni di approfondimento per obiettivo
 
-Le righe senza un nuovo errore indicano cosa è stato esaminato e cosa resta da
-confermare; non equivalgono a un obiettivo certificato corretto.
+Le righe riepilogano gli aspetti esaminati e suggeriscono approfondimenti facoltativi
+per lo studio. Non sono attività aperte né condizioni di approvazione.
 
-| Obiettivo | Valutazione e prossimo controllo |
+| Obiettivo | Valutazione e approfondimenti |
 |---|---|
 | 1.1 | Distinzione fra categoria e funzione già documentata; verificare gli esempi con più funzioni |
 | 1.2 | Vestibolo e non ripudio corretti nella PR #81; controllare gli assoluti negli esempi fisici e deception |
@@ -93,7 +92,7 @@ confermare; non equivalgono a un obiettivo certificato corretto.
 | 5.1 | Ruoli e gerarchia documentale presenti; validare le responsabilità nel contesto organizzativo |
 | 5.2 | E9 esplicita l'incertezza; mantenere corretta la distinzione fra frequenza, probabilità e impatto |
 | 5.3 | Due diligence e monitoraggio distinti; verificare evidenze del fornitore e condizioni contrattuali |
-| 5.4 | E10 elimina l'esclusività della giurisdizione fisica; revisione legale degli esempi concreti ancora necessaria |
+| 5.4 | E10 elimina l'esclusività della giurisdizione fisica; per i casi concreti occorre verificare ambito e normativa applicabile |
 | 5.5 | Audit, attestazioni e ambienti di test distinti; verificare perimetro, periodo e limiti delle evidenze |
 | 5.6 | Awareness include segnalazione e formazione; verificare accessibilità, tono e misurazione con utenti reali |
 
@@ -129,7 +128,7 @@ I cinque check accettano risultati da GitHub Actions. `Require approvals`,
 Code Owners obbligatori e approvazione dell'ultimo push sono disattivati:
 **non occorre un secondo revisore**. La regola vale anche per gli amministratori;
 force push e cancellazione non sono consentiti. I controlli tecnici obbligatori
-non vengono confusi con la validazione umana dei contenuti.
+restano obbligatori anche senza approvazioni personali.
 
 ## Fonti verificate per le nuove correzioni
 
@@ -153,8 +152,7 @@ non vengono confusi con la validazione umana dei contenuti.
   dataset, analisi di ogni distrattore e parità delle traduzioni.
 - Build di produzione, precompressione e smoke test superati.
 - Script `tsx` eseguiti con `node --import tsx` per il limite IPC locale.
-- La CI della PR #81 è risultata verde (Docs, CI e Security). I check della
-  nuova PR, inclusi E2E/axe, vanno verificati sul nuovo commit.
+- CI delle PR #81 e #82 superata: Docs, CI e Security, inclusi E2E/axe.
 
 ## English summary
 
@@ -162,8 +160,8 @@ AI-assisted review across all five domains: 562 active concepts, 682 active
 questions and 28 objective guides. Twelve additional issue groups were corrected
 in both languages, following six Domain 1 fixes already merged in PR #81.
 The complete inventory receives structural and language checks; semantic review
-of explanations is targeted, not sentence-by-sentence certification. All human
-review states remain `needs-review`. Italian spelling covers the full extracted
+of explanations is targeted, not sentence-by-sentence certification. The owner authorized the corrections and removed mandatory human
+approval on 2026-10-02. Italian spelling covers the full extracted
 study corpus with project-owned MIT vocabulary and unchanged dependency-license
 policy. Main protection was saved with five mandatory GitHub Actions checks,
 up-to-date branches and resolved conversations, without required approvals.

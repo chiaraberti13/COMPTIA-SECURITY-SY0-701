@@ -1,10 +1,8 @@
 # Code owners are asked to review pull requests that touch their paths.
 # Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 #
-# Today there is a single maintainer. Paths are split by area so that a second
-# reviewer can take over one area (content, translations, security) by editing
-# one line. Note: if branch protection requires code-owner review, a sole owner
-# cannot approve their own pull requests; enable it only with a second owner.
+# Ownership identifies the maintainer responsible for each area.
+# Reviews and code-owner approvals are optional; mandatory CI protects main.
 
 *                               @chiaraberti13
 

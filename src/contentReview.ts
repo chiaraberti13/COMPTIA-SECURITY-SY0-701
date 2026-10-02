@@ -1,19 +1,4 @@
-/**
- * Where the study content of each SY0-701 objective can be checked, and
- * whether a person has checked it.
- *
- * - `SOURCES` is the catalogue. Primary sources are the exam objectives and
- *   the standards, laws and specifications they refer to; secondary sources
- *   are community and agency references that explain or apply them.
- * - `OBJECTIVE_REVIEW` gives every official objective its sources and its
- *   review state. A state becomes "reviewed" only when a person has compared
- *   the questions, glossary entries and guide of that objective with the
- *   listed sources: then the date and the reviewer are mandatory
- *   (tests/contentReview.test.ts). Automated checks never count as a review.
- *
- * The URLs are also written to docs/coverage-matrix.md, where the weekly
- * external-link check of the Docs workflow (lychee) verifies them.
- */
+/** Authoritative source catalogue and mapping for all SY0-701 objectives. */
 
 export type SourceKind = "exam" | "standard" | "reference";
 
@@ -58,14 +43,7 @@ export const SOURCES = {
 
 export type SourceId = keyof typeof SOURCES;
 
-export type ReviewStatus = "reviewed" | "needs-review" | "deprecated";
-
-export interface ObjectiveReview {
-  status: ReviewStatus;
-  /** ISO date (YYYY-MM-DD) of the last human review; null until one happens. */
-  lastReviewed: string | null;
-  /** GitHub handle of who reviewed it; null until one happens. */
-  reviewer: string | null;
+export interface ObjectiveSources {
   /** Primary sources first, then secondary ones. */
   sources: SourceId[];
 }
@@ -73,57 +51,44 @@ export interface ObjectiveReview {
 /** When the sources below were assigned to the objectives. */
 export const SOURCES_MAPPED_ON = "2026-09-28";
 
-const pending = (...sources: SourceId[]): ObjectiveReview => ({
-  status: "needs-review",
-  lastReviewed: null,
-  reviewer: null,
+const mapped = (...sources: SourceId[]): ObjectiveSources => ({
   sources: ["comptiaSecurityPlus", ...sources],
 });
 
-export const OBJECTIVE_REVIEW: Record<string, ObjectiveReview> = {
-  "1.1": pending("nist80053"),
-  "1.2": pending("nist800207", "nist80053"),
-  "1.3": pending("nist80053", "cisControls"),
-  "1.4": pending("nist80057", "nist80056a", "rfc8446"),
-  "2.1": pending("nist80030", "mitreAttack"),
-  "2.2": pending("nist800161", "mitreAttack"),
-  "2.3": pending("nist80053", "owaspTop10", "cisaKev"),
-  "2.4": pending("nist80061", "mitreAttack"),
-  "2.5": pending("nist80053", "cisControls"),
-  "3.1": pending("nist800145", "nist800207"),
-  "3.2": pending("nist800207", "cisControls"),
-  "3.3": pending("nist80057", "gdpr"),
-  "3.4": pending("nist80034"),
-  "4.1": pending("nist80053", "cisControls"),
-  "4.2": pending("nist80053", "nist80088", "cisControls"),
-  "4.3": pending("nist80040", "firstCvss", "cisaKev"),
-  "4.4": pending("nist80092", "mitreAttack"),
-  "4.5": pending("nist80053", "cisControls"),
-  "4.6": pending("nist800207", "nist80053", "nist80063b"),
-  "4.7": pending("nist80053", "cisControls"),
-  "4.8": pending("nist80061"),
-  "4.9": pending("nist80061", "nist80092"),
-  "5.1": pending("nistCsf", "iso27001", "nist80037"),
-  "5.2": pending("nist80030"),
-  "5.3": pending("nist800161", "soc2"),
-  "5.4": pending("gdpr", "pciDss", "iso27001", "hipaa"),
-  "5.5": pending("nist800115", "soc2"),
-  "5.6": pending("nist80050"),
+export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
+  "1.1": mapped("nist80053"),
+  "1.2": mapped("nist800207", "nist80053"),
+  "1.3": mapped("nist80053", "cisControls"),
+  "1.4": mapped("nist80057", "nist80056a", "rfc8446"),
+  "2.1": mapped("nist80030", "mitreAttack"),
+  "2.2": mapped("nist800161", "mitreAttack"),
+  "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),
+  "2.4": mapped("nist80061", "mitreAttack"),
+  "2.5": mapped("nist80053", "cisControls"),
+  "3.1": mapped("nist800145", "nist800207"),
+  "3.2": mapped("nist800207", "cisControls"),
+  "3.3": mapped("nist80057", "gdpr"),
+  "3.4": mapped("nist80034"),
+  "4.1": mapped("nist80053", "cisControls"),
+  "4.2": mapped("nist80053", "nist80088", "cisControls"),
+  "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
+  "4.4": mapped("nist80092", "mitreAttack"),
+  "4.5": mapped("nist80053", "cisControls"),
+  "4.6": mapped("nist800207", "nist80053", "nist80063b"),
+  "4.7": mapped("nist80053", "cisControls"),
+  "4.8": mapped("nist80061"),
+  "4.9": mapped("nist80061", "nist80092"),
+  "5.1": mapped("nistCsf", "iso27001", "nist80037"),
+  "5.2": mapped("nist80030"),
+  "5.3": mapped("nist800161", "soc2"),
+  "5.4": mapped("gdpr", "pciDss", "iso27001", "hipaa"),
+  "5.5": mapped("nist800115", "soc2"),
+  "5.6": mapped("nist80050"),
 };
 
 /** The sources of a set of objectives, each once, primary ones first. */
 export function sourcesOf(codes: readonly string[]): Source[] {
-  const ids = [...new Set(codes.flatMap(code => OBJECTIVE_REVIEW[code]?.sources ?? []))];
+  const ids = [...new Set(codes.flatMap(code => OBJECTIVE_SOURCES[code]?.sources ?? []))];
   const rank = (id: SourceId) => (SOURCES[id].kind === "reference" ? 1 : 0);
   return ids.sort((a, b) => rank(a) - rank(b)).map(id => SOURCES[id]);
-}
-
-/** How many of the given objectives are in each review state. */
-export function reviewSummary(codes: readonly string[]): Record<ReviewStatus, number> {
-  const summary: Record<ReviewStatus, number> = { reviewed: 0, "needs-review": 0, deprecated: 0 };
-  for (const code of codes) {
-    const review = OBJECTIVE_REVIEW[code];
-    if (review) summary[review.status] += 1;
-  }
-  return summary;
 }

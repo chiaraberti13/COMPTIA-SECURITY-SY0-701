@@ -17,7 +17,7 @@ import {
   DOMAIN_5_QUESTIONS,
 } from "../src/data";
 import { DOMAIN_GUIDES_IT, OFFICIAL_DOMAIN_WEIGHTS } from "../src/domainGuides";
-import { OBJECTIVE_REVIEW, SOURCES, SOURCES_MAPPED_ON, type ReviewStatus, type Source } from "../src/contentReview";
+import { OBJECTIVE_SOURCES, SOURCES, SOURCES_MAPPED_ON, type Source } from "../src/contentReview";
 import { isActive } from "../src/localizedData";
 import { OFFICIAL_OBJECTIVES, objectivesOfQuestion } from "../src/questionObjectives";
 import type { Question } from "../src/types";
@@ -34,12 +34,6 @@ const BANKS: Record<number, Question[]> = {
 };
 
 const LEVELS: Question["level"][] = ["RICORDO", "COMPRENSIONE", "APPLICAZIONE", "ANALISI"];
-
-const STATUS_LABEL: Record<ReviewStatus, string> = {
-  reviewed: "revisionato",
-  "needs-review": "da revisionare",
-  deprecated: "deprecato",
-};
 
 /** "NIST SP 800-53 Rev. 5" out of "SP 800-53 Rev. 5 — Security and Privacy Controls". */
 const shortName = (source: { title: string; publisher: string }) => {
@@ -81,23 +75,20 @@ export function renderCoverageMatrix(): string {
       "",
       `Peso d'esame ${OFFICIAL_DOMAIN_WEIGHTS[domain - 1]}% · ${BANKS[domain].length} domande nel banco del dominio.`,
       "",
-      "| Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |",
-      "|---|---|---|---|---|---|---|---|---|---|"
+      "| Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |",
+      "|---|---|---|---|---|---|---|---|---|"
     );
     for (const code of OFFICIAL_OBJECTIVES[domain]) {
       const questions = byObjective.get(code) ?? [];
       const perLevel = LEVELS.map((level) => questions.filter((q) => q.level === level).length);
       const outcome = guide.objectives.find((o) => o.code === code)?.outcome ?? "";
       const exercises = (guide.practiceScenarios ?? []).filter((s) => s.objective === code).length;
-      const review = OBJECTIVE_REVIEW[code];
-      const status = review.status === "reviewed"
-        ? `${STATUS_LABEL.reviewed} il ${review.lastReviewed} (@${review.reviewer})`
-        : STATUS_LABEL[review.status];
+      const review = OBJECTIVE_SOURCES[code];
       const sources = review.sources
         .filter((id) => id !== "comptiaSecurityPlus")
         .map((id) => `[${shortName(SOURCES[id])}](${SOURCES[id].url})`)
         .join(", ");
-      lines.push(`| ${code} | ${outcome} | ${questions.length} | ${perLevel.join(" | ")} | ${exercises} | ${status} | ${sources} |`);
+      lines.push(`| ${code} | ${outcome} | ${questions.length} | ${perLevel.join(" | ")} | ${exercises} | ${sources} |`);
     }
     lines.push("");
   }
@@ -118,12 +109,11 @@ export function renderCoverageMatrix(): string {
   const secondary = all.filter((source) => source.kind === "reference");
   const item = (source: Source) => `- [${source.title}](${source.url}) — ${source.publisher}`;
   lines.push(
-    "## Fonti e revisione",
+    "## Fonti",
     "",
     "Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il " + SOURCES_MAPPED_ON + "); gli obiettivi d'esame",
-    "CompTIA valgono per tutti e non sono ripetuti nella tabella. Un obiettivo diventa **revisionato** solo",
-    "quando una persona ha confrontato domande, glossario e guida con le fonti indicate: servono data e revisore.",
-    "I controlli automatici (parità IT/EN, struttura, copertura) non contano come revisione.",
+    "CompTIA valgono per tutti e non sono ripetuti nella tabella. Non sono richieste approvazioni umane",
+    "o un secondo revisore; restano obbligatori i controlli automatici del repository.",
     "",
     "### Fonti primarie: obiettivi d'esame, standard, specifiche e norme",
     "",

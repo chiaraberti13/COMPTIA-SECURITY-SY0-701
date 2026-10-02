@@ -39,4 +39,4 @@ solo da chi usa l'app in inglese. I testi dell'interfaccia usano chiavi in
   di ogni frase con la sua traduzione (circa 8.000 coppie). Ha già trovato 9
   disallineamenti, che sono stati corretti.
 - ⚠️ La parità di significato, oltre ai fatti estratti automaticamente, richiede
-  ancora una revisione umana (voce P1 della roadmap).
+  controlli di significato insieme alle correzioni; non richiedono approvazioni umane separate.

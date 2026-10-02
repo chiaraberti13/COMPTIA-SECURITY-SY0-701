@@ -46,8 +46,7 @@ Altre scelte, non verificate dal test perché dipendono dal contesto:
 - I nomi dei controlli restano in inglese come negli obiettivi (*least privilege*, *defense in
   depth*, *separation of duties*), con la traduzione fra parentesi alla prima occorrenza:
   «separation of duties (separazione dei compiti)».
-- **Email**, senza trattino, nel testo nuovo; *e-mail* nei contenuti esistenti non va corretto
-  a mano uno per uno (vedi la roadmap).
+- **Email**, senza trattino, in tutti i contenuti italiani e inglesi.
 
 ## Ortografia inglese
 

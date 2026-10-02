@@ -273,15 +273,16 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
                             <thead>
                               <tr className="border-b border-slate-800 bg-slate-900/60 font-bold tracking-wider">
                                 {sub.comparativeTable.headers.map((h, hIdx) => (
-                                  <th key={hIdx} className="px-3 py-2.5 text-slate-400 uppercase font-mono text-[9px]">{h}</th>
+                                  <th key={hIdx} scope="col" className="px-3 py-2.5 text-slate-400 uppercase font-mono text-[11px]">{h}</th>
                                 ))}
                               </tr>
                             </thead>
                             <tbody>
                               {sub.comparativeTable.rows.map((row, rIdx) => (
                                 <tr key={rIdx} className="border-b border-slate-800/50 hover:bg-slate-900/20">
-                                  {row.map((cell, cIdx) => (
-                                    <td key={cIdx} className="px-3 py-2 text-slate-300 leading-normal">{cell}</td>
+                                  <th scope="row" className="px-3 py-2 text-slate-200 font-semibold align-top min-w-[8rem]">{row[0]}</th>
+                                  {row.slice(1).map((cell, cIdx) => (
+                                    <td key={cIdx} className="px-3 py-2 text-slate-300 leading-relaxed align-top min-w-[12rem] max-w-[24rem] whitespace-normal break-words">{cell}</td>
                                   ))}
                                 </tr>
                               ))}

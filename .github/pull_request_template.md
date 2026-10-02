@@ -6,7 +6,6 @@
 
 - [ ] `npm run check` (typecheck, lint, tests)
 - [ ] `npm run build && npm run smoke`
-- [ ] Checked by hand in the app (describe what and at which screen width) · Verificato a mano nell'app (descrivi che cosa e a quale larghezza)
 
 ## Checklist
 
