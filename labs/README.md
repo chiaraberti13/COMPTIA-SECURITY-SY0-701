@@ -12,7 +12,9 @@ durata e livello di rischio prima di qualsiasi comando.
 > the structure of every lab and that its commands never target a host other than your own
 > machine. Labs above the `low` risk level run in a virtual machine on an isolated virtual
 > network, with a snapshot taken before and restored after, using the commands below for
-> VirtualBox, libvirt/KVM and Hyper-V.
+> VirtualBox, libvirt/KVM and Hyper-V. `labs/preflight.sh NN` checks the environment before a
+> lab starts: tools, disk and memory, free ports, services exposed beyond loopback and, above
+> `low`, a virtual machine with no default route.
 
 ## Elenco dei laboratori
 
@@ -134,6 +136,51 @@ Restore-VMCheckpoint -VMName "lab-vm" -Name "prima-del-lab" -Confirm:$false
   **Setup**, ripristino dello snapshot sempre nel **Cleanup**: una macchina su cui è stata
   sfruttata una vulnerabilità non si considera mai pulita.
 
+## Controllo preliminare
+
+Prima di iniziare un laboratorio, `labs/preflight.sh` controlla che l'ambiente sia pronto e
+sicuro. Legge solo lo stato della macchina: non manda traffico a nessun host e non modifica
+nulla.
+
+```bash
+bash labs/preflight.sh 09
+```
+
+```text
+Controllo preliminare del laboratorio 09 (moderate)
+
+[OK]      comando ip presente
+[OK]      comando nft presente
+[OK]      comando ss presente
+[OK]      comando nc presente
+[OK]      comando ping presente
+[OK]      comando python3 presente
+[OK]      spazio libero nella home: 20 GB
+[OK]      memoria disponibile: 15593 MB
+[AVVISO ] servizi in ascolto fuori dal loopback: 0.0.0.0:2024 0.0.0.0:2025 — verifica che servano
+[AVVISO ] ambiente docker: è un container, non una VM, e lo snapshot va fatto con altri mezzi
+[ERRORE ] esiste una rotta predefinita (default via 192.0.2.1 dev eth0): collega la VM a una rete isolata
+
+Esito: errori 1, avvisi 2. Correggi gli errori prima di iniziare.
+```
+
+È l'output reale ottenuto in un container con accesso a Internet: proprio il caso che il
+controllo deve fermare per un laboratorio `moderate`.
+
+| Controllo | Per quali lab | Che cosa verifica |
+|---|---|---|
+| Strumenti | tutti | i comandi che il laboratorio usa sono installati |
+| Risorse | tutti | almeno 2 GB liberi nella home e 1 GB di memoria disponibile |
+| Porte | quelli che avviano un servizio | la porta che il laboratorio userà è libera (4190 per il Lab 01, 8080 per il Lab 07) |
+| Esposizione | tutti | quali servizi ascoltano fuori dal loopback: un avviso, perché il laboratorio non deve aggiungerne |
+| Macchina virtuale | sopra `low` | `systemd-detect-virt` riconosce una VM; un container dà un avviso, l'host fisico un errore |
+| Rete isolata | sopra `low` | `ip route show default` non stampa nulla |
+
+L'esito è `0` se si può iniziare, `1` se un controllo è fallito; `--en` stampa i messaggi in
+inglese. Per i laboratori `moderate` lo script va copiato nella macchina virtuale, che non ha
+bisogno del resto del repository. `tests/preflight.test.ts` lo esegue in ogni scenario, con
+strumenti finti e letture del sistema sostituite dalle variabili `PREFLIGHT_*`.
+
 ## Scrivere un nuovo laboratorio
 
 1. Copia [TEMPLATE.md](TEMPLATE.md) in `labs/NN-nome-breve/README.md` e scrivi la versione
@@ -143,5 +190,6 @@ Restore-VMCheckpoint -VMName "lab-vm" -Name "prima-del-lab" -Confirm:$false
 3. Esegui ogni comando su una macchina pulita e riporta l'output reale, non quello atteso.
 4. Se il laboratorio analizza dei file, mettili in `labs/NN-nome-breve/data/` e registrali
    nel [catalogo dei dati sintetici](DATI.md), con l'impronta e, se generati, con il generatore.
-5. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
+5. Aggiungi i requisiti del laboratorio (rischio, comandi, porte) a `labs/preflight.sh`.
+6. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
    verifica sezioni, metadati, parità fra le due lingue e indirizzi usati nei comandi.

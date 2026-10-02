@@ -24,6 +24,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- A preflight for the labs (`bash labs/preflight.sh NN`, documented in `labs/README.md`): before a lab it checks the tools it uses, disk and memory, that its ports are free, the services listening beyond loopback and, above the `low` risk level, that it runs in a virtual machine with no default route. It only reads local state and speaks Italian or English (`--en`). `tests/preflight.test.ts` runs it in every scenario with stand-in tools and substituted readings.
 - A catalog of the labs' synthetic data (`labs/DATI.md`): every dataset with its SHA-256 and the rules it follows (private or documentation addresses, reserved domains, no email, declared fake secrets). The Lab 03 log now ships with a deterministic generator that recreates it byte for byte. `tests/labData.test.ts` checks the hashes in the catalog and in each lab's Setup, regenerates the log, refuses real addresses, domains and emails, and recomputes from the data the figures shown in the expected output of Labs 03 and 06.
 - Versioned release workflow: validates the tag against the package version, dated changelog notes and main ancestry; runs checks, production audit, build and smoke before creating a draft with the application archive, production CycloneDX SBOM and SHA-256 checksums. Bilingual instructions in `docs/releases.md`; no release is published automatically.
 
