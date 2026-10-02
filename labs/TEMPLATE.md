@@ -41,7 +41,8 @@ I comandi per preparare l'ambiente, ognuno con una frase che dice che cosa fa, e
 controllo finale che l'ambiente è isolato (per esempio la verifica dell'interfaccia di
 ascolto). Sopra il livello `low`: lo snapshot `prima-del-lab` della macchina virtuale e, per
 `advanced-controlled`, la verifica che `ip route show default` non stampi nulla (vedi
-[Isolamento e ripristino](README.md#isolamento-e-ripristino)).
+[Isolamento e ripristino](README.md#isolamento-e-ripristino)). Il primo comando può essere
+il [controllo preliminare](README.md#controllo-preliminare): `bash labs/preflight.sh NN`.
 
 ## Esercizio
 
