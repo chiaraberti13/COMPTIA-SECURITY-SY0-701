@@ -372,5 +372,6 @@ with the commit of each fix. To report a new one, open an issue.
 
 ## Content review and spelling
 
+- [PR previews and deployment configuration](docs/deployment.md)
 - [Dominio 1 / Domain 1: rapporto di revisione](docs/domain-1-review.md)
 - [Controllo ortografico IT/EN / IT/EN spelling](docs/italian-spelling.md)
