@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Validate tag, main ancestry and release notes
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          git merge-base --is-ancestor HEAD origin/main
+          npx tsx scripts/release.ts
+      - run: npm run check
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+      - run: npm run smoke
+      - name: Package build, licences and production SBOM
+        run: |
+          mkdir release-package
+          cp -r dist release-package/dist
+          cp package.json package-lock.json LICENSE README.md README.it.md release-package/
+          npm sbom --omit dev --sbom-format cyclonedx --sbom-type application > release-package/sbom.cdx.json
+          tar -czf app.tar.gz -C release-package .
+          cp release-package/sbom.cdx.json sbom.cdx.json
+          sha256sum app.tar.gz sbom.cdx.json > SHA256SUMS
+      - name: Create draft release for review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" app.tar.gz sbom.cdx.json SHA256SUMS \
+            --verify-tag --draft --title "$RELEASE_TAG" --notes-file release-notes.md
