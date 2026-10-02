@@ -33,7 +33,8 @@ inside. At the end you deliver a timeline and the recommended actions.
 ```
 
 No network, no service: you work on a single file. The log is **synthetic**, generated for the
-exercise. External addresses belong to the blocks reserved for documentation
+exercise by `data/genera_auth_log.py`, which recreates it byte for byte (see
+[Synthetic lab data](../DATI.md)). External addresses belong to the blocks reserved for documentation
 (`203.0.113.0/24` and `198.51.100.0/24`, RFC 5737), internal ones to a private network, and the
 keys are fake.
 

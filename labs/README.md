@@ -141,5 +141,7 @@ Restore-VMCheckpoint -VMName "lab-vm" -Name "prima-del-lab" -Confirm:$false
 2. Compila la tabella iniziale: gli obiettivi devono essere codici ufficiali SY0-701 e il
    rischio uno dei tre livelli qui sopra.
 3. Esegui ogni comando su una macchina pulita e riporta l'output reale, non quello atteso.
-4. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
+4. Se il laboratorio analizza dei file, mettili in `labs/NN-nome-breve/data/` e registrali
+   nel [catalogo dei dati sintetici](DATI.md), con l'impronta e, se generati, con il generatore.
+5. Aggiungi il laboratorio all'elenco qui sopra e lancia `npm run check`: `tests/labs.test.ts`
    verifica sezioni, metadati, parità fra le due lingue e indirizzi usati nei comandi.
