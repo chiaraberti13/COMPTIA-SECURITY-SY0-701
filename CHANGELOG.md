@@ -8,6 +8,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Added Vercel static frontend/serverless API deployment artifacts, preview AI isolation and a dedicated CI smoke test; live project activation is pending.
+
 - Removed mandatory human-review metadata and second-reviewer requirements; retained sources and mandatory CI.
 - Standardized email spelling in both languages and improved comparative-table readability and accessibility.
 

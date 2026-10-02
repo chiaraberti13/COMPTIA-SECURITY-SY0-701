@@ -18,3 +18,6 @@ playwright-report/
 
 # Extracted Italian and English texts checked by npm run spellcheck
 .spellcheck/
+
+# Local Vercel linkage and generated deployment output
+.vercel/

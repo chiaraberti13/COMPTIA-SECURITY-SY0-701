@@ -43,6 +43,8 @@ export interface AppOptions {
   createClient: (apiKey: string) => AiClient;
   /** Built front end served in production; defaults to ./dist. */
   distPath?: string;
+  /** Disable the static SPA when the platform serves it separately on its CDN. */
+  serveStatic?: boolean;
   /** Per-IP limit on /api; defaults to 30 requests every 15 minutes. */
   rateLimit?: { windowMs: number; limit: number };
   /**
@@ -469,7 +471,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
     }
   });
 
-  if (opts.isProduction) {
+  if (opts.isProduction && opts.serveStatic !== false) {
     const distPath = opts.distPath ?? path.join(process.cwd(), "dist");
     app.use(precompressedStatic(distPath));
     // File names under /assets carry a hash of their content: a new build means
