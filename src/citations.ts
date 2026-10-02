@@ -78,7 +78,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "5:Compliance": [{ source: "gdpr" }, { source: "pciDss" }, { source: "hipaa" }],
   "5:DueDiligence": [{ source: "iso27001" }, { source: "soc2" }],
   "5:GDPRComplianceConcept": [{ source: "gdpr", locator: { it: "art. 3, par. 2, e art. 83, par. 5", en: "Art. 3(2) and Art. 83(5)" } }],
-  "5:DataSovereigntyConcept": [{ source: "gdpr", locator: { it: "artt. 44–49", en: "Arts. 44–49" } }],
+  "5:DataSovereigntyConcept": [{ source: "gdpr", locator: { it: "art. 3 e artt. 44–49", en: "Art. 3 and Arts. 44–49" } }],
   "5:NISTRes": [{ source: "nistCsf" }, { source: "nist80053" }, { source: "nist80037" }],
   "5:VendorAssessment": [{ source: "iso27001" }, { source: "soc2" }],
   "5:Questionnaires": [{ source: "soc2" }],
