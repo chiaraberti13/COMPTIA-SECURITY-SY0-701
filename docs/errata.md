@@ -16,6 +16,14 @@ in italiano e in inglese nello stesso commit. Per segnalare un errore: [apri una
 
 Ultimo aggiornamento: 2026-10-02. Le correzioni precedenti al 2026-09-24 sono ricostruite dalla cronologia git.
 
+## Estensione della revisione ai Domini 1–5 — 2026-10-02
+
+Il [rapporto completo](domains-1-5-review.md) registra 12 ulteriori problemi
+corretti in IT/EN: attribuzione APT, ransomware, Bluetooth, TCP/UDP, journaling,
+capacity planning, copertura dei log firewall, limiti del filtro DNS, incertezza
+del rischio quantitativo, sovranità dei dati, sanitizzazione e degaussing.
+Le voci E1–E12 riportano identificatori, problema, correzione e priorità.
+
 ## Dominio 1 — General Security Concepts
 
 | Data | Dove | Diceva | Dice ora | Commit |

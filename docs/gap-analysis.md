@@ -71,16 +71,16 @@ indirizzi qui sotto.
 - `4:VulnerabilityAssessmentConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `4:VulnerabilityScannerRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `5:AttestationConcept`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
-- `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+- `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:Compliance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `5:DataRetentionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17
 - `5:DataRolesGovernance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 24 e artt. 37–39
-- `5:DataSovereigntyConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), artt. 44–49
+- `5:DataSovereigntyConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 3 e artt. 44–49
 - `5:DueDiligence`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:ExternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:GDPRComplianceConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 3, par. 2, e art. 83, par. 5
 - `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
-- `5:MediaSanitizationRes`: [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final)
+- `5:MediaSanitizationRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
 - `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
 - `5:Questionnaires`: [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)

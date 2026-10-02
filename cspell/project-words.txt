@@ -318,3 +318,7 @@ xrdp
 Yubi
 zeroizes
 ZTNA
+
+# Transport and magnetic-media terminology checked against RFC 768 and NIST SP 800-88r2.
+datagrams
+coercivity

@@ -31,7 +31,7 @@ export const SOURCES = {
   nist80056a: { title: "SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/a/r3/final", kind: "standard" },
   nist80063b: { title: "SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/63/b/4/final", kind: "standard" },
   nist80037: { title: "SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", kind: "standard" },
-  nist80088: { title: "SP 800-88 Rev. 1 — Guidelines for Media Sanitization", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/88/r1/final", kind: "standard" },
+  nist80088: { title: "SP 800-88 Rev. 2 — Guidelines for Media Sanitization", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/88/r2/final", kind: "standard" },
   nist80057: { title: "SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", kind: "standard" },
   nist800145: { title: "SP 800-145 — The NIST Definition of Cloud Computing", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/145/final", kind: "standard" },
   nist80034: { title: "SP 800-34 Rev. 1 — Contingency Planning Guide", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final", kind: "standard" },

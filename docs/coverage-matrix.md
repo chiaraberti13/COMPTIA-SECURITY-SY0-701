@@ -49,7 +49,7 @@ Peso d'esame 28% · 185 domande nel banco del dominio.
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Revisione | Fonti |
 |---|---|---|---|---|---|---|---|---|---|
 | 4.1 | Applicare baseline, hardening, patching, secure configuration e protezioni per endpoint, mobile, wireless, applicazioni e cloud. | 23 | 0 | 5 | 17 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 4.2 | Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset. | 18 | 0 | 13 | 4 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-88 Rev. 1](https://csrc.nist.gov/pubs/sp/800/88/r1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
+| 4.2 | Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset. | 18 | 0 | 13 | 4 | 1 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-88 Rev. 2](https://csrc.nist.gov/pubs/sp/800/88/r2/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.3 | Eseguire vulnerability management dal discovery alla prioritizzazione, remediation, rescansione, reporting ed eccezioni. | 24 | 0 | 12 | 7 | 5 | 1 | da revisionare | [NIST SP 800-40 Rev. 4](https://csrc.nist.gov/pubs/sp/800/40/r4/final), [FIRST Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
 | 4.4 | Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore. | 16 | 0 | 9 | 3 | 4 | 1 | da revisionare | [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 4.5 | Configurare controlli enterprise quali firewall, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR e proxy. | 21 | 0 | 7 | 10 | 4 | 1 | da revisionare | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
@@ -96,7 +96,7 @@ I controlli automatici (parità IT/EN, struttura, copertura) non contano come re
 - [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final) — NIST
 - [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) — NIST
 - [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final) — NIST
-- [SP 800-88 Rev. 1 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r1/final) — NIST
+- [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final) — NIST
 - [SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final) — NIST
 - [SP 800-145 — The NIST Definition of Cloud Computing](https://csrc.nist.gov/pubs/sp/800/145/final) — NIST
 - [SP 800-34 Rev. 1 — Contingency Planning Guide](https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final) — NIST

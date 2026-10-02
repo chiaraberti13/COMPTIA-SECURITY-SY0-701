@@ -612,6 +612,7 @@ ammettere
 ammettono
 amministra
 amministrare
+amministrarlo
 amministrativa
 amministrativamente
 amministrative
@@ -971,6 +972,7 @@ artificialmente
 artificiosa
 artigianali
 artistiche
+artt
 ascensore
 ascensori
 ascii
@@ -2108,6 +2110,7 @@ codificate
 codificati
 codificato
 coercitive
+coercitività
 coercizione
 coerente
 coerenti
@@ -2344,6 +2347,7 @@ completano
 completare
 completarle
 completata
+completate
 completati
 completato
 complete
@@ -2707,6 +2711,7 @@ conservandone
 conservano
 conservare
 conservarla
+conservarne
 conservata
 conservate
 conservati
@@ -3277,6 +3282,7 @@ darebbero
 darsi
 data
 database
+datagrammi
 datata
 datate
 datati
@@ -3824,6 +3830,7 @@ discutono
 disegna
 disegnata
 disegnati
+disgiunte
 disinfezione
 disinformazione
 disinstalla
@@ -4081,6 +4088,7 @@ duplicato
 duplicazione
 duplice
 dura
+durabilità
 durante
 durata
 durate
@@ -4650,6 +4658,7 @@ exploit
 extended
 extra
 extraterritoriale
+extraterritoriali
 fa
 fabbisogno
 fabbrica
@@ -5328,6 +5337,7 @@ governabile
 governano
 governare
 governarla
+governata
 governati
 governativa
 governative
@@ -5982,6 +5992,7 @@ influenzarne
 influenze
 influire
 influisce
+influiscono
 influito
 infondato
 informa
@@ -6426,6 +6437,7 @@ invalidazione
 invaliderebbe
 invariata
 invariati
+invasivi
 invasivo
 invecchiano
 invece
@@ -9418,6 +9430,7 @@ reimpostare
 reimpostazione
 reindirizza
 reindirizzamento
+reindirizzando
 reindirizzandolo
 reindirizzato
 reinfezione
@@ -10086,6 +10099,7 @@ ripristinato
 ripristinerà
 ripristini
 ripristino
+riprodotte
 riproduce
 riproducibile
 riproducibilità
@@ -11953,6 +11967,7 @@ terra
 terremoti
 terreno
 terrestri
+territoriale
 territorio
 terza
 terze
@@ -11976,6 +11991,7 @@ testi
 testimone
 testimonianze
 testina
+testine
 testo
 testuali
 tetto

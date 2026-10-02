@@ -783,7 +783,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "Con la replication non servono più i backup.", correction: "La replication copia subito anche errori, cancellazioni e file cifrati dal ransomware; servono backup con versioni, isolati o immutabili." },
       { misconception: "Nel SaaS la sicurezza è tutta del provider.", correction: "Anche nel SaaS il cliente resta responsabile di dati, utenti, permessi e configurazioni di sicurezza dell'applicazione." },
       { misconception: "Un hot site garantisce di non perdere dati.", correction: "L'hot site riduce il tempo di ripristino (RTO); la perdita di dati (RPO) dipende da quanto spesso i dati vengono replicati o copiati." },
-      { misconception: "Data sovereignty e geolocation sono sinonimi.", correction: "La data sovereignty dice quali leggi si applicano ai dati in base al paese in cui si trovano; la geolocation individua dove si trova un dispositivo o un utente e serve per applicare restrizioni geografiche." },
+      { misconception: "Data sovereignty e geolocation sono sinonimi.", correction: "La data sovereignty riguarda le giurisdizioni applicabili ai dati, considerando anche residenza e obblighi extraterritoriali; la geolocation individua dove si trova un dispositivo o un utente e serve per applicare restrizioni geografiche." },
       { misconception: "Un UPS mantiene i sistemi accesi per tutto un blackout lungo.", correction: "L'UPS copre l'interruzione breve e il tempo necessario all'avvio del generatore, che sostiene i blackout lunghi." },
     ],
     examVsPractice: [
@@ -819,7 +819,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         objective: "3.3",
         title: "Dati dei clienti europei nel cloud",
         prompt: "Un'azienda con clienti nell'UE vuole spostare il database clienti su un provider cloud che, per risparmiare, replica automaticamente i dati in regioni fuori dall'UE. Quali concetti entrano in gioco e che cosa va configurato?",
-        reasoning: "Entra in gioco la data sovereignty: ai dati si applicano le leggi del paese in cui si trovano, e per dati personali di cittadini UE il GDPR limita i trasferimenti. Vanno configurate restrizioni geografiche sulle regioni di archiviazione e di replica, cifratura con chiavi gestite dall'azienda e una classificazione del dato come regolamentato, verificando le clausole contrattuali del provider.",
+        reasoning: "Entra in gioco la data sovereignty: residenza e accessi influiscono sulle giurisdizioni applicabili. Per i trattamenti soggetti al GDPR, i trasferimenti verso paesi terzi richiedono il rispetto degli artt. 44–49; la cittadinanza non è il criterio decisivo. Vanno configurate restrizioni geografiche sulle regioni di archiviazione e di replica, cifratura con chiavi gestite dall'azienda e una classificazione del dato come regolamentato, verificando le clausole contrattuali del provider.",
       },
       {
         objective: "3.4",
@@ -2069,7 +2069,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       { misconception: "With replication, backups are no longer needed.", correction: "Replication immediately copies errors, deletions, and files encrypted by ransomware as well; versioned, isolated, or immutable backups are required." },
       { misconception: "In SaaS, security is entirely the provider's job.", correction: "Even in SaaS the customer remains responsible for data, users, permissions, and the application's security configuration." },
       { misconception: "A hot site guarantees no data loss.", correction: "A hot site reduces restoration time (RTO); data loss (RPO) depends on how often data is replicated or copied." },
-      { misconception: "Data sovereignty and geolocation are synonyms.", correction: "Data sovereignty states which laws apply to data based on the country where it resides; geolocation determines where a device or user is and is used to enforce geographic restrictions." },
+      { misconception: "Data sovereignty and geolocation are synonyms.", correction: "Data sovereignty concerns applicable jurisdictions, including residency and extraterritorial obligations; geolocation determines where a device or user is and is used to enforce geographic restrictions." },
       { misconception: "A UPS keeps systems running through a long blackout.", correction: "A UPS covers the short interruption and the time needed for the generator to start, which sustains long blackouts." },
     ],
     examVsPractice: [
@@ -2105,7 +2105,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         objective: "3.3",
         title: "European customer data in the cloud",
         prompt: "A company with customers in the EU wants to move its customer database to a cloud provider that, to save money, automatically replicates data to regions outside the EU. Which concepts are involved, and what must be configured?",
-        reasoning: "Data sovereignty is involved: data is subject to the laws of the country where it resides, and for personal data of EU residents the GDPR restricts transfers. Configure geographic restrictions on the storage and replication regions, encryption with company-managed keys, and a classification of the data as regulated, while checking the provider's contractual clauses.",
+        reasoning: "Data sovereignty is involved: residency and access affect applicable jurisdictions. For processing subject to the GDPR, transfers to third countries must meet Arts. 44–49; citizenship is not the deciding criterion. Configure geographic restrictions on the storage and replication regions, encryption with company-managed keys, and a classification of the data as regulated, while checking the provider's contractual clauses.",
       },
       {
         objective: "3.4",
