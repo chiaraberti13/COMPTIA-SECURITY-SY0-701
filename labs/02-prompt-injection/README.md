@@ -181,6 +181,56 @@ Il nuovo attacco non esce dal suo tag: la difesa non cerca parole sospette («ig
 istruzioni»), toglie al testo dell'utente la possibilità di falsificare il confine. Prova altre
 varianti e annota in `~/lab02/note.md` quelle che hai tentato.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `~/lab02/note.md` indica la riga del threat model sulla prompt injection, la sua categoria
+  STRIDE e il controllo che la mitiga.
+- Con la difesa spenta falliscono 5 test; con il file ripristinato passano tutti.
+- Il tuo attacco aggiunto a `ATTACKS` resta dentro il suo tag e i test passano (17 su 17).
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Non trovi la riga? Cerca «injection» nella tabella del confine 3 di `docs/threat-model.md` e
+leggi perché il controllo è indicato come parziale.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Dopo il ripristino falliscono ancora dei test? Controlla con `git diff server/promptSafety.ts`
+che il file sia tornato identico all'originale.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+La difesa non cerca parole sospette: toglie al testo dell'utente ogni forma dei tag riservati,
+comprese le varianti con parentesi a larghezza piena e caratteri invisibili. Così il testo non
+può chiudere in anticipo il proprio tag e resta un dato. Lo stato resta 🟡 perché il modello
+potrebbe comunque seguire un'istruzione scritta dentro i dati: l'inquadramento riduce il rischio
+senza eliminarlo. Il danno possibile resta comunque limitato: il modello non ha strumenti né
+dati riservati, e la risposta è solo testo mostrato a chi l'ha chiesta.
+
+</details>
+
+### Errori comuni
+
+- Pensare che basti filtrare frasi come «ignora le istruzioni»: si aggira con sinonimi, altre
+  lingue o codifiche.
+- Dimenticare di ripristinare `server/promptSafety.ts` dopo il passaggio 3.
+- Considerare lo stato 🟡 un difetto da correggere: nessuna difesa contro la prompt injection è
+  completa.
+- Usare una chiave Gemini reale: il laboratorio non ne ha bisogno.
+
 ## Evidenze
 
 Nella cartella `~/lab02` devono esserci:

@@ -208,6 +208,57 @@ Il contatore vive nella memoria del processo: riavviando il server si azzera. È
 per indirizzo IP pensato contro l'uso eccessivo (*denial of wallet*), non una protezione
 contro un attacco distribuito da molti indirizzi.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `~/lab01/headers.txt` contiene `Content-Security-Policy` e non contiene `X-Powered-By`.
+- La console del browser mostra «Refused to execute inline script» e `window.__ran` vale
+  `undefined`.
+- La trentunesima richiesta a `/api/chat` riceve `429`, con `RateLimit-Policy: 30;w=900`.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Non vedi gli header di sicurezza? Controlla in che modalità gira il server: ci sono solo dopo
+`npm run build` e con `NODE_ENV=production`.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Il `429` non arriva? Il contatore vale per indirizzo e solo per gli endpoint `/api/`: le
+richieste alla pagina principale non contano, e riavviare il server lo azzera.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+`nosniff` impedisce al browser di indovinare il tipo di un file e di eseguire come script ciò
+che il server dichiara testo. `no-referrer` evita che l'indirizzo della pagina, con i suoi
+parametri, arrivi ai siti esterni. HSTS obbliga il browser a usare solo HTTPS per un anno,
+contro il downgrade a HTTP. La CSP blocca lo script del passaggio 3 perché è scritto dentro la
+pagina e la policy ammette solo file serviti dallo stesso sito. Il limite di richieste è un
+controllo preventivo contro l'uso eccessivo, non contro un attacco distribuito da molti
+indirizzi.
+
+</details>
+
+### Errori comuni
+
+- Avviare `npm run dev`: in sviluppo gli header non ci sono e il controllo sembra fallito.
+- Incollare lo script in una scheda vuota o su un altro sito: la CSP da provare è quella della
+  pagina dell'app.
+- Concludere che HSTS funzioni su `http://`: il browser lo ignora finché il sito non è servito in
+  HTTPS.
+- Togliere `HOST=127.0.0.1`: il server diventa raggiungibile da tutta la rete durante l'esercizio.
+
 ## Evidenze
 
 Nella cartella `~/lab01` devono esserci:

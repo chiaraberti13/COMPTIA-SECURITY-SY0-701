@@ -14,8 +14,8 @@ const LABS_DIR = "labs";
 const RISK_LEVELS = ["low", "moderate", "advanced-controlled"];
 
 const SECTIONS = {
-  it: ["Scenario", "Prerequisiti", "Topologia", "Setup", "Esercizio", "Evidenze", "Cleanup", "Domande finali"],
-  en: ["Scenario", "Prerequisites", "Topology", "Setup", "Exercise", "Evidence", "Cleanup", "Final questions"],
+  it: ["Scenario", "Prerequisiti", "Topologia", "Setup", "Esercizio", "Aiuti e soluzione", "Evidenze", "Cleanup", "Domande finali"],
+  en: ["Scenario", "Prerequisites", "Topology", "Setup", "Exercise", "Hints and solution", "Evidence", "Cleanup", "Final questions"],
 };
 const FIELDS = {
   it: { objectives: "Obiettivi SY0-701", risk: "Rischio", duration: "Durata" },
@@ -172,6 +172,36 @@ describe("labs", () => {
       }
     }
     expect(missing).toEqual([]);
+  });
+
+  it("help progressively: success indicators, two folded hints, a worked solution and common mistakes", () => {
+    const parts = {
+      it: { ok: "### Indicatori di successo", stuck: "### Se ti blocchi", err: "### Errori comuni", folds: ["Suggerimento 1", "Suggerimento 2", "Soluzione ragionata"] },
+      en: { ok: "### Success indicators", stuck: "### If you get stuck", err: "### Common mistakes", folds: ["Hint 1", "Hint 2", "Worked solution"] },
+    };
+    const heading = { it: "Aiuti e soluzione", en: "Hints and solution" };
+    for (const lab of labs) {
+      const counts: number[][] = [];
+      for (const lang of Object.keys(FILES) as Lang[]) {
+        const help = section(read(lab, lang), heading[lang]);
+        const p = parts[lang];
+        const where = `${lab}/${FILES[lang]}`;
+        // The three parts, in order.
+        const order = [p.ok, p.stuck, p.err].map((h) => help.indexOf(`\n${h}\n`));
+        expect(order.every((i) => i > 0) && order[0] < order[1] && order[1] < order[2], where).toBe(true);
+        // Hints and the solution are folded, in increasing order of help.
+        const summaries = [...help.matchAll(/<summary>([^<]+)<\/summary>/g)].map((m) => m[1]);
+        expect(summaries, where).toEqual(p.folds);
+        const bullets = (from: string, to?: string) =>
+          help.slice(help.indexOf(from), to ? help.indexOf(to) : undefined).split("\n").filter((l) => l.startsWith("- ")).length;
+        const indicators = bullets(p.ok, p.stuck);
+        const mistakes = bullets(p.err);
+        expect(indicators, `${where}: success indicators`).toBeGreaterThanOrEqual(3);
+        expect(mistakes, `${where}: common mistakes`).toBeGreaterThanOrEqual(3);
+        counts.push([indicators, mistakes]);
+      }
+      expect(counts[1], `${lab}: same number of items in both languages`).toEqual(counts[0]);
+    }
   });
 
   it("are all listed in labs/README.md, in both languages", () => {

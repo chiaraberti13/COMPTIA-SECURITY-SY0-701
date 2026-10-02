@@ -251,6 +251,53 @@ Le date e gli hash delle chiavi negli output sono quelli dell'esecuzione dell'au
    Chi non la controlla continuerebbe ad accettarlo: la revoca protegge solo i client che la
    verificano.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- Prima della revoca, `openssl verify -CAfile ca.crt web.crt` stampa `web.crt: OK`.
+- Le impronte delle due chiavi pubbliche del passaggio 6 coincidono.
+- Dopo la revoca, la verifica con `-crl_check` dà `error 23 at 0 depth lookup: certificate
+  revoked`.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+`openssl ca` non trova i suoi file? Lancialo dalla cartella `~/lab04`: la configurazione usa
+percorsi relativi (`./ca`, `./ca.crt`).
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+La verifica con la CRL dà ancora `OK`? Rigenera la CRL dopo la revoca (`-gencrl`) e passala con
+`-CRLfile` insieme a `-crl_check`.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+La CSR porta la chiave pubblica e il nome richiesto, firmata con la chiave privata del server;
+la CA la firma aggiungendo il SAN e l'uso `serverAuth`. La verifica della catena risale dal
+certificato alla radice che hai scelto di considerare attendibile: un certificato autofirmato
+con lo stesso nome non ci arriva. La revoca entra in una CRL firmata dalla CA, e ha effetto solo
+per i client che la controllano, o che usano OCSP.
+
+</details>
+
+### Errori comuni
+
+- Mettere il nome solo nel CN: i browser leggono il SAN.
+- Distribuire la chiave privata della CA insieme al suo certificato.
+- Revocare senza pubblicare la nuova CRL.
+- Leggere il valore di `-checkend` come giorni: sono secondi.
+
 ## Evidenze
 
 Nella cartella `~/lab04` devono esserci:

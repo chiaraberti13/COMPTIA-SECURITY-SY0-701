@@ -178,6 +178,55 @@ The new attack does not leave its tag: the defence does not look for suspicious 
 the instructions»), it takes away from user text the ability to forge the boundary. Try other
 variants and note in `~/lab02/notes.md` the ones you attempted.
 
+## Hints and solution
+
+### Success indicators
+
+- `~/lab02/note.md` names the threat model row on prompt injection, its STRIDE category and the
+  control that mitigates it.
+- With the defense off, 5 tests fail; with the file restored, all pass.
+- Your attack added to `ATTACKS` stays inside its tag and the tests pass (17 of 17).
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+Cannot find the row? Search for "injection" in the boundary 3 table of `docs/threat-model.md`
+and read why the control is marked as partial.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Tests still fail after restoring? Check with `git diff server/promptSafety.ts` that the file is
+back to the original.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+The defense does not look for suspicious words: it strips every form of the reserved tags from
+the user's text, including fullwidth brackets and invisible characters. The text therefore
+cannot close its own tag early and stays data. The status remains 🟡 because the model could
+still follow an instruction written inside the data: framing reduces the risk without removing
+it. The possible damage stays limited anyway: the model has no tools or confidential data, and
+the answer is only text shown to whoever asked for it.
+
+</details>
+
+### Common mistakes
+
+- Thinking it is enough to filter phrases like "ignore the instructions": synonyms, other
+  languages or encodings get around it.
+- Forgetting to restore `server/promptSafety.ts` after step 3.
+- Treating the 🟡 status as a defect to fix: no defense against prompt injection is complete.
+- Using a real Gemini key: the lab does not need one.
+
 ## Evidence
 
 The `~/lab02` folder must contain:

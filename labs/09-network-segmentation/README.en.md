@@ -186,6 +186,54 @@ The outputs are those the author obtained on Ubuntu 24.04. The words "aperta" (o
    retransmission) and two 84-byte pings. On a real network, a counter rising on the guest rule
    is a signal to send to the SIEM.
 
+## Hints and solution
+
+### Success indicators
+
+- Before the rules, offices and guests reach the server; after, only the offices do.
+- `server -> ping uffici` gives `100% packet loss`.
+- The counter on the guest rule rises after the tests.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+Nobody reaches the server, even before the rules? Check that forwarding is on in the `router`
+namespace and that every zone has its default route.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+After the rules, not even the offices reach port 8080? Without `ct state established,related
+accept` the server's replies are dropped.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+The router applies the rules in the `forward` chain, to traffic passing through it. The `drop`
+policy refuses everything not listed; two rules allow offices to the server, and connection
+state lets only the replies back. Guests therefore reach nothing internal and the server cannot
+open connections to the offices: an attacker controlling it would lose the path for lateral
+movement.
+
+</details>
+
+### Common mistakes
+
+- Putting the rules in the `input` chain: traffic between zones passes through the router, it is
+  not addressed to it.
+- Writing a deny list for guests while leaving the policy at `accept`: what you did not foresee
+  gets through.
+- Concluding the service is broken without waiting for it to listen.
+- Thinking VLANs are enough: routing between VLANs joins them again if nobody filters transit.
+
 ## Evidence
 
 The `~/lab09` folder must contain:

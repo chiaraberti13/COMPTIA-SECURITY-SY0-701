@@ -168,6 +168,52 @@ Italian, as in the Italian version, so the hashes below match on every run.
    proof, not just hope. You restore into a separate folder so as not to overwrite what the
    investigation needs, and to check the result before putting it back into use.
 
+## Hints and solution
+
+### Success indicators
+
+- `full-lun.tar.gz` holds the four files and `incr-mar.tar.gz` only the two changed on Tuesday.
+- After the damage, `sha256sum -c` reports `FAILED` for the two affected files.
+- In the `ripristino` folder all five files are `OK`.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+The incremental backup holds every file? You used a new state file instead of the copy of
+Monday's `stato.snar`.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+The restore reports missing files? Extract the full backup first and then the incremental one,
+in order, and run `sha256sum -c` from inside the `ripristino` folder.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+The full backup captures everything; the incremental one, thanks to the state file, only what
+changed. The restore reapplies them in the same order, and the manifest recorded *before* the
+damage proves every file is back identical. You restore into a separate folder so as not to
+destroy evidence and to check the result before putting it back into use. In practice the backup
+sits on another medium, with an off-site copy, preferably immutable.
+
+</details>
+
+### Common mistakes
+
+- Restoring over the damaged data instead of into a separate folder.
+- Keeping backups in the same folder or on the same disk as the data.
+- Trusting the "backup completed" message without a restore test.
+- Building the manifest after the damage: it would certify altered files as intact.
+
 ## Evidence
 
 The `~/lab05` folder must contain:

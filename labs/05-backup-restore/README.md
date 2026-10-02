@@ -167,6 +167,52 @@ Solo file locali, tutti dentro `~/lab05`. I dati sono di fantasia.
    la prova, non solo la speranza. Si ripristina in una cartella separata per non sovrascrivere
    ciò che serve all'indagine e per controllare il risultato prima di rimetterlo in uso.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `full-lun.tar.gz` contiene i quattro file e `incr-mar.tar.gz` solo i due cambiati il martedì.
+- Dopo il danno, `sha256sum -c` segnala `FAILED` per i due file colpiti.
+- Nella cartella `ripristino` tutti e cinque i file risultano `OK`.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+L'incrementale contiene tutti i file? Hai usato un file di stato nuovo invece della copia di
+`stato.snar` del lunedì.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Il ripristino segnala file mancanti? Estrai prima il completo e poi l'incrementale, nell'ordine,
+e lancia `sha256sum -c` dall'interno della cartella `ripristino`.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Il completo fotografa tutto; l'incrementale, grazie al file di stato, solo ciò che è cambiato.
+Il ripristino li riapplica nello stesso ordine, e il manifesto registrato *prima* del danno
+dimostra che ogni file è tornato identico. Si ripristina in una cartella separata per non
+distruggere le evidenze e per controllare il risultato prima di rimetterlo in uso. Nella realtà
+la copia di backup sta su un altro supporto, e una fuori sede, meglio se immutabile.
+
+</details>
+
+### Errori comuni
+
+- Ripristinare sopra i dati danneggiati invece che in una cartella separata.
+- Tenere i backup nella stessa cartella o sullo stesso disco dei dati.
+- Fidarsi del messaggio «backup completato» senza una prova di ripristino.
+- Generare il manifesto dopo il danno: certificherebbe come integri file già alterati.
+
 ## Evidenze
 
 Nella cartella `~/lab05` devono esserci:

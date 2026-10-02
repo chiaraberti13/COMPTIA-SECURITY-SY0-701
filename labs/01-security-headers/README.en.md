@@ -207,6 +207,56 @@ The counter lives in the process memory: restarting the server resets it. It is 
 limit designed against excessive use (*denial of wallet*), not a protection against an
 attack distributed across many addresses.
 
+## Hints and solution
+
+### Success indicators
+
+- `~/lab01/headers.txt` contains `Content-Security-Policy` and does not contain `X-Powered-By`.
+- The browser console shows "Refused to execute inline script" and `window.__ran` is `undefined`.
+- The thirty-first request to `/api/chat` gets `429`, with `RateLimit-Policy: 30;w=900`.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+No security headers? Check which mode the server runs in: they appear only after `npm run build`
+and with `NODE_ENV=production`.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+No `429`? The counter is per address and only for the `/api/` endpoints: requests to the main
+page do not count, and restarting the server resets it.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+`nosniff` stops the browser from guessing a file's type and running as script what the server
+declares as text. `no-referrer` keeps the page address, with its parameters, from reaching other
+sites. HSTS makes the browser use only HTTPS for a year, against downgrades to HTTP. The CSP
+blocks the script in step 3 because it is written inside the page and the policy allows only
+files served by the same site. The rate limit is a preventive control against overuse, not
+against an attack spread over many addresses.
+
+</details>
+
+### Common mistakes
+
+- Starting `npm run dev`: in development the headers are missing and the check looks failed.
+- Pasting the script into a blank tab or another site: the CSP to test is the one on the app's
+  page.
+- Concluding that HSTS works over `http://`: the browser ignores it until the site is served over
+  HTTPS.
+- Removing `HOST=127.0.0.1`: the server becomes reachable from the whole network during the
+  exercise.
+
 ## Evidence
 
 The `~/lab01` folder must contain:

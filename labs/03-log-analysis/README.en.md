@@ -186,6 +186,55 @@ keys are fake.
    29 /home/your-user/lab03/timeline.txt
    ```
 
+## Hints and solution
+
+### Success indicators
+
+- `203.0.113.45` is classified as brute force (24 attempts on one account) and `198.51.100.23` as
+  password spraying (12 accounts, one attempt each).
+- `~/lab03/timeline.txt` has 29 lines and contains the creation of `svc-update` and its addition
+  to the `sudo` group.
+- The report asks to disable both `deploy` and `svc-update`, not only to block the addresses.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+Step 3 returns odd numbers? Look at the fields: for a nonexistent user the message adds `invalid
+user` and the name moves two places along.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Cannot find what the attacker did after signing in? Look at lines from processes other than
+`sshd`: `sudo` and `useradd` log administrative commands.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+The number of attempts alone does not tell the two attacks apart: count how many different
+accounts each address tries. The successful sign-in at 02:12 comes from the brute-force address,
+with a password and outside working hours: it is the indicator of compromise. A minute later
+`svc-update` appears and is added to `sudo`: that is persistence. The actions are to preserve
+the evidence, disable both accounts and end their sessions, block the addresses, require keys or
+MFA for SSH and look for the same address on the other servers.
+
+</details>
+
+### Common mistakes
+
+- Counting only attempts and calling the spraying a brute force too.
+- Stopping at the successful sign-in without looking at what happened next.
+- Blocking the address and leaving `svc-update` active.
+- Changing `auth.log` during the analysis: the hash in the Setup no longer matches.
+
 ## Evidence
 
 The `~/lab03` folder must contain:

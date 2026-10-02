@@ -251,6 +251,53 @@ The dates and key hashes in the outputs are those of the author's run: yours wil
    it. Anyone who does not check would keep accepting it: revocation protects only the
    clients that verify it.
 
+## Hints and solution
+
+### Success indicators
+
+- Before revocation, `openssl verify -CAfile ca.crt web.crt` prints `web.crt: OK`.
+- The hashes of the two public keys in step 6 match.
+- After revocation, checking with `-crl_check` gives `error 23 at 0 depth lookup: certificate
+  revoked`.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+`openssl ca` cannot find its files? Run it from the `~/lab04` folder: the configuration uses
+relative paths (`./ca`, `./ca.crt`).
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+The CRL check still says `OK`? Regenerate the CRL after revoking (`-gencrl`) and pass it with
+`-CRLfile` together with `-crl_check`.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+The CSR carries the public key and the requested name, signed with the server's private key; the
+CA signs it, adding the SAN and the `serverAuth` usage. Chain verification climbs from the
+certificate to the root you chose to trust: a self-signed certificate with the same name never
+gets there. Revocation goes into a CRL signed by the CA, and takes effect only for clients that
+check it, or that use OCSP.
+
+</details>
+
+### Common mistakes
+
+- Putting the name only in the CN: browsers read the SAN.
+- Distributing the CA's private key together with its certificate.
+- Revoking without publishing the new CRL.
+- Reading the `-checkend` value as days: it is seconds.
+
 ## Evidence
 
 The `~/lab04` folder must contain:

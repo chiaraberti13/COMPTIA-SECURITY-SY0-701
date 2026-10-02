@@ -179,6 +179,54 @@ addresses belong to the documentation block `203.0.113.0/24` (RFC 5737) and the 
    6
    ```
 
+## Hints and solution
+
+### Success indicators
+
+- A-101 and A-102 are closed as false positives (approved scanner) and A-103 is to be checked with
+  the backup team.
+- A-105, A-106, A-107, A-108, A-110 and A-111 form a single incident, opened first.
+- The containment proposal covers WS-042 and the accounts `l.bianchi` and `adm.verdi`.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+Not sure which alerts belong together? Look for the host and user names in the `detail` field
+too, not only in `host`.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Not sure where to start? More than the severity of each alert, what matters is how far the
+attacker got: the last link in the chain.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+Alerts explained by the inventory are closed or checked; the others are correlated by host, user
+and time. Six alerts from five different sources tell one story: a document with a macro,
+PowerShell, DNS beaconing, credential theft, an administrator sign-in from the workstation. The
+last step, A-111, shows the attacker already holds a privileged identity: containment covers the
+accounts at once, as well as the host, preserving WS-042's memory.
+
+</details>
+
+### Common mistakes
+
+- Ordering the queue only by severity or by an automatic score.
+- Closing A-103 as a false positive without confirmation: a known exception is a good hiding
+  place.
+- Shutting down or reinstalling WS-042: the memory the investigation needs is lost.
+- Isolating the host and forgetting the accounts already compromised.
+
 ## Evidence
 
 The `~/lab06` folder must contain:

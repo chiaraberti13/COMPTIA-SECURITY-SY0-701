@@ -235,6 +235,53 @@ amministratore (qui `ubuntu`) possono essere diversi.
    Ogni riga va confrontata con una richiesta approvata. Anna compare ancora come account
    (bloccato, ed è voluto); se fra un mese nessuno l'avrà cancellato, è un account orfano.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `marco` non riesce a elencare `/srv/contabilita`; `revisore` legge `bilancio.txt` ma non crea
+  file.
+- `sudo -l -U marco` mostra un solo comando, `/usr/bin/ss -tlnp`.
+- `passwd -S anna` mostra `L` e `chage -l anna` una scadenza dell'account nel passato.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Il file creato da Anna appartiene al gruppo `anna`? Manca il bit setgid: la cartella deve avere
+permessi `2770`.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Il revisore non legge i file creati dopo la ACL? Serve anche la ACL *default* (`setfacl -d`),
+che vale per i file nuovi.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Ogni richiesta riceve esattamente il permesso che le serve: lettura e scrittura al gruppo, sola
+lettura al revisore con una ACL, un solo comando a Marco. All'uscita di Anna l'account si blocca
+e scade, perché la sola password bloccata non ferma una chiave SSH, si toglie dal gruppo e i
+suoi file passano a un altro proprietario. La revisione finale confronta ogni accesso con una
+richiesta approvata.
+
+</details>
+
+### Errori comuni
+
+- Aggiungere il revisore al gruppo: otterrebbe anche la scrittura.
+- Scrivere in `/etc/sudoers.d/` senza controllare il file con `visudo -c`.
+- Bloccare solo la password di chi lascia l'azienda: con una chiave SSH entra ancora.
+- Cancellare subito l'account: i suoi file restano a un UID che può essere riassegnato.
+
 ## Evidenze
 
 Nella cartella `~/lab08` devono esserci:

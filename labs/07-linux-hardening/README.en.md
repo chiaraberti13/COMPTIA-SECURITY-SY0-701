@@ -270,6 +270,52 @@ instead of `sshd`.
    services is still the first step; the firewall covers what slips through. Stop the test
    service with `kill %1`.
 
+## Hints and solution
+
+### Success indicators
+
+- `sudo sshd -T` shows `permitrootlogin no`, `passwordauthentication no` and `maxauthtries 3`.
+- `stat -c '%A' /usr/bin/chfn` prints `-rwxr-xr-x`.
+- From the `client` namespace port 22 answers (code 0) and port 8080 does not (code 1).
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+`sshd -T` still shows the old values? The file must live in `/etc/ssh/sshd_config.d/` and end in
+`.conf`; after `sshd -t`, reload the service.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Port 8080 answers from the client too? Check with `sudo nft list ruleset` that the table is
+loaded and the `input` chain has `policy drop`.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+Each change removes a piece of attack surface: no direct root login, no passwords to guess,
+fewer attempts per connection, one SUID binary fewer, a firewall that allows only what is
+needed. The test from the namespace proves the result from outside, because loopback traffic is
+always allowed. Validating before applying, and the snapshot, are the backout plan, as in change
+management.
+
+</details>
+
+### Common mistakes
+
+- Disabling passwords while working over SSH without an authorized key: you lock yourself out.
+- Removing the SUID bit with `chmod`: the next package update brings it back.
+- Testing the firewall from `127.0.0.1`: loopback is allowed, so the test proves nothing.
+- Forgetting the ICMPv6 rules: IPv6 stops working.
+
 ## Evidence
 
 The `~/lab07` folder must contain:

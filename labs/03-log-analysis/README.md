@@ -185,6 +185,56 @@ sono finte.
    29 /home/tuo-utente/lab03/timeline.txt
    ```
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `203.0.113.45` è classificato come brute force (24 tentativi su un account) e `198.51.100.23`
+  come password spraying (12 account, un tentativo ciascuno).
+- `~/lab03/timeline.txt` ha 29 righe e contiene la creazione di `svc-update` e il suo ingresso nel
+  gruppo `sudo`.
+- Il rapporto chiede di disabilitare sia `deploy` sia `svc-update`, non solo di bloccare gli
+  indirizzi.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Il passaggio 3 restituisce numeri strani? Guarda i campi: per un utente inesistente il messaggio
+aggiunge `invalid user` e il nome si sposta di due posizioni.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Non trovi che cosa ha fatto l'attaccante dopo l'accesso? Cerca le righe dei processi diversi da
+`sshd`: `sudo` e `useradd` registrano i comandi amministrativi.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Il numero di tentativi da solo non distingue i due attacchi: conta quanti account diversi prova
+ogni indirizzo. L'accesso riuscito delle 02:12 viene dallo stesso indirizzo del brute force, con
+password e fuori orario: è l'indicatore di compromissione. Un minuto dopo nasce `svc-update`,
+aggiunto a `sudo`: è persistenza. Le azioni sono preservare le evidenze, disabilitare entrambi
+gli account e chiuderne le sessioni, bloccare gli indirizzi, imporre chiavi o MFA su SSH e
+cercare lo stesso indirizzo sugli altri server.
+
+</details>
+
+### Errori comuni
+
+- Contare solo i tentativi e chiamare brute force anche lo spraying.
+- Fermarsi all'accesso riuscito senza cercare che cosa è successo dopo.
+- Bloccare l'indirizzo e lasciare attivo `svc-update`.
+- Modificare `auth.log` durante l'analisi: l'hash del Setup non corrisponde più.
+
 ## Evidenze
 
 Nella cartella `~/lab03` devono esserci:

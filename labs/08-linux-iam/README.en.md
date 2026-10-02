@@ -236,6 +236,52 @@ name of your administrator user (here `ubuntu`) may differ.
    Each line must be matched with an approved request. Anna still appears as an account (locked,
    on purpose); if nobody has deleted it a month from now, it is an orphaned account.
 
+## Hints and solution
+
+### Success indicators
+
+- `marco` cannot list `/srv/contabilita`; `revisore` reads `bilancio.txt` but cannot create files.
+- `sudo -l -U marco` shows a single command, `/usr/bin/ss -tlnp`.
+- `passwd -S anna` shows `L` and `chage -l anna` an account expiry in the past.
+
+### If you get stuck
+
+Try on your own first: the hints open one at a time, from the vaguest to the solution.
+
+<details>
+<summary>Hint 1</summary>
+
+Anna's file belongs to the `anna` group? The setgid bit is missing: the folder needs permissions
+`2770`.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+The auditor cannot read files created after the ACL? You also need the *default* ACL (`setfacl
+-d`), which applies to new files.
+
+</details>
+
+<details>
+<summary>Worked solution</summary>
+
+Each request gets exactly the permission it needs: read and write for the group, read-only for
+the auditor through an ACL, one command for Marco. When Anna leaves, the account is locked and
+expired, because a locked password alone does not stop an SSH key, she is removed from the group
+and her files go to another owner. The final review matches every access with an approved
+request.
+
+</details>
+
+### Common mistakes
+
+- Adding the auditor to the group: they would also get write access.
+- Writing into `/etc/sudoers.d/` without checking the file with `visudo -c`.
+- Locking only the password of someone leaving: with an SSH key they can still get in.
+- Deleting the account at once: their files stay with a UID that may be reassigned.
+
 ## Evidence
 
 The `~/lab08` folder must contain:

@@ -181,6 +181,53 @@ dominio `update-check.example` usa il suffisso riservato `.example` (RFC 2606).
    6
    ```
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- A-101 e A-102 sono chiusi come falsi positivi (scanner approvato) e A-103 è da verificare con il
+  team dei backup.
+- A-105, A-106, A-107, A-108, A-110 e A-111 formano un solo incidente, aperto per primo.
+- La proposta di contenimento riguarda WS-042 e gli account `l.bianchi` e `adm.verdi`.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Non capisci quali allarmi stanno insieme? Cerca il nome dell'host e dell'utente anche nel campo
+`detail`, non solo in `host`.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Non sai da che cosa partire? Più della gravità del singolo allarme conta fin dove è arrivato
+l'attaccante: l'ultimo anello della catena.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Gli allarmi spiegati dall'inventario si chiudono o si verificano; gli altri si correlano per
+host, utente e tempo. Sei allarmi di cinque fonti diverse raccontano un'unica storia: documento
+con macro, PowerShell, beacon DNS, furto di credenziali, accesso amministrativo dalla
+postazione. L'ultimo passo, A-111, mostra che l'attaccante ha già un'identità privilegiata: il
+contenimento riguarda subito gli account, oltre all'host, preservando la memoria di WS-042.
+
+</details>
+
+### Errori comuni
+
+- Ordinare la coda solo per gravità o per punteggio automatico.
+- Chiudere A-103 come falso positivo senza conferma: un'eccezione nota è un buon nascondiglio.
+- Spegnere o reinstallare WS-042: si perde la memoria che serve all'indagine.
+- Isolare l'host e dimenticare gli account già compromessi.
+
 ## Evidenze
 
 Nella cartella `~/lab06` devono esserci:

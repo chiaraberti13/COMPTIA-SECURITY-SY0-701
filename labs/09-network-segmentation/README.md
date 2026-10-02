@@ -185,6 +185,54 @@ stampano i comandi del laboratorio.
    ritrasmissione) e due ping da 84 byte. In una rete vera, un contatore che sale sulla regola
    degli ospiti è un segnale da inviare al SIEM.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- Prima delle regole uffici e ospiti raggiungono il server; dopo, solo gli uffici.
+- `server -> ping uffici` dà `100% packet loss`.
+- Il contatore della regola degli ospiti cresce dopo le prove.
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+Nessuno raggiunge il server, nemmeno prima delle regole? Controlla che l'inoltro sia attivo nel
+namespace `router` e che ogni zona abbia la sua rotta predefinita.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Dopo le regole nemmeno gli uffici raggiungono la 8080? Senza `ct state established,related
+accept` le risposte del server vengono scartate.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Il router applica le regole nella catena `forward`, al traffico che lo attraversa. La policy
+`drop` rifiuta tutto ciò che non è elencato; due regole ammettono uffici verso server, e lo
+stato della connessione lascia passare solo le risposte. Così gli ospiti non raggiungono nulla
+di interno e il server non può aprire connessioni verso gli uffici: un attaccante che lo
+controllasse perderebbe la strada del movimento laterale.
+
+</details>
+
+### Errori comuni
+
+- Mettere le regole nella catena `input`: il traffico fra le zone attraversa il router, non è
+  diretto a lui.
+- Scrivere una deny list per gli ospiti lasciando la policy `accept`: ciò che non hai previsto
+  passa.
+- Concludere che il servizio non funziona senza aspettare che sia in ascolto.
+- Pensare che le VLAN bastino: il routing fra VLAN le ricollega se nessuno filtra il transito.
+
 ## Evidenze
 
 Nella cartella `~/lab09` devono esserci:

@@ -4,7 +4,7 @@
 Copia questo file in labs/NN-nome-breve/README.md e la versione inglese in README.en.md.
 tests/labs.test.ts richiede la tabella qui sotto (con gli stessi valori nelle due lingue) e
 le sezioni "##" in quest'ordine. Nella versione inglese le intestazioni sono: Scenario,
-Prerequisites, Topology, Setup, Exercise, Evidence, Cleanup, Final questions; le righe
+Prerequisites, Topology, Setup, Exercise, Hints and solution, Evidence, Cleanup, Final questions; le righe
 della tabella: SY0-701 objectives, Risk, Duration.
 -->
 
@@ -48,6 +48,15 @@ il [controllo preliminare](README.md#controllo-preliminare): `bash labs/prefligh
 
 I passaggi numerati. Per ognuno: il comando, l'output reale ottenuto dall'autore e la
 spiegazione di che cosa osservare. Prima di ogni passaggio sensibile, un avviso `> ⚠️`.
+
+## Aiuti e soluzione
+
+Aiuto progressivo per chi si blocca, in tre parti: «### Indicatori di successo» (almeno tre
+segni concreti che l'esercizio è riuscito), «### Se ti blocchi» con tre blocchi `<details>`
+— «Suggerimento 1», «Suggerimento 2», «Soluzione ragionata» — dal più vago alla soluzione, e
+«### Errori comuni» (almeno tre, ciascuno con la sua conseguenza). Nella versione inglese:
+Hints and solution, Success indicators, If you get stuck, Hint 1, Hint 2, Worked solution,
+Common mistakes.
 
 ## Evidenze
 

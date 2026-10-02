@@ -266,6 +266,52 @@ socket di systemd, `ss` mostra `systemd` al posto di `sshd`.
    dei servizi inutili resta comunque il primo passo; il firewall copre ciò che sfugge.
    Ferma il servizio di prova con `kill %1`.
 
+## Aiuti e soluzione
+
+### Indicatori di successo
+
+- `sudo sshd -T` mostra `permitrootlogin no`, `passwordauthentication no` e `maxauthtries 3`.
+- `stat -c '%A' /usr/bin/chfn` stampa `-rwxr-xr-x`.
+- Dal namespace `client` la porta 22 risponde (codice 0) e la 8080 no (codice 1).
+
+### Se ti blocchi
+
+Prova prima da solo: i suggerimenti si aprono uno alla volta, dal più vago alla soluzione.
+
+<details>
+<summary>Suggerimento 1</summary>
+
+`sshd -T` mostra ancora i vecchi valori? Il file deve stare in `/etc/ssh/sshd_config.d/` e
+terminare in `.conf`; dopo `sshd -t` ricarica il servizio.
+
+</details>
+
+<details>
+<summary>Suggerimento 2</summary>
+
+Dal client risponde anche la 8080? Controlla con `sudo nft list ruleset` che la tabella sia
+caricata e che la catena `input` abbia `policy drop`.
+
+</details>
+
+<details>
+<summary>Soluzione ragionata</summary>
+
+Ogni modifica riduce un pezzo di superficie d'attacco: niente accesso diretto come root, niente
+password da indovinare, meno tentativi per connessione, un binario SUID in meno, un firewall che
+ammette solo ciò che serve. Il test dal namespace prova il risultato dall'esterno, perché il
+traffico dal loopback è sempre ammesso. La validazione prima di applicare e lo snapshot sono il
+piano di rientro, come nel change management.
+
+</details>
+
+### Errori comuni
+
+- Disattivare le password lavorando via SSH senza una chiave autorizzata: si resta chiusi fuori.
+- Togliere il SUID con `chmod`: il prossimo aggiornamento del pacchetto lo ripristina.
+- Provare il firewall da `127.0.0.1`: il loopback è ammesso, e il test non dimostra nulla.
+- Dimenticare le regole ICMPv6: IPv6 smette di funzionare.
+
 ## Evidenze
 
 Nella cartella `~/lab07` devono esserci:
