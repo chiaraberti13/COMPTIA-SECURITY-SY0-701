@@ -10,6 +10,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Started by dependabot-merge.yml after a merge, which as a job-token push
+  # would not start this workflow by itself.
+  workflow_dispatch:
 
 permissions:
   contents: read
