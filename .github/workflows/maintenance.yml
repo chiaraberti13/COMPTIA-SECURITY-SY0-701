@@ -1,0 +1,85 @@
+name: Maintenance
+
+# Once a month, opens the maintenance issue (ROADMAP: "Automatizzare le issue
+# ricorrenti") with what still needs a person: external links that no longer
+# answer, sources to confirm as the current revision, the dependency audit and
+# the major updates to plan, and the Italian/English document pairs that
+# drifted apart. scripts/maintenance-report.ts builds the body; a second run in
+# the same month updates that issue instead of opening another.
+
+on:
+  schedule:
+    # The 1st of every month, 05:29 UTC (an off-peak minute).
+    - cron: "29 5 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maintenance
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: Monthly maintenance issue
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The full history: the language check compares when each file of a pair last changed.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: List the source URLs for the link check
+        run: npx tsx scripts/maintenance-report.ts --source-links > source-links.md
+
+      # A broken link must end up in the issue, not fail the job.
+      - name: External links of the documents and of the sources
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --config lychee.toml --no-progress
+            './*.md' './docs/**/*.md' './labs/**/*.md' './.github/**/*.md' source-links.md
+          format: markdown
+          output: lychee.md
+          fail: false
+          jobSummary: false
+
+      # Both commands exit non-zero when they find something: that is the data, not an error.
+      - name: Dependency audit and outdated packages
+        run: |
+          npm audit --json > audit.json || true
+          npm outdated --json > outdated.json || true
+
+      - name: Build the report
+        run: |
+          npx tsx scripts/maintenance-report.ts --audit audit.json --outdated outdated.json --links lychee.md > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open or update the issue of the month
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          title="Manutenzione periodica — $(date -u +%Y-%m)"
+          gh label create maintenance --color 0e8a16 --description "Controllo periodico di link, fonti, dipendenze e traduzioni" --force
+          number="$(gh issue list --state open --label maintenance --json number,title \
+            --jq "[.[] | select(.title == \"$title\")][0].number // empty")"
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file report.md
+            echo "Updated issue #$number."
+          else
+            gh issue create --title "$title" --label maintenance --body-file report.md
+          fi

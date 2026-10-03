@@ -180,7 +180,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 
 - [x] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** sicurezza entro 48 ore, minor e patch entro 7 giorni, ogni major in una PR dedicata con changelog, smoke test e verifica manuale — 2026-09-24.
 - [x] **P1 — Migrazione a Express 5** (5.2.1, 2026-09-25), sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); anche le API senza corpo JSON rispondono 400 e non 502 con Express 5 (`req.body ?? {}`); gli errori asincroni restano gestiti da `try/catch` nelle rotte, compatibili con la gestione nativa di Express 5.
-- [ ] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S**
+- [x] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S** — Verificato il 2026-10-03: i tre branch non esistono più su GitHub (l'API risponde 404); restano solo `main` e il branch della sessione di lavoro, che non ha commit né patch assenti da `main`.
 
 #### Collaborazione e manutenzione
 
@@ -190,7 +190,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P1 — Definire `CODEOWNERS`:** responsabilità per area documentate; nessuna approvazione del proprietario o secondo revisore obbligatori — 2026-10-02.
 - [x] **P1 — Policy di versionamento:** SemVer dichiarato in `CHANGELOG.md` (correzioni di contenuto = patch, nuove domande o sezioni = minor, formato dei progressi salvati o syllabus = major) — 2026-09-24.
 - [x] **P1 — Processo di deprecazione:** contenuti superati marcati `deprecated` con motivazione, senza rimozione immediata. Domande e sottovoci accettano `deprecated: { since, reason }`: restano nel dataset, così gli ID a cui puntano i progressi salvati continuano a esistere, ma l'app non le mostra, non le estrae nei quiz e non le conta, come la matrice di copertura. `tests/deprecation.test.ts` impone data e motivazione; il processo è descritto in `CONTRIBUTING.md` — 2026-09-27.
-- [ ] **P2 — Automatizzare le issue ricorrenti:** revisione link, aggiornamento fonti, audit dipendenze e parità linguistica.
+- [x] **P2 — Automatizzare le issue ricorrenti:** revisione link, aggiornamento fonti, audit dipendenze e parità linguistica. Dal 2026-10-03 il workflow `maintenance.yml` apre il primo di ogni mese (e su richiesta) la issue «Manutenzione periodica — AAAA-MM», con etichetta `maintenance`, e la aggiorna se esiste già: link esterni dei documenti e delle fonti non raggiungibili (lychee), fonti da confermare come revisione in vigore con l'età della mappatura (oltre 180 giorni è segnalata), `npm audit` con i pacchetti vulnerabili e `npm outdated` con le major da pianificare, coppie di documenti italiano/inglese in cui una lingua è cambiata dopo l'altra. Il corpo è generato da `scripts/maintenance-report.ts`, verificato da `tests/maintenanceReport.test.ts`; il workflow può solo leggere il codice e scrivere issue.
 
 **Criteri di accettazione:** una nuova domanda o pagina si aggiunge seguendo un template e un test la valida; la pull request riceve feedback automatico chiaro; indice e matrice di copertura non richiedono aggiornamenti manuali.
 
