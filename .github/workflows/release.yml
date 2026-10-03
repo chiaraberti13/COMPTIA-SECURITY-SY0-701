@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      # Build provenance: id-token signs the attestation through the OIDC
+      # identity of the run, attestations records it against the repository.
+      id-token: write
+      attestations: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,6 +49,15 @@ jobs:
           tar -czf app.tar.gz -C release-package .
           cp release-package/sbom.cdx.json sbom.cdx.json
           sha256sum app.tar.gz sbom.cdx.json > SHA256SUMS
+      # Signed SLSA provenance for the archive and the SBOM: who built them,
+      # from which commit and which workflow. Verified with
+      # `gh attestation verify app.tar.gz --repo <owner>/<repo>`.
+      - name: Attest the provenance of the release artifacts
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            app.tar.gz
+            sbom.cdx.json
       - name: Create draft release for review
         env:
           GH_TOKEN: ${{ github.token }}
@@ -53,3 +66,52 @@ jobs:
         run: |
           gh release create "$RELEASE_TAG" app.tar.gz sbom.cdx.json SHA256SUMS \
             --verify-tag --draft --title "$RELEASE_TAG" --notes-file release-notes.md
+
+  image:
+    name: Publish and attest the container image
+    # Only after the release job has validated the tag, run the checks and built
+    # the app: the image for a tag that fails validation is never published.
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Push the image to this repository's namespace in the GitHub Container
+      # Registry; id-token and attestations sign and record its provenance.
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Only publish a tag that is on main
+        run: git merge-base --is-ancestor HEAD origin/main
+      - name: Log in to the GitHub Container Registry
+        env:
+          REGISTRY_TOKEN: ${{ github.token }}
+          REGISTRY_USER: ${{ github.actor }}
+        run: echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$REGISTRY_USER" --password-stdin
+      - name: Build and push the image
+        id: push
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          # GHCR image names must be lower case.
+          image="ghcr.io/$(echo "$REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          docker build --tag "$image:$RELEASE_TAG" --tag "$image:latest" .
+          docker push "$image:$RELEASE_TAG"
+          docker push "$image:latest"
+          # The manifest digest is stable across both tags; attest it by digest.
+          digest=$(docker inspect --format='{{index .RepoDigests 0}}' "$image:$RELEASE_TAG" | cut -d@ -f2)
+          echo "image-name=$image" >> "$GITHUB_OUTPUT"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+      # Signed SLSA provenance for the image, pushed next to it in the registry.
+      # Verified with `gh attestation verify oci://<image>@<digest> --repo <owner>/<repo>`.
+      - name: Attest the image provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ steps.push.outputs.image-name }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

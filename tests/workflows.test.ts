@@ -128,3 +128,37 @@ describe("release safeguards", () => {
     expect(release).not.toMatch(/run:.*\$\{\{ github\.ref_name/);
   });
 });
+
+describe("provenance attestation", () => {
+  const release = workflows.find((w) => w.name === "release.yml")!.text;
+
+  it("signs the release artifacts with build provenance", () => {
+    // attest-build-provenance needs an OIDC token to sign and the right to
+    // record the attestation; without both permissions the step fails.
+    expect(release).toMatch(/id-token:\s*write/);
+    expect(release).toMatch(/attestations:\s*write/);
+    expect(release).toContain("actions/attest-build-provenance@");
+    // The archive and the SBOM are the subjects of the artifact attestation.
+    const subjectPath = release.indexOf("subject-path:");
+    expect(subjectPath).toBeGreaterThan(0);
+    const after = release.slice(subjectPath, subjectPath + 120);
+    expect(after).toContain("app.tar.gz");
+    expect(after).toContain("sbom.cdx.json");
+  });
+
+  it("publishes the container image to GHCR and attests it by digest", () => {
+    // packages: write lets the job push to the repository's GHCR namespace.
+    expect(release).toMatch(/packages:\s*write/);
+    expect(release).toContain("docker login ghcr.io");
+    expect(release).toContain("ghcr.io/");
+    // The image attestation references the pushed manifest by digest and is
+    // stored next to the image in the registry.
+    expect(release).toMatch(/subject-digest:\s*\$\{\{ steps\.push\.outputs\.digest \}\}/);
+    expect(release).toMatch(/push-to-registry:\s*true/);
+  });
+
+  it("never passes github.ref_name straight into a run step", () => {
+    // The tag is attacker-influenced; it reaches shell steps only through env.
+    expect(release).not.toMatch(/run:.*\$\{\{ github\.ref_name/);
+  });
+});
