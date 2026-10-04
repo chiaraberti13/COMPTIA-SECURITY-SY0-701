@@ -354,7 +354,8 @@ sempre la documentazione ufficiale**.
 
 La copertura di ogni obiettivo ufficiale (numero di domande per livello cognitivo ed esercizi
 guidati) è pubblicata in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generata dal
-dataset e verificata dalla CI.
+dataset e verificata dalla CI. Le funzioni NIST CSF 2.0, i CIS Controls v8 e le tattiche MITRE ATT&CK
+più vicini a ogni obiettivo sono in [`docs/framework-mapping.md`](docs/framework-mapping.md).
 
 Gli errori di contenuto sostanziali già corretti (una definizione sbagliata, una porta
 errata, una risposta che contraddiceva la spiegazione) sono elencati in

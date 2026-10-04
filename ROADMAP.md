@@ -266,7 +266,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [x] **P1 — Tracciabilità delle fonti:** mappatura per obiettivo e data della mappatura in `src/contentReview.ts`; eliminati stati di revisione personale non richiesti — 2026-10-02.
 - [x] **P1 — Errata e storico correzioni:** `docs/errata.md` elenca per dominio gli errori sostanziali già corretti (cosa diceva, cosa dice ora, commit della correzione), ricostruiti dalla cronologia git; collegato dai README, con l'invito a segnalare nuovi errori tramite issue — 2026-09-26.
 - [x] **P1 — Collegare attacchi, controlli e rilevazione:** per ogni scenario indicare vettore, impatto, mitigazione, evidenza e limite del controllo. I 12 scenari d'attacco delle guide (domini 1–4) hanno la catena completa in italiano e inglese, mostrata dentro il ragionamento; `tests/domainGuides.test.ts` elenca gli scenari d'attacco e rifiuta una catena incompleta. Gli scenari di governance del dominio 5 non descrivono un attacco e restano senza.
-- [ ] **P2 — Mappare i contenuti a framework complementari:** NIST CSF 2.0, MITRE ATT&CK, CIS Controls v8 o NICE, senza sostituire gli obiettivi CompTIA.
+- [x] **P2 — Mappare i contenuti a framework complementari:** ogni obiettivo SY0-701 è collegato alle funzioni NIST CSF 2.0, ai CIS Controls v8 e alle tattiche MITRE ATT&CK più vicine (`src/frameworkMapping.ts`), pubblicate in `docs/framework-mapping.md` (generato con `npm run framework-mapping`); i test impongono che ogni obiettivo sia mappato, che i valori esistano e che il file sia aggiornato. NICE non è mappato. Gli obiettivi CompTIA restano il riferimento — 2026-10-04.
 
 #### Laboratori pratici sicuri
 

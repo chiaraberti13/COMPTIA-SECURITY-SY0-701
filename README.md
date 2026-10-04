@@ -354,7 +354,8 @@ documentation always prevails**.
 
 How every official objective is covered (number of questions by cognitive level and guided
 exercises) is published in [`docs/coverage-matrix.md`](docs/coverage-matrix.md), generated
-from the dataset and checked by CI.
+from the dataset and checked by CI. The closest NIST CSF 2.0 functions, CIS Controls v8 and
+MITRE ATT&CK tactics for each objective are in [`docs/framework-mapping.md`](docs/framework-mapping.md).
 
 Substantive content errors already fixed (a wrong definition, a mismatched port, an
 answer that contradicted the explanation) are listed in [`docs/errata.md`](docs/errata.md),
