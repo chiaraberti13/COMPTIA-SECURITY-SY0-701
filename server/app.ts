@@ -12,23 +12,19 @@ import fs from "fs";
 import path from "path";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import { Type, type GenerateContentParameters } from "@google/genai";
 import {
   ChatRequestSchema,
   MAX_MESSAGE_CHARS,
   RemediationRequestSchema,
 } from "../src/apiSchemas";
 import { validateRemediationPayload } from "../src/remediation";
+import { createGeminiProvider, type AiClient, type AiProvider, type JsonSchema } from "./aiProvider";
 import { tokenMatches, type DailyBudget } from "./aiGuard";
 import { createJsonLogger, redact, requestLogger, type Logger } from "./log";
 import { asData } from "./promptSafety";
 
-/** The part of the Gemini SDK the endpoints use; tests provide a fake. */
-export interface AiClient {
-  models: {
-    generateContent(params: GenerateContentParameters): Promise<{ text?: string | undefined }>;
-  };
-}
+/** Re-exported: tests build fake Gemini clients with this type. */
+export type { AiClient, AiProvider } from "./aiProvider";
 
 export interface AppOptions {
   isProduction: boolean;
@@ -41,6 +37,11 @@ export interface AppOptions {
   /** Read per request, so a key added at runtime by the platform is picked up. */
   getApiKey: () => string | undefined;
   createClient: (apiKey: string) => AiClient;
+  /**
+   * Builds the provider the routes talk to. Defaults to Gemini over
+   * `createClient` and `model`; pass another adapter to change vendor.
+   */
+  createProvider?: (apiKey: string) => AiProvider;
   /** Built front end served in production; defaults to ./dist. */
   distPath?: string;
   /** Disable the static SPA when the platform serves it separately on its CDN. */
@@ -138,7 +139,42 @@ function precompressedStatic(distPath: string): express.RequestHandler {
   };
 }
 
+/** Shape the model must return for the remediation questions. */
+const REMEDIATION_SCHEMA: JsonSchema = {
+  type: "object",
+  properties: {
+    questions: {
+      type: "array",
+      description: "Lista di 3 domande di recupero",
+      items: {
+        type: "object",
+        required: ["id", "topic", "level", "scenario", "question", "options", "answerIndex", "explanation"],
+        properties: {
+          id: { type: "integer", description: "ID univoco sequenziale" },
+          topic: { type: "string", description: "Argomento specifico del Dominio 1, 2, 3, 4 o 5" },
+          level: { type: "string", description: "ANALISI" },
+          scenario: { type: "string", description: "Scenario aziendale dettagliato con vincoli (minimo 3-4 righe)" },
+          question: { type: "string", description: "La domanda specifica, focalizzata su BEST, MOST o FIRST" },
+          options: {
+            type: "array",
+            items: { type: "string" },
+            description: "Esattamente 4 opzioni plausibili, di cui solo una è la migliore",
+          },
+          answerIndex: { type: "integer", description: "Indice a base 0 della risposta corretta (0-3)" },
+          explanation: {
+            type: "string",
+            description: "Spiegazione estremamente approfondita e formattata con markdown che dettaglia il motivo della scelta migliore rispetto a ciascun distrattore.",
+          },
+        },
+      },
+    },
+  },
+  required: ["questions"],
+};
+
 export function createApp(opts: AppOptions): express.Express {
+  const createProvider =
+    opts.createProvider ?? ((apiKey: string) => createGeminiProvider(opts.createClient(apiKey), opts.model));
   const app = express();
 
   if (opts.isProduction) {
@@ -274,7 +310,7 @@ export function createApp(opts: AppOptions): express.Express {
         return res.status(503).json({ error: budgetError(opts.budget, isEn) });
       }
 
-      const ai = opts.createClient(apiKey);
+      const ai = createProvider(apiKey);
 
       // Every turn is framed as data (server/promptSafety.ts): the text of a
       // message cannot close its tag or pose as a new turn of the dialogue.
@@ -323,18 +359,15 @@ ${asData("student_message", message)}
 
 Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best practice ufficiali.`;
 
-      const response = await ai.models.generateContent({
-        model: opts.model,
-        contents: prompt,
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.3,
-          maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS,
-          abortSignal: AbortSignal.timeout(opts.timeoutMs),
-        },
+      const reply = await ai.generateText({
+        system: systemPrompt,
+        prompt,
+        temperature: 0.3,
+        maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS,
+        timeoutMs: opts.timeoutMs,
       });
 
-      res.json({ reply: response.text });
+      res.json({ reply });
     } catch (error: any) {
       // The provider error can carry internal endpoints, project ids and quota
       // details: it belongs in the server log, not in the browser.
@@ -378,7 +411,7 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
         return res.status(503).json({ error: budgetError(opts.budget, isEn) });
       }
 
-      const ai = opts.createClient(apiKey);
+      const ai = createProvider(apiKey);
 
       // Each topic label is framed as data, like the chat messages.
       const topicsString = safeTopics.map((topic) => asData("topic", topic)).join(" ");
@@ -408,51 +441,22 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
         : `Genera esattamente 3 domande d'esame di livello ANALISI in formato JSON sugli argomenti deboli: ${topicsString}.
       Ogni domanda deve focalizzarsi sull'applicazione in contesti complessi e contenere una spiegazione approfondita (CompTIA-style) che spieghi perché la risposta corretta è la BEST e perché le altre tre sono distrattori plausibili ma sub-ottimali.`;
 
-      const response = await ai.models.generateContent({
-        model: opts.model,
-        contents: prompt,
-        config: {
-          systemInstruction: systemInstruction,
-          responseMimeType: "application/json",
+      const text = await ai.generateJson(
+        {
+          system: systemInstruction,
+          prompt,
           maxOutputTokens: 4096,
-          abortSignal: AbortSignal.timeout(opts.timeoutMs),
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              questions: {
-                type: Type.ARRAY,
-                description: "Lista di 3 domande di recupero",
-                items: {
-                  type: Type.OBJECT,
-                  required: ["id", "topic", "level", "scenario", "question", "options", "answerIndex", "explanation"],
-                  properties: {
-                    id: { type: Type.INTEGER, description: "ID univoco sequenziale" },
-                    topic: { type: Type.STRING, description: "Argomento specifico del Dominio 1, 2, 3, 4 o 5" },
-                    level: { type: Type.STRING, description: "ANALISI" },
-                    scenario: { type: Type.STRING, description: "Scenario aziendale dettagliato con vincoli (minimo 3-4 righe)" },
-                    question: { type: Type.STRING, description: "La domanda specifica, focalizzata su BEST, MOST o FIRST" },
-                    options: {
-                      type: Type.ARRAY,
-                      items: { type: Type.STRING },
-                      description: "Esattamente 4 opzioni plausibili, di cui solo una è la migliore"
-                    },
-                    answerIndex: { type: Type.INTEGER, description: "Indice a base 0 della risposta corretta (0-3)" },
-                    explanation: { type: Type.STRING, description: "Spiegazione estremamente approfondita e formattata con markdown che dettaglia il motivo della scelta migliore rispetto a ciascun distrattore." }
-                  }
-                }
-              }
-            },
-            required: ["questions"]
-          }
-        }
-      });
+          timeoutMs: opts.timeoutMs,
+        },
+        REMEDIATION_SCHEMA,
+      );
 
-      if (!response.text) {
-        throw new Error("No response text from Gemini");
+      if (!text) {
+        throw new Error("No response text from the AI provider");
       }
 
-      const result = validateRemediationPayload(JSON.parse(response.text.trim()));
-      if (!result) throw new Error("Gemini returned an invalid remediation payload");
+      const result = validateRemediationPayload(JSON.parse(text.trim()));
+      if (!result) throw new Error("The AI provider returned an invalid remediation payload");
       res.json({ questions: result });
     } catch (error: any) {
       logAiFailure("/api/quiz/remediation", error);
