@@ -9,6 +9,7 @@ afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); process.exitCode = 0
 function engine() {
   let now = 1_800_000_000_000;
   let serial = 0;
+  let beforeInspect = () => {};
   const containers = new Map<string, { Id: string; Image: string; Config: { Labels: Record<string, string> }; State: { Running: boolean; Paused: boolean } }>();
   const calls: string[][] = [];
   const run: DockerRunner = async args => {
@@ -24,6 +25,7 @@ function engine() {
       return `container-${serial}`;
     }
     if (args[0] === "inspect") {
+      beforeInspect();
       const container = containers.get(args[1]);
       if (!container) throw new Error("No such container");
       return JSON.stringify([container]);
@@ -38,7 +40,7 @@ function engine() {
     if (args[0] === "exec") return "command output";
     throw new Error(`unhandled ${args}`);
   };
-  return { manager: new LabSessions(scope, run, () => now), containers, calls, advance: (ms: number) => { now += ms; } };
+  return { manager: new LabSessions(scope, run, () => now), containers, calls, onInspect: (callback: () => void) => { beforeInspect = callback; }, advance: (ms: number) => { now += ms; } };
 }
 
 describe("on-demand session inputs and boundaries", () => {
@@ -132,6 +134,24 @@ describe("on-demand session lifecycle", () => {
     expect(await e.manager.clean()).toEqual(["03"]);
     expect((await e.manager.list()).map(s => s.lab)).toEqual(["04"]);
   });
+  it("does not clean a new unexpired session that replaced an expired slot after listing", async () => {
+    const e = engine();
+    await e.manager.start("03", 60);
+    e.advance(60_000);
+    let inspections = 0;
+    e.onInspect(() => {
+      if (++inspections === 2) {
+        const replacement = e.containers.get(sessionName(scope, "03"))!;
+        replacement.Id = "replacement-container";
+        replacement.Config.Labels[`${label}.expires`] = String(Number(replacement.Config.Labels[`${label}.expires`]) + 60_000);
+      }
+    });
+    expect(await e.manager.clean()).toEqual([]);
+    expect(e.containers.size).toBe(1);
+    expect(e.calls.filter(args => args[0] === "rm")).toHaveLength(0);
+    expect((await e.manager.list())[0].secondsLeft).toBe(60);
+  });
+
   it.each(["exec", "stop", "reset"] as const)("refuses %s on a foreign container before executing or deleting", async action => {
     const e = engine();
     await e.manager.start("03", 60);

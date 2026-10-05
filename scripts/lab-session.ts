@@ -134,7 +134,15 @@ export class LabSessions {
   async clean() {
     const removed: LabNumber[] = [];
     for (const session of await this.list()) {
-      if (!session.running || session.secondsLeft === 0) { await this.stop(session.lab); removed.push(session.lab); }
+      if (!session.running || session.secondsLeft === 0) {
+        // The listed container may have expired and been replaced in this slot.
+        // Check lifetime and removal id from the SAME fresh snapshot.
+        const current = await this.inspect(session.lab);
+        if (!current.State.Running || Number(current.Config.Labels[EXPIRES]) <= this.now()) {
+          await this.run(["rm", "--force", current.Id]);
+          removed.push(session.lab);
+        }
+      }
     }
     return removed;
   }
