@@ -108,6 +108,7 @@ test("a completed update waits for the learner and preserves the running quiz un
     const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
     await page.goto(origin);
     await ready(page);
+    await expect(page.locator("#offline_update_btn")).toBeHidden();
     await page.locator("#tab_btn_quiz").click();
     await page.getByRole("button", { name: /Mini/ }).first().click();
     await page.locator("#start_quiz_btn").click();

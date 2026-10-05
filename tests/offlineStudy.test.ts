@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { startOfflineStudy, type OfflineState } from "../src/offlineStudy";
 
-function environment() {
+function environment(firstInstall = false) {
   const active = { postMessage: vi.fn() };
   const waiting = { postMessage: vi.fn() };
-  const registration = Object.assign(new EventTarget(), { active, waiting: null as typeof waiting | null, installing: null });
-  const workers = Object.assign(new EventTarget(), { register: vi.fn(async () => registration), ready: Promise.resolve(registration) });
+  const registration = Object.assign(new EventTarget(), { active: firstInstall ? null : active, waiting: null as typeof waiting | null, installing: null });
+  const workers = Object.assign(new EventTarget(), { controller: firstInstall ? null : active, register: vi.fn(async () => registration), ready: Promise.resolve(registration) });
   const changes: OfflineState[] = [];
   const reload = vi.fn();
   const control = startOfflineStudy(state => changes.push(state), { enabled: true, secure: true, workers: workers as unknown as ServiceWorkerContainer, reload });
@@ -39,6 +39,31 @@ describe("offline registration", () => {
     e.workers.dispatchEvent(new Event("controllerchange"));
     e.workers.dispatchEvent(new Event("controllerchange"));
     expect(e.reload).toHaveBeenCalledOnce();
+    e.control.stop();
+  });
+  it("never offers the first installation as an update during its transient waiting state", async () => {
+    const e = environment(true);
+    e.registration.waiting = e.waiting;
+    await tick();
+    expect(e.changes.some(state => state.updateAvailable)).toBe(false);
+    e.registration.waiting = null;
+    e.registration.active = e.active;
+    e.workers.controller = e.active;
+    e.workers.dispatchEvent(new Event("controllerchange"));
+    e.workers.dispatchEvent(new MessageEvent("message", { data: { type: "offline-ready", ready: true } }));
+    expect(e.changes.at(-1)).toEqual({ phase: "ready", updateAvailable: false });
+    expect(e.reload).not.toHaveBeenCalled();
+    e.control.stop();
+  });
+  it("clears a stale offer when another tab activates the update without restarting this quiz", async () => {
+    const e = environment();
+    e.registration.waiting = e.waiting;
+    await tick();
+    expect(e.changes.at(-1)?.updateAvailable).toBe(true);
+    e.registration.waiting = null;
+    e.workers.dispatchEvent(new Event("controllerchange"));
+    expect(e.changes.at(-1)?.updateAvailable).toBe(false);
+    expect(e.reload).not.toHaveBeenCalled();
     e.control.stop();
   });
   it("records unavailability honestly and cleans up listeners after unmount", async () => {

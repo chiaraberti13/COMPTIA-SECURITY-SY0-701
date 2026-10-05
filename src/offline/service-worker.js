@@ -1,5 +1,5 @@
 // The build replaces these two tokens with a content revision and all public
-// app files, including both language datasets and lazy-loaded PBQ chunks.
+// app files, including both language datasets, PBQ resources and any lazy chunks.
 const PREFIX = "comptia-sy0701-offline-v1-";
 const CACHE = PREFIX + __OFFLINE_REVISION__;
 const FILES = __OFFLINE_FILES__;

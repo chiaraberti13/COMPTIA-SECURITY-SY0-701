@@ -17,7 +17,9 @@ export function startOfflineStudy(notify: (state: OfflineState) => void, environ
   const cleanups: (() => void)[] = [];
   const change = (next: Partial<OfflineState>) => {
     if (stopped) return;
-    state = { ...state, ...next };
+    const updated = { ...state, ...next };
+    if (updated.phase === state.phase && updated.updateAvailable === state.updateAvailable) return;
+    state = updated;
     notify(state);
   };
   const listen = (target: EventTarget, name: string, listener: EventListener) => {
@@ -25,7 +27,10 @@ export function startOfflineStudy(notify: (state: OfflineState) => void, environ
     cleanups.push(() => target.removeEventListener(name, listener));
   };
   const check = () => {
-    if (registration?.waiting) change({ updateAvailable: true });
+    // The first install can briefly be "waiting" before it activates. Offer
+    // a restart only when an existing controller is actually being replaced,
+    // and clear an offer if another tab activates it or the candidate fails.
+    change({ updateAvailable: !!(registration?.waiting && registration.active && workers?.controller) });
     registration?.active?.postMessage({ type: "offline-status" });
   };
 
@@ -50,7 +55,10 @@ export function startOfflineStudy(notify: (state: OfflineState) => void, environ
         if (!worker) return;
         listen(worker, "statechange", () => {
           if (worker.state === "installed" || worker.state === "activated") check();
-          if (worker.state === "redundant" && !result.active) change({ phase: "unavailable" });
+          if (worker.state === "redundant") {
+            if (!result.active) change({ phase: "unavailable" });
+            check();
+          }
         });
       };
       listen(result, "updatefound", watch);
