@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Added portfolio mode in the study area: three sanitized, professionally reusable documents built on the labs — an incident write-up (Lab 03), a SOC alert triage runbook (Lab 06) and an HTTP security headers hardening report (Lab 01). Each shows linked objectives (clickable to the domain guide), skills and sections, and exports as deterministic Markdown via copy or `.md` download. All data is synthetic (fictional company Kestrelia, RFC 5737 addresses) with a closing confidentiality note. Pure data/logic in `src/portfolio.ts`, covered by `tests/portfolio.test.ts` (IT/EN parity, publishable IPs only, no secrets, deterministic render); documented in `docs/portfolio-mode.md`.
+- Aggiunta la modalità portfolio nell'area di studio: tre documenti sanificati e riutilizzabili professionalmente, costruiti sui laboratori — un write-up di incidente (Lab 03), un runbook di triage SOC (Lab 06) e un report di hardening degli header HTTP (Lab 01). Ognuno mostra obiettivi collegati (apribili nella guida), competenze e sezioni, ed è esportabile in Markdown deterministico con copia o download `.md`. Dati solo sintetici (azienda di fantasia Kestrelia, indirizzi RFC 5737) con nota di riservatezza finale. Dati e logica puri in `src/portfolio.ts`, test in `tests/portfolio.test.ts`; documentazione in `docs/portfolio-mode.md`.
+
 - Ethical Blue Team and Red Team study paths in Italian and English: shared objectives, prevention, detection and authorized validation, linked lab instructions and learning checks.
 - Percorsi Blue Team e Red Team etici in IT/EN: stessi obiettivi, prevenzione, rilevazione e validazione autorizzata, laboratori collegati e criteri di verifica.
 

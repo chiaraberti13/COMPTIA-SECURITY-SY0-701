@@ -18,6 +18,7 @@ const OWN_DETAILS: Record<string, number> = {
   "DomainGuidePanel.tsx": 1,
   "ReadinessPanel.tsx": 1,
   "StudyPathsPanel.tsx": 1,
+  "PortfolioPanel.tsx": 1,
 };
 
 describe("Disclosure", () => {

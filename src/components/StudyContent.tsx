@@ -28,6 +28,7 @@ import Callout from "./Callout";
 import MarkdownText, { InlineText } from "./MarkdownText";
 import { getDomainRoute } from "../domainRoutes";
 import StudyPathsPanel from "./StudyPathsPanel";
+import PortfolioPanel from "./PortfolioPanel";
 import type { StudyAction } from "../studyPaths";
 import { conceptAnchor } from "../studyAnchors";
 
@@ -135,6 +136,9 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
 
             {/* Domain-level learning guide: orientation before individual concepts. */}
             <DomainGuidePanel guide={DOMAIN_GUIDE} route={getDomainRoute(activeDomain, lang)} onAction={runStudyAction} glossaryIndex={GLOSSARY_INDEX} />
+
+            {/* Portfolio mode: sanitized, professionally reusable write-ups from the labs. */}
+            <PortfolioPanel onAction={runStudyAction} />
 
             {/* Topic Header Card */}
             <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg relative overflow-hidden shadow-md" id="topic_hero_card">

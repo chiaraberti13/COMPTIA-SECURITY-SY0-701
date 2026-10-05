@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Star } from "lucide-react";
 import { useLang, type UIKey } from "../i18n";
 import { examAnswerComplete, examAnswerCorrect } from "../exam";
 import type { ExamSession } from "../hooks/useExamSession";
@@ -69,7 +70,7 @@ export default function ExamScreen({ session, onConfigure, onRepeat, onStudyActi
           <button type="button" key={item.key} className={`${button} ${i === session.index ? "border-cyan-400 text-cyan-300" : ""}`}
             aria-current={i === session.index ? "step" : undefined} onClick={() => session.goTo(i)}
             aria-label={t("exam.jump", { i: i + 1 }) + " · " + t(examAnswerComplete(item, answers[item.key]) ? "exam.answered" : "quiz.reviewNoAnswer") + (session.flagged.includes(item.key) ? " · " + t("exam.flagged") : "") }>
-            {i + 1}{item.kind === "pbq" ? " P" : ""}{session.flagged.includes(item.key) ? " ★" : ""}{examAnswerComplete(item, answers[item.key]) ? " ✓" : ""}
+            {i + 1}{item.kind === "pbq" ? " P" : ""}{session.flagged.includes(item.key) ? <Star className="inline w-3 h-3 ml-0.5 -mt-0.5 fill-current" aria-hidden="true" /> : ""}{examAnswerComplete(item, answers[item.key]) ? " ✓" : ""}
           </button>
         ))}
       </nav>
