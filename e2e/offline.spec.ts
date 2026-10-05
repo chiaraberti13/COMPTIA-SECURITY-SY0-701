@@ -116,9 +116,20 @@ test("a completed update waits for the learner and preserves the running quiz un
     writeFileSync(join(directory, "sw.js"), script);
     await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.update());
     await expect(page.locator("#offline_update_btn")).toBeVisible({ timeout: 30_000 });
+    expect(await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.waiting?.state)).toBe("installed");
     expect(await page.locator("#main_quiz_question_screen").textContent()).toBe(before);
     await expect(page.locator("#quiz_completed_screen")).toBeHidden();
-    await Promise.all([page.waitForEvent("load"), page.locator("#offline_update_btn").click()]);
+    try {
+      await Promise.all([page.waitForEvent("load", { timeout: 20_000 }), page.locator("#offline_update_btn").click()]);
+    } catch (error) {
+      const diagnostic = await page.evaluate(async () => {
+        const registration = await navigator.serviceWorker.getRegistration();
+        return { waiting: registration?.waiting?.state ?? null, active: registration?.active?.state,
+          installing: registration?.installing?.state ?? null, caches: await caches.keys() };
+      });
+      console.log("Offline update lifecycle:", JSON.stringify(diagnostic));
+      throw error;
+    }
     await ready(page);
     await expect(page.locator("#offline_update_btn")).toBeHidden();
     const keys = await page.evaluate(async () => (await caches.keys()).filter(key => key.startsWith("comptia-sy0701-offline-v1-")));

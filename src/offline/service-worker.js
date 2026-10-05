@@ -34,7 +34,9 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("message", event => {
-  if (event.data?.type === "activate-update") event.waitUntil(self.skipWaiting());
+  // Activation is a lifecycle request, not work that must finish before this
+  // message event can settle (the standard skipWaiting message pattern).
+  if (event.data?.type === "activate-update") void self.skipWaiting();
   if (event.data?.type === "offline-status") event.waitUntil((async () => {
     let ready = false;
     try {
