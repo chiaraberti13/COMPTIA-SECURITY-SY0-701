@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { OFFICIAL_DOMAIN_WEIGHTS } from "../src/domainGuides";
 import { getDomainQuestions, sourceQuestionId } from "../src/localizedData";
 import { questionIdsByObjective } from "../src/questionObjectives";
-import { MIN_ATTEMPTS_FOR_SIGNAL, computeReadiness } from "../src/readiness";
+import { MIN_ATTEMPTS_FOR_SIGNAL, computeReadiness, summarizeRunByObjective } from "../src/readiness";
 import type { Question, QuestionProgress } from "../src/types";
 
 const NOW = Date.UTC(2026, 8, 26);
@@ -58,5 +58,42 @@ describe("computeReadiness", () => {
     expect(r.objectives).toHaveLength(28);
     expect(r.objectives.every(o => o.total >= 10)).toBe(true);
     expect(r.domains.reduce((sum, d) => sum + d.total, 0)).toBe(all.length);
+  });
+});
+
+describe("summarizeRunByObjective", () => {
+  // Id 3 trains both 1.1 and 4.6, so it is counted in each.
+  const byObjective = new Map<string, readonly number[]>([
+    ["1.1", [1, 2, 3]],
+    ["2.1", [4]],
+    ["4.6", [3, 5, 6]],
+    ["5.1", [99]], // not in the run
+  ]);
+  const run = [
+    { id: 1, correct: true },
+    { id: 2, correct: false },
+    { id: 3, correct: true },
+    { id: 4, correct: false },
+    { id: 5, correct: true },
+    { id: 6, correct: false },
+  ];
+
+  it("tallies each touched objective, counting multi-objective questions in each, weakest first", () => {
+    const result = summarizeRunByObjective(run, byObjective);
+    expect(result).toEqual([
+      { code: "2.1", total: 1, correct: 0, accuracy: 0 },
+      { code: "1.1", total: 3, correct: 2, accuracy: 67 },
+      { code: "4.6", total: 3, correct: 2, accuracy: 67 },
+    ]);
+  });
+
+  it("omits objectives the run never touched and returns nothing for an empty run", () => {
+    expect(summarizeRunByObjective(run, byObjective).some(o => o.code === "5.1")).toBe(false);
+    expect(summarizeRunByObjective([], byObjective)).toEqual([]);
+  });
+
+  it("ignores a run question that belongs to no objective", () => {
+    const result = summarizeRunByObjective([{ id: 777, correct: true }], byObjective);
+    expect(result).toEqual([]);
   });
 });

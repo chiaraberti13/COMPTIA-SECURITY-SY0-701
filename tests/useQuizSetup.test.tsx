@@ -44,6 +44,26 @@ describe("useQuizSetup", () => {
     expect(result.current.totalQuestionsSelected).toBe(90);
   });
 
+  it("configures an exam-blueprint simulation split by the official weights", () => {
+    const weights = { 1: 12, 2: 22, 3: 18, 4: 28, 5: 20 };
+    const { result } = renderSetup();
+
+    act(() => result.current.applyBlueprint(90, weights));
+    expect(result.current.quizFocus).toBe("blueprint");
+    expect(result.current.blueprintTotal).toBe(90);
+    expect(result.current.customCounts).toEqual({ 1: 11, 2: 20, 3: 16, 4: 25, 5: 18 });
+    expect(result.current.totalQuestionsSelected).toBe(90);
+
+    act(() => result.current.applyBlueprint(20, weights));
+    expect(result.current.blueprintTotal).toBe(20);
+    expect(result.current.totalQuestionsSelected).toBe(20);
+
+    // Any manual change drops back to a plain custom set-up.
+    act(() => result.current.setDomainCount(2, 1));
+    expect(result.current.quizFocus).toBe("custom");
+    expect(result.current.blueprintTotal).toBeNull();
+  });
+
   it("draws the configured number from each domain, in domain order", () => {
     const { result } = renderSetup();
     act(() => result.current.applyCounts({ 1: 2, 2: 0, 3: 1, 4: 3, 5: 1 }));

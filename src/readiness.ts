@@ -58,6 +58,51 @@ export interface Readiness {
 
 const percent = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 100) : 0);
 
+/** How one objective went within a single finished simulation. */
+export interface RunObjectiveResult {
+  code: string;
+  /** Questions of the run that train this objective. */
+  total: number;
+  correct: number;
+  /** correct / total, 0-100. */
+  accuracy: number;
+}
+
+/**
+ * Per-objective breakdown of one finished run, for the post-session analysis:
+ * how many of the run's questions trained each objective and how many were
+ * answered correctly. A question that trains several objectives counts in each.
+ * The result lists only the objectives the run actually touched, weakest first
+ * (then by objective code), so the learner sees where this sitting went worst.
+ */
+export function summarizeRunByObjective(
+  run: readonly { id: number; correct: boolean }[],
+  questionsByObjective: ReadonlyMap<string, readonly number[]>,
+): RunObjectiveResult[] {
+  const objectivesOfId = new Map<number, string[]>();
+  for (const [code, ids] of questionsByObjective) {
+    for (const id of ids) {
+      const list = objectivesOfId.get(id);
+      if (list) list.push(code);
+      else objectivesOfId.set(id, [code]);
+    }
+  }
+
+  const tally = new Map<string, { total: number; correct: number }>();
+  for (const { id, correct } of run) {
+    for (const code of objectivesOfId.get(id) ?? []) {
+      const entry = tally.get(code) ?? { total: 0, correct: 0 };
+      entry.total += 1;
+      if (correct) entry.correct += 1;
+      tally.set(code, entry);
+    }
+  }
+
+  return [...tally.entries()]
+    .map(([code, { total, correct }]) => ({ code, total, correct, accuracy: percent(correct, total) }))
+    .sort((a, b) => a.accuracy - b.accuracy || b.total - a.total || a.code.localeCompare(b.code));
+}
+
 function summarize(questions: readonly Question[], progress: Record<number, QuestionProgress>, now: number): AreaReadiness {
   let seen = 0, attempts = 0, correct = 0, due = 0;
   for (const question of questions) {

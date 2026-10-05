@@ -317,6 +317,46 @@ test.describe("quiz by objective", () => {
   });
 });
 
+test.describe("exam simulation (configurable blueprint)", () => {
+  test("a length button splits the exam by the official weights and turns the timer on", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+
+    await page.locator("#blueprint_btn_20").click();
+    await expect(page.locator("#blueprint_btn_20")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#timer_toggle_input")).toBeChecked();
+    // 20 split across the five domains by weight adds up to 20.
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("20");
+  });
+
+  test("the results break down the run by objective and link each to its guide", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#blueprint_btn_20").click();
+    await page.locator("#start_quiz_btn").click();
+
+    for (let i = 0; i < 40 && !(await page.locator("#quiz_completed_screen").isVisible()); i++) {
+      await expect(page.locator("#quiz_options_list")).toBeVisible();
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      await page.keyboard.press("Enter");
+    }
+
+    const box = page.locator("#run_objectives_box");
+    await expect(box).toBeVisible();
+    // The score is stated in words (a percentage), never by the coloured bar alone.
+    await expect(box).toContainText("%");
+
+    await box.locator("[id^='run_objective_open_']").first().click();
+    // The link leaves the results and opens a domain guide in the study view.
+    await expect(page.locator("#quiz_completed_screen")).toBeHidden();
+    await expect(page.locator("details[id^='domain_guide_'][open]").first()).toBeVisible();
+  });
+});
+
 test.describe("study paths (Where do I start?)", () => {
   test("open for a new learner, folded once there is progress", async ({ page }) => {
     await openApp(page);

@@ -1,7 +1,7 @@
 import type { QuizSession } from "../hooks/useQuizSession";
 import type { DomainCounts, QuizSetup } from "../hooks/useQuizSetup";
 import React from "react";
-import { TrendingUp, Check, ChevronRight, RefreshCw, Activity } from "lucide-react";
+import { TrendingUp, Check, ChevronRight, RefreshCw, Activity, Clock } from "lucide-react";
 import { ALL_OBJECTIVES } from "../questionObjectives";
 import type { Question } from "../types";
 import type { Readiness } from "../readiness";
@@ -16,13 +16,16 @@ import { SECONDS_PER_QUESTION, scorePercent, summarizeWeakTopics } from "../quiz
  * questions, presets and questions per domain, the exam timer, the start
  * button, the local history and "Your data".
  */
-export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, questionsByObjective, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
+export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, questionsByObjective, simulationLengths, onApplyBlueprint, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
   quiz: QuizSession;
   setup: QuizSetup;
   maxQuestionsByDomain: DomainCounts;
   dueReviewQuestions: Question[];
   weakTopicSummary: ReturnType<typeof summarizeWeakTopics>;
   questionsByObjective: Map<string, number[]>;
+  /** Exam-simulation lengths offered (e.g. 20/45/65/90). */
+  simulationLengths: readonly number[];
+  onApplyBlueprint: (total: number) => void;
   onStartQuiz: () => void;
   onStartObjectiveQuiz: () => void;
   onStartSmartReview: () => void;
@@ -34,7 +37,7 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
 }) {
   const { t, lang } = useLang();
   const { quizHistory, timerEnabled, setTimerEnabled } = quiz;
-  const { quizFocus, setQuizFocus, objectiveChoice, setObjectiveChoice, customCounts, totalQuestionsSelected, applyPreset } = setup;
+  const { quizFocus, setQuizFocus, objectiveChoice, setObjectiveChoice, customCounts, blueprintTotal, totalQuestionsSelected, applyPreset } = setup;
   const handleStartQuiz = onStartQuiz;
   const handleStartObjectiveQuiz = onStartObjectiveQuiz;
   const handleStartSmartReview = onStartSmartReview;
@@ -266,6 +269,38 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
           <p id="objective_hint" className="text-[10px] text-slate-400">{t("quiz.objectiveHint")}</p>
         </div>
       </div>
+
+      {/* Exam simulation: pick a length, split across domains by official weights. */}
+      <section
+        className="bg-slate-950/40 border border-slate-800/60 p-4 rounded-md space-y-3"
+        id="exam_simulation_box"
+        aria-labelledby="exam_simulation_title"
+      >
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+            <h3 id="exam_simulation_title" className="text-xs font-bold text-slate-200">{t("quiz.blueprintTitle")}</h3>
+          </div>
+          <p className="text-[11px] text-slate-400 leading-relaxed">{t("quiz.blueprintDesc")}</p>
+        </div>
+        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="exam_simulation_title">
+          {simulationLengths.map((total) => {
+            const selected = quizFocus === "blueprint" && blueprintTotal === total;
+            return (
+              <button
+                key={total}
+                type="button"
+                id={`blueprint_btn_${total}`}
+                aria-pressed={selected}
+                onClick={() => onApplyBlueprint(total)}
+                className={`px-3 py-2 rounded text-xs font-semibold border transition-all ${selected ? "border-cyan-500 bg-cyan-500/10 text-cyan-300" : "border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 hover:text-slate-200"}`}
+              >
+                {t("quiz.blueprintQuestions", { n: total })}
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       {/* Domain-specific Question Count Sliders */}
       <div className="space-y-4" id="domain_sliders_list">

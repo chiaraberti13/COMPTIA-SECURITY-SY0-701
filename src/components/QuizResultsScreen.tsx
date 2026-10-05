@@ -5,15 +5,19 @@ import { useLang, type UIKey } from "../i18n";
 import MarkdownText, { InlineText } from "./MarkdownText";
 import { hasPassedRun, correctIndexes, isSelectionCorrect } from "../quiz";
 import type { StudyAction } from "../studyPaths";
+import type { RunObjectiveResult } from "../readiness";
 
 /**
- * The end of a simulator run: score and pass mark, the objective follow-up,
- * retry and AI remediation, the answer review and the way back.
+ * The end of a simulator run: score and pass mark, the per-objective analysis,
+ * the objective follow-up, retry and AI remediation, the answer review and the
+ * way back.
  */
-export default function QuizResultsScreen({ quiz, remediation, activeObjective, onRestart, onRetryMistakes, onStartRemediation, onStudyAction, onBackToStudio }: {
+export default function QuizResultsScreen({ quiz, remediation, activeObjective, runObjectives, onRestart, onRetryMistakes, onStartRemediation, onStudyAction, onBackToStudio }: {
   quiz: QuizSession;
   remediation: Remediation;
   activeObjective: string | null;
+  /** Per-objective breakdown of this run, weakest first. */
+  runObjectives: RunObjectiveResult[];
   onRestart: () => void;
   onRetryMistakes: () => void;
   onStartRemediation: () => void;
@@ -145,6 +149,56 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
             </p>
           </div>
         </div>
+      )}
+
+      {/* Post-session analysis: how each objective of this run went. Shown for a
+          multi-objective simulation; a single-objective quiz has its own box. */}
+      {!activeObjective && runObjectives.length >= 2 && (
+        <section
+          className="bg-slate-950/60 border border-slate-800 p-4 rounded-lg space-y-3"
+          id="run_objectives_box"
+          aria-labelledby="run_objectives_title"
+        >
+          <div className="space-y-1">
+            <h3 id="run_objectives_title" className="text-xs font-bold text-slate-200">
+              {t("quiz.runByObjectiveTitle")}
+            </h3>
+            <p className="text-[11px] text-slate-400 leading-relaxed">{t("quiz.runByObjectiveDesc")}</p>
+          </div>
+          <ul className="space-y-2.5">
+            {runObjectives.map((o) => {
+              const domain = Number(o.code[0]) as 1 | 2 | 3 | 4 | 5;
+              return (
+                <li key={o.code} className="space-y-1.5" id={`run_objective_${o.code.replace(".", "_")}`}>
+                  <div className="flex items-center justify-between gap-3 text-[11px]">
+                    <span className="text-slate-300 truncate">
+                      <span className="font-mono text-cyan-400">{o.code}</span>{" "}
+                      {t(`objective.${o.code}` as UIKey)}
+                    </span>
+                    <span className="font-mono text-slate-400 shrink-0">
+                      {t("quiz.runByObjectiveScore", { correct: o.correct, total: o.total, percent: o.accuracy })}
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden" aria-hidden="true">
+                    <div
+                      className={`h-full rounded-full ${o.accuracy >= 80 ? "bg-cyan-500" : o.accuracy >= 60 ? "bg-amber-500" : "bg-rose-500"}`}
+                      style={{ width: `${o.accuracy}%` }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    id={`run_objective_open_${o.code.replace(".", "_")}`}
+                    onClick={() => onStudyAction({ kind: "guide", domain, objective: o.code })}
+                    className="inline-flex items-center gap-1 text-[10px] font-semibold text-cyan-300 hover:text-cyan-200 underline underline-offset-2 transition-colors"
+                  >
+                    {t("quiz.runByObjectiveOpen", { code: o.code })}
+                    <ChevronRight className="w-3 h-3" aria-hidden="true" />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       )}
 
       {/* Answer review: every answer given is already in quizAnswers. */}

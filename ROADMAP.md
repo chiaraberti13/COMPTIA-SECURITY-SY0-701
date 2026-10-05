@@ -341,7 +341,7 @@ Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle 
 - [ ] **P1 — Scenari performance-based originali:** ordinamento, abbinamento, interpretazione di log, risposta a incidente e scelta del controllo. **L**
 - [x] **P1 — Livelli cognitivi bilanciati:** i test impongono che in ogni dominio prevalgano domande di livello superiore.
 - [x] **P1 — Ripasso spaziato locale:** intervalli 1-3-7-14-30 giorni, errori riproposti subito, nessuna raccolta di dati.
-- [ ] 🟡 **P2 — Simulazioni temporizzate:** timer opzionale già presente; mancano blueprint configurabile (numero domande, distribuzione per dominio) e analisi post-sessione per obiettivo.
+- [x] **P2 — Simulazioni temporizzate:** il timer opzionale c'era già; dal 2026-10-05 la configurazione della simulazione è completa. Nella schermata di avvio una sezione «Simulazione d'esame» offre quattro lunghezze (20, 45, 65 e 90 domande, `SIMULATION_LENGTHS`): scelta una, le domande sono ripartite tra i cinque domini secondo i pesi ufficiali (`examBlueprint`, metodo del resto maggiore, senza superare la banca di ogni dominio) e il timer si attiva, restando disattivabile (WCAG 2.2.1). Il percorso «Preparazione all'esame» usa ora lo stesso meccanismo per la simulazione da 90. A fine prova la schermata dei risultati mostra «Risultati per obiettivo» (`summarizeRunByObjective` in `src/readiness.ts`): ogni obiettivo toccato dalla sessione, con risposte corrette su totale e percentuale scritta a parole (non solo colore), dal più debole, con un link alla guida di quell'obiettivo; una domanda che allena più obiettivi conta in ciascuno e quelle lasciate in bianco allo scadere del tempo contano come errate. `tests/useQuizSetup.test.tsx`, `tests/readiness.test.ts` e `tests/QuizResultsScreen.test.tsx` coprono logica e accessibilità; due test end-to-end percorrono la scelta della lunghezza e la simulazione fino all'analisi per obiettivo — 2026-10-05. **S**
 
 **Criteri di accettazione:** uno studente individua rapidamente il punto di partenza, segue un percorso coerente, usa l'app anche solo da tastiera e comprende l'errore dopo ogni domanda senza dipendere da conoscenze implicite.
 
@@ -517,6 +517,7 @@ Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le pr
 | 2026-09-26 | M3 | Immagine Docker irrobustita (distroless, non root, digest fissati, sola lettura) verificata in CI | Voce P1 container di deploy | Completato |
 | 2026-09-26 | M2 | Scansione delle vulnerabilità dell'immagine Docker con Grype in CI | Voce P1 scansione container | Completato |
 | 2026-10-05 | M6 | Collegamento al glossario esteso ai nomi completi (locuzioni di più parole) oltre agli acronimi, e portato ai sotto-argomenti ufficiali delle guide di dominio; domande con un termine collegato dal 43% al 67% | Voce P1 integrare ricerca e glossario | Completato |
+| 2026-10-05 | M7 | Simulazione d'esame configurabile (lunghezze 20/45/65/90 ripartite per peso ufficiale, timer facoltativo) e analisi post-sessione per obiettivo nella schermata dei risultati | Voce P2 simulazioni temporizzate | Completato |
 
 ---
 

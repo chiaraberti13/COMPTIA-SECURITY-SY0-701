@@ -24,7 +24,7 @@ import { useAiChat } from "./hooks/useAiChat";
 import { useQuizSession } from "./hooks/useQuizSession";
 import { useRemediation } from "./hooks/useRemediation";
 import { useStudySession } from "./hooks/useStudySession";
-import { useQuizSetup } from "./hooks/useQuizSetup";
+import { useQuizSetup, SIMULATION_LENGTHS } from "./hooks/useQuizSetup";
 import QuizSetupScreen from "./components/QuizSetupScreen";
 import QuizResultsScreen from "./components/QuizResultsScreen";
 import RemediationScreen from "./components/RemediationScreen";
@@ -33,12 +33,13 @@ import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
-import { computeReadiness } from "./readiness";
+import { computeReadiness, summarizeRunByObjective } from "./readiness";
 import {
   shuffle,
   selectDueReviewQuestions,
   summarizeWeakTopics,
-  examBlueprint,
+  isSelectionCorrect,
+  EXAM_QUESTION_COUNT,
 } from "./quiz";
 import type { StudyAction } from "./studyPaths";
 import { parseStudyAnchor } from "./studyAnchors";
@@ -124,7 +125,7 @@ export default function App() {
   const quiz = useQuizSession({ paused: remediationActive });
   const {
     activeQuestions, quizStarted, currentQuestionIndex, selectedOptions,
-    quizCompleted, showFeedback, wrongQuestions,
+    quizCompleted, showFeedback, wrongQuestions, quizAnswers,
     setTimerEnabled, questionProgress,
   } = quiz;
   const handleSelectOption = quiz.select;
@@ -230,6 +231,18 @@ export default function App() {
     [ALL_QUESTIONS, questionProgress, questionsByObjective]
   );
 
+  // Per-objective breakdown of the finished run, for the post-session analysis
+  // on the results screen (empty until the run is over). An unanswered question
+  // (timer expiry) counts as wrong, like the score itself.
+  const runObjectives = useMemo(() => {
+    if (!quizCompleted) return [];
+    const run = activeQuestions.map(q => ({
+      id: q.id,
+      correct: quizAnswers[q.id] !== undefined && isSelectionCorrect(q, quizAnswers[q.id]),
+    }));
+    return summarizeRunByObjective(run, questionsByObjective);
+  }, [quizCompleted, activeQuestions, quizAnswers, questionsByObjective]);
+
   const handleStartSmartReview = () => {
     if (dueReviewQuestions.length === 0) return;
     setQuizFocus("review");
@@ -324,6 +337,19 @@ export default function App() {
     requestAnimationFrame(tick);
   };
 
+  /**
+   * Sets up and reveals a timed exam simulation of `total` questions, split
+   * across the domains by the official SY0-701 weights. The timer is turned on;
+   * it stays optional, since the learner can untick it before starting.
+   */
+  const handleApplyBlueprint = (total: number) => {
+    setActiveTab("quiz");
+    const weights = Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainGuide(d, lang).weight]));
+    setup.applyBlueprint(total, weights);
+    setTimerEnabled(true);
+    revealElement("custom_quiz_summary_box", "start_quiz_btn");
+  };
+
   /** Performs the jump behind a step of the "Where do I start?" paths. */
   const runStudyAction = (action: StudyAction) => {
     switch (action.kind) {
@@ -357,14 +383,9 @@ export default function App() {
         applyPreset(action.preset);
         revealElement("custom_quiz_summary_box", "start_quiz_btn");
         break;
-      case "exam": {
-        setActiveTab("quiz");
-        const weights = Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainGuide(d, lang).weight]));
-        setup.applyCounts(examBlueprint(weights, maxQuestionsByDomain));
-        setTimerEnabled(true);
-        revealElement("custom_quiz_summary_box", "start_quiz_btn");
+      case "exam":
+        handleApplyBlueprint(EXAM_QUESTION_COUNT);
         break;
-      }
       case "review":
         setActiveTab("quiz");
         revealElement("smart_review_box", "smart_review_start_btn");
@@ -445,11 +466,11 @@ export default function App() {
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
 
               {!quizStarted ? (
-                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} questionsByObjective={questionsByObjective} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
+                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
               ) : quizCompleted && !remediationActive ? (
                 /* Completed Screen. The remediation starts from here, so while
                    it runs its questions are shown instead (next branch). */
-                <QuizResultsScreen quiz={quiz} remediation={remediation} activeObjective={activeObjective} onRestart={handleStartQuiz} onRetryMistakes={handleRetryMistakes} onStartRemediation={handleStartRemediation} onStudyAction={runStudyAction} onBackToStudio={() => setActiveTab("studio")} />
+                <QuizResultsScreen quiz={quiz} remediation={remediation} activeObjective={activeObjective} runObjectives={runObjectives} onRestart={handleStartQuiz} onRetryMistakes={handleRetryMistakes} onStartRemediation={handleStartRemediation} onStudyAction={runStudyAction} onBackToStudio={() => setActiveTab("studio")} />
               ) : remediationActive ? (
                 /* REMEDIATION ACTIVE SCREEN */
                 <RemediationScreen remediation={remediation} quiz={quiz} onRegenerate={handleStartRemediation} levelLabel={levelLabel} />
