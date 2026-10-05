@@ -31,7 +31,7 @@ export default function OfflineStatus() {
       {state.updateAvailable && (
         <span className="flex flex-wrap items-center gap-2">
           <span>{t("offline.updateReady")}</span>
-          <button type="button" id="offline_update_btn" disabled={!online} onClick={() => update.current()} className="px-2 py-1 min-h-6 rounded bg-cyan-700 text-white disabled:opacity-60">
+          <button type="button" id="offline_update_btn" disabled={!online} onClick={() => update.current()} onKeyDown={event => event.stopPropagation()} className="px-2 py-1 min-h-6 rounded bg-cyan-700 text-white disabled:opacity-60">
             {t("offline.update")}
           </button>
         </span>

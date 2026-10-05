@@ -120,8 +120,10 @@ test("a completed update waits for the learner and preserves the running quiz un
     expect(await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.waiting?.state)).toBe("installed");
     expect(await page.locator("#main_quiz_question_screen").textContent()).toBe(before);
     await expect(page.locator("#quiz_completed_screen")).toBeHidden();
+    // Native Enter on the update button must not become a quiz confirmation.
+    await page.locator("#offline_update_btn").focus();
     try {
-      await Promise.all([page.waitForEvent("load", { timeout: 20_000 }), page.locator("#offline_update_btn").click()]);
+      await Promise.all([page.waitForEvent("load", { timeout: 20_000 }), page.keyboard.press("Enter")]);
     } catch (error) {
       const diagnostic = await page.evaluate(async () => {
         const registration = await navigator.serviceWorker.getRegistration();
