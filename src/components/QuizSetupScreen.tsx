@@ -1,11 +1,13 @@
 import type { QuizSession } from "../hooks/useQuizSession";
 import type { DomainCounts, QuizSetup } from "../hooks/useQuizSetup";
 import React from "react";
-import { TrendingUp, Check, ChevronRight, RefreshCw, Activity, Clock } from "lucide-react";
+import { TrendingUp, Check, ChevronRight, RefreshCw, Activity, Clock, Layers } from "lucide-react";
 import { ALL_OBJECTIVES } from "../questionObjectives";
 import type { Question } from "../types";
-import type { Readiness } from "../readiness";
+import type { Readiness, ReviewObjective } from "../readiness";
+import type { StudyAction } from "../studyPaths";
 import ReadinessPanel from "./ReadinessPanel";
+import Disclosure from "./Disclosure";
 import { useLang, type UIKey } from "../i18n";
 import DataControls from "./DataControls";
 import type { QuizPreset } from "../hooks/useQuizSetup";
@@ -16,12 +18,18 @@ import { SECONDS_PER_QUESTION, scorePercent, summarizeWeakTopics } from "../quiz
  * questions, presets and questions per domain, the exam timer, the start
  * button, the local history and "Your data".
  */
-export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, questionsByObjective, simulationLengths, onApplyBlueprint, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
+export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, reviewObjectives, objectiveSubtopics, onReviewObjective, onStudyAction, questionsByObjective, simulationLengths, onApplyBlueprint, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
   quiz: QuizSession;
   setup: QuizSetup;
   maxQuestionsByDomain: DomainCounts;
   dueReviewQuestions: Question[];
   weakTopicSummary: ReturnType<typeof summarizeWeakTopics>;
+  /** Objectives with questions due now, weakest first (adaptive review). */
+  reviewObjectives: ReviewObjective[];
+  /** Official sub-topics of each objective, to re-read before reviewing. */
+  objectiveSubtopics: Record<string, string[]>;
+  onReviewObjective: (code: string) => void;
+  onStudyAction: (action: StudyAction) => void;
   questionsByObjective: Map<string, number[]>;
   /** Exam-simulation lengths offered (e.g. 20/45/65/90). */
   simulationLengths: readonly number[];
@@ -108,6 +116,71 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
           </button>
         </div>
       </div>
+
+      {/* Spaced review by objective: the weakest objectives that are due now,
+          each reviewable on its own, with the official sub-topics to re-read. */}
+      {reviewObjectives.length > 0 && (
+        <section
+          className="bg-cyan-950/10 border border-cyan-500/20 p-4 rounded-lg space-y-3"
+          id="objective_review_box"
+          aria-labelledby="objective_review_title"
+        >
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+              <h3 id="objective_review_title" className="text-xs font-bold text-cyan-300">{t("quiz.objReviewTitle")}</h3>
+            </div>
+            <p className="text-[11px] text-slate-400 leading-relaxed">{t("quiz.objReviewDesc")}</p>
+          </div>
+          <ul className="space-y-2" id="objective_review_list">
+            {reviewObjectives.map((o) => {
+              const slug = o.code.replace(".", "_");
+              const subtopics = objectiveSubtopics[o.code] ?? [];
+              return (
+                <li key={o.code} className="bg-slate-900 border border-slate-800 rounded p-3 space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs text-slate-300">
+                      <span className="font-mono font-bold text-cyan-400 mr-1.5">{o.code}</span>
+                      {t(`objective.${o.code}` as UIKey)}
+                    </span>
+                    <span className="text-[11px] font-mono text-slate-400 shrink-0">
+                      {t("quiz.objReviewMeta", { due: o.due, acc: o.accuracy ?? 0 })}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      id={`objective_review_start_${slug}`}
+                      onClick={() => onReviewObjective(o.code)}
+                      className="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded bg-cyan-700 hover:bg-cyan-600 text-white text-[11px] font-bold transition-colors"
+                    >
+                      {t("quiz.objReviewStart")}
+                    </button>
+                    <button
+                      type="button"
+                      id={`objective_review_reread_${slug}`}
+                      onClick={() => onStudyAction({ kind: "guide", domain: o.domain as 1 | 2 | 3 | 4 | 5, objective: o.code })}
+                      className="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded border border-slate-700 bg-slate-900 text-[11px] font-semibold text-cyan-300 hover:bg-slate-800 transition-colors"
+                    >
+                      {t("quiz.objReviewReread", { code: o.code })}
+                      <ChevronRight className="w-3 h-3" aria-hidden="true" />
+                    </button>
+                  </div>
+                  {subtopics.length > 0 && (
+                    <Disclosure variant="answer" summary={t("quiz.objReviewSubtopics")}>
+                      <ul className="list-disc pl-5 space-y-1 text-[11px] text-slate-400 leading-relaxed">
+                        {subtopics.map((topic, i) => (
+                          <li key={i}>{topic}</li>
+                        ))}
+                      </ul>
+                    </Disclosure>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {weakTopicSummary.length > 0 && (
         <section

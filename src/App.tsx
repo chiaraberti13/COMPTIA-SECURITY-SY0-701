@@ -33,7 +33,7 @@ import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
-import { computeReadiness, summarizeRunByObjective } from "./readiness";
+import { computeReadiness, selectReviewObjectives, summarizeRunByObjective } from "./readiness";
 import {
   shuffle,
   selectDueReviewQuestions,
@@ -247,6 +247,37 @@ export default function App() {
     if (dueReviewQuestions.length === 0) return;
     setQuizFocus("review");
     beginQuizRun(shuffle(dueReviewQuestions));
+  };
+
+  // Spaced review rolled up to the official objective: the objectives with
+  // questions due now, weakest first, each reviewable on its own.
+  const reviewObjectives = useMemo(
+    () => selectReviewObjectives({ questions: ALL_QUESTIONS, progress: questionProgress, questionsByObjective }),
+    [ALL_QUESTIONS, questionProgress, questionsByObjective]
+  );
+
+  // The official sub-topics of each objective (bilingual, from the domain
+  // guides): what the learner is pointed at to re-read before reviewing.
+  const objectiveSubtopics = useMemo(() => {
+    const map: Record<string, string[]> = {};
+    for (const d of [1, 2, 3, 4, 5]) {
+      for (const o of getDomainGuide(d, lang).objectives) {
+        if (o.keyTopics?.length) map[o.code] = o.keyTopics;
+      }
+    }
+    return map;
+  }, [lang]);
+
+  // Review just the questions of one objective that are due now (spaced), not
+  // the whole objective: a short, targeted sitting that respects the schedule.
+  const handleReviewObjective = (code: string) => {
+    const entry = reviewObjectives.find(o => o.code === code);
+    const ids = new Set(entry?.dueIds ?? []);
+    const questions = ALL_QUESTIONS.filter(q => ids.has(q.id));
+    if (questions.length === 0) return;
+    setQuizFocus("review");
+    beginQuizRun(shuffle(questions));
+    setActiveObjective(code);
   };
 
   const handleRetryMistakes = () => {
@@ -466,7 +497,7 @@ export default function App() {
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
 
               {!quizStarted ? (
-                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
+                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} reviewObjectives={reviewObjectives} objectiveSubtopics={objectiveSubtopics} onReviewObjective={handleReviewObjective} onStudyAction={runStudyAction} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
               ) : quizCompleted && !remediationActive ? (
                 /* Completed Screen. The remediation starts from here, so while
                    it runs its questions are shown instead (next branch). */

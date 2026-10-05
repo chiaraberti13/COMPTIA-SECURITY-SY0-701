@@ -362,6 +362,12 @@ const it = {
   "quiz.weakTopicsDesc": "Calcolati dai tuoi risultati reali: gli argomenti con accuratezza più bassa hanno la priorità.",
   "quiz.weakTopicsAccuracy": "{percent}% · {n} tentativi",
   "quiz.weakTopicsDue": "{n} domande pronte per il ripasso",
+  "quiz.objReviewTitle": "Ripasso per obiettivo",
+  "quiz.objReviewDesc": "Il ripasso spaziato ora vale anche per i 28 obiettivi ufficiali: qui trovi quelli con domande in scadenza, dal più debole. Ripassa un obiettivo e rileggi i suoi sotto-argomenti nella guida.",
+  "quiz.objReviewMeta": "{due} da ripassare · {acc}% di accuratezza",
+  "quiz.objReviewStart": "Ripassa ora",
+  "quiz.objReviewReread": "Rileggi i sotto-argomenti di {code}",
+  "quiz.objReviewSubtopics": "Sotto-argomenti da rileggere",
 
   // Quiz completed
   "quiz.completedTitle": "Simulazione Completata",
@@ -807,6 +813,12 @@ const en: Record<UIKey, string> = {
   "quiz.weakTopicsDesc": "Calculated from your actual results: lower-accuracy topics receive priority.",
   "quiz.weakTopicsAccuracy": "{percent}% · {n} attempts",
   "quiz.weakTopicsDue": "{n} questions ready for review",
+  "quiz.objReviewTitle": "Review by objective",
+  "quiz.objReviewDesc": "Spaced review now works across the 28 official objectives too: here are the ones with questions due, weakest first. Review one and re-read its sub-topics in the guide.",
+  "quiz.objReviewMeta": "{due} to review · {acc}% accuracy",
+  "quiz.objReviewStart": "Review now",
+  "quiz.objReviewReread": "Re-read the sub-topics of {code}",
+  "quiz.objReviewSubtopics": "Sub-topics to re-read",
 
   // Quiz completed
   "quiz.completedTitle": "Simulation Completed",

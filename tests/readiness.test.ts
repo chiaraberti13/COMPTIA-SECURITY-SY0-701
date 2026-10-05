@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { OFFICIAL_DOMAIN_WEIGHTS } from "../src/domainGuides";
 import { getDomainQuestions, sourceQuestionId } from "../src/localizedData";
 import { questionIdsByObjective } from "../src/questionObjectives";
-import { MIN_ATTEMPTS_FOR_SIGNAL, computeReadiness, summarizeRunByObjective } from "../src/readiness";
+import { MIN_ATTEMPTS_FOR_SIGNAL, computeReadiness, selectReviewObjectives, summarizeRunByObjective } from "../src/readiness";
 import type { Question, QuestionProgress } from "../src/types";
 
 const NOW = Date.UTC(2026, 8, 26);
@@ -95,5 +95,61 @@ describe("summarizeRunByObjective", () => {
   it("ignores a run question that belongs to no objective", () => {
     const result = summarizeRunByObjective([{ id: 777, correct: true }], byObjective);
     expect(result).toEqual([]);
+  });
+});
+
+describe("selectReviewObjectives", () => {
+  const questions = [question(1, 1), question(1, 2), question(4, 1), question(4, 2), question(4, 3), question(4, 4)];
+  const objectives = new Map<string, readonly number[]>([
+    ["1.1", [10001, 10002]],
+    ["4.3", [40001, 40002]],
+    ["4.6", [40003, 40004]],
+  ]);
+
+  it("returns only objectives with a question due now", () => {
+    // 1.1 due (-1 day), 4.3 not due (+5 days), 4.6 untouched.
+    const progress = { 10001: answered(2, 1, -1), 40001: answered(2, 2, 5) };
+    const r = selectReviewObjectives({ questions, progress, questionsByObjective: objectives, now: NOW });
+    expect(r.map(o => o.code)).toEqual(["1.1"]);
+    expect(r[0]).toMatchObject({ domain: 1, due: 1, dueIds: [10001], attempts: 2, correct: 1, accuracy: 50 });
+  });
+
+  it("orders due objectives by accuracy, then by how many are due, weakest first", () => {
+    const progress = {
+      10001: answered(4, 3, -1), // 1.1: 75%
+      40001: answered(4, 1, -1), // 4.3: 25%, one due
+      40002: answered(4, 1, -2), // 4.3: another due -> two due, 25% overall
+      40003: answered(2, 1, -1), // 4.6: 50%
+    };
+    const r = selectReviewObjectives({ questions, progress, questionsByObjective: objectives, now: NOW });
+    expect(r.map(o => o.code)).toEqual(["4.3", "4.6", "1.1"]);
+    expect(r.find(o => o.code === "4.3")).toMatchObject({ due: 2, accuracy: 25 });
+  });
+
+  it("lists a due objective's questions weakest and most overdue first", () => {
+    const progress = {
+      40001: answered(4, 3, -1), // 75%, due yesterday
+      40002: answered(4, 1, -5), // 25%, due five days ago
+    };
+    const r = selectReviewObjectives({ questions, progress, questionsByObjective: objectives, now: NOW });
+    // The shakier question (lower accuracy) leads, regardless of due date.
+    expect(r[0].dueIds).toEqual([40002, 40001]);
+  });
+
+  it("ignores unknown ids and never-answered questions, and caps the list", () => {
+    const many = new Map<string, readonly number[]>(
+      Array.from({ length: 8 }, (_, i) => [`4.${i + 1}`, [40000 + i]] as const)
+    );
+    const manyQuestions = Array.from({ length: 8 }, (_, i) => question(4, i));
+    const progress = Object.fromEntries(manyQuestions.map(q => [q.id, answered(1, 0, -1)]));
+    progress[99999] = answered(1, 0, -1); // not in the bank
+    const r = selectReviewObjectives({ questions: manyQuestions, progress, questionsByObjective: many, now: NOW, limit: 5 });
+    expect(r).toHaveLength(5);
+    expect(r.every(o => o.dueIds.every(id => id !== 99999))).toBe(true);
+  });
+
+  it("returns nothing when no question is due", () => {
+    const progress = { 10001: answered(3, 2, 3), 40001: answered(2, 2, 10) };
+    expect(selectReviewObjectives({ questions, progress, questionsByObjective: objectives, now: NOW })).toEqual([]);
   });
 });
