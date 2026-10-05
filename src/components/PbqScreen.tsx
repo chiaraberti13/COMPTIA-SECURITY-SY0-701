@@ -154,7 +154,7 @@ function PbqSetup({ scenarios, onStart }: { scenarios: Pbq[]; onStart: (list: Pb
  * Ordering task
  * ------------------------------------------------------------------ */
 
-function OrderingTask({ session, pbq }: { session: PbqSession; pbq: OrderingPbq }) {
+export function OrderingTask({ session, pbq }: { session: Pick<PbqSession, "graded" | "grade" | "order" | "moveStepAt">; pbq: OrderingPbq }) {
   const { t } = useLang();
   const byId = new Map(pbq.steps.map((s) => [s.id, s]));
   return (
@@ -242,7 +242,7 @@ function OrderingTask({ session, pbq }: { session: PbqSession; pbq: OrderingPbq 
  * Matching task
  * ------------------------------------------------------------------ */
 
-function MatchingTask({ session, pbq }: { session: PbqSession; pbq: MatchingPbq }) {
+export function MatchingTask({ session, pbq }: { session: Pick<PbqSession, "graded" | "grade" | "matches" | "setMatch">; pbq: MatchingPbq }) {
   const { t } = useLang();
   const optionText = new Map(pbq.options.map((o) => [o.id, o.text]));
   return (

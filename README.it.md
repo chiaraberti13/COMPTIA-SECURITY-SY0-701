@@ -78,6 +78,7 @@ La filosofia, condivisa con gli altri repository:
   gli errori tornano subito e le risposte corrette seguono intervalli di 1–3–7–14–30 giorni.
 - **Localizzazione completa Inglese / Italiano** — ogni subtopic e domanda di quiz in
   entrambe le lingue, commutabile nell'app.
+- **Modalità esame configurabile** — 1–90 MCQ/PBQ, conteggi esatti per dominio, timer facoltativo, navigazione e segnali di revisione, spiegazioni dopo la consegna e analisi per dominio/obiettivo. Vedi [simulatore d’esame](docs/exam-simulator.md).
 - **Studio senza rete (PWA)** — dopo una prima visita online, attendi «Pronto per studiare
   offline»: guide, glossario, quiz e scenari pratici funzionano senza rete in entrambe
   le lingue, con i progressi salvati nel browser. L’AI richiede Internet; gli aggiornamenti

@@ -18,7 +18,7 @@ import { SECONDS_PER_QUESTION, scorePercent, summarizeWeakTopics } from "../quiz
  * questions, presets and questions per domain, the exam timer, the start
  * button, the local history and "Your data".
  */
-export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, reviewObjectives, objectiveSubtopics, onReviewObjective, onStudyAction, questionsByObjective, simulationLengths, onApplyBlueprint, onStartQuiz, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
+export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, dueReviewQuestions, weakTopicSummary, reviewObjectives, objectiveSubtopics, onReviewObjective, onStudyAction, questionsByObjective, simulationLengths, onApplyBlueprint, onStartQuiz, onStartExam, examPbqAvailable, onStartObjectiveQuiz, onStartSmartReview, onClearHistory, onStartNewQuestions, onShowNewQuestions, readiness, onTrainObjective }: {
   quiz: QuizSession;
   setup: QuizSetup;
   maxQuestionsByDomain: DomainCounts;
@@ -35,6 +35,8 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
   simulationLengths: readonly number[];
   onApplyBlueprint: (total: number) => void;
   onStartQuiz: () => void;
+  onStartExam: () => void;
+  examPbqAvailable: number;
   onStartObjectiveQuiz: () => void;
   onStartSmartReview: () => void;
   onClearHistory: () => void;
@@ -461,6 +463,22 @@ export default function QuizSetupScreen({ quiz, setup, maxQuestionsByDomain, due
           </span>
         </label>
       </div>
+
+      <section id="exam_mode_setup" aria-labelledby="exam_mode_title" className="p-4 rounded border border-cyan-500/30 bg-cyan-950/20 space-y-3">
+        <h3 id="exam_mode_title" className="text-sm font-bold text-cyan-300">{t("exam.title")}</h3>
+        <p className="text-xs text-slate-400">{t("exam.description")}</p>
+        <label htmlFor="exam_pbq_count" className="block text-xs text-slate-200">{t("exam.pbqCount")}</label>
+        <select id="exam_pbq_count" value={Math.min(setup.examPbqCount, examPbqAvailable)} onChange={e => setup.setExamPbqCount(Number(e.target.value))}
+          aria-describedby="exam_pbq_available" className="min-h-11 w-full rounded bg-slate-900 border border-slate-700 text-slate-200 px-3 text-sm">
+          {Array.from({ length: examPbqAvailable + 1 }, (_, n) => <option key={n} value={n}>{n}</option>)}
+        </select>
+        <p id="exam_pbq_available" className="text-xs text-slate-400">{t("exam.availability", { n: examPbqAvailable })}</p>
+        <p className="text-xs text-slate-400">{t("exam.timing")}</p>
+        <p className="text-xs text-slate-400">{t("exam.scoring")}</p>
+        {(totalQuestionsSelected < 1 || totalQuestionsSelected > 90) && <p className="text-xs text-amber-300">{t("exam.sizeHint")}</p>}
+        <button type="button" id="start_exam_btn" disabled={totalQuestionsSelected < 1 || totalQuestionsSelected > 90} onClick={onStartExam}
+          className="min-h-11 w-full rounded bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold px-3 py-2 text-sm">{t("exam.start")}</button>
+      </section>
 
       <div className="bg-cyan-950/20 border border-cyan-500/20 p-4 rounded-lg flex flex-col md:flex-row justify-between items-center gap-4" id="custom_quiz_summary_box">
         <div className="text-left space-y-1">

@@ -1,3 +1,6 @@
+import ExamScreen from "./components/ExamScreen";
+import { useExamSession } from "./hooks/useExamSession";
+import { assembleExam, availableExamPbqs } from "./exam";
 import React, { useState, useEffect, useEffectEvent, useMemo } from "react";
 import {
   X,
@@ -136,6 +139,7 @@ export default function App() {
     quizCompleted, showFeedback, wrongQuestions, quizAnswers,
     setTimerEnabled, questionProgress,
   } = quiz;
+  const exam = useExamSession(quiz.recordExam);
   const handleSelectOption = quiz.select;
   const handleConfirmAnswer = quiz.confirm;
   const handleNextQuestion = quiz.next;
@@ -175,6 +179,16 @@ export default function App() {
     quiz.begin(questions);
     setActiveObjective(null);
     remediation.exit();
+  };
+
+  const handleStartExam = () => {
+    const counts = setup.customCounts;
+    const items = assembleExam(counts, Math.min(setup.examPbqCount, availableExamPbqs(counts, PBQ_SCENARIOS)), {
+      1: DOMAIN_1_QUESTIONS, 2: DOMAIN_2_QUESTIONS, 3: DOMAIN_3_QUESTIONS, 4: DOMAIN_4_QUESTIONS, 5: DOMAIN_5_QUESTIONS,
+    }, PBQ_SCENARIOS, questionIdsByObjective(
+      Object.fromEntries([1, 2, 3, 4, 5].map(d => [d, getDomainQuestions(d, "it")])), sourceQuestionId
+    ));
+    exam.begin(items, quiz.timerEnabled);
   };
 
   const handleStartQuiz = () => {
@@ -301,7 +315,7 @@ export default function App() {
    * ---------------------------------------------------------------- */
   useEffect(() => {
     // After the run, the keys still drive the remediation questions.
-    if (activeTab !== "quiz" || !quizStarted || (quizCompleted && !remediationActive)) return;
+    if (exam.items.length || activeTab !== "quiz" || !quizStarted || (quizCompleted && !remediationActive)) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -339,7 +353,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    activeTab, quizStarted, quizCompleted, remediationActive, remediationCompleted,
+    exam.items.length, activeTab, quizStarted, quizCompleted, remediationActive, remediationCompleted,
     remediationIndex, remediationShowFeedback, remediationSelected,
     currentQuestionIndex, showFeedback, selectedOptions, activeQuestions, remediationQuestions,
   ]);
@@ -504,8 +518,10 @@ export default function App() {
               <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
 
-              {!quizStarted ? (
-                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} reviewObjectives={reviewObjectives} objectiveSubtopics={objectiveSubtopics} onReviewObjective={handleReviewObjective} onStudyAction={runStudyAction} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
+              {exam.items.length > 0 ? (
+                <ExamScreen session={exam} onConfigure={exam.exit} onRepeat={handleStartExam} onStudyAction={runStudyAction} />
+              ) : !quizStarted ? (
+                <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} reviewObjectives={reviewObjectives} objectiveSubtopics={objectiveSubtopics} onReviewObjective={handleReviewObjective} onStudyAction={runStudyAction} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartExam={handleStartExam} examPbqAvailable={availableExamPbqs(setup.customCounts, PBQ_SCENARIOS)} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
               ) : quizCompleted && !remediationActive ? (
                 /* Completed Screen. The remediation starts from here, so while
                    it runs its questions are shown instead (next branch). */

@@ -12,6 +12,7 @@ export default defineConfig({
       provider: "v8",
       include: [
         "src/quiz.ts",
+        "src/exam.ts",
         "src/remediation.ts",
         "src/storage.ts",
         "src/localizedData.ts",

@@ -147,6 +147,20 @@ export function useQuizSession({ paused }: { paused: boolean }) {
     }
   };
 
+  /** Exam mode uses the same stable history format; only MCQs enter spaced review. */
+  const recordExam = (entry: QuizResult, questions: Question[], answers: Record<number, number[]>) => {
+    setQuizHistory(prev => {
+      const next = appendHistory(prev, entry);
+      writeJSON(STORAGE_KEYS.quizHistory, next);
+      return next;
+    });
+    setQuestionProgress(prev => {
+      const next = updateQuestionProgress(prev, questions, answers);
+      writeJSON(STORAGE_KEYS.questionProgress, next);
+      return next;
+    });
+  };
+
   const clearHistory = () => {
     setQuizHistory([]);
     removeKey(STORAGE_KEYS.quizHistory);
@@ -202,6 +216,7 @@ export function useQuizSession({ paused }: { paused: boolean }) {
     /** Shows the results of the run again, e.g. when leaving the remediation. */
     showResults: () => setQuizCompleted(true),
     clearHistory,
+    recordExam,
   };
 }
 

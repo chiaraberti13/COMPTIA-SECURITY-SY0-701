@@ -28,6 +28,7 @@ const each = (n: number): DomainCounts => Object.fromEntries(DOMAINS.map(d => [d
  * `maxByDomain` is how many questions each domain has.
  */
 export function useQuizSetup({ maxByDomain }: { maxByDomain: DomainCounts }) {
+  const [examPbqCount, setExamPbqCount] = useState(2);
   const [quizFocus, setQuizFocus] = useState<QuizFocus>("all");
   // Exam objective chosen for the "objective only" quiz ("" = none yet).
   const [objectiveChoice, setObjectiveChoice] = useState("");
@@ -84,6 +85,8 @@ export function useQuizSetup({ maxByDomain }: { maxByDomain: DomainCounts }) {
     DOMAINS.flatMap(d => shuffle(questionsByDomain[d] ?? []).slice(0, customCounts[d]));
 
   return {
+    examPbqCount,
+    setExamPbqCount,
     quizFocus,
     setQuizFocus,
     objectiveChoice,

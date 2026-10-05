@@ -322,3 +322,8 @@ ZTNA
 # Transport and magnetic-media terminology checked against RFC 768 and NIST SP 800-88r2.
 datagrams
 coercivity
+
+# Valid Italian inflections used in the exam-mode interface.
+didattica
+mostrate
+suggerite

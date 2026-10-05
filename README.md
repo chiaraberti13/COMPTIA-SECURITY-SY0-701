@@ -78,6 +78,7 @@ The philosophy, shared with the rest of these repositories:
   return immediately and correct answers reappear on a 1–3–7–14–30 day schedule.
 - **Full English / Italian localisation** — every subtopic and quiz question in both
   languages, switchable in-app.
+- **Configurable exam mode** — 1–90 MCQs/PBQs, exact domain counts, optional timer, answer navigation and flags, deferred explanations and domain/objective reports. See [exam simulator](docs/exam-simulator.md).
 - **Offline study (PWA)** — after one online visit, wait for “Ready to study offline”:
   guides, glossary, quizzes and practice scenarios work without a network in both
   languages, with progress saved in this browser. AI needs Internet; updates wait

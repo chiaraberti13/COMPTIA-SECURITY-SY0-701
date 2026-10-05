@@ -35,6 +35,8 @@ const setup = {
   totalQuestionsSelected: 25,
   applyPreset: () => {},
   setDomainCount: () => {},
+  examPbqCount: 2,
+  setExamPbqCount: vi.fn(),
 } as unknown as QuizSetup;
 
 const emptyArea = { total: 0, seen: 0, attempts: 0, correct: 0, due: 0, coverage: 0, accuracy: null };
@@ -65,6 +67,8 @@ function renderSetup(props: Partial<Parameters<typeof QuizSetupScreen>[0]> = {})
   render(
     <LanguageProvider>
       <QuizSetupScreen
+        onStartExam={vi.fn()}
+        examPbqAvailable={2}
         quiz={quiz}
         setup={setup}
         maxQuestionsByDomain={{ 1: 10, 2: 10, 3: 10, 4: 10, 5: 10 }}

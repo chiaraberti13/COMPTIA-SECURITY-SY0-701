@@ -8,6 +8,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Added configurable IT/EN exam mode: 1–90 MCQs/PBQs with exact domain counts, optional deadline timer, editable answers and review flags, deferred explanations, domain/objective reports and compatible local history. PBQs replace MCQs within their domain; practice scoring is explicitly distinct from CompTIA scoring.
+
 - Added Vercel static frontend/serverless API deployment artifacts, preview AI isolation and a dedicated CI smoke test. On 2026-10-05 the existing Git-linked project `chiara11/comp-tia-security-sy-0-701` was verified live: public production from `main`, authenticated PR previews and Node 24. Deployment evidence and URLs are recorded in `docs/deployment.md` in IT/EN.
 
 - Removed mandatory human-review metadata and second-reviewer requirements; retained sources and mandatory CI.

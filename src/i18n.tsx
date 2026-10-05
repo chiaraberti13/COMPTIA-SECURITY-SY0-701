@@ -151,6 +151,31 @@ export function translate(lang: Lang, key: UIKey, vars?: Record<string, string |
  * ------------------------------------------------------------------ */
 
 const it = {
+  "exam.title": "Modalità esame: MCQ e PBQ",
+  "exam.description": "Usa i conteggi per dominio qui sopra. Le PBQ sono incluse nel totale e sostituiscono MCQ dello stesso dominio. Da 1 a 90 domande; le lunghezze suggerite applicano i pesi ufficiali.",
+  "exam.pbqCount": "Numero di PBQ",
+  "exam.availability": "Disponibili con questa distribuzione: {n} PBQ.",
+  "exam.start": "Avvia modalità esame",
+  "exam.scoring": "Valutazione didattica: 1 punto per ogni domanda o PBQ interamente corretta, soglia 80%. Le parti delle PBQ sono mostrate separatamente. Questo risultato non equivale al punteggio ufficiale CompTIA.",
+  "exam.sizeHint": "Per la modalità esame scegli da 1 a 90 domande in totale.",
+  "exam.results": "Risultati della modalità esame",
+  "exam.unanswered": "Risposte incomplete o mancanti: {n}.",
+  "exam.byDomain": "Analisi per dominio",
+  "exam.objectiveHint": "Include MCQ e PBQ. Una domanda può contribuire a più obiettivi; questi totali possono quindi superare il numero di domande.",
+  "exam.configure": "Modifica configurazione",
+  "exam.inProgress": "Risposte e spiegazioni saranno disponibili dopo la consegna. Puoi saltare domande e modificarle. La sessione resta in memoria: ricaricare la pagina la interrompe. Il timer continua anche cambiando scheda.",
+  "exam.remaining": "Tempo rimanente: {min}:{sec}",
+  "exam.navigation": "Navigazione delle domande di esame",
+  "exam.jump": "Domanda {i}",
+  "exam.answered": "Risposta completa",
+  "exam.flagged": "Segnalata per revisione",
+  "exam.choose": "Seleziona {n} risposta/e.",
+  "exam.previous": "Precedente",
+  "exam.next": "Successiva / salta",
+  "exam.flag": "Segna per revisione",
+  "exam.finish": "Consegna e termina (risposte incomplete: {n})",
+  "exam.timing": "Timer facoltativo: un minuto per domanda nel totale, PBQ incluse; 90 domande = 90 minuti.",
+
   // Header
   "header.subtitle": "Senior Cybersecurity Trainer Interface v4.2",
   "tab.studio": "Checklist & Studio",
@@ -648,6 +673,31 @@ const it = {
 export type UIKey = keyof typeof it;
 
 const en: Record<UIKey, string> = {
+  "exam.title": "Exam mode: MCQs and PBQs",
+  "exam.description": "Use the domain counts above. PBQs are included in the total and replace MCQs in the same domain. From 1 to 90 questions; suggested lengths apply the official weights.",
+  "exam.pbqCount": "Number of PBQs",
+  "exam.availability": "Available with this distribution: {n} PBQs.",
+  "exam.start": "Start exam mode",
+  "exam.scoring": "Practice scoring: 1 point for each fully correct question or PBQ, with an 80% target. PBQ parts are shown separately. This result is not equivalent to the official CompTIA score.",
+  "exam.sizeHint": "Select from 1 to 90 questions in total for exam mode.",
+  "exam.results": "Exam mode results",
+  "exam.unanswered": "Incomplete or missing answers: {n}.",
+  "exam.byDomain": "Analysis by domain",
+  "exam.objectiveHint": "Includes MCQs and PBQs. A question may contribute to several objectives, so these totals can exceed the number of questions.",
+  "exam.configure": "Change configuration",
+  "exam.inProgress": "Answers and explanations will be available after submission. You can skip questions and change answers. The session stays in memory: reloading the page ends it. The timer keeps running when switching tabs.",
+  "exam.remaining": "Time remaining: {min}:{sec}",
+  "exam.navigation": "Exam question navigation",
+  "exam.jump": "Question {i}",
+  "exam.answered": "Complete answer",
+  "exam.flagged": "Flagged for review",
+  "exam.choose": "Select {n} answer(s).",
+  "exam.previous": "Previous",
+  "exam.next": "Next / skip",
+  "exam.flag": "Flag for review",
+  "exam.finish": "Submit and finish (incomplete answers: {n})",
+  "exam.timing": "Optional timer: one minute per question in the total, including PBQs; 90 questions = 90 minutes.",
+
   // Header
   "header.subtitle": "Senior Cybersecurity Trainer Interface v4.2",
   "tab.studio": "Checklist & Study",
