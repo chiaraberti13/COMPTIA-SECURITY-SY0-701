@@ -37,6 +37,8 @@ npm run e2e               # Playwright + axe at phone and desktop width (after b
 
 For `npm run e2e`, install Chromium once with `npx playwright install chromium`, or point `PW_CHROMIUM_PATH` to an existing Chromium.
 
+Automated checks (axe, keyboard, the mobile viewport and the 200% zoom reflow) cannot replace a real assistive technology. Before a release, run the periodic manual accessibility pass in `docs/accessibility-manual-tests.md` (NVDA, VoiceOver, 200% zoom, a real phone) and record the result there.
+
 `npm run spellcheck` checks Italian and English content separately with cspell and names the text that holds an unknown word: fix it, or add a real term (an acronym, a product, a fictional name) to `cspell/project-words.txt`.
 
 CI runs these on Node 22 and 24, plus a separate security workflow (secret scan, `npm audit`, dependency review, CodeQL). A pull request is ready when all of them are green.

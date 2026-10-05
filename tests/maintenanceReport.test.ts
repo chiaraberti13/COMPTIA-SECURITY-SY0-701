@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { SOURCES, SOURCES_MAPPED_ON } from "../src/contentReview";
+import { MANUAL_A11Y_CHECKED_ON, MANUAL_A11Y_CHECKS, MANUAL_A11Y_MAX_AGE_DAYS } from "../src/manualAccessibilityTests";
 import { buildReport, languagePairs, linkErrors, SOURCES_MAX_AGE_DAYS, type ReportInput } from "../scripts/maintenance-report";
 
 /*
@@ -38,11 +39,21 @@ const base: ReportInput = {
 describe("maintenance report", () => {
   it("reports a clean month as clean, in four sections", () => {
     const report = buildReport(base);
-    expect(report.match(/^## \d\. /gm)).toEqual(["## 1. ", "## 2. ", "## 3. ", "## 4. "]);
+    expect(report.match(/^## \d\. /gm)).toEqual(["## 1. ", "## 2. ", "## 3. ", "## 4. ", "## 5. "]);
     expect(report).toContain("✅ Tutti i link esterni rispondono.");
     expect(report).toContain("✅ `npm audit`: nessuna vulnerabilità nota.");
     expect(report).toContain("✅ Tutte le dipendenze dirette sono all'ultima versione.");
     expect(report).toContain("✅ In ogni coppia le due lingue sono state aggiornate insieme.");
+  });
+
+  it("lists the manual accessibility checks and flags an overdue round", () => {
+    const report = buildReport(base);
+    expect(report).toContain("## 5. Test manuali di accessibilità");
+    expect(report).toContain("docs/accessibility-manual-tests.md");
+    for (const check of MANUAL_A11Y_CHECKS) expect(report).toContain(`- [ ] ${check.it} (WCAG ${check.wcag.join(", ")})`);
+    expect(report).not.toContain("⚠️ L'ultimo giro di test manuali");
+    const late = new Date(Date.parse(MANUAL_A11Y_CHECKED_ON) + (MANUAL_A11Y_MAX_AGE_DAYS + 1) * 86_400_000).toISOString().slice(0, 10);
+    expect(buildReport({ ...base, date: late })).toContain("⚠️ L'ultimo giro di test manuali");
   });
 
   it("counts lychee errors and timeouts and keeps its detail", () => {

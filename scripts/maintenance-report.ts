@@ -22,6 +22,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { SOURCES, SOURCES_MAPPED_ON } from "../src/contentReview";
+import { MANUAL_A11Y_CHECKED_ON, MANUAL_A11Y_CHECKS, MANUAL_A11Y_MAX_AGE_DAYS } from "../src/manualAccessibilityTests";
 
 /** After this many days the source mapping is flagged for a full review. */
 export const SOURCES_MAX_AGE_DAYS = 180;
@@ -147,11 +148,26 @@ function paritySection(pairs: LanguagePair[]): string[] {
   return lines;
 }
 
+function manualAccessibilitySection(date: string): string[] {
+  const age = daysBetween(MANUAL_A11Y_CHECKED_ON, date);
+  const head =
+    age > MANUAL_A11Y_MAX_AGE_DAYS
+      ? `⚠️ L'ultimo giro di test manuali di accessibilità (\`MANUAL_A11Y_CHECKED_ON\` in \`src/manualAccessibilityTests.ts\`) risale al ${MANUAL_A11Y_CHECKED_ON}, ${age} giorni fa: oltre i ${MANUAL_A11Y_MAX_AGE_DAYS} previsti, va ripetuto e la data aggiornata.`
+      : `L'ultimo giro di test manuali di accessibilità risale al ${MANUAL_A11Y_CHECKED_ON} (${age} giorni fa, limite ${MANUAL_A11Y_MAX_AGE_DAYS}).`;
+  return [
+    head,
+    "",
+    "Procedura, criteri di successo e registro degli esiti in `docs/accessibility-manual-tests.md`. Esegui ogni verifica a mano, annota l'esito nel registro e aggiorna `MANUAL_A11Y_CHECKED_ON`.",
+    "",
+    ...MANUAL_A11Y_CHECKS.map((c) => `- [ ] ${c.it} (WCAG ${c.wcag.join(", ")})`),
+  ];
+}
+
 export function buildReport(input: ReportInput): string {
   return [
     `Controllo periodico generato il ${input.date} da \`.github/workflows/maintenance.yml\` (\`scripts/maintenance-report.ts\`). Spunta le voci man mano; chiudi la issue quando sono tutte risolte o motivate in un commento.`,
     "",
-    "> **English summary.** Monthly maintenance report: unreachable external links, sources to confirm as current, dependency audit and outdated packages, and Italian/English document pairs that drifted apart.",
+    "> **English summary.** Monthly maintenance report: unreachable external links, sources to confirm as current, dependency audit and outdated packages, Italian/English document pairs that drifted apart, and the periodic manual accessibility pass when it is overdue.",
     "",
     "## 1. Link esterni",
     "",
@@ -168,6 +184,10 @@ export function buildReport(input: ReportInput): string {
     "## 4. Parità linguistica",
     "",
     ...paritySection(input.pairs),
+    "",
+    "## 5. Test manuali di accessibilità",
+    "",
+    ...manualAccessibilitySection(input.date),
     "",
   ].join("\n");
 }

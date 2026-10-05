@@ -51,6 +51,24 @@ test.describe("layout", () => {
     expect(overflow).toBe(false);
   });
 
+  test("the layout reflows at 200% zoom without sideways scrolling (WCAG 1.4.10)", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "zoom is measured from the desktop width");
+    // 200% zoom halves the available CSS space: a 1280 px desktop becomes 640.
+    // This backs the manual zoom check in docs/accessibility-manual-tests.md.
+    await page.setViewportSize({ width: 640, height: 900 });
+    await openApp(page);
+    for (const [tab, marker] of [
+      ["#tab_btn_studio", "#study_panel_wrapper"],
+      ["#tab_btn_glossary", "#glossary_root"],
+      ["#tab_btn_quiz", "#start_quiz_btn"],
+    ] as const) {
+      await page.locator(tab).click();
+      await expect(page.locator(marker)).toBeVisible();
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+      expect(overflow, `${tab} overflows at 200% zoom`).toBe(false);
+    }
+  });
+
   test("the domain guide opens and keeps its tables inside their box", async ({ page }) => {
     await openApp(page);
     await page.locator("#domain_guide_1 > summary").click();
