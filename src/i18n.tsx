@@ -36,8 +36,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [initialLang] = useState<Lang>(() => detectInitialLang());
   const [lang, setLangState] = useState<Lang>(initialLang);
   const [isLoadingLang, setIsLoadingLang] = useState(false);
-  // The English dataset lives in a lazily-loaded chunk. Italian users never
-  // download it; English users wait for it once, before the first render.
+  // The English dataset is executed lazily; the production offline copy also
+  // downloads it in the background so a later language switch works without a network.
   const [datasetReady, setDatasetReady] = useState(initialLang === "it");
 
   useEffect(() => {
@@ -467,6 +467,14 @@ const it = {
   "a11y.optionsGroupMulti": "Opzioni di risposta, scelta multipla",
   "a11y.keyboardHint": "Suggerimento: premi 1-4 per selezionare, Invio per confermare.",
   "a11y.mainNavigation": "Navigazione principale",
+  "offline.preparing": "Preparazione dello studio offline…",
+  "offline.ready": "Pronto per studiare offline.",
+  "offline.active": "Sei offline. Studio, quiz e progressi sono disponibili; l’AI richiede Internet.",
+  "offline.notReady": "Sei offline. La copia per lo studio senza rete non è ancora pronta.",
+  "offline.unavailable": "Studio offline non disponibile in questo browser. Puoi continuare online.",
+  "offline.ai": "Sei offline. Le funzioni AI richiedono una connessione Internet; puoi continuare lo studio e i quiz.",
+  "offline.updateReady": "Nuova versione pronta. Aggiorna al termine della prova.",
+  "offline.update": "Aggiorna e riavvia",
   "a11y.decreaseDomainQuestions": "Riduci le domande del dominio {n}",
   "a11y.increaseDomainQuestions": "Aumenta le domande del dominio {n}",
   "a11y.domainQuestionCount": "Numero di domande del dominio {n}",
@@ -956,6 +964,14 @@ const en: Record<UIKey, string> = {
   "a11y.optionsGroupMulti": "Answer options, multiple choice",
   "a11y.keyboardHint": "Tip: press 1-4 to select, Enter to confirm.",
   "a11y.mainNavigation": "Main navigation",
+  "offline.preparing": "Preparing offline study…",
+  "offline.ready": "Ready to study offline.",
+  "offline.active": "You are offline. Study, quizzes and progress are available; AI requires Internet.",
+  "offline.notReady": "You are offline. The copy for offline study is not ready yet.",
+  "offline.unavailable": "Offline study is unavailable in this browser. You can continue online.",
+  "offline.ai": "You are offline. AI features require an Internet connection; you can continue studying and taking quizzes.",
+  "offline.updateReady": "A new version is ready. Update after finishing your session.",
+  "offline.update": "Update and restart",
   "a11y.decreaseDomainQuestions": "Decrease Domain {n} questions",
   "a11y.increaseDomainQuestions": "Increase Domain {n} questions",
   "a11y.domainQuestionCount": "Number of Domain {n} questions",

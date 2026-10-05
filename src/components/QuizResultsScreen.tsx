@@ -6,6 +6,7 @@ import MarkdownText, { InlineText } from "./MarkdownText";
 import { hasPassedRun, correctIndexes, isSelectionCorrect } from "../quiz";
 import type { StudyAction } from "../studyPaths";
 import type { RunObjectiveResult } from "../readiness";
+import { useOnline } from "../network";
 
 /**
  * The end of a simulator run: score and pass mark, the per-objective analysis,
@@ -25,6 +26,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
   onBackToStudio: () => void;
 }) {
   const { t } = useLang();
+  const online = useOnline();
   const { activeQuestions, quizAnswers, quizScore, reviewWrongOnly, setReviewWrongOnly, setShowReview, showReview, timeUp, wrongQuestions } = quiz;
   const { isGeneratingRemediation, remediationError } = remediation;
   const handleStartQuiz = onRestart;
@@ -97,7 +99,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
 
           <div className="pt-2 border-t border-slate-800 flex flex-col sm:flex-row justify-between sm:items-center gap-4" id="remediation_actions">
             <p className="text-xs text-slate-400 max-w-[340px]">
-              {t("quiz.remediationOffer")}
+              {online ? t("quiz.remediationOffer") : t("offline.ai")}
             </p>
             <div className="flex flex-col sm:flex-row gap-2 shrink-0">
               <button
@@ -112,7 +114,7 @@ export default function QuizResultsScreen({ quiz, remediation, activeObjective, 
               <button
                 type="button"
                 id="trigger_remediation_btn"
-                disabled={isGeneratingRemediation}
+                disabled={!online || isGeneratingRemediation}
                 onClick={handleStartRemediation}
                 className="bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 text-white font-bold px-4 py-2 text-xs rounded transition-all flex items-center justify-center gap-1 shadow-md shadow-rose-600/10"
               >

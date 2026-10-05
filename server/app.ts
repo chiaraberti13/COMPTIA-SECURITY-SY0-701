@@ -477,6 +477,10 @@ Fornisci una risposta approfondita, CompTIA-style, focalizzandoti sulle best pra
 
   if (opts.isProduction && opts.serveStatic !== false) {
     const distPath = opts.distPath ?? path.join(process.cwd(), "dist");
+    app.use("/sw.js", (_req, res, next) => {
+      res.set({ "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" });
+      next();
+    });
     app.use(precompressedStatic(distPath));
     // File names under /assets carry a hash of their content: a new build means
     // a new name, so browsers may keep them for a year without asking again.

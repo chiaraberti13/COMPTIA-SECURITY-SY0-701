@@ -13,6 +13,12 @@ const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true 
   entry.isDirectory() ? files(join(dir, entry.name)) : [join(dir, entry.name)],
 );
 assert(readFileSync(join(staticRoot, "index.html"), "utf8").includes('id="root"'));
+const worker = readFileSync(join(staticRoot, "sw.js"), "utf8");
+assert(worker.includes('"/index.html"') && worker.includes("dataset-it-") && worker.includes("dataset-en-"), "offline copy misses shell or language");
+assert(!worker.includes("__OFFLINE_"), "worker contains unresolved build tokens");
+const workerRoute = routes.find((route: { src?: string }) => route.src === "/sw\\.js");
+assert.equal(workerRoute?.headers["Cache-Control"], "no-cache");
+assert.equal(workerRoute?.headers["Service-Worker-Allowed"], "/");
 for (const file of files(staticRoot)) {
   assert(!/\.(?:cjs|map|ts)$/.test(file), `private build file in CDN: ${file}`);
   assert(!/\/(?:server|\.env)/.test(file), `server file in CDN: ${file}`);

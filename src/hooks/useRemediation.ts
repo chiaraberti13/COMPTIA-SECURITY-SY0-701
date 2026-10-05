@@ -4,6 +4,7 @@ import { ApiErrorSchema, RemediationResponseSchema, type RemediationRequest } fr
 import { useLang } from "../i18n";
 import { isSelectionComplete, isSelectionCorrect, toggleSelection } from "../quiz";
 import type { Question } from "../types";
+import { isOnline } from "../network";
 
 /** Topics used when a run had no wrong answer to learn from. */
 const DEFAULT_TOPICS = ["Quantitative Risk Calculation", "Risk Appetite vs Risk Tolerance", "Compliance & Privacy"];
@@ -30,6 +31,7 @@ export function useRemediation({ onLocked }: { onLocked: () => void }) {
 
   /** Asks for new questions on the topics of the wrong answers of a run. */
   const start = async (runQuestions: Question[], wrongIds: number[]) => {
+    if (!isOnline()) { setRemediationError(t("offline.ai")); return; }
     const weakTopics = runQuestions
       .filter(q => wrongIds.includes(q.id))
       .map(q => q.topic);
@@ -72,7 +74,7 @@ export function useRemediation({ onLocked }: { onLocked: () => void }) {
         throw new Error(t("rem.noValidQuestions"));
       }
     } catch (err: any) {
-      setRemediationError(err.message || t("rem.unknownError"));
+      setRemediationError(!isOnline() ? t("offline.ai") : err.message || t("rem.unknownError"));
     } finally {
       setIsGeneratingRemediation(false);
     }

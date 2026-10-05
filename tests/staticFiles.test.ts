@@ -40,6 +40,7 @@ beforeAll(async () => {
   writeFileSync(path.join(dist, "assets", "app-1234abcd.js"), script);
   writeFileSync(path.join(dist, "assets", "tiny-1234abcd.js"), "export {};\n");
   writeFileSync(path.join(dist, "server.cjs"), "x".repeat(4_000));
+  writeFileSync(path.join(dist, "sw.js"), script);
   precompress(dist);
 
   const app = createApp({
@@ -71,6 +72,16 @@ describe("precompress", () => {
 });
 
 describe("precompressed static files", () => {
+  it("serves the worker as JavaScript with revalidation, root scope and security headers", async () => {
+    for (const encoding of [undefined, "br"]) {
+      const response = await get("/sw.js", encoding);
+      expect(response.status).toBe(200);
+      expect(response.headers["content-type"]).toMatch(/javascript/);
+      expect(response.headers["cache-control"]).toBe("no-cache");
+      expect(response.headers["service-worker-allowed"]).toBe("/");
+      expect(response.headers["x-content-type-options"]).toBe("nosniff");
+    }
+  });
   it("sends Brotli when accepted, with the original type and a year of caching", async () => {
     const res = await get("/assets/app-1234abcd.js", "gzip, deflate, br");
     expect(res.status).toBe(200);

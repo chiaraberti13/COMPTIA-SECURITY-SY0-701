@@ -31,6 +31,7 @@ import RemediationScreen from "./components/RemediationScreen";
 import QuizQuestionScreen from "./components/QuizQuestionScreen";
 import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
+import OfflineStatus from "./components/OfflineStatus";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
 import PbqScreen from "./components/PbqScreen";
@@ -570,6 +571,7 @@ export default function App() {
           {t("disclaimer.verify")}
         </p>
       </footer>
+      <OfflineStatus />
 
       {/* Inline notification (replaces window.alert) */}
       {toast && (

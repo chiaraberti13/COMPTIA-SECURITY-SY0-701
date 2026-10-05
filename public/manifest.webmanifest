@@ -2,6 +2,8 @@
   "name": "CompTIA Security+ SY0-701 — Training Studio",
   "short_name": "Security+",
   "lang": "it",
+  "id": "/",
+  "scope": "/",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",

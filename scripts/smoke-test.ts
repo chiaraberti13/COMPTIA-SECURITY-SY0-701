@@ -90,6 +90,17 @@ const checks: Check[] = [
     },
   },
   {
+    name: "the offline worker serves both languages with revalidation and root scope",
+    run: async () => {
+      const response = await fetch(`${BASE}/sw.js`);
+      assert(response.status === 200 && (response.headers.get("content-type") ?? "").includes("javascript"), "offline worker is not JavaScript");
+      assert(response.headers.get("cache-control") === "no-cache", "offline worker cannot revalidate");
+      assert(response.headers.get("service-worker-allowed") === "/", "offline worker has no root scope");
+      const text = await response.text();
+      assert(text.includes("dataset-it-") && text.includes("dataset-en-") && !text.includes("__OFFLINE_"), "offline copy lacks a language or build revision");
+    },
+  },
+  {
     name: "a valid chat request is refused with 503 when the AI budget is 0",
     run: async () => {
       // AI_DAILY_LIMIT=0 below: the request must stop before any Gemini call.

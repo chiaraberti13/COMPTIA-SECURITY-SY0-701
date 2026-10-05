@@ -78,6 +78,10 @@ La filosofia, condivisa con gli altri repository:
   gli errori tornano subito e le risposte corrette seguono intervalli di 1–3–7–14–30 giorni.
 - **Localizzazione completa Inglese / Italiano** — ogni subtopic e domanda di quiz in
   entrambe le lingue, commutabile nell'app.
+- **Studio senza rete (PWA)** — dopo una prima visita online, attendi «Pronto per studiare
+  offline»: guide, glossario, quiz e scenari pratici funzionano senza rete in entrambe
+  le lingue, con i progressi salvati nel browser. L’AI richiede Internet; gli aggiornamenti
+  attendono il riavvio che scegli tu. Vedi [studio offline](docs/offline-study.md).
 - **Laboratori pratici** — esercizi da svolgere sul proprio computer, con regole d'ingaggio,
   livello di rischio e cleanup verificato: vedi [`labs/`](labs/README.md). Il primo esamina
   gli header di sicurezza e il limite di richieste di questa stessa app.
@@ -257,6 +261,7 @@ mai dentro l'immagine.
 | `npm test` | Suite Vitest: integrità del dataset, logica del quiz e copertura i18n. |
 | `npm run check` | Typecheck + lint + test, lo stesso controllo eseguito dalla CI. |
 | `npm run smoke` | Dopo `npm run build`: avvia `dist/server.cjs` in modalità produzione e verifica pagina dell'app, header di sicurezza, fallback della SPA e validazione degli input delle API. Eseguito anche dalla CI. |
+| `npm run e2e:offline` | Dopo `npm run build`: verifica ricaricamento senza rete, entrambe le lingue, progressi dei quiz salvati e aggiornamenti espliciti in Chromium su desktop e telefono. Incluso nella suite end-to-end completa della CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
 
 ## Architettura

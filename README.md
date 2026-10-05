@@ -78,6 +78,10 @@ The philosophy, shared with the rest of these repositories:
   return immediately and correct answers reappear on a 1–3–7–14–30 day schedule.
 - **Full English / Italian localisation** — every subtopic and quiz question in both
   languages, switchable in-app.
+- **Offline study (PWA)** — after one online visit, wait for “Ready to study offline”:
+  guides, glossary, quizzes and practice scenarios work without a network in both
+  languages, with progress saved in this browser. AI needs Internet; updates wait
+  until you choose to restart. See [offline study](docs/offline-study.md).
 - **Hands-on labs** — exercises to run on your own machine, with rules of engagement, a
   risk level and a tested cleanup: see [`labs/`](labs/README.md). The first one inspects
   this app's own security headers and rate limit.
@@ -257,6 +261,7 @@ never bake them into the image.
 | `npm test` | Vitest suite: dataset integrity, quiz logic and i18n coverage. |
 | `npm run check` | Typecheck + lint + tests, the same gate CI runs. |
 | `npm run smoke` | After `npm run build`: starts `dist/server.cjs` in production mode and checks the app shell, security headers, SPA fallback and API input validation. Also run by CI. |
+| `npm run e2e:offline` | After `npm run build`: checks offline reloads, both languages, saved quiz progress and explicit updates in Chromium at desktop and phone width. Included in the full CI end-to-end suite. |
 | `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
 
 ## Architecture

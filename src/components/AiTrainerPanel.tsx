@@ -5,6 +5,7 @@ import type { AiChat } from "../hooks/useAiChat";
 import { useLang } from "../i18n";
 import AiAccessForm from "./AiAccessForm";
 import MarkdownText from "./MarkdownText";
+import { useOnline } from "../network";
 
 /**
  * The collapsible AI Trainer panel: transparency notice, conversation log,
@@ -22,6 +23,7 @@ export default function AiTrainerPanel({
   chat: AiChat;
 }) {
   const { t } = useLang();
+  const online = useOnline();
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +76,7 @@ export default function AiTrainerPanel({
             <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{t("chat.disclaimer")}</span>
           </p>
+          {!online && <p id="ai_offline_notice" role="status" className="px-4 py-2 text-xs text-amber-200 bg-slate-950">{t("offline.ai")}</p>}
 
           {/* Chat messages */}
           <div
@@ -128,6 +131,7 @@ export default function AiTrainerPanel({
             <div className="flex flex-wrap gap-1.5" id="suggested_chips_list">
               <button 
                 id="chip_threats"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipThreatsPrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -135,6 +139,7 @@ export default function AiTrainerPanel({
               </button>
               <button 
                 id="chip_edr"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipEdrPrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -142,6 +147,7 @@ export default function AiTrainerPanel({
               </button>
               <button 
                 id="chip_rto"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipRtoPrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -149,6 +155,7 @@ export default function AiTrainerPanel({
               </button>
               <button 
                 id="chip_sle"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipSlePrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -156,6 +163,7 @@ export default function AiTrainerPanel({
               </button>
               <button 
                 id="chip_due"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipDuePrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -163,6 +171,7 @@ export default function AiTrainerPanel({
               </button>
               <button 
                 id="chip_agreements"
+                disabled={!online}
                 onClick={() => chat.send(t("chat.chipAgreementsPrompt"))}
                 className="bg-slate-800 hover:bg-slate-700 hover:text-cyan-400 border border-slate-700 hover:border-cyan-900/30 rounded px-2 py-1 text-[10px] text-slate-300 transition-colors"
               >
@@ -201,7 +210,7 @@ export default function AiTrainerPanel({
                 id="chat_submit_btn"
                 type="submit"
                 aria-label={t("a11y.sendMessage")}
-                disabled={chat.isLoading || !input.trim()}
+                disabled={!online || chat.isLoading || !input.trim()}
                 className="bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-800 text-white disabled:text-slate-600 font-bold p-2 rounded transition-colors"
               >
                 <Send className="w-4 h-4 stroke-[2.5]" />

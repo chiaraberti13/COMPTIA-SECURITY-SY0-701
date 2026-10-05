@@ -31,6 +31,7 @@ writeFileSync(`${output}/config.json`, JSON.stringify({
   version: 3,
   routes: [
     { src: "/.*", headers: securityHeaders, continue: true },
+    { src: "/sw\\.js", headers: { "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" }, continue: true },
     { src: "/assets/.*", headers: { "Cache-Control": "public, max-age=31536000, immutable" }, continue: true },
     { src: "/(?:api(?:/.*)?|healthz)", headers: { "Cache-Control": "no-store" }, dest: "/api" },
     { handle: "filesystem" },

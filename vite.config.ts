@@ -2,10 +2,11 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
+import {offlineBuildPlugin} from './scripts/offline-build.ts';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), offlineBuildPlugin()],
     resolve: {
       alias: {
         // import.meta.dirname rather than __dirname: Vite's native config loader,

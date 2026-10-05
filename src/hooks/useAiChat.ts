@@ -9,6 +9,7 @@ import {
 } from "../apiSchemas";
 import { useLang } from "../i18n";
 import type { ChatMessage } from "../types";
+import { isOnline } from "../network";
 
 export interface AiChat {
   messages: ChatMessage[];
@@ -51,6 +52,7 @@ export function useAiChat(): AiChat {
 
   const send = async (text: string) => {
     if (!text.trim()) return;
+    if (!isOnline()) { addSystemMessage(t("offline.ai")); return; }
 
     const userMsg: ChatMessage = {
       id: newId(),
@@ -100,7 +102,7 @@ export function useAiChat(): AiChat {
         timestamp: new Date()
       }]);
     } catch (err: any) {
-      addSystemMessage(t("chat.connectionError", { msg: err.message }));
+      addSystemMessage(!isOnline() ? t("offline.ai") : t("chat.connectionError", { msg: err.message }));
     } finally {
       setIsLoading(false);
     }

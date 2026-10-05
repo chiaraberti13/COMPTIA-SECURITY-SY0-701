@@ -8,6 +8,10 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ["src/offline/service-worker.js"],
+    languageOptions: { globals: { ...globals.serviceworker, __OFFLINE_REVISION__: "readonly", __OFFLINE_FILES__: "readonly" } },
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2022,
