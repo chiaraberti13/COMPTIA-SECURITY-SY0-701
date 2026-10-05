@@ -374,6 +374,6 @@ nuovo apri una issue.
 
 ## Revisione dei contenuti e ortografia
 
-- [Anteprime delle PR e configurazione del deploy](docs/deployment.md)
+- [Deploy attivo, anteprime delle PR e controlli](docs/deployment.md)
 - [Dominio 1 / Domain 1: rapporto di revisione](docs/domain-1-review.md)
 - [Controllo ortografico IT/EN / IT/EN spelling](docs/italian-spelling.md)

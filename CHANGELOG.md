@@ -8,7 +8,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
-- Added Vercel static frontend/serverless API deployment artifacts, preview AI isolation and a dedicated CI smoke test; live project activation is pending.
+- Added Vercel static frontend/serverless API deployment artifacts, preview AI isolation and a dedicated CI smoke test. On 2026-10-05 the existing Git-linked project `chiara11/comp-tia-security-sy-0-701` was verified live: public production from `main`, authenticated PR previews and Node 24. Deployment evidence and URLs are recorded in `docs/deployment.md` in IT/EN.
 
 - Removed mandatory human-review metadata and second-reviewer requirements; retained sources and mandatory CI.
 - Standardized email spelling in both languages and improved comparative-table readability and accessibility.
@@ -24,6 +24,7 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ### Added
 
+- Repeatable live deployment check (`npm run smoke:live -- <https-origin>`): verifies CDN assets and caching, CSP, SPA fallback, health, unknown APIs and invalid input in both languages without paid AI calls. Thirteen tests catch false successes from login redirects and HTML fallback, cached health, unsafe URLs and cross-origin assets; existing bypass codes stay in environment variables and are never forwarded to redirects.
 - Adaptive review by objective: spaced repetition, already run per question, now rolls up to the 28 official objectives. `selectReviewObjectives` (`src/readiness.ts`) aggregates each objective's question due dates and returns those with questions due now, ordered adaptively (weakest accuracy first, then most due, then most overdue). The simulator start screen gains a "Review by objective" section (`QuizSetupScreen`): each due objective shows its accuracy and due count in words, a button that reviews only that objective's due questions (keeping the schedule, not the whole objective) and a link that opens the objective in its domain guide to re-read its official sub-topics, also listed in place. `tests/readiness.test.ts`, `tests/QuizSetupScreen.test.tsx` and `tests/i18n.test.ts` cover the logic, the section and the Italian/English string parity.
 - Monthly maintenance issue (`.github/workflows/maintenance.yml`, `scripts/maintenance-report.ts`): on the 1st of each month and on demand, an issue labelled `maintenance` lists the external links of the documents and sources that lychee cannot reach, the cited sources to confirm as the current revision with the age of the mapping, `npm audit` findings and the major updates to plan, and the Italian/English document pairs where one language changed after the other. A second run in the same month updates the issue; the job can only read code and write issues.
 - Dependabot pull requests merge by themselves (`.github/workflows/dependabot-merge.yml`) once CI, Security and Docs are green on their latest commit and no check is pending or failed, only when every commit is Dependabot's; the workflow runs main's code, checks out nothing, merges with `--match-head-commit` and then starts CI, Security and Docs on main. Updates to workflow files need an `AUTOMERGE_TOKEN` secret with the Workflows permission.
