@@ -4,7 +4,7 @@ import { useLang } from "../i18n";
 import { STUDY_PATHS, actionLabel, type StudyAction, type StudyPathId } from "../studyPaths";
 
 /**
- * "Where do I start?": four guided study paths. Each step can jump to the part
+ * "Where do I start?": guided study paths. Each step can jump to the part
  * of the app it describes; the parent performs the jump through `onAction`.
  * Open by default for a learner with no progress yet.
  */
@@ -42,7 +42,7 @@ export default function StudyPathsPanel({
       </summary>
 
       <div className="border-t border-slate-800 p-5 sm:p-6 space-y-5">
-        <div role="group" aria-label={t("paths.choose")} className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        <div role="group" aria-label={t("paths.choose")} className="grid grid-cols-2 lg:grid-cols-3 gap-2">
           {paths.map((p) => (
             <button
               key={p.id}
@@ -62,6 +62,12 @@ export default function StudyPathsPanel({
         </div>
 
         <p className="text-sm text-slate-300 border-l-2 border-cyan-500 pl-4">{path.forWhom}</p>
+
+        {path.resource && (
+          <a href={`https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/blob/main/docs/ethical-team-paths.md${path.resource.href}`} className="inline-flex min-h-[44px] items-center text-sm text-cyan-300 underline focus-visible:outline-2 focus-visible:outline-cyan-500">
+            {path.resource.label}
+          </a>
+        )}
 
         <ol className="space-y-3" aria-label={t("paths.stepsFor", { name: path.title })} id="study_path_steps">
           {path.steps.map((step, i) => (

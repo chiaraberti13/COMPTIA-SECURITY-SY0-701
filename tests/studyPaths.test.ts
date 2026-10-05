@@ -6,9 +6,24 @@ import { factDrift } from "./helpers/languageFacts";
 const { it: IT, en: EN } = STUDY_PATHS;
 
 describe("study paths", () => {
-  it("offer the four paths of the roadmap, in the same order in both languages", () => {
-    expect(IT.map((p) => p.id)).toEqual(["beginner", "refresh", "exam", "practice"]);
+  it("offer the study paths of the roadmap, in the same order in both languages", () => {
+    expect(IT.map((p) => p.id)).toEqual(["beginner", "refresh", "exam", "practice", "blue", "red"]);
     expect(EN.map((p) => p.id)).toEqual(IT.map((p) => p.id));
+  });
+
+  it("pairs ethical paths on the same objectives with authorization first and cleanup last", () => {
+    for (const paths of [IT, EN]) {
+      const blue = paths.find((p) => p.id === "blue")!;
+      const red = paths.find((p) => p.id === "red")!;
+      const objectives = (path: typeof blue) => path.steps.map((s) => s.action?.kind === "guide" ? s.action.objective : undefined).sort();
+      expect(objectives(blue)).toEqual(["4.4", "4.6", "4.8", "4.9", "5.5"]);
+      expect(objectives(red)).toEqual(objectives(blue));
+      for (const path of [blue, red]) {
+        expect(path.steps[0].text).toMatch(/autorizzazione scritta|written authorization/);
+        expect(path.steps.at(-1)!.text).toContain("cleanup");
+        expect(path.steps.map((s) => s.text).join(" ")).toMatch(/falsi positivi|false positives|punti ciechi|blind spots/);
+      }
+    }
   });
 
   it("have the same steps and actions in Italian and English", () => {

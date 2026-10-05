@@ -21,7 +21,7 @@ export interface StudyStep {
   action?: StudyAction;
 }
 
-export type StudyPathId = "beginner" | "refresh" | "exam" | "practice";
+export type StudyPathId = "beginner" | "refresh" | "exam" | "practice" | "blue" | "red";
 
 export interface StudyPath {
   id: StudyPathId;
@@ -29,6 +29,7 @@ export interface StudyPath {
   /** Who the path is for, in one line. */
   forWhom: string;
   steps: StudyStep[];
+  resource?: { label: string; href: string };
 }
 
 const IT: StudyPath[] = [
@@ -79,6 +80,33 @@ const IT: StudyPath[] = [
       { text: "Dopo un quiz, usa la remediation adattiva per ricevere nuove domande sugli argomenti sbagliati." },
     ],
   },
+  {
+    id: "blue",
+    resource: { label: "Apri laboratori e criteri di verifica", href: "#italiano" },
+    title: "Blue Team",
+    forWhom: "Conosci le basi dei Domini 2 e 4. Impara a prevenire, rilevare e verificare un incidente in un ambiente isolato.",
+    steps: [
+      { text: "Definisci autorizzazione scritta, sistemi consentiti, condizioni di arresto e ripristino prima della prova. Usa solo dati sintetici.", action: { kind: "guide", domain: 5, objective: "5.5" } },
+      { text: "Prevenzione: per le identità applica MFA e minimo privilegio; per i servizi limita accessi e richieste. Spiega quale rischio riduce ogni controllo.", action: { kind: "guide", domain: 4, objective: "4.6" } },
+      { text: "Rilevazione: nei Lab 03 e 11 confronta log di identità, rete ed endpoint; ricostruisci la stessa sequenza e indica i limiti di ogni sensore.", action: { kind: "guide", domain: 4, objective: "4.9" } },
+      { text: "Validazione autorizzata: nel Lab 10 usa le tracce sintetiche e il servizio locale per verificare regole e controlli. Confronta risultati attesi e osservati, inclusi i falsi positivi.", action: { kind: "guide", domain: 4, objective: "4.4" } },
+      { text: "Risposta: nel Lab 06 motiva priorità e contenimento con le evidenze; verifica il ripristino e completa il cleanup del laboratorio.", action: { kind: "guide", domain: 4, objective: "4.8" } },
+    ],
+  },
+  {
+    id: "red",
+    resource: { label: "Apri laboratori e criteri di verifica", href: "#italiano" },
+    title: "Red Team",
+    forWhom: "Conosci le basi dei Domini 2 e 4. Impara a validare controlli con prove autorizzate, senza bersagli pubblici.",
+    steps: [
+      { text: "Definisci autorizzazione scritta, sistemi consentiti, condizioni di arresto e ripristino prima della prova. Usa solo dati sintetici.", action: { kind: "guide", domain: 5, objective: "5.5" } },
+      { text: "Validazione autorizzata: nel Lab 10 interpreta le tracce sintetiche di ricognizione e credential stuffing; verifica il servizio locale entro i limiti del laboratorio. Distingui ipotesi ed evidenze.", action: { kind: "guide", domain: 4, objective: "4.4" } },
+      { text: "Prevenzione: associa ogni traccia a MFA, minimo privilegio e limiti di accesso; spiega quali controlli impediscono il comportamento e quali ne riducono solo gli effetti.", action: { kind: "guide", domain: 4, objective: "4.6" } },
+      { text: "Rilevazione: nei Lab 03 e 11 verifica quali segnali della stessa sequenza compaiono nei log di identità, rete ed endpoint. Documenta i punti ciechi senza disattivare i sensori.", action: { kind: "guide", domain: 4, objective: "4.9" } },
+      { text: "Risposta: confronta le evidenze con il triage del Lab 06. Ripeti la verifica dopo la correzione, documenta i limiti e completa il cleanup del laboratorio.", action: { kind: "guide", domain: 4, objective: "4.8" } },
+    ],
+  },
+
 ];
 
 const EN: StudyPath[] = [
@@ -129,6 +157,33 @@ const EN: StudyPath[] = [
       { text: "After a quiz, use the adaptive remediation to get new questions on the topics you got wrong." },
     ],
   },
+  {
+    id: "blue",
+    resource: { label: "Open labs and verification criteria", href: "#english" },
+    title: "Blue Team",
+    forWhom: "You know the basics of Domains 2 and 4. Learn to prevent, detect and verify an incident in an isolated environment.",
+    steps: [
+      { text: "Define written authorization, allowed systems, stop conditions and recovery before testing. Use synthetic data only.", action: { kind: "guide", domain: 5, objective: "5.5" } },
+      { text: "Prevention: apply MFA and least privilege to identities; limit access and requests to services. Explain which risk each control reduces.", action: { kind: "guide", domain: 4, objective: "4.6" } },
+      { text: "Detection: in Labs 03 and 11 compare identity, network and endpoint logs; reconstruct the same sequence and state the limits of each sensor.", action: { kind: "guide", domain: 4, objective: "4.9" } },
+      { text: "Authorized validation: in Lab 10 use synthetic traces and the local service to verify rules and controls. Compare expected and observed results, including false positives.", action: { kind: "guide", domain: 4, objective: "4.4" } },
+      { text: "Response: in Lab 06 justify priority and containment with evidence; verify recovery and complete the lab cleanup.", action: { kind: "guide", domain: 4, objective: "4.8" } },
+    ],
+  },
+  {
+    id: "red",
+    resource: { label: "Open labs and verification criteria", href: "#english" },
+    title: "Red Team",
+    forWhom: "You know the basics of Domains 2 and 4. Learn to validate controls with authorized tests, without public targets.",
+    steps: [
+      { text: "Define written authorization, allowed systems, stop conditions and recovery before testing. Use synthetic data only.", action: { kind: "guide", domain: 5, objective: "5.5" } },
+      { text: "Authorized validation: in Lab 10 interpret synthetic reconnaissance and credential stuffing traces; verify the local service within the lab boundaries. Distinguish hypotheses from evidence.", action: { kind: "guide", domain: 4, objective: "4.4" } },
+      { text: "Prevention: associate each trace with MFA, least privilege and access limits; explain which controls prevent the behavior and which only reduce its effects.", action: { kind: "guide", domain: 4, objective: "4.6" } },
+      { text: "Detection: in Labs 03 and 11 verify which signals of the same sequence appear in identity, network and endpoint logs. Document blind spots without disabling sensors.", action: { kind: "guide", domain: 4, objective: "4.9" } },
+      { text: "Response: compare evidence with the triage in Lab 06. Repeat validation after remediation, document limitations and complete the lab cleanup.", action: { kind: "guide", domain: 4, objective: "4.8" } },
+    ],
+  },
+
 ];
 
 export const STUDY_PATHS: Record<Lang, StudyPath[]> = { it: IT, en: EN };

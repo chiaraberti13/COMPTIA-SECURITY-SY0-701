@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Ethical Blue Team and Red Team study paths in Italian and English: shared objectives, prevention, detection and authorized validation, linked lab instructions and learning checks.
+- Percorsi Blue Team e Red Team etici in IT/EN: stessi obiettivi, prevenzione, rilevazione e validazione autorizzata, laboratori collegati e criteri di verifica.
+
 - Added MIT-licensed synthetic study evidence: correlated authentication logs, DNS PCAP, alerts, timeline and fictional IOCs; deterministic generator, hash manifest, bilingual exercises/solutions and integrity tests.
 - Aggiunti dataset didattici sintetici MIT con log, PCAP DNS, alert, timeline e IOC fittizi correlati, generatore deterministico, manifest con hash, esercizi/soluzioni IT/EN e test di integrità.
 

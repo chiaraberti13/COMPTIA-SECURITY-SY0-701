@@ -387,3 +387,5 @@ nuovo apri una issue.
 - [Deploy attivo, anteprime delle PR e controlli](docs/deployment.md)
 - [Dominio 1 / Domain 1: rapporto di revisione](docs/domain-1-review.md)
 - [Controllo ortografico IT/EN / IT/EN spelling](docs/italian-spelling.md)
+
+Percorsi Blue Team e Red Team: apri il pannello dei percorsi di studio. [Laboratori e verifica](docs/ethical-team-paths.md#italiano).
