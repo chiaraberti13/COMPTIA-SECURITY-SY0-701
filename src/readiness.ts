@@ -103,6 +103,91 @@ export function summarizeRunByObjective(
     .sort((a, b) => a.accuracy - b.accuracy || b.total - a.total || a.code.localeCompare(b.code));
 }
 
+/** One official objective with questions due for spaced review. */
+export interface ReviewObjective {
+  code: string;
+  /** Domain the objective belongs to (1-5). */
+  domain: number;
+  /** Questions of the objective whose review is due now. */
+  due: number;
+  /** Ids of those due questions, in within-objective review priority. */
+  dueIds: number[];
+  /** Answers given on the objective's questions, counting repeats. */
+  attempts: number;
+  correct: number;
+  /** correct / attempts, 0-100; null when none answered. */
+  accuracy: number | null;
+}
+
+/**
+ * Spaced repetition lifted from the single question to the official objective:
+ * the per-question queue (quiz.ts) already knows when each answer falls due; this
+ * rolls those dates up so the learner can review a whole weak objective at once
+ * and knows which sub-topics to re-read.
+ *
+ * An objective is due when at least one of its questions is due. The list is
+ * ordered adaptively — weakest first (lowest accuracy), then the most questions
+ * due, then the most overdue — so a short, targeted review lands where it helps
+ * most. Only answered questions count toward accuracy: a never-seen objective is
+ * not a weakness and is left out. `dueIds` keeps the same within-objective
+ * priority as selectDueReviewQuestions (lowest accuracy and streak, then most
+ * overdue), so a review run starts with the shakiest questions.
+ */
+export function selectReviewObjectives({
+  questions,
+  progress,
+  questionsByObjective,
+  now = Date.now(),
+  limit = 5,
+}: {
+  questions: readonly Question[];
+  progress: Record<number, QuestionProgress>;
+  questionsByObjective: ReadonlyMap<string, readonly number[]>;
+  now?: number;
+  limit?: number;
+}): ReviewObjective[] {
+  const known = new Set(questions.map((q) => q.id));
+  const result: (ReviewObjective & { earliestDue: number })[] = [];
+
+  for (const [code, ids] of questionsByObjective) {
+    let attempts = 0;
+    let correct = 0;
+    const dueEntries: { id: number; acc: number; streak: number; dueAt: number }[] = [];
+    for (const id of ids) {
+      if (!known.has(id)) continue;
+      const item = progress[id];
+      if (!item || item.attempts <= 0) continue;
+      attempts += item.attempts;
+      correct += item.correct;
+      if (item.dueAt <= now) {
+        dueEntries.push({ id, acc: item.correct / item.attempts, streak: item.streak, dueAt: item.dueAt });
+      }
+    }
+    if (dueEntries.length === 0) continue;
+    dueEntries.sort((a, b) => a.acc - b.acc || a.streak - b.streak || a.dueAt - b.dueAt || a.id - b.id);
+    result.push({
+      code,
+      domain: Number(code[0]),
+      due: dueEntries.length,
+      dueIds: dueEntries.map((e) => e.id),
+      attempts,
+      correct,
+      accuracy: attempts > 0 ? percent(correct, attempts) : null,
+      earliestDue: Math.min(...dueEntries.map((e) => e.dueAt)),
+    });
+  }
+
+  return result
+    .sort((a, b) =>
+      (a.accuracy ?? 0) - (b.accuracy ?? 0) ||
+      b.due - a.due ||
+      a.earliestDue - b.earliestDue ||
+      a.code.localeCompare(b.code)
+    )
+    .slice(0, Math.max(0, limit))
+    .map(({ earliestDue: _earliestDue, ...objective }) => objective);
+}
+
 function summarize(questions: readonly Question[], progress: Record<number, QuestionProgress>, now: number): AreaReadiness {
   let seen = 0, attempts = 0, correct = 0, due = 0;
   for (const question of questions) {
