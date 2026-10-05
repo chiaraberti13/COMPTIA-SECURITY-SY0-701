@@ -12,6 +12,7 @@ import { DOMAIN_GUIDES_EN, DOMAIN_GUIDES_IT } from "../src/domainGuides";
 import { UI } from "../src/i18n";
 import { getAllTopics, getDomainQuestions, loadEnglishOverlay } from "../src/localizedData";
 import { STUDY_PATHS } from "../src/studyPaths";
+import { getPbqScenarios } from "../src/localizedPbq";
 
 export const SPELLCHECK_FILE = path.join(".spellcheck", "content-en.txt");
 
@@ -37,6 +38,12 @@ export async function contentUnits(language: "it" | "en"): Promise<[string, stri
   }
   for (const [key, text] of Object.entries(UI[language])) units.push([`ui ${key}`, text]);
   STUDY_PATHS[language].forEach((p) => units.push([`path ${p.id}`, strings(p).join(" ")]));
+  for (const pbq of getPbqScenarios(language)) {
+    const parts = [pbq.title, pbq.scenario, pbq.prompt, pbq.explanation];
+    if (pbq.mechanic === "ordering") parts.push(...pbq.steps.map((s) => s.text));
+    else parts.push(...pbq.prompts.map((x) => x.text), ...pbq.options.map((o) => o.text));
+    units.push([`pbq ${pbq.id}`, strings(parts).join(" ")]);
+  }
   return units.map(([id, text]) => [id.replace(/\s+/g, "_"), text.replace(/\s+/g, " ")]);
 }
 

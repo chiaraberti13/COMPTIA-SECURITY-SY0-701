@@ -33,6 +33,9 @@ import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
+import PbqScreen from "./components/PbqScreen";
+import { usePbqSession } from "./hooks/usePbqSession";
+import { getPbqScenarios } from "./localizedPbq";
 import { computeReadiness, selectReviewObjectives, summarizeRunByObjective } from "./readiness";
 import {
   shuffle,
@@ -102,6 +105,10 @@ export default function App() {
 
   // The AI Trainer conversation, shared by the panel, the study view and the glossary.
   const chat = useAiChat();
+
+  // Performance-based scenarios (ordering / matching), their own in-memory run.
+  const pbq = usePbqSession();
+  const PBQ_SCENARIOS = useMemo(() => getPbqScenarios(lang), [lang]);
 
   // Inline notification, replacing window.alert().
   const [toast, setToast] = useState<string | null>(null);
@@ -522,6 +529,17 @@ export default function App() {
               chat.send(prompt);
             }}
           />
+        )}
+
+        {/* TAB 4: PERFORMANCE-BASED SCENARIOS (PBQ) */}
+        {activeTab === "pbq" && (
+          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-start justify-center" id="pbq_layout">
+            <div className="w-full max-w-2xl my-auto bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="pbq_panel_container">
+              <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
+              <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
+              <PbqScreen session={pbq} scenarios={PBQ_SCENARIOS} />
+            </div>
+          </main>
         )}
 
         {/* PERSISTENT COLLAPSIBLE AI SIDEBAR */}

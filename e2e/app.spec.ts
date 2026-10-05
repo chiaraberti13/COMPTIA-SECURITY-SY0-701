@@ -61,6 +61,7 @@ test.describe("layout", () => {
       ["#tab_btn_studio", "#study_panel_wrapper"],
       ["#tab_btn_glossary", "#glossary_root"],
       ["#tab_btn_quiz", "#start_quiz_btn"],
+      ["#tab_btn_pbq", "#pbq_start_all"],
     ] as const) {
       await page.locator(tab).click();
       await expect(page.locator(marker)).toBeVisible();
@@ -85,7 +86,7 @@ test.describe("layout: main menu", () => {
     await openApp(page);
     const nav = page.locator("#navigation_tabs");
     expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
-    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#toggle_sidebar_btn", "#lang_btn_en"]) {
       await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
     }
     // Each tab keeps a readable name, short on phones and full on desktop.
@@ -728,5 +729,67 @@ test.describe("sources", () => {
     await expect(sources.getByRole("link", { name: /SP 800-53/ })).toHaveAttribute("href", /^https:\/\/csrc\.nist\.gov\//);
     await expect(sources.getByRole("link", { name: /Segnalalo con una issue/ })).toHaveAttribute("rel", "noopener noreferrer");
     expect(await seriousViolations(page)).toEqual([]);
+  });
+});
+
+test.describe("performance-based scenarios (PBQ)", () => {
+  async function openPbq(page: Page) {
+    await openApp(page);
+    await page.locator("#tab_btn_pbq").click();
+    await expect(page.locator("#pbq_setup")).toBeVisible();
+  }
+
+  test("the chooser and an active scenario pass axe (WCAG 2.2 AA)", async ({ page }) => {
+    await openPbq(page);
+    expect(await seriousViolations(page)).toEqual([]);
+    // Open the first scenario in the list and re-check the interactive task.
+    await page.locator("[id^=pbq_start_]").first().click();
+    await expect(page.locator("#pbq_active")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+    expect(await headingProblems(page)).toEqual([]);
+  });
+
+  test("a matching scenario is graded with a worded verdict", async ({ page }) => {
+    await openPbq(page);
+    // Scenario 301 (social engineering) is a matching task.
+    await page.locator("#pbq_start_301").click();
+    await expect(page.locator("#pbq_match_list")).toBeVisible();
+
+    // Assign every prompt its correct option, then check the answer.
+    for (const [prompt, option] of [
+      ["p_ceo", "bec"],
+      ["p_sms", "smishing"],
+      ["p_usb", "baiting"],
+      ["p_call", "vishing"],
+    ] as const) {
+      await page.locator(`#pbq_match_${prompt}`).selectOption(option);
+    }
+    await expect(page.locator("#pbq_submit")).toBeEnabled();
+    await page.locator("#pbq_submit").click();
+
+    // The verdict is announced and written in words, not colour alone.
+    await expect(page.locator("#pbq_feedback_announcer")).toHaveAttribute("role", "status");
+    await expect(page.locator("#pbq_feedback")).toContainText("Tutto corretto");
+    await page.locator("#pbq_next").click();
+    await expect(page.locator("#pbq_summary")).toBeVisible();
+  });
+
+  test("ordering steps is operable from the keyboard", async ({ page }) => {
+    await openPbq(page);
+    // Scenario 201 (incident response) is an ordering task.
+    await page.locator("#pbq_start_201").click();
+    await expect(page.locator("#pbq_order_list")).toBeVisible();
+
+    const ids = () => page.locator("#pbq_order_list > li").evaluateAll((els) => els.map((el) => el.id));
+    const before = await ids();
+    const firstStep = before[0].replace("pbq_step_", "");
+    // The down arrow of the first row moves it below the second, from the keyboard.
+    await page.locator(`#pbq_down_${firstStep}`).focus();
+    await page.keyboard.press("Enter");
+    const after = await ids();
+    expect(after[1]).toBe(`pbq_step_${firstStep}`);
+
+    await page.locator("#pbq_submit").click();
+    await expect(page.locator("#pbq_feedback")).toBeVisible();
   });
 });

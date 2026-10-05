@@ -13,7 +13,7 @@ import { describe, expect, it } from "vitest";
  * - Nothing shaped like a real credential.
  */
 
-const CONTENT_FILES = ["src/data.ts", "src/data.en.ts", "src/domainGuides.ts", "src/i18n.tsx", "src/studyPaths.ts"];
+const CONTENT_FILES = ["src/data.ts", "src/data.en.ts", "src/domainGuides.ts", "src/i18n.tsx", "src/studyPaths.ts", "src/pbqData.ts", "src/pbqData.en.ts"];
 const content = CONTENT_FILES.map((file) => ({ file, text: readFileSync(file, "utf8") }));
 
 /** Real hostnames that stay because the sentence is about them. */

@@ -15,6 +15,7 @@ abbia
 abbiamo
 abbiano
 abbigliamento
+abbina
 abbinamento
 abbinata
 abbinato
@@ -468,6 +469,7 @@ algoritmico
 algoritmo
 alice
 alimenta
+alimentando
 alimentano
 alimentare
 alimentari
@@ -1186,6 +1188,7 @@ attributi
 attributo
 attrito
 attua
+attuabile
 attuale
 attuali
 attualmente
@@ -1763,6 +1766,7 @@ castello
 casuale
 casuali
 casualmente
+cataloga
 catalogare
 catalogate
 catalogati
@@ -4089,6 +4093,7 @@ duplicazione
 duplice
 dura
 durabilità
+durano
 durante
 durata
 durate
@@ -4794,6 +4799,7 @@ fedora
 feedback
 fenomeni
 fenomeno
+feriale
 feriali
 ferie
 ferma
@@ -5103,6 +5109,7 @@ fraudolenti
 fraudolento
 frazione
 frazioni
+frecce
 fredda
 free
 frenetiche
@@ -5827,6 +5834,7 @@ indaga
 indagando
 indagano
 indagare
+indagati
 indagine
 indagini
 indebitamente
@@ -8151,6 +8159,7 @@ percepita
 percepito
 percezione
 perché
+perciò
 percorre
 percorrere
 percorrerebbe
@@ -8234,6 +8243,7 @@ persistente
 persistenti
 persistenza
 persistenze
+persistono
 perso
 persona
 personale
@@ -9047,6 +9057,7 @@ pulire
 pulisci
 pulita
 pulite
+puliti
 pulito
 pulizia
 pulsante
@@ -9210,6 +9221,7 @@ rafforzato
 raffreddamento
 raggio
 raggirati
+raggiro
 raggiunga
 raggiungano
 raggiunge
@@ -9570,6 +9582,7 @@ retine
 retro
 retroattivamente
 reversibile
+reversibili
 reversibilità
 revisionata
 revisionati
@@ -9701,6 +9714,7 @@ riciclare
 riciclate
 ricognizione
 ricollegato
+ricomincia
 ricominciare
 ricompaiono
 ricomparsa
@@ -10869,6 +10883,7 @@ sequenziale
 sequenziali
 sequenzialmente
 sequestrati
+sequestrato
 sequestro
 sera
 serali
@@ -11342,6 +11357,7 @@ spacciandosi
 spacciano
 sparire
 sparisce
+spariscono
 sparito
 sparizione
 sparpagliate
@@ -11775,6 +11791,7 @@ surriscaldamento
 suscettibili
 suscettibilità
 svaluta
+svanisce
 svanita
 svantaggi
 svantaggio
@@ -12083,6 +12100,7 @@ tra
 tracce
 traccia
 tracciabile
+tracciabili
 tracciabilità
 tracciamento
 tracciano
@@ -12652,6 +12670,7 @@ videoconferenze
 videogiochi
 videoregistrata
 videosorveglianza
+videosorvegliata
 vie
 viene
 vieta
