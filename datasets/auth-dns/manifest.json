@@ -1,0 +1,42 @@
+{
+  "id": "auth-dns",
+  "version": 1,
+  "synthetic": true,
+  "license": "MIT",
+  "owner": "chiaraberti13",
+  "reviewed": "2026-10-05",
+  "nextReview": "2027-01-05",
+  "objectives": [
+    "2.4",
+    "4.4",
+    "4.8",
+    "4.9"
+  ],
+  "files": [
+    {
+      "name": "events.jsonl",
+      "bytes": 1246,
+      "sha256": "ada609a393f8f3fd36540b6b3eba09e311bad844232da8fce948aca0b1f62986"
+    },
+    {
+      "name": "traffic.pcap",
+      "bytes": 282,
+      "sha256": "69ab1815caf69c65a5a4dbf162ef010fa3e2c76ff794449aced31126104db028"
+    },
+    {
+      "name": "alerts.jsonl",
+      "bytes": 538,
+      "sha256": "b55cf4d0a618e77be6c50d05f0132282d96d3bdd42e82a63fae5d7ce7efab274"
+    },
+    {
+      "name": "timeline.csv",
+      "bytes": 226,
+      "sha256": "b4d245381f6fb09bd28abc995379c470bf4a0ecf717072aac9a4af0e60a86930"
+    },
+    {
+      "name": "iocs.json",
+      "bytes": 395,
+      "sha256": "989a9e36f2afeb380a7f440d331fd5f20669e8cdc36f4cb5c8db013acd2bdd18"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "operationalUse": false,
+  "indicators": [
+    {
+      "type": "domain",
+      "value": "updates.training.invalid",
+      "evidence": [
+        "E5",
+        "E6",
+        "E7"
+      ],
+      "confidence": "low"
+    },
+    {
+      "type": "ipv4",
+      "value": "192.0.2.10",
+      "evidence": [
+        "E1",
+        "E4"
+      ],
+      "confidence": "low"
+    }
+  ]
+}

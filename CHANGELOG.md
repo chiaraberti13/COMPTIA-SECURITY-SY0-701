@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Added MIT-licensed synthetic study evidence: correlated authentication logs, DNS PCAP, alerts, timeline and fictional IOCs; deterministic generator, hash manifest, bilingual exercises/solutions and integrity tests.
+- Aggiunti dataset didattici sintetici MIT con log, PCAP DNS, alert, timeline e IOC fittizi correlati, generatore deterministico, manifest con hash, esercizi/soluzioni IT/EN e test di integrità.
+
 - Added local on-demand lab sessions for Labs 03/04/05/06/10/11: automatic lifetime, bounded resources, offline isolation, shell re-entry, clean reset from the same image, scoped ownership and real Docker lifecycle checks in CI. Costs and limits are documented in IT/EN.
 
 - Added configurable IT/EN exam mode: 1–90 MCQs/PBQs with exact domain counts, optional deadline timer, editable answers and review flags, deferred explanations, domain/objective reports and compatible local history. PBQs replace MCQs within their domain; practice scoring is explicitly distinct from CompTIA scoring.

@@ -21,6 +21,7 @@
 
 ## Navigazione rapida
 
+- **Dataset di evidenze sintetiche** — log, PCAP, alert, timeline e IOC fittizi con esercizi bilingui e licenza esplicita: [catalogo](datasets/README.md).
 - **[Cos'è](#cosè)** — L'idea dietro il trainer e come è strutturato.
 - **[Funzionalità](#funzionalità)** — Checklist, glossario, simulatore d'esame, trainer AI.
 - **[Prerequisiti](#prerequisiti)** — Cosa serve installare prima di iniziare.

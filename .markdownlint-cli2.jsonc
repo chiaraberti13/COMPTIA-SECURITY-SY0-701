@@ -14,6 +14,6 @@
     // Files may open with that banner instead of a heading.
     "MD041": false
   },
-  "globs": ["*.md", "docs/**/*.md", "labs/**/*.md", ".github/**/*.md"],
+  "globs": ["*.md", "docs/**/*.md", "datasets/**/*.md", "labs/**/*.md", ".github/**/*.md"],
   "ignores": ["node_modules/**", "dist/**"]
 }

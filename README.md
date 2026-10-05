@@ -21,6 +21,7 @@
 
 ## Quick Navigation
 
+- **Synthetic evidence datasets** — logs, PCAP, alerts, timelines and fictional IOCs with bilingual exercises and an explicit license: [catalog](datasets/README.md).
 - **[What this is](#what-this-is)** — The idea behind the trainer and how it's put together.
 - **[Features](#features)** — Checklists, glossary, exam simulator, AI trainer.
 - **[Prerequisites](#prerequisites)** — What you need installed before you start.
