@@ -32,6 +32,12 @@ durata e livello di rischio prima di qualsiasi comando.
 | [10 — Dalla traccia alla difesa: ricognizione e credential stuffing](10-attack-to-defense/README.md) ([versione inglese](10-attack-to-defense/README.en.md)) | 2.4, 4.4, 4.5, 4.8 | `low` | 60 minuti |
 | [11 — Tre sensori, un incidente: rete, identità ed endpoint](11-telemetry-views/README.md) ([versione inglese](11-telemetry-views/README.en.md)) | 4.4, 4.9 | `low` | 40 minuti |
 
+## Sessioni su richiesta / On-demand sessions
+
+Per i Lab 03/04/05/06/10/11 puoi avviare un container temporaneo con scadenza, rientrare nella shell e ripristinare lo stato iniziale. Costi, limiti, comandi e verifica sono documentati in IT/EN in [Lab on demand](../docs/labs-on-demand.md). Le sessioni sono locali e non richiedono servizi cloud.
+
+For Labs 03/04/05/06/10/11, start a temporary container with expiry, re-enter its shell and reset to a clean state. The bilingual [on-demand lab guide](../docs/labs-on-demand.md) documents costs, limits, commands and verification. Sessions are local and require no cloud service.
+
 ## Regole d'ingaggio
 
 Valgono per ogni laboratorio, senza eccezioni.

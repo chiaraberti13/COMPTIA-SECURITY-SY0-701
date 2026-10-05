@@ -141,3 +141,7 @@ docker run --rm ubuntu:noble-20260917 sh -c 'apt-get update -qq && apt-cache pol
 
 The script uses Docker; `LAB_ENGINE=podman` passes the same options to Podman, which accepts
 them, but the project verifies Docker only.
+
+## On demand
+
+For expiring sessions with shell re-entry and reset, use the new manager: [On-demand labs — IT/EN guide](../../docs/labs-on-demand.md). `run.sh` remains available for a command or shell that removes the container on exit.

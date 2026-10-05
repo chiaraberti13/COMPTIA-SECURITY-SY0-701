@@ -78,6 +78,7 @@ La filosofia, condivisa con gli altri repository:
   gli errori tornano subito e le risposte corrette seguono intervalli di 1–3–7–14–30 giorni.
 - **Localizzazione completa Inglese / Italiano** — ogni subtopic e domanda di quiz in
   entrambe le lingue, commutabile nell'app.
+- **Lab su richiesta** — sessioni Docker locali con scadenza automatica, rientro, ripristino e limiti di risorse. Costi e uso in [Lab on demand](docs/labs-on-demand.md).
 - **Modalità esame configurabile** — 1–90 MCQ/PBQ, conteggi esatti per dominio, timer facoltativo, navigazione e segnali di revisione, spiegazioni dopo la consegna e analisi per dominio/obiettivo. Vedi [simulatore d’esame](docs/exam-simulator.md).
 - **Studio senza rete (PWA)** — dopo una prima visita online, attendi «Pronto per studiare
   offline»: guide, glossario, quiz e scenari pratici funzionano senza rete in entrambe
@@ -262,6 +263,8 @@ mai dentro l'immagine.
 | `npm test` | Suite Vitest: integrità del dataset, logica del quiz e copertura i18n. |
 | `npm run check` | Typecheck + lint + test, lo stesso controllo eseguito dalla CI. |
 | `npm run smoke` | Dopo `npm run build`: avvia `dist/server.cjs` in modalità produzione e verifica pagina dell'app, header di sicurezza, fallback della SPA e validazione degli input delle API. Eseguito anche dalla CI. |
+| `npm run lab:session -- help` | Gestisce sessioni locali Docker su richiesta, con scadenza, ripristino e limiti; aiuto IT/EN. |
+| `npm run lab:verify` | Richiede l’immagine `comptia-labs` e Docker: verifica isolamento, limiti, ripristino e scadenza reali. |
 | `npm run e2e:offline` | Dopo `npm run build`: verifica ricaricamento senza rete, entrambe le lingue, progressi dei quiz salvati e aggiornamenti espliciti in Chromium su desktop e telefono. Incluso nella suite end-to-end completa della CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
 

@@ -169,6 +169,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
       # Base pinned by digest and exact package versions: a version withdrawn
       # from the Ubuntu archive makes this step fail instead of drifting.
       - name: Build the lab image
@@ -179,3 +185,6 @@ jobs:
       # nginx of Lab 10 on a read-only root and no container left behind.
       - name: Verify the labs inside the container
         run: bash labs/container/verify.sh
+
+      - name: Verify on-demand session lifecycle and limits
+        run: npm run lab:verify

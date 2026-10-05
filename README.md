@@ -78,6 +78,7 @@ The philosophy, shared with the rest of these repositories:
   return immediately and correct answers reappear on a 1–3–7–14–30 day schedule.
 - **Full English / Italian localisation** — every subtopic and quiz question in both
   languages, switchable in-app.
+- **On-demand labs** — local Docker sessions with automatic expiry, re-entry, clean reset and resource caps. See [costs and usage](docs/labs-on-demand.md).
 - **Configurable exam mode** — 1–90 MCQs/PBQs, exact domain counts, optional timer, answer navigation and flags, deferred explanations and domain/objective reports. See [exam simulator](docs/exam-simulator.md).
 - **Offline study (PWA)** — after one online visit, wait for “Ready to study offline”:
   guides, glossary, quizzes and practice scenarios work without a network in both
@@ -262,6 +263,8 @@ never bake them into the image.
 | `npm test` | Vitest suite: dataset integrity, quiz logic and i18n coverage. |
 | `npm run check` | Typecheck + lint + tests, the same gate CI runs. |
 | `npm run smoke` | After `npm run build`: starts `dist/server.cjs` in production mode and checks the app shell, security headers, SPA fallback and API input validation. Also run by CI. |
+| `npm run lab:session -- help` | Manages local on-demand Docker sessions with expiry, reset and resource caps; IT/EN help. |
+| `npm run lab:verify` | Requires Docker and the `comptia-labs` image: verifies real isolation, limits, reset and expiry. |
 | `npm run e2e:offline` | After `npm run build`: checks offline reloads, both languages, saved quiz progress and explicit updates in Chromium at desktop and phone width. Included in the full CI end-to-end suite. |
 | `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
 
