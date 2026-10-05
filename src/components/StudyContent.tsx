@@ -1,6 +1,6 @@
 import type { StudySession } from "../hooks/useStudySession";
 import type { DomainGuide } from "../domainGuides";
-import type { GlossaryHint } from "../glossaryIndex";
+import type { GlossaryIndex } from "../glossaryIndex";
 import type { TopicGroup } from "../types";
 import { useEffect, useRef } from "react";
 import {
@@ -40,7 +40,7 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
   study: StudySession;
   domainTopics: TopicGroup[];
   domainGuide: DomainGuide;
-  glossaryIndex: Map<string, GlossaryHint>;
+  glossaryIndex: GlossaryIndex;
   isNewLearner: boolean;
   onStudyAction: (action: StudyAction) => void;
   onAskTrainer: (prompt: string) => void;
@@ -134,7 +134,7 @@ export default function StudyContent({ study, domainTopics, domainGuide, glossar
             />
 
             {/* Domain-level learning guide: orientation before individual concepts. */}
-            <DomainGuidePanel guide={DOMAIN_GUIDE} route={getDomainRoute(activeDomain, lang)} onAction={runStudyAction} />
+            <DomainGuidePanel guide={DOMAIN_GUIDE} route={getDomainRoute(activeDomain, lang)} onAction={runStudyAction} glossaryIndex={GLOSSARY_INDEX} />
 
             {/* Topic Header Card */}
             <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg relative overflow-hidden shadow-md" id="topic_hero_card">

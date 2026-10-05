@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { BookOpen } from "lucide-react";
 import { useLang } from "../i18n";
-import { findGlossaryTerms, type GlossaryHint } from "../glossaryIndex";
+import { findGlossaryTerms, type GlossaryIndex } from "../glossaryIndex";
 
 /**
- * "Glossary terms in this text": the glossary acronyms found in the given
- * texts, as toggle buttons that show the definition in place, so the learner
- * does not have to leave a question or a concept to look a term up.
+ * "Glossary terms in this text": the glossary acronyms and full names found in
+ * the given texts, as toggle buttons that show the definition in place, so the
+ * learner does not have to leave a question or a concept to look a term up.
  */
 export default function GlossaryHints({
   texts,
@@ -15,7 +15,7 @@ export default function GlossaryHints({
   exclude,
 }: {
   texts: readonly string[];
-  index: ReadonlyMap<string, GlossaryHint>;
+  index: GlossaryIndex;
   /** Unique per instance: the ids of the definition panels derive from it. */
   idPrefix: string;
   /** Glossary entry not to list, e.g. the concept being read. */
@@ -48,7 +48,7 @@ export default function GlossaryHints({
                 : "border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-600"
             }`}
           >
-            {hint.acronym}
+            {hint.label}
           </button>
         ))}
       </div>

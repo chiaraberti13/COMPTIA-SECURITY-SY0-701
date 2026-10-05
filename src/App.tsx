@@ -18,7 +18,7 @@ import { useLang, type UIKey } from "./i18n";
 import { getDomainGuide } from "./domainGuides";
 import { STORAGE_KEYS, readJSON } from "./storage";
 import { sanitizeChecklist } from "./progressBackup";
-import { buildAcronymIndex } from "./glossaryIndex";
+import { buildGlossaryIndex } from "./glossaryIndex";
 import AiTrainerPanel from "./components/AiTrainerPanel";
 import { useAiChat } from "./hooks/useAiChat";
 import { useQuizSession } from "./hooks/useQuizSession";
@@ -56,10 +56,11 @@ export default function App() {
   const DOMAIN_3_QUESTIONS = useMemo(() => getDomainQuestions(3, lang), [lang]);
   const DOMAIN_4_QUESTIONS = useMemo(() => getDomainQuestions(4, lang), [lang]);
   const DOMAIN_5_QUESTIONS = useMemo(() => getDomainQuestions(5, lang), [lang]);
-  // Glossary acronyms (SIEM, ZTA, ...) linked from questions and concepts.
+  // Glossary terms (acronyms like SIEM/ZTA and full names like "Zero Trust")
+  // linked from questions, concepts and the domain guides.
   const GLOSSARY_INDEX = useMemo(
     () =>
-      buildAcronymIndex(
+      buildGlossaryIndex(
         [DOMAIN_1_TOPICS, DOMAIN_2_TOPICS, DOMAIN_3_TOPICS, DOMAIN_4_TOPICS, DOMAIN_5_TOPICS].flatMap(groups =>
           groups.flatMap(g => g.subtopics)
         )

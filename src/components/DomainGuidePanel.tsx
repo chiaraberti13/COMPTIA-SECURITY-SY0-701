@@ -7,7 +7,9 @@ import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
 import Callout from "./Callout";
 import Disclosure, { DeepenTag } from "./Disclosure";
+import GlossaryHints from "./GlossaryHints";
 import ModuleSummary from "./ModuleSummary";
+import type { GlossaryIndex } from "../glossaryIndex";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
 
@@ -194,10 +196,12 @@ export default function DomainGuidePanel({
   guide,
   route,
   onAction,
+  glossaryIndex,
 }: {
   guide: DomainGuide;
   route: DomainRoute;
   onAction: (action: StudyAction) => void;
+  glossaryIndex: GlossaryIndex;
 }) {
   const { t } = useLang();
   const d = guide.domainId;
@@ -273,6 +277,12 @@ export default function DomainGuidePanel({
               </div>
             ))}
           </div>
+          {/* Glossary terms named by the official sub-topics, explained in place. */}
+          <GlossaryHints
+            idPrefix={`guide_objectives_${d}`}
+            index={glossaryIndex}
+            texts={guide.objectives.flatMap((o) => [o.outcome, ...(o.keyTopics ?? [])])}
+          />
         </section>
 
         <section className="space-y-3">

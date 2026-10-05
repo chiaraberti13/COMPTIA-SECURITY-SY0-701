@@ -1,5 +1,5 @@
 import type { QuizSession } from "../hooks/useQuizSession";
-import type { GlossaryHint } from "../glossaryIndex";
+import type { GlossaryIndex } from "../glossaryIndex";
 import { Check, X, ChevronRight } from "lucide-react";
 import { useLang } from "../i18n";
 import OptionVerdict from "./OptionVerdict";
@@ -21,7 +21,7 @@ import {
  */
 export default function QuizQuestionScreen({ quiz, glossaryIndex, levelLabel }: {
   quiz: QuizSession;
-  glossaryIndex: Map<string, GlossaryHint>;
+  glossaryIndex: GlossaryIndex;
   levelLabel: (level: string) => string;
 }) {
   const { t } = useLang();

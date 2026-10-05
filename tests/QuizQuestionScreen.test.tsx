@@ -6,7 +6,10 @@ import { useQuizSession } from "../src/hooks/useQuizSession";
 import { LanguageProvider, useLang } from "../src/i18n";
 import { getDomainQuestions, loadEnglishOverlay, sourceQuestionId } from "../src/localizedData";
 import { correctIndexes, isMultiResponse } from "../src/quiz";
+import { buildGlossaryIndex } from "../src/glossaryIndex";
 import type { Question } from "../src/types";
+
+const EMPTY_GLOSSARY = buildGlossaryIndex([]);
 
 /*
  * The question screen of the simulator as the learner uses it: the real
@@ -31,7 +34,7 @@ function Harness({ questions }: { questions: Question[] }) {
       <button onClick={() => quiz.begin(questions)}>start</button>
       <button onClick={toggleLang}>lang {lang}</button>
       {quiz.quizStarted && !quiz.quizCompleted && (
-        <QuizQuestionScreen quiz={quiz} glossaryIndex={new Map()} levelLabel={(level) => level} />
+        <QuizQuestionScreen quiz={quiz} glossaryIndex={EMPTY_GLOSSARY} levelLabel={(level) => level} />
       )}
       {quiz.quizCompleted && <p>score {quiz.quizScore}</p>}
     </>

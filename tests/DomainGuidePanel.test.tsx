@@ -4,7 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import DomainGuidePanel from "../src/components/DomainGuidePanel";
 import { DOMAIN_GUIDES_IT, type DomainGuide } from "../src/domainGuides";
 import { getDomainRoute } from "../src/domainRoutes";
+import { buildGlossaryIndex } from "../src/glossaryIndex";
+import { getDomainTopics } from "../src/localizedData";
 import { LanguageProvider } from "../src/i18n";
+
+const GLOSSARY = buildGlossaryIndex([1, 2, 3, 4, 5].flatMap((d) => getDomainTopics(d, "it").flatMap((g) => g.subtopics)));
 
 /*
  * Component tests for the domain guide, rendered in a simulated DOM. They check
@@ -17,7 +21,7 @@ afterEach(cleanup);
 function renderGuide(guide: DomainGuide, onAction = vi.fn()) {
   const view = render(
     <LanguageProvider>
-      <DomainGuidePanel guide={guide} route={getDomainRoute(guide.domainId, "it")} onAction={onAction} />
+      <DomainGuidePanel guide={guide} route={getDomainRoute(guide.domainId, "it")} onAction={onAction} glossaryIndex={GLOSSARY} />
     </LanguageProvider>
   );
   return view.container.querySelector(`#domain_guide_${guide.domainId}`) as HTMLDetailsElement;
