@@ -10,6 +10,7 @@ export interface Source {
 }
 
 export const SOURCES = {
+  nistSteganography: { title: "CSRC Glossary — Steganography", publisher: "NIST", url: "https://csrc.nist.gov/glossary/term/steganography", kind: "reference" },
   comptiaSecurityPlus: { title: "CompTIA Security+ (SY0-701) — exam objectives", publisher: "CompTIA", url: "https://www.comptia.org/certifications/security", kind: "exam" },
   nist80053: { title: "SP 800-53 Rev. 5 — Security and Privacy Controls", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", kind: "standard" },
   nist800207: { title: "SP 800-207 — Zero Trust Architecture", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/207/final", kind: "standard" },
@@ -49,7 +50,7 @@ export interface ObjectiveSources {
 }
 
 /** When the sources below were assigned to the objectives. */
-export const SOURCES_MAPPED_ON = "2026-09-28";
+export const SOURCES_MAPPED_ON = "2026-10-06";
 
 const mapped = (...sources: SourceId[]): ObjectiveSources => ({
   sources: ["comptiaSecurityPlus", ...sources],
@@ -59,7 +60,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "1.1": mapped("nist80053"),
   "1.2": mapped("nist800207", "nist80053"),
   "1.3": mapped("nist80053", "cisControls"),
-  "1.4": mapped("nist80057", "nist80056a", "rfc8446"),
+  "1.4": mapped("nist80057", "nist80056a", "rfc8446", "nistSteganography"),
   "2.1": mapped("nist80030", "mitreAttack"),
   "2.2": mapped("nist800161", "mitreAttack"),
   "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),

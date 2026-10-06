@@ -263,13 +263,51 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         ],
       },
       {
-        title: "Offuscamento dei dati",
-        headers: ["Tecnica", "Cosa fa", "Reversibile?"],
-        rows: [
-          ["Tokenization", "Sostituisce il dato con un token; la corrispondenza resta in un vault separato", "Sì, solo tramite il vault"],
-          ["Data masking", "Nasconde parte del dato mostrato, ad esempio ****1234", "Di norma no, sulla copia mascherata"],
-          ["Steganography", "Nasconde l'esistenza stessa del dato dentro un altro file", "Sì, per chi conosce il metodo"],
+        "title": "Steganografia e protezione dei dati (1.4)",
+        "headers": [
+          "Tecnica",
+          "Scopo",
+          "Recupero del dato",
+          "Limite"
         ],
+        "rows": [
+          [
+            "Steganografia (Steganography)",
+            "Nasconde un messaggio in un contenitore: immagine o audio",
+            "Estrazione con il metodo previsto, talvolta con una chiave",
+            "Non garantisce riservatezza, integrità o autenticità; il messaggio può essere scoperto"
+          ],
+          [
+            "Cifratura (Encryption)",
+            "Rende il contenuto illeggibile senza la chiave",
+            "Decifratura con la chiave corretta",
+            "Non nasconde necessariamente l'esistenza della comunicazione"
+          ],
+          [
+            "Hashing",
+            "Produce un'impronta per confrontare i dati",
+            "Non è progettato per ricostruire il dato originale",
+            "Da solo non autentica il mittente né nasconde il contenuto"
+          ],
+          [
+            "Tokenization",
+            "Sostituisce il dato con un token",
+            "Tramite il servizio autorizzato; vault o schema vaultless",
+            "Proteggere anche il servizio di detokenizzazione"
+          ],
+          [
+            "Data masking",
+            "Limita il dato visibile, ad esempio ****1234",
+            "Dipende dal metodo: la copia può perdere informazioni",
+            "Il dato originale può restare nello storage"
+          ],
+          [
+            "Offuscamento del codice",
+            "Rende difficile analizzare un programma mantenendone il comportamento",
+            "Analisi del programma; nessuna garanzia crittografica",
+            "Non sostituisce la cifratura dei segreti né implica un contenitore steganografico"
+          ]
+        ]
       },
       {
         title: "Verifica della revoca dei certificati",
@@ -309,6 +347,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Messaggio nascosto o contenuto protetto?",
+        "prompt": "Kestrelia prepara una figura e una registrazione audio sintetiche. Vuole prima nascondere che trasportano una frase di prova, poi rendere la frase illeggibile a chi riesce a estrarla. Quali tecniche soddisfano i due requisiti?",
+        "reasoning": "La steganografia nasconde il messaggio nel contenitore; la cifratura ne protegge il contenuto con una chiave. Nessuna delle due equivale a hashing, tokenizzazione o mascheramento. Ricompressione e conversione possono distruggere il messaggio nascosto; la steganografia da sola non ne verifica integrità o autore. L'offuscamento del codice riguarda invece la leggibilità del programma."
+      },
       {
         objective: "1.1",
         title: "Sistema industriale non aggiornabile",
@@ -1549,13 +1593,51 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         ],
       },
       {
-        title: "Data obfuscation",
-        headers: ["Technique", "What it does", "Reversible?"],
-        rows: [
-          ["Tokenization", "Replaces the data with a token; the mapping stays in a separate vault", "Yes, only through the vault"],
-          ["Data masking", "Hides part of the displayed data, for example ****1234", "Usually not, on the masked copy"],
-          ["Steganography", "Hides the very existence of data inside another file", "Yes, for whoever knows the method"],
+        "title": "Steganography and data protection (1.4)",
+        "headers": [
+          "Technique",
+          "Purpose",
+          "Data recovery",
+          "Limit"
         ],
+        "rows": [
+          [
+            "Steganography (Steganografia)",
+            "Hides a message in a carrier: image or audio",
+            "Extraction using the intended method, sometimes with a key",
+            "Does not guarantee confidentiality, integrity or authenticity; the message may be discovered"
+          ],
+          [
+            "Encryption",
+            "Makes content unreadable without the key",
+            "Decryption with the correct key",
+            "Does not necessarily hide the existence of the communication"
+          ],
+          [
+            "Hashing",
+            "Produces a fingerprint to compare data",
+            "Not designed to reconstruct the original data",
+            "Alone it neither authenticates the sender nor hides content"
+          ],
+          [
+            "Tokenization",
+            "Replaces data with a token",
+            "Through the authorized service; vault or vaultless scheme",
+            "Also protect the detokenization service"
+          ],
+          [
+            "Data masking",
+            "Limits visible data, for example ****1234",
+            "Depends on the method: the copy may lose information",
+            "The original data may remain in storage"
+          ],
+          [
+            "Code obfuscation",
+            "Makes a program difficult to analyze while preserving behavior",
+            "Program analysis; no cryptographic guarantee",
+            "Does not replace encryption of secrets or imply a steganographic carrier"
+          ]
+        ]
       },
       {
         title: "Certificate revocation checking",
@@ -1595,6 +1677,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Hidden message or protected content?",
+        "prompt": "Kestrelia prepares a synthetic picture and audio recording. It first wants to hide that they carry a test phrase, then make that phrase unreadable to anyone who extracts it. Which techniques meet the two requirements?",
+        "reasoning": "Steganography hides the message in the carrier; encryption protects its content with a key. Neither is equivalent to hashing, tokenization or masking. Recompression and conversion may destroy the hidden message; steganography alone does not verify its integrity or author. Code obfuscation instead concerns the readability of the program."
+      },
       {
         objective: "1.1",
         title: "Unpatchable industrial system",

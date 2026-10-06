@@ -232,8 +232,13 @@ export const GROUP_EN: Record<string, GroupOverride> = {
  * ------------------------------------------------------------------ */
 
 export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
-
   1: {
+    SteganographyConcept: {
+      "name": "Steganography (Steganografia)",
+      "definition": "A technique that embeds a message in a carrier, such as an image or an audio file, to conceal the existence of the communication.",
+      "details": "Steganography separates the **hidden message** from the apparently ordinary **carrier** that transports it, called the cover object. The recipient uses the intended extraction method; some schemes also require a key.\n* **Images and audio:** small changes to pixel data or audio samples can embed a message without obvious visual or audible changes. Not every format and method withstands recompression, resizing or file conversion.\n* **Limits:** statistical analysis or comparison with the original may reveal hidden data. Once extracted, an unencrypted message is readable: steganography alone does not guarantee confidentiality, integrity or authenticity.\n* **Comparison:** encryption protects content with a key; hashing produces a fingerprint for checking data; tokenization replaces data with a token; masking limits what is displayed. Code obfuscation makes a program difficult to analyze without changing its behavior: it does not imply a message inside a carrier.\n\n* **Focused Mini-Example:** Kestrelia uses a synthetic picture and a test audio recording to carry the fictional phrase “Meeting in the blue room”. Hiding it in the carrier is steganography; making it unreadable without a key is encryption. The techniques can be combined, but hiding the phrase does not prove who wrote it or prevent alteration.\n\nTerminology source: NIST CSRC glossary, steganography entry.",
+      "examTip": "If the scenario asks to hide the existence of a message in an image or audio, choose steganography; if it asks to make the content unreadable without the key, choose encryption."
+    },
     "LegacyPAP": {
       "name": "Password Authentication Protocol (PAP)",
       "definition": "PAP is a legacy PPP authentication protocol that sends the username and password in plaintext over the link.",

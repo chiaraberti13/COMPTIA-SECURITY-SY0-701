@@ -49,6 +49,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "ChangeDocumentation": "Processi di Change Management",
   
   // Topic 5: Cryptography
+  "SteganographyConcept": "Crittografia",
   "SymmetricEncryption": "Crittografia",
   "AsymmetricEncryption": "Crittografia",
   "HashingConcept": "Crittografia",

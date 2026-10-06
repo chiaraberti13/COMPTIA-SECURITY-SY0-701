@@ -17,7 +17,7 @@ Peso d'esame 12% · 110 domande nel banco del dominio.
 | 1.1 | Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato. | 15 | 0 | 4 | 5 | 6 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.2 | Applicare CIA, autenticazione, autorizzazione, accounting, non ripudio, zero trust, gap analysis, sicurezza fisica e deception a uno scenario. | 35 | 1 | 14 | 9 | 11 | 2 | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.3 | Valutare un cambiamento sicuro: ownership, impatto, approvazione, test, rollback, documentazione e monitoraggio. | 20 | 1 | 3 | 8 | 8 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 2 | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [NIST SP 800-56A Rev. 3](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446) |
+| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 3 | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [NIST SP 800-56A Rev. 3](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446), [NIST CSRC Glossary](https://csrc.nist.gov/glossary/term/steganography) |
 
 ## Dominio 2 — Minacce, vulnerabilità e mitigazioni
 
@@ -83,7 +83,7 @@ I 5 obiettivi con meno domande, da rinforzare per primi:
 
 ## Fonti
 
-Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-09-28); gli obiettivi d'esame
+Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-10-06); gli obiettivi d'esame
 CompTIA valgono per tutti e non sono ripetuti nella tabella. Non sono richieste approvazioni umane
 o un secondo revisore; restano obbligatori i controlli automatici del repository.
 
@@ -116,6 +116,7 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti secondarie: riferimenti di comunità ed enti
 
+- [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography) — NIST
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — OWASP Foundation
 - [CIS Critical Security Controls](https://www.cisecurity.org/controls) — Center for Internet Security
 - [MITRE ATT&CK](https://attack.mitre.org/) — MITRE

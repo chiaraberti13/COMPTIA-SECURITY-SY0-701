@@ -27,13 +27,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 1. Steganografia e limiti dell'offuscamento
 
-- [ ] Aggiungere una voce autonoma di steganografia e approfondire il confronto con cifratura, hashing, tokenizzazione e mascheramento nella guida del Dominio 1 (obiettivo 1.4).
+- [x] Aggiungere una voce autonoma di steganografia e approfondire il confronto con cifratura, hashing, tokenizzazione e mascheramento nella guida del Dominio 1 (obiettivo 1.4).
 
 **Evidenza nel repository:** La guida cita la steganografia nell'elenco dell'obiettivo e in una breve tabella; manca una voce dedicata nelle definizioni del glossario. Tokenizzazione e mascheramento sono già trattati e vanno collegati.
 
 **Da realizzare:** spiegare messaggio nascosto e contenitore, esempi descrittivi con immagini/audio e distinzione fra nascondere l'esistenza di un messaggio e proteggerne il contenuto. La steganografia da sola non garantisce riservatezza, integrità o autenticità. Separare questo concetto dall'offuscamento del codice.
 
 **Accettazione:** ricerca IT/EN di “steganografia/steganography” trova la voce; un esempio originale permette di scegliere fra steganografia e cifratura senza suggerire che l'occultamento sostituisca la crittografia. Verifica tecnica su pubblicazioni NIST pertinenti alla terminologia.
+
+**Completato il 6 ottobre 2026:** voce canonica `1:SteganographyConcept` con nomi IT/EN ricercabili, esempio immagini/audio, limiti e fonte NIST CSRC; tabella ampliata e scenario originale nella guida 1.4. Verificata la ricerca nel glossario in entrambe le lingue e l'assenza di flashcard con sigle inventate.
 
 ### 2. XSS reflected/stored e confronto con CSRF
 

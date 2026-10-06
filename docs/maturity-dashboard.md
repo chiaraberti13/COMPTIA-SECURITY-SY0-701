@@ -29,7 +29,7 @@ e livello cognitivo in [`docs/coverage-matrix.md`](coverage-matrix.md).
 | Obiettivi ufficiali coperti da domande | 28 / 28 | 28 / 28 | ✅ raggiunto |
 | Domande per l'obiettivo più scoperto | 15 (1.1: 15, 4.4: 16, 2.3: 17) | ≥ 10 | ✅ raggiunto |
 | Guide di dominio complete | 5 / 5 | 5 / 5 | ✅ raggiunto |
-| Esercizi guidati nelle guide | 33 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
+| Esercizi guidati nelle guide | 34 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
 | Scenari PBQ nel simulatore | 10 | ≥ 1 | ✅ raggiunto |
 
 ## 2. Freschezza delle revisioni
@@ -40,7 +40,7 @@ le voci scadute, così il dashboard resta deterministico e la scadenza viene com
 
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
-| Mappatura obiettivi → fonti (`SOURCES_MAPPED_ON`) | 2026-09-28 | rivista entro 180 giorni | 🟡 monitorato |
+| Mappatura obiettivi → fonti (`SOURCES_MAPPED_ON`) | 2026-10-06 | rivista entro 180 giorni | 🟡 monitorato |
 | Ultimo giro di test manuali di accessibilità (`MANUAL_A11Y_CHECKED_ON`) | 2026-10-05 | ripetuto entro 180 giorni | 🟡 monitorato |
 
 ## 3. Link
@@ -101,7 +101,7 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
 | Lingua sorgente di verità | Italiano, con overlay inglese e fallback | parità verificata a ogni commit | ✅ raggiunto |
-| Concetti (sottovoci) tradotti e in parità | 572 | 100% | ✅ raggiunto |
+| Concetti (sottovoci) tradotti e in parità | 573 | 100% | ✅ raggiunto |
 | Domande tradotte e in parità | 682 | 100% | ✅ raggiunto |
 
 | Gate di parità | File | Stato |
@@ -112,6 +112,6 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 
 ## Riepilogo
 
-- Fonti citate: 24 primarie e 5 secondarie (mappate il 2026-09-28).
+- Fonti citate: 24 primarie e 6 secondarie (mappate il 2026-10-06).
 - I controlli marcati ✅ obbligatorio bloccano le pull request tramite branch protection.
 - Le voci 🟡 sono verificate altrove (CI, scheda Security, issue di manutenzione) o soggette a una scadenza sorvegliata.

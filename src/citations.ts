@@ -23,6 +23,7 @@ export interface Citation {
 
 /** How the study text names each cited document. */
 export const MENTIONS: [SourceId, RegExp][] = [
+  ["nistSteganography", /NIST CSRC/],
   ["gdpr", /\bGDPR\b/],
   ["pciDss", /\bPCI[- ]DSS\b/],
   ["iso27001", /\b27001\b/],
@@ -43,6 +44,7 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "1:SteganographyConcept": [{ source: "nistSteganography" }],
   "1:GapAnalysis": [{ source: "pciDss" }, { source: "iso27001" }, { source: "hipaa" }, { source: "nistCsf" }],
   "1:ZeroTrustIntro": [{ source: "nist800207" }],
   "1:DirectiveControl": [{ source: "gdpr" }, { source: "pciDss" }],

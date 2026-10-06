@@ -13,14 +13,14 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 572 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 573 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
 
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
-| 1 | 94 | 0 |
+| 1 | 95 | 0 |
 | 2 | 74 | 0 |
 | 3 | 175 | 0 |
 | 4 | 135 | 0 |
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-50 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+51 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -49,6 +49,7 @@ indirizzi qui sotto.
 - `1:ImpactAnalysis`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `1:MFAImplementationsTokens`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `1:PasswordPoliciesAccount`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
+- `1:SteganographyConcept`: [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography)
 - `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
 - `2:CVSSVuln`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `3:APIArchitecture`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)

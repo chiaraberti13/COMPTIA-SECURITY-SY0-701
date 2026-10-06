@@ -238,6 +238,13 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     icon: "Calculator",
     subtopics: [
       {
+        "name": "Steganografia (Steganography)",
+        "checklistKey": "SteganographyConcept",
+        "definition": "Tecnica che incorpora un messaggio in un contenitore, come un'immagine o un file audio, per nascondere l'esistenza della comunicazione.",
+        "details": "La steganografia separa il **messaggio nascosto** dal **contenitore** apparentemente ordinario che lo trasporta, detto cover object. Il destinatario usa il metodo di estrazione previsto; alcuni schemi richiedono anche una chiave.\n* **Immagini e audio:** piccole modifiche ai dati dei pixel o ai campioni audio possono incorporare un messaggio senza cambiamenti evidenti alla vista o all'ascolto. Non tutti i formati e metodi resistono alla ricompressione, al ridimensionamento o alla conversione del file.\n* **Limiti:** l'analisi statistica o il confronto con l'originale possono rivelare la presenza di dati nascosti. Una volta estratto, un messaggio non cifrato è leggibile: la sola steganografia non garantisce riservatezza, integrità o autenticità.\n* **Confronto:** la cifratura protegge il contenuto con una chiave; l'hashing produce un'impronta per verificare dati; la tokenizzazione sostituisce il dato con un token; il mascheramento limita ciò che viene mostrato. L'offuscamento del codice rende un programma difficile da analizzare senza cambiarne il comportamento: non implica un messaggio dentro un contenitore.\n\n* **Piccolo Esempio Concentrato:** Kestrelia usa una figura sintetica e una registrazione audio di prova per trasportare la frase fittizia «Riunione in sala blu». Nasconderla nel contenitore è steganografia; renderla illeggibile senza una chiave è cifratura. Le due tecniche possono essere combinate, ma nascondere la frase non prova chi l'ha scritta né impedisce che venga alterata.\n\nFonte terminologica: glossario NIST CSRC, voce steganography.",
+        "examTip": "Se lo scenario chiede di nascondere l'esistenza di un messaggio in un'immagine o in un audio, scegli steganografia; se chiede di renderne il contenuto illeggibile senza la chiave, scegli cifratura."
+      },
+      {
         name: "Symmetric Encryption",
         checklistKey: "SymmetricEncryption",
         definition: "Algoritmi di crittografia che utilizzano una singola chiave condivisa sia per cifrare che per decifrare i dati.",
