@@ -57,3 +57,35 @@ describe("AppHeader language switch", () => {
     expect(tabs()).toContain("EN");
   });
 });
+
+describe("AppHeader navigation", () => {
+  it("keeps AI and language controls outside the five study tabs", () => {
+    renderHeader();
+    const tablist = screen.getByRole("tablist");
+    expect(tablist.querySelectorAll('[role="tab"]')).toHaveLength(5);
+    expect(tablist.querySelectorAll("button:not([role='tab'])")).toHaveLength(0);
+    expect(screen.getByRole("button", { name: "AI Trainer" }).getAttribute("aria-pressed")).toBe("false");
+    expect(screen.getByRole("group", { name: "Lingua" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Checklist & Studio" }).tabIndex).toBe(0);
+    expect(screen.getByRole("tab", { name: "Flashcard Acronimi" }).tabIndex).toBe(-1);
+  });
+
+  it("moves focus and activates adjacent or endpoint tabs from the keyboard", () => {
+    const change = vi.fn();
+    renderHeader(change);
+    const tabs = screen.getAllByRole("tab");
+    tabs[0].focus();
+    fireEvent.keyDown(tabs[0], { key: "ArrowLeft" });
+    expect(document.activeElement).toBe(tabs[4]);
+    expect(change).toHaveBeenLastCalledWith("flash");
+    fireEvent.keyDown(tabs[4], { key: "ArrowRight" });
+    expect(document.activeElement).toBe(tabs[0]);
+    expect(change).toHaveBeenLastCalledWith("studio");
+    fireEvent.keyDown(tabs[0], { key: "End" });
+    expect(document.activeElement).toBe(tabs[4]);
+    fireEvent.keyDown(tabs[4], { key: "Home" });
+    expect(document.activeElement).toBe(tabs[0]);
+    fireEvent.click(tabs[2]);
+    expect(change).toHaveBeenLastCalledWith("quiz");
+  });
+});

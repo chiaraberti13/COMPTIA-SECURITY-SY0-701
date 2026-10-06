@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Migliorata la barra di navigazione sui notebook: due righe stabili fino a 1536 px, voci compatte, Trainer AI e lingua nella riga del titolo; una riga sugli schermi ampi. Controlli senza sovrapposizioni, focus visibile e navigazione tra schede con frecce/Home/End.
+- Improved notebook navigation: stable two-row layout below 1536 px, concise tab labels, AI Trainer and language next to the title; a single row on wide screens. Controls avoid collisions, with visible focus and arrow/Home/End tab navigation.
+
 - Completati i gap della roadmap sugli acronimi: nove concetti IT/EN con esempi, protocolli legacy, formati PEM/DER/P12/PFX e distinzione .cer/CER. Indice del glossario esteso a sigle con trattino e P12, con test di regressione.
 - Completed the roadmap acronym gaps: nine IT/EN concepts with examples, legacy protocols, PEM/DER/P12/PFX formats and the .cer/CER distinction. Glossary indexing now supports hyphenated acronyms and P12, with regression tests.
 
