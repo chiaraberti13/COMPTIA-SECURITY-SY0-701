@@ -165,6 +165,10 @@ export const SUBGROUP_MAP: Record<string, string> = {
 
   "NetworkWirelessAttacks": "Attacchi Infrastrutturali & Web",
   "AppCryptoAttacks": "Attacchi Infrastrutturali & Web",
+  "XSSAttack": "Attacchi Infrastrutturali & Web",
+  "CSRFAttack": "Attacchi Infrastrutturali & Web",
+  "SSRFAttack": "Attacchi Infrastrutturali & Web",
+
   "AmplifiedDDoS_New": "Attacchi Infrastrutturali & Web",
   "ReflectedDDoS_New": "Attacchi Infrastrutturali & Web",
   "SQLi_New": "Attacchi Infrastrutturali & Web",

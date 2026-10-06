@@ -28,7 +28,7 @@ Peso d'esame 22% · 133 domande nel banco del dominio.
 | 2.1 | Confrontare attori, attributi e motivazioni per stimare capacità, intento, accesso e probabilità. | 19 | 0 | 11 | 5 | 3 | 1 | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 2.2 | Analizzare vettori e superfici di attacco, inclusi social engineering, supply chain, cloud, wireless e removable media. | 31 | 0 | 15 | 8 | 8 | 1 | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 2.3 | Riconoscere vulnerabilità applicative, hardware, cloud, virtualizzazione, mobile, crittografiche e di configurazione. | 17 | 0 | 5 | 3 | 9 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [OWASP Foundation OWASP Top 10](https://owasp.org/www-project-top-ten/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
-| 2.4 | Interpretare indicatori di malware, attacchi di rete, credenziali, applicazioni e comportamenti anomali. | 45 | 0 | 2 | 2 | 41 | 2 | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [MITRE ATT&CK](https://attack.mitre.org/) |
+| 2.4 | Interpretare indicatori di malware, attacchi di rete, credenziali, applicazioni e comportamenti anomali. | 45 | 0 | 2 | 2 | 41 | 5 | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [MITRE ATT&CK](https://attack.mitre.org/), [OWASP Foundation XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html), [OWASP Foundation CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), [OWASP Foundation SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) |
 | 2.5 | Selezionare mitigazioni coerenti con il vettore: segmentation, hardening, patching, least privilege, allowlisting, isolamento e monitoring. | 23 | 0 | 14 | 6 | 3 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 
 ## Dominio 3 — Architettura di sicurezza
@@ -116,6 +116,9 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti secondarie: riferimenti di comunità ed enti
 
+- [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) — OWASP Foundation
+- [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) — OWASP Foundation
+- [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) — OWASP Foundation
 - [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography) — NIST
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — OWASP Foundation
 - [CIS Critical Security Controls](https://www.cisecurity.org/controls) — Center for Internet Security

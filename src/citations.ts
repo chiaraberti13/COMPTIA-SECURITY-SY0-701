@@ -23,6 +23,9 @@ export interface Citation {
 
 /** How the study text names each cited document. */
 export const MENTIONS: [SourceId, RegExp][] = [
+  ["owaspXss", /XSS Prevention Cheat Sheet/],
+  ["owaspCsrf", /CSRF Prevention Cheat Sheet/],
+  ["owaspSsrf", /SSRF Prevention Cheat Sheet/],
   ["nistSteganography", /NIST CSRC/],
   ["gdpr", /\bGDPR\b/],
   ["pciDss", /\bPCI[- ]DSS\b/],
@@ -44,6 +47,9 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "2:XSSAttack": [{ source: "owaspXss" }],
+  "2:CSRFAttack": [{ source: "owaspCsrf" }],
+  "2:SSRFAttack": [{ source: "owaspSsrf" }],
   "1:SteganographyConcept": [{ source: "nistSteganography" }],
   "1:GapAnalysis": [{ source: "pciDss" }, { source: "iso27001" }, { source: "hipaa" }, { source: "nistCsf" }],
   "1:ZeroTrustIntro": [{ source: "nist800207" }],

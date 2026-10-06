@@ -763,6 +763,7 @@
     "CISBenchmarkRes",
     "COPE",
     "CSRConcept",
+    "CSRFAttack",
     "CVE",
     "CVEVuln",
     "CVSS",
@@ -1158,6 +1159,7 @@
     "SSHNet",
     "SSHPBQ",
     "SSLTLSTunnelVPNConcept",
+    "SSRFAttack",
     "SaaSCloud",
     "SaltingConcept",
     "SanitizationSec_New",
@@ -1255,6 +1257,7 @@
     "WirelessWPS",
     "WorkstationHardening",
     "WormMalware",
+    "XSSAttack",
     "ZeroDayVuln",
     "ZeroTrustIntro"
   ],

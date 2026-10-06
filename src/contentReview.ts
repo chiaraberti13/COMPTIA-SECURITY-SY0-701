@@ -10,6 +10,10 @@ export interface Source {
 }
 
 export const SOURCES = {
+  owaspXss: {"title": "XSS Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html", "kind": "reference"},
+  owaspCsrf: {"title": "CSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
+  owaspSsrf: {"title": "SSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
+
   nistSteganography: { title: "CSRC Glossary — Steganography", publisher: "NIST", url: "https://csrc.nist.gov/glossary/term/steganography", kind: "reference" },
   comptiaSecurityPlus: { title: "CompTIA Security+ (SY0-701) — exam objectives", publisher: "CompTIA", url: "https://www.comptia.org/certifications/security", kind: "exam" },
   nist80053: { title: "SP 800-53 Rev. 5 — Security and Privacy Controls", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", kind: "standard" },
@@ -64,7 +68,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "2.1": mapped("nist80030", "mitreAttack"),
   "2.2": mapped("nist800161", "mitreAttack"),
   "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),
-  "2.4": mapped("nist80061", "mitreAttack"),
+  "2.4": mapped("nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),
   "3.2": mapped("nist800207", "cisControls"),

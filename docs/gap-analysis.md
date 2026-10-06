@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 573 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 576 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -21,7 +21,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
 | 1 | 95 | 0 |
-| 2 | 74 | 0 |
+| 2 | 77 | 0 |
 | 3 | 175 | 0 |
 | 4 | 135 | 0 |
 | 5 | 94 | 0 |
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-51 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+54 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -51,7 +51,10 @@ indirizzi qui sotto.
 - `1:PasswordPoliciesAccount`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `1:SteganographyConcept`: [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography)
 - `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
+- `2:CSRFAttack`: [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 - `2:CVSSVuln`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `2:SSRFAttack`: [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
+- `2:XSSAttack`: [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - `3:APIArchitecture`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `3:BackupEncryptionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
 - `3:DataMaskingSec`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)

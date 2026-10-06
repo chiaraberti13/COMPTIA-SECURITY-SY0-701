@@ -504,6 +504,48 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "XSS, CSRF e SSRF: componente e difesa",
+        "headers": [
+          "Attacco",
+          "Componente che agisce",
+          "Fiducia sfruttata",
+          "Difesa principale"
+        ],
+        "rows": [
+          [
+            "Reflected XSS",
+            "Browser della vittima",
+            "Input della richiesta interpretato nella risposta",
+            "Output encoding contestuale"
+          ],
+          [
+            "Stored XSS",
+            "Browser di chi visita la pagina",
+            "Input salvato interpretato come codice",
+            "Output encoding; sanitizzazione se si consente HTML"
+          ],
+          [
+            "CSRF / XSRF",
+            "Browser con sessione attiva",
+            "Credenziali automatiche scambiate per intenzione",
+            "Token anti-CSRF verificato e controllo origine; SameSite aggiuntivo"
+          ],
+          [
+            "SSRF",
+            "Server applicativo",
+            "Accesso del server a destinazioni scelte da input non fidato",
+            "Verifica destinazioni, redirect e uscita dalla rete"
+          ],
+          [
+            "SQLi",
+            "Database tramite la query applicativa",
+            "Input interpretato come istruzione SQL",
+            "Query parametrizzate; validazione aggiuntiva"
+          ]
+        ]
+      },
+
+      {
         title: "Attori delle minacce",
         headers: ["Attore", "Motivazione tipica", "Risorse e capacità", "Indizio nello scenario"],
         rows: [
@@ -571,6 +613,15 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      {
+        "misconception": "HttpOnly impedisce XSS.",
+        "correction": "HttpOnly limita la lettura dei cookie da JavaScript, ma lo script può ancora eseguire azioni con la sessione. Eliminare il punto di esecuzione con output encoding o sanitizzazione appropriata."
+      },
+      {
+        "misconception": "SameSite blocca ogni CSRF.",
+        "correction": "SameSite limita i cookie cross-site, ma non verifica ogni intenzione: sottodomini same-site e operazioni che cambiano stato via GET richiedono difese aggiuntive e controlli lato server."
+      },
+
       { misconception: "Un worm ha bisogno che l'utente apra un file.", correction: "Il worm si propaga da solo sfruttando una vulnerabilità di rete; è il virus che richiede l'esecuzione di un file o programma infetto." },
       { misconception: "Password spraying e brute force sono la stessa cosa.", correction: "Il brute force prova molte password su un account e provoca blocchi; lo spraying prova poche password comuni su molti account per restare sotto la soglia di blocco." },
       { misconception: "Dopo un account compromesso basta cambiare la password.", correction: "Sessioni, token OAuth e regole di persistenza possono restare validi: vanno revocati e rimossi, e va trovata la causa dell'accesso." },
@@ -598,6 +649,25 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "XSS riflesso o persistente?",
+        "prompt": "Nella simulazione Kestrelia, una ricerca sintetica compare come codice attivo nella risposta immediata. Una recensione di prova salvata provoca invece lo stesso comportamento a ogni visita successiva. Che differenza mostrano i due casi e cosa verifichi?",
+        "reasoning": "Il primo caso è reflected XSS; il secondo è stored XSS. In entrambi agisce il browser. Verifica origine dell'input, risposta e record salvato senza dedurre esecuzione da un solo log sospetto. Mostrare testo richiede encoding contestuale; consentire HTML richiede sanitizzazione. HttpOnly non elimina l'esecuzione. Le query parametrizzate restano una difesa SQLi."
+      },
+      {
+        "objective": "2.4",
+        "title": "Richiesta con cookie senza intenzione",
+        "prompt": "Un utente Kestrelia autenticato apre una pagina estranea che induce il browser a modificare il recapito sintetico del portale. Il server accetta il cookie senza verificare un token. Non è stato iniettato codice nel portale: quale attacco riconosci?",
+        "reasoning": "È CSRF, anche chiamato XSRF: il browser invia la sessione, ma il server non verifica l'intenzione. Collegare i token e i cookie sicuri già spiegati in Application Security del Dominio 4. HttpOnly non blocca l'invio del cookie; SameSite è uno strato aggiuntivo, non una garanzia universale. Non confondere richiesta indotta con furto della sessione o XSS."
+      },
+      {
+        "objective": "2.4",
+        "title": "Anteprima che raggiunge un servizio interno",
+        "prompt": "Kestrelia importa immagini da un catalogo esterno approvato. In un test sintetico, un redirect induce il backend a contattare un servizio interno escluso dal catalogo. Quale componente invia la richiesta e quale controllo deve verificare il nuovo indirizzo?",
+        "reasoning": "Il backend compie la richiesta: è SSRF. Controllare destinazioni autorizzate, indirizzi risolti, redirect e uscita dalla rete. Un filtro sul solo URL iniziale può fallire dopo un redirect. Un token CSRF protegge un'altra relazione di fiducia e l'output encoding previene un altro tipo di interpretazione. Correlare le richieste in uscita; una connessione non prova da sola un'esfiltrazione."
+      },
+
       {
         objective: "2.1",
         title: "Condivisione file non approvata",
@@ -1834,6 +1904,48 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "XSS, CSRF and SSRF: component and defense",
+        "headers": [
+          "Attack",
+          "Component acting",
+          "Trust exploited",
+          "Primary defense"
+        ],
+        "rows": [
+          [
+            "Reflected XSS",
+            "Victim browser",
+            "Request input interpreted in the response",
+            "Contextual output encoding"
+          ],
+          [
+            "Stored XSS",
+            "Page visitor browser",
+            "Saved input interpreted as code",
+            "Output encoding; sanitization when HTML is allowed"
+          ],
+          [
+            "CSRF / XSRF",
+            "Browser with an active session",
+            "Automatic credentials mistaken for intent",
+            "Verified anti-CSRF token and origin check; additional SameSite"
+          ],
+          [
+            "SSRF",
+            "Application server",
+            "Server access to destinations chosen by untrusted input",
+            "Validate destinations, redirects and network egress"
+          ],
+          [
+            "SQLi",
+            "Database through the application query",
+            "Input interpreted as SQL instructions",
+            "Parameterized queries; additional validation"
+          ]
+        ]
+      },
+
+      {
         title: "Threat actors",
         headers: ["Actor", "Typical motivation", "Resources and capability", "Clue in the scenario"],
         rows: [
@@ -1901,6 +2013,15 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      {
+        "misconception": "HttpOnly prevents XSS.",
+        "correction": "HttpOnly limits JavaScript access to cookies, but the script can still act using the session. Remove the execution point with appropriate output encoding or sanitization."
+      },
+      {
+        "misconception": "SameSite blocks every CSRF.",
+        "correction": "SameSite limits cross-site cookies but does not verify every intent: same-site subdomains and state-changing GET operations require additional defenses and server-side checks."
+      },
+
       { misconception: "A worm needs the user to open a file.", correction: "A worm spreads on its own by exploiting a network vulnerability; it is a virus that requires an infected file or program to be executed." },
       { misconception: "Password spraying and brute force are the same thing.", correction: "Brute force tries many passwords against one account and causes lockouts; spraying tries a few common passwords against many accounts to stay below the lockout threshold." },
       { misconception: "After an account compromise, changing the password is enough.", correction: "Sessions, OAuth tokens, and persistence rules can remain valid: they must be revoked and removed, and the cause of the access must be found." },
@@ -1928,6 +2049,25 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Reflected or stored XSS?",
+        "prompt": "In the Kestrelia simulation, a synthetic search appears as active code in the immediate response. A saved test review instead causes the same behavior on every later visit. What distinction do the cases show and what do you verify?",
+        "reasoning": "The first case is reflected XSS; the second is stored XSS. The browser acts in both. Check input origin, response and saved record without inferring execution from one suspicious log. Displaying text requires contextual encoding; allowing HTML requires sanitization. HttpOnly does not eliminate execution. Parameterized queries remain a SQLi defense."
+      },
+      {
+        "objective": "2.4",
+        "title": "Cookie-bearing request without intent",
+        "prompt": "An authenticated Kestrelia user opens an unrelated page that causes the browser to change the portal test contact address. The server accepts the cookie without checking a token. No code was injected into the portal: which attack do you recognize?",
+        "reasoning": "This is CSRF, also called XSRF: the browser sends the session, but the server does not verify intent. Connect to tokens and secure cookies already explained in Application Security in Domain 4. HttpOnly does not block cookie sending; SameSite is an additional layer, not a universal guarantee. Do not confuse an induced request with session theft or XSS."
+      },
+      {
+        "objective": "2.4",
+        "title": "Preview reaching an internal service",
+        "prompt": "Kestrelia imports images from an approved external catalog. In a synthetic test, a redirect causes the backend to contact an internal service excluded from the catalog. Which component sends the request and which control must check the new address?",
+        "reasoning": "The backend makes the request: this is SSRF. Check authorized destinations, resolved addresses, redirects and network egress. Filtering only the initial URL can fail after a redirect. A CSRF token protects a different trust relationship and output encoding prevents a different interpretation. Correlate outbound requests; a connection alone does not prove exfiltration."
+      },
+
       {
         objective: "2.1",
         title: "Unapproved file sharing",

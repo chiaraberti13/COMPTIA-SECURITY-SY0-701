@@ -39,13 +39,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 2. XSS reflected/stored e confronto con CSRF
 
-- [ ] Approfondire XSS e CSRF nella guida del Dominio 2 (obiettivo 2.4), con voci autonome e alias nel glossario.
+- [x] Approfondire XSS e CSRF nella guida del Dominio 2 (obiettivo 2.4), con voci autonome e alias nel glossario.
 
 **Evidenza nel repository:** `AppCryptoAttacks` contiene definizioni generali di XSS e CSRF, ma non distingue XSS riflesso e persistente. `ApplicationSecurityHardening` spiega già cookie sicuri e token CSRF: riutilizzare quelle mitigazioni.
 
 **Da realizzare:** distinguere reflected/stored XSS per origine e persistenza dell'input, esecuzione nel browser e impatto; confrontare XSS, CSRF e SSRF per componente che agisce e fiducia sfruttata. Spiegare output encoding contestuale, sanitizzazione quando occorre consentire HTML e query parametrizzate per SQLi: non presentare la stessa difesa come sufficiente per tutti gli attacchi. Aggiungere l'alias XSRF alla voce CSRF.
 
 **Accettazione:** casi originali distinguono i tre attacchi; HttpOnly limita la lettura dei cookie ma non impedisce l'esecuzione XSS, e SameSite non è presentato come difesa universale. Fonti: guide OWASP su XSS e CSRF.
+
+**Completato il 6 ottobre 2026:** voci canoniche `2:XSSAttack`, `2:CSRFAttack` e `2:SSRFAttack`; alias CSRF/XSRF condiviso. Guida IT/EN con confronto di componenti e difese, tre scenari sintetici e limiti HttpOnly/SameSite. Fonti delle Cheat Sheet OWASP collegate; ricerca, suggerimenti nel testo e flashcard verificati in entrambe le lingue.
 
 ### 3. Furto della sessione, replay e manipolazione dei cookie
 
