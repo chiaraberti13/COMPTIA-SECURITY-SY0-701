@@ -799,6 +799,7 @@ appartiene
 appassionati
 appellarsi
 appena
+appendice
 appetibile
 appetite
 appetito
@@ -859,6 +860,7 @@ approfondendo
 approfondimenti
 approfondimento
 approfondire
+approfondisci
 approfondita
 approfonditamente
 approfondite
@@ -4391,6 +4393,7 @@ escalation
 escano
 esce
 esche
+esci
 esclude
 escludendo
 escludere
@@ -6080,6 +6083,7 @@ inizialmente
 iniziano
 iniziare
 iniziata
+iniziate
 iniziativa
 iniziative
 iniziato
@@ -10489,6 +10493,7 @@ saperne
 sapesse
 sapeva
 sapevi
+sapevo
 sappi
 sappia
 sappiamo
@@ -11674,6 +11679,7 @@ studi
 studia
 studiano
 studiare
+studiarle
 studiata
 studiati
 studiato

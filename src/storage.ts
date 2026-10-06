@@ -14,6 +14,8 @@ export const STORAGE_KEYS = {
   lang: "comptia_sy0701_lang",
   /** Self-assessment points of the guides the learner ticked, by readinessCheckId(). */
   selfAssessment: "comptia_sy0701_self_assessment",
+  /** Spaced-repetition schedule of the acronym flashcards, keyed by acronym. */
+  acronymProgress: "comptia_sy0701_acronym_progress",
   /** Format version of everything above, see migrateStorage(). */
   schema: "comptia_sy0701_schema",
 } as const;

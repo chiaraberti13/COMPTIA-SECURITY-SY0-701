@@ -62,6 +62,7 @@ test.describe("layout", () => {
       ["#tab_btn_glossary", "#glossary_root"],
       ["#tab_btn_quiz", "#start_quiz_btn"],
       ["#tab_btn_pbq", "#pbq_start_all"],
+      ["#tab_btn_flash", "#flash_start_all"],
     ] as const) {
       await page.locator(tab).click();
       await expect(page.locator(marker)).toBeVisible();
@@ -86,7 +87,7 @@ test.describe("layout: main menu", () => {
     await openApp(page);
     const nav = page.locator("#navigation_tabs");
     expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
-    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#tab_btn_flash", "#toggle_sidebar_btn", "#lang_btn_en"]) {
       await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
     }
     // Each tab keeps a readable name, short on phones and full on desktop.
@@ -146,6 +147,18 @@ test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
     await openApp(page);
     await page.locator("#tab_btn_quiz").click();
     await expect(page.locator("#start_quiz_btn")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("acronym flashcards, chooser and a revealed card", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_flash").click();
+    await expect(page.locator("#flash_start_all")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+    // Reveal a card so axe also checks the answer side and the verdict buttons.
+    await page.locator("#flash_start_all").click();
+    await page.locator("#flash_reveal").click();
+    await expect(page.locator("#flash_answer_text")).toBeVisible();
     expect(await seriousViolations(page)).toEqual([]);
   });
 });
@@ -791,5 +804,39 @@ test.describe("performance-based scenarios (PBQ)", () => {
 
     await page.locator("#pbq_submit").click();
     await expect(page.locator("#pbq_feedback")).toBeVisible();
+  });
+});
+
+test.describe("acronym flashcards", () => {
+  async function openFlash(page: Page) {
+    await openApp(page);
+    await page.locator("#tab_btn_flash").click();
+    await expect(page.locator("#flash_setup")).toBeVisible();
+  }
+
+  test("studies a card and self-assesses it from the keyboard", async ({ page }) => {
+    await openFlash(page);
+    await page.locator("#flash_start_all").click();
+
+    const prompt = await page.locator("#flash_prompt").textContent();
+    expect(prompt?.trim().length ?? 0).toBeGreaterThan(0);
+
+    // Space reveals the answer; the reveal is announced to screen readers.
+    await page.locator("#flash_reveal").focus();
+    await page.keyboard.press(" ");
+    await expect(page.locator("#flash_answer_text")).toBeVisible();
+    await expect(page.locator("#flash_answer_announcer")).toContainText(/\S/);
+
+    // "2" marks the card known and advances to the next one.
+    await page.keyboard.press("2");
+    await expect(page.locator("#flash_prompt")).not.toHaveText(prompt ?? "");
+  });
+
+  test("filters the deck by domain before starting", async ({ page }) => {
+    await openFlash(page);
+    const allCount = await page.locator("#flash_start_all").textContent();
+    await page.locator("#flash_domain").selectOption("4");
+    const domainCount = await page.locator("#flash_start_all").textContent();
+    expect(domainCount).not.toBe(allCount);
   });
 });

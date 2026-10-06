@@ -7,6 +7,7 @@
  * because a file (or a tampered localStorage entry) is untrusted input.
  */
 import { sanitizeQuestionProgress, sanitizeQuizHistory } from "./quiz";
+import { sanitizeCardProgress, type CardProgress } from "./flashcards";
 import type { QuestionProgress, QuizResult } from "./types";
 
 export const BACKUP_APP_ID = "comptia-security-sy0-701";
@@ -30,6 +31,11 @@ export interface ProgressData {
    * backups lack it and import as "nothing ticked", older app versions ignore it.
    */
   selfAssessment: Record<string, true>;
+  /**
+   * Acronym flashcard schedule, keyed by acronym. Added after schema 1 like
+   * `selfAssessment`: older backups lack it and import as "no cards reviewed".
+   */
+  acronymProgress: Record<string, CardProgress>;
 }
 
 export interface ProgressBackup {
@@ -67,6 +73,7 @@ export function sanitizeProgress(raw: Partial<Record<keyof ProgressData, unknown
     quizHistory: sanitizeQuizHistory(raw.quizHistory),
     questionProgress: sanitizeQuestionProgress(raw.questionProgress),
     selfAssessment: sanitizeChecklist(raw.selfAssessment),
+    acronymProgress: sanitizeCardProgress(raw.acronymProgress),
   };
 }
 

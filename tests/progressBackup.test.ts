@@ -16,6 +16,7 @@ const SAMPLE: ProgressData = {
   quizHistory: [{ at: 1_758_700_000_000, score: 20, total: 25, domains: [1, 2], passed: true }],
   questionProgress: { 10_001: { attempts: 2, correct: 1, streak: 0, lastSeenAt: 1_758_700_000_000, dueAt: 1_758_786_400_000 } },
   selfAssessment: { "D1-0a1b2c3d": true },
+  acronymProgress: { SIEM: { seen: 3, known: 2, streak: 2, lastSeenAt: 1_758_700_000_000, dueAt: 1_758_786_400_000 } },
 };
 
 describe("sanitizeChecklist", () => {
@@ -51,6 +52,14 @@ describe("backup round trip", () => {
     const result = parseBackup(text);
     expect(result.ok && result.data.selfAssessment).toEqual({});
     expect(result.ok && result.data.checklist).toEqual(SAMPLE.checklist);
+  });
+
+  it("imports a backup made before the acronym flashcards existed, with no cards reviewed", () => {
+    const { acronymProgress: _omitted, ...older } = SAMPLE;
+    const text = JSON.stringify({ app: BACKUP_APP_ID, schema: 1, exportedAt: "2026-09-24T10:00:00.000Z", data: older });
+    const result = parseBackup(text);
+    expect(result.ok && result.data.acronymProgress).toEqual({});
+    expect(result.ok && result.data.questionProgress).toEqual(SAMPLE.questionProgress);
   });
 
   it("names the file after the export date", () => {
@@ -89,13 +98,14 @@ describe("parseBackup rejects untrusted files", () => {
         quizHistory: [{ at: -1, score: 99, total: 1 }],
         questionProgress: { "-5": {}, abc: { attempts: 1 } },
         selfAssessment: { "D1-0a1b2c3d": true, "D2 <b>": true, D3: "yes" },
+        acronymProgress: { SIEM: { seen: 2, known: 1, streak: 1, lastSeenAt: 1, dueAt: 2 }, "bad key": { seen: 1, known: 1, streak: 1, lastSeenAt: 1, dueAt: 2 }, MFA: { seen: 0 } },
         __proto__: { polluted: true },
       },
     });
     const result = parseBackup(text);
     expect(result).toEqual({
       ok: true,
-      data: { checklist: { good: true }, bookmarks: [], quizHistory: [], questionProgress: {}, selfAssessment: { "D1-0a1b2c3d": true } },
+      data: { checklist: { good: true }, bookmarks: [], quizHistory: [], questionProgress: {}, selfAssessment: { "D1-0a1b2c3d": true }, acronymProgress: { SIEM: { seen: 2, known: 1, streak: 1, lastSeenAt: 1, dueAt: 2 } } },
       exportedAt: "",
     });
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();

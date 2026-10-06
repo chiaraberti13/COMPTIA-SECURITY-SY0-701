@@ -1,7 +1,7 @@
-import { FileText, RefreshCw, BookOpen, Activity, MessageSquare, ShieldCheck, ClipboardList } from "lucide-react";
+import { FileText, RefreshCw, BookOpen, Activity, MessageSquare, ShieldCheck, ClipboardList, Layers } from "lucide-react";
 import { useLang } from "../i18n";
 
-export type AppTab = "studio" | "quiz" | "glossary" | "pbq";
+export type AppTab = "studio" | "quiz" | "glossary" | "pbq" | "flash";
 
 /**
  * The top bar: logo and title, the four sections as tabs, the AI Trainer
@@ -30,9 +30,9 @@ export default function AppHeader({ activeTab, onTabChange, sidebarOpen, onToggl
       </div>
 
       <nav className="order-3 lg:order-2 w-full lg:w-auto lg:ml-auto flex items-stretch lg:items-center gap-1 lg:gap-3" id="navigation_tabs">
-        {/* Only the four tabs belong to the tablist: the AI toggle is an
+        {/* Only the five tabs belong to the tablist: the AI toggle is an
             ordinary button next to it. */}
-        <div className="flex-[4] lg:flex-none grid grid-cols-4 lg:flex lg:items-center gap-1 lg:gap-3" role="tablist" aria-label={t("a11y.mainNavigation")}>
+        <div className="flex-[5] lg:flex-none grid grid-cols-5 lg:flex lg:items-center gap-1 lg:gap-3" role="tablist" aria-label={t("a11y.mainNavigation")}>
           <button
             id="tab_btn_studio"
             role="tab"
@@ -76,6 +76,17 @@ export default function AppHeader({ activeTab, onTabChange, sidebarOpen, onToggl
             <ClipboardList className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0" aria-hidden="true" />
             <span className="lg:hidden truncate max-w-full">{t("tab.pbqShort")}</span>
             <span className="hidden lg:inline">{t("tab.pbq")}</span>
+          </button>
+          <button
+            id="tab_btn_flash"
+            role="tab"
+            aria-selected={activeTab === "flash"}
+            onClick={() => { setActiveTab("flash"); }}
+            className={`min-h-[44px] lg:min-h-0 px-1 lg:px-3 py-1.5 rounded-md text-[11px] lg:text-xs font-semibold lg:uppercase tracking-wide lg:tracking-wider transition-all duration-200 flex flex-col lg:flex-row items-center justify-center gap-0.5 lg:gap-2 min-w-0 lg:shrink-0 whitespace-nowrap ${activeTab === "flash" ? "bg-cyan-700 text-white font-bold shadow-md shadow-cyan-500/20" : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"}`}
+          >
+            <Layers className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0" aria-hidden="true" />
+            <span className="lg:hidden truncate max-w-full">{t("tab.flashShort")}</span>
+            <span className="hidden lg:inline">{t("tab.flash")}</span>
           </button>
         </div>
 
