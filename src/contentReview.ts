@@ -10,6 +10,8 @@ export interface Source {
 }
 
 export const SOURCES = {
+  owaspSession: { title: "Session Management Cheat Sheet", publisher: "OWASP Foundation", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", kind: "reference" },
+  mdnCookies: { title: "MDN Set-Cookie", publisher: "MDN", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie", kind: "reference" },
   owaspXss: {"title": "XSS Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html", "kind": "reference"},
   owaspCsrf: {"title": "CSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
   owaspSsrf: {"title": "SSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
@@ -68,13 +70,13 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "2.1": mapped("nist80030", "mitreAttack"),
   "2.2": mapped("nist800161", "mitreAttack"),
   "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),
-  "2.4": mapped("nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf"),
+  "2.4": mapped("nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),
   "3.2": mapped("nist800207", "cisControls"),
   "3.3": mapped("nist80057", "gdpr"),
   "3.4": mapped("nist80034"),
-  "4.1": mapped("nist80053", "cisControls"),
+  "4.1": mapped("nist80053", "cisControls", "owaspSession", "mdnCookies"),
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
   "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
   "4.4": mapped("nist80092", "mitreAttack"),

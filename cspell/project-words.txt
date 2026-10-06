@@ -331,3 +331,5 @@ NTLM
 WTLS
 Steganografia
 steganographic
+
+Sidejacking

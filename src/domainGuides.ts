@@ -504,6 +504,36 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Sessione, intercettazione e replay",
+        "headers": [
+          "Tecnica",
+          "Che cosa accade",
+          "Limite della difesa"
+        ],
+        "rows": [
+          [
+            "On-path",
+            "Intercettazione del traffico in transito",
+            "TLS protegge il transito, non un token sottratto al dispositivo"
+          ],
+          [
+            "Session hijacking / Sidejacking",
+            "Riuso di un ID di sessione valido sottratto",
+            "MFA al login non invalida automaticamente il token rubato"
+          ],
+          [
+            "Replay attack",
+            "Ripresentazione di un messaggio già valido",
+            "Firma e cifratura non garantiscono freschezza o unicità"
+          ],
+          [
+            "Cookie & Header Tampering",
+            "Modifica di valori controllati dal client",
+            "Cookie e header non sostituiscono autorizzazione sul server"
+          ]
+        ]
+      },
+      {
         "title": "XSS, CSRF e SSRF: componente e difesa",
         "headers": [
           "Attacco",
@@ -614,6 +644,14 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "TLS e MFA impediscono ogni furto della sessione.",
+        "correction": "TLS protegge il transito e MFA il login; un ID valido sottratto può ancora essere riusato. Servono protezione del token, rotazione, scadenza e revoca sul server."
+      },
+      {
+        "misconception": "Un messaggio firmato non può essere riprodotto.",
+        "correction": "La firma prova integrità e origine, non unicità. Il protocollo deve verificare nonce o contatori e, se usa finestre temporali, rilevare anche i duplicati."
+      },
+      {
         "misconception": "HttpOnly impedisce XSS.",
         "correction": "HttpOnly limita la lettura dei cookie da JavaScript, ma lo script può ancora eseguire azioni con la sessione. Eliminare il punto di esecuzione con output encoding o sanitizzazione appropriata."
       },
@@ -649,6 +687,18 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Sessione sottratta dopo MFA",
+        "prompt": "Nel portale di prova Kestrelia, il login con MFA emette SESSION-DEMO-A. Una copia sintetica arriva da un altro client via TLS ed è accettata. Dopo la revoca sul server, la stessa copia è rifiutata. Quale attacco mostra il flusso e che cosa dimostra TLS?",
+        "reasoning": "Flusso: utente → autenticazione → ID emesso → ID sottratto → richiesta da altro client → accettazione finché valido → revoca server → rifiuto. È session hijacking: non occorre ripetere identica operazione né essere on-path. TLS protegge il transito; MFA protegge il login, non annulla una sessione rubata. Collegare al Dominio 4 rotazione dopo autenticazione e cambio privilegi, scadenza e revoca server. Correlare anomalie con il contesto senza registrare token reali."
+      },
+      {
+        "objective": "2.4",
+        "title": "Un ruolo scritto nel cookie",
+        "prompt": "Un client di prova Kestrelia cambia un cookie da role=user a role=admin e modifica un header di autorizzazione. Il trasporto è TLS. Il server deve concedere l’accesso al record amministrativo? Quale verifica rende efficace la difesa?",
+        "reasoning": "No: cookie e header provengono dal client. Il server risolve una sessione valida oppure verifica firma e condizioni del token, quindi autorizza identità e azione sulla risorsa. TLS non rende affidabile il ruolo modificato. Secure, HttpOnly e SameSite riducono rischi specifici ma non sostituiscono questa decisione. Eliminare un cookie locale non revoca una copia ancora valida sul server; verificare anche scadenza e revoca effettive."
+      },
       {
         "objective": "2.4",
         "title": "XSS riflesso o persistente?",
@@ -1094,6 +1144,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Per dischi SSD e flash la sanitizzazione affidabile è la crypto erase o la distruzione fisica; il degaussing funziona solo sui supporti magnetici.",
     ],
     connections: [
+      "Session hijacking, replay e cookie manipolati del D2 collegano TLS, rotazione, scadenza/revoca server e cookie sicuri all’Application Security del D4.",
       "Le primitive e i controlli del D1 diventano configurazioni, procedure e verifiche operative.",
       "TTP, vulnerabilità e indicatori del D2 alimentano detection engineering, threat hunting e prioritizzazione.",
       "Architettura del D3 determina log disponibili e punti di enforcement; governance del D5 determina escalation, retention, evidence handling e reporting.",
@@ -1904,6 +1955,36 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Sessions, interception and replay",
+        "headers": [
+          "Technique",
+          "What happens",
+          "Defense limitation"
+        ],
+        "rows": [
+          [
+            "On-path",
+            "Interception of traffic in transit",
+            "TLS protects transit, not a token stolen from the device"
+          ],
+          [
+            "Session hijacking / Sidejacking",
+            "Reuse of a stolen valid session ID",
+            "MFA at login does not automatically invalidate the stolen token"
+          ],
+          [
+            "Replay attack",
+            "Resubmission of a previously valid message",
+            "Signing and encryption do not guarantee freshness or uniqueness"
+          ],
+          [
+            "Cookie & Header Tampering",
+            "Modification of client-controlled values",
+            "Cookies and headers do not replace server-side authorization"
+          ]
+        ]
+      },
+      {
         "title": "XSS, CSRF and SSRF: component and defense",
         "headers": [
           "Attack",
@@ -2014,6 +2095,14 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "TLS and MFA prevent every session theft.",
+        "correction": "TLS protects transit and MFA protects login; a stolen valid ID can still be reused. Token protection, rotation, expiration and server-side revocation are required."
+      },
+      {
+        "misconception": "A signed message cannot be replayed.",
+        "correction": "A signature proves integrity and origin, not uniqueness. The protocol must check nonces or counters and, when using time windows, also detect duplicates."
+      },
+      {
         "misconception": "HttpOnly prevents XSS.",
         "correction": "HttpOnly limits JavaScript access to cookies, but the script can still act using the session. Remove the execution point with appropriate output encoding or sanitization."
       },
@@ -2049,6 +2138,18 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Session stolen after MFA",
+        "prompt": "In the Kestrelia test portal, login with MFA issues SESSION-DEMO-A. A synthetic copy arrives from another client over TLS and is accepted. After server-side revocation, the same copy is rejected. Which attack does this flow show and what does TLS prove?",
+        "reasoning": "Flow: user → authentication → ID issued → ID stolen → request from another client → acceptance while valid → server revocation → rejection. This is session hijacking: neither repeating an identical operation nor an on-path position is required. TLS protects transit; MFA protects login, not a stolen session. Connect Domain 4 rotation after authentication and privilege changes, expiration and server-side revocation. Correlate anomalies with context without logging real tokens."
+      },
+      {
+        "objective": "2.4",
+        "title": "A role written in a cookie",
+        "prompt": "A Kestrelia test client changes a cookie from role=user to role=admin and modifies an authorization header. The transport uses TLS. Should the server grant access to the administrative record? Which check makes the defense effective?",
+        "reasoning": "No: cookies and headers come from the client. The server resolves a valid session or verifies the token signature and conditions, then authorizes the identity and action on the resource. TLS does not make the modified role trustworthy. Secure, HttpOnly and SameSite reduce specific risks but do not replace this decision. Deleting a local cookie does not revoke a copy still valid on the server; also verify effective expiration and revocation."
+      },
       {
         "objective": "2.4",
         "title": "Reflected or stored XSS?",
@@ -2494,6 +2595,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "For SSD and flash drives, reliable sanitization is crypto erase or physical destruction; degaussing works only on magnetic media.",
     ],
     connections: [
+      "Session hijacking, replay and manipulated cookies in D2 connect TLS, rotation, server-side expiration/revocation and secure cookies to Application Security in D4.",
       "D1 primitives and controls become operational configurations, procedures, and checks.",
       "D2 TTPs, vulnerabilities, and indicators feed detection engineering, threat hunting, and prioritization.",
       "D3 architecture determines available logs and enforcement points; D5 governance determines escalation, retention, evidence handling, and reporting.",

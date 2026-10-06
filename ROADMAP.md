@@ -51,13 +51,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 3. Furto della sessione, replay e manipolazione dei cookie
 
-- [ ] Esplicitare session hijacking/sidejacking nella guida del Dominio 2 e nel glossario, collegandoli alle mitigazioni applicative del Dominio 4 (obiettivi 2.4 e 4.1).
+- [x] Esplicitare session hijacking/sidejacking nella guida del Dominio 2 e nel glossario, collegandoli alle mitigazioni applicative del Dominio 4 (obiettivi 2.4 e 4.1).
 
 **Evidenza nel repository:** `NetworkWirelessAttacks` menziona session hijacking come esempio di on-path; `AppCryptoAttacks` tratta replay e la sezione di hardening tratta già i cookie. Manca una spiegazione autonoma della relazione fra questi concetti.
 
 **Da realizzare:** mostrare con un flusso testuale il riuso di un identificatore di sessione sottratto; distinguere attacco on-path, furto di sessione e replay, che possono essere collegati senza essere sinonimi. Separare header/cookie controllati dal client dalle decisioni di autorizzazione del server. Collegare TLS, scadenza/revoca, rotazione dopo autenticazione e attributi dei cookie già presenti.
 
 **Accettazione:** chiarire che TLS non neutralizza ogni modalità di furto della sessione e che MFA al login non rende inutilizzabile una sessione rubata. Usare difese attuali e supportate. Fonti: OWASP Session Management Cheat Sheet e documentazione dei cookie HTTP.
+
+**Completato il 6 ottobre 2026:** voci canoniche `2:SessionHijackingAttack`, `2:ReplayAttack` e `2:CookieHeaderTampering` IT/EN; tabella comparativa e scenari sintetici nella guida 2.4, collegamento alle mitigazioni del Dominio 4. Precisati i limiti di TLS, MFA e HttpOnly; fonti OWASP e MDN collegate. Verificate ricerca nel glossario, parità linguistica, citazioni e copertura.
 
 ### 4. Domain hijacking rispetto a DNS poisoning e typosquatting
 
