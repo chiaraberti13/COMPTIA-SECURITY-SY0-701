@@ -21,7 +21,7 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 - Esempi con dati sintetici, senza credenziali reali o istruzioni per attaccare sistemi esterni. Diagrammi, se utili, accompagnati da una spiegazione testuale accessibile e leggibile su mobile.
 - Controlli pertinenti su parità, termini canonici, citazioni, copertura e ricerca; eseguire i controlli automatici del progetto e aggiornare eventuali artefatti di copertura interessati.
 
-**Ordine:** completare prima P1, poi P2. Tutte le caselle sono nuove attività da svolgere; l'analisi non equivale all'implementazione.
+**Ordine:** completare prima P1, poi P2; per gli esercizi che dipendono dalle nuove definizioni, completare prima la relativa attività di contenuto. Tutte le caselle sono nuove attività da svolgere; l'analisi non equivale all'implementazione.
 
 ## P1 — contenuti e precisione tecnica
 
@@ -167,9 +167,185 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 **Accettazione:** ambito geografico esplicito e nessuna applicabilità automatica a ogni organizzazione italiana; niente importi di sanzioni o classificazioni penali copiati dal PDF. Verificare testo e applicabilità su SEC, FTC, HHS, PCI SSC e fonti istituzionali UE alla data dell'implementazione, registrando la data di verifica.
 
-## Argomenti verificati che non generano nuove attività
+## Estensione dell'audit — PBQ e banca delle domande
 
-Il confronto non giustifica un nuovo backlog per i seguenti contenuti già presenti:
+Il secondo confronto del **6 ottobre 2026** include `src/pbqData.ts`, `src/pbqData.en.ts` e la banca iniziale localizzata delle domande. Lo stato esaminato comprende **10 PBQ interattive** e **682 domande iniziali**, distribuite sui cinque domini. Le sezioni teoriche con chiavi come `FirewallRulesPBQ` e `VPNPBQ` sono materiale preparatorio, non ulteriori scenari interattivi.
+
+Il PDF contiene appunti, diagrammi e confronti: non è una banca di PBQ o di quesiti da importare. Le attività seguenti prevedono **esercizi e domande originali**, derivati dagli argomenti e verificati sulle fonti primarie. Non riprodurre diagrammi, esempi, domande d'esame o marchi del PDF come scenari del progetto.
+
+Le PBQ attuali coprono rilascio dei certificati (101), change management (102), ciclo incident response (201), volatilità forense (202), social engineering (301), trattamento del rischio (302), log generali (401), log di autenticazione (402), classificazione dei controlli (501) e protezione dei dati (502). Le nuove attività aggiungono compiti diversi; non ripetono questi dieci scenari cambiando soltanto nomi e numeri.
+
+### Requisiti comuni per i nuovi esercizi
+
+- Usare prima le meccaniche esistenti di abbinamento e ordinamento (`src/pbq.ts`); non serve un nuovo motore per realizzare gli scenari sotto. Scegliere il `kind` compatibile con la meccanica, senza classificare un abbinamento come `incident`, che oggi richiede ordinamento.
+- Definire identificatori stabili, obiettivo principale e rimandi agli obiettivi secondari; parità IT/EN di istruzioni, dati, risposta e spiegazione. Usare Kestrelia, indirizzi riservati/documentali e dati sintetici.
+- Prevedere opzioni e premesse che rendano la soluzione determinata, senza imporre un ordine artificiale a operazioni che potrebbero avvenire in parallelo. La spiegazione deve motivare ogni scelta e chiarire i limiti delle conclusioni tratte dai log.
+- Per i quiz, distinguere comprensione e applicazione, con distrattori plausibili e motivazione della risposta corretta e delle alternative. Ricontrollare i 682 quesiti esistenti, inclusi opzioni e spiegazioni, prima di introdurre ogni nuovo scenario.
+- Verificare scoring, reset, persistenza e resa IT/EN delle nuove PBQ con Vitest; verificare via Playwright il flusso con tastiera e viewport mobile, senza dipendere dal solo trascinamento o dal colore. Riutilizzare i controlli di parità, obiettivi, citazioni e sicurezza dei contenuti per le nuove domande.
+
+## P2 — otto nuove PBQ originali
+
+### 15. Regole firewall e segmentazione
+
+- [ ] Aggiungere una PBQ di abbinamento fra flussi richiesti e regole firewall, con ordine di valutazione e deny implicito dichiarati nello scenario (obiettivo principale 4.5; collegamenti 2.5 e 3.2).
+
+**Evidenza:** PDF pp. 40, 47 e 70–71. Non esiste una PBQ interattiva di configurazione firewall; la PBQ 401 riconosce indizi nei log e le voci `FirewallRulesPBQ`/`PBQFirewallLogs` sono approfondimenti teorici.
+
+**Da realizzare:** topologia testuale con Internet, screened subnet, rete applicativa e gestione; scegliere sorgente, destinazione, protocollo/porta e azione per ciascun requisito. Includere una regola troppo ampia o mascherata da una precedente. Precisare se il firewall è stateful e come gestisce il traffico di risposta.
+
+**Accettazione:** soluzione limita i flussi al necessario e mantiene la gestione dal segmento autorizzato; scoring ed esplicazione verificano ogni associazione. Non presentare NAT come sostituto delle policy firewall. Fonti: documentazione primaria del firewall scelto per la semantica delle regole.
+
+### 16. Percorso VPN e protezione dei due siti
+
+- [ ] Aggiungere una PBQ di abbinamento per scegliere accesso remoto TLS, VPN site-to-site IPsec e modalità tunnel in un'infrastruttura sintetica (obiettivo 3.2).
+
+**Evidenza:** PDF pp. 51–52, con diagrammi distinti di accesso remoto e collegamento fra siti. Le definizioni VPN/IPsec esistono, ma nessuna delle dieci PBQ richiede di applicarle a una topologia.
+
+**Da realizzare:** associare requisiti e punti di terminazione ai collegamenti corretti; distinguere il tratto protetto dai segmenti oltre il gateway e specificare l'autenticazione necessaria. Usare l'abbinamento esistente e un equivalente testuale della topologia.
+
+**Accettazione:** spiegare perché tunnel e transport mode non sono intercambiabili nel caso proposto e perché un tunnel non protegge automaticamente tutto il traffico successivo alla terminazione. Nessuna falsa equivalenza “accesso remoto = sempre TLS”. Fonti: RFC IPsec/IKE e documentazione VPN ufficiale.
+
+### 17. Wi-Fi enterprise e ruoli 802.1X
+
+- [ ] Aggiungere una PBQ di abbinamento fra requisiti Wi-Fi, ruoli 802.1X e metodi EAP (obiettivo principale 4.1; collegamento 3.2).
+
+**Evidenza:** PDF pp. 50 e 60–62. La banca contiene già una domanda sul Wi-Fi con certificati (40199), ma manca un esercizio interattivo che colleghi client, access point, RADIUS e validazione del server.
+
+**Da realizzare:** associare supplicant/authenticator/authentication server ai componenti, quindi profili con certificato client o autenticazione nel tunnel ai metodi pertinenti. Dichiarare le condizioni che distinguono PEAP ed EAP-TTLS ed evitare scelte ugualmente valide. Dipendenza: attività 5 e 11.
+
+**Accettazione:** RADIUS non viene confuso con il metodo EAP e il certificato del server non è contato come fattore aggiuntivo dell'utente. Fonti: IEEE 802.1X e specifiche dei metodi EAP.
+
+### 18. SPF, DKIM e risultato DMARC
+
+- [ ] Aggiungere una PBQ di interpretazione di intestazioni email sintetiche con abbinamento a esito e motivazione DMARC (obiettivo 4.5).
+
+**Evidenza:** PDF p. 73. Le voci SPF/DKIM/DMARC e i quesiti 40190, 40406 e 40200 trattano già i meccanismi; non esiste una PBQ con evidenze di autenticazione e allineamento da applicare.
+
+**Da realizzare:** fornire dominio From, envelope sender, dominio della firma DKIM e risultati dei controlli, con policy DMARC e modalità di allineamento esplicite. Includere SPF valido ma non allineato, DKIM valido e allineato, e nessun meccanismo allineato.
+
+**Accettazione:** pass/fail dipende dall'allineamento richiesto e dal risultato di almeno un meccanismo; separare valutazione DMARC e disposizione del messaggio secondo policy, senza garantire che ogni destinatario applichi la stessa azione. Fonte: specifiche IETF applicabili a SPF/DKIM/DMARC.
+
+### 19. Priorità delle vulnerabilità e verifica della remediation
+
+- [ ] Aggiungere una PBQ di abbinamento fra finding, priorità motivata e azione di verifica (obiettivo 4.3).
+
+**Evidenza:** PDF pp. 66–67. Il quesito 40320 già confronta CVSS ed esposizione: la nuova PBQ deve richiedere decisioni su più finding e sulla conferma della remediation, non riproporre quel confronto come domanda singola.
+
+**Da realizzare:** tabella sintetica con CVE, severità fornita, esposizione, sfruttamento noto, criticità dell'asset e disponibilità delle patch; includere un falso positivo da validare e un sistema non aggiornabile da proteggere con controllo compensativo. Usare priorità esplicite e univoche nel contesto dichiarato.
+
+**Accettazione:** non ordinare automaticamente per CVSS; distinguere patch applicata, rescan e verifica dell'efficacia. Nessun calcolo di vettori CVSS non spiegati o mescolati fra versioni. Fonti: FIRST, CISA e documentazione dello scanner per le evidenze.
+
+### 20. Postura NAC e rete di remediation
+
+- [ ] Aggiungere una PBQ di abbinamento tra esiti del controllo di postura e accesso alla rete consentito (obiettivo principale 4.5; collegamento 4.1).
+
+**Evidenza:** PDF p. 74. `NACNet` spiega già quarantena e controllo di postura; la PBQ 502 sceglie controlli per proteggere i dati, ma non tratta ammissione dei dispositivi.
+
+**Da realizzare:** presentare dispositivi con stato patch, cifratura, agente e identità; associare accesso ordinario, accesso limitato alla remediation o blocco, secondo una policy dichiarata. Includere rivalutazione dopo la correzione e distinguere dispositivo conforme da attività sicuramente innocua.
+
+**Accettazione:** la rete limitata offre i soli servizi necessari alla correzione; nessuna conclusione “antivirus presente = dispositivo fidato”. Collegare le varianti di agenti dell'attività 27. Fonti: documentazione ufficiale del prodotto NAC di riferimento.
+
+### 21. RTO, RPO, backup e siti di recupero
+
+- [ ] Aggiungere una PBQ di abbinamento tra requisiti BIA e piani di recupero con tempi e perdita dati dichiarati (obiettivo principale 3.4; collegamento 5.2).
+
+**Evidenza:** PDF pp. 55–58 e 89. Esistono domande su RTO/RPO e siti alternativi; manca un esercizio interattivo che valuti insieme tempi di ripristino e intervallo dei dati persi.
+
+**Da realizzare:** associare servizi a piani con frequenza backup/replica, ultimo punto recuperabile e durata misurata del ripristino. Includere siti hot/warm/cold solo con capacità esplicite: il nome del sito, da solo, non dimostra il rispetto del requisito.
+
+**Accettazione:** lo studente distingue limite di perdita dati e tempo obiettivo di recupero; la soluzione è verificabile dai valori forniti, non dall'assunto “replica = backup” o “backup frequente = ripristino rapido”. Fonti: NIST sulla pianificazione di continuità.
+
+### 22. Catena quantitativa AV → EF → SLE → ALE
+
+- [ ] Aggiungere una PBQ di abbinamento fra dati, risultati di calcolo e trattamento motivato del rischio (obiettivo 5.2).
+
+**Evidenza:** PDF p. 88. Le formule e i quesiti 50006, 50068 e 50075 sono già presenti; la PBQ 302 classifica strategie di trattamento senza richiedere calcoli. Il nuovo compito integra i passaggi e il rischio residuo.
+
+**Da realizzare:** dati originali con EF in percentuale/frazione e ARO espresso come frequenza annua; far associare SLE e ALE prima e dopo un controllo dal costo annuo dichiarato. Esplicitare gli effetti del controllo e l'incertezza delle stime.
+
+**Accettazione:** unità, conversioni e risultati verificati automaticamente; convenienza economica non presentata come unico criterio per sicurezza, obblighi o rischio per le persone. Nessuna copia dei valori dell'esempio del PDF.
+
+## P2 — ulteriori voci autonome nel glossario
+
+### 23. Key Management System e secure enclave
+
+- [ ] Aggiungere KMS e secure enclave come voci canoniche, con rimandi a TPM/HSM e alla guida del Dominio 1 (obiettivo 1.4).
+
+**Evidenza:** PDF p. 12. TPM/HSM hanno voci dedicate; KMS e secure enclave sono argomenti citati nell'obiettivo/guida senza equivalenti voci autonome nelle definizioni analizzate.
+
+**Da realizzare:** distinguere gestione del ciclo di vita delle chiavi, protezione hardware delle operazioni e ambiente isolato; spiegare che una piattaforma KMS può usare HSM e che le proprietà di un enclave dipendono dall'implementazione. Non attribuire a tutti gli enclave ogni caratteristica hardware elencata nel PDF.
+
+**Accettazione:** nomi estesi e acronimi reperibili in entrambe le lingue; confronto originale con TPM/HSM senza duplicare quelle definizioni. Fonti: NIST per key management e documentazione primaria dell'implementazione scelta.
+
+### 24. EOL, EOS ed EOSL: terminologia del supporto
+
+- [ ] Espandere gli alias EOL/EOS/EOSL e precisare la voce `LegacyEOLVuln` con un confronto fra vendita, manutenzione e supporto (obiettivo 2.3).
+
+**Evidenza:** PDF p. 26. EOSL è assente dal corpus di definizioni analizzato; la voce legacy esistente tende a equiparare EOL e fine supporto, mentre il PDF distingue le tappe con una nomenclatura specifica.
+
+**Da realizzare:** spiegare che i produttori usano sigle e milestone diverse, quindi vanno controllate data e condizioni della policy del vendor. Separare tecnologia legacy, fine vendita, fine aggiornamenti ordinari ed eventuale supporto esteso; non inventare una definizione universale di EOS.
+
+**Accettazione:** esempio con calendario sintetico che identifica quando cessano le patch, senza dire che nessun aggiornamento potrà mai essere rilasciato. Riutilizzare segmentation/virtual patching già presenti. Fonte: policy ufficiale del vendor assunto come esempio.
+
+### 25. CCMP, GCMP e GMAC
+
+- [ ] Rendere CCMP e GMAC autonomamente ricercabili, collegandoli a `GCMPConcept` e al confronto Wi-Fi (obiettivo 4.1).
+
+**Evidenza:** PDF p. 61. GCMP è già una voce con i limiti corretti delle suite WPA3; CCMP è citato nei dettagli e GMAC non compare nelle definizioni analizzate.
+
+**Da realizzare:** distinguere protocollo di protezione Wi-Fi, modalità di cifratura autenticata e codice di autenticazione. Non presentare GMAC come cifratura del contenuto né GCMP come obbligatorio in ogni rete WPA3. Collegare le attività 5 e 11, senza replicarne il confronto sui metodi di autenticazione.
+
+**Accettazione:** espansione di GMAC verificata sulla fonte primaria, distinguendo la grafia sintetica del PDF dal nome tecnico; esempi separano riservatezza e integrità. Fonti: NIST SP 800-38D, IEEE e Wi-Fi Alliance.
+
+### 26. SD-WAN, SASE, CASB, SWG e FWaaS
+
+- [ ] Separare le definizioni canoniche della voce composita `ModernCloudNetArchitectures` e collegarle alla guida del Dominio 3 (obiettivo 3.2).
+
+**Evidenza:** PDF pp. 51–52. Le cinque spiegazioni esistono nella stessa voce: l'attività riguarda reperibilità e relazioni, non l'invenzione di contenuti mancanti. Il diagramma SASE del PDF distingue componenti di connettività e servizi di sicurezza.
+
+**Da realizzare:** dare a ogni acronimo una voce autonoma e riutilizzare i contenuti; chiarire architettura complessiva, componenti e modalità di erogazione. Disambiguare SWG e CASB per web/SaaS; non assumere che ogni implementazione includa tutti i servizi del diagramma.
+
+**Accettazione:** ricerca di ogni acronimo porta alla propria definizione e ai rimandi; niente duplicati in glossario o flashcard. Fonti: documentazione primaria delle architetture adottate e fonti istituzionali pertinenti.
+
+### 27. Agente persistente, dissolvibile e agentless nel NAC
+
+- [ ] Integrare agente dissolvibile/temporaneo e posture assessment nel glossario, collegandoli a `AgentRes`, `AgentlessRes` e `NACNet` (obiettivo 4.5).
+
+**Evidenza:** PDF p. 74. Il corpus distingue agente e agentless, ma non introduce autonomamente la categoria dissolvibile e la relazione con la valutazione della postura.
+
+**Da realizzare:** distinguere installazione persistente, esecuzione temporanea e verifica senza agente sul dispositivo, con limiti di visibilità e frequenza dei controlli. Non generalizzare le affermazioni del PDF secondo cui ogni sistema agentless dipende da Active Directory o non può essere schedulato.
+
+**Accettazione:** caso originale seleziona l'approccio secondo requisiti espliciti; disambiguare la quarantena NAC dalla quarantena di un file antimalware. Fonte: documentazione primaria di implementazioni NAC, riportando i limiti del prodotto scelto.
+
+## P2 — nuove domande di comprensione e applicazione
+
+### 28. Quiz sugli approfondimenti dei Domini 1 e 2
+
+- [ ] Aggiungere almeno otto domande originali, una per ciascun tema: steganografia, PE/PA/PEP, key agreement e chiavi effimere, reflected/stored XSS, CSRF rispetto a SSRF, furto di sessione, domain hijacking, elicitation rispetto a frode d'identità.
+
+**Evidenza:** PDF pp. 5–6, 11–13, 21, 25–26 e 33–37. Gli argomenti sono previsti nelle attività 1–7 e 9; diversi compaiono soltanto come cenni, opzioni o spiegazioni nelle domande iniziali, non come competenza applicata nel contesto specifico. Non dedurre assenza dal solo mancato acronimo: verificare semanticamente il banco prima di aggiungere ogni quesito.
+
+**Accettazione:** almeno quattro quesiti applicativi con scenari sintetici; ogni domanda si collega alla definizione completata e a un obiettivo principale, con distrattori motivati. Non ripetere il riconoscimento generale di social engineering della PBQ 301.
+
+### 29. Quiz su rete, cloud e autenticazione
+
+- [ ] Aggiungere almeno otto domande originali: due su limiti PMF/jamming e suite Wi-Fi, due su EAP/validazione del server, due su terminazione TLS e segmenti protetti, due sulla scelta motivata fra SD-WAN/SASE/CASB/SWG.
+
+**Evidenza:** PDF pp. 34, 50–52 e 61–62. Esistono domande di riconoscimento dei protocolli e architetture, ma non coprono tutte le distinzioni approfondite nelle attività 5, 8, 11, 25 e 26.
+
+**Accettazione:** dipendenze completate prima dei quesiti; le nuove domande chiedono di applicare le condizioni del caso, senza trasformare un acronimo aggiuntivo in un requisito ufficiale. Verificare la differenza rispetto al quesito Wi-Fi 40199 e al quesito SD-WAN 30540.
+
+### 30. Quiz su IAM, hardening e responsabilità normative
+
+- [ ] Aggiungere almeno otto domande originali: due su SAML/OAuth/OIDC, due su SELinux/MAC/UAC, due su EOL/EOSL e supporto esteso, due su ambito e distinzione legge/standard di SOX/GLBA/HIPAA/PCI DSS.
+
+**Evidenza:** PDF pp. 26, 63, 72, 75–77, 87 e 92. I quesiti esistenti, fra cui 40218 su SAML, non esauriscono le distinzioni delle attività 12–14 e 24. Per le norme, evitare quesiti mnemonici sulle sanzioni storiche del PDF.
+
+**Accettazione:** gli otto quesiti verificano decisioni e concetti distinti; OAuth resta autorizzazione delegata, UAC non diventa sandbox, la cessazione del supporto dipende dalla policy dichiarata. Fonti primarie normative controllate alla data di implementazione. Nessuna domanda aggiunta prima del materiale didattico necessario a risolverla.
+
+## Argomenti già coperti nelle spiegazioni
+
+Il confronto non giustifica duplicare le spiegazioni dei seguenti contenuti già presenti. Alcuni vengono comunque ripresi nelle nuove PBQ, perché spiegazione teorica ed esercizio interattivo sono strumenti diversi:
 
 - CIA/AAA, categorie e funzioni dei controlli, change management, hashing/salting, firme, TPM/HSM, formati dei certificati e tokenizzazione.
 - Vettori e attori di minaccia, malware/fileless e living off the land, SQLi, buffer overflow, vulnerabilità cloud/supply chain e mitigazioni generali.
