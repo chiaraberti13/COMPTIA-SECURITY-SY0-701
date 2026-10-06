@@ -10,6 +10,7 @@
   "concept D1 AuthenticationConcept_New": "09af455e3fd4327d",
   "concept D1 AuthorizationConcept_New": "1cf202d3416ac451",
   "concept D1 BackoutPlan": "d6db5e154d2558ee",
+  "concept D1 BiometricErrorRates": "469bd8e11e3a7905",
   "concept D1 BlockchainConcept": "89176b4292eec1b7",
   "concept D1 BlockCipherConcept": "3459222a2bb07eb4",
   "concept D1 CertificateAuthorityConcept": "6a2ed49e349a84a2",

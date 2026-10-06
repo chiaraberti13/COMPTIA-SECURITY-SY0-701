@@ -91,6 +91,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "MACConcept": "Modelli di Controllo Accessi (IAM)",
   "MFAConcept_New": "Modelli d'Identità e Federazione",
   "MFAImplementationsTokens": "Modelli d'Identità e Federazione",
+  "BiometricErrorRates": "Modelli d'Identità e Federazione",
   "FederationConcept": "Modelli d'Identità e Federazione",
   "AccessControlModels": "Modelli di Controllo Accessi (IAM)",
   "RBACConcept": "Modelli di Controllo Accessi (IAM)",
