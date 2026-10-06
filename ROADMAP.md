@@ -1,530 +1,180 @@
-# 🗺️ Project Roadmap: COMPTIA-SECURITY-SY0-701
+# Roadmap — integrazioni alla guida e al glossario SY0-701
 
-## Visione
+## Origine e perimetro
 
-Trasformare **COMPTIA-SECURITY-SY0-701** in una risorsa didattica di cybersecurity chiara, affidabile, manutenibile e sicura, utile sia per la preparazione alla certificazione CompTIA Security+ SY0-701 sia per consolidare competenze applicabili in contesti reali.
+Questa roadmap sostituisce integralmente il precedente backlog. Contiene soltanto nuove attività emerse dal confronto, effettuato il **6 ottobre 2026**, fra il PDF allegato *Professor Messer’s CompTIA SY0-701 Security+ Course Notes*, versione **1.07**, e i contenuti attuali del repository.
 
-Il restyling segue tre prospettive complementari:
+Il PDF ha **107 pagine fisiche**, delle quali **96 pagine numerate di contenuto**. I riferimenti sotto usano la numerazione stampata: pagina 1 corrisponde alla pagina fisica 10. Il confronto riguarda le cinque guide in `src/domainGuides.ts`, le definizioni e gli approfondimenti in `src/data.ts` e `src/data.en.ts`, e la loro reperibilità nel glossario tramite `src/glossaryIndex.ts` e `src/canonicalTerms.ts`.
 
-- **Engineering:** repository ordinato, validato automaticamente e semplice da mantenere o estendere.
-- **Cybersecurity:** contenuti tecnicamente corretti, esempi sicuri e controlli di sicurezza integrati nel ciclo di sviluppo (DevSecOps), estesi alla sicurezza dell'applicazione e della componente AI.
-- **UX didattica:** navigazione intuitiva, progressione coerente, accessibilità e strumenti che favoriscano comprensione, pratica e ripasso.
+La presenza di un termine nel PDF non implica una lacuna: numerosi argomenti sono già spiegati. Le attività distinguono **contenuto da approfondire**, **voce di glossario da rendere autonoma** e **formulazione da correggere**. I riferimenti agli obiettivi SY0-701 indicano dove integrare il materiale, senza trasformare ogni approfondimento in un nuovo requisito ufficiale d'esame.
 
-> [!IMPORTANT]
-> Questa roadmap è stata confrontata con lo stato reale del repository il **2026-09-24** (vedi [Stato attuale](#-stato-attuale--audit-del-2026-09-24)) e riallineata dopo le PR #37–#50. Le voci già soddisfatte sono marcate come completate con l'evidenza nel codice; quelle nuove nascono dai gap emersi. Non costituisce materiale ufficiale CompTIA e non garantisce il superamento dell'esame.
+Il PDF è una fonte secondaria per individuare gli argomenti, non un testo da copiare né un'autorità tecnica da seguire senza verifica. Non aggiungere il PDF, la sua estrazione o i suoi esempi al repository. Scrivere spiegazioni originali e verificarle sulle fonti primarie indicate nelle attività.
 
-### Principio guida: non rompere ciò che funziona
+## Criteri comuni di completamento
 
-Il progetto ha già una base solida (app funzionante, dataset bilingue, test di integrità dei contenuti, CI). Ogni attività deve quindi:
+Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
-1. essere **incrementale** e reversibile, con una PR piccola e focalizzata;
-2. mantenere verde `npm run check` (typecheck + lint + test) e `npm run build`;
-3. non cambiare formato dei dati persistiti in `localStorage` senza una **migrazione** e un test dedicato;
-4. non spostare i dataset (`src/data.ts`, `src/data.en.ts`) finché i test di integrità non coprono anche la nuova struttura;
-5. non integrare un aggiornamento di versione principale di una dipendenza solo perché la CI è verde: prima va provato l'avvio reale dell'app (vedi [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze)).
+- Parità italiano/inglese: definizione, approfondimento, esempio originale e avvertenza didattica, quando pertinenti.
+- Riutilizzo delle definizioni canoniche e collegamenti ai contenuti esistenti; identificatori stabili e nessuna duplicazione di concetti già spiegati.
+- Termini e acronimi ricercabili nel glossario, con espansione corretta, alias IT/EN e disambiguazione dei significati. Verificare anche le flashcard generate dal glossario.
+- Fonti primarie e mappatura agli obiettivi SY0-701; niente affermazioni assolute non giustificate, numeri normativi datati o contenuti di versioni successive presentati come requisiti SY0-701.
+- Esempi con dati sintetici, senza credenziali reali o istruzioni per attaccare sistemi esterni. Diagrammi, se utili, accompagnati da una spiegazione testuale accessibile e leggibile su mobile.
+- Controlli pertinenti su parità, termini canonici, citazioni, copertura e ricerca; eseguire i controlli automatici del progetto e aggiornare eventuali artefatti di copertura interessati.
 
----
+**Ordine:** completare prima P1, poi P2. Tutte le caselle sono nuove attività da svolgere; l'analisi non equivale all'implementazione.
 
-## 🔍 Stato attuale — audit del 2026-09-24
+## P1 — contenuti e precisione tecnica
 
-**Natura del progetto:** non è un repository di sole note Markdown, ma una **web app full-stack self-hosted**: frontend React 19 + Vite 8 + Tailwind 4, backend Express 5 (`server.ts` e `server/`) che serve il frontend e fa da proxy verso l'API Google Gemini. I contenuti didattici vivono in dataset TypeScript tipizzati.
+### 1. Steganografia e limiti dell'offuscamento
 
-| Area | Già presente | Gap principale |
-|---|---|---|
-| Contenuti | 5 domini, checklist, ~550 voci di glossario, banca domande con scenario; **guide di dominio complete** per tutti e 5 i domini (ogni sotto-argomento ufficiale, 30 tabelle comparative, 40 errori comuni, 33 esercizi guidati), imposte da `tests/domainGuides.test.ts` | Fonti per tutti i 28 obiettivi; gli obiettivi 1.1, 2.3 e 5.6 hanno meno domande degli altri (vedi `docs/coverage-matrix.md`) |
-| Bilinguismo | Italiano sorgente di verità, overlay inglese con fallback, test di parità strutturale e **di contenuto** (stessi numeri, sigle e token in 7.979 coppie di frasi e in tutte le guide) | Il controllo automatico non coglie differenze di significato senza numeri o sigle; ~~nessun segnale di traduzione da rivedere dopo una modifica al testo italiano~~ risolto il 2026-09-27 |
-| Qualità contenuti | `tests/dataset.test.ts`: ID univoci, spiegazione di ogni distrattore, scenario obbligatorio, copertura di ogni obiettivo, pesi dei domini (±5%), maggioranza di domande di livello superiore | Nessun changelog/errata pubblico delle correzioni sostanziali |
-| Apprendimento | Simulatore con timer opzionale, domande multi-risposta, soglia 80%, storico, ripasso spaziato 1-3-7-14-30 giorni, remediation AI, esportazione/importazione e cancellazione dei progressi | Nessuna vista "exam readiness" per obiettivo; quiz non ancora filtrabile per obiettivo |
-| Backend / AppSec | `helmet` con CSP in produzione, rate limit su `/api/`, body limit 64 kB, input limitati, history sanificata, prompt con difesa da injection, output JSON AI validato, errori del provider non esposti al client | Timeout, `maxOutputTokens`, tetto giornaliero, `/healthz`, arresto graduale e smoke test di avvio aggiunti il 2026-09-24; test API con client Gemini simulato e log strutturati JSON dal 2026-09-24; manca la validazione con schema |
-| Frontend security | Rendering Markdown fatto a mano in JSX, senza `innerHTML` (niente XSS dall'output AI); `localStorage` letto tramite wrapper difensivo e sanificatori | ~~CSP con `'unsafe-inline'` e Google Fonts esterni~~ risolto il 2026-09-24: CSP solo `'self'`, font nel bundle |
-| CI | `.github/workflows/ci.yml` con `permissions: contents: read`, `concurrency`, `npm ci`, typecheck, lint, test, build su Node 22 e 24, Actions fissate a SHA (`tests/workflows.test.ts`), Dependabot attivo | Secret scan, CodeQL, audit e dependency review aggiunti in `security.yml` (2026-09-24); **6 PR di Dependabot aperte**, tutte verificate, 5 con cambi di versione principale (Express 5, Vite 8, plugin-react 6, motion 13, Actions v7) |
-| Governance | `SECURITY.md` e `CONTRIBUTING.md` bilingui, `CHANGELOG.md`, moduli per issue e modello di PR, `CODEOWNERS`, `LICENSE` MIT, README IT/EN, `.gitignore` che esclude `.env*`, `package.json` con nome, versione ed `engines` reali | Branch protection e regole obbligatorie sulle PR da configurare su GitHub; ~~`CODE_OF_CONDUCT.md` assente~~ aggiunto il 2026-09-27 |
-| Manutenibilità | Logica pura estratta e testata (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`); helper di test condivisi in `tests/helpers/` | `src/App.tsx` ha circa 2.640 righe: rendering, stato e logica di tutte le sezioni in un unico componente; branch remoti già integrati mai chiusi |
-| Accessibilità e layout | `lang` del documento aggiornato dinamicamente, attributi ARIA in più punti, area di studio leggibile anche su telefono, tabelle con scorrimento orizzontale nel proprio riquadro, soluzioni degli esercizi nascoste finché non richieste | Test end-to-end e axe in CI dal 2026-09-24, reflow al 200% di zoom dal 2026-10-05; le verifiche con screen reader reali (NVDA, VoiceOver) e su dispositivo mobile reale restano manuali, ora con procedura periodica in [`docs/accessibility-manual-tests.md`](docs/accessibility-manual-tests.md) |
+- [ ] Aggiungere una voce autonoma di steganografia e approfondire il confronto con cifratura, hashing, tokenizzazione e mascheramento nella guida del Dominio 1 (obiettivo 1.4).
 
----
-
-## Come usare questa roadmap
-
-### Stati
-
-- [ ] Da pianificare
-- [ ] In corso — aggiungere `🚧` e il riferimento a issue/PR
-- [ ] Parziale — aggiungere `🟡` e indicare cosa manca
-- [x] Completato — aggiungere data e riferimento a issue/PR o all'evidenza nel codice
-- [ ] Bloccato — aggiungere `⛔` e descrivere il blocco
-
-### Priorità
-
-| Livello | Significato | Criterio |
-|---|---|---|
-| **P0** | Fondamentale | Correttezza, sicurezza, struttura di base o rischio elevato |
-| **P1** | Alto valore | Migliora sensibilmente studio, manutenzione e qualità |
-| **P2** | Evolutivo | Funzionalità avanzata o ottimizzazione successiva |
-
-### Stima dello sforzo
-
-Ogni voce nuova riporta, dove utile, una taglia indicativa: **S** (meno di mezza giornata), **M** (1–2 giorni), **L** (più giorni, da spezzare in più PR).
-
-### Definizione generale di completamento
-
-Un'attività è completata quando:
-
-1. la modifica è verificata e collegata a una issue o pull request;
-2. `npm run check` e `npm run build` passano in locale e in CI;
-3. la documentazione e i contenuti in italiano e inglese rimangono coerenti (i test di parità restano verdi);
-4. esempi e laboratori includono prerequisiti, obiettivi, limiti d'uso e procedura di ripristino;
-5. non sono presenti credenziali, dati personali, output sensibili o asset non distribuibili;
-6. il changelog, il README e questa roadmap vengono aggiornati quando necessario;
-7. ogni nuova regola sui contenuti è **codificata in un test** in `tests/`, non solo descritta a parole.
-
----
-
-## 🔎 Fase 0 — Audit e baseline
-
-**Obiettivo:** verificare lo stato reale del repository prima di applicare cambiamenti strutturali.
-
-- [x] **P0 — Inventario del repository:** mappati directory, script, workflow, dipendenze e asset — 2026-09-24, sezione [Stato attuale](#-stato-attuale--audit-del-2026-09-24).
-- [x] **P0 — Mappatura degli obiettivi SY0-701 a livello di gruppo tematico:** ogni obiettivo numerato è coperto (test `covers every numbered objective in the five official domains`).
-- [x] **P0 — Mappatura degli obiettivi a livello di domanda:** tutte le 664 domande sono collegate agli obiettivi in `src/questionObjectives.ts`, tramite una mappa revisionata `(dominio, topic) → obiettivi` e 4 eccezioni per singola domanda con motivazione, senza riscrivere i dataset. `tests/questionObjectives.test.ts` impone copertura completa, soli codici ufficiali, nessuna voce obsoleta e almeno 10 domande per obiettivo — 2026-09-24.
-- [x] **P0 — Analisi dei gap:** la matrice di copertura elenca gli obiettivi con meno domande. Il 2026-09-27 l'obiettivo 1.1 è passato da 10 a 15 domande, scelte sulle lacune delle esistenti: categoria fisica, controllo solo rilevativo, una misura con più tipi, controllo compensativo per la separazione dei compiti e una domanda a risposta multipla sui controlli gestionali. Lo stesso giorno l'obiettivo 2.3 è passato da 13 a 17, con le sottovoci ufficiali che non avevano domande: memory injection, resource reuse, catena di fornitura lato fornitore di servizi e vulnerabilità crittografiche. Poi il 5.6 da 13 a 18, sulle sottovoci senza domande: supporti rimovibili e cavi, lavoro ibrido e remoto, gestione delle password, reporting e monitoraggio del programma, comportamento involontario. Infine il 4.7 da 14 a 18, con domande di applicazione e analisi su disattivazione automatica degli accessi, escalation, integrazioni via API con il ticketing e permanenza del personale. Oggi nessun obiettivo ha meno di 15 domande (1.1 con 15, 4.4 con 16); Il 2026-09-28 sono state individuate anche le altre lacune, in [`docs/gap-analysis.md`](docs/gap-analysis.md), generato da `npm run gap-analysis`: 154 sottovoci su 562 non avevano alcun esempio pratico, nessuna nei domini 1 e 2 dopo i 13 esempi scritti lo stesso giorno in entrambe le lingue (control e data plane di Zero Trust, key stretching, HVAC, LDAP, whaling, campagne di phishing, DDoS amplificato e riflesso, SQL injection, threat intelligence, OSINT, dark web). Restano 141 sottovoci, tutte nei domini 3, 4 e 5 (voce qui sotto). Fra i contenuti non verificabili, le sole cifre fissate da una norma senza fonte erano le sanzioni e le scadenze del GDPR: ora citano gli articoli 33, 34 e 83, e la frase sulla notifica, che attribuiva le 72 ore anche agli interessati, è stata corretta. `tests/gapAnalysis.test.ts` tiene il documento aggiornato, rifiuta una nuova sottovoce senza esempio e una cifra normativa senza fonte, e fa accorciare l'elenco a ogni esempio aggiunto. **M**
-- [x] **P1 — Esempi pratici per le sottovoci che ne sono prive:** 141 sottovoci dei domini 3 (73), 4 (43) e 5 (25), elencate in [`docs/gap-analysis.md`](docs/gap-analysis.md); un «Piccolo Esempio Concentrato» per ciascuna, in italiano e in inglese. **L** Completato il 2026-09-30: tutte le 141 sottovoci hanno un «Piccolo Esempio Concentrato» in italiano e un «Focused Mini-Example» in inglese, con le stesse cifre e le stesse sigle nelle due lingue; i nomi di aziende sono di fantasia (Kestrelia) e gli indirizzi esterni sono quelli riservati alla documentazione (203.0.113.0/24). `docs/gap-analysis.md` elenca 0 concetti senza esempio su 562, e `tests/gapAnalysis.test.ts` rifiuta ogni nuovo concetto che ne sia privo.
-- [x] **P0 — Verifica linguistica strutturale:** test di parità IT/EN su ID, campi tradotti, intestazioni e annunci multi-risposta.
-- [x] **P0 — Baseline qualità:** registrare nel report numero di domande per dominio/obiettivo, stato Lighthouse (performance, accessibilità) e risultato di `npm audit`. [`docs/quality-baseline.md`](docs/quality-baseline.md), con il metodo per ripetere ogni misura. La misura ha trovato due problemi, corretti subito: il front end viaggiava senza compressione (5,4 MB per visita, ora 1,35 MB con Brotli precompresso) e il pannello AI spostava il layout al caricamento (CLS desktop da 0,419 a 0,038); performance desktop da 47 a 93 — 2026-09-27. **S**
-- [x] **P0 — Threat model dell'applicazione e del repository:** [`docs/threat-model.md`](docs/threat-model.md), STRIDE su quattro confini (browser, Internet → server, server → Gemini, supply chain), con controlli, test che li verificano e rischi residui. Ha trovato un rischio reale: con `trust proxy` fisso a 1, un server esposto senza proxy permetteva di aggirare il rate limit con un `X-Forwarded-For` falso. Ora è configurabile con `TRUST_PROXY` e coperto da test — 2026-09-24.
-- [x] **P1 — Registro decisionale:** [`docs/adr/`](docs/adr/README.md) con modello e quattro ADR: dataset in TypeScript, bilingue a overlay, provider AI dietro proxy, persistenza solo locale — 2026-09-24.
-
-**Deliverable:** report di audit, matrice di copertura per obiettivo, threat model e backlog confermato.
-
----
-
-## 📌 Priorità attuali — Q4 2026
-
-### 🏗️ Engineering & Developer Experience
-
-**Obiettivo:** migliorare struttura, manutenibilità, automazione e facilità di contribuzione senza interrompere l'app esistente.
-
-#### Struttura e convenzioni
-
-- [x] **P0 — Consolidare la struttura esistente** invece di riorganizzarla da zero. Completata il 2026-09-27 con `CODE_OF_CONDUCT.md`, l'ultimo file mancante; `tests/conventions.test.ts` verifica che i file di community e governance restino al loro posto. Struttura attuale:
-
-  ```text
-  .github/
-  ├── ISSUE_TEMPLATE/            # errore di contenuto, bug, proposta di studio
-  ├── workflows/                 # ci.yml, security.yml, docs.yml, scorecard.yml
-  ├── dependabot.yml
-  ├── CODEOWNERS
-  └── pull_request_template.md
-  docs/
-  ├── adr/                       # decisioni architetturali
-  ├── threat-model.md            # STRIDE
-  ├── coverage-matrix.md         # generato da scripts/coverage-matrix.ts
-  ├── content-templates.md       # template dei contenuti
-  ├── quality-baseline.md        # misure di riferimento
-  └── errata.md                  # errori di contenuto già corretti
-  labs/                          # regole d'ingaggio, template e laboratori
-  scripts/                       # matrice di copertura, smoke test, precompressione
-  src/
-  ├── components/                # viste e pannelli
-  ├── hooks/                     # stato delle sezioni
-  ├── data.ts / data.en.ts       # sorgente IT e overlay EN
-  ├── domainGuides.ts, contentReview.ts, questionObjectives.ts
-  └── quiz.ts, readiness.ts, remediation.ts, storage.ts, localizedData.ts  # logica pura testata
-  server/                        # app Express, guardie AI, log, difesa dalla prompt injection
-  tests/                         # Vitest; e2e/ per Playwright
-  CHANGELOG.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md
-  LICENSE, README.md, README.it.md, ROADMAP.md
-  ```
-
-- [x] **P0 — Correggere l'identità del pacchetto:** `name` `comptia-security-sy0-701`, `version` `1.0.0`, `engines` `node ^22.13.0 || >=24.0.0` e `npm >=10` — 2026-09-24.
-- [x] **P0 — Stabilire convenzioni di naming:** file in `kebab-case` per documenti e lab, componenti React in `PascalCase`, identificatori univoci e stabili per obiettivi, domande, voci di glossario e lab. Regole scritte in `CONTRIBUTING.md` e verificate da `tests/conventions.test.ts`; gli identificatori a cui puntano i dati salvati dagli studenti (ID delle domande, `checklistKey` di sottovoci e voci di glossario, codici degli obiettivi, cartelle dei lab) sono registrati in `tests/fixtures/stable-ids.json`, e il test fallisce se uno sparisce — 2026-09-27.
-- [x] **P0 — Separare contenuti, logica e automazioni:** dataset, logica pura (`quiz.ts`, `remediation.ts`, `storage.ts`) e test sono già separati.
-- [x] **P1 — Scomporre `src/App.tsx`:** estratte la guida di dominio (`src/components/DomainGuidePanel.tsx`, HTML generato identico byte per byte prima e dopo su 5 domini × 2 lingue) e la sezione "I tuoi dati" (`DataControls.tsx`) — 2026-09-24. Estratto l'AI Trainer: pannello `AiTrainerPanel.tsx`, conversazione nell'hook `src/hooks/useAiChat.ts` (il benvenuto è calcolato dalla lingua, non più sincronizzato con un effetto) e Markdown in `MarkdownText.tsx`; HTML identico byte per byte in 8 stati (benvenuto IT/EN, risposta, domanda digitata, accesso bloccato, errore, caricamento, area di studio), 7 test di componente; il caricamento della checklist ora avviene al primo rendering — 2026-09-26. Estratta la sessione del simulatore in `src/hooks/useQuizSession.ts`: domande, risposte, punteggio, timer, revisione, cronologia e progressi salvati. Le domande nella lingua attiva sono ora derivate e non più sincronizzate con un effetto; la scadenza del timer chiude la prova dal callback del timer con `useEffectEvent`. HTML e `localStorage` identici prima e dopo in 15 stati resi deterministici (seme fisso per l'ordine delle domande, orologio fisso o finto per il timer), 6 test dell'hook — 2026-09-26. Estratta la remediation AI in `src/hooks/useRemediation.ts`: HTML, richieste all'API e `localStorage` identici in 27 stati, 5 test dell'hook. Preparando il confronto è emerso che le domande della remediation non erano mai mostrate (la schermata dei risultati restava sopra), corretto a parte nella PR #75 con un test end-to-end — 2026-09-26. Estratta l'area di studio in `src/hooks/useStudySession.ts`: dominio, concetto selezionato (salvata solo la chiave, l'oggetto si ricava dalla lingua attiva) e checklist salvata; tolta l'ultima eccezione `set-state-in-effect`. HTML e `localStorage` identici in 23 stati, compreso il cambio di lingua con lo stesso concetto selezionato, 4 test dell'hook — 2026-09-26. Estratta la configurazione del quiz in `src/hooks/useQuizSetup.ts` (preset, domande per dominio, obiettivo scelto, estrazione casuale): 40 stati identici, compreso l'ordine casuale delle domande, 4 test dell'hook — 2026-09-26. Tutto lo stato delle sezioni è ora negli hook e `App.tsx` non ha più eccezioni `set-state-in-effect`. Diviso il JSX in 8 componenti di vista: `AppHeader`, `ChecklistSidebar`, `StudyContent`, `QuizSetupScreen`, `QuizQuestionScreen`, `QuizResultsScreen`, `RemediationScreen`, `NewQuestionsModal`. `App.tsx` passa a 485 righe (obiettivo < 500) e resta il punto che collega hook e viste. HTML identico in 72 stati deterministici — 2026-09-26.
-- [x] **P1 — Scomporre `server.ts`:** `server/app.ts` costruisce l'app con `createApp(opzioni)` (middleware di sicurezza, `/healthz`, le due rotte AI, file statici) e riceve il client Gemini come parametro; `server.ts` legge l'ambiente, aggiunge Vite in sviluppo e avvia il server. Comportamento invariato, verificato con smoke test, end-to-end e modalità sviluppo — 2026-09-24.
-- [x] **P1 — Fonti dei contenuti:** mappatura dei 28 obiettivi, fonti nelle guide e matrice di copertura. Correzioni dei Domini 1–5 applicate e autorizzate; eliminati stati di attesa e obblighi di approvazione umana il 2026-10-02. Rapporti in `docs/domain-1-review.md` e `docs/domains-1-5-review.md`.
-- [x] **P1 — Eliminare duplicazioni:** le definizioni presenti sia nel glossario sia nelle sottovoci devono puntare a una voce canonica tramite ID. Il glossario è costruito dalle sottovoci, quindi il doppione era una sottovoce con lo stesso concetto in due domini. Su 14 nomi ripetuti, 10 erano lo stesso concetto definito due volte (least privilege, hashing, encryption, CVE, CVSS, falso positivo e negativo, insider threat, penetration test, rules of engagement): ora la definizione è scritta una volta sola nella voce canonica, e la sottovoce dell'altro dominio la riceve tramite il riferimento `dominio:checklistKey` di `src/canonicalTerms.ts`, conservando la propria analisi e il consiglio d'esame. Il glossario mostra una voce per concetto, con «Si studia anche in», e il filtro per dominio la trova in tutti i domini; i segnalibri sulle voci duplicate passano alla voce canonica. Gli altri 8 sono omonimi con significati diversi (i piani di Zero Trust e delle SDN, Recovery, Reporting, gli scenari PBQ) e sono dichiarati con il motivo. `tests/canonicalTerms.test.ts` rifiuta un nuovo nome ripetuto che non sia collegato o dichiarato omonimo — 2026-09-28.
-- [x] **P1 — Glossario centralizzato:** ~550 voci con ricerca, filtri per dominio e categoria, indice A–Z e segnalibri (`src/components/GlossarySection.tsx`).
-- [x] **P2 — Valutare l'estrazione dei dataset in JSON/YAML con schema:** solo dopo che i test coprono la validazione dello schema; beneficio principale: contributi di contenuto senza toccare codice TypeScript. Prima la condizione: `src/contentSchema.ts` descrive i contenuti con zod (lo stesso contratto dei tipi più le regole che i tipi non esprimono: risposta dentro le opzioni, risposte multiple coerenti, nessun campo sconosciuto, date ISO, tabelle rettangolari) e `tests/contentSchema.test.ts` lo applica a tutti i dataset, italiano e inglese, verificando anche che siano dati puri serializzabili in JSON senza perdite. Poi la valutazione, in [ADR 0005](docs/adr/0005-formato-dei-dataset.md): i dataset restano in TypeScript finché non arrivano contributi di chi non usa TypeScript, uno strumento editoriale o la divisione dei dati per dominio; con lo schema pronto, l'estrazione diventa un passo meccanico — 2026-09-28.
-
-#### Qualità automatizzata e CI
-
-- [x] **P0 — Pipeline di base:** typecheck, lint, test Vitest e build su ogni push a `main` e su ogni pull request.
-- [x] **P0 — Validazione dei dati strutturati:** i dataset sono tipizzati e verificati da `tests/dataset.test.ts` (ID, opzioni, risposte, spiegazioni, scenari, parità IT/EN).
-- [x] **P0 — Aggiornare Node.js in CI e in `engines`:** CI su matrice Node 22 + 24 (al posto di Node 20, fuori supporto da aprile 2026), `.nvmrc` a 24 e README IT/EN allineati — 2026-09-24. Togliere Node 22 dalla matrice alla sua fine vita (aprile 2027).
-- [x] **P0 — Aggiungere Markdown linting:** `markdownlint-cli2` 0.23.2 (versione esatta) con `.markdownlint-cli2.jsonc` su tutti i `.md` della radice, di `docs/` e di `.github/`; `npm run lint:md`, incluso in `npm run check` e nel workflow `docs.yml`. La dipendenza `smol-toml` 1.7.0 (GHSA-7w5x-hrqm-74c2, DoS) è forzata a 1.8.0 con `overrides` — 2026-09-24.
-- [x] **P0 — Aggiungere link checking:** `lychee` 0.24.2 (`lychee.toml`, retry, esclusioni motivate): link interni e ancore `#sezione` offline a ogni push e PR, link esterni ogni lunedì e su richiesta, così un sito remoto irraggiungibile non blocca PR estranee — 2026-09-24.
-- [x] **P1 — Aggiungere spell checking tecnico:** `npm run spellcheck` controlla separatamente IT/EN su sottovoci, domande, guide, interfaccia e percorsi, in locale e in CI. L’italiano usa un vocabolario MIT del progetto validato sui propri contenuti, senza importare dizionari GPL o cambiare la politica delle licenze. Parole nuove richiedono aggiunta esplicita dopo verifica; test con refusi, accenti, elisioni e isolamento delle lingue. Copertura del corpus didattico, non dell’intera lingua o della grammatica: [`docs/italian-spelling.md`](docs/italian-spelling.md) — 2026-10-02. **M**
-- [x] **P1 — Test dell'API server:** `tests/api.test.ts`, 15 test sull'app reale con un finto client Gemini (senza rete e senza costi): validazione e limiti degli input, cronologia ridotta e troncata, guardia anti-injection nel prompt di sistema, chiave mancante, budget esaurito (503) e non consumato dalle richieste invalide, timeout reale (504), errori del provider non esposti (502), output della remediation trattato come non attendibile, rate limit (429). Nessuna nuova dipendenza: `fetch` al posto di Supertest — 2026-09-24.
-- [x] **P1 — Test dei componenti principali:** Testing Library e jsdom configurati; `tests/DomainGuidePanel.test.tsx` verifica apertura, sotto-argomenti come liste etichettate, tabelle con didascalia in regioni raggiungibili da tastiera, errori comuni etichettati a parole, soluzioni nascoste e sezioni opzionali assenti — 2026-09-24. Dal 2026-09-29 anche quiz e cambio lingua: `tests/QuizQuestionScreen.test.tsx` usa la sessione, la schermata e il provider di lingua veri e verifica le opzioni come radio di un gruppo etichettato, la conferma solo dopo una scelta, il verdetto a parole sulle opzioni e nell'annuncio per screen reader, le risposte multiple come caselle di controllo, e il cambio di lingua a metà prova senza perdere la domanda né la risposta; `tests/AppHeader.test.tsx` verifica i pulsanti IT/EN (stato premuto, lingua del documento, scelta ricordata), attendendo il caricamento reale del file dei contenuti inglesi. **M**
-- [x] **P1 — Soglia di copertura dei test** per la logica pura e il server (`quiz.ts`, `remediation.ts`, `storage.ts`, `localizedData.ts`, `progressBackup.ts`, `questionObjectives.ts`, `server/`), non per le viste React coperte dagli end-to-end: `npm run test:coverage` in CI con soglie 92% istruzioni, 78% rami, 90% funzioni, 93% righe (valori al 2026-09-26: 94,8 / 82,2 / 93,6 / 96,0). `storage.ts` passato dal 7% al 100% con test sul blocco dell'archiviazione del browser — 2026-09-26.
-- [x] **P1 — Generare automaticamente la matrice di copertura:** `npm run coverage-matrix` genera `docs/coverage-matrix.md` (domande per obiettivo e per livello cognitivo, esercizi guidati, priorità); un test fa fallire la CI se il file non è aggiornato — 2026-09-24.
-- [x] **P1 — Job separati e con permessi minimi:** `quality` (typecheck, lint, test), `build`, `security`, `docs`, ognuno con messaggi d'errore leggibili. Verificato il 2026-09-27: quattro workflow separati (CI con qualità, build e smoke su Node 22 e 24, end-to-end e immagine Docker; Security con secret scan, audit, dependency review, CodeQL, SBOM e scansione dell'immagine; Docs; Scorecard), tutti con `contents: read` come base e permessi aggiuntivi solo nei job che ne hanno bisogno, dichiarati e motivati; `tests/workflows.test.ts` impone permessi espliciti e Action fissate a SHA. Ogni passo ha un nome leggibile e lo smoke test spiega che cosa manca quando fallisce.
-- [x] **P1 — Rendere obbligatori i controlli principali sulle pull request** tramite branch protection. Regola `main` salvata e confermata da GitHub il 2026-10-02: Node 22/24, E2E/axe, audit e gitleaks obbligatori da GitHub Actions; branch aggiornato e conversazioni risolte; nessuna approvazione richiesta. Regola applicata anche agli amministratori; force push e cancellazione bloccati.
-- [x] **P2 — Anteprima per pull request e deploy dalla branch principale:** configurazione Vercel v3, frontend statico e API Node 24 separati, segreti gestiti a runtime, AI disattivata nelle anteprime, build e smoke dedicati in CI — 2026-10-02. Completato il 2026-10-05 verificando il progetto già esistente `chiara11/comp-tia-security-sy-0-701`, collegato a GitHub: produzione pubblica da `main`, anteprima della PR 89 protetta dall'autenticazione Vercel, entrambe Ready. `npm run smoke:live` verifica gli URL di produzione, gli header, la cache, il fallback SPA, i 404 di asset/API, la salute JSON e gli input invalidi IT/EN senza chiamate AI; 13 test impediscono falsi successi e l'invio di codici a un'altra origine. Quiz, tastiera, cambio lingua e Trainer dell'anteprima provati dal vivo. URL ed evidenze in [`docs/deployment.md`](docs/deployment.md).
-- [x] **P2 — Release versionate:** `.github/workflows/release.yml` valida tag semantico, versione del pacchetto, note datate e appartenenza a `main`; esegue check, audit, build e smoke e prepara una bozza con build, SBOM CycloneDX e checksum. Procedura IT/EN in [`docs/releases.md`](docs/releases.md), validatore coperto da `tests/release.test.ts` — 2026-10-02. La prima release verrà creata quando il maintainer invierà un tag.
-
-#### Aggiornamento delle dipendenze
-
-Dependabot è attivo dal 2026-09-24 e ha già aperto 6 pull request. Integrarle senza metodo è il modo più rapido per rompere un'app che funziona; lasciarle aperte accumula debito e vulnerabilità. Le regole seguenti bilanciano le due cose.
-
-- [x] **P0 — Smoke test di avvio in produzione nella CI:** `scripts/smoke-test.ts` (`npm run smoke`) avvia `dist/server.cjs` con `NODE_ENV=production` e verifica pagina dell'app, CSP, `nosniff`, assenza di `X-Powered-By`, fallback della SPA e risposta 400 delle due API; eseguito dalla CI dopo la build. Verificato che fallisce con Express 5 e la vecchia rotta `"*"` (`PathError: Missing parameter name`) — 2026-09-24.
-- [x] **P0 — Smistare le 6 PR aperte di Dependabot:** ognuna verificata il 2026-09-24 in una copia separata del repository, con `npm ci`, typecheck, lint, test, build e smoke test; integrate tutte insieme il 2026-09-25 in un'unica PR. Il lockfile è stato rigenerato con `npm install --before` così che nessun pacchetto, anche indiretto, abbia meno di 7 giorni (`npm install` avrebbe preso vite 8.3.1 e motion 13.4.3, pubblicati il giorno prima). Verifiche: 160 test, smoke test, 24 end-to-end, server di sviluppo, animazione del pannello AI. Ordine e prerequisiti verificati:
-
-  | Ordine | PR di Dependabot | Esito della verifica | Prerequisito |
-  |---|---|---|---|
-  | 1 | Gruppo npm minor/patch (10 pacchetti, esbuild 0.25 → 0.28) | ✅ tutto verde | Nessuno |
-  | 2 | `express` 4 → 5 e `@types/express` | ✅ tutto verde **dopo** due correzioni: la rotta `"*"` fermava l'avvio (`PathError: Missing parameter name`) e le API senza corpo rispondevano 502 invece di 400 | Correzioni di `server.ts` e smoke test di questo branch |
-  | 3 | `vite` 6 → 8 **insieme a** `@vitejs/plugin-react` 5 → 6 | ✅ tutto verde, build in circa 1 s invece di 4 s, nessun avviso | Gruppo minor/patch già integrato (Vite 8 richiede esbuild 0.27 o 0.28) e `vite.config.ts` con `import.meta.dirname`. Le due PR modificano lo stesso lockfile: integrare la prima, poi chiedere a Dependabot di aggiornare la seconda (`@dependabot rebase`) |
-  | 4 | `motion` 12 → 13 | ✅ tutto verde; da controllare a vista l'animazione del pannello AI | Nessuno |
-  | 5 | Actions `checkout` e `setup-node` a v7 | Non verificabile in locale; il commento di versione rispetta `tests/workflows.test.ts`. Consigliata: le v4 sono scritte per Node 20, che GitHub sta ritirando dai runner (la CI è ancora verde al 2026-09-24) | La CI della PR stessa deve essere verde su Node 22 e 24 |
-
-- [x] **P1 — Policy di aggiornamento documentata in `CONTRIBUTING.md`:** sicurezza entro 48 ore, minor e patch entro 7 giorni, ogni major in una PR dedicata con changelog, smoke test e verifica manuale — 2026-09-24.
-- [x] **P1 — Migrazione a Express 5** (5.2.1, 2026-09-25), sostituisce la voce P2 precedente: il fallback della SPA è ora un middleware finale compatibile con Express 4 e 5 (smoke test verde con 4.22.3 e 5.2.1); anche le API senza corpo JSON rispondono 400 e non 502 con Express 5 (`req.body ?? {}`); gli errori asincroni restano gestiti da `try/catch` nelle rotte, compatibili con la gestione nativa di Express 5.
-- [x] **P2 — Pulizia dei branch remoti già integrati** (`codex/adaptive-learning-hardening`, `claude/loving-brown-fmfu60`, `claude/elegant-turing-xo631b`), dopo aver verificato che non contengano commit mancanti in `main`. **S** — Verificato il 2026-10-03: i tre branch non esistono più su GitHub (l'API risponde 404); restano solo `main` e il branch della sessione di lavoro, che non ha commit né patch assenti da `main`.
-
-#### Collaborazione e manutenzione
-
-- [x] **P0 — Creare `CONTRIBUTING.md`:** bilingue, con installazione, controlli (`check`, `build`, `smoke`), regole per contenuti e traduzioni, regole per il codice, policy di aggiornamento delle dipendenze e convenzioni di commit — 2026-09-24.
-- [x] **P0 — Aggiungere template di issue e pull request:** moduli bilingui per errore nei contenuti, bug dell'app e proposta didattica (domanda, guida, laboratorio); issue vuote disattivate e vulnerabilità indirizzate a Security Advisories; modello di PR con verifiche e checklist — 2026-09-24.
-- [x] **P0 — Creare `CHANGELOG.md`** nel formato *Keep a Changelog*, con la sezione *Unreleased* per questo ciclo e la cronologia precedente ricostruita dal log git per temi — 2026-09-24.
-- [x] **P1 — Definire `CODEOWNERS`:** responsabilità per area documentate; nessuna approvazione del proprietario o secondo revisore obbligatori — 2026-10-02.
-- [x] **P1 — Policy di versionamento:** SemVer dichiarato in `CHANGELOG.md` (correzioni di contenuto = patch, nuove domande o sezioni = minor, formato dei progressi salvati o syllabus = major) — 2026-09-24.
-- [x] **P1 — Processo di deprecazione:** contenuti superati marcati `deprecated` con motivazione, senza rimozione immediata. Domande e sottovoci accettano `deprecated: { since, reason }`: restano nel dataset, così gli ID a cui puntano i progressi salvati continuano a esistere, ma l'app non le mostra, non le estrae nei quiz e non le conta, come la matrice di copertura. `tests/deprecation.test.ts` impone data e motivazione; il processo è descritto in `CONTRIBUTING.md` — 2026-09-27.
-- [x] **P2 — Automatizzare le issue ricorrenti:** revisione link, aggiornamento fonti, audit dipendenze e parità linguistica. Dal 2026-10-03 il workflow `maintenance.yml` apre il primo di ogni mese (e su richiesta) la issue «Manutenzione periodica — AAAA-MM», con etichetta `maintenance`, e la aggiorna se esiste già: link esterni dei documenti e delle fonti non raggiungibili (lychee), fonti da confermare come revisione in vigore con l'età della mappatura (oltre 180 giorni è segnalata), `npm audit` con i pacchetti vulnerabili e `npm outdated` con le major da pianificare, coppie di documenti italiano/inglese in cui una lingua è cambiata dopo l'altra. Il corpo è generato da `scripts/maintenance-report.ts`, verificato da `tests/maintenanceReport.test.ts`; il workflow può solo leggere il codice e scrivere issue.
-
-**Criteri di accettazione:** una nuova domanda o pagina si aggiunge seguendo un template e un test la valida; la pull request riceve feedback automatico chiaro; indice e matrice di copertura non richiedono aggiornamenti manuali.
-
----
-
-### 🛡️ Security Posture & Content
-
-**Obiettivo:** rendere il progetto sicuro da mantenere e da esporre, tecnicamente affidabile e adatto a esercitazioni controllate.
-
-#### Governance e sicurezza del repository (supply chain)
-
-- [x] **P0 — `SECURITY.md`:** canale privato tramite GitHub Security Advisories, ambito e regole di disclosure responsabile, in IT e EN.
-- [x] **P0 — Minimo privilegio nei workflow:** `permissions: contents: read` dichiarato a livello di workflow.
-- [x] **P0 — Lockfile versionato:** `package-lock.json` presente e installazione con `npm ci`.
-- [x] **P0 — Fissare le GitHub Actions a commit SHA immutabili:** `checkout` e `setup-node` fissate a SHA (v4.4.0, poi v7.0.1 e v7.0.0 dal 2026-09-25, SHA verificati sui tag ufficiali) con commento della versione, `persist-credentials: false`, processo di aggiornamento documentato in `ci.yml` e imposto da `tests/workflows.test.ts` — 2026-09-24.
-- [x] **P0 — Secret scanning:** job `Secret scan (gitleaks)` in `.github/workflows/security.yml` su ogni push, pull request e settimanalmente, sull'intera cronologia; `.gitleaks.toml` mantiene le regole predefinite con due sole eccezioni motivate (nomi di chiavi di `localStorage` e identificativi della checklist, unici 4 falsi positivi su 130 commit) — 2026-09-24. Da verificare nelle impostazioni del repository che *secret scanning* e *push protection* di GitHub siano attivi.
-- [x] **P0 — Audit delle dipendenze:** Dependabot per `npm` e `github-actions` (settimanale, attesa di 7 giorni, minor/patch raggruppati) e job `Dependency audit (npm)` con `npm audit --omit=dev --audit-level=high` — 2026-09-24. Esito attuale: 0 vulnerabilità nelle dipendenze di produzione.
-- [x] **P0 — SAST pertinente:** job `CodeQL (JavaScript/TypeScript)` con la suite `security-extended`, senza build, risultati nella scheda Security — 2026-09-24. Se nel repository è attivo il *default setup* di CodeQL, va disattivato perché va in conflitto con questa configurazione avanzata.
-- [x] **P1 — Dependency review sulle pull request:** job `Dependency review` che blocca le PR che introducono dipendenze con vulnerabilità `high` o `critical` — 2026-09-24. Dal 2026-09-27 blocca anche le licenze fuori da un elenco `allow-licenses` verificato sulle dipendenze attuali: solo licenze compatibili con MIT (permissive, MPL-2.0 per il solo strumento di build lightningcss, OFL-1.1 per i font, CC-BY-4.0 per i dati di caniuse-lite, Python-2.0 in sviluppo), nessuna GPL, LGPL, AGPL o SSPL. `tests/workflows.test.ts` tiene allineati elenco e `package-lock.json`, così un aggiornamento con una licenza nuova si vede già in locale. Le note OFL dei font sono distribuite con l'app in `public/licenses/`.
-- [x] **P1 — OpenSSF Scorecard** come indicatore periodico della postura del repository: `.github/workflows/scorecard.yml` (ossf/scorecard-action v2.4.4 a SHA) a ogni push su `main`, ogni lunedì e a ogni modifica della protezione del branch. I risultati arrivano nella scheda Security e nell'API pubblica, che serve il badge dei README — 2026-09-26. Da rivedere dopo il primo punteggio: i controlli con esito basso diventano voci della roadmap.
-- [x] **P1 — SBOM (CycloneDX) allegato alle release** dell'app: job `SBOM (CycloneDX)` in `security.yml` con `npm sbom` (nessuna nuova dipendenza). Elenca i circa 128 pacchetti di produzione con versione, licenza e purl, ed è conservato 90 giorni come artifact di ogni build — 2026-09-26. Dal 2026-10-02 il workflow `release.yml` lo allega anche alle bozze di release per tag insieme alla build e ai checksum.
-- [x] **P1 — Scansione container e IaC:** il `Dockerfile` è verificato in CI (build, esecuzione irrobustita, utente non root) e Dependabot ne aggiorna le immagini base. Il job `Container image scan (Grype)` in `security.yml` (anchore/scan-action v7.4.2 fissata a SHA) analizza l'immagine a ogni PR, a ogni push su `main` e ogni lunedì. Fallisce per vulnerabilità high o critical che abbiano già una correzione e invia i risultati alla scheda Security. Alla prima esecuzione ha trovato vulnerabilità high già corrette: l'immagine distroless di Node era ferma alla 24.14.0, mentre l'ultima release di sicurezza è la 24.21.0. Ora il runtime è `distroless/cc-debian12` con il binario di Node della fase di build, e se la scansione fallisce il log mostra la tabella dei risultati. Restano 6 CVE di `libssl3` 3.0.20 nell'immagine base distroless, corrette nella 3.0.22 che distroless non ha ancora pubblicato. Non sono raggiungibili: Node incorpora la propria OpenSSL (3.5.8) e non carica la libssl di sistema. Sono ignorate una per una in `.grype.yaml`, e il job `Container image` verifica a ogni esecuzione che la libreria non sia caricata. Le eccezioni vanno tolte con il prossimo digest distroless proposto da Dependabot — 2026-09-26.
-- [x] **P2 — Firma delle release e attestazione di provenienza** (GitHub artifact attestation / SLSA) per build e immagini — 2026-10-03. `release.yml` firma un'attestazione di provenienza SLSA con l'identità OIDC dell'esecuzione (`actions/attest-build-provenance` fissata a SHA) per `app.tar.gz` e `sbom.cdx.json`; un job successivo pubblica l'immagine del container in `ghcr.io/OWNER/REPO` (tag della versione e `latest`) e ne attesta la provenienza per digest, con l'attestazione conservata nel registro accanto all'immagine. L'immagine è pubblicata solo dopo la validazione del tag e i controlli del job di release. Verifica con `gh attestation verify`; procedura in [`docs/releases.md`](docs/releases.md), passi e permessi richiesti imposti da `tests/workflows.test.ts`.
-
-#### Sicurezza dell'applicazione (AppSec)
-
-- [x] **P0 — Chiave API solo lato server:** il browser non riceve mai `GEMINI_API_KEY`; `.env*` escluso da git.
-- [x] **P0 — Header di sicurezza in produzione:** `helmet` con CSP restrittiva (`default-src 'self'`, `object-src 'none'`, `frame-ancestors 'self'`).
-- [x] **P0 — Limiti sugli input:** body JSON max 64 kB, messaggio max 2.000 caratteri, history max 8 turni, max 10 argomenti da 120 caratteri.
-- [x] **P0 — Rate limiting** su `/api/` (30 richieste ogni 15 minuti per IP) con `trust proxy` in produzione.
-- [x] **P0 — Nessuna fuga di dettagli interni:** gli errori del provider restano nei log del server.
-- [x] **P0 — Output AI reso senza `innerHTML`:** il Markdown è convertito in JSX, quindi il testo generato non può iniettare HTML.
-- [x] **P0 — Timeout e annullamento delle chiamate Gemini:** `AbortSignal.timeout(GEMINI_TIMEOUT_MS)` su entrambi gli endpoint (predefinito 30 s, configurabile); il timeout risponde 504 con messaggio localizzato. Verificato contro un finto endpoint che non risponde: richiesta annullata dopo 504 ms con `AbortError` — 2026-09-24.
-- [x] **P0 — Limitare anche l'output della chat:** `maxOutputTokens: 2048` su `/api/chat` (4096 già presente sulla remediation) — 2026-09-24.
-- [x] **P0 — Tetto di spesa globale (denial of wallet):** `server/aiGuard.ts` con budget giornaliero per giorno UTC (`AI_DAILY_LIMIT`, predefinito 500, `0` disattiva l'AI), controllato prima di ogni chiamata a Gemini, risposta 503 localizzata; valori non validi nella configurazione ricadono sul predefinito invece di togliere il limite. Test unitari in `tests/aiGuard.test.ts` e verifica dal vivo nello smoke test — 2026-09-24. Il contatore è per processo: con più istanze il tetto si moltiplica.
-- [x] **P1 — Rimuovere l'header `User-Agent: aistudio-build`:** rimosso; un unico `geminiClient()` crea il client per entrambi gli endpoint — 2026-09-24.
-- [x] **P1 — Endpoint `/healthz` e arresto graduale:** `GET /healthz` risponde `{"status":"ok"}` senza cache e senza dettagli di configurazione; su `SIGTERM`/`SIGINT` il server smette di accettare connessioni e chiude le richieste in corso. Entrambi verificati dallo smoke test — 2026-09-24.
-- [x] **P1 — Log strutturati:** `server/log.ts` scrive una riga JSON per evento (avvio con la configurazione, ogni richiesta `/api/` con metodo, percorso senza query, stato e millisecondi, errori di Gemini con tipo e dettaglio ripulito dalle chiavi, arresto). Mai testo dell'utente, argomenti, IP o chiavi: test dedicati, e lo smoke test fallisce se una riga non è JSON o contiene la chiave. Senza nuove dipendenze; `dotenv` reso silenzioso perché la sua riga promozionale rompeva il formato — 2026-09-24.
-- [x] **P1 — Irrigidire la CSP:** font Inter e JetBrains Mono inclusi nel bundle (Fontsource 5.3.0, SIL OFL 1.1) al posto di Google Fonts, mai incorporati come `data:`; tolti `fonts.googleapis.com`, `fonts.gstatic.com` e `'unsafe-inline'`; aggiunti `base-uri 'self'` e `form-action 'self'`. Un test end-to-end percorre studio, guida, glossario e quiz e fallisce a ogni violazione della CSP o richiesta verso un'altra origine; lo smoke test verifica le direttive — 2026-09-24.
-- [x] **P1 — Validazione degli input con schema** condiviso tra client e server al posto dei controlli manuali: `src/apiSchemas.ts` con Zod 4 (`zod/mini`, circa 7 kB compressi nel browser invece dei 22 kB dell'API classica). Il server valida richieste e output del modello; il browser valida le risposte del server e invia la cronologia già troncata ai limiti del server, così una conversazione lunga non supera più il limite di 64 kB del corpo. Stessi codici di stato di prima (400, 413, 502), argomenti non testuali ora rifiutati con 400; `tests/apiSchemas.test.ts` e test end-to-end su una risposta di forma errata — 2026-09-26.
-- [x] **P1 — Protezione minima degli endpoint AI in deploy pubblici:** `AI_DAILY_LIMIT=0` spegne l'AI; `AI_ACCESS_TOKEN` la limita a chi conosce un codice, inviato nell'intestazione `X-Access-Token`. Il confronto avviene in tempo costante sugli hash SHA-256, dopo il rate limit (i tentativi sono limitati) e prima di Gemini; risponde 401 con un codice d'errore. L'app chiede il codice nel pannello del Trainer AI e lo conserva solo nella scheda (`sessionStorage`); il server avvisa nei log se il codice è più corto di 16 caratteri. 8 test API e un test end-to-end. Nello stesso lavoro, corretti due difetti di accessibilità della chat trovati dal test: contrasto dell'orario dei messaggi e area dei messaggi non raggiungibile da tastiera (ora `role="log"`) — 2026-09-26.
-- [x] **P1 — Container di deploy sicuro:** `Dockerfile` multi-stage. Il runtime è distroless Node 24 senza shell né gestore di pacchetti, con utente `nonroot` (uid 65532) e file di proprietà di root. Le immagini base sono fissate per digest e aggiornate da Dependabot. Contiene solo `dist/`, con il server impacchettato insieme alle sue librerie (`npm run build:standalone`): 219 MB invece di 481. `HEALTHCHECK` su `/healthz`; verificato con `--read-only`, `--cap-drop=ALL` e `no-new-privileges`, arresto pulito in 200 ms. Il job CI `Container image` ripete ogni volta queste verifiche; istruzioni nei README — 2026-09-26.
-- [x] **P1 — Migrazione a Express 5:** completata il 2026-09-25, vedi [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze), perché Dependabot l'ha già proposta.
-
-#### Sicurezza della componente AI (OWASP Top 10 for LLM Applications)
-
-- [x] **LLM01 — Prompt injection (mitigazione di base):** il system prompt dichiara che i messaggi e gli argomenti dell'utente sono dati, non istruzioni.
-- [x] **LLM05 — Gestione dell'output:** la remediation usa uno schema JSON e l'output è validato da `validateRemediationPayload` prima dell'uso.
-- [x] **LLM10 — Consumo illimitato:** rate limit per IP, limiti sugli input, timeout, `maxOutputTokens` su entrambi gli endpoint e tetto giornaliero complessivo — 2026-09-24.
-- [x] **P1 — Suite di test anti-injection:** `tests/promptInjection.test.ts` invia 11 attacchi noti al server reale con un client Gemini simulato: sostituzione delle regole, cambio di ruolo, tag di chiusura falsificati (maiuscole, spazi, parentesi a larghezza piena, caratteri invisibili, frammenti annidati), turni di dialogo inventati, HTML e script, richieste di rivelare il prompt. Verifica che le regole restino identiche e che ogni attacco resti nel suo tag. Nuova difesa: *spotlighting* in `server/promptSafety.ts` per domanda, cronologia e argomenti della remediation. Con i test di mutazione, ogni difesa rimossa fa fallire la suite. Un test end-to-end verifica che HTML, script e link `javascript:` in una risposta AI siano mostrati come testo e mai eseguiti — 2026-09-26.
-- [x] **P1 — Avviso trasparente nell'interfaccia:** avviso sempre visibile nel pannello del Trainer AI (le risposte possono essere sbagliate, non sostituiscono gli obiettivi ufficiali, niente dati personali), verificato da un test end-to-end — 2026-09-24.
-- [x] **P1 — Provenienza delle domande AI:** etichetta esplicita nelle due lingue; contenuti temporanei della sessione separati dalla banca ufficiale. Proposta di un flusso di revisione ritirata su richiesta della proprietaria — 2026-10-02.
-- [x] **P2 — Astrazione del provider AI:** `server/aiProvider.ts` definisce `AiProvider` (`generateText`, `generateJson` con schema JSON neutro, timeout e limite di token per richiesta). Le route `/api/chat` e `/api/quiz/remediation` non importano più l'SDK Gemini; `createGeminiProvider` è l'unico adattatore, e per cambiare fornitore basta passare `createProvider` a `createApp`. Comportamento e test esistenti invariati; `tests/aiProvider.test.ts` verifica la mappatura verso Gemini e una route servita da un fornitore diverso — 2026-10-04.
-
-#### Integrità e privacy dei dati locali
-
-- [x] **P0 — Persistenza solo nel browser:** progressi, storico e segnalibri restano in `localStorage`; nessun account.
-- [x] **P0 — Lettura difensiva:** `storage.ts` non lancia mai eccezioni; `sanitizeQuizHistory` e `sanitizeQuestionProgress` scartano dati corrotti o manipolati; dal 2026-09-24 anche checklist e segnalibri passano da `sanitizeChecklist` e `sanitizeBookmarks` (un valore non-array nei segnalibri bloccava il glossario).
-- [x] **P1 — Versionare lo schema dei dati salvati:** il file di backup ha un campo `schema` e rifiuta le versioni sconosciute (2026-09-24). I dati in `localStorage` hanno una versione (`comptia_sy0701_schema`) e `migrateStorage()` applica all'avvio, una sola volta e in ordine, i passi mancanti di `STORAGE_MIGRATIONS`. Ogni passo riuscito viene registrato subito, così un errore a metà riprende dal punto giusto; i dati di una versione più recente non vengono toccati. 7 test; procedura documentata in `CONTRIBUTING.md` — 2026-09-26.
-- [x] **P1 — Esportazione e importazione dei progressi in JSON:** sezione "I tuoi dati" nel simulatore (`src/components/DataControls.tsx`, `src/progressBackup.ts`); l'importazione mostra un riepilogo e chiede conferma, valida il file con gli stessi sanificatori (dimensione massima, applicazione, schema, voci malformate, prototype pollution) e non invia nulla al server. 11 test unitari e 3 end-to-end — 2026-09-24.
-- [x] **P1 — Pulsante "Cancella tutti i miei dati":** con seconda conferma e annullamento, rimuove tutte le chiavi dell'app da questo browser; coperto da un test end-to-end — 2026-09-24.
-
-#### Qualità e correttezza dei contenuti
-
-- [x] **P0 — Copertura SY0-701 verificata da test:** ogni obiettivo numerato è coperto e la distribuzione delle domande resta entro ±5% dei pesi ufficiali.
-- [x] **P0 — Spiegazione di tutte le opzioni:** i test verificano che la spiegazione nomini le risposte corrette e discuta ogni distrattore, in IT e EN.
-- [x] **P0 — Matrice di copertura per obiettivo pubblicata:** `docs/coverage-matrix.md`, collegata dai README — 2026-09-24. Ha per ogni obiettivo le fonti, più il catalogo delle fonti primarie e secondarie, i cui link sono verificati dal controllo settimanale dei link esterni.
-- [x] **P0 — Distinguere fonti primarie e secondarie:** catalogo in `src/contentReview.ts`: primarie gli obiettivi d'esame CompTIA, gli standard e le norme (NIST SP 800, CSF 2.0, RFC, ISO/IEC 27001, GDPR, PCI DSS), secondarie i riferimenti di comunità ed enti (OWASP, CIS, MITRE ATT&CK, CISA, FIRST). Un test impone per ogni obiettivo gli obiettivi d'esame e almeno un'altra fonte primaria — 2026-09-26.
-- [x] **P0 — Citazioni verificabili:** fonti verificabili a livello di obiettivo, con la data dell'assegnazione (2026-09-26) e i link controllati ogni settimana. Dal 2026-09-28 anche le citazioni puntuali: i 50 concetti che nominano una legge, uno standard o un sistema di punteggio (GDPR, PCI DSS, HIPAA, ISO/IEC 27001, SOC 2, CVSS, NIST CSF e le SP 800-37, 53, 56A, 61, 63B, 88 e 207, OWASP, MITRE ATT&CK) la citano in `src/citations.ts`, con l'articolo quando il testo afferma una regola precisa: notifica in 72 ore (art. 33), comunicazione agli interessati (art. 34), ambito territoriale (art. 3, par. 2), sanzioni (art. 83, par. 5), poteri dell'autorità (art. 58), DPO (artt. 37–39), cancellazione e sue eccezioni (art. 17), trasferimenti verso Paesi terzi (artt. 44–49). Dove l'articolo non è certo si cita il documento intero, mai un articolo supposto. Le fonti compaiono sotto ogni concetto («Fonti citate») e in `docs/gap-analysis.md`, i cui link sono controllati ogni settimana; sei documenti nuovi sono entrati nel catalogo e negli obiettivi pertinenti. `tests/citations.test.ts` rifiuta un concetto che nomina un documento senza citarlo, in entrambe le lingue, e una regola del GDPR senza articolo.
-- [x] **P0 — Revisionare gli esempi per evitare cattive pratiche:** nessuna credenziale reale, disabilitazione ingiustificata dei controlli o comando distruttivo copiabile senza avvertenze. Revisione del 2026-09-27: nessun comando pericoloso né credenziale trovati, ma gli scenari usavano domini reali di terzi (anche di una banca, come esempio di typosquatting) e la ragione sociale reale di un ente di formazione come azienda protagonista. Sostituiti con domini riservati (RFC 2606: `example.com`, `.example`, `.test`) e con il nome di fantasia «Kestrelia»; la scansione `nmap` d'esempio ricorda l'autorizzazione. `tests/contentSafety.test.ts` impedisce che ritornino, insieme a comandi che spengono protezioni o distruggono dati e a stringhe con la forma di credenziali reali.
-- [x] **P0 — Separare teoria d'esame e pratica reale:** evidenziare semplificazioni e differenze tra concetto, prodotto e implementazione. Ogni guida di dominio ha la sezione «Esame e realtà»: tre argomenti per dominio (per esempio Zero Trust, gestione delle vulnerabilità, RPO/RTO, SIEM, conformità) con «All'esame» e «Nella pratica» affiancati come callout, in italiano e in inglese; i test impongono almeno tre voci per dominio e lo stesso numero nelle due lingue. `CONTRIBUTING.md` chiede la stessa distinzione nei nuovi contenuti — 2026-09-27.
-- [x] **P1 — Processo di controllo dei contenuti:** correzioni documentate per i cinque domini e controlli automatici obbligatori. Obbligo di peer review ritirato su richiesta della proprietaria — 2026-10-02.
-- [x] **P1 — Tracciabilità delle fonti:** mappatura per obiettivo e data della mappatura in `src/contentReview.ts`; eliminati stati di revisione personale non richiesti — 2026-10-02.
-- [x] **P1 — Errata e storico correzioni:** `docs/errata.md` elenca per dominio gli errori sostanziali già corretti (cosa diceva, cosa dice ora, commit della correzione), ricostruiti dalla cronologia git; collegato dai README, con l'invito a segnalare nuovi errori tramite issue — 2026-09-26.
-- [x] **P1 — Collegare attacchi, controlli e rilevazione:** per ogni scenario indicare vettore, impatto, mitigazione, evidenza e limite del controllo. I 12 scenari d'attacco delle guide (domini 1–4) hanno la catena completa in italiano e inglese, mostrata dentro il ragionamento; `tests/domainGuides.test.ts` elenca gli scenari d'attacco e rifiuta una catena incompleta. Gli scenari di governance del dominio 5 non descrivono un attacco e restano senza.
-- [x] **P2 — Mappare i contenuti a framework complementari:** ogni obiettivo SY0-701 è collegato alle funzioni NIST CSF 2.0, ai CIS Controls v8 e alle tattiche MITRE ATT&CK più vicine (`src/frameworkMapping.ts`), pubblicate in `docs/framework-mapping.md` (generato con `npm run framework-mapping`); i test impongono che ogni obiettivo sia mappato, che i valori esistano e che il file sia aggiornato. NICE non è mappato. Gli obiettivi CompTIA restano il riferimento — 2026-10-04.
-- [x] **P2 — Tassi di errore biometrici (FAR, FRR, CER):** audit del 2026-10-06 — la copertura dei sotto-obiettivi SY0-701 è al 100% e il glossario ne deriva, ma i **tassi di errore biometrici** mancano del tutto in entrambe le lingue (`grep` di `crossover`, `false acceptance/rejection`, `falsa accettazione/falso rifiuto` = 0 in `src/data.ts` e `src/data.en.ts`). Sono materia d'esame dell'obiettivo 4.6 (MFA e biometria) e dell'appendice degli acronimi. Aggiungere un concetto nel gruppo «Identity & Access Control Models (Obj 4.6)» del Dominio 1: **FAR** (false acceptance rate, errore di sicurezza: un impostore accettato), **FRR** (false rejection rate, errore di usabilità: un utente legittimo respinto) e **CER/EER** (crossover/equal error rate, il punto in cui FAR = FRR, usato per confrontare sensori), con il compromesso sensibilità↔soglia, un «Piccolo Esempio Concentrato» e un consiglio d'esame (CER più basso = sensore migliore; alzare la soglia riduce il FAR ma alza il FRR). In italiano e inglese con parità di numeri/sigle (`tests/languageParity.test.ts`), esempio obbligatorio (`tests/gapAnalysis.test.ts`) e aggiornamento di `docs/coverage-matrix.md`. **Completato il 2026-10-06:** concetto «Biometric error rates (FAR, FRR, CER)» (`checklistKey` `BiometricErrorRates`) aggiunto al gruppo «Identity & Access Control Models (Obj 4.6)» del Dominio 1 in `src/data.ts` (IT) e `src/data.en.ts` (EN), con FAR (errore di sicurezza), FRR (errore di usabilità), CER/EER, il compromesso soglia↔sensibilità, un «Piccolo Esempio Concentrato» / «Focused Mini-Example» (banca con lettore d'impronta: FAR alto, soglia stretta, FRR alto, scelta sul CER più basso) e un consiglio d'esame. Parità IT/EN dei numeri e delle sigle, esempio obbligatorio presente e documenti generati (`docs/coverage-matrix.md`, `docs/gap-analysis.md`) rigenerati senza differenze; verde su `tests/dataset.test.ts`, `tests/languageParity.test.ts`, `tests/gapAnalysis.test.ts` e `tests/citations.test.ts`.
-- [x] **P2 — Completare l'appendice degli acronimi SY0-701:** il glossario indicizza gli acronimi **usati** dai contenuti; alcuni dell'appendice ufficiale restano fuori perché nessun concetto li nomina (verificati assenti il 2026-10-06: **LEAP**, **EAP-FAST**, **WPS**, **WTLS**, **NTLM**, **PAP**; formati di certificato **PEM/DER/P12 (PFX)/CER**). Non sono sotto-obiettivi numerati, ma possono comparire all'esame. Dove sono didatticamente pertinenti, nominarli nel concetto giusto (protocolli di autenticazione wireless in «Wireless security settings» dell'obiettivo 4.1 per LEAP/EAP-FAST/WPS; formati di codifica dei certificati nella crittografia dell'obiettivo 1.4) così che l'indice del glossario (`src/glossaryIndex.ts`) li agganci da solo, con la stessa cura di parità IT/EN e di esempio già imposta ai contenuti. Gli acronimi obsoleti vanno marcati come tali (per esempio WEP/WPS/LEAP) per non insegnarli come buona pratica. **Completato il 2026-10-06:** nove concetti IT/EN con esempi e consigli, nei gruppi 1.4, 4.6, 3.2 e 4.1; PEM, DER e P12/PFX separati, .cer distinta dal CER biometrico. LEAP, WTLS, NTLM e PAP marcati legacy; WPS descritto con i rischi della modalità PIN. Indice esteso a EAP-FAST e P12; regressioni in `tests/acronymAppendix.test.ts`, fonti in `docs/acronym-appendix.md`.
-
-#### Laboratori pratici sicuri
-
-- [x] **P0 — Policy per i lab:** regole d'ingaggio in `labs/README.md` (solo sistemi propri o autorizzati per iscritto, nessun bersaglio pubblico, ambiente isolato, dati sintetici, cleanup verificato); `tests/labs.test.ts` rifiuta i comandi dei lab che puntano a host diversi da `127.0.0.1` o `localhost` — 2026-09-27.
-- [x] **P0 — Template standard:** obiettivi e codice obiettivo SY0-701, scenario, prerequisiti, topologia, durata, rischio, setup, esercizio, evidenze, cleanup e domande finali, in `labs/TEMPLATE.md`; ogni lab è in italiano e inglese e il test ne verifica sezioni, metadati e parità fra le lingue — 2026-09-27.
-- [x] **P0 — Isolamento e ripristino:** regole di isolamento e ripristino in `labs/README.md`; il server accetta `HOST=127.0.0.1` per restare fuori dalla rete durante un lab, e il primo lab verifica l'interfaccia di ascolto prima e dopo l'esercizio — 2026-09-27. Dal 2026-09-28 anche snapshot e reti virtuali, con i comandi per VirtualBox, libvirt/KVM e Hyper-V in `labs/README.md`: una rete interna o isolata senza instradamento verso l'esterno, lo snapshot `prima-del-lab` prima dell'esercizio e il suo ripristino dopo. L'isolamento si verifica con `ip route show default` vuoto, senza mandare traffico a un sito esterno (se l'isolamento non funzionasse, quel traffico arriverebbe davvero a un terzo). `tests/labs.test.ts` obbliga ogni lab `moderate` a fare lo snapshot nel Setup e ad annullare le modifiche nel Cleanup, e ogni lab `advanced-controlled` anche a verificare la rotta e a ripristinare sempre lo snapshot.
-- [x] **P0 — Classificazione del rischio:** `low`, `moderate`, `advanced-controlled`, definiti in `labs/README.md` con ciò che ciascuno richiede; il test impone un avviso `> ⚠️` nei lab sopra `low` — 2026-09-27.
-- [x] **P1 — Lab difensivi introduttivi:** analisi log, hardening Linux, IAM, gestione certificati, backup, segmentazione e incident triage. Dal 2026-09-30 ci sono quattro lab `low`, in italiano e inglese, con gli output reali dei comandi eseguiti dall'autore: 03 analisi dei log di autenticazione (brute force riuscito e password spraying ricostruiti con `grep` e `awk` su un `auth.log` sintetico), 04 PKI con OpenSSL (CA di laboratorio, CSR, SAN, verifica della catena, scadenza, revoca e CRL), 05 backup completo e incrementale con `tar`, manifesto SHA-256 e prova di ripristino, 06 triage di dodici allarmi con `jq` (falsi positivi, correlazione, confronto con un punteggio automatico). I dati sintetici sono in `labs/NN/data/` con il loro hash. Dal 2026-10-01 anche i tre lab `moderate`, in una macchina virtuale Ubuntu 24.04 con snapshot e con gli output reali: 07 hardening Linux (audit e baseline SSH in `sshd_config.d`, SUID rimosso con `dpkg-statoverride`, firewall nftables con policy di scarto provato da un network namespace), 08 IAM su Linux (gruppi e cartella setgid, ACL in sola lettura, `sudo` limitato a un comando, scadenza delle password, uscita di un dipendente e revisione degli accessi), 09 segmentazione (tre zone e un router con nftables in network namespace: rete piatta, poi allow list e prova del movimento laterale bloccato).
-- [x] **P1 — Lab "sul progetto stesso":** il Lab 01 legge gli header di sicurezza, vede la CSP bloccare uno script e fa scattare il limite di richieste in locale; il Lab 02 parte dal threat model, mostra come il server neutralizza la prompt injection, spegne la difesa per vedere i test fallire e fa provare un attacco proprio, senza chiave API (2026-09-27). Voce originale: usare questa app come caso di studio (lettura degli header di sicurezza, test del rate limit in locale, analisi del threat model, prompt injection sul proprio server), collegandoli agli obiettivi 2.x, 3.x e 4.x.
-- [x] **P1 — Scenari attack-to-defense:** osservare un comportamento malevolo simulato e poi configurare prevenzione, rilevazione e risposta. Dal 2026-10-02 il Lab 10 parte da tracce **registrate e sintetiche**, senza eseguire alcun attacco: una ricognizione che cerca file esposti e un credential stuffing riuscito su un account, seguito dall'esportazione dei suoi dati. Si costruiscono due regole di rilevazione (l'allarme sul login arriva trenta secondi prima dell'accesso riuscito), una configurazione nginx di prevenzione provata in locale su `127.0.0.1:8090` (file sensibili negati, login limitati a 5 al minuto con `429` dal quinto tentativo) e il playbook di risposta. Il generatore ricrea le tracce identiche; `tests/labData.test.ts` ricalcola dai dati gli output attesi, compreso l'orario dell'allarme.
-- [x] **P1 — Dati sintetici versionati:** log, IOC fittizi, configurazioni volutamente vulnerabili ed expected output privi di dati personali. Dal 2026-10-02 il catalogo [`labs/DATI.md`](labs/DATI.md) elenca ogni file di dati dei laboratori con la sua impronta SHA-256 e le regole che deve rispettare (indirizzi privati o di documentazione, domini riservati, nessuna email, segreti finti dichiarati); il log del Lab 03 ha il suo generatore deterministico, che lo ricrea identico. `tests/labData.test.ts` controlla le impronte nel catalogo e nel Setup dei laboratori, rigenera il log, rifiuta indirizzi, domini ed email reali e ricalcola dai dati le cifre degli output attesi dei Lab 03 e 06. Le configurazioni deboli non sono versionate: i lab di hardening partono dai default della distribuzione e li correggono.
-- [x] **P1 — Validazione automatica dell'ambiente:** preflight per virtualizzazione, porte, risorse e assenza di esposizione pubblica involontaria. Dal 2026-10-02 `bash labs/preflight.sh NN` controlla, prima di un laboratorio, gli strumenti che usa, lo spazio e la memoria, che le sue porte siano libere, i servizi in ascolto fuori dal loopback e, sopra il livello `low`, che si lavori in una macchina virtuale senza rotta predefinita; legge solo lo stato locale, non manda traffico e non modifica nulla. Documentato in `labs/README.md` («Controllo preliminare»), con italiano e inglese (`--en`). `tests/preflight.test.ts` lo esegue in ogni scenario con strumenti finti e letture sostituite, e verifica che conosca ogni laboratorio con il rischio dichiarato.
-- [x] **P1 — Soluzioni progressive:** hint, soluzione ragionata, indicatori di successo ed errori comuni. Dal 2026-10-02 ogni laboratorio, dal 01 al 09, ha la sezione «Aiuti e soluzione» fra l'esercizio e le evidenze, in italiano e inglese: almeno tre indicatori di successo concreti, due suggerimenti e la soluzione ragionata piegati uno dopo l'altro, dal più vago alla soluzione, e almeno tre errori comuni con la loro conseguenza. La sezione è nel template, e `tests/labs.test.ts` ne verifica le tre parti, l'ordine degli aiuti e lo stesso numero di voci nelle due lingue.
-- [x] **P2 — Lab containerizzati riproducibili:** immagini minimali, non privilegiate, versioni fissate e teardown automatico. Dal 2026-10-02 `labs/container` offre un'immagine Ubuntu 24.04 fissata per digest, con quattro pacchetti a versione esatta e un utente senza privilegi, per i laboratori `low` su file locali (03, 04, 05, 06, 10, 11). `run.sh` avvia un container usa e getta senza rete, senza capability, con l'immagine e i laboratori in sola lettura e la home in memoria, che sparisce all'uscita. `verify.sh`, eseguito dalla CI nel job `labs-container`, ne prova le proprietà e avvia nginx del Lab 10; gli output dei laboratori eseguiti nel container coincidono con quelli dei testi. I laboratori `moderate` restano nella VM, perché in un container richiederebbero privilegi che annullano l'isolamento.
-- [x] **P2 — Telemetria didattica locale:** mostrare quali eventi sarebbero visibili a endpoint, rete, identity e SIEM. Dal 2026-10-02 il Lab 11 racconta lo stesso incidente del Lab 03 con tre sensori sintetici, flussi di rete, autenticazioni ed eventi dell'endpoint: con `jq` si scopre che la rete non vede gli utenti (SSH è cifrato), che l'identità si ferma al login e che l'endpoint non vede i tentativi falliti né l'origine. Unite in una linea temporale normalizzata, le tre fonti permettono una regola di correlazione che dà un solo allarme con i comandi di persistenza. Il generatore ricrea i dati identici; `tests/labData.test.ts` ricalcola gli output attesi.
-
-**Criteri di accettazione:** nessun segreto rilevato; workflow a privilegi minimi e azioni fissate a SHA; endpoint AI con limiti di tempo, dimensione e costo; ogni lab è isolabile e ripristinabile; ogni contenuto critico presenta fonte e contesto.
-
----
-
-### 🎨 Documentation & UX
-
-**Obiettivo:** massimizzare comprensione, orientamento e continuità dello studio.
-
-#### Architettura dell'informazione
-
-- [x] **P0 — README come landing page:** scopo, funzionalità, prerequisiti, installazione per sistema operativo, architettura e risoluzione problemi, in IT e EN.
-- [x] **P0 — Navigazione per i cinque domini:** stesso ordine e stessi nomi in checklist, guide, glossario e simulatore.
-- [x] **P0 — Rendere visibile la copertura:** la matrice per obiettivo è pubblicata e collegata dai README (2026-09-24); dal 2026-09-26 la vista "Preparazione all'esame" elenca nell'app le domande disponibili per ognuno dei 28 obiettivi, con quante ne hai viste e con quale accuratezza.
-- [x] **P0 — Area di studio illeggibile su mobile:** `#study_panel_wrapper` aveva altezza 0 a 390 px; ora è un blocco a piena altezza sotto la checklist (`flex-none h-full`, layout affiancato invariato da `md` in su), verificato con Playwright a 390, 768 e 1280 px — 2026-09-24. Resta da aggiungere un test end-to-end in CI (vedi sotto).
-- [x] **P0 — Percorsi di studio:** pannello "Da dove inizio?" in cima all'area di studio (`src/studyPaths.ts`, `StudyPathsPanel`), aperto solo per chi non ha ancora progressi. Offre quattro percorsi (principiante, ripasso rapido, preparazione all'esame, consolidamento pratico) con passi ordinati; ogni pulsante porta alla funzione giusta e sposta lì il focus da tastiera. La preparazione all'esame imposta una simulazione di 90 domande ripartite con i pesi ufficiali (`examBlueprint`: 11/20/16/25/18) e il timer, al ritmo dell'esame reale: 1 minuto per domanda, 90 minuti in tutto (prima erano 2 minuti per domanda). Parità IT/EN verificata da test; test end-to-end con axe — 2026-09-25.
-- [x] **P1 — Collegare prerequisiti e passi successivi:** ogni guida di dominio si apre con "Prima di iniziare" e si chiude con "Dove proseguire" (`src/domainRoutes.ts`). Ogni passo ha un pulsante che apre la guida di un altro dominio sull'obiettivo collegato e vi sposta il focus. Il Dominio 1 elenca le basi di rete e di sistemi operativi che presuppone; il Dominio 5 si chiude con simulazione d'esame, ripasso intelligente e quiz per obiettivo. `tests/domainRoutes.test.ts` impone solo obiettivi ufficiali, prerequisiti da domini precedenti e passi successivi verso domini successivi, e testi IT/EN con gli stessi fatti. Verificato con test di componente, end-to-end e axe — 2026-09-26.
-- [x] **P1 — Integrare ricerca e glossario:** la ricerca nel glossario esiste. Dal 2026-09-26 gli acronimi del glossario citati in una domanda (scenario, testo, spiegazione) o in una sottovoce compaiono come "Termini del glossario citati"; un tocco mostra definizione e consiglio d'esame sul posto (`src/glossaryIndex.ts`, `GlossaryHints`). Sono 83 acronimi, quelli ambigui esclusi (per esempio MAC). Completato il 2026-10-05: oltre agli acronimi ora si collegano anche i **nomi completi** dei termini, limitati alle locuzioni di più parole (per esempio «Zero Trust», «Logic Bomb», «Social Engineering») che si riconoscono con certezza nel testo; i nomi di una sola parola («Audit», «Patch») restano esclusi perché si confonderebbero con la prosa comune, e una locuzione che indica due concetti diversi viene scartata invece di indovinare. Le 294 locuzioni indicizzate hanno portato le domande con almeno un termine collegato dal 43% al 67%. Gli stessi suggerimenti compaiono ora anche sotto i **sotto-argomenti ufficiali** di ogni guida di dominio (`DomainGuidePanel`), così dalla mappa degli obiettivi si apre sul posto la definizione dei termini citati. Matching con confini di parola Unicode (le parole accentate italiane restano intere); `tests/glossaryIndex.test.ts` verifica acronimi, nomi completi, ordine di comparsa, esclusioni e la presenza di almeno un termine collegato nei sotto-argomenti di tutte e cinque le guide.
-- [x] **P1 — Separare contenuto principale e approfondimenti** con divulgazione progressiva coerente. Dal 2026-09-30 tre livelli, descritti in `docs/style-guide.md` («Divulgazione progressiva»): pannelli interi, approfondimenti e risposte. Il nucleo resta sempre aperto (di un concetto: definizione, analisi con l'esempio, formule, tabella e suggerimento d'esame; di una guida: scopo, obiettivi, percorso, pattern decisionali, errori comuni, scenari, esercizi e riepilogo). Gli approfondimenti si aprono su richiesta e dicono che cosa contengono: nelle guide collegamenti tra domini, confronti chiave, «Esame e realtà» e fonti; nei concetti fonti citate e termini del glossario; nella preparazione all'esame la tabella di tutti gli obiettivi. Un solo componente, `Disclosure`, per approfondimenti e ragionamenti degli esercizi; l'indice della guida apre l'approfondimento che raggiunge. `tests/disclosure.test.tsx` rifiuta un nuovo `<details>` scritto a mano fuori dai pannelli di primo livello.
-- [x] **P2 — Vista "Exam readiness":** pannello "Preparazione all'esame" in cima al simulatore (`src/readiness.ts`, `ReadinessPanel`), calcolato dai progressi già salvati nel browser. Mostra accuratezza e copertura pesate con `OFFICIAL_DOMAIN_WEIGHTS`, tenute separate di proposito (un'accuratezza alta su poche domande non è preparazione), una tabella per dominio con domande viste, accuratezza e ripassi in scadenza (schede su telefono), gli obiettivi più deboli con almeno 3 risposte e un pulsante per allenarli, gli obiettivi mai allenati e la copertura della banca per obiettivo. 5 test del calcolo, test end-to-end con axe — 2026-09-26.
-
-#### Sistema editoriale e leggibilità
-
-- [x] **P1 — Guide di dominio arricchite:** tabelle comparative, errori comuni, esercizi guidati con soluzione nascosta e mappa dei sotto-argomenti ufficiali per obiettivo, con test di completezza (`tests/domainGuides.test.ts`). Completate tutte e cinque le guide (2026-09-24).
-- [x] **P0 — Template coerenti** per sottovoce, confronto, procedura, comando, domanda, scenario e lab. [`docs/content-templates.md`](docs/content-templates.md) descrive i sette template con campi, regole, esempi e il test che li fa rispettare; il nuovo `tests/contentTemplates.test.ts` copre la sottovoce, l'unico template ancora senza verifica (definizione breve e chiusa, analisi, consiglio d'esame, tabelle regolari). Ha trovato tre tabelle con la prima intestazione vuota, che gli screen reader annunciavano senza nome: ora si chiama «Aspetto» / «Aspect» — 2026-09-27.
-- [x] **P0 — Gerarchia dei titoli corretta:** un solo H1, sezioni brevi, ancore stabili e sommario per le pagine lunghe. Dal 2026-09-27 ogni vista ha un solo H1 e nessun livello saltato: la domanda del quiz e della remediation è un H2, il Trainer AI e la finestra delle nuove domande sono H2, i riquadri dei risultati e della preparazione H3. Un test end-to-end percorre studio, glossario, impostazione, domanda, feedback, risultati e remediation. Ogni guida di dominio si apre con il sommario «In questa guida»: un link per ogni sezione presente, che porta alla sezione e sposta il focus sul suo titolo (e apre «Fonti» se è chiusa). Dal 2026-09-28 ogni concetto ha un link permanente, `#studio/<dominio>/<checklistKey>` (per esempio `#studio/4/CVE`), e ogni obiettivo delle guide `#guida/<dominio>/<obiettivo>`: si basano sugli identificatori stabili, quindi valgono in entrambe le lingue e sopravvivono alle modifiche dei testi. Aprendo il link l'app sceglie dominio e concetto e sposta il focus sul titolo; l'hash è validato rigidamente (un link sconosciuto o manipolato non fa nulla) e non finisce mai nella pagina (`src/studyAnchors.ts`, `tests/studyAnchors.test.ts`, due test end-to-end). Misurata la lunghezza delle sezioni: la più lunga ha 366 parole, la mediana 100; un test fissa il limite a 400 parole per concetto, circa due minuti di lettura.
-- [x] **P0 — Callout standard:** `Nota`, `Esame`, `Pratica`, `Attenzione`, `Errore comune`, `Approfondimento`. Dal 2026-09-27 il componente `Callout` ha i sei tipi, ciascuno con icona, colore e titolo scritto (mai solo il colore). Le etichette già usate dalle spiegazioni diventano callout senza riscrivere i dataset: «Trappola d'esame» (esame, 239 per lingua), «Piccolo Esempio Concentrato» (pratica, 406), «Pericolo» e «Attenzione» (attenzione), «Da ricordare» (nota); il consiglio d'esame di ogni sottovoce è un callout «esame». Le regole per chi scrive sono in `CONTRIBUTING.md`. Dal 2026-09-28 anche `Errore comune` e `Approfondimento` hanno contenuti: le 40 voci per lingua «errato → corretto» delle guide di dominio sono callout «Errore comune», e le spiegazioni che ripartono dalle basi («Il concetto, dal principio», 13 per lingua) sono callout «Approfondimento». Un test verifica che ogni etichetta sia usata davvero e che i sei tipi compaiano; ha trovato un avviso presente in italiano («Attenzione: nessuna replica è un backup») ma scritto come semplice nota in inglese, ora allineato.
-- [x] **P0 — Blocchi di codice:** linguaggio dichiarato, prompt distinguibile, output separato e righe pericolose commentate. Nell'app i contenuti hanno solo codice inline: dal 2026-09-27 `` `codice` `` è mostrato come codice in carattere monospazio (prima comparivano i backtick grezzi in spiegazioni, dettagli, consigli d'esame, scenari e opzioni) e un test verifica che nessun backtick resti spaiato. Nei lab ogni blocco dichiara il linguaggio (regola MD040 di markdownlint), i comandi (`bash`) sono separati dall'output (`text`) e l'unico comando distruttivo, la cancellazione della cartella di lavoro, è spiegato nel cleanup — 2026-09-27.
-- [x] **P1 — Tabelle comparative leggibili:** colonne con spazio minimo e testo a capo, intestazioni di riga e colonna, testo delle intestazioni più leggibile e scorrimento accessibile da tastiera anche su mobile — 2026-10-02.
-- [x] **P1 — Riepiloghi di fine modulo:** concetti chiave, acronimi, errori frequenti e autovalutazione. Dal 2026-09-30 ogni guida di dominio si chiude con il «Riepilogo di fine modulo»: sei concetti chiave in italiano e inglese, gli acronimi del dominio con lo scioglimento ufficiale inglese (da 10 a 16 per dominio), la lettura corretta degli errori frequenti e un'autovalutazione a caselle che sostituisce la «Verifica di padronanza». Le spunte restano nel browser, si cancellano con «Cancella tutti i miei dati» ed entrano nel backup dei progressi senza cambiare versione del formato (un backup precedente si importa con nessuna spunta). `tests/domainGuides.test.ts` impone da cinque a otto concetti per dominio in entrambe le lingue e accetta solo acronimi usati dai contenuti del dominio; `tests/ModuleSummary.test.tsx` verifica ruoli accessibili, persistenza e valori manomessi.
-- [x] **P1 — Esempi progressivi negli scenari:** le guide di dominio includono scenari applicati e ogni domanda si apre con uno scenario.
-- [x] **P1 — Style guide:** `docs/style-guide.md` e controlli di terminologia in entrambe le lingue. Uniformato «email» senza trattino in tutto il corpus; corrette le formulazioni assolute e fuorvianti documentate nei rapporti dei Domini 1–5. Rimosso il requisito di revisione umana del tono — 2026-10-02.
-- [x] **P1 — Parità IT/EN:** controlli di struttura e fatti, traduzioni aggiornate insieme alle correzioni; nessuna approvazione umana separata richiesta — 2026-10-02.
-- [x] **P1 — Parità dei contenuti IT/EN verificata automaticamente:** per ogni frase di guide, sottovoci, glossario e domande i numeri, le sigle e i token letterali devono coincidere nelle due lingue (`tests/languageParity.test.ts`, `tests/helpers/languageFacts.ts`); le differenze solo idiomatiche stanno in un elenco revisionato — 2026-09-24.
-- [x] **P1 — Traduzioni da rivedere dopo una modifica:** quando cambia un testo italiano, segnalare in CI la frase inglese corrispondente come da rivedere (per esempio confrontando l'hash del testo sorgente salvato accanto alla traduzione), perché il controllo dei fatti non coglie le differenze di significato. Fatto il 2026-09-27: `tests/fixtures/translation-sources.json` registra l'impronta (SHA-256) del testo italiano di ogni unità tradotta (1.348 fra domande, sottovoci, gruppi e campi delle guide) e `tests/translationFreshness.test.ts` elenca le traduzioni inglesi da rileggere quando l'italiano cambia; dopo la revisione si aggiorna l'impronta con `UPDATE_TRANSLATION_SOURCES=1`. **M**
-
-#### Accessibilità e inclusione (obiettivo: WCAG 2.2 AA)
-
-- [x] **P0 — Struttura ARIA corretta (trovata da axe il 2026-09-24):** `role="tablist"` ristretto alle tre schede, pulsante di invio della chat con nome accessibile, voci della checklist non più annidate (casella e argomento sono controlli affiancati), caselle da 24 px (WCAG 2.2 target size), tabelle scorrevoli raggiungibili da tastiera, `aria-pressed` su AI Trainer e lingua. Anche la schermata di remediation annuncia l'esito della risposta.
-- [x] **P0 — Testo alternativo informativo** per banner e immagini; icone decorative con `aria-hidden`: verificato il 2026-09-24, l'app non contiene immagini `<img>` e tutte le 88 icone SVG hanno `aria-hidden="true"`. Le icone che portano un significato (esatta o errata nel ripasso) sono ora affiancate da testo.
-- [x] **P0 — Non affidarsi solo al colore:** dopo la conferma, nel simulatore e nella remediation, ogni opzione giusta o scelta porta un'etichetta a parole con icona ("Risposta corretta", "La tua risposta"), letta anche dagli screen reader; il ripasso finale scrive "Esatta", "Errata" o "Nessuna risposta data" invece della sola icona colorata (WCAG 1.4.1). Componente `OptionVerdict` con test di componente e controllo end-to-end — 2026-09-24.
-- [x] **P0 — Contrasto e leggibilità:** sfondi `bg-cyan-600` sotto testo bianco portati a `bg-cyan-700` e testo secondario `text-slate-500` portato a `text-slate-400` su sfondo scuro (da 3,6–4,2:1 a oltre 4,5:1); axe non rileva più problemi di contrasto su studio, glossario e simulatore — 2026-09-24.
-- [x] **P0 — Navigazione completa da tastiera nel quiz:** tasti numerici e Invio erano già supportati; aggiunta una regione `role="status"` sempre presente che annuncia l'esito della risposta, icone decorative nascoste, e un test end-to-end che svolge una domanda solo da tastiera — 2026-09-24.
-- [x] **P1 — Rispetto di `prefers-reduced-motion`:** `MotionConfig reducedMotion="user"` attorno all'app — 2026-09-24.
-- [x] **P1 — Test end-to-end di accessibilità e layout:** `e2e/app.spec.ts` con Playwright e `axe-core` a larghezza desktop e telefono: altezza del pannello, assenza di scorrimento orizzontale, WCAG 2.2 AA su studio (guida aperta), glossario e simulatore, quiz da tastiera. Job `End-to-end` in CI con tracce caricate in caso di errore. Verificato che fallisce se il pannello torna ad altezza 0 — 2026-09-24.
-- [x] **P1 — Timer accessibile:** il limite di tempo è facoltativo e si attiva solo su scelta dell'utente (WCAG 2.2.1); il conto alla rovescia non viene annunciato ogni secondo, ma un avviso per screen reader segnala l'ultimo minuto — 2026-09-24.
-- [x] **P1 — Versioni testuali dei diagrammi** e link descrittivi (niente "clicca qui"): l'app e la documentazione non contengono diagrammi; la regola per i prossimi (una «Versione testuale» sotto ogni figura o blocco Mermaid) è in `CONTRIBUTING.md`. Resi descrittivi i link che fuori contesto non dicevano nulla: i numeri dell'indice degli ADR (ora il link è il titolo della decisione), «EN» nell'elenco dei laboratori (ora «versione inglese»), «issue» nei README. Il banner e i badge dei README hanno un testo alternativo che dice che cosa mostrano, nella lingua del file («Licenza: MIT» invece di «MIT»). `tests/linkText.test.ts` controlla testi dei link, testi alternativi, nome accessibile dei file SVG e versione testuale dei diagrammi — 2026-09-27.
-- [x] **P1 — Limitare emoji decorative e badge** come unica fonte di informazione: l'app non usa più emoji. La risposta giusta nella finestra delle nuove domande dice «Risposta corretta» a parole (non solo una ✓ verde); l'errore della remediation ha un'icona nascosta agli screen reader e `role="alert"`; l'errore di connessione del Trainer AI e le due descrizioni di gruppo usano parole al posto di ⚠️. Le risposte del quiz erano già indicate a parole (`OptionVerdict`). Nella documentazione ogni emoji di stato è seguita dal suo significato (`✅ mitigato` nelle 19 celle del threat model, 🟡 e ✅ nel lab 02). `tests/emojiCues.test.ts` rifiuta emoji nel codice dell'app e emoji senza parole nei documenti; la regola è in `CONTRIBUTING.md` — 2026-09-27.
-- [x] **P2 — Test manuali periodici:** screen reader (NVDA, VoiceOver), zoom al 200%, viewport mobile. Completato il 2026-10-05: [`docs/accessibility-manual-tests.md`](docs/accessibility-manual-tests.md) descrive una procedura ripetibile per le verifiche che solo una persona può fare, con passi, risultato atteso e criterio di successo per NVDA, VoiceOver, zoom al 200% (e reflow al 400%) e viewport mobile su dispositivo reale, più responsabile, data dell'ultima revisione, prossimo controllo e un registro degli esiti. La checklist e la cadenza (180 giorni) vivono in `src/manualAccessibilityTests.ts`, unica fonte di verità; `tests/manualAccessibilityTests.test.ts` tiene allineati modulo e documento (parità IT/EN delle etichette, data valida nel passato, prossimo controllo derivato dalla cadenza). Il controllo periodico mensile (`scripts/maintenance-report.ts`, sezione 5) segnala da solo il giro quando è scaduto, così resta davvero periodico. Automatizzato anche ciò che si può: `e2e/app.spec.ts` verifica il reflow al 200% di zoom senza scorrimento orizzontale su studio, glossario e simulatore, oltre al viewport mobile (Pixel 7) e ad axe già presenti. **S**
-
-#### Apprendimento e valutazione
-
-- [x] **P0 — Banca domande strutturata:** ID, argomento, livello cognitivo, scenario, opzioni, una o più risposte corrette e spiegazione; validata dai test.
-- [x] **P0 — Spiegare tutte le opzioni:** imposto da test in entrambe le lingue.
-- [x] **P0 — Contenuti originali, nessun dump:** dichiarato in README e verificato con controllo delle coppie di domande troppo simili.
-- [x] **P1 — Quiz per obiettivo:** nel simulatore, "Solo obiettivo" elenca i 28 obiettivi ufficiali con il numero di domande disponibili (da 10 a 45) e avvia un quiz con tutte le domande dell'obiettivo scelto, in italiano e in inglese; la funzione pura `questionIdsByObjective` è testata contro la matrice di copertura, più un test end-to-end da tastiera con axe — 2026-09-25. A fine quiz un riquadro rimanda alla guida del dominio e porta il focus sulla scheda di quell'obiettivo (risultato atteso e sotto-argomenti ufficiali) — 2026-09-26.
-- [x] **P1 — Scenari performance-based originali:** ordinamento, abbinamento, interpretazione di log, risposta a incidente e scelta del controllo. **L** Completato il 2026-10-05 con la nuova scheda «Scenari Pratici» (`src/components/PbqScreen.tsx`, sessione in memoria `src/hooks/usePbqSession.ts`). Dieci scenari originali, due per ciascuno dei cinque temi, in italiano e inglese (`src/pbqData.ts` sorgente, `src/pbqData.en.ts` overlay con le stesse chiavi stabili, uniti in `src/localizedPbq.ts`), legati agli obiettivi ufficiali e distribuiti su tutti e cinque i domini: ciclo di vita di un certificato TLS (1.4) e change management (1.3) per l'ordinamento; ciclo NIST SP 800-61 e ordine di volatilità (4.8) per la risposta a incidente; ingegneria sociale (2.2) e risposte al rischio (5.2) per l'abbinamento; indizi nei log (4.9) e analisi del log di autenticazione (2.4) per l'interpretazione di log; classificazione dei controlli (1.1) e controlli per proteggere i dati (3.3) per la scelta del controllo. I cinque temi si riducono a due meccaniche — riordino di passi e abbinamento voce→opzione — con la logica di correzione pura in `src/pbq.ts`. Accessibilità: il riordino è operabile da tastiera con pulsanti su/giù dal nome descrittivo (nessun drag), l'abbinamento usa `<select>` nativi etichettati, e ogni verdetto è scritto a parole con icona, mai col solo colore (WCAG 1.4.1). Contenuti con azienda di fantasia «Kestrelia», domini riservati e indirizzi di documentazione, estesi a `tests/contentSafety.test.ts` e allo spellcheck IT/EN. I progressi non vengono salvati, quindi nessuna migrazione di `localStorage`. Coperto da `tests/pbq.test.ts` (logica), `tests/pbqData.test.ts` (struttura, mapping tema→meccanica, obiettivi ufficiali, parità IT/EN), `tests/PbqScreen.test.tsx` (interazione e accessibilità) e tre test end-to-end con axe su desktop e telefono in `e2e/app.spec.ts`.
-- [x] **P1 — Livelli cognitivi bilanciati:** i test impongono che in ogni dominio prevalgano domande di livello superiore.
-- [x] **P1 — Ripasso spaziato locale:** intervalli 1-3-7-14-30 giorni, errori riproposti subito, nessuna raccolta di dati.
-- [x] **P2 — Simulazioni temporizzate:** il timer opzionale c'era già; dal 2026-10-05 la configurazione della simulazione è completa. Nella schermata di avvio una sezione «Simulazione d'esame» offre quattro lunghezze (20, 45, 65 e 90 domande, `SIMULATION_LENGTHS`): scelta una, le domande sono ripartite tra i cinque domini secondo i pesi ufficiali (`examBlueprint`, metodo del resto maggiore, senza superare la banca di ogni dominio) e il timer si attiva, restando disattivabile (WCAG 2.2.1). Il percorso «Preparazione all'esame» usa ora lo stesso meccanismo per la simulazione da 90. A fine prova la schermata dei risultati mostra «Risultati per obiettivo» (`summarizeRunByObjective` in `src/readiness.ts`): ogni obiettivo toccato dalla sessione, con risposte corrette su totale e percentuale scritta a parole (non solo colore), dal più debole, con un link alla guida di quell'obiettivo; una domanda che allena più obiettivi conta in ciascuno e quelle lasciate in bianco allo scadere del tempo contano come errate. `tests/useQuizSetup.test.tsx`, `tests/readiness.test.ts` e `tests/QuizResultsScreen.test.tsx` coprono logica e accessibilità; due test end-to-end percorrono la scelta della lunghezza e la simulazione fino all'analisi per obiettivo — 2026-10-05. **S**
-- [x] **P2 — Modalità ripasso acronimi (flashcard):** l'esame SY0-701 verifica l'appendice ufficiale degli acronimi (~280 sigle) e il glossario ne indicizza già la maggior parte con scioglimento e consiglio d'esame, ma non esiste un allenamento mirato sigla↔significato. Aggiungere una modalità flashcard che riusa il ripasso spaziato locale già presente (intervalli 1-3-7-14-30, nessuna raccolta dati): mostra la sigla e chiede lo scioglimento (o viceversa), con autovalutazione «lo sapevo / non lo sapevo» che alimenta la coda di ripasso. Costruita dai dati del glossario (`buildGlossaryDataset`), così resta allineata ai contenuti senza un elenco duplicato; filtrabile per dominio e obiettivo, operabile da sola tastiera e con verdetti scritti a parole (WCAG 1.4.1). Parità IT/EN delle stringhe e test della logica pura e dell'interazione. Prerequisito utile: chiudere prima la voce «Completare l'appendice degli acronimi». **Completato il 2026-10-06:** nuova scheda «Flashcard Acronimi» (`src/components/FlashcardScreen.tsx`, sessione in memoria + schedulazione persistita nell'hook `src/hooks/useFlashcards.ts`, logica pura in `src/flashcards.ts`). Il mazzo è derivato dai contenuti di studio (`buildAcronymDeck`): per ogni concetto con una sigla riconosciuta si ricava lo scioglimento dal nome «Nome Completo (SIGLA)» o dalla testa della definizione prima dei due punti, scartando le sigle ambigue (come MAC) e i doppioni canonici — 91 carte identiche in italiano e inglese (stessi id e stessi scioglimenti, verificato da `tests/flashcards.test.ts`). La carta mostra la sigla e chiede lo scioglimento, o viceversa a scelta; si scopre la risposta e ci si autovaluta con «La sapevo / Non la sapevo», che alimenta lo **stesso** ripasso spaziato del simulatore (intervalli 1-3-7-14-30 giorni, `FLASHCARD_INTERVAL_DAYS`) salvato nella nuova chiave locale `comptia_sy0701_acronym_progress`, inclusa nel backup/ripristino e nella cancellazione dei dati senza cambiare versione del formato (come `selfAssessment`). Filtrabile per dominio e obiettivo; operabile da sola tastiera (Spazio/Invio scopre, 1/2 autovalutano) con la risposta annunciata in una regione `aria-live`; ogni verdetto è scritto a parole, mai col solo colore (WCAG 1.4.1). La revisione scopre anche la definizione, il consiglio d'esame e un collegamento al concetto nell'area di studio. Coperto da `tests/flashcards.test.ts` (parsing obiettivi, derivazione dello scioglimento, costruzione e filtro del mazzo, sanificazione e schedulazione, parità sui contenuti reali) e `tests/FlashcardScreen.test.tsx` (scelta, scoperta, autovalutazione, direzione, tastiera, persistenza); `npm run check` verde.
-
-**Criteri di accettazione:** uno studente individua rapidamente il punto di partenza, segue un percorso coerente, usa l'app anche solo da tastiera e comprende l'errore dopo ogni domanda senza dipendere da conoscenze implicite.
-
----
-
-## 🧭 Piano di esecuzione consigliato
-
-| Milestone | Focus | Dipendenze | Stato | Risultato atteso |
-|---|---|---|---|---|
-| **M0 — Baseline** | Audit, inventario, threat model, mappatura per domanda | Nessuna | 🟡 Parziale | Backlog verificato e rischi noti |
-| **M1 — Fondazioni** | CONTRIBUTING, CHANGELOG, template, identità del pacchetto, Node LTS | M0 | ✅ Completata il 2026-09-24 | Repository contribuibile |
-| **M2 — Quality & Security Gate** | Action a SHA, Dependabot e smistamento delle sue PR, smoke test di avvio, gitleaks, CodeQL, npm audit, Markdown lint, link check | M1 | 🟡 CI, Action a SHA, Dependabot, smoke test, controlli di sicurezza, lint del Markdown e link check presenti; PR di Dependabot integrate il 2026-09-25; protezione di `main` attiva dal 2026-10-02 | Pull request controllate automaticamente, dipendenze aggiornate senza regressioni |
-| **M3 — Hardening AppSec/AI** | Timeout, tetti di costo, health check, CSP, test API e anti-injection | M2 | 🟡 Difese di base presenti | App esponibile in modo sicuro |
-| **M4 — Refactoring senza regressioni** | Scomposizione di `App.tsx` e `server.ts`, test di componenti | M2 | Da pianificare | Codice manutenibile, comportamento invariato |
-| **M5 — Content Quality** | Obiettivi per domanda, fonti, freschezza, errata, style guide | M0–M2 | 🟡 Guide complete per i 5 domini, parità IT/EN automatica; obiettivi per domanda e fonti pubblicati; correzioni dei cinque domini completate | Materiale coerente e verificabile |
-| **M6 — Active Learning & A11y** | Percorsi, quiz per obiettivo, PBQ, tastiera, reduced motion, axe | M4–M5 | 🟡 Ripasso spaziato, esercizi guidati con soluzione nascosta e layout mobile corretto | Studio applicato e accessibile |
-| **M7 — Learning Platform** | Exam readiness, export progressi, lab, simulazioni configurabili | M5–M6 | Da pianificare | Esperienza didattica completa |
-
-### Ordine delle prossime attività
-
-Ordinate per rapporto rischio ridotto / sforzo, ognuna in una PR separata. Le prime tre sono completate; la nuova n. 4 viene prima delle altre perché le PR di Dependabot sono già aperte e una di esse romperebbe l'avvio in produzione.
-
-1. [x] Completare l'inventario del repository (audit del 2026-09-24, PR #37).
-2. [x] Aggiornare Node.js alla LTS in CI e `engines`, correggere `name`/`version` in `package.json` (PR #38).
-3. [x] Fissare le Actions a SHA e aggiungere Dependabot (`npm` + `github-actions`) (PR #39).
-4. [x] Aggiungere lo smoke test di avvio in produzione alla CI, poi smistare le PR di Dependabot secondo la tabella in [Aggiornamento delle dipendenze](#aggiornamento-delle-dipendenze): smoke test e correzioni completati, tutte le PR verificate; integrate il 2026-09-25.
-5. [x] Aggiungere un workflow `security.yml`: gitleaks, CodeQL, `npm audit`, dependency review (2026-09-24).
-6. [x] Hardening degli endpoint AI: timeout, `maxOutputTokens` sulla chat, tetto giornaliero, `/healthz`, arresto graduale (2026-09-24).
-7. [x] Pubblicare `CONTRIBUTING.md` (con la policy di aggiornamento delle dipendenze), `CHANGELOG.md`, template di issue/PR e `CODEOWNERS` (2026-09-24).
-8. [x] Collegare ogni domanda agli obiettivi con test obbligatorio e generare la matrice di copertura (2026-09-24; collegamento tramite `src/questionObjectives.ts` invece di un campo su ogni domanda, per non riscrivere i dataset).
-9. [x] Test end-to-end con Playwright e `axe-core` su telefono e desktop; quiz completamente usabile da tastiera e rispetto di `prefers-reduced-motion` (2026-09-24).
-10. [x] Aggiungere test API e i primi test di componenti, poi estrarre la prima sezione da `App.tsx` (2026-09-24: 15 test API, 6 test di componente, guida di dominio estratta).
-11. [x] Esportazione/importazione dei progressi e pulsante per cancellare i dati locali (2026-09-24).
-
----
-
-## 🚀 Roadmap futura — Next Steps
-
-- [x] **Quiz interattivi offline-first:** completato il 2026-10-05. PWA con service worker di produzione e cache versionata di interfaccia, font locali, dataset completi IT/EN e scenari pratici; ricaricamento e cambio lingua senza rete, quiz e progressi locali disponibili senza account. Stato della preparazione verificato sulla cache effettiva, download fallito gestito e aggiornamenti attivati soltanto con riavvio esplicito al termine della prova. AI online e opzionale, con messaggi bilingui e comandi disabilitati offline; API, health check, credenziali e dati dello studente esclusi dalla cache. Nessuna nuova dipendenza o migrazione dei progressi. Test di build, worker, registrazione e componenti; smoke Express/Vercel e prove Playwright IT/EN su desktop e telefono per uso offline, persistenza, riconnessione e aggiornamenti. Uso e limiti documentati in [Studio offline](docs/offline-study.md).
-- [x] **Motore di ripasso adattivo:** il ripasso spaziato per domanda era già attivo; dal 2026-10-05 sale anche al livello dei 28 obiettivi ufficiali. `selectReviewObjectives` (`src/readiness.ts`) aggrega le scadenze delle domande di ogni obiettivo e restituisce quelli con domande in scadenza, ordinati in modo adattivo — prima i più deboli (accuratezza più bassa), poi i più numerosi in scadenza, poi i più in ritardo; all'interno di ciascun obiettivo le domande seguono la stessa priorità di `selectDueReviewQuestions`. La schermata di avvio del simulatore mostra la sezione «Ripasso per obiettivo» (`QuizSetupScreen`): per ogni obiettivo in scadenza, accuratezza e numero di domande scritti a parole (mai solo colore), un pulsante che avvia un ripasso mirato delle sole domande in scadenza di quell'obiettivo (spaziatura rispettata, non l'intero obiettivo) e un collegamento che apre l'obiettivo nella guida di dominio per rileggerne i sotto-argomenti ufficiali (`keyTopics`), elencati anche in loco in un pannello a scomparsa. `tests/readiness.test.ts` copre ordinamento, priorità interna, filtri e limite della funzione pura; `tests/QuizSetupScreen.test.tsx` verifica la sezione, le due azioni e i sotto-argomenti; `tests/i18n.test.ts` garantisce la parità IT/EN delle nuove stringhe. **M**
-- [x] **Simulatore d'esame configurabile:** numero di domande, distribuzione per dominio, PBQ e analisi per obiettivo. Completato 2026-10-05: sessioni miste da 1 a 90 elementi, PBQ incluse nei conteggi, navigazione e segnali di revisione, timer, soluzioni dopo la consegna e report per dominio/obiettivo in IT/EN; storico compatibile e test automatici. Vedi [documentazione](docs/exam-simulator.md).
-- [x] **Lab on demand:** completato 2026-10-05. Manager locale Docker per i Lab 03/04/05/06/10/11: avvio su richiesta, shell e comandi, scadenza automatica, stato, reset dalla stessa immagine e chiusura; slot atomici per utente/checkout, rete disabilitata, sorgenti in sola lettura, utente non privilegiato e limiti CPU/RAM/processi/log. Aiuto ed errori IT/EN, costi e limiti espliciti (nessun servizio cloud); gli altri lab mantengono app/VM e snapshot. Test del ciclo di vita e verifica reale Docker nel job CI dei laboratori. Vedi [guida IT/EN](docs/labs-on-demand.md).
-- [x] **Repository di dataset didattici:** completato 2026-10-05. Catalogo `datasets/README.md`, scenario auth-dns con log sintetici, PCAP DNS generato senza dati reali, alert, timeline e IOC fittizi correlati; licenza MIT esplicita, esercizi e soluzioni IT/EN, obiettivi 2.4/4.4/4.8/4.9, generatore deterministico e manifest SHA-256. `tests/studyDatasets.test.ts` verifica riproducibilità, integrità, riservatezza e coerenza dei pacchetti con i log.
-- [x] **Percorsi Blue Team e Red Team etici:** completato il 2026-10-05. Due percorsi IT/EN nel pannello di studio, sugli stessi obiettivi 5.5/4.6/4.9/4.4/4.8, con azioni dirette alle guide, autorizzazione iniziale e cleanup finale. [Guida bilingue](docs/ethical-team-paths.md) con matrice prevenzione/rilevazione/validazione, Lab 03/06/10/11, prerequisiti, limiti e criteri di verifica; test di parità e struttura.
-- [x] **Modalità portfolio:** completato il 2026-10-05. Nell'area di studio, sotto la guida di dominio, il pannello **Modalità portfolio** (`src/components/PortfolioPanel.tsx`) offre tre documenti riutilizzabili professionalmente, costruiti sui laboratori: un write-up di incidente (brute force e password spraying, Lab 03, obiettivi 2.4/4.4/4.9), un runbook di triage SOC (Lab 06, obiettivi 4.4/4.8/4.9) e un report di hardening degli header HTTP (Lab 01, obiettivi 2.5/4.1). Ogni documento mostra obiettivi collegati (un clic apre l'obiettivo nella guida), competenze e sezioni, e si esporta in Markdown deterministico con **Copia** o **Scarica .md** (il download resta se gli appunti sono bloccati). Tutti i dati sono sintetici — azienda di fantasia Kestrelia, indirizzi `203.0.113.0/24` (RFC 5737) e loopback — con una nota di riservatezza finale. Dati e logica puri in `src/portfolio.ts`; `tests/portfolio.test.ts` impone parità IT/EN (stessi numeri, sigle e codici obiettivo), indirizzi IP solo in blocchi pubblicabili, assenza di segreti e render deterministico. Documentazione in [`docs/portfolio-mode.md`](docs/portfolio-mode.md). **M**
-- [x] **Dashboard di maturità del progetto:** completato il 2026-10-06. Una pagina sola, [`docs/maturity-dashboard.md`](docs/maturity-dashboard.md), generata da `npm run maturity-dashboard` (`scripts/maturity-dashboard.ts`), raccoglie i segnali di salute nelle sei dimensioni richieste: copertura dei contenuti (domande attive per dominio, 28/28 obiettivi coperti, obiettivo più scoperto, guide complete, esercizi guidati, PBQ), freschezza delle revisioni (`SOURCES_MAPPED_ON` e `MANUAL_A11Y_CHECKED_ON` con le loro scadenze), link (lychee interni obbligatori, esterni monitorati), accessibilità (axe, tastiera, `prefers-reduced-motion` e le quattro verifiche manuali WCAG), sicurezza (badge OpenSSF Scorecard e i job di `security.yml`: gitleaks, CodeQL, audit, dependency review, SBOM, Grype, Actions a SHA) e stato delle traduzioni (italiano sorgente, concetti e domande in parità, i gate `languageParity`/`translationFreshness`/`i18n`). I numeri sono calcolati dagli stessi moduli dell'app, quindi non possono divergere; i segnali «in tempo reale» rimandano alla fonte autorevole invece di incollarne un valore stantìo. L'output è deterministico (date committate e soglie, mai «oggi») e `tests/maturityDashboard.test.ts` fa fallire la CI quando il file non è rigenerato, come per la matrice di copertura. **S**
-- [x] **Release per aggiornamenti d'esame:** completato il 2026-10-06. [`docs/exam-update-migration.md`](docs/exam-update-migration.md) è la strategia bilingue di migrazione verso il successore di SY0-701: principi (un solo punto di verità, nessuna perdita di progressi, finestra di sovrapposizione, versione major) e sette passi ordinati — `watch`, `inventory`, `map-objectives`, `content`, `translate`, `compatibility`, `release`. L'identità dell'esame (famiglia, codice, numero di domini, stato nel ciclo di vita, successore) è dichiarata una sola volta in [`src/examVersion.ts`](src/examVersion.ts), radice dell'inventario: alla data odierna nessun successore è annunciato (`SUCCESSOR` è `null`). `tests/examVersion.test.ts` tiene il modulo coerente con obiettivi, pesi di dominio, intestazione dell'interfaccia e nome del pacchetto, e verifica che ogni passo di `MIGRATION_STEPS` sia documentato in entrambe le lingue, così la strategia non può divergere dal codice. **S**
-- [x] **Community review periodica:** proposta ritirata su richiesta della proprietaria; nessuna sessione o revisione esterna obbligatoria — 2026-10-02.
-
----
-
-## 📊 Metriche di successo
-
-| Area | Indicatore | Baseline 2026-09-24 | Target iniziale |
-|---|---|---|---|
-| Copertura | Obiettivi coperti da almeno una sottovoce | 100% (verificato da test) | 100% |
-| Copertura | Domande collegate esplicitamente a un obiettivo | 100% dal 2026-09-24 (era 0%) | 100% |
-| Qualità | Test automatici verdi su `main` | Sì | Sempre |
-| Qualità | Link interni validi | 100% (lychee offline in CI dal 2026-09-24) | 100% |
-| Sicurezza | Segreti confermati nella branch principale | 0 su 130 commit (gitleaks 8.30.1, 2026-09-24) | 0 |
-| Sicurezza | Workflow con permessi espliciti | 100% | 100% |
-| Sicurezza | Actions fissate a SHA | 0% → 100% (2026-09-24) | 100% |
-| Sicurezza | Vulnerabilità `high`/`critical` nelle dipendenze di produzione | 0 (`npm audit`, 2026-09-24) | 0 |
-| Sicurezza | Endpoint AI con timeout, limite di input/output e rate limit | 2 su 2 (2026-09-24; erano 0) | 2 su 2 |
-| Manutenzione | Obiettivi con fonti mappate | 100% (28/28) | 100% |
-| Manutenzione | Righe di `src/App.tsx` | 485 ✅ (2026-09-26, erano ~2.810 dopo le ultime funzioni; ~2.550 all'audit iniziale) | < 500 |
-| Didattica | Domande con spiegazione di tutte le opzioni | 100% (verificato da test) | 100% |
-| Didattica | Domini con guida completa (ogni sotto-argomento ufficiale, tabelle, errori comuni, un esercizio per obiettivo) | 5 su 5 (verificato da test) | 5 su 5 |
-| Manutenzione | PR di Dependabot aperte da più di 14 giorni | 0 (6 aperte, tutte del 2026-09-24) | 0 |
-| Qualità | Avvio in produzione verificato automaticamente | Sì, dal 2026-09-24 (`npm run smoke` in CI) | Sì, a ogni pull request |
-| Laboratori | Lab con isolamento e cleanup verificati | Nessun lab | 100% dei lab pubblicati |
-| Accessibilità | Violazioni axe gravi o critiche sulle viste principali | 0 dal 2026-09-24 (erano 5 regole, 2 critiche) | 0 |
-| Localizzazione | Campi tradotti per domanda e sottovoce | 100% (verificato da test) | 100% |
-| Localizzazione | Coppie di frasi IT/EN con gli stessi numeri, sigle e token | 100% di 7.979, più tutte le guide (2 eccezioni revisionate) | 100% |
-| Contributor UX | Tempo di `npm ci && npm run check` | Non documentato | Documentato e ripetibile |
-
-> Le metriche devono misurare qualità reale. Non vanno usate per incentivare contenuti superficiali, duplicati o creati soltanto per aumentare una percentuale.
-
----
-
-## ⚠️ Rischi da gestire
-
-| Rischio | Impatto | Mitigazione |
-|---|---|---|
-| Contenuti obsoleti | Studio di concetti non più pertinenti | Owner, data di revisione e issue periodiche |
-| Automazione eccessiva | Falsi positivi e manutenzione onerosa | Strumenti pertinenti, baseline e override motivati |
-| Traduzioni divergenti | Ambiguità tecnica | Glossario condiviso, test di parità e review bilingue |
-| Lab esposti o distruttivi | Danno a sistemi o reti | Isolamento, preflight, dati sintetici e cleanup |
-| Domande troppo simili all'esame | Rischio etico e di proprietà intellettuale | Contenuti originali basati sugli obiettivi |
-| Dipendenze non affidabili | Compromissione della supply chain | Pinning a SHA, Dependabot, dependency review, privilegi minimi |
-| Runtime fuori supporto | Nessuna patch di sicurezza per Node.js | Allineamento alla LTS attiva, campo `engines`, `.nvmrc` e matrice CI rivista a ogni fine vita |
-| Abuso degli endpoint AI | Costi imprevisti (denial of wallet) o servizio indisponibile | Rate limit per IP, tetto globale, timeout, opzione per disattivare l'AI |
-| Prompt injection o risposte AI errate | Contenuti fuorvianti presentati come autorevoli | Istruzioni difensive, schema e validazione dell'output, avviso nell'interfaccia, nessuna promozione automatica nella banca domande |
-| Refactoring del monolite `App.tsx` | Regressioni nell'interfaccia o perdita dei progressi salvati | Test di componenti prima dell'estrazione, una sezione per PR, migrazioni dei dati testate |
-| Aggiornamento major che passa la CI ma rompe l'avvio | App non disponibile al primo deploy (caso concreto: Express 5 e la rotta `"*"`) | Smoke test di avvio in produzione, una PR per major, lettura del changelog |
-| Regressioni di layout non coperte da test | Aree dell'app inutilizzabili su alcuni dispositivi (caso concreto: pannello di studio ad altezza 0 su telefono) | Test end-to-end su più viewport in CI |
-| Traduzione corretta nei fatti ma non nel significato | Uno studente di una lingua impara una regola diversa | Segnalazione delle traduzioni da rivedere, revisione bilingue |
-| File di contenuto danneggiati da un caricamento | Perdita silenziosa di contenuti (caso concreto: `9098ba5`) | Test di integrità dei dataset in CI, revisione del diff prima di unire, dimensione dei file controllata |
-| Crescita senza struttura | Navigazione e manutenzione difficili | Template, tassonomia e governance editoriale |
-
----
-
-## ✅ Checklist per ogni nuovo contenuto
-
-- [ ] È collegato a uno o più obiettivi SY0-701 (per le domande: `src/questionObjectives.ts`, poi `npm run coverage-matrix`).
-- [ ] Dichiara prerequisiti, livello e risultati di apprendimento.
-- [ ] Usa fonti autorevoli e indica la data di verifica quando pertinente.
-- [ ] Distingue ciò che serve per l'esame da ciò che dipende dal contesto reale.
-- [ ] Non contiene segreti, dati personali o comandi pericolosi non contestualizzati.
-- [ ] Include esempi originali e legalmente distribuibili.
-- [ ] È presente in italiano e in inglese e rispetta template, glossario e terminologia.
-- [ ] Supera `npm run check`, lint del Markdown, link check e controlli di sicurezza.
-- [ ] È accessibile senza affidarsi solo a colore, immagini o formattazione visiva.
-- [ ] Indica owner, data dell'ultima revisione e prossimo controllo.
-
-## ✅ Checklist per ogni modifica al codice
-
-- [ ] Nessun cambio di comportamento non dichiarato; i refactoring sono separati dalle nuove funzionalità.
-- [ ] Nuovi input dal client sono validati e limitati lato server.
-- [ ] Nessun uso di `dangerouslySetInnerHTML` o `innerHTML` su testo proveniente da utenti o AI.
-- [ ] Nessuna nuova dipendenza senza motivazione, controllo della licenza e della manutenzione.
-- [ ] I dati salvati in `localStorage` mantengono la compatibilità o hanno una migrazione testata.
-- [ ] Le interazioni nuove funzionano da tastiera e hanno etichette accessibili in IT e EN.
-- [ ] `npm run check` e `npm run build` passano.
-
----
-
-## 📝 Registro avanzamento
-
-| Data | Milestone | Modifica | Issue/PR | Stato |
-|---|---|---|---|---|
-| 2026-09-17 | M5 | Spiegazione obbligatoria di ogni distrattore in IT e EN, coerenza tra sorgente italiana e localizzazione | Cronologia git (`718daab`, `3e562e5`) | Completato |
-| 2026-09-18 | M5 | Revisione del glossario (550 voci) e delle domande deboli | PR #29–#31 | Completato |
-| 2026-09-21 | M5 | Riscrittura dei cluster più poveri del glossario | PR #34, #35 | Completato |
-| 2026-09-22 | M6 | Ripasso spaziato adattivo e hardening dei progressi persistiti | `bf529c0`, `dc00db6` | Completato |
-| 2026-09-22 | M5 | Test di accuratezza e integrità, guide di dominio con scenari applicati | `9098ba5`, `014585f`, `3440958` | Completato |
-| 2026-09-24 | M0 | Audit del repository e roadmap riallineata allo stato reale | PR #37 | Completato |
-| 2026-09-24 | M1 | Node 22/24 in CI, `.nvmrc`, `engines`, nome e versione del pacchetto, prerequisiti del README | PR #38 | Completato |
-| 2026-09-24 | M5 | `src/data.ts` e `src/data.en.ts` troncati dal commit `9098ba5`: conservati solo i primi e gli ultimi 384 KiB (questi slittati di 2 bit), ~1,6 MB centrali persi per file; typecheck, test e build di `main` fallivano. Risolto ripristinando i due file alla versione precedente (le correzioni di contenuto di `9098ba5` non sono recuperate) | `9098ba5`, `af7b320`, PR #38 | Completato |
-| 2026-09-24 | M2 | Actions fissate a SHA (v4.4.0), `persist-credentials: false`, Dependabot per npm e Actions, test `tests/workflows.test.ts` | PR #39 | Completato |
-| 2026-09-24 | M5 | Guida del Dominio 1 arricchita: sotto-argomenti ufficiali 1.1–1.4, 5 tabelle comparative, 8 errori comuni, 6 esercizi guidati, percorso e verifiche estesi, in IT e EN | PR #46 | Completato |
-| 2026-09-24 | M6 | Area di studio resa leggibile su mobile (pannello a piena altezza sotto la checklist) | PR #47 | Completato |
-| 2026-09-24 | M5 | Guida del Dominio 2 arricchita (sotto-argomenti 2.1–2.5, 5 tabelle, 8 errori comuni, 6 esercizi); controllo automatico di parità IT/EN esteso a tutti i contenuti, con 9 disallineamenti corretti | PR #47 | Completato |
-| 2026-09-24 | M5 | Guida del Dominio 3 arricchita: sotto-argomenti ufficiali 3.1–3.4, 6 tabelle (responsabilità cloud, apparati di rete, fail-open/fail-closed, siti alternativi, tecniche di copia, stati del dato), 8 errori comuni, 6 esercizi, in IT e EN con parità verificata | PR #48 | Completato |
-| 2026-09-24 | M5 | Guida del Dominio 4 arricchita: sotto-argomenti ufficiali 4.1–4.9, 7 tabelle (modelli di accesso, dispositivi mobili, SPF/DKIM/DMARC, esiti di scansione, fine vita degli asset, fasi di IR, fonti dati), 8 errori comuni, 9 esercizi (uno per obiettivo), in IT e EN con parità verificata | PR #49 | Completato |
-| 2026-09-24 | M5 | Guida del Dominio 5 arricchita: sotto-argomenti ufficiali 5.1–5.6, 7 tabelle (documenti di governance, ruoli sui dati, strategie di rischio, analisi quantitativa, metriche BIA, accordi con terze parti, ambienti di penetration test), 8 errori comuni, 6 esercizi, in IT e EN con parità verificata. Tutte e cinque le guide completate | PR #50 | Completato |
-| 2026-09-24 | M2 | Roadmap riallineata dopo le PR #37–#50: smistamento delle 6 PR di Dependabot (con il blocco di avvio di Express 5), smoke test di avvio, test end-to-end di layout, nuovi rischi e metriche | Revisione roadmap | Completato |
-| 2026-09-24 | M2 | Smoke test di avvio in produzione in CI; fallback della SPA e lettura del corpo delle API compatibili con Express 5; `vite.config.ts` pronto per Vite 8; 6 PR di Dependabot verificate con ordine di integrazione | Attività n. 4 | Parziale |
-| 2026-09-24 | M2 | Workflow `security.yml`: gitleaks con `.gitleaks.toml`, `npm audit`, dependency review, CodeQL; convalidato con actionlint | Attività n. 5 | Completato |
-| 2026-09-24 | M3 | Hardening degli endpoint AI: timeout con `AbortSignal`, `maxOutputTokens` sulla chat, tetto giornaliero (`server/aiGuard.ts`), `/healthz`, arresto graduale, rimosso `User-Agent` del template; smoke test esteso a 8 controlli | Attività n. 6 | Completato |
-| 2026-09-24 | M1 | `CONTRIBUTING.md` bilingue con policy sulle dipendenze, `CHANGELOG.md`, moduli per issue, modello di PR, `CODEOWNERS` | Attività n. 7 | Completato |
-| 2026-09-24 | M5 | Tutte le 664 domande collegate agli obiettivi ufficiali (`src/questionObjectives.ts`), matrice di copertura generata e verificata in CI (`docs/coverage-matrix.md`) | Attività n. 8 | Completato |
-| 2026-09-24 | M6 | Test end-to-end con Playwright e axe (desktop e telefono) in CI; corrette 5 regole WCAG violate (2 critiche): tablist, nome del pulsante chat, controlli annidati, dimensione dei bersagli, contrasto, tabelle raggiungibili da tastiera; annuncio dell'esito nel quiz; `prefers-reduced-motion` | Attività n. 9 | Completato |
-| 2026-09-24 | M7 | Sezione "I tuoi dati": esportazione, importazione con conferma e cancellazione dei progressi locali; checklist e segnalibri ora sanificati alla lettura | Attività n. 11 | Completato |
-| 2026-09-24 | M4 | `server.ts` diviso in `server/app.ts` (`createApp`) e avvio; 15 test API con finto client Gemini | Attività n. 10 | Parziale |
-| 2026-09-24 | M4 | Guida di dominio estratta da `App.tsx` in `DomainGuidePanel.tsx` (HTML identico), Testing Library e jsdom con 6 test di componente | Attività n. 10 | Completato |
-| 2026-09-24 | M3/M6 | Avviso di trasparenza nel Trainer AI, etichetta sulle domande generate, annuncio dell'esito nella remediation, avviso di un minuto per il timer | Voci P1 AI e accessibilità | Completato |
-| 2026-09-24 | M2 | Workflow `docs.yml`: `markdownlint-cli2` e `lychee` (link interni offline a ogni modifica, esterni settimanali); README IT/EN con albero dell'architettura aggiornato | Voci P0 Markdown lint e link check | Completato |
-| 2026-09-24 | M3 | CSP senza `'unsafe-inline'` né origini esterne: font nel bundle, `base-uri` e `form-action`; test end-to-end sulle violazioni e sulle richieste verso altre origini | Voce P1 CSP | Completato |
-| 2026-09-24 | M0/M3 | Threat model STRIDE e quattro ADR; `TRUST_PROXY` configurabile contro l'aggiramento del rate limit con `X-Forwarded-For` falso | Voci P0 threat model e P1 registro decisionale | Completato |
-| 2026-09-24 | M3 | Log strutturati JSON senza dati degli utenti né chiavi, verificati da test e dallo smoke test | Voce P1 log strutturati | Completato |
-| 2026-09-24 | M6 | Esito delle risposte indicato a parole oltre che col colore; verificate icone decorative e assenza di immagini senza testo alternativo | Voci P0 accessibilità | Completato |
-| 2026-09-25 | M2 | Le 6 PR di Dependabot integrate in una: Express 5, Vite 8 con plugin-react 6, motion 13, gruppo minor/patch, Actions `checkout` v7.0.1 e `setup-node` v7.0.0; lockfile con soli pacchetti pubblicati da almeno 7 giorni | Attività n. 4 | Completato |
-| 2026-09-25 | M6 | Quiz per singolo obiettivo ufficiale (28 obiettivi, IT/EN); test del glossario con axe segnato come lento (superava i 30 s con test in parallelo) | Voce P1 quiz per obiettivo | Completato |
-| 2026-09-25 | M6 | Percorsi di studio "Da dove inizio?" con azioni dirette e simulazione d'esame da 90 domande secondo i pesi ufficiali | Voce P0 percorsi di studio | Completato |
-| 2026-09-26 | M4 | Timer al ritmo dell'esame reale (90 minuti per 90 domande); soglie di copertura dei test in CI | Voci P0 percorsi e P1 copertura | Completato |
-| 2026-09-26 | M3 | Codice di accesso facoltativo per le funzioni AI (`AI_ACCESS_TOKEN`) e chat accessibile da tastiera | Voce P1 protezione degli endpoint AI | Completato |
-| 2026-09-26 | M2 | OpenSSF Scorecard settimanale con badge, SBOM CycloneDX a ogni build | Voci P1 Scorecard e SBOM | Completato |
-| 2026-09-26 | M6 | Fine del quiz per obiettivo collegata alla guida; lo scorrimento verso un elemento si ferma sotto l'intestazione fissa | Voce P1 quiz per obiettivo | Completato |
-| 2026-09-26 | M7 | Versione e migrazioni testate per i dati salvati nel browser | Voce P1 schema dei dati salvati | Completato |
-| 2026-09-26 | M6 | Termini del glossario nel quiz e nelle sottovoci; corretto il pannello del simulatore la cui parte alta era irraggiungibile | Voce P1 glossario | Completato |
-| 2026-09-26 | M3 | Spotlighting dei testi dell'utente nei prompt e suite anti-injection con 11 attacchi; output AI ostile verificato come testo inerte | Voce P1 suite anti-injection | Completato |
-| 2026-09-26 | M3 | Immagine Docker irrobustita (distroless, non root, digest fissati, sola lettura) verificata in CI | Voce P1 container di deploy | Completato |
-| 2026-09-26 | M2 | Scansione delle vulnerabilità dell'immagine Docker con Grype in CI | Voce P1 scansione container | Completato |
-| 2026-10-05 | M6 | Collegamento al glossario esteso ai nomi completi (locuzioni di più parole) oltre agli acronimi, e portato ai sotto-argomenti ufficiali delle guide di dominio; domande con un termine collegato dal 43% al 67% | Voce P1 integrare ricerca e glossario | Completato |
-| 2026-10-05 | M7 | Simulazione d'esame configurabile (lunghezze 20/45/65/90 ripartite per peso ufficiale, timer facoltativo) e analisi post-sessione per obiettivo nella schermata dei risultati | Voce P2 simulazioni temporizzate | Completato |
-| 2026-10-05 | M2 | Progetto Vercel collegato a GitHub verificato: produzione da `main`, anteprime protette, Node 24; controllo live ripetibile con 13 test e documentazione IT/EN | Voce P2 anteprime e deploy; `scripts/smoke-live.ts`, `tests/smokeLive.test.ts` | Completato |
-
----
-
-## Nota legale ed etica
-
-Questo progetto ha finalità esclusivamente formative. Esempi offensivi, simulazioni e laboratori devono essere eseguiti soltanto su sistemi propri o esplicitamente autorizzati, in ambienti isolati e nel rispetto delle leggi applicabili. CompTIA e Security+ sono marchi dei rispettivi proprietari; il repository è indipendente e non affiliato.
+**Evidenza:** PDF p. 13. La guida cita la steganografia nell'elenco dell'obiettivo e in una breve tabella; manca una voce dedicata nelle definizioni del glossario. Tokenizzazione e mascheramento sono già trattati e vanno collegati.
+
+**Da realizzare:** spiegare messaggio nascosto e contenitore, esempi descrittivi con immagini/audio e distinzione fra nascondere l'esistenza di un messaggio e proteggerne il contenuto. La steganografia da sola non garantisce riservatezza, integrità o autenticità. Separare questo concetto dall'offuscamento del codice.
+
+**Accettazione:** ricerca IT/EN di “steganografia/steganography” trova la voce; un esempio originale permette di scegliere fra steganografia e cifratura senza suggerire che l'occultamento sostituisca la crittografia. Verifica tecnica su pubblicazioni NIST pertinenti alla terminologia.
+
+### 2. XSS reflected/stored e confronto con CSRF
+
+- [ ] Approfondire XSS e CSRF nella guida del Dominio 2 (obiettivo 2.4), con voci autonome e alias nel glossario.
+
+**Evidenza:** PDF pp. 25–26 e 37. `AppCryptoAttacks` contiene definizioni generali di XSS e CSRF, ma non distingue XSS riflesso e persistente. `ApplicationSecurityHardening` spiega già cookie sicuri e token CSRF: riutilizzare quelle mitigazioni.
+
+**Da realizzare:** distinguere reflected/stored XSS per origine e persistenza dell'input, esecuzione nel browser e impatto; confrontare XSS, CSRF e SSRF per componente che agisce e fiducia sfruttata. Spiegare output encoding contestuale, sanitizzazione quando occorre consentire HTML e query parametrizzate per SQLi: non presentare la stessa difesa come sufficiente per tutti gli attacchi. Aggiungere l'alias XSRF alla voce CSRF.
+
+**Accettazione:** casi originali distinguono i tre attacchi; HttpOnly limita la lettura dei cookie ma non impedisce l'esecuzione XSS, e SameSite non è presentato come difesa universale. Fonti: guide OWASP su XSS e CSRF.
+
+### 3. Furto della sessione, replay e manipolazione dei cookie
+
+- [ ] Esplicitare session hijacking/sidejacking nella guida del Dominio 2 e nel glossario, collegandoli alle mitigazioni applicative del Dominio 4 (obiettivi 2.4 e 4.1).
+
+**Evidenza:** PDF pp. 35–36. `NetworkWirelessAttacks` menziona session hijacking come esempio di on-path; `AppCryptoAttacks` tratta replay e la sezione di hardening tratta già i cookie. Manca una spiegazione autonoma della relazione fra questi concetti.
+
+**Da realizzare:** mostrare con un flusso testuale il riuso di un identificatore di sessione sottratto; distinguere attacco on-path, furto di sessione e replay, che possono essere collegati senza essere sinonimi. Separare header/cookie controllati dal client dalle decisioni di autorizzazione del server. Collegare TLS, scadenza/revoca, rotazione dopo autenticazione e attributi dei cookie già presenti.
+
+**Accettazione:** chiarire che TLS non neutralizza ogni modalità di furto della sessione e che MFA al login non rende inutilizzabile una sessione rubata. Nessun addon obsoleto del PDF proposto come difesa attuale. Fonti: OWASP Session Management Cheat Sheet e documentazione dei cookie HTTP.
+
+### 4. Domain hijacking rispetto a DNS poisoning e typosquatting
+
+- [ ] Aggiungere domain hijacking alla guida del Dominio 2 e al glossario (obiettivo 2.4), collegandolo ai vettori di phishing dell'obiettivo 2.2.
+
+**Evidenza:** PDF p. 33. Il corpus spiega DNS poisoning e typosquatting; manca il caso distinto del controllo illecito dell'account di registrazione o della delega del dominio.
+
+**Da realizzare:** confrontare compromissione dell'account registrar, modifica dei record/deleghe, avvelenamento delle risposte DNS e registrazione di un dominio somigliante. Introdurre controllo degli accessi al registrar, MFA, protezione dei contatti di recupero, lock disponibili e monitoraggio delle modifiche.
+
+**Accettazione:** uno scenario originale identifica quale componente è compromesso; spiegare che DNSSEC non impedisce da solo modifiche autorizzate con un account registrar compromesso. Fonti: ICANN e documentazione primaria su DNSSEC/registrar.
+
+### 5. Disponibilità Wi-Fi e limiti di PMF
+
+- [ ] Integrare RF jamming e deauthentication/disassociation nella guida e nel glossario, correggendo le generalizzazioni su PMF nei Domini 2, 3 e 4 (obiettivi 2.4, 3.2 e 4.1).
+
+**Evidenza:** PDF p. 34. Il corpus parla di interferenze e PMF, ma non spiega autonomamente il jamming Wi-Fi. `WPA3EnterpriseRes` afferma genericamente che PMF cifra e protegge i management frame: occorre precisare ambito e limiti.
+
+**Da realizzare:** distinguere interferenza accidentale, disturbo radio intenzionale e falsificazione di frame di gestione. Espandere PMF/MFP e il riferimento storico a IEEE 802.11w; spiegare che la protezione riguarda specifici frame di gestione robusti e che protezione unicast e broadcast non equivale alla cifratura di ogni management frame. Collegare WPA3 e modalità di transizione senza attribuire la stessa garanzia a qualunque configurazione.
+
+**Accettazione:** PMF non è descritto come protezione dal disturbo fisico RF o da ogni DoS; non riprodurre l'affermazione del PDF che lega indiscriminatamente l'obbligatorietà di 802.11w a 802.11ac. Fonti: IEEE e Wi-Fi Alliance; solo scenari difensivi, nessun laboratorio di jamming.
+
+### 6. Ruoli Zero Trust: PE, PA e PEP
+
+- [ ] Rendere autonomi e ricercabili Policy Engine, Policy Administrator e Policy Enforcement Point, collegandoli alla guida del Dominio 1 (obiettivo 1.2).
+
+**Evidenza:** PDF pp. 5–6. `PolicyDrivenAccessControl` e `ControlPlaneZTA` spiegano già PE/PA; la guida nomina Policy Enforcement Point, ma l'acronimo PEP e le voci autonome non sono disponibili nel glossario.
+
+**Da realizzare:** riutilizzare le spiegazioni esistenti per distinguere decisione della policy, gestione della comunicazione e applicazione del controllo nel data plane. Collegare subject/system, segnali di contesto e verifica continua. Disambiguare il PA Zero Trust da altri significati dello stesso acronimo.
+
+**Accettazione:** un flusso di accesso originale identifica correttamente chi decide, chi coordina e chi applica; ricerca per nomi estesi e acronimi, con collegamenti bidirezionali alle sezioni esistenti. Fonte: NIST SP 800-207.
+
+### 7. Accordo delle chiavi, chiavi effimere e forward secrecy
+
+- [ ] Approfondire key establishment nella guida del Dominio 1 e aggiungere le voci collegate nel glossario (obiettivo 1.4).
+
+**Evidenza:** PDF pp. 11–12. `AsymmetricEncryption` distingue già correttamente DH/ECDH dalla cifratura; perfect forward secrecy compare soprattutto nel contesto WPA3. Manca un percorso generale su chiave di sessione, key transport, key agreement e chiavi effimere.
+
+**Da realizzare:** conservare la distinzione già corretta su DH/ECDH; confrontare consegna di una chiave cifrata e derivazione di un segreto condiviso, poi l'uso della cifratura simmetrica. Definire DH, ECDH, ephemeral key e PFS/forward secrecy, spiegando perché l'autenticazione dei peer resta necessaria.
+
+**Accettazione:** il trasporto RSA della chiave illustrato nel PDF non viene presentato come handshake TLS 1.3; descrivere cosa protegge e cosa non protegge la forward secrecy in caso di compromissione. Fonti: NIST SP 800-56A e RFC 8446. Diagramma originale con equivalente testuale.
+
+### 8. Terminazione TLS nei bilanciatori e confini di fiducia
+
+- [ ] Integrare TLS termination/offload nella guida del Dominio 3 e nel glossario (obiettivo 3.2).
+
+**Evidenza:** PDF p. 50. `LoadBalancingRes` e `ActiveActivePassiveRes` coprono distribuzione e disponibilità; manca l'approfondimento sulla terminazione TLS/SSL offload e sul percorso verso il backend.
+
+**Da realizzare:** confrontare TLS pass-through, terminazione al bilanciatore e nuova connessione TLS al backend. Spiegare dove sono disponibili i dati in chiaro, custodia delle chiavi e verifica del certificato backend; separare distribuzione del traffico e protezione crittografica. Mantenere SSL offload come alias storico, usando TLS nel testo operativo.
+
+**Accettazione:** due flussi originali mostrano distintamente tratto client–bilanciatore e bilanciatore–backend; HTTPS sul primo tratto non è descritto come garanzia automatica sull'intero percorso. Fonti: documentazione ufficiale di un reverse proxy/bilanciatore e RFC TLS.
+
+## P2 — reperibilità e approfondimenti mirati
+
+### 9. Elicitation e frode d'identità
+
+- [ ] Esplicitare elicitation e identity fraud nella guida del Dominio 2 e nel glossario (obiettivo 2.2), collegandole a pretexting e impersonation.
+
+**Evidenza:** PDF p. 21. `PretextingSE` contiene già un esempio di informazioni ottenute con una storia inventata e `ImpersonationSE` descrive la falsa identità; mancano le voci autonome e il confronto con l'uso illecito dell'identità raccolta.
+
+**Da realizzare:** distinguere il pretesto costruito, il ruolo impersonato, l'ottenimento di informazioni durante una conversazione e la frode realizzata usando i dati altrui. Un attacco può combinare queste tecniche: non presentarle come fasi obbligatorie né come sinonimi. Collegare verifica tramite canale indipendente, minimizzazione della divulgazione e segnalazione.
+
+**Accettazione:** un caso sintetico distingue raccolta delle informazioni e successivo abuso dell'identità; riutilizzare gli esempi di pretexting già presenti senza duplicarli. Voci e alias IT/EN reperibili. Fonti: risorse istituzionali CISA per social engineering e FTC per identity theft, con terminologia coerente con gli obiettivi d'esame.
+
+### 10. Certificati, fiducia e revoca nel glossario
+
+- [ ] Aggiungere accessi autonomi a CRL, OCSP, OCSP stapling e certificato autofirmato, collegandoli alla guida del Dominio 1 (obiettivo 1.4).
+
+**Evidenza:** PDF pp. 16–17. `PKIFundamentals` spiega già CRL/OCSP/stapling; esistono voci su CA, certificati, root of trust, wildcard e formati. La lacuna riguarda soprattutto reperibilità e confronto fra certificato autofirmato, CA interna e CA pubblica.
+
+**Da realizzare:** riutilizzare le definizioni di revoca; chiarire trust anchor, catena e distribuzione della fiducia. Un certificato autofirmato non è automaticamente debole sul piano crittografico, ma non offre automaticamente una fiducia verificata da terzi. Separare revoca, scadenza e verifica del nome.
+
+**Accettazione:** ogni acronimo porta alla definizione canonica; distinguere stato “good” OCSP dalla validazione completa del certificato. Fonti: RFC 5280 e RFC 6960, con verifica del contesto TLS per stapling.
+
+### 11. Metodi EAP e validazione del server
+
+- [ ] Rendere autonomi EAP-TLS, EAP-TTLS e PEAP nel glossario e affinare il confronto nella guida del Dominio 4 (obiettivo 4.1).
+
+**Evidenza:** PDF pp. 50 e 62. `EAPProtocol_New` descrive già i tre metodi, ma usa formule assolute come “il più sicuro di tutti” e collega la sola presenza di certificati alla neutralizzazione degli AP malevoli.
+
+**Da realizzare:** precisare credenziali del client, tunnel e autenticazione del server per ciascun metodo; descrivere validazione della CA e dell'identità del server, provisioning del profilo e custodia della chiave privata. Collegare i ruoli supplicant/authenticator/authentication server di 802.1X senza duplicare la voce esistente. LEAP, EAP-FAST e WPS sono già presenti: non aggiungerli nuovamente.
+
+**Accettazione:** nessuna graduatoria assoluta senza ipotesi; certificato server non contato come secondo fattore dell'utente. Evitare il nome improprio “WPA3-PSK” del PDF per descrivere SAE. Fonti: RFC dei metodi EAP e documentazione ufficiale dei profili di autenticazione.
+
+### 12. SSO, SAML, OAuth e OIDC nel glossario
+
+- [ ] Rendere autonomi SSO, SAML, OAuth 2.0, OpenID Connect e Kerberos, collegandoli al confronto IAM della guida del Dominio 4 (obiettivo 4.6).
+
+**Evidenza:** PDF pp. 75–77. `MFA_SSO_Federation` e `FederationConcept` spiegano già SSO, SAML e la distinzione OAuth/OIDC; questi protocolli non hanno tutti una voce autonoma. LDAP ha già una voce con DN, OU, LDAPS e StartTLS: non ripetere tali contenuti né aggiungere DAP per il solo cenno storico nel PDF.
+
+**Da realizzare:** organizzare i rimandi per autenticazione, autorizzazione delegata, federazione e SSO. Collegare identity provider, service provider/relying party, asserzione e token nei limiti necessari a comprendere i flussi; spiegare il ruolo dei ticket Kerberos senza equipararlo automaticamente alla federazione web.
+
+**Accettazione:** OAuth non diventa un protocollo di autenticazione; distinguere access token e ID token e non presumere che ogni access token sia JWT. Esempi IT/EN coerenti. Fonti: OASIS SAML, specifiche OAuth/OIDC e RFC 4120.
+
+### 13. SELinux, MAC e isolamento applicativo
+
+- [ ] Aggiungere una voce SELinux e approfondire MAC rispetto a DAC nella guida del Dominio 4, collegandoli al Dominio 1 (obiettivi 4.5 e 1.2).
+
+**Evidenza:** PDF pp. 63 e 72. `MACConcept` usa già SELinux come esempio e la guida cita SELinux, ma manca una spiegazione autonoma. Il PDF colloca UAC tra gli esempi di sandboxing: tale equivalenza non va importata.
+
+**Da realizzare:** spiegare policy, label e confinamento delle applicazioni, distinguendo DAC, type enforcement e l'eventuale configurazione MLS. Non ridurre ogni policy SELinux al confronto lineare fra clearance e classificazione. Se si introduce UAC nel confronto, descriverlo come controllo dell'elevazione dei privilegi, distinto dall'isolamento di una sandbox.
+
+**Accettazione:** esempio difensivo in cui permessi DAC concessi non bastano ad autorizzare l'accesso secondo la policy MAC; non proporre la disattivazione del controllo come soluzione standard. Fonti: documentazione ufficiale SELinux/distribuzione Linux e Microsoft per UAC.
+
+### 14. Contesto normativo: SOX e GLBA
+
+- [ ] Integrare un confronto normativo essenziale nel Dominio 5 e le voci SOX/GLBA nel glossario (obiettivi 5.1 e 5.4), collegando GDPR, HIPAA e PCI DSS già citati.
+
+**Evidenza:** PDF pp. 87 e 92. SOX e GLBA non compaiono nelle guide/definizioni analizzate; GDPR ha già una voce, mentre HIPAA e PCI DSS compaiono in vari approfondimenti. Non serve ricostruire una guida giuridica completa.
+
+**Da realizzare:** spiegare ambito statunitense, finalità e tipo di organizzazione interessata da SOX e GLBA; distinguere legge/regolamento, standard di settore e obbligo contrattuale. Rendere HIPAA e PCI DSS autonomamente reperibili riutilizzando il contenuto pertinente. Collegare compliance reporting e responsabilità già trattati.
+
+**Accettazione:** ambito geografico esplicito e nessuna applicabilità automatica a ogni organizzazione italiana; niente importi di sanzioni o classificazioni penali copiati dal PDF. Verificare testo e applicabilità su SEC, FTC, HHS, PCI SSC e fonti istituzionali UE alla data dell'implementazione, registrando la data di verifica.
+
+## Argomenti verificati che non generano nuove attività
+
+Il confronto non giustifica un nuovo backlog per i seguenti contenuti già presenti:
+
+- CIA/AAA, categorie e funzioni dei controlli, change management, hashing/salting, firme, TPM/HSM, formati dei certificati e tokenizzazione.
+- Vettori e attori di minaccia, malware/fileless e living off the land, SQLi, buffer overflow, vulnerabilità cloud/supply chain e mitigazioni generali.
+- Segmentazione, VPN/SASE, modelli cloud, disponibilità active/active e active/passive, backup, metriche di resilienza e alimentazione.
+- Baseline, MDM/BYOD/COPE, SAST e fuzzing, scansioni, threat intelligence, SIEM, SPF/DKIM/DMARC, DLP/NAC, automazione e risposta agli incidenti.
+- Ruoli sui dati, gestione del rischio, BIA, fornitori, accordi, audit, awareness e formazione.
+
+La copertura esistente non esclude miglioramenti futuri, ma il PDF non è una ragione per duplicare queste sezioni. Non pianificare cataloghi di tool citati soltanto come esempi storici, statistiche incidentali, importi normativi datati o acronimi non pertinenti agli obiettivi. Le correzioni individuate sopra riguardano le formulazioni effettivamente riscontrate o gli errori del PDF da evitare durante l'integrazione.
