@@ -263,6 +263,7 @@ never bake them into the image.
 | `npm run lint` | ESLint over the source (TypeScript + React Hooks rules). |
 | `npm test` | Vitest suite: dataset integrity, quiz logic and i18n coverage. |
 | `npm run check` | Typecheck + lint + tests, the same gate CI runs. |
+| `npm run maturity-dashboard` | Regenerates [`docs/maturity-dashboard.md`](docs/maturity-dashboard.md): project health across coverage, freshness, links, accessibility, security and translations. A test fails CI when it is stale. |
 | `npm run smoke` | After `npm run build`: starts `dist/server.cjs` in production mode and checks the app shell, security headers, SPA fallback and API input validation. Also run by CI. |
 | `npm run lab:session -- help` | Manages local on-demand Docker sessions with expiry, reset and resource caps; IT/EN help. |
 | `npm run lab:verify` | Requires Docker and the `comptia-labs` image: verifies real isolation, limits, reset and expiry. |
@@ -299,6 +300,7 @@ Integrated **full-stack** layout — one Express server serves the frontend and 
 ├── e2e/                      # Playwright + axe at phone and desktop width
 ├── scripts/                  # Smoke test and coverage-matrix generator
 ├── docs/coverage-matrix.md   # Generated: questions per objective
+├── docs/maturity-dashboard.md # Generated: project health across six dimensions
 ├── docs/errata.md            # Content errors already fixed
 ├── docs/quality-baseline.md  # Measured baseline: questions, tests, audit, Lighthouse
 ├── docs/content-templates.md # How each kind of content is written, and its test
