@@ -163,6 +163,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "PasswordSprayingAtt": "Attacchi alle Credenziali",
   "CredentialStuffingAtt": "Attacchi alle Credenziali",
 
+  "DomainHijackingAttack": "Attacchi Infrastrutturali & Web",
   "NetworkWirelessAttacks": "Attacchi Infrastrutturali & Web",
   "AppCryptoAttacks": "Attacchi Infrastrutturali & Web",
   "SessionHijackingAttack": "Attacchi Infrastrutturali & Web",

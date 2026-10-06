@@ -23,6 +23,11 @@ export interface Citation {
 
 /** How the study text names each cited document. */
 export const MENTIONS: [SourceId, RegExp][] = [
+  ["icannHijacking", /ICANN Domain Name Registration Hijacking/],
+  ["icannProtection", /ICANN Protect Your Domain Name/],
+  ["icannLocks", /ICANN EPP Status Codes/],
+  ["rfc4033", /RFC 4033/],
+
   ["owaspSession", /Session Management Cheat Sheet/],
   ["mdnCookies", /MDN Set-Cookie/],
   ["owaspXss", /XSS Prevention Cheat Sheet/],
@@ -49,6 +54,7 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "2:DomainHijackingAttack": [{ source: "icannHijacking" }, { source: "icannProtection" }, { source: "icannLocks" }, { source: "rfc4033" }],
   "2:SessionHijackingAttack": [{ source: "owaspSession" }],
   "2:ReplayAttack": [{ source: "owaspSession" }, { source: "nist80063b" }],
   "2:CookieHeaderTampering": [{ source: "owaspSession" }, { source: "mdnCookies" }],

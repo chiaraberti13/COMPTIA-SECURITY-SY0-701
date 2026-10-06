@@ -10,6 +10,11 @@ export interface Source {
 }
 
 export const SOURCES = {
+  icannHijacking: {"title": "ICANN Domain Name Registration Hijacking", "publisher": "ICANN", "url": "https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en", "kind": "reference"},
+  icannProtection: {"title": "ICANN Protect Your Domain Name", "publisher": "ICANN", "url": "https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en", "kind": "reference"},
+  icannLocks: {"title": "ICANN EPP Status Codes", "publisher": "ICANN", "url": "https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en", "kind": "reference"},
+  rfc4033: {"title": "RFC 4033 — DNS Security Introduction and Requirements", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc4033", "kind": "standard"},
+
   owaspSession: { title: "Session Management Cheat Sheet", publisher: "OWASP Foundation", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", kind: "reference" },
   mdnCookies: { title: "MDN Set-Cookie", publisher: "MDN", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie", kind: "reference" },
   owaspXss: {"title": "XSS Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html", "kind": "reference"},
@@ -68,9 +73,9 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "1.3": mapped("nist80053", "cisControls"),
   "1.4": mapped("nist80057", "nist80056a", "rfc8446", "nistSteganography"),
   "2.1": mapped("nist80030", "mitreAttack"),
-  "2.2": mapped("nist800161", "mitreAttack"),
+  "2.2": mapped("icannProtection", "nist800161", "mitreAttack"),
   "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),
-  "2.4": mapped("nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
+  "2.4": mapped("icannHijacking", "icannProtection", "icannLocks", "rfc4033", "nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),
   "3.2": mapped("nist800207", "cisControls"),

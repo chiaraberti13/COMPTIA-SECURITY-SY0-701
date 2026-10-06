@@ -496,6 +496,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Shadow IT è tecnologia non autorizzata usata di solito per comodità, non per nuocere: la risposta è governance e un'alternativa approvata, non trattarla come un insider malevolo.",
     ],
     connections: [
+      "Domain hijacking collega il phishing dell’obiettivo 2.2 alla compromissione del registrar o del provider DNS dell’obiettivo 2.4; Typosquatting usa invece un nome distinto.",
       "Le mitigazioni dipendono dai modelli architetturali e dai trust boundary del D3.",
       "Indicatori, vulnerability management, SIEM e incident response diventano processi operativi nel D4.",
       "Threat intelligence, risk appetite e priorità di remediation dipendono da governance e rischio del D5.",
@@ -503,6 +504,36 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Il rischio di supply chain collega vendor assessment e contratti del D5 alle vulnerabilità di update malevoli e service provider.",
     ],
     comparisons: [
+      {
+        "title": "Domain hijacking, DNS poisoning e typosquatting",
+        "headers": [
+          "Caso",
+          "Componente alterato",
+          "Controllo da verificare"
+        ],
+        "rows": [
+          [
+            "Domain hijacking al registrar",
+            "Account di gestione; delega o registrazione del dominio esistente",
+            "MFA, accessi limitati, recupero sicuro, lock con ambito verificato"
+          ],
+          [
+            "Compromissione DNS autorevole",
+            "Account del provider; record della zona esistente",
+            "Accessi al provider, audit e verifica dei record"
+          ],
+          [
+            "DNS poisoning",
+            "Risposta o cache del resolver; zona legittima invariata",
+            "Validazione DNSSEC con catena di fiducia valida"
+          ],
+          [
+            "Typosquatting",
+            "Altro dominio con nome somigliante",
+            "Verifica del nome esatto e difese contro il phishing"
+          ]
+        ]
+      },
       {
         "title": "Sessione, intercettazione e replay",
         "headers": [
@@ -644,6 +675,14 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "DNSSEC impedisce la compromissione dell’account registrar.",
+        "correction": "DNSSEC autentica dati DNS, non l’operatore dell’account. Proteggere registrar, provider DNS e recupero; cambiamenti amministrativi possono alterare dati firmati o la catena di fiducia."
+      },
+      {
+        "misconception": "Un transfer lock blocca ogni cambiamento DNS.",
+        "correction": "clientTransferProhibited riguarda il trasferimento. Verificare separatamente protezione degli aggiornamenti, ambito del registry lock e accessi al provider della zona autorevole."
+      },
+      {
         "misconception": "TLS e MFA impediscono ogni furto della sessione.",
         "correction": "TLS protegge il transito e MFA il login; un ID valido sottratto può ancora essere riusato. Servono protezione del token, rotazione, scadenza e revoca sul server."
       },
@@ -687,6 +726,18 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Il nome è giusto, la delega è cambiata",
+        "prompt": "Nella simulazione Kestrelia, gli utenti digitano kestrelia.example senza errori. Il log del registrar mostra un cambio non approvato dei nameserver dopo una falsa email di rinnovo. La cache del resolver riflette la nuova delega: quale componente è compromesso?",
+        "reasoning": "È domain hijacking tramite l’account registrar: è cambiata la gestione del dominio legittimo. Non basta svuotare la cache e non è typosquatting. La falsa email collega il vettore phishing dell’obiettivo 2.2 all’attacco dell’obiettivo 2.4. Conservare l’audit, contattare il registrar tramite canale noto, contenere accessi e recupero, ripristinare delega e controllare record e DNSSEC. Un cambio DNS isolato non prova un attacco: qui lo rendono significativo assenza di approvazione e accesso anomalo."
+      },
+      {
+        "objective": "2.4",
+        "title": "Il transfer lock non basta",
+        "prompt": "Kestrelia protegge il dominio con clientTransferProhibited. Un account DNS compromesso modifica un record nella zona e il servizio lo firma normalmente. L’account del registrar non cambia e il resolver valida la risposta. Quali controlli mancano?",
+        "reasoning": "Il blocco riguarda il trasferimento tra registrar, non ogni modifica dei record presso il provider DNS. DNSSEC valida origine e integrità: non autorizza la persona che ha modificato dati poi firmati. Servono accessi limitati e MFA anche al provider, audit delle modifiche e ripristino dei record. Valutare update lock e registry lock per le operazioni cui si applicano; non presentarli come blocco universale. Se la catena DNSSEC diventasse incoerente, l’esito potrebbe essere un errore di validazione anziché il reindirizzamento."
+      },
       {
         "objective": "2.4",
         "title": "Sessione sottratta dopo MFA",
@@ -1947,6 +1998,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Shadow IT is unauthorized technology usually adopted for convenience, not to cause harm: the response is governance and an approved alternative, not treating it as a malicious insider.",
     ],
     connections: [
+      "Domain hijacking connects phishing in objective 2.2 to registrar or DNS provider compromise in objective 2.4; Typosquatting instead uses a separate name.",
       "Mitigations depend on the architectural models and trust boundaries in D3.",
       "Indicators, vulnerability management, SIEM, and incident response become operational processes in D4.",
       "Threat intelligence, risk appetite, and remediation priority depend on governance and risk in D5.",
@@ -1954,6 +2006,36 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Supply chain risk connects vendor assessment and contracts in D5 to the vulnerabilities of malicious updates and service providers.",
     ],
     comparisons: [
+      {
+        "title": "Domain hijacking, DNS poisoning and typosquatting",
+        "headers": [
+          "Case",
+          "Altered component",
+          "Control to check"
+        ],
+        "rows": [
+          [
+            "Domain hijacking at the registrar",
+            "Management account; delegation or registration of the existing domain",
+            "MFA, limited access, secure recovery, locks with verified scope"
+          ],
+          [
+            "Authoritative DNS compromise",
+            "Provider account; existing zone records",
+            "Provider access, audit and record checks"
+          ],
+          [
+            "DNS poisoning",
+            "Resolver response or cache; legitimate zone unchanged",
+            "DNSSEC validation with a valid trust chain"
+          ],
+          [
+            "Typosquatting",
+            "Another domain with a similar name",
+            "Exact name verification and phishing defenses"
+          ]
+        ]
+      },
       {
         "title": "Sessions, interception and replay",
         "headers": [
@@ -2095,6 +2177,14 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "DNSSEC prevents registrar account compromise.",
+        "correction": "DNSSEC authenticates DNS data, not the account operator. Protect the registrar, DNS provider and recovery; administrative changes may alter signed data or the trust chain."
+      },
+      {
+        "misconception": "A transfer lock blocks every DNS change.",
+        "correction": "clientTransferProhibited concerns transfer. Separately check update protection, registry lock scope and access to the authoritative zone provider."
+      },
+      {
         "misconception": "TLS and MFA prevent every session theft.",
         "correction": "TLS protects transit and MFA protects login; a stolen valid ID can still be reused. Token protection, rotation, expiration and server-side revocation are required."
       },
@@ -2138,6 +2228,18 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Correct name, changed delegation",
+        "prompt": "In the Kestrelia simulation, users type kestrelia.example without mistakes. The registrar log shows an unapproved nameserver change after a fake renewal email. The resolver cache reflects the new delegation: which component is compromised?",
+        "reasoning": "This is domain hijacking through the registrar account: management of the legitimate domain changed. Flushing the cache is insufficient and this is not typosquatting. The fake email connects the phishing vector in objective 2.2 to the attack in objective 2.4. Preserve the audit, contact the registrar through a known channel, contain access and recovery, restore delegation and check records and DNSSEC. An isolated DNS change does not prove an attack: here lack of approval and anomalous access make it significant."
+      },
+      {
+        "objective": "2.4",
+        "title": "A transfer lock is insufficient",
+        "prompt": "Kestrelia protects its domain with clientTransferProhibited. A compromised DNS account changes a zone record and the service signs it normally. The registrar account does not change and the resolver validates the response. Which controls are missing?",
+        "reasoning": "The lock concerns transfer between registrars, not every record change at the DNS provider. DNSSEC validates origin and integrity: it does not authorize the person who changed subsequently signed data. Limited access and MFA at the provider, change audit and record restoration are required. Evaluate update locks and registry locks for applicable operations; do not present them as universal blocks. If the DNSSEC chain became inconsistent, validation failure rather than redirection could result."
+      },
       {
         "objective": "2.4",
         "title": "Session stolen after MFA",

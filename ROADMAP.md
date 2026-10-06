@@ -63,13 +63,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 4. Domain hijacking rispetto a DNS poisoning e typosquatting
 
-- [ ] Aggiungere domain hijacking alla guida del Dominio 2 e al glossario (obiettivo 2.4), collegandolo ai vettori di phishing dell'obiettivo 2.2.
+- [x] Aggiungere domain hijacking alla guida del Dominio 2 e al glossario (obiettivo 2.4), collegandolo ai vettori di phishing dell'obiettivo 2.2.
 
 **Evidenza nel repository:** Il corpus spiega DNS poisoning e typosquatting; manca il caso distinto del controllo illecito dell'account di registrazione o della delega del dominio.
 
 **Da realizzare:** confrontare compromissione dell'account registrar, modifica dei record/deleghe, avvelenamento delle risposte DNS e registrazione di un dominio somigliante. Introdurre controllo degli accessi al registrar, MFA, protezione dei contatti di recupero, lock disponibili e monitoraggio delle modifiche.
 
 **Accettazione:** uno scenario originale identifica quale componente è compromesso; spiegare che DNSSEC non impedisce da solo modifiche autorizzate con un account registrar compromesso. Fonti: ICANN e documentazione primaria su DNSSEC/registrar.
+
+**Completato il 6 ottobre 2026:** voce canonica `2:DomainHijackingAttack` IT/EN, ricercabile per domain hijacking e dirottamento/domain takeover. Tabella comparativa e due scenari originali collegano gli obiettivi 2.2 e 2.4; precisati account registrar/provider DNS, record e deleghe, limiti DNSSEC e ambito dei lock. Collegamenti bidirezionali ai contenuti esistenti e fonti ICANN/IETF; verificati ricerca, parità, citazioni e assenza di sigle inventate nelle flashcard.
 
 ### 5. Disponibilità Wi-Fi e limiti di PMF
 

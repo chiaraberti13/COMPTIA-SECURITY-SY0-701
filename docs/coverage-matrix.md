@@ -26,9 +26,9 @@ Peso d'esame 22% · 133 domande nel banco del dominio.
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
 |---|---|---|---|---|---|---|---|---|
 | 2.1 | Confrontare attori, attributi e motivazioni per stimare capacità, intento, accesso e probabilità. | 19 | 0 | 11 | 5 | 3 | 1 | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final), [MITRE ATT&CK](https://attack.mitre.org/) |
-| 2.2 | Analizzare vettori e superfici di attacco, inclusi social engineering, supply chain, cloud, wireless e removable media. | 31 | 0 | 15 | 8 | 8 | 1 | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [MITRE ATT&CK](https://attack.mitre.org/) |
+| 2.2 | Analizzare vettori e superfici di attacco, inclusi social engineering, supply chain, cloud, wireless e removable media. | 31 | 0 | 15 | 8 | 8 | 1 | [ICANN Protect Your Domain Name](https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en), [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 2.3 | Riconoscere vulnerabilità applicative, hardware, cloud, virtualizzazione, mobile, crittografiche e di configurazione. | 17 | 0 | 5 | 3 | 9 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [OWASP Foundation OWASP Top 10](https://owasp.org/www-project-top-ten/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
-| 2.4 | Interpretare indicatori di malware, attacchi di rete, credenziali, applicazioni e comportamenti anomali. | 45 | 0 | 2 | 2 | 41 | 7 | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [MITRE ATT&CK](https://attack.mitre.org/), [OWASP Foundation XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html), [OWASP Foundation CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), [OWASP Foundation SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html), [OWASP Foundation Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie), [NIST SP 800-63B](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) |
+| 2.4 | Interpretare indicatori di malware, attacchi di rete, credenziali, applicazioni e comportamenti anomali. | 45 | 0 | 2 | 2 | 41 | 9 | [ICANN Domain Name Registration Hijacking](https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en), [ICANN Protect Your Domain Name](https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en), [ICANN EPP Status Codes](https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en), [IETF RFC 4033](https://www.rfc-editor.org/rfc/rfc4033), [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [MITRE ATT&CK](https://attack.mitre.org/), [OWASP Foundation XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html), [OWASP Foundation CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), [OWASP Foundation SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html), [OWASP Foundation Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie), [NIST SP 800-63B](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) |
 | 2.5 | Selezionare mitigazioni coerenti con il vettore: segmentation, hardening, patching, least privilege, allowlisting, isolamento e monitoring. | 23 | 0 | 14 | 6 | 3 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 
 ## Dominio 3 — Architettura di sicurezza
@@ -89,6 +89,7 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti primarie: obiettivi d'esame, standard, specifiche e norme
 
+- [RFC 4033 — DNS Security Introduction and Requirements](https://www.rfc-editor.org/rfc/rfc4033) — IETF
 - [CompTIA Security+ (SY0-701) — exam objectives](https://www.comptia.org/certifications/security) — CompTIA
 - [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) — NIST
 - [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) — NIST
@@ -116,6 +117,9 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti secondarie: riferimenti di comunità ed enti
 
+- [ICANN Domain Name Registration Hijacking](https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en) — ICANN
+- [ICANN Protect Your Domain Name](https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en) — ICANN
+- [ICANN EPP Status Codes](https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en) — ICANN
 - [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) — OWASP Foundation
 - [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) — MDN
 - [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) — OWASP Foundation
