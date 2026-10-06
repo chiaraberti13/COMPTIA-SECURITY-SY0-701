@@ -7,6 +7,16 @@
  * `i18n.tsx` translates them for display.
  */
 export const SUBGROUP_MAP: Record<string, string> = {
+  "CertificatePEM": "Infrastruttura PKI",
+  "CertificateDER": "Infrastruttura PKI",
+  "CertificateP12": "Infrastruttura PKI",
+  "LegacyNTLM": "Modelli d'Identità e Federazione",
+  "LegacyPAP": "Modelli d'Identità e Federazione",
+  "LegacyWTLS": "Autenticazione di Rete Centralizzata (AAA)",
+  "WirelessLEAP": "Hardening di Sistemi e Dispositivi",
+  "WirelessEAPFAST": "Hardening di Sistemi e Dispositivi",
+  "WirelessWPS": "Hardening di Sistemi e Dispositivi",
+
   // Domain 1
   "CIATriad": "Principi Fondamentali (CIA, AAA, Non-Repudio)",
   "AAAFramework": "Principi Fondamentali (CIA, AAA, Non-Repudio)",

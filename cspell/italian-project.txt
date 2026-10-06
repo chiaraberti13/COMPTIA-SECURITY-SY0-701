@@ -12851,3 +12851,9 @@ severo
 abbassarla
 permissiva
 stringe
+dedurla
+delimitatori
+importazione
+raccomandarne
+riattivarlo
+testuale

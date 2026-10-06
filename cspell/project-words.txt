@@ -327,3 +327,5 @@ coercivity
 didattica
 mostrate
 suggerite
+NTLM
+WTLS

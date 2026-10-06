@@ -232,7 +232,38 @@ export const GROUP_EN: Record<string, GroupOverride> = {
  * ------------------------------------------------------------------ */
 
 export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
+
   1: {
+    "LegacyPAP": {
+      "name": "Password Authentication Protocol (PAP)",
+      "definition": "PAP is a legacy PPP authentication protocol that sends the username and password in plaintext over the link.",
+      "details": "PAP provides neither confidentiality nor replay protection on its own. An outer tunnel can protect transport, but does not change the properties of the inner method. Do not use it over unprotected links.\n\n* **Focused Mini-Example:** Kestrelia finds PAP in an old remote access configuration and requires an approved authentication method before reactivating it.",
+      "examTip": "PAP sends plaintext credentials; do not confuse it with a challenge-response method."
+    },
+    "LegacyNTLM": {
+      "name": "New Technology LAN Manager (NTLM)",
+      "definition": "NTLM is a legacy family of Microsoft challenge-response authentication protocols.",
+      "details": "The password is not sent directly, but this does not prevent relay or pass-the-hash. NTLM is deprecated: inventory dependencies and prefer Kerberos where supported, without blindly disrupting services.\n\n* **Focused Mini-Example:** Kestrelia detects NTLM in application logs and tests Kerberos authentication in an isolated environment before migration.",
+      "examTip": "Challenge-response does not imply relay resistance; NTLM is not Kerberos."
+    },
+    "CertificateP12": {
+      "name": "PKCS #12 (P12) / Personal Information Exchange (PFX)",
+      "definition": "P12 and PFX are common extensions for PKCS #12 containers, which can include certificates, a chain and a private key.",
+      "details": "The container can protect the private key with a password; protection depends on the selected algorithms and password. It is not just a public certificate to distribute freely.\n\n* **Focused Mini-Example:** Kestrelia transfers a protected PFX to the authorized server, communicates the password through a separate channel and removes the temporary copy after import.",
+      "examTip": "P12/PFX may include the private key: protect the file and restrict distribution."
+    },
+    "CertificateDER": {
+      "name": "Distinguished Encoding Rules (DER)",
+      "definition": "DER is a deterministic binary encoding for ASN.1 structures, also used by certificates.",
+      "details": "DER and PEM can represent the same certificate: the encoding changes, not trust in the CA. The .cer extension does not guarantee the encoding: it may contain DER or PEM. Do not confuse .cer with CER, the biometric error rate.\n\n* **Focused Mini-Example:** Kestrelia receives a .cer file and checks the encoding before import, without inferring it from the name.",
+      "examTip": "DER is binary; PEM is textual. A public certificate does not contain the private key."
+    },
+    "CertificatePEM": {
+      "name": "Privacy Enhanced Mail (PEM)",
+      "definition": "PEM is a Base64 textual encoding with delimiters for certificates and other cryptographic objects.",
+      "details": "The format represents binary data as text; it adds no encryption. A PEM file can contain a public certificate or a private key: check the object type and protect keys.\n\n* **Focused Mini-Example:** Kestrelia imports a PEM certificate into the web server and keeps the private key separately with restricted access.",
+      "examTip": "PEM identifies a textual representation, not an encryption algorithm."
+    },
   /* ---------------- Domain 1 · Group 1: Exam Fundamentals ---------------- */
   CIATriad: {
     name: "CIA Triad",
@@ -1249,6 +1280,12 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
 
   /* ================= Domain 3 ================= */
   3: {
+    "LegacyWTLS": {
+      "name": "Wireless Transport Layer Security (WTLS)",
+      "definition": "WTLS is the legacy security protocol of the WAP architecture for resource-constrained mobile devices.",
+      "details": "It is not Wi-Fi link encryption. In the WAP gateway model, conversion between WTLS and TLS can expose plaintext at the gateway: do not assume end-to-end protection.\n\n* **Focused Mini-Example:** Kestrelia identifies WTLS in a historical mobile application and plans replacement with modern HTTPS.",
+      "examTip": "WTLS belongs to the legacy WAP world, not WPA3."
+    },
   /* ---- Group 1: Cloud ---- */
   OnPremisesArchitecture: {
     name: "On-premises",
@@ -2325,6 +2362,24 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   },
   4: {
+    "WirelessWPS": {
+      "name": "Wi-Fi Protected Setup (WPS)",
+      "definition": "WPS is a simplified Wi-Fi device enrollment mechanism, through a PIN or button.",
+      "details": "It is not an encryption protocol. PIN mode is vulnerable to attempts to guess the code; disable WPS when unnecessary. Button mode still requires physical control and control of the enrollment window.\n\n* **Focused Mini-Example:** Kestrelia disables WPS on the router and enrolls devices through the approved Wi-Fi configuration.",
+      "examTip": "WPS simplifies enrollment; it does not replace WPA3 or make a network secure."
+    },
+    "WirelessEAPFAST": {
+      "name": "Flexible Authentication via Secure Tunneling (EAP-FAST)",
+      "definition": "EAP-FAST is an EAP method that protects inner authentication through a TLS tunnel.",
+      "details": "It can use a PAC (Protected Access Credential) to establish the tunnel. PAC provisioning must be protected: a tunnel does not eliminate configuration errors. Do not confuse it with LEAP or EAP-TLS, which uses client certificates.\n\n* **Focused Mini-Example:** Kestrelia verifies protected PAC distribution in an existing EAP-FAST profile before allowing access.",
+      "examTip": "EAP-FAST: TLS tunnel and possible PAC; EAP-TLS: client and server certificates."
+    },
+    "WirelessLEAP": {
+      "name": "Lightweight Extensible Authentication Protocol (LEAP)",
+      "definition": "LEAP is a legacy Cisco password-based wireless authentication method.",
+      "details": "Weaknesses in the method expose passwords to dictionary attacks. Do not select it for a new network: plan migration to EAP-TLS with certificate validation.\n\n* **Focused Mini-Example:** Kestrelia finds LEAP in an old laptop profile and replaces it with EAP-TLS after a compatibility test.",
+      "examTip": "LEAP is legacy; recognizing the name does not mean recommending its use."
+    },
   HardeningConcept: {
     name: "Hardening",
     definition: "The systematic process of strengthening a system (hardware, software, server, workstation or network device) to reduce its attack surface by minimizing known vulnerabilities.",

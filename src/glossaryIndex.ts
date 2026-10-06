@@ -35,15 +35,15 @@ export interface GlossaryIndex {
   namePattern: RegExp | null;
 }
 
-const ACRONYM = /^[A-Z][A-Z0-9]{1,7}\+?$/;
-const IN_PARENTHESES = /\(([A-Z][A-Z0-9]{1,7}\+?)\)/g;
+const ACRONYM = /^[A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?$/;
+const IN_PARENTHESES = /\(([A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?)\)/g;
 /** Candidate acronyms in running text; a trailing "+" is part of the token. */
-const IN_TEXT = /(?<![A-Za-z0-9])[A-Z][A-Z0-9]{1,7}\+?(?![A-Za-z0-9+])/g;
+const IN_TEXT = /(?<![A-Za-z0-9-])[A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?(?![A-Za-z0-9+-])/g;
 /** A trailing "(ACRONYM)" is the acronym, not part of the full name. */
 const PAREN_SUFFIX = /\s*\([^)]*\)\s*$/;
 
 /** Needs at least two capital letters: "A1" or "Q3" are not acronyms. */
-const isAcronym = (value: string) => ACRONYM.test(value) && (value.match(/[A-Z]/g) ?? []).length >= 2;
+const isAcronym = (value: string) => value === "P12" || ACRONYM.test(value) && (value.match(/[A-Z]/g) ?? []).length >= 2;
 
 /** The acronyms a glossary term stands for: the term itself, or any in parentheses. */
 export function acronymsOf(term: string): string[] {

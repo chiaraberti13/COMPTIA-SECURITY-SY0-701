@@ -301,6 +301,27 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
         examTip: "La chiave privata non viene mai inclusa o inviata alla CA all'interno del file CSR."
       },
       {
+        "name": "Privacy Enhanced Mail (PEM)",
+        "checklistKey": "CertificatePEM",
+        "definition": "PEM è una codifica testuale Base64 con delimitatori per certificati e altri oggetti crittografici.",
+        "details": "Il formato rappresenta dati binari come testo; non aggiunge cifratura. Un file PEM può contenere un certificato pubblico o una chiave privata: controllare il tipo di oggetto e proteggere le chiavi.\n\n* **Piccolo Esempio Concentrato:** Kestrelia importa un certificato PEM nel server web e conserva separatamente la chiave privata con accesso limitato.",
+        "examTip": "PEM indica una rappresentazione testuale, non un algoritmo di cifratura."
+      },
+      {
+        "name": "Distinguished Encoding Rules (DER)",
+        "checklistKey": "CertificateDER",
+        "definition": "DER è una codifica binaria deterministica per strutture ASN.1, usata anche dai certificati.",
+        "details": "DER e PEM possono rappresentare lo stesso certificato: cambia la codifica, non la fiducia nella CA. L’estensione .cer non garantisce la codifica: può contenere DER oppure PEM. Non confondere .cer con CER, il tasso di errore biometrico.\n\n* **Piccolo Esempio Concentrato:** Kestrelia riceve un file .cer e verifica la codifica prima dell’importazione, senza dedurla dal nome.",
+        "examTip": "DER è binario; PEM è testuale. Un certificato pubblico non contiene la chiave privata."
+      },
+      {
+        "name": "PKCS #12 (P12) / Personal Information Exchange (PFX)",
+        "checklistKey": "CertificateP12",
+        "definition": "P12 e PFX sono estensioni comuni per contenitori PKCS #12, che possono includere certificati, catena e chiave privata.",
+        "details": "Il contenitore può proteggere la chiave privata con una password; la protezione dipende dagli algoritmi e dalla password scelti. Non è un semplice certificato pubblico da distribuire liberamente.\n\n* **Piccolo Esempio Concentrato:** Kestrelia trasferisce un PFX protetto al server autorizzato, comunica la password su un canale separato e rimuove la copia temporanea dopo l’importazione.",
+        "examTip": "P12/PFX può includere la chiave privata: proteggere il file e limitarne la distribuzione."
+      },
+      {
         name: "Certificates",
         checklistKey: "CertificatesConcept",
         definition: "Documenti digitali che legano in modo sicuro l'identità di un soggetto alla sua chiave pubblica tramite la firma di una CA fidata.",
@@ -510,6 +531,20 @@ export const DOMAIN_1_TOPICS: TopicGroup[] = [
     description: "Gestione delle identità, autenticazione a più fattori, servizi di directory e modelli di autorizzazione. Attenzione: questi argomenti appartengono all'obiettivo 4.6 (Security Operations): sono raccolti qui perché servono fin da subito, ma all'esame contano come Dominio 4, non come Dominio 1.",
     icon: "Users",
     subtopics: [
+      {
+        "name": "New Technology LAN Manager (NTLM)",
+        "checklistKey": "LegacyNTLM",
+        "definition": "NTLM è una famiglia legacy di protocolli Microsoft di autenticazione challenge-response.",
+        "details": "La password non viene inviata direttamente, ma questo non impedisce relay o pass-the-hash. NTLM è deprecato: inventariare le dipendenze e preferire Kerberos dove supportato, senza interrompere servizi alla cieca.\n\n* **Piccolo Esempio Concentrato:** Kestrelia rileva NTLM nei log di un’applicazione e prova l’autenticazione Kerberos in un ambiente isolato prima della migrazione.",
+        "examTip": "Challenge-response non equivale a resistenza al relay; NTLM non è Kerberos."
+      },
+      {
+        "name": "Password Authentication Protocol (PAP)",
+        "checklistKey": "LegacyPAP",
+        "definition": "PAP è un protocollo legacy di autenticazione PPP che trasmette nome utente e password in chiaro sul collegamento.",
+        "details": "PAP non offre autonomamente riservatezza né protezione dal replay. Un tunnel esterno può proteggere il trasporto, ma non cambia le proprietà del metodo interno. Non usarlo su collegamenti non protetti.\n\n* **Piccolo Esempio Concentrato:** Kestrelia trova PAP in un vecchio accesso remoto e richiede un metodo di autenticazione approvato prima di riattivarlo.",
+        "examTip": "PAP invia credenziali in chiaro; non confonderlo con un metodo challenge-response."
+      },
       {
         name: "Authentication",
         checklistKey: "AuthenticationConcept_New",
@@ -1722,6 +1757,13 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         examTip: "A differenza di TACACS+ (che cifra l'intero corpo dei pacchetti ed è ideale per la gestione degli apparati di rete degli amministratori), RADIUS cifra solo la password ed è più orientato agli accessi generali degli utenti."
       },
       {
+        "name": "Wireless Transport Layer Security (WTLS)",
+        "checklistKey": "LegacyWTLS",
+        "definition": "WTLS è il protocollo di sicurezza legacy dell’architettura WAP per dispositivi mobili con risorse limitate.",
+        "details": "Non è la cifratura del collegamento Wi-Fi. Nel modello con gateway WAP, la conversione fra WTLS e TLS può esporre dati in chiaro al gateway: non presumere protezione da un’estremità all’altra.\n\n* **Piccolo Esempio Concentrato:** Kestrelia identifica WTLS in un’applicazione mobile storica e pianifica la sostituzione con HTTPS moderno.",
+        "examTip": "WTLS appartiene al mondo WAP legacy, non a WPA3."
+      },
+      {
         name: "EAP",
         checklistKey: "EAPProtocol_New",
         definition: "Extensible Authentication Protocol: un framework di autenticazione universale utilizzato per estendere e supportare diversi metodi di verifica su reti cablate e Wi-Fi.",
@@ -2579,6 +2621,27 @@ export const DOMAIN_4_TOPICS: TopicGroup[] = [
     description: "Processo di irrobustimento di sistemi, reti, server, dispositivi mobili e IoT per ridurre la superficie d'attacco.",
     icon: "Lock",
     subtopics: [
+      {
+        "name": "Lightweight Extensible Authentication Protocol (LEAP)",
+        "checklistKey": "WirelessLEAP",
+        "definition": "LEAP è un metodo di autenticazione wireless legacy di Cisco basato su password.",
+        "details": "Le debolezze del metodo espongono le password ad attacchi a dizionario. Non sceglierlo per una nuova rete: pianificare la migrazione verso EAP-TLS con validazione dei certificati.\n\n* **Piccolo Esempio Concentrato:** Kestrelia trova LEAP nel profilo di un vecchio portatile e lo sostituisce con EAP-TLS dopo un test di compatibilità.",
+        "examTip": "LEAP è legacy; riconoscere il nome non significa raccomandarne l’uso."
+      },
+      {
+        "name": "Flexible Authentication via Secure Tunneling (EAP-FAST)",
+        "checklistKey": "WirelessEAPFAST",
+        "definition": "EAP-FAST è un metodo EAP che protegge l’autenticazione interna mediante un tunnel TLS.",
+        "details": "Può utilizzare una PAC (Protected Access Credential) per stabilire il tunnel. Il provisioning della PAC deve essere protetto: un tunnel non elimina gli errori di configurazione. Non confonderlo con LEAP o con EAP-TLS, che usa certificati del client.\n\n* **Piccolo Esempio Concentrato:** Kestrelia verifica la distribuzione protetta della PAC in un profilo EAP-FAST esistente prima di consentire l’accesso.",
+        "examTip": "EAP-FAST: tunnel TLS e possibile PAC; EAP-TLS: certificati del client e del server."
+      },
+      {
+        "name": "Wi-Fi Protected Setup (WPS)",
+        "checklistKey": "WirelessWPS",
+        "definition": "WPS è un meccanismo di registrazione semplificata dei dispositivi Wi-Fi, tramite PIN o pulsante.",
+        "details": "Non è un protocollo di cifratura. La modalità PIN è vulnerabile a tentativi di indovinare il codice; disabilitare WPS quando non necessario. La modalità a pulsante richiede comunque il controllo fisico e della finestra di registrazione.\n\n* **Piccolo Esempio Concentrato:** Kestrelia disabilita WPS sul router e registra i dispositivi tramite la configurazione Wi-Fi approvata.",
+        "examTip": "WPS semplifica la registrazione; non sostituisce WPA3 e non rende sicura una rete."
+      },
       {
         name: "Hardening",
         checklistKey: "HardeningConcept",
