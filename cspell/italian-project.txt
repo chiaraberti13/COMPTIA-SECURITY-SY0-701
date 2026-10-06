@@ -12840,3 +12840,14 @@ motiva
 sintetici
 anteprima
 riutilizzarlo
+
+# Metriche di errore biometrico (obiettivo 4.6): forme italiane corrette dei contenuti.
+impostore
+impostori
+respinti
+usabilità
+esaspera
+severo
+abbassarla
+permissiva
+stringe
