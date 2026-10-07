@@ -112,21 +112,33 @@ describe("offline service worker", () => {
     expect(await (await w.dispatch("fetch", { request: w.request("/assets/old-en.js") }))?.text()).toBe("OLD EN");
   });
 
+  it.each(["https://other.example", "null", "", undefined])("ignores messages from untrusted origin %s", async origin => {
+    const w = worker();
+    const postMessage = vi.fn();
+    for (const type of ["activate-update", "offline-status"]) {
+      await w.dispatch("message", { origin, data: { type }, source: { postMessage } });
+    }
+    expect(w.skipWaiting).not.toHaveBeenCalled();
+    expect(postMessage).not.toHaveBeenCalled();
+    expect(w.fetchMock).not.toHaveBeenCalled();
+    expect(w.stores.size).toBe(0);
+  });
+
   it("reports readiness from actual cache contents and repairs an evicted copy", async () => {
     const w = worker();
     const postMessage = vi.fn();
     await w.dispatch("install");
-    await w.dispatch("message", { data: { type: "offline-status" }, source: { postMessage } });
+    await w.dispatch("message", { origin: ORIGIN, data: { type: "offline-status" }, source: { postMessage } });
     expect(postMessage).toHaveBeenLastCalledWith({ type: "offline-ready", ready: true });
     await w.caches.delete(PREFIX + "current");
     w.fetchMock.mockRejectedValueOnce(new Error("Offline"));
-    await w.dispatch("message", { data: { type: "offline-status" }, source: { postMessage } });
+    await w.dispatch("message", { origin: ORIGIN, data: { type: "offline-status" }, source: { postMessage } });
     expect(postMessage).toHaveBeenLastCalledWith({ type: "offline-ready", ready: false });
-    await w.dispatch("message", { data: { type: "offline-status" }, source: { postMessage } });
+    await w.dispatch("message", { origin: ORIGIN, data: { type: "offline-status" }, source: { postMessage } });
     expect(postMessage).toHaveBeenLastCalledWith({ type: "offline-ready", ready: true });
-    await w.dispatch("message", { data: { type: "unknown" } });
+    await w.dispatch("message", { origin: ORIGIN, data: { type: "unknown" } });
     expect(w.skipWaiting).not.toHaveBeenCalled();
-    await w.dispatch("message", { data: { type: "activate-update" } });
+    await w.dispatch("message", { origin: ORIGIN, data: { type: "activate-update" } });
     expect(w.skipWaiting).toHaveBeenCalledOnce();
   });
 });

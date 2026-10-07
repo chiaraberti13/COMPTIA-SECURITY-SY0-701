@@ -97,7 +97,13 @@ describe("stable identifiers", () => {
 
   if (process.env.UPDATE_STABLE_IDS) {
     it("records the identifiers in use", () => {
-      const recorded: StableIds = existsSync(FIXTURE) ? JSON.parse(readFileSync(FIXTURE, "utf8")) : { questions: [], concepts: [], objectives: [], labs: [] };
+      let recorded: StableIds;
+      try {
+        recorded = JSON.parse(readFileSync(FIXTURE, "utf8"));
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        recorded = { questions: [], concepts: [], objectives: [], labs: [] };
+      }
       // Only ever adds: an identifier that disappeared stays recorded, so the
       // next run without UPDATE_STABLE_IDS still reports it.
       const merged: StableIds = {

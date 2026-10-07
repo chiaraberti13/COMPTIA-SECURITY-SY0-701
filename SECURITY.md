@@ -19,6 +19,12 @@
 
 Security fixes are applied to the latest version on the default branch. Older commits, forks and unofficial builds are not supported unless explicitly documented.
 
+### Dependency checks
+
+The production dependency audit runs on every push to `main`. Also run `npm audit` locally to inspect development tools. `smol-toml` and `katex` overrides pin patched versions until their parent tools adopt them. Remove an override only after checking the resolved lockfile and running the full checks.
+
+As of 7 October 2026, `braces` 3.0.3 has an unpatched stack-exhaustion advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)). It is a transitive development dependency of Markdown linting; it is not shipped with the production server. Use repository-controlled file patterns and monitor upstream releases. This finding is not suppressed.
+
 ### Reporting a vulnerability
 
 Report suspected vulnerabilities privately through [GitHub Security Advisories](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/security/advisories/new). Do not open a public issue for an unpatched vulnerability.
@@ -36,6 +42,12 @@ This policy covers this repository. Test only systems and data you own or are ex
 ### Versioni supportate
 
 Le correzioni di sicurezza vengono applicate alla versione più recente del branch predefinito. Commit precedenti, fork e build non ufficiali non sono supportati salvo diversa indicazione.
+
+### Controlli delle dipendenze
+
+L’audit delle dipendenze di produzione viene eseguito a ogni push su `main`. Esegui anche `npm audit` localmente per controllare gli strumenti di sviluppo. Gli override di `smol-toml` e `katex` fissano versioni corrette finché gli strumenti che li usano non le adottano. Rimuovi un override solo dopo aver verificato il lockfile risolto ed eseguito tutti i controlli.
+
+Al 7 ottobre 2026, `braces` 3.0.3 presenta una vulnerabilità di esaurimento dello stack senza patch ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)). È una dipendenza transitiva di sviluppo del lint Markdown; non viene distribuita con il server di produzione. Usa pattern di file controllati dal repository e monitora le nuove versioni upstream. La segnalazione non viene soppressa.
 
 ### Segnalazione di una vulnerabilità
 

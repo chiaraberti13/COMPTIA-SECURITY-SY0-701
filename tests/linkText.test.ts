@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from "node:fs";
+import { JSDOM } from "jsdom";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -38,7 +39,7 @@ function linkTexts(text: string): string[] {
   const md = [...prose(text).matchAll(/(?<!!)\[([^\]]+)\]\(([^)]+)\)/g)]
     .filter((m) => !(/^[0-9a-f]{7,40}$/.test(m[1]) && /\/commit\/[0-9a-f]{7,40}$/.test(m[2])))
     .map((m) => m[1]);
-  const html = [...prose(text).matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1].replace(/<[^>]+>/g, ""));
+  const html = [...prose(text).matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map((m) => JSDOM.fragment(m[1]).textContent ?? "");
   return [...md, ...html].map((t) => t.trim()).filter(Boolean);
 }
 
@@ -53,6 +54,9 @@ function imageAlts(text: string): string[] {
 const isBadge = (line: string) => /img\.shields\.io|api\.scorecard\.dev|\/badge\b/.test(line);
 
 describe("links and images", () => {
+  it("reads HTML link text with a parser, including entities and nested markup", () => {
+    expect(linkTexts('<a href="/docs"><strong>Guida</strong> &amp; glossario</a>')).toEqual(["Guida & glossario"]);
+  });
   it("have link texts that make sense out of context", () => {
     const vague = markdown.flatMap((f) => linkTexts(read(f)).filter((t) => VAGUE.test(t)).map((t) => `${f}: "${t}"`));
     expect(vague).toEqual([]);

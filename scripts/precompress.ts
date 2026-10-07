@@ -7,7 +7,7 @@
  *
  * Usage: tsx scripts/precompress.ts [dir]   (default: dist)
  */
-import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 
@@ -30,8 +30,10 @@ export function precompress(dir: string): { files: number; before: number; brotl
   let brotli = 0;
   for (const file of walk(dir)) {
     // The server bundle and its source map never reach a browser.
-    if (!COMPRESSIBLE.test(file) || /server\.cjs/.test(file) || statSync(file).size < MIN_BYTES) continue;
+    if (!COMPRESSIBLE.test(file) || /server\.cjs/.test(file)) continue;
+    // Check the bytes we actually read, without a separate stat/read race.
     const data = readFileSync(file);
+    if (data.length < MIN_BYTES) continue;
     const br = brotliCompressSync(data, {
       params: { [constants.BROTLI_PARAM_QUALITY]: constants.BROTLI_MAX_QUALITY, [constants.BROTLI_PARAM_SIZE_HINT]: data.length },
     });

@@ -97,7 +97,7 @@ describe("dependency licences", () => {
   });
 
   it("never allow a strong copyleft licence", () => {
-    expect([...allowed].filter((l) => /^(A|L)?GPL|SSPL|EUPL/i.test(l))).toEqual([]);
+    expect([...allowed].filter((l) => /^(?:(A|L)?GPL|SSPL|EUPL)/i.test(l))).toEqual([]);
   });
 });
 
