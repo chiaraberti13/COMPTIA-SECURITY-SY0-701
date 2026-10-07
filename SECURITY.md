@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/status-maintained-F2C94C?style=flat-square" alt="Project status: maintained">
 </p>
 
-<p align="center"><a href="README.md">Project README</a> · <a href="LICENSE">MIT Licence</a></p>
+<p align="center"><a href="README.md">Project README</a> · <a href="LICENSE">GPL-3.0 Licence</a></p>
 
 ---
 
