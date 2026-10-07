@@ -2,7 +2,7 @@
 
 ## Italiano
 
-Catalogo di evidenze originali e interamente sintetiche, distribuite con [licenza MIT](LICENSE), inclusi i file PCAP. Nessun traffico reale o dato personale è stato raccolto. Gli indirizzi appartengono a TEST-NET e i domini a `.invalid`: non sono IOC operativi e non devono alimentare blocklist o servizi di reputazione.
+Catalogo di evidenze originali e interamente sintetiche, distribuite con [licenza GPL-3.0](LICENSE), inclusi i file PCAP. Nessun traffico reale o dato personale è stato raccolto. Gli indirizzi appartengono a TEST-NET e i domini a `.invalid`: non sono IOC operativi e non devono alimentare blocklist o servizi di reputazione.
 
 | Dataset | Evidenze | Obiettivi SY0-701 | Livello |
 |---|---|---|---|
@@ -14,7 +14,7 @@ Rigenerazione deterministica dalla radice del repository: `npm run datasets:gene
 
 ## English
 
-Catalog of original, entirely synthetic evidence under the [MIT license](LICENSE), including PCAP files. No real traffic or personal data was collected. Addresses belong to TEST-NET and domains to `.invalid`: these are not operational IOCs and must not feed blocklists or reputation services.
+Catalog of original, entirely synthetic evidence under the [GPL-3.0 license](LICENSE), including PCAP files. No real traffic or personal data was collected. Addresses belong to TEST-NET and domains to `.invalid`: these are not operational IOCs and must not feed blocklists or reputation services.
 
 | Dataset | Evidence | SY0-701 objectives | Level |
 |---|---|---|---|
