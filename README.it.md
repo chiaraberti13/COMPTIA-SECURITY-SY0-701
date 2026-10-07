@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="Categoria: apprendimento">
   <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="Stack: TypeScript">
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="Lingue: inglese e italiano">
-  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="Licenza: MIT">
+  <img src="https://img.shields.io/badge/licence-GPL--3.0-2EA043?style=flat-square" alt="Licenza: GPL-3.0">
   <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="Punteggio di sicurezza OpenSSF Scorecard"></a>
 </p>
 
@@ -32,7 +32,7 @@
 - **[Script](#script)** — I comandi npm e cosa fa ciascuno.
 - **[Architettura](#architettura)** — Dove vive il codice nel repository.
 - **[Risoluzione dei problemi](#risoluzione-dei-problemi)** — I due errori più probabili e come risolverli.
-- **[Licenza](#licenza)** — MIT per il codice; i marchi CompTIA restano dei rispettivi proprietari.
+- **[Licenza](#licenza)** — GPL-3.0 per il codice; i marchi CompTIA restano dei rispettivi proprietari.
 
 > [!TIP]
 > **Hai trovato un errore in una domanda o in una traduzione, o hai un'idea?** Apri una [issue su GitHub](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingue, self-hosted e privacy-first è l'unico vero requisito.
@@ -56,7 +56,7 @@ La filosofia, condivisa con gli altri repository:
 - **Self-hosted** — nessun account di terze parti per l'app stessa; clona ed esegui.
 - **Privacy-first** — la tua chiave Gemini vive in un `.env` locale ed è usata solo dal tuo
   server; nulla dei tuoi dati di studio lascia la tua macchina.
-- **Gratuito e open-source**, sotto licenza MIT.
+- **Gratuito e open-source**, sotto licenza GNU GPL-3.0.
 
 ## Funzionalità
 
@@ -330,7 +330,7 @@ La porta 3000 è occupata. Liberala:
 
 ## Licenza
 
-Il codice di questo repository è distribuito sotto **licenza MIT** — vedi
+Il codice di questo repository è distribuito sotto **licenza GNU GPL-3.0** — vedi
 [`LICENSE`](LICENSE) per il testo completo. Sei libero di usarlo, studiarlo, modificarlo e
 ridistribuirlo, anche commercialmente, purché venga mantenuta la nota di copyright; è fornito
 "così com'è", senza garanzie.
