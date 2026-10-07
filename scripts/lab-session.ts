@@ -48,7 +48,7 @@ export function sessionRunArgs(scope: SessionScope, lab: LabNumber, image: strin
     "--memory", SESSION_LIMITS.memory, "--memory-swap", SESSION_LIMITS.memory, "--pids-limit", String(SESSION_LIMITS.pids),
     "--tmpfs", "/tmp:rw,nosuid,nodev,noexec,size=64m",
     "--tmpfs", "/home/lab:rw,nosuid,nodev,size=2g,uid=10001,gid=10001,mode=0700",
-    "--shm-size", "16m", "--log-driver", "local", "--log-opt", "max-size=1m", "--log-opt", "max-file=1",
+    "--shm-size", "16m", "--log-driver", "local", "--log-opt", "max-size=1m", "--log-opt", "max-file=1", "--log-opt", "compress=false",
     "--mount", `type=bind,source=${scope.labs},target=/repo/labs,readonly`,
     "--workdir", "/repo", "--entrypoint", "/usr/bin/sleep", image, String(seconds)];
 }

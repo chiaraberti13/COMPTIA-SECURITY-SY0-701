@@ -68,6 +68,9 @@ describe("on-demand session inputs and boundaries", () => {
     for (const [flag, value] of [["--network", "none"], ["--cap-drop", "ALL"], ["--security-opt", "no-new-privileges"], ["--user", "10001:10001"], ["--memory", "512m"], ["--memory-swap", "512m"], ["--cpus", "0.5"], ["--pids-limit", "256"], ["--entrypoint", "/usr/bin/sleep"], ["--pull", "never"]]) {
       expect(args[args.indexOf(flag) + 1]).toBe(value);
     }
+    // The local driver rejects its default compression with a single log file.
+    const logOptions = args.flatMap((arg, i) => arg === "--log-opt" ? [args[i + 1]] : []);
+    expect(logOptions).toEqual(["max-size=1m", "max-file=1", "compress=false"]);
     expect(args).toContain("--rm"); expect(args).toContain("--init"); expect(args).toContain("--read-only");
     expect(args).toContain(`${label}.expires=61000`);
     expect(args).toContain(`type=bind,source=${scope.labs},target=/repo/labs,readonly`);

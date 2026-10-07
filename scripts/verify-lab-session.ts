@@ -21,6 +21,8 @@ try {
   assert.equal(inspect.HostConfig.NanoCpus, 500_000_000);
   assert.equal(inspect.HostConfig.PidsLimit, 256);
   assert.equal(inspect.HostConfig.AutoRemove, true);
+  assert.equal(inspect.HostConfig.LogConfig.Type, "local");
+  assert.deepEqual(inspect.HostConfig.LogConfig.Config, { "max-size": "1m", "max-file": "1", compress: "false" });
   assert.equal(inspect.Config.User, "10001:10001");
   assert.equal(inspect.HostConfig.RestartPolicy.Name, "no");
   assert.deepEqual(inspect.HostConfig.PortBindings ?? {}, {});
