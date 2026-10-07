@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/category-LEARNING-22D3EE?style=flat-square" alt="Category: learning">
   <img src="https://img.shields.io/badge/stack-TypeScript-8B949E?style=flat-square" alt="Stack: TypeScript">
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20IT-8B5CF6?style=flat-square" alt="Languages: English and Italian">
-  <img src="https://img.shields.io/badge/licence-MIT-2EA043?style=flat-square" alt="Licence: MIT">
+  <img src="https://img.shields.io/badge/licence-GPL--3.0-2EA043?style=flat-square" alt="Licence: GPL-3.0">
   <a href="https://scorecard.dev/viewer/?uri=github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701"><img src="https://api.scorecard.dev/projects/github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/badge?style=flat-square" alt="OpenSSF Scorecard security score"></a>
 </p>
 
@@ -32,7 +32,7 @@
 - **[Scripts](#scripts)** — The npm commands and what each one does.
 - **[Architecture](#architecture)** — Where the code lives in the repo.
 - **[Troubleshooting](#troubleshooting)** — Fixes for the two errors you're most likely to hit.
-- **[Licence](#licence)** — MIT for the code; CompTIA marks belong to their owners.
+- **[Licence](#licence)** — GPL-3.0 for the code; CompTIA marks belong to their owners.
 
 > [!TIP]
 > **Found a mistake in a question or translation, or have a feature idea?** Open an [issue on GitHub](https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues) — bilingual, self-hosted and privacy-first is the only real requirement.
@@ -56,7 +56,7 @@ The philosophy, shared with the rest of these repositories:
 - **Self-hosted** — no third-party account for the app itself; clone it and run it.
 - **Privacy-first** — your Gemini key lives in a local `.env` and is used only by your own
   server; nothing about your study data leaves your machine.
-- **Free and open-source**, under the MIT licence.
+- **Free and open-source**, under the GNU GPL-3.0 licence.
 
 ## Features
 
@@ -330,7 +330,7 @@ Port 3000 is taken. Free it:
 
 ## Licence
 
-The code in this repository is distributed under the **MIT licence** — see
+The code in this repository is distributed under the **GNU GPL-3.0 licence** — see
 [`LICENSE`](LICENSE) for the full text. You're free to use, study, modify and redistribute
 it, including commercially, as long as the copyright notice is kept; it's provided as-is,
 with no warranty.
