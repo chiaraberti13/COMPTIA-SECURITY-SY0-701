@@ -65,10 +65,13 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      # Production dependencies only: they ship with the server. Development
-      # tooling is covered by Dependabot and dependency review.
+      # Keep a separate production result, then also audit development tooling.
+      # A clean server tree must not hide vulnerable build or test dependencies.
       - name: npm audit (production, high and critical)
         run: npm audit --omit=dev --audit-level=high
+
+      - name: npm audit (all dependencies, all severities)
+        run: npm audit --audit-level=low
 
   dependency-review:
     name: Dependency review

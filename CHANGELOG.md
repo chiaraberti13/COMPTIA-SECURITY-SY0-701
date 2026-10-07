@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Removed the vulnerable Markdown CLI dependency chain while preserving lint rules and document coverage. Added six generative security properties with fast-check, full dependency auditing in CI, and documented Scorecard governance requirements.
+- Rimossa la catena vulnerabile del CLI Markdown mantenendo regole e copertura dei documenti. Aggiunte sei proprietà generative di sicurezza con fast-check, audit completo delle dipendenze in CI e documentazione dei requisiti di governance Scorecard.
+
 - Migliorata la barra di navigazione sui notebook: due righe stabili fino a 1536 px, voci compatte, Trainer AI e lingua nella riga del titolo; una riga sugli schermi ampi. Controlli senza sovrapposizioni, focus visibile e navigazione tra schede con frecce/Home/End.
 - Improved notebook navigation: stable two-row layout below 1536 px, concise tab labels, AI Trainer and language next to the title; a single row on wide screens. Controls avoid collisions, with visible focus and arrow/Home/End tab navigation.
 

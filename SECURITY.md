@@ -21,9 +21,11 @@ Security fixes are applied to the latest version on the default branch. Older co
 
 ### Dependency checks
 
-The production dependency audit runs on every push to `main`. Also run `npm audit` locally to inspect development tools. `smol-toml` and `katex` overrides pin patched versions until their parent tools adopt them. Remove an override only after checking the resolved lockfile and running the full checks.
+Both production and development dependency audits run on every push to `main`. The full audit blocks vulnerabilities of low severity or higher. `smol-toml` and `katex` overrides pin patched versions until their parent tools adopt them. Remove an override only after checking the resolved lockfile and running the full checks.
 
-As of 7 October 2026, `braces` 3.0.3 has an unpatched stack-exhaustion advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)). It is a transitive development dependency of Markdown linting; it is not shipped with the production server. Use repository-controlled file patterns and monitor upstream releases. This finding is not suppressed.
+The Markdown lint uses `markdownlint` directly with a filesystem walker. The former CLI dependency chain (`markdownlint-cli2` → `micromatch` → `braces`) was removed, keeping the document scope and lint rules. Run `npm run lint:md` and `npm audit` after dependency changes.
+
+Generative security checks use `fast-check` in `tests/securityFuzz.test.ts` and run in normal CI. `npm run test:fuzz` runs them separately; failure output includes a seed and shrink path for replay. Repository governance requirements and remaining external prerequisites are tracked in [Scorecard remediation](docs/scorecard-remediation.md).
 
 ### Reporting a vulnerability
 
@@ -45,9 +47,11 @@ Le correzioni di sicurezza vengono applicate alla versione più recente del bran
 
 ### Controlli delle dipendenze
 
-L’audit delle dipendenze di produzione viene eseguito a ogni push su `main`. Esegui anche `npm audit` localmente per controllare gli strumenti di sviluppo. Gli override di `smol-toml` e `katex` fissano versioni corrette finché gli strumenti che li usano non le adottano. Rimuovi un override solo dopo aver verificato il lockfile risolto ed eseguito tutti i controlli.
+Gli audit delle dipendenze di produzione e di sviluppo vengono eseguiti a ogni push su `main`. L’audit completo blocca le vulnerabilità di gravità bassa o superiore. Gli override di `smol-toml` e `katex` fissano versioni corrette finché gli strumenti che li usano non le adottano. Rimuovi un override solo dopo aver verificato il lockfile risolto ed eseguito tutti i controlli.
 
-Al 7 ottobre 2026, `braces` 3.0.3 presenta una vulnerabilità di esaurimento dello stack senza patch ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)). È una dipendenza transitiva di sviluppo del lint Markdown; non viene distribuita con il server di produzione. Usa pattern di file controllati dal repository e monitora le nuove versioni upstream. La segnalazione non viene soppressa.
+Il lint Markdown usa direttamente `markdownlint` con una scansione del filesystem. La precedente catena di dipendenze del CLI (`markdownlint-cli2` → `micromatch` → `braces`) è stata rimossa, mantenendo il perimetro dei documenti e le regole di lint. Esegui `npm run lint:md` e `npm audit` dopo le modifiche alle dipendenze.
+
+I controlli generativi di sicurezza usano `fast-check` in `tests/securityFuzz.test.ts` e vengono eseguiti nella normale CI. `npm run test:fuzz` li esegue separatamente; in caso di errore vengono riportati seed e percorso di riduzione per riprodurlo. I requisiti di governance e i prerequisiti esterni ancora necessari sono registrati in [Correzioni Scorecard](docs/scorecard-remediation.md).
 
 ### Segnalazione di una vulnerabilità
 

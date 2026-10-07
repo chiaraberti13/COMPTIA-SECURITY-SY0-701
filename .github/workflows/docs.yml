@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Rules in .markdownlint-cli2.jsonc.
+      # Rules in .markdownlint.json.
       - name: Markdown lint
         run: npm run lint:md
 
