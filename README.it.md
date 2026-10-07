@@ -338,7 +338,7 @@ ridistribuirlo, anche commercialmente, purché venga mantenuta la nota di copyri
 I font inclusi, Inter e JetBrains Mono, sono sotto SIL Open Font License 1.1: le loro note
 di copyright e la licenza sono distribuite con l'app in [`public/licenses/`](public/licenses/).
 Le licenze di ogni dipendenza sono nella SBOM prodotta dal workflow Security, e le pull
-request sono controllate con un elenco di licenze compatibili con MIT.
+request sono controllate con un elenco di licenze compatibili con GPL-3.0.
 
 Questo progetto è un ausilio allo studio indipendente e a scopo educativo. **CompTIA** e
 **Security+** sono marchi registrati di CompTIA, Inc.; questo progetto non è affiliato né
