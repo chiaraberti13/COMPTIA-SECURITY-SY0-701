@@ -338,7 +338,7 @@ with no warranty.
 The bundled fonts, Inter and JetBrains Mono, are under the SIL Open Font License 1.1: their
 notices and licence ship with the app in [`public/licenses/`](public/licenses/). The
 licences of every dependency are in the SBOM the Security workflow builds, and pull requests
-are checked against an allow-list of licences compatible with MIT.
+are checked against an allow-list of licences compatible with GPL-3.0.
 
 This project is an independent, educational study aid. **CompTIA** and **Security+** are
 registered trademarks of CompTIA, Inc.; this project is not affiliated with or endorsed by
