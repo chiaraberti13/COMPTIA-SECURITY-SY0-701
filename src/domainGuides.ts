@@ -497,6 +497,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     connections: [
       "Domain hijacking collega il phishing dell’obiettivo 2.2 alla compromissione del registrar o del provider DNS dell’obiettivo 2.4; Typosquatting usa invece un nome distinto.",
+      "Jamming RF, deautenticazione e disassociazione sono attacchi wireless alla disponibilità dell’obiettivo 2.4; la protezione dei frame di gestione (PMF) e WPA3 del D3 e le wireless security settings del D4 (obiettivi 3.2 e 4.1) dicono quali difendono e quali no.",
       "Le mitigazioni dipendono dai modelli architetturali e dai trust boundary del D3.",
       "Indicatori, vulnerability management, SIEM e incident response diventano processi operativi nel D4.",
       "Threat intelligence, risk appetite e priorità di remediation dipendono da governance e rischio del D5.",
@@ -504,6 +505,31 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Il rischio di supply chain collega vendor assessment e contratti del D5 alle vulnerabilità di update malevoli e service provider.",
     ],
     comparisons: [
+      {
+        "title": "Interferenza, jamming RF e deautenticazione",
+        "headers": [
+          "Caso",
+          "Livello e meccanismo",
+          "Che cosa aiuta"
+        ],
+        "rows": [
+          [
+            "Interferenza accidentale",
+            "Fisico; sorgenti non ostili sullo stesso canale",
+            "Site survey, scelta del canale, riduzione delle sorgenti"
+          ],
+          [
+            "Jamming RF intenzionale",
+            "Fisico; rumore o segnali che saturano la banda",
+            "Analisi di spettro, localizzazione, sicurezza fisica; non PMF"
+          ],
+          [
+            "Deautenticazione/disassociazione",
+            "Frame di gestione contraffatti, non disturbo radio",
+            "PMF/802.11w sui frame robusti; monitoraggio se non attivabile"
+          ]
+        ]
+      },
       {
         "title": "Domain hijacking, DNS poisoning e typosquatting",
         "headers": [
@@ -675,6 +701,14 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "La protezione dei frame di gestione (PMF) ferma anche il jamming RF.",
+        "correction": "La PMF/802.11w autentica i frame di gestione robusti e blocca deautenticazione e disassociazione contraffatte, ma il jamming agisce sul livello fisico e nega comunque il canale. Contro il disturbo radio servono analisi di spettro, localizzazione e sicurezza fisica."
+      },
+      {
+        "misconception": "Una passphrase robusta impedisce la deautenticazione.",
+        "correction": "La passphrase cifra i dati, non autentica i frame di gestione: la deautenticazione contraffatta funziona anche con password lunghissime. La difesa è la PMF sui frame di gestione robusti, non copre però beacon e probe precedenti all’associazione."
+      },
+      {
         "misconception": "DNSSEC impedisce la compromissione dell’account registrar.",
         "correction": "DNSSEC autentica dati DNS, non l’operatore dell’account. Proteggere registrar, provider DNS e recupero; cambiamenti amministrativi possono alterare dati firmati o la catena di fiducia."
       },
@@ -726,6 +760,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Wi-Fi che cade: jamming o deautenticazione?",
+        "prompt": "Nella sede Kestrelia due piani perdono il Wi-Fi. Al piano A i client vengono espulsi in blocco ogni pochi secondi e l’analisi mostra frame di deautenticazione con il MAC dell’access point; la rete è WPA2 con passphrase robusta. Al piano B nessun frame anomalo, ma l’analizzatore di spettro mostra rumore continuo a banda larga sul 2.4 GHz. Come si classificano i due casi e quali difese valgono per ciascuno?",
+        "reasoning": "Piano A è deautenticazione: frame di gestione contraffatti, non disturbo radio. La passphrase non c’entra perché non autentica i frame di gestione; la difesa è la PMF/802.11w (obbligatoria in WPA3) che autentica i frame di gestione robusti, oppure il monitoraggio wireless per localizzare la sorgente se la PMF non è attivabile. Piano B è jamming RF al livello fisico: cifratura, WPA3 e PMF non lo fermano perché non proteggono la portante; servono analisi di spettro, localizzazione e sicurezza fisica, e il cambio di canale aiuta solo se il disturbo è parziale. Collega 3.2 e 4.1: la PMF protegge i frame di gestione robusti, non ogni frame né il canale radio. Nessuna delle due soluzioni prevede attaccare una rete."
+      },
       {
         "objective": "2.4",
         "title": "Il nome è giusto, la delega è cambiata",
@@ -992,6 +1032,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      { misconception: "La protezione dei frame di gestione (PMF) cifra tutti i frame di gestione e protegge da ogni DoS wireless.", correction: "La PMF/802.11w copre i frame di gestione robusti: riservatezza e integrità per l’unicast, integrità (BIP) per i frame indirizzati a gruppo. Non cifra ogni frame, non protegge beacon e probe precedenti all’associazione e non ferma il jamming RF, che agisce al livello fisico. È obbligatoria in WPA3 e non è legata a 802.11ac." },
       { misconception: "Load balancing e clustering sono la stessa cosa.", correction: "Il load balancing distribuisce le richieste su più nodi attivi; il clustering fa lavorare più nodi come un unico sistema e garantisce il failover quando uno cade." },
       { misconception: "Un IDS blocca gli attacchi.", correction: "L'IDS è passivo: rileva e allerta. Per bloccare serve un dispositivo inline come l'IPS." },
       { misconception: "Una VLAN equivale a un air gap.", correction: "La VLAN è segmentazione logica sulla stessa infrastruttura; l'air gap è isolamento fisico, senza alcun collegamento di rete." },
@@ -1280,6 +1321,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      { misconception: "Fra le wireless security settings, WPA3 e la PMF rendono la rete immune agli attacchi wireless.", correction: "WPA3 e la protezione dei frame di gestione (PMF/802.11w) neutralizzano la deautenticazione contraffatta e irrobustiscono l’autenticazione, ma non difendono dal jamming RF né da ogni DoS, perché il disturbo radio agisce al livello fisico. Contro di esso servono site survey, analisi di spettro e sicurezza fisica." },
       { misconception: "Il punteggio CVSS decide da solo la priorità.", correction: "Il CVSS misura la gravità tecnica; la priorità dipende anche da esposizione, exploit disponibili, valore dell'asset, variabili ambientali e tolleranza al rischio." },
       { misconception: "Un falso positivo è più pericoloso di un falso negativo.", correction: "Il falso negativo è il più pericoloso: una vulnerabilità o un attacco reale non vengono segnalati. Il falso positivo costa tempo e riduce la fiducia negli alert." },
       { misconception: "La catena di custodia serve solo se si andrà in tribunale.", correction: "Non si sa in anticipo se l'incidente finirà in giudizio: la catena di custodia va documentata dall'acquisizione della prima evidenza." },
@@ -1999,6 +2041,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     connections: [
       "Domain hijacking connects phishing in objective 2.2 to registrar or DNS provider compromise in objective 2.4; Typosquatting instead uses a separate name.",
+      "RF jamming, deauthentication and disassociation are wireless availability attacks in objective 2.4; Protected Management Frames (PMF) and WPA3 in D3 and the wireless security settings in D4 (objectives 3.2 and 4.1) say which ones they defend against and which they do not.",
       "Mitigations depend on the architectural models and trust boundaries in D3.",
       "Indicators, vulnerability management, SIEM, and incident response become operational processes in D4.",
       "Threat intelligence, risk appetite, and remediation priority depend on governance and risk in D5.",
@@ -2006,6 +2049,31 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Supply chain risk connects vendor assessment and contracts in D5 to the vulnerabilities of malicious updates and service providers.",
     ],
     comparisons: [
+      {
+        "title": "Interference, RF jamming and deauthentication",
+        "headers": [
+          "Case",
+          "Layer and mechanism",
+          "What helps"
+        ],
+        "rows": [
+          [
+            "Accidental interference",
+            "Physical; non-hostile sources on the same channel",
+            "Site survey, channel choice, reducing sources"
+          ],
+          [
+            "Intentional RF jamming",
+            "Physical; noise or signals saturating the band",
+            "Spectrum analysis, localization, physical security; not PMF"
+          ],
+          [
+            "Deauthentication/disassociation",
+            "Forged management frames, not radio interference",
+            "PMF/802.11w on robust frames; monitoring if not enabled"
+          ]
+        ]
+      },
       {
         "title": "Domain hijacking, DNS poisoning and typosquatting",
         "headers": [
@@ -2177,6 +2245,14 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "Protected Management Frames (PMF) also stop RF jamming.",
+        "correction": "PMF/802.11w authenticates robust management frames and blocks forged deauthentication and disassociation, but jamming acts at the physical layer and denies the channel anyway. Against radio interference you need spectrum analysis, localization and physical security."
+      },
+      {
+        "misconception": "A strong passphrase prevents deauthentication.",
+        "correction": "The passphrase encrypts data, it does not authenticate management frames: forged deauthentication works even with very long passwords. The defense is PMF on robust management frames, which does not cover pre-association beacons and probes."
+      },
+      {
         "misconception": "DNSSEC prevents registrar account compromise.",
         "correction": "DNSSEC authenticates DNS data, not the account operator. Protect the registrar, DNS provider and recovery; administrative changes may alter signed data or the trust chain."
       },
@@ -2228,6 +2304,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Wi-Fi going down: jamming or deauthentication?",
+        "prompt": "At the Kestrelia site two floors lose Wi-Fi. On floor A clients are kicked off en masse every few seconds and analysis shows deauthentication frames with the access point's MAC; the network is WPA2 with a strong passphrase. On floor B there are no anomalous frames, but the spectrum analyzer shows continuous broadband noise on 2.4 GHz. How are the two cases classified and which defenses apply to each?",
+        "reasoning": "Floor A is deauthentication: forged management frames, not radio interference. The passphrase is irrelevant because it does not authenticate management frames; the defense is PMF/802.11w (mandatory in WPA3), which authenticates robust management frames, or wireless monitoring to locate the source if PMF cannot be enabled. Floor B is RF jamming at the physical layer: encryption, WPA3 and PMF do not stop it because they do not protect the carrier; spectrum analysis, localization and physical security are needed, and changing channel helps only if the interference is partial. This connects 3.2 and 4.1: PMF protects robust management frames, not every frame nor the radio channel. Neither solution involves attacking a network."
+      },
       {
         "objective": "2.4",
         "title": "Correct name, changed delegation",
@@ -2494,6 +2576,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      { misconception: "Protected Management Frames (PMF) encrypt all management frames and protect against every wireless DoS.", correction: "PMF/802.11w covers robust management frames: confidentiality and integrity for unicast, integrity (BIP) for group-addressed frames. It does not encrypt every frame, does not protect pre-association beacons and probes and does not stop RF jamming, which acts at the physical layer. It is mandatory in WPA3 and not tied to 802.11ac." },
       { misconception: "Load balancing and clustering are the same thing.", correction: "Load balancing distributes requests across several active nodes; clustering makes several nodes work as a single system and provides failover when one goes down." },
       { misconception: "An IDS blocks attacks.", correction: "An IDS is passive: it detects and alerts. Blocking requires an inline device such as an IPS." },
       { misconception: "A VLAN is equivalent to an air gap.", correction: "A VLAN is logical segmentation on the same infrastructure; an air gap is physical isolation, with no network connection at all." },
@@ -2782,6 +2865,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      { misconception: "Among wireless security settings, WPA3 and PMF make the network immune to wireless attacks.", correction: "WPA3 and Protected Management Frames (PMF/802.11w) neutralize forged deauthentication and strengthen authentication, but they do not defend against RF jamming or every DoS, because radio interference acts at the physical layer. Against it you need site surveys, spectrum analysis and physical security." },
       { misconception: "The CVSS score alone decides priority.", correction: "CVSS measures technical severity; priority also depends on exposure, available exploits, asset value, environmental variables, and risk tolerance." },
       { misconception: "A false positive is more dangerous than a false negative.", correction: "The false negative is the most dangerous: a real vulnerability or attack goes unreported. A false positive costs time and reduces trust in alerts." },
       { misconception: "Chain of custody only matters if the case goes to court.", correction: "Nobody knows in advance whether an incident will end up in court: chain of custody must be documented from the acquisition of the first piece of evidence." },

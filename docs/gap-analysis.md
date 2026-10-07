@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 580 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 583 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -21,8 +21,8 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
 | 1 | 95 | 0 |
-| 2 | 81 | 0 |
-| 3 | 175 | 0 |
+| 2 | 83 | 0 |
+| 3 | 176 | 0 |
 | 4 | 135 | 0 |
 | 5 | 94 | 0 |
 
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-58 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+61 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -58,12 +58,15 @@ indirizzi qui sotto.
 - `2:ReplayAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `2:SessionHijackingAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
 - `2:SSRFAttack`: [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
+- `2:WiFiDeauthAttack`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
+- `2:WiFiJammingAttack`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `2:XSSAttack`: [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - `3:APIArchitecture`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `3:BackupEncryptionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
 - `3:DataMaskingSec`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
 - `3:DataTypesConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `3:PaaSCloud`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- `3:ProtectedManagementFrames`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `3:SaaSCloud`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
 - `3:WAFFire`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)

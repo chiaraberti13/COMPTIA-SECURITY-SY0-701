@@ -164,6 +164,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "CredentialStuffingAtt": "Attacchi alle Credenziali",
 
   "DomainHijackingAttack": "Attacchi Infrastrutturali & Web",
+  "WiFiJammingAttack": "Attacchi Infrastrutturali & Web",
+  "WiFiDeauthAttack": "Attacchi Infrastrutturali & Web",
   "NetworkWirelessAttacks": "Attacchi Infrastrutturali & Web",
   "AppCryptoAttacks": "Attacchi Infrastrutturali & Web",
   "SessionHijackingAttack": "Attacchi Infrastrutturali & Web",
@@ -248,6 +250,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "OpenSystemConcept": "Sicurezza Reti Wireless (Wi-Fi)",
   "WPA3PersonalRes": "Sicurezza Reti Wireless (Wi-Fi)",
   "WPA3EnterpriseRes": "Sicurezza Reti Wireless (Wi-Fi)",
+  "ProtectedManagementFrames": "Sicurezza Reti Wireless (Wi-Fi)",
   "WiFiBluetoothTech": "Sicurezza Reti Wireless (Wi-Fi)",
   "WirelessSurveyRes": "Sicurezza Reti Wireless (Wi-Fi)",
   "RADIUSNet": "Autenticazione di Rete Centralizzata (AAA)",

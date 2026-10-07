@@ -75,13 +75,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 5. Disponibilità Wi-Fi e limiti di PMF
 
-- [ ] Integrare RF jamming e deauthentication/disassociation nella guida e nel glossario, correggendo le generalizzazioni su PMF nei Domini 2, 3 e 4 (obiettivi 2.4, 3.2 e 4.1).
+- [x] Integrare RF jamming e deauthentication/disassociation nella guida e nel glossario, correggendo le generalizzazioni su PMF nei Domini 2, 3 e 4 (obiettivi 2.4, 3.2 e 4.1).
 
 **Evidenza nel repository:** Il corpus parla di interferenze e PMF, ma non spiega autonomamente il jamming Wi-Fi. `WPA3EnterpriseRes` afferma genericamente che PMF cifra e protegge i management frame: occorre precisare ambito e limiti.
 
 **Da realizzare:** distinguere interferenza accidentale, disturbo radio intenzionale e falsificazione di frame di gestione. Espandere PMF/MFP e il riferimento storico a IEEE 802.11w; spiegare che la protezione riguarda specifici frame di gestione robusti e che protezione unicast e broadcast non equivale alla cifratura di ogni management frame. Collegare WPA3 e modalità di transizione senza attribuire la stessa garanzia a qualunque configurazione.
 
 **Accettazione:** PMF non è descritto come protezione dal disturbo fisico RF o da ogni DoS; non legare indiscriminatamente l'obbligatorietà di 802.11w a 802.11ac. Fonti: IEEE e Wi-Fi Alliance; solo scenari difensivi, nessun laboratorio di jamming.
+
+**Completato il 7 ottobre 2026:** voci canoniche `2:WiFiJammingAttack`, `2:WiFiDeauthAttack` e `3:ProtectedManagementFrames` IT/EN, ricercabili (jamming, interferenza, deautenticazione/disassociazione, PMF/MFP). Distinte interferenza accidentale, jamming RF al livello fisico e falsificazione dei frame di gestione; precisata la PMF/802.11w (frame di gestione robusti, riservatezza+integrità unicast, integrità BIP per i frame di gruppo, non ogni frame né beacon/probe), con obbligo legato a WPA3 e non a 802.11ac. Corretta la generalizzazione «cifra i management frame» in `WPA3EnterpriseRes` e aggiunti confronto, trappole e scenario nelle guide dei Domini 2, 3 e 4. Precisato che PMF non ferma il jamming né ogni DoS; fonti IEEE Std 802.11-2020 e Wi-Fi Alliance collegate. Verificati ricerca nel glossario, parità IT/EN, citazioni, flashcard (nessuna sigla inventata) e copertura.
 
 ### 6. Ruoli Zero Trust: PE, PA e PEP
 

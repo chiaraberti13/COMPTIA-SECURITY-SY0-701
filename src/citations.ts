@@ -27,6 +27,8 @@ export const MENTIONS: [SourceId, RegExp][] = [
   ["icannProtection", /ICANN Protect Your Domain Name/],
   ["icannLocks", /ICANN EPP Status Codes/],
   ["rfc4033", /RFC 4033/],
+  ["ieee80211", /IEEE Std 802\.11/],
+  ["wifiAlliance", /Wi-Fi Alliance/],
 
   ["owaspSession", /Session Management Cheat Sheet/],
   ["mdnCookies", /MDN Set-Cookie/],
@@ -55,6 +57,9 @@ export const MENTIONS: [SourceId, RegExp][] = [
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "2:DomainHijackingAttack": [{ source: "icannHijacking" }, { source: "icannProtection" }, { source: "icannLocks" }, { source: "rfc4033" }],
+  "2:WiFiJammingAttack": [{ source: "ieee80211" }, { source: "wifiAlliance" }],
+  "2:WiFiDeauthAttack": [{ source: "ieee80211" }, { source: "wifiAlliance" }],
+  "3:ProtectedManagementFrames": [{ source: "ieee80211" }, { source: "wifiAlliance" }],
   "2:SessionHijackingAttack": [{ source: "owaspSession" }],
   "2:ReplayAttack": [{ source: "owaspSession" }, { source: "nist80063b" }],
   "2:CookieHeaderTampering": [{ source: "owaspSession" }, { source: "mdnCookies" }],
