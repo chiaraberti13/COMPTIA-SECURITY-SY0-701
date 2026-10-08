@@ -29,7 +29,9 @@ describe("Roadmap task 28 attack concept questions", () => {
       const english = getDomainQuestions(domain, "en").find((item) => item.id === q.id);
       expect(english).toBeDefined();
       expect(english?.question).not.toBe(q.question);
-      expect(english?.options).not.toEqual(q.options);
+      expect(english?.scenario).not.toBe(q.scenario);
+      expect(english?.explanation).not.toBe(q.explanation);
+      expect(english?.options).toHaveLength(4);
     }
   });
 
