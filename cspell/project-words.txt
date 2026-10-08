@@ -336,6 +336,7 @@ Sidejacking
 ICANN
 
 # Valid Italian terms used in the Zero Trust lesson.
+contando
 coordinando
 Disambiguazione
 Collegalo
