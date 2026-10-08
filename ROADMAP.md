@@ -275,13 +275,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 20. Postura NAC e rete di remediation
 
-- [ ] Aggiungere una PBQ di abbinamento tra esiti del controllo di postura e accesso alla rete consentito (obiettivo principale 4.5; collegamento 4.1).
+- [x] Aggiungere una PBQ di abbinamento tra esiti del controllo di postura e accesso alla rete consentito (obiettivo principale 4.5; collegamento 4.1).
 
 **Evidenza nel repository:** `NACNet` spiega già quarantena e controllo di postura; la PBQ 502 sceglie controlli per proteggere i dati, ma non tratta ammissione dei dispositivi.
 
 **Da realizzare:** presentare dispositivi con stato patch, cifratura, agente e identità; associare accesso ordinario, accesso limitato alla remediation o blocco, secondo una policy dichiarata. Includere rivalutazione dopo la correzione e distinguere dispositivo conforme da attività sicuramente innocua.
 
 **Accettazione:** la rete limitata offre i soli servizi necessari alla correzione; nessuna conclusione “antivirus presente = dispositivo fidato”. Collegare le varianti di agenti dell'attività 27. Fonti: documentazione ufficiale del prodotto NAC di riferimento.
+
+**Completato il 2026-10-08:** PBQ originale 503 IT/EN, obiettivo 4.5 e collegamento 4.1: cinque dispositivi, otto abbinamenti e quattro distrattori. Policy esplicita per identità, patch, cifratura, antimalware e report corrente; accesso ordinario circoscritto al ruolo, remediation limitata, provisioning/valutazione per postura sconosciuta e blocco per identità revocata. Tabella accessibile condivisa tra pratica ed esame. Rivalutazione e nuova autorizzazione dopo la correzione; conformità distinta da attività sicuramente innocua, quarantena NAC distinta dalla quarantena di file. Rimandi alle varianti Agent/Agentless/Dissolvable Agent dell’attività 27, senza attribuire capacità universali al metodo agentless. Fonti Cisco ISE e NIST visibili nell’app; soluzione in `docs/nac-pbq.md`, report rigenerati. Superati 959 test Vitest, typecheck, lint, Markdown, ortografia IT/EN, build e 9 smoke test. Sei test Playwright desktop/mobile aggiunti; non eseguiti localmente per Chromium non disponibile, già verificato nell’intervento precedente.
 
 ### 21. RTO, RPO, backup e siti di recupero
 

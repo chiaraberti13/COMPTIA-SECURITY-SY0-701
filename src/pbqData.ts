@@ -23,6 +23,170 @@ import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
 {
+  "id": 503,
+  "kind": "control",
+  "mechanic": "matching",
+  "objective": "4.5",
+  "relatedObjectives": [
+    "4.1"
+  ],
+  "domain": 4,
+  "sources": [
+    "ciscoIsePosture",
+    "ciscoIseAgentless",
+    "nist800207"
+  ],
+  "title": "Postura NAC e accesso alla remediation",
+  "scenario": "Kestrelia usa una policy NAC ispirata ai profili di autorizzazione Cisco ISE. Identità di utente e dispositivo devono essere valide e autorizzate. Sono obbligatori patch approvate, cifratura del disco attiva e antimalware attivo e aggiornato, verificati da un report di postura corrente e riuscito. Un agente installato, da solo, non è prova di conformità. Policy: identità non valida = blocco dei servizi aziendali e di remediation; identità valida e tutti i requisiti verificati = accesso ordinario ai soli servizi del ruolo; identità valida con requisito correggibile fallito = rete limitata alla remediation; identità valida con report incompleto o non disponibile = accesso limitato a provisioning e valutazione, mai alla produzione. In entrambe le reti limitate una ACL consente soltanto DNS e DHCP aziendali, servizio NAC di valutazione/provisioning e server aziendali di aggiornamento o configurazione necessari al caso; sono vietati Internet generale, server di produzione e altri endpoint. Le eccezioni sono servizi di questo laboratorio, non un elenco universale. Dopo la correzione serve una nuova valutazione riuscita e una nuova decisione di autorizzazione. Dati sintetici; nessun incidente attivo noto. Guida D4, obiettivi 4.5 e 4.1; glossario: NAC, Agent, Agentless e Dissolvable Agent (attività 27). Un agente persistente resta installato, un agente dissolvibile è temporaneo; agentless descrive l’approccio senza agente persistente, con capacità dipendenti dal prodotto. Cisco ISE può usare script temporanei anche nel metodo denominato agentless: il nome non garantisce tutte le verifiche o una rivalutazione periodica.",
+  "prompt": "Abbina i dispositivi A–E al profilo di accesso motivato; valuta poi rivalutazione, servizi consentiti e significato della conformità. Alcune opzioni sono distrattori.",
+  "explanation": "A → accesso ordinario circoscritto al ruolo: identità valida e report corrente confermano tutti i requisiti, non accesso illimitato. B → remediation delle patch: la cifratura e l’antimalware non compensano il requisito patch fallito. C → remediation della cifratura: un antimalware attivo non sostituisce la cifratura del disco. D → blocco: l’identità revocata prevale anche con un report di postura conforme; non riceve accesso alla remediation. E → provisioning/valutazione limitati: dati dichiarati buoni ma report agentless incompleto significano postura sconosciuta, non conformità. L’assenza di un agente persistente non è da sola una non conformità: un metodo agentless supportato con tutte le evidenze richieste potrebbe produrre un report valido. Per B, il messaggio di installazione della patch non basta: resta limitato fino a nuova valutazione riuscita e nuova autorizzazione. La rete di remediation consente soltanto i servizi definiti nella policy: DNS/DHCP aziendali, NAC e server di aggiornamento/configurazione necessari; niente produzione, comunicazione con altri endpoint o Internet generale. La conformità è una misura rispetto ai requisiti e al momento della verifica, non prova di attività innocua: allarmi successivi richiedono indagine e rivalutazione secondo policy. La quarantena NAC limita la rete, mentre la quarantena antimalware isola un file. I distrattori confondono presenza dell’antimalware con fiducia, report incompleto con conformità, correzione dichiarata con autorizzazione e remediation con accesso esteso.",
+  "prompts": [
+    {
+      "id": "p_device_a",
+      "text": "A: identità valida; patch approvate; cifratura attiva; antimalware attivo e aggiornato; agente persistente con report corrente riuscito.",
+      "correctOptionId": "ordinary"
+    },
+    {
+      "id": "p_device_b",
+      "text": "B: identità valida; patch obbligatoria mancante; cifratura attiva; antimalware attivo e aggiornato; agente dissolvibile supportato con report corrente riuscito.",
+      "correctOptionId": "patch_remediation"
+    },
+    {
+      "id": "p_device_c",
+      "text": "C: identità valida; patch approvate; cifratura disattivata; antimalware attivo e aggiornato; agente persistente con report corrente riuscito.",
+      "correctOptionId": "encryption_remediation"
+    },
+    {
+      "id": "p_device_d",
+      "text": "D: identità del dispositivo revocata; patch approvate; cifratura attiva; antimalware attivo e aggiornato; agente persistente con report corrente riuscito.",
+      "correctOptionId": "block_identity"
+    },
+    {
+      "id": "p_device_e",
+      "text": "E: identità valida; patch, cifratura e antimalware dichiarati conformi; metodo agentless configurato, ma controlli obbligatori non completati e report incompleto.",
+      "correctOptionId": "unknown_posture"
+    },
+    {
+      "id": "p_reassessment",
+      "text": "B: l’installazione della patch è terminata, ma manca un nuovo report di postura. Quando può ottenere l’accesso ordinario?",
+      "correctOptionId": "fresh_authorization"
+    },
+    {
+      "id": "p_network_scope",
+      "text": "Un dispositivo con identità valida è in remediation. Quali servizi può raggiungere secondo la policy dichiarata?",
+      "correctOptionId": "remediation_services"
+    },
+    {
+      "id": "p_compliance_limits",
+      "text": "A passa la valutazione e ottiene l’accesso del ruolo. Questo prova che ogni attività successiva sia innocua?",
+      "correctOptionId": "no_safety_guarantee"
+    }
+  ],
+  "options": [
+    {
+      "id": "ordinary",
+      "text": "Accesso ordinario ai soli servizi autorizzati del ruolo: identità valida e tutti i requisiti verificati."
+    },
+    {
+      "id": "patch_remediation",
+      "text": "Remediation limitata per installare la patch approvata; produzione vietata fino alla nuova autorizzazione."
+    },
+    {
+      "id": "encryption_remediation",
+      "text": "Remediation limitata per attivare e verificare la cifratura richiesta; antimalware da solo insufficiente."
+    },
+    {
+      "id": "block_identity",
+      "text": "Blocco dei servizi aziendali e di remediation: identità revocata, indipendentemente dalla postura."
+    },
+    {
+      "id": "unknown_posture",
+      "text": "Accesso limitato a provisioning e valutazione: postura sconosciuta, nessun accesso alla produzione."
+    },
+    {
+      "id": "fresh_authorization",
+      "text": "Restare limitato fino a nuova valutazione riuscita di tutti i requisiti e nuova decisione di autorizzazione."
+    },
+    {
+      "id": "remediation_services",
+      "text": "Solo DNS/DHCP aziendali, NAC e server di update/configurazione necessari; niente Internet generale, produzione o altri endpoint."
+    },
+    {
+      "id": "no_safety_guarantee",
+      "text": "No: conformità al momento della verifica, non garanzia di attività innocua; continuare monitoraggio e rivalutazione secondo policy."
+    },
+    {
+      "id": "antimalware_trust",
+      "text": "Consentire accesso a tutta la rete a qualsiasi dispositivo con antimalware presente."
+    },
+    {
+      "id": "unknown_compliant",
+      "text": "Trattare un report incompleto come conforme perché non contiene fallimenti."
+    },
+    {
+      "id": "automatic_promotion",
+      "text": "Riammettere automaticamente dopo il messaggio di installazione senza valutazione o autorizzazione."
+    },
+    {
+      "id": "broad_remediation",
+      "text": "Consentire Internet generale, produzione e altri endpoint per facilitare la correzione."
+    }
+  ],
+  "evidenceTable": {
+    "caption": "Postura e identità dei dispositivi A–E",
+    "headers": [
+      "Dispositivo",
+      "Identità",
+      "Patch",
+      "Cifratura",
+      "Antimalware",
+      "Metodo / report"
+    ],
+    "rows": [
+      [
+        "A",
+        "Valida",
+        "Approvate",
+        "Attiva",
+        "Attivo e aggiornato",
+        "Persistente / corrente riuscito"
+      ],
+      [
+        "B",
+        "Valida",
+        "Obbligatoria mancante",
+        "Attiva",
+        "Attivo e aggiornato",
+        "Dissolvibile / corrente riuscito"
+      ],
+      [
+        "C",
+        "Valida",
+        "Approvate",
+        "Disattivata",
+        "Attivo e aggiornato",
+        "Persistente / corrente riuscito"
+      ],
+      [
+        "D",
+        "Revocata",
+        "Approvate",
+        "Attiva",
+        "Attivo e aggiornato",
+        "Persistente / corrente riuscito"
+      ],
+      [
+        "E",
+        "Valida",
+        "Dichiarate conformi",
+        "Dichiarata attiva",
+        "Dichiarato conforme",
+        "Agentless / incompleto"
+      ]
+    ]
+  }
+},
+{
   "id": 306,
   "evidenceTable": {
   "caption": "Evidenze sintetiche dei finding A–D",

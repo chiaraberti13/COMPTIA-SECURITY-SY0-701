@@ -10,6 +10,8 @@ export interface Source {
 }
 
 export const SOURCES = {
+  ciscoIsePosture: { title: "Cisco ISE 3.4 — Compliance", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/td/docs/security/ise/3-4/admin_guide/b_ise_admin_3_4/b_ISE_admin_compliance.html", kind: "reference" },
+  ciscoIseAgentless: { title: "Cisco ISE — Configure Posture Agentless", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/222260-configure-posture-agentless.html", kind: "reference" },
   tenableCredentialedChecks: { title: "Tenable Nessus Credentialed Checks", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/NessusCredentialedChecks.htm", kind: "reference" },
   tenablePluginRules: { title: "Tenable Nessus Plugin Rules", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/PluginRules.htm", kind: "reference" },
   rfc9989: { title: "RFC 9989 — DMARC", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc9989", kind: "standard" },
@@ -117,7 +119,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
   "4.3": mapped("nist80040", "firstCvss", "cisaKev", "tenableCredentialedChecks", "tenablePluginRules"),
   "4.4": mapped("nist80092", "mitreAttack"),
-  "4.5": mapped("rfc9989", "rfc7208", "rfc6376", "netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
+  "4.5": mapped("ciscoIsePosture", "ciscoIseAgentless", "rfc9989", "rfc7208", "rfc6376", "netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
   "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),
   "4.7": mapped("nist80053", "cisControls"),
   "4.8": mapped("nist80061"),

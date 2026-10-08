@@ -22,6 +22,89 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+503: {
+  "title": "NAC posture and remediation access",
+  "scenario": "Kestrelia uses a NAC policy inspired by Cisco ISE authorization profiles. User and device identities must be valid and authorized. Approved patches, active disk encryption and active current antimalware are mandatory, verified by a current successful posture report. An installed agent alone does not prove compliance. Policy: invalid identity = block corporate and remediation services; valid identity and all requirements verified = ordinary access only to role services; valid identity with a failed fixable requirement = restricted remediation network; valid identity with an incomplete or unavailable report = restricted provisioning and assessment access, never production. In both restricted networks an ACL permits only corporate DNS and DHCP, the NAC assessment/provisioning service, and corporate update or configuration servers needed for the case; general Internet access, production servers and other endpoints are denied. These exceptions are lab services, not a universal list. After a fix, a successful fresh assessment and a new authorization decision are required. Synthetic data; no known active incident. Guide D4, objectives 4.5 and 4.1; glossary: NAC, Agent, Agentless and Dissolvable Agent (activity 27). A persistent agent remains installed, a dissolvable agent is temporary; agentless describes an approach without a persistent agent, with product-dependent capabilities. Cisco ISE can use temporary scripts even in its method named agentless: the name guarantees neither all checks nor periodic reassessment.",
+  "prompt": "Match devices A–E to the justified access profile; then assess reassessment, permitted services and the meaning of compliance. Some options are distractors.",
+  "explanation": "A → ordinary role-scoped access: valid identity and a current report confirm every requirement, not unrestricted access. B → patch remediation: encryption and antimalware do not compensate for the failed patch requirement. C → encryption remediation: active antimalware does not replace disk encryption. D → block: revoked identity takes precedence even with a compliant posture report; no remediation access is granted. E → restricted provisioning/assessment: reportedly good settings but an incomplete agentless report mean unknown posture, not compliance. The absence of a persistent agent is not itself noncompliance: a supported agentless method with all required evidence could produce a valid report. For B, the patch installation message is insufficient: access stays restricted until a successful fresh assessment and new authorization. The remediation network permits only policy-defined services: corporate DNS/DHCP, NAC and required update/configuration servers; no production, communication with other endpoints or general Internet access. Compliance measures requirements at assessment time; it does not prove harmless activity: later alerts require investigation and reassessment according to policy. NAC quarantine restricts network access, while antimalware quarantine isolates a file. Distractors confuse antimalware presence with trust, incomplete reports with compliance, a reported fix with authorization and remediation with broad access.",
+  "prompts": {
+    "p_device_a": "A: valid identity; approved patches; active encryption; active current antimalware; persistent agent with a current successful report.",
+    "p_device_b": "B: valid identity; mandatory patch missing; active encryption; active current antimalware; supported dissolvable agent with a current successful report.",
+    "p_device_c": "C: valid identity; approved patches; encryption disabled; active current antimalware; persistent agent with a current successful report.",
+    "p_device_d": "D: revoked device identity; approved patches; active encryption; active current antimalware; persistent agent with a current successful report.",
+    "p_device_e": "E: valid identity; patches, encryption and antimalware reportedly compliant; agentless method configured, but mandatory checks unfinished and report incomplete.",
+    "p_reassessment": "B: patch installation has finished, but there is no new posture report. When can it obtain ordinary access?",
+    "p_network_scope": "A device with valid identity is in remediation. Which services can it reach under the stated policy?",
+    "p_compliance_limits": "A passes assessment and receives role access. Does this prove that every later activity is harmless?"
+  },
+  "options": {
+    "ordinary": "Ordinary access only to authorized role services: valid identity and all requirements verified.",
+    "patch_remediation": "Restricted remediation to install the approved patch; production denied until new authorization.",
+    "encryption_remediation": "Restricted remediation to enable and verify required encryption; antimalware alone is insufficient.",
+    "block_identity": "Block corporate and remediation services: revoked identity, regardless of posture.",
+    "unknown_posture": "Restricted provisioning and assessment access: unknown posture, no production access.",
+    "fresh_authorization": "Remain restricted until a successful fresh assessment of all requirements and a new authorization decision.",
+    "remediation_services": "Only corporate DNS/DHCP, NAC and required update/configuration servers; no general Internet, production or other endpoints.",
+    "no_safety_guarantee": "No: compliance at assessment time, not a guarantee of harmless activity; continue monitoring and reassessment under policy.",
+    "antimalware_trust": "Allow access to the entire network for any device with antimalware present.",
+    "unknown_compliant": "Treat an incomplete report as compliant because it contains no failures.",
+    "automatic_promotion": "Readmit automatically after the installation message without assessment or authorization.",
+    "broad_remediation": "Allow general Internet, production and other endpoints to make the fix easier."
+  },
+  "evidenceTable": {
+    "caption": "Device posture and identity for A–E",
+    "headers": [
+      "Device",
+      "Identity",
+      "Patches",
+      "Encryption",
+      "Antimalware",
+      "Method / report"
+    ],
+    "rows": [
+      [
+        "A",
+        "Valid",
+        "Approved",
+        "Active",
+        "Active and current",
+        "Persistent / current successful"
+      ],
+      [
+        "B",
+        "Valid",
+        "Mandatory patch missing",
+        "Active",
+        "Active and current",
+        "Dissolvable / current successful"
+      ],
+      [
+        "C",
+        "Valid",
+        "Approved",
+        "Disabled",
+        "Active and current",
+        "Persistent / current successful"
+      ],
+      [
+        "D",
+        "Revoked",
+        "Approved",
+        "Active",
+        "Active and current",
+        "Persistent / current successful"
+      ],
+      [
+        "E",
+        "Valid",
+        "Reportedly compliant",
+        "Reportedly active",
+        "Reportedly compliant",
+        "Agentless / incomplete"
+      ]
+    ]
+  }
+},
 306: {
   "evidenceTable": {
   "caption": "Synthetic evidence for findings A–D",

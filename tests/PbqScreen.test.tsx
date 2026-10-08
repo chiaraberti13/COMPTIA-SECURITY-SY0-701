@@ -239,3 +239,25 @@ describe("vulnerability PBQ reset", () => {
     expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
   });
 });
+
+describe("NAC posture PBQ", () => {
+  it("shows posture evidence, diagnoses unknown-state trust and resets all answers", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 503)! as MatchingPbq;
+    renderHarness([pbq]);
+    fireEvent.click(document.getElementById("pbq_start_503")!);
+    const table = screen.getByRole("table", { name: "Postura e identità dei dispositivi A–E" });
+    expect(within(table).getAllByRole("row")).toHaveLength(6);
+    expect(screen.getByRole("region", { name: "Postura e identità dei dispositivi A–E" }).tabIndex).toBe(0);
+    expect(screen.getByRole("link", { name: "Cisco ISE 3.4 — Compliance" }).getAttribute("href")).toContain("www.cisco.com");
+    for (const p of pbq.prompts) fireEvent.change(screen.getByLabelText(p.text), {
+      target: { value: p.id === "p_device_e" ? "unknown_compliant" : p.correctOptionId },
+    });
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_match_row_p_device_e")!.textContent).toContain("Corretto: Accesso limitato");
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("nuova valutazione riuscita");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    for (const p of pbq.prompts) expect((screen.getByLabelText(p.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
+  });
+});
