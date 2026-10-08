@@ -357,6 +357,38 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 **Accettazione:** gli otto quesiti verificano decisioni e concetti distinti; OAuth resta autorizzazione delegata, UAC non diventa sandbox, la cessazione del supporto dipende dalla policy dichiarata. Fonti primarie normative controllate alla data di implementazione. Nessuna domanda aggiunta prima del materiale didattico necessario a risolverla.
 
+## Estensione dell'audit — confronto con il PDF ufficiale degli obiettivi SY0-701
+
+Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contro il documento ufficiale *CompTIA Security+ SY0-701 Exam Objectives* (Exam Number SY0-701 V7, Document Version 7.0, © 2023 CompTIA), sotto-obiettivo per sotto-obiettivo sui cinque domini. La copertura di guide, glossario e banca delle domande è risultata ampia: la grande maggioranza delle voci puntate del PDF ha già spiegazione, voce ricercabile o quesito dedicato, e non va duplicata. Il confronto ha però individuato **due sotto-obiettivi non coperti adeguatamente**, documentati sotto con l'evidenza riscontrata. Le attività che seguono non trasformano queste voci in nuovi requisiti d'esame: colmano una lacuna rispetto all'elenco ufficiale, con gli stessi criteri comuni di completamento, parità IT/EN e fonti primarie già richiesti dalla roadmap.
+
+### 31. Sensori di rilevamento nella sicurezza fisica (P1 — contenuto)
+
+- [ ] Rendere autonomi e ricercabili i sensori fisici infrarosso, di pressione, a microonde e a ultrasuoni, con approfondimento nella guida del Dominio 1 (obiettivo 1.2).
+
+**Evidenza nel repository:** i quattro sensori compaiono **solo** come voce dell'elenco `keyTopics` dell'obiettivo 1.2 nelle guide IT/EN (`src/domainGuides.ts`, «Sensori: infrared, pressure, microwave, ultrasonic» / «Sensors: …»). Non esiste alcuna menzione in `src/data.ts` e `src/data.en.ts` (ricerca di infrared, pressure, microwave, ultrasonic, motion detector: zero risultati), nessuna voce canonica in `src/canonicalTerms.ts`, nessuna chiave in `src/glossaryIndex.ts`. Bollard, access control vestibule, video surveillance, lighting e la deception (honeypot/honeynet/honeyfile/honeytoken) sono invece già trattati e vanno collegati, non riscritti.
+
+**Da realizzare:** una voce autonoma per i sensori di rilevamento che distingua il principio fisico di ciascuna tecnologia — infrarosso passivo (calore/corpo), sensore di pressione (peso/contatto a pavimento), microonde e ultrasuoni (rilevamento attivo di movimento per effetto Doppler, con bande e sensibilità diverse). Collocare i sensori come controllo **detective** (rileva e segnala), distinto da barriere deterrenti/preventive come bollard e vestibolo; spiegarne posizionamento, complementarità con videosorveglianza e illuminazione, e i limiti di falsi positivi/negativi in funzione dell'ambiente (correnti d'aria, animali, ostacoli, interferenze). Riutilizzare l'esempio «motion sensor» già citato nella tabella delle funzioni dei controlli, senza duplicarla.
+
+**Accettazione:** la ricerca IT/EN di «sensore/sensor», «infrarosso/infrared», «pressione/pressure», «microonde/microwave», «ultrasuoni/ultrasonic» porta alla voce; uno scenario originale sceglie il sensore adeguato al contesto senza presentarne uno come universale né equiparare un sensore di rilevamento a una misura che impedisce l'intrusione. Collegamenti bidirezionali alle voci di sicurezza fisica esistenti; flashcard senza sigle inventate. Fonti: NIST (es. SP 800-116 e materiale sulla sicurezza fisica) e documentazione primaria dei produttori di sensori, con terminologia coerente con l'obiettivo 1.2.
+
+### 32. Vettori non umani: image-based, file-based, voice call e removable device (P2 — reperibilità)
+
+- [ ] Rendere autonomamente reperibili i vettori basati su immagine, file, chiamata vocale e dispositivo rimovibile nella guida del Dominio 2 e nel glossario (obiettivo 2.2), collegandoli ai vettori umani e alle mitigazioni già presenti.
+
+**Evidenza nel repository:** i vettori appaiono come enumerazione dell'obiettivo 2.2 nelle guide (`src/domainGuides.ts`, «Message-based: email, SMS, instant messaging; image-based, file-based, voice call» e «Removable device, vulnerable software…») con poche menzioni sparse in `src/data.ts`; manca una spiegazione autonoma e ricercabile che li distingua. Phishing/vishing/smishing, removable media hardening, email security e `AppCryptoAttacks` sono già trattati e vanno collegati.
+
+**Da realizzare:** una voce per ciascun vettore che separi il **mezzo di consegna** (immagine o QR code malevolo, documento/macro armati, chiamata vocale, supporto USB/rimovibile) dalla **tecnica** che lo sfrutta (es. social engineering, esecuzione di codice, esfiltrazione). Chiarire che lo stesso attacco può combinare più vettori e che il vettore non coincide con il payload. Collegare vishing alla voce «voice call», smishing/phishing ai messaggi, e il removable device all'hardening dei supporti rimovibili e al controllo dei dispositivi, senza duplicare quelle sezioni.
+
+**Accettazione:** ogni vettore è ricercabile in IT/EN e uno scenario sintetico identifica il vettore senza confonderlo con la tecnica; nessuna affermazione che disabilitare un singolo canale elimini l'intera superficie d'attacco. Collegamenti bidirezionali ai contenuti esistenti, senza ripeterli. Fonti: CISA e NIST per i vettori di social engineering e la sicurezza dei supporti rimovibili.
+
+### 33. Quiz su sensori fisici e vettori non umani (P2 — quiz)
+
+- [ ] Aggiungere almeno quattro domande originali: due sui sensori di rilevamento fisico (scelta del sensore in funzione del contesto e funzione detective) e due sui vettori non umani (distinzione fra mezzo di consegna e tecnica). Dipendenza: completare prima le attività 31 e 32.
+
+**Evidenza nel repository:** gli argomenti sono oggi presenti solo come enumerazione dell'obiettivo; non esistono quesiti che richiedano di applicarne le distinzioni in uno scenario. Verificare semanticamente la banca prima di aggiungere ogni quesito, senza dedurre l'assenza dal solo mancato acronimo.
+
+**Accettazione:** almeno due quesiti applicativi con scenario sintetico; ogni domanda si collega alla voce completata nelle attività 31–32 e a un obiettivo principale, con distrattori motivati e spiegazione della risposta corretta e delle alternative. Nessun quesito aggiunto prima del materiale didattico necessario a risolverlo; nessun sensore o vettore presentato come soluzione universale. Verifica IT/EN con Vitest e, dove pertinente, controllo del flusso su mobile.
+
 ## Argomenti già coperti nelle spiegazioni
 
 Il confronto non giustifica duplicare le spiegazioni dei seguenti contenuti già presenti. Alcuni vengono comunque ripresi nelle nuove PBQ, perché spiegazione teorica ed esercizio interattivo sono strumenti diversi:
