@@ -19,6 +19,12 @@ import {
   PHYSICAL_VECTOR_QUESTION_EN,
   PHYSICAL_VECTOR_QUESTION_EN_EXTRA,
 } from "./physicalVectorQuestions";
+import {
+  DOMAIN_1_ATTACK_QUESTIONS,
+  DOMAIN_2_ATTACK_QUESTIONS,
+  DOMAIN_1_ATTACK_QUESTION_EN,
+  DOMAIN_2_ATTACK_QUESTION_EN,
+} from "./attackTopicQuestions";
 
 /**
  * Deprecated content stays in the dataset, so its id keeps pointing at
@@ -40,8 +46,8 @@ const IT_TOPICS: Record<number, TopicGroup[]> = {
 };
 
 const IT_QUESTIONS: Record<number, Question[]> = {
-  1: [...DOMAIN_1_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[1] ?? [])],
-  2: [...DOMAIN_2_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[2] ?? [])],
+  1: [...DOMAIN_1_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[1] ?? []), ...DOMAIN_1_ATTACK_QUESTIONS],
+  2: [...DOMAIN_2_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[2] ?? []), ...DOMAIN_2_ATTACK_QUESTIONS],
   3: DOMAIN_3_QUESTIONS.filter(isActive),
   4: DOMAIN_4_QUESTIONS.filter(isActive),
   5: DOMAIN_5_QUESTIONS.filter(isActive),
@@ -233,6 +239,7 @@ export function getDomainQuestions(domainId: number, lang: Lang): Question[] {
         ...(englishOverlay!.QUESTION_EN[domainId] || {}),
         ...(PHYSICAL_VECTOR_QUESTION_EN[domainId] || {}),
         ...(PHYSICAL_VECTOR_QUESTION_EN_EXTRA[domainId] || {}),
+        ...(domainId === 1 ? DOMAIN_1_ATTACK_QUESTION_EN : DOMAIN_2_ATTACK_QUESTION_EN),
       } : {};
     cache[domainId] = it.map((q) => ({
       ...localizeQuestion(q, qOverrides),
