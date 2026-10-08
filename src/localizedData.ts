@@ -14,6 +14,11 @@ import {
 import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.en";
 import type { Lang } from "./i18n";
 import { CANONICAL_TERMS, conceptRef, parseConceptRef } from "./canonicalTerms";
+import {
+  PHYSICAL_VECTOR_QUESTIONS,
+  PHYSICAL_VECTOR_QUESTION_EN,
+  PHYSICAL_VECTOR_QUESTION_EN_EXTRA,
+} from "./physicalVectorQuestions";
 
 /**
  * Deprecated content stays in the dataset, so its id keeps pointing at
@@ -35,8 +40,8 @@ const IT_TOPICS: Record<number, TopicGroup[]> = {
 };
 
 const IT_QUESTIONS: Record<number, Question[]> = {
-  1: DOMAIN_1_QUESTIONS.filter(isActive),
-  2: DOMAIN_2_QUESTIONS.filter(isActive),
+  1: [...DOMAIN_1_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[1] ?? [])],
+  2: [...DOMAIN_2_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[2] ?? [])],
   3: DOMAIN_3_QUESTIONS.filter(isActive),
   4: DOMAIN_4_QUESTIONS.filter(isActive),
   5: DOMAIN_5_QUESTIONS.filter(isActive),
@@ -224,7 +229,11 @@ export function getDomainQuestions(domainId: number, lang: Lang): Question[] {
     // are reused across domains in the Italian source. The overlay is looked
     // up with the original id, then the id is namespaced.
     const qOverrides =
-      effectiveLang === "en" ? englishOverlay!.QUESTION_EN[domainId] || {} : {};
+      effectiveLang === "en" ? {
+        ...(englishOverlay!.QUESTION_EN[domainId] || {}),
+        ...(PHYSICAL_VECTOR_QUESTION_EN[domainId] || {}),
+        ...(PHYSICAL_VECTOR_QUESTION_EN_EXTRA[domainId] || {}),
+      } : {};
     cache[domainId] = it.map((q) => ({
       ...localizeQuestion(q, qOverrides),
       id: questionUid(domainId, q.id),
