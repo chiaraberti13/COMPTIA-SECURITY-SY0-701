@@ -9,7 +9,7 @@ export const DOMAIN_1_ATTACK_QUESTIONS: Question[] = [
     question: "Quale tecnica corrisponde meglio all'obiettivo, e quale limite va ricordato?",
     options: ["Steganografia: nasconde la presenza del messaggio, ma da sola non ne cifra il contenuto", "Hashing: nasconde e permette di recuperare il messaggio originale", "Cifratura: rende invisibile il fatto che esista un messaggio", "Tokenizzazione: garantisce autenticità dell'immagine"],
     answerIndex: 0,
-    explanation: "La steganografia inserisce un messaggio in un contenitore per celarne la presenza. Non fornisce automaticamente riservatezza, integrità o autenticità; cifrare il contenuto prima di nasconderlo può aggiungere riservatezza. L'hash non è reversibile, la cifratura non nasconde necessariamente l'esistenza del dato e la tokenizzazione sostituisce valori."
+    explanation: "La steganografia inserisce un messaggio in un contenitore per celarne la presenza. Non fornisce automaticamente riservatezza, integrità o autenticità; cifrare il contenuto prima di occultarlo può aggiungere riservatezza. L'hash non è reversibile, la cifratura non nasconde necessariamente l'esistenza del dato e la tokenizzazione sostituisce valori."
   },
   {
     id: 9006, topic: "Zero Trust Architecture", level: "APPLICAZIONE",
@@ -17,12 +17,12 @@ export const DOMAIN_1_ATTACK_QUESTIONS: Question[] = [
     question: "Quale componente svolge questo ruolo di coordinamento?",
     options: ["Policy Administrator (PA)", "Policy Engine (PE)", "Policy Enforcement Point (PEP)", "Identity provider"],
     answerIndex: 0,
-    explanation: "Il Policy Administrator coordina l'istituzione o la cessazione del percorso di comunicazione sulla base della decisione del Policy Engine. Il PE decide, il PEP applica il controllo al traffico, mentre l'identity provider fornisce asserzioni d'identità e non sostituisce questi ruoli."
+    explanation: "Il Policy Administrator coordina l'istituzione o la cessazione del percorso di comunicazione sulla base della decisione del Policy Engine. Il PE decide, il PEP applica il controllo al traffico, mentre l'identity provider fornisce i dati d'identità e non sostituisce questi ruoli."
   },
   {
     id: 9007, topic: "Cryptography", level: "ANALISI",
     scenario: "Due endpoint concordano chiavi effimere per derivare un segreto di sessione. In seguito viene compromessa la chiave privata a lungo termine usata per autenticare le sessioni.",
-    question: "Quale proprietà può limitare l'esposizione delle sessioni passate, se sono state usate chiavi effimere e i segreti temporanei sono stati eliminati?",
+    question: "Quale proprietà può limitare l'esposizione delle sessioni passate, se sono state usate chiavi effimere e i segreti temporanei sono stati cancellati?",
     options: ["Forward secrecy", "Steganografia", "Hash collision resistance", "Key escrow"],
     answerIndex: 0,
     explanation: "La forward secrecy limita la possibilità di ricostruire chiavi di sessioni passate dalla sola compromissione successiva della chiave privata a lungo termine, quando il protocollo usa accordo effimero e i segreti di sessione non sono conservati. Non protegge endpoint compromessi o dati già acquisiti; steganografia nasconde la presenza, collision resistance riguarda gli hash e key escrow conserva chiavi per recupero."
@@ -52,7 +52,7 @@ export const DOMAIN_2_ATTACK_QUESTIONS: Question[] = [
     question: "Quale affermazione descrive correttamente il rischio e una risposta difensiva?",
     options: ["È session hijacking; revocare o ruotare la sessione può invalidare l'identificatore, mentre MFA al solo login non annulla una sessione già rubata", "È solo password spraying; cambiare la password rende sempre inutilizzabile ogni cookie", "È DNS poisoning; DNSSEC revoca l'identificatore", "È CSRF; SameSite garantisce che una sessione copiata non sia riutilizzabile"],
     answerIndex: 0,
-    explanation: "Un identificatore di sessione sottratto può consentire di assumere la sessione autenticata. Revoca, scadenza e rotazione dell'identificatore sono pertinenti; MFA al login protegge l'autenticazione iniziale, ma da sola non invalida una sessione già attiva. Le altre opzioni confondono attacchi distinti o attribuiscono a DNSSEC/SameSite garanzie che non offrono."
+    explanation: "Un identificatore di sessione sottratto può consentire di assumere la sessione autenticata. Revoca, scadenza e rotazione dell'identificatore sono pertinenti; MFA al login protegge l'autenticazione iniziale, ma da sola non invalida una sessione già attiva. Le altre opzioni confondono attacchi distinti o danno a DNSSEC/SameSite garanzie che non offrono."
   },
   {
     id: 9013, topic: "Threat Vectors & Attack Surfaces", level: "APPLICAZIONE",
@@ -64,9 +64,9 @@ export const DOMAIN_2_ATTACK_QUESTIONS: Question[] = [
   },
   {
     id: 9014, topic: "Threat Vectors & Attack Surfaces", level: "COMPRENSIONE",
-    scenario: "Durante una chiamata, una persona con un pretesto convincente pone domande mirate e raccoglie dettagli interni; in seguito usa dati d'identità sottratti per aprire un account a nome della vittima.",
+    scenario: "Durante una chiamata, una persona con un pretesto credibile pone domande mirate e raccoglie dettagli interni; in seguito usa dati d'identità sottratti per aprire un account a nome della vittima.",
     question: "Quale distinzione è corretta?",
-    options: ["La raccolta conversazionale è elicitation; l'uso dei dati per fingersi la vittima è identity fraud", "La raccolta è identity fraud; l'apertura dell'account è elicitation", "Entrambi sono sinonimi di pretexting", "L'elicitation richiede sempre una compromissione tecnica"],
+    options: ["La raccolta di informazioni durante una conversazione è elicitation; l'uso dei dati per fingersi la vittima è identity fraud", "La raccolta è identity fraud; l'apertura dell'account è elicitation", "Entrambi sono sinonimi di pretexting", "L'elicitation richiede sempre una compromissione tecnica"],
     answerIndex: 0,
     explanation: "Elicitation indica l'ottenimento di informazioni durante una conversazione; identity fraud è l'abuso dei dati altrui per agire sotto falsa identità. Un pretext può sostenere la conversazione, ma le tecniche non sono sinonimi né fasi obbligatorie. L'elicitation può avvenire senza exploit tecnico."
   }
@@ -129,7 +129,7 @@ export const DOMAIN_2_ATTACK_QUESTION_EN: Record<number, QuestionOverride> = {
     topic: "Threat Vectors & Attack Surfaces",
     scenario: "During a call, someone using a convincing pretext asks targeted questions and gathers internal details; later, the person uses stolen identity data to open an account in the victim's name.",
     question: "Which distinction is correct?",
-    options: ["Conversational information gathering is elicitation; using the data to impersonate the victim is identity fraud", "The gathering is identity fraud; opening the account is elicitation", "Both are synonyms for pretexting", "Elicitation always requires a technical compromise"],
+    options: ["Information gathering during a conversation is elicitation; using the data to impersonate the victim is identity fraud", "The gathering is identity fraud; opening the account is elicitation", "Both are synonyms for pretexting", "Elicitation always requires a technical compromise"],
     explanation: "Elicitation means obtaining information during a conversation; identity fraud is abusing another person's data to act under a false identity. A pretext can support the conversation, but these techniques are neither synonyms nor mandatory stages. Elicitation can happen without a technical exploit."
   }
 };
