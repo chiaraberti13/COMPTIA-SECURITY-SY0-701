@@ -60,7 +60,7 @@ export const CERTIFICATE_REVOCATION_TOPICS_EN: TopicGroup[] = [
         checklistKey: "CertificateRevocationOCSP",
         definition: "OCSP lets a client ask a responder for the revocation status of an individual certificate.",
         details: "The signed response reports good, revoked, or unknown. good means the responder has no indication that the certificate is revoked at the time of the response; by itself, it does not prove that the certificate was issued, that its chain ends at an accepted trust anchor, that it is unexpired, or that its name matches the requested server. Also check the response signature and freshness. Source: RFC 6960, sections 2.2 and 4.2.",
-        examTip: "OCSP good does not mean "the certificate is valid": still validate the chain, dates, and server identity.",
+        examTip: "OCSP good does not mean \"the certificate is valid\": still validate the chain, dates, and server identity.",
       },
       {
         name: "OCSP stapling",
