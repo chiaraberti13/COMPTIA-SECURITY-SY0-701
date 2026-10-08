@@ -347,11 +347,13 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 28. Quiz sugli approfondimenti dei Domini 1 e 2
 
-- [ ] Aggiungere almeno otto domande originali, una per ciascun tema: steganografia, PE/PA/PEP, key agreement e chiavi effimere, reflected/stored XSS, CSRF rispetto a SSRF, furto di sessione, domain hijacking, elicitation rispetto a frode d'identità.
+- [x] Aggiungere almeno otto domande originali, una per ciascun tema: steganografia, PE/PA/PEP, key agreement e chiavi effimere, reflected/stored XSS, CSRF rispetto a SSRF, furto di sessione, domain hijacking, elicitation rispetto a frode d'identità.
 
 **Evidenza nel repository:** Gli argomenti sono previsti nelle attività 1–7 e 9; diversi compaiono soltanto come cenni, opzioni o spiegazioni nelle domande iniziali, non come competenza applicata nel contesto specifico. Non dedurre assenza dal solo mancato acronimo: verificare semanticamente il banco prima di aggiungere ogni quesito.
 
 **Accettazione:** almeno quattro quesiti applicativi con scenari sintetici; ogni domanda si collega alla definizione completata e a un obiettivo principale, con distrattori motivati. Non ripetere il riconoscimento generale di social engineering della PBQ 301.
+
+**Completato l’8 ottobre 2026:** aggiunte otto domande originali IT/EN, una per ciascun tema, nei gruppi Cryptography, Zero Trust Architecture, Vulnerability Types e Threat Vectors & Attack Surfaces. Gli scenari distinguono steganografia e cifratura, ruoli PE/PA/PEP, forward secrecy con chiavi effimere, reflected/stored XSS, CSRF/SSRF, furto di sessione, domain hijacking e elicitation/frode d'identità. Le spiegazioni motivano la risposta e i distrattori; mappatura agli obiettivi 1.2, 1.4, 2.2 e 2.3. Test Vitest dedicato a copertura, traduzione, risposte e obiettivi.
 
 ### 29. Quiz su rete, cloud e autenticazione
 
