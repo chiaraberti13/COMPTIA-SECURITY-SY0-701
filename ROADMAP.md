@@ -263,13 +263,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 19. Priorità delle vulnerabilità e verifica della remediation
 
-- [ ] Aggiungere una PBQ di abbinamento fra finding, priorità motivata e azione di verifica (obiettivo 4.3).
+- [x] Aggiungere una PBQ di abbinamento fra finding, priorità motivata e azione di verifica (obiettivo 4.3).
 
 **Evidenza nel repository:** Il quesito 40320 già confronta CVSS ed esposizione: la nuova PBQ deve richiedere decisioni su più finding e sulla conferma della remediation, non riproporre quel confronto come domanda singola.
 
 **Da realizzare:** tabella sintetica con CVE, severità fornita, esposizione, sfruttamento noto, criticità dell'asset e disponibilità delle patch; includere un falso positivo da validare e un sistema non aggiornabile da proteggere con controllo compensativo. Usare priorità esplicite e univoche nel contesto dichiarato.
 
 **Accettazione:** non ordinare automaticamente per CVSS; distinguere patch applicata, rescan e verifica dell'efficacia. Nessun calcolo di vettori CVSS non spiegati o mescolati fra versioni. Fonti: FIRST, CISA e documentazione dello scanner per le evidenze.
+
+**Completato il 2026-10-08:** PBQ originale 306 IT/EN, con quattro finding e otto abbinamenti più quattro distrattori. Tabella accessibile condivisa fra pratica ed esame con CVE esplicitamente fittizie, CVSS v3.1 Base fornito, esposizione, sfruttamento noto, criticità e disponibilità delle patch; priorità interne esplicite, senza ordinamento automatico per CVSS. Distinti falso positivo da validare e poi documentare, asset non aggiornabile con controllo compensativo, ticket di patch, rescan autenticato e verifica funzionale; evidenziato il rescan inconcludente quando i controlli autenticati falliscono. Fonti FIRST, CISA, Tenable e NIST collegate; soluzione e limiti in `docs/vulnerability-pbq.md`. Aggiornati i report di copertura e maturità. Superati 936 test Vitest, typecheck, lint, Markdown, ortografia IT/EN, build e 9 smoke test. Aggiunti sei test Playwright desktop/mobile per tastiera, reset, feedback, cambio lingua, esame, storico, axe e overflow: esecuzione locale bloccata prima del test dal Chromium assente e dal download non valido; verifiche browser non dichiarate superate.
 
 ### 20. Postura NAC e rete di remediation
 

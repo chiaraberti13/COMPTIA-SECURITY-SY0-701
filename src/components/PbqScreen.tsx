@@ -1,3 +1,4 @@
+import PbqEvidence from "./PbqEvidence";
 import { ArrowUp, ArrowDown, Check, X, ChevronRight, ClipboardList, RotateCcw } from "lucide-react";
 import { useLang } from "../i18n";
 import { InlineText } from "./MarkdownText";
@@ -64,6 +65,8 @@ export default function PbqScreen({ session, scenarios }: { session: PbqSession;
           <InlineText text={session.current.scenario} />
         </p>
       </div>
+
+      <PbqEvidence pbq={session.current} />
 
       <h2 className="font-bold text-sm text-slate-200 leading-relaxed" id="pbq_prompt">
         {session.current.prompt}

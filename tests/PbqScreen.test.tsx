@@ -217,3 +217,25 @@ describe("DMARC PBQ reset", () => {
     expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
   });
 });
+
+describe("vulnerability PBQ reset", () => {
+  it("renders evidence, rejects score-only triage and clears answers on restart", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 306)! as MatchingPbq;
+    renderHarness([pbq]);
+    fireEvent.click(document.getElementById("pbq_start_306")!);
+    const table = screen.getByRole("table", { name: "Evidenze sintetiche dei finding A–D" });
+    expect(within(table).getAllByRole("row")).toHaveLength(5);
+    expect(screen.getByRole("region", { name: "Evidenze sintetiche dei finding A–D" }).tabIndex).toBe(0);
+    expect(screen.getByRole("link", { name: "Tenable Nessus Credentialed Checks" }).getAttribute("href")).toContain("docs.tenable.com");
+    for (const p of pbq.prompts) {
+      fireEvent.change(screen.getByLabelText(p.text), { target: { value: p.id === "p_finding_a" ? "score_only" : p.correctOptionId } });
+    }
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_match_row_p_finding_a")!.textContent).toContain("Corretto: P1:");
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("autenticazione fallita è inconcludente");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    for (const p of pbq.prompts) expect((screen.getByLabelText(p.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
+  });
+});

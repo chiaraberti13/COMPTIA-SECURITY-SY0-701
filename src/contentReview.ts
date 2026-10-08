@@ -10,6 +10,8 @@ export interface Source {
 }
 
 export const SOURCES = {
+  tenableCredentialedChecks: { title: "Tenable Nessus Credentialed Checks", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/NessusCredentialedChecks.htm", kind: "reference" },
+  tenablePluginRules: { title: "Tenable Nessus Plugin Rules", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/PluginRules.htm", kind: "reference" },
   rfc9989: { title: "RFC 9989 — DMARC", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc9989", kind: "standard" },
   rfc7208: { title: "RFC 7208 — SPF", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc7208", kind: "standard" },
   rfc6376: { title: "RFC 6376 — DKIM", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc6376", kind: "standard" },
@@ -113,7 +115,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "3.4": mapped("nist80034"),
   "4.1": mapped("ciscoWpa3Modes", "ieee8021x", "rfc3748", "microsoftPeap", "nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
-  "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
+  "4.3": mapped("nist80040", "firstCvss", "cisaKev", "tenableCredentialedChecks", "tenablePluginRules"),
   "4.4": mapped("nist80092", "mitreAttack"),
   "4.5": mapped("rfc9989", "rfc7208", "rfc6376", "netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
   "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),

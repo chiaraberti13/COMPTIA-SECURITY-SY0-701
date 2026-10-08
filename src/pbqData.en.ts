@@ -8,6 +8,7 @@
  */
 
 export interface PbqOverride {
+  evidenceTable?: import("./pbq").PbqEvidenceTable;
   title: string;
   scenario: string;
   prompt: string;
@@ -21,6 +22,81 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+306: {
+  "evidenceTable": {
+  "caption": "Synthetic evidence for findings A–D",
+  "headers": [
+    "Finding / fictional CVE",
+    "CVSS v3.1 Base",
+    "Exposure",
+    "Known exploitation",
+    "Criticality",
+    "Patch / evidence"
+  ],
+  "rows": [
+    [
+      "A / CVE-2099-1001",
+      "8.1",
+      "Internet",
+      "Yes",
+      "Critical",
+      "Supported patch available; confirmed"
+    ],
+    [
+      "B / CVE-2099-1002",
+      "7.5",
+      "Internal network",
+      "No",
+      "Critical",
+      "Cannot upgrade; confirmed"
+    ],
+    [
+      "C / CVE-2099-1003",
+      "9.8",
+      "Isolated lab",
+      "No",
+      "Noncritical",
+      "Supported patch available; confirmed"
+    ],
+    [
+      "D / CVE-2099-1004",
+      "9.1",
+      "Internal service",
+      "No",
+      "Noncritical",
+      "Reported backport; banner only, unverified"
+    ]
+  ]
+},
+  "title": "Finding priorities and remediation verification",
+  "scenario": "Kestrelia evaluates four findings with supplied CVSS v3.1 Base scores: do not calculate vectors or compare different versions. CVE-2099-1001, CVE-2099-1002, CVE-2099-1003 and CVE-2099-1004 are fictional identifiers, not real vulnerabilities or entries in the CISA KEV catalog. Known exploitation is also a supplied synthetic fact, not evidence of a local compromise. Internal policy: P1 = emergency for a confirmed vulnerability on a critical Internet-exposed asset with known exploitation; P2 = urgent compensating control for a critical asset reachable from the internal network, without a supported patch and without known exploitation; P3 = patch in the approved window for a noncritical asset in an isolated lab without known exploitation; V = validate a banner-only finding first. P1, P2 and P3 are priorities for this exercise, not CISA deadlines or a universal formula. Inventory and authenticated checks succeeded for confirmed findings. For finding D, the banner suggests a vulnerable version but the vendor reports a backported fix: verification is still incomplete. Verification actions are authorized and nondestructive. Guide D4, objective 4.3; related concepts: CVSS, credentialed scans and compensating controls.",
+  "prompt": "Match each finding to its justified priority, then each follow-up observation to the required verification. Rows A–D provide CVE, severity, exposure, exploitation, criticality and patch status. Some options are distractors.",
+  "prompts": {
+    "p_finding_a": "A | CVE-2099-1001 | CVSS v3.1 Base 8.1 | critical Internet-exposed payroll portal | known exploitation: yes | confirmed vulnerability | supported patch available.",
+    "p_finding_b": "B | CVE-2099-1002 | CVSS v3.1 Base 7.5 | critical console reachable from the internal network | known exploitation: no | confirmed vulnerability | no supported patch; upgrade not possible.",
+    "p_finding_c": "C | CVE-2099-1003 | CVSS v3.1 Base 9.8 | noncritical server in the isolated lab | known exploitation: no | confirmed vulnerability | supported patch available.",
+    "p_finding_d": "D | CVE-2099-1004 | CVSS v3.1 Base 9.1 | noncritical internal service | known exploitation: no | banner-only finding; vendor reports backport | patch reportedly installed, still unverified.",
+    "p_patch_ticket": "A: the ticket says the patch was applied. No rescan or functional test has run yet. What verification is needed before closure?",
+    "p_failed_scan": "C: the rescan shows no findings, but the output reports failed authenticated checks. Is the patch verified?",
+    "p_compensation": "B: segmentation and allowlist installed. What evidence verifies compensation without pretending the vulnerability was removed?",
+    "p_backport": "D: authenticated inventory and the vendor advisory now confirm the package is fixed through a backport; the plugin used only the old banner. What treatment is justified?"
+  },
+  "options": {
+    "p1": "P1: immediate containment and approved patch; criticality, Internet exposure and known exploitation outweigh the score alone.",
+    "p2": "P2: urgent compensation, monitoring and replacement plan; critical internal asset cannot be upgraded.",
+    "p3": "P3: patch in the approved window; isolated noncritical lab, without known exploitation.",
+    "validate": "V: validate with authenticated inventory, vendor advisory and plugin output; possible backport false positive.",
+    "verify_patch": "Successful authenticated rescan with current plugins, fixed version running and functional tests; document effectiveness before closure.",
+    "repeat_scan": "Restore authentication and repeat relevant checks: no findings with failed checks does not demonstrate a fix.",
+    "verify_control": "Authorized tests of blocked and allowed paths, log evidence and residual-risk review; vulnerability remains present.",
+    "record_false_positive": "Record a false positive with verified package, advisory, output and rationale; any exception is scoped and reviewable.",
+    "score_only": "Handle C before A solely because 9.8 is greater than 8.1.",
+    "ticket_closes": "Close A because the installation ticket is sufficient proof of remediation.",
+    "hide_plugin": "Hide the plugin and declare the system fixed without further evidence.",
+    "compensation_fixes": "Close B as fixed software because segmentation eliminates the vulnerability."
+  },
+  "explanation": "A → P1: Internet exposure, criticality and known exploitation make the portal urgent even though 8.1 is below 9.8. Contain exposure and apply the approved patch through change management; known exploitation does not automatically imply a local incident. B → P2: no patch is available; restrict paths to the console through segmentation and an allowlist, monitor, and assign an owner to residual risk and the replacement plan. Compensation reduces risk without fixing the software. C → P3: 9.8 indicates high technical severity but the noncritical asset is isolated and has no known exploitation; it still needs patching in the stated window. D → V: a banner proves neither vulnerability nor a false positive; compare package version, vendor advisory and plugin output using authenticated checks. Only after confirming the backport should the false positive be recorded with evidence. A patch ticket is insufficient: rescan with current plugins and successful credentials, check the actual version and run functional tests. A rescan with no findings but failed authentication is inconclusive. For B, verify that forbidden paths are blocked and required paths work; retain monitoring and residual-risk review. Hiding a plugin changes the report, not the vulnerability. No exploit against external systems is required."
+},
 403: {
   "title": "Email headers and DMARC alignment",
   "scenario": "Kestrelia’s email gateway analyzes six synthetic messages. From and DKIM header excerpts and the SMTP session MAIL FROM appear in each row; MAIL FROM is the envelope sender, not the display name or another From header. MAIL FROM is nonempty and each message has one From domain and one DKIM signature. SPF and DKIM have already been checked by the trusted gateway: use the stated results, not an Authentication-Results header supplied by the sender. There are no DNS or syntax errors, other signatures or local exceptions to infer. The policy shown in each row is the effective policy for the From domain. For relaxed cases, the already determined Organizational Domains are example.com and example.net: no DNS lookup is required. aspf=s/adkim=s require exact domain equality; r means relaxed alignment within the same Organizational Domain. DMARC passes if at least one of valid aligned SPF or valid aligned DKIM satisfies the requirement. Evaluate pass/fail first; consider the disposition requested by p and the receiver’s decision separately. example.com and example.net are documentation domains. Primary objective 4.5; related objective 2.2.",

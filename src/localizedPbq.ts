@@ -19,6 +19,7 @@ function localizeScenario(pbq: Pbq, o: PbqOverride): Pbq {
     scenario: o.scenario,
     prompt: o.prompt,
     explanation: o.explanation,
+    evidenceTable: o.evidenceTable ?? pbq.evidenceTable,
   };
   if (base.mechanic === "ordering") {
     const steps = (pbq as OrderingPbq).steps.map((s) => ({

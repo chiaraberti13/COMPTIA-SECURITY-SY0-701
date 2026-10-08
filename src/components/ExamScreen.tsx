@@ -1,3 +1,4 @@
+import PbqEvidence from "./PbqEvidence";
 import { useEffect, useRef } from "react";
 import { Star } from "lucide-react";
 import { useLang, type UIKey } from "../i18n";
@@ -77,6 +78,7 @@ export default function ExamScreen({ session, onConfigure, onRepeat, onStudyActi
       <section id="exam_current" className="space-y-4 border-t border-slate-700 pt-4" aria-label={t("exam.jump", { i: session.index + 1 })}>
         <p className="text-xs font-mono text-cyan-300">{session.index + 1}/{session.items.length} · {t("sidebar.domShort", { n: current.domain })} · {current.kind === "pbq" ? "PBQ" : "MCQ"}</p>
         <p className="text-xs text-slate-400 leading-relaxed"><InlineText text={current.kind === "pbq" ? current.pbq.scenario : current.question.scenario} /></p>
+        {current.kind === "pbq" ? <PbqEvidence pbq={current.pbq} /> : null}
         <h3 ref={heading} tabIndex={-1} className="text-sm text-slate-100 font-bold">{current.kind === "pbq" ? current.pbq.prompt : current.question.question}</h3>
         {current.kind === "question" ? (
           <>

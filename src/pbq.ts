@@ -42,7 +42,15 @@ export const KIND_MECHANIC: Record<PbqKind, PbqMechanic> = {
   control: "matching",
 };
 
+export interface PbqEvidenceTable {
+  caption: string;
+  headers: string[];
+  rows: string[][];
+}
+
 interface PbqBase {
+  /** Optional comparative evidence, shared by practice and exam. */
+  evidenceTable?: PbqEvidenceTable;
   /** Globally unique, stable id (saved progress and anchors may point at it). */
   id: number;
   kind: PbqKind;

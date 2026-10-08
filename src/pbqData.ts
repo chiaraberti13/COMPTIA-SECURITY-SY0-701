@@ -23,6 +23,165 @@ import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
 {
+  "id": 306,
+  "evidenceTable": {
+  "caption": "Evidenze sintetiche dei finding A–D",
+  "headers": [
+    "Finding / CVE fittizia",
+    "CVSS v3.1 Base",
+    "Esposizione",
+    "Sfruttamento noto",
+    "Criticità",
+    "Patch / evidenza"
+  ],
+  "rows": [
+    [
+      "A / CVE-2099-1001",
+      "8.1",
+      "Internet",
+      "Sì",
+      "Critico",
+      "Patch supportata disponibile; confermato"
+    ],
+    [
+      "B / CVE-2099-1002",
+      "7.5",
+      "Rete interna",
+      "No",
+      "Critico",
+      "Non aggiornabile; confermato"
+    ],
+    [
+      "C / CVE-2099-1003",
+      "9.8",
+      "Laboratorio isolato",
+      "No",
+      "Non critico",
+      "Patch supportata disponibile; confermato"
+    ],
+    [
+      "D / CVE-2099-1004",
+      "9.1",
+      "Servizio interno",
+      "No",
+      "Non critico",
+      "Backport dichiarato; solo banner, da validare"
+    ]
+  ]
+},
+  "kind": "matching",
+  "mechanic": "matching",
+  "objective": "4.3",
+  "relatedObjectives": [
+    "2.5",
+    "1.3"
+  ],
+  "domain": 4,
+  "sources": [
+    "firstCvss",
+    "cisaKev",
+    "tenableCredentialedChecks",
+    "tenablePluginRules",
+    "nist80040"
+  ],
+  "title": "Priorità dei finding e verifica della remediation",
+  "scenario": "Kestrelia valuta quattro finding con CVSS v3.1 Base già fornito: non calcolare vettori né confrontare versioni diverse. Le CVE-2099-1001, CVE-2099-1002, CVE-2099-1003 e CVE-2099-1004 sono identificatori fittizi, non vulnerabilità reali né voci del catalogo CISA KEV. Anche lo sfruttamento noto è un dato sintetico fornito, non la prova di una compromissione locale. Policy interna: P1 = emergenza per vulnerabilità confermata su asset critico esposto a Internet e con sfruttamento noto; P2 = controllo compensativo urgente per asset critico raggiungibile dalla rete interna, non aggiornabile, senza sfruttamento noto; P3 = patch nella finestra approvata per asset non critico in laboratorio isolato, senza sfruttamento noto; V = validare prima un finding basato solo sul banner. P1, P2 e P3 sono priorità di questo esercizio, non scadenze CISA o una formula universale. Per i finding confermati, inventario e controlli autenticati sono riusciti. Per il finding D, il banner suggerisce una versione vulnerabile ma il fornitore dichiara una correzione backport: verifica ancora incompleta. Le azioni di verifica sono autorizzate e non distruttive. Guida D4, obiettivo 4.3; rimandi: CVSS, scansioni credentialed e controlli compensativi.",
+  "prompt": "Abbina ogni finding alla priorità motivata, poi ogni evidenza successiva alla verifica necessaria. Le righe A–D riportano CVE, severità, esposizione, sfruttamento, criticità e patch. Alcune opzioni sono distrattori.",
+  "prompts": [
+    {
+      "id": "p_finding_a",
+      "text": "A | CVE-2099-1001 | CVSS v3.1 Base 8.1 | portale paghe critico esposto a Internet | sfruttamento noto: sì | vulnerabilità confermata | patch supportata disponibile.",
+      "correctOptionId": "p1"
+    },
+    {
+      "id": "p_finding_b",
+      "text": "B | CVE-2099-1002 | CVSS v3.1 Base 7.5 | console critica raggiungibile dalla rete interna | sfruttamento noto: no | vulnerabilità confermata | nessuna patch supportata; aggiornamento non possibile.",
+      "correctOptionId": "p2"
+    },
+    {
+      "id": "p_finding_c",
+      "text": "C | CVE-2099-1003 | CVSS v3.1 Base 9.8 | server non critico nel laboratorio isolato | sfruttamento noto: no | vulnerabilità confermata | patch supportata disponibile.",
+      "correctOptionId": "p3"
+    },
+    {
+      "id": "p_finding_d",
+      "text": "D | CVE-2099-1004 | CVSS v3.1 Base 9.1 | servizio interno non critico | sfruttamento noto: no | finding solo da banner; fornitore dichiara backport | patch dichiarata installata, ancora da verificare.",
+      "correctOptionId": "validate"
+    },
+    {
+      "id": "p_patch_ticket",
+      "text": "A: il ticket dichiara patch applicata. Nessun rescan o test funzionale è ancora stato eseguito. Quale verifica serve prima della chiusura?",
+      "correctOptionId": "verify_patch"
+    },
+    {
+      "id": "p_failed_scan",
+      "text": "C: il rescan non mostra finding, ma l’output indica fallimento dei controlli autenticati. La patch è verificata?",
+      "correctOptionId": "repeat_scan"
+    },
+    {
+      "id": "p_compensation",
+      "text": "B: segmentazione e allowlist installate. Quale evidenza verifica la compensazione senza fingere che la vulnerabilità sia rimossa?",
+      "correctOptionId": "verify_control"
+    },
+    {
+      "id": "p_backport",
+      "text": "D: inventario autenticato e advisory del fornitore ora confermano il pacchetto corretto tramite backport; il plugin usava solo il vecchio banner. Quale trattamento è giustificato?",
+      "correctOptionId": "record_false_positive"
+    }
+  ],
+  "options": [
+    {
+      "id": "p1",
+      "text": "P1: contenimento immediato e patch approvata; criticità, esposizione Internet e sfruttamento noto prevalgono sul solo punteggio."
+    },
+    {
+      "id": "p2",
+      "text": "P2: compensazione urgente, monitoraggio e piano di sostituzione; asset critico interno non aggiornabile."
+    },
+    {
+      "id": "p3",
+      "text": "P3: patch nella finestra approvata; laboratorio isolato non critico, senza sfruttamento noto."
+    },
+    {
+      "id": "validate",
+      "text": "V: validare con inventario autenticato, advisory del fornitore e output del plugin; possibile falso positivo da backport."
+    },
+    {
+      "id": "verify_patch",
+      "text": "Rescan autenticato riuscito con plugin aggiornati, versione corretta in esecuzione e test funzionali; documentare l’efficacia prima della chiusura."
+    },
+    {
+      "id": "repeat_scan",
+      "text": "Ripristinare l’autenticazione e ripetere i controlli pertinenti: assenza di finding con controlli falliti non dimostra la correzione."
+    },
+    {
+      "id": "verify_control",
+      "text": "Test autorizzati dei percorsi bloccati e consentiti, evidenze nei log e riesame del rischio residuo; vulnerabilità ancora presente."
+    },
+    {
+      "id": "record_false_positive",
+      "text": "Registrare falso positivo con pacchetto, advisory, output e motivazione verificati; eventuale eccezione circoscritta e riesaminabile."
+    },
+    {
+      "id": "score_only",
+      "text": "Trattare C prima di A soltanto perché 9.8 è maggiore di 8.1."
+    },
+    {
+      "id": "ticket_closes",
+      "text": "Chiudere A perché il ticket di installazione basta a dimostrare la remediation."
+    },
+    {
+      "id": "hide_plugin",
+      "text": "Nascondere il plugin e dichiarare il sistema corretto senza altre evidenze."
+    },
+    {
+      "id": "compensation_fixes",
+      "text": "Chiudere B come software corretto perché la segmentazione elimina la vulnerabilità."
+    }
+  ],
+  "explanation": "A → P1: esposizione Internet, criticità e sfruttamento noto rendono urgente il portale anche se 8.1 è inferiore a 9.8. Contieni l’esposizione e applica la patch approvata con gestione della modifica; sfruttamento noto non significa automaticamente incidente locale. B → P2: la patch non è disponibile; limita i percorsi di accesso alla console mediante segmentazione e allowlist, monitora e assegna un responsabile al rischio residuo e al piano di sostituzione. La compensazione riduce il rischio senza correggere il software. C → P3: 9.8 indica severità tecnica alta ma l’asset non critico è isolato e non ha sfruttamento noto; resta da aggiornare nella finestra prevista. D → V: un banner non dimostra vulnerabilità né falso positivo; confronta versione del pacchetto, advisory del fornitore e output del plugin con controlli autenticati. Solo dopo conferma del backport registra il falso positivo con evidenze. Il ticket di patch non basta: rescan con plugin aggiornati e credenziali riuscite, controllo della versione effettiva e test funzionali. Un rescan senza finding ma con autenticazione fallita è inconcludente. Per B verifica che i percorsi vietati siano bloccati e quelli necessari funzionino; conserva monitoraggio e riesame del rischio residuo. Nascondere un plugin cambia il report, non risolve la vulnerabilità. Nessun exploit su sistemi esterni è richiesto."
+},
+{
   "id": 403,
   "kind": "log",
   "mechanic": "matching",
