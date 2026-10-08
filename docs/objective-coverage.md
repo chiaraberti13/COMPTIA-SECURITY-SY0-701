@@ -20,8 +20,8 @@ del tutto (gap di contenuto). L'elenco può solo accorciarsi; l'obiettivo è zer
 | Metrica | Conteggio | Quota |
 |---|---|---|
 | Voci di obiettivo curate | 249 | 100% |
-| Spiegate come voce (glossario o guida) | 239 | 96.0% |
-| Spiegate solo in una domanda | 10 | 4.0% |
+| Spiegate come voce (glossario o guida) | 242 | 97.2% |
+| Spiegate solo in una domanda | 7 | 2.8% |
 | Assenti (gap di contenuto) | 0 | 0.0% |
 
 ## Assenti — gap di contenuto da colmare
@@ -38,19 +38,10 @@ renderle ricercabili come voce autonoma.
 ### Obiettivo 1.2
 
 - Threat scope reduction
-- Pressure sensor
 
 ### Obiettivo 1.4
 
 - Record-level encryption
-
-### Obiettivo 2.2
-
-- Voice call vector
-
-### Obiettivo 2.4
-
-- RFID cloning
 
 ### Obiettivo 2.5
 

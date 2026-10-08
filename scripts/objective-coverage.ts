@@ -91,7 +91,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Bloatware", match: ["bloatware"] },
     { term: "Logic bomb", match: ["logic bomb", "bomba logica"] },
     { term: "Rootkit", match: ["rootkit"] },
-    { term: "RFID cloning", match: ["rfid cloning", "clonazione rfid", "clonazione del badge", "clonazione di badge"] },
+    { term: "RFID cloning", match: ["rfid cloning", "clonazione rfid", "clonazione del badge", "clonazione di badge", "clonazione non autorizzate a distanza", "unauthorized reading and cloning"] },
     { term: "DDoS amplified", match: ["amplified", "amplificazione", "amplificato"] },
     { term: "DDoS reflected", match: ["reflected", "riflesso"] },
     { term: "On-path", match: ["on-path"] },
@@ -337,6 +337,9 @@ const GUIDES: Record<Lang, typeof DOMAIN_GUIDES_IT> = { it: DOMAIN_GUIDES_IT, en
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+/** Drop Markdown emphasis so a phrase matches across `**bold**` and `*italic*`. */
+const stripEmphasis = (text: string): string => text.replace(/[*`_]/g, "");
+
 /** Whole-token / whole-phrase match, case-insensitive, Unicode-aware boundaries. */
 const mentions = (text: string, phrase: string): boolean =>
   new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(phrase)}(?![\\p{L}\\p{N}])`, "iu").test(text);
@@ -354,15 +357,17 @@ function teachingText(lang: Lang): string {
   const guideTeaching = Object.values(GUIDES[lang])
     .map(({ objectives: _objectives, ...rest }) => JSON.stringify(rest))
     .join("\n");
-  return `${glossary}\n${guideTeaching}`;
+  return stripEmphasis(`${glossary}\n${guideTeaching}`);
 }
 
 /** The text of all quiz questions of one language (scenario, stem, options, explanation). */
 function questionText(lang: Lang): string {
-  return getInitialQuestions(lang)
-    .filter((q) => !q.deprecated)
-    .map((q) => `${q.scenario}\n${q.question}\n${q.options.join("\n")}\n${q.explanation}`)
-    .join("\n");
+  return stripEmphasis(
+    getInitialQuestions(lang)
+      .filter((q) => !q.deprecated)
+      .map((q) => `${q.scenario}\n${q.question}\n${q.options.join("\n")}\n${q.explanation}`)
+      .join("\n")
+  );
 }
 
 /** Where a sub-topic is explained: a referenceable entry/guide, only a quiz, or nowhere. */
