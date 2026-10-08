@@ -28,7 +28,7 @@ export const PHYSICAL_VECTOR_QUESTIONS: Record<number, Question[]> = {
       question: "Quale affermazione separa correttamente il vettore di consegna dalla tecnica?",
       options: ["L'immagine/QR code è il vettore; il phishing è la tecnica di ingegneria sociale", "Il phishing è il vettore; il QR code è il payload", "Il furto di credenziali è il vettore; il poster è la tecnica", "La pagina di accesso è il vettore; il social engineering è il payload"],
       answerIndex: 0,
-      explanation: "Il QR code è un mezzo di consegna basato su immagine. Il phishing è la tecnica ingannevole di ingegneria sociale; la pagina contraffatta fa parte dell'esca usata per raccogliere credenziali. I termini descrivono parti diverse dell'evento e una campagna può concatenare vettori e tecniche."
+      explanation: "Il QR code è un mezzo di consegna basato su immagine. Il phishing è la tecnica ingannevole di ingegneria sociale; la pagina contraffatta fa parte dell'esca usata per raccogliere credenziali. I termini descrivono parti diverse dell'evento e una campagna può combinare vettori e tecniche."
     },
     {
       id: 9004, topic: "Threat Vectors & Attack Surfaces", level: "APPLICAZIONE",
@@ -36,7 +36,7 @@ export const PHYSICAL_VECTOR_QUESTIONS: Record<number, Question[]> = {
       question: "Qual è il vettore descritto, distinto dalla tecnica che esegue il codice?",
       options: ["Il supporto rimovibile è il vettore; l'esecuzione del programma malevolo è la tecnica", "L'esecuzione del programma è il vettore; la chiavetta è la tecnica", "Il parcheggio è il vettore; la chiavetta è il payload", "Il malware è il vettore; l'accesso fisico è la tecnica"],
       answerIndex: 0,
-      explanation: "Il dispositivo rimovibile è il mezzo con cui il contenuto raggiunge il sistema; l'esecuzione del programma è l'azione tecnica successiva. Il malware è il payload e il luogo in cui è stato trovato non è il vettore. La catena può includere anche ingegneria sociale, per esempio confidando che qualcuno colleghi il supporto."
+      explanation: "Il dispositivo rimovibile è il mezzo con cui il contenuto raggiunge il sistema; l'esecuzione del programma è l'azione tecnica successiva. Il malware è il payload e il luogo in cui è stato trovato non è il vettore. La catena può includere anche ingegneria sociale, per esempio contando sul fatto che qualcuno colleghi il supporto."
     }
   ]
 };
@@ -76,7 +76,7 @@ export const PHYSICAL_VECTOR_QUESTION_EN_EXTRA: Record<number, Record<number, Qu
       scenario: "An unknown USB drive is left in a parking lot. An employee plugs it in, and a malicious program attempts to run.",
       question: "Which is the vector, distinct from the technique that executes the code?",
       options: ["The removable device is the vector; running the malicious program is the technique", "Running the program is the vector; the USB drive is the technique", "The parking lot is the vector; the USB drive is the payload", "The malware is the vector; physical access is the technique"],
-      explanation: "The removable device is the means by which content reaches the system; running the program is the subsequent technical action. Malware is the payload, and the place where the drive was found is not the vector. The chain may also include social engineering, such as relying on someone to plug in the device."
+      explanation: "The removable device is the means by which content reaches the system; running the program is the subsequent technical action. Malware is the payload, and the place where the drive was found is not the vector. The chain may also include social engineering, such as expecting someone to plug in the device."
     }
   }
 };
