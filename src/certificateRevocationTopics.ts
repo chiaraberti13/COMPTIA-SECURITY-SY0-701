@@ -45,14 +45,14 @@ export const CERTIFICATE_REVOCATION_TOPICS_IT: TopicGroup[] = [
 export const CERTIFICATE_REVOCATION_TOPICS_EN: TopicGroup[] = [
   {
     title: "Digital certificates and trust",
-    description: "PKI revocation, status, and trust models. See the Domain 1 guide, objective 1.4.",
+    description: "PKI revocation, status, and trust models. See the Domain 1 (D1) guide, objective 1.4.",
     icon: "ShieldCheck",
     subtopics: [
       {
         name: "Certificate Revocation List (CRL)",
         checklistKey: "CertificateRevocationCRL",
         definition: "A CRL is a CA-signed list that identifies certificates revoked before their expiration.",
-        details: "The verifier checks the list published by the certificate authority (CA) and looks for the certificate serial number. CRLs are updated periodically, so they may not reflect a revocation immediately; list size, distribution, and availability affect checking. **Example:** a client finds a service certificate serial number in the CA-signed CRL and rejects it even though it has not expired. A CRL does not replace chain, expiration, or name validation. Source: RFC 5280, sections 5.1 and 6.",
+        details: "The verifier checks the list published by the certificate authority (CA) and looks for the certificate serial number. CRLs are updated periodically, so they may not reflect a revocation immediately; list size, distribution, and availability affect checking. **Example:** a client finds the serial number of a service TLS certificate in the CA-signed CRL and rejects it even though it has not expired. A CRL does not replace chain, expiration, or name validation. Source: RFC 5280, sections 5.1 and 6.",
         examTip: "CRL means a list: the client downloads or checks a set of revocations, which may be less current than an OCSP response.",
       },
       {
