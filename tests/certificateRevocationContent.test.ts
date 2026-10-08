@@ -30,11 +30,15 @@ describe("certificate revocation and trust glossary", () => {
     });
   }
 
-  it("links the entries to the Domain 1.4 guide in both languages", () => {
-    expect(JSON.stringify(DOMAIN_GUIDES_IT[1])).toContain("Modelli di fiducia dei certificati (1.4)");
-    expect(JSON.stringify(DOMAIN_GUIDES_IT[1])).toContain("good descrive lo stato di revoca");
-    expect(JSON.stringify(DOMAIN_GUIDES_EN[1])).toContain("Certificate trust models (1.4)");
-    expect(JSON.stringify(DOMAIN_GUIDES_EN[1])).toContain("good describes the revocation status");
+  it("links the glossary entries to the Domain 1 guide and objective 1.4", () => {
+    for (const lang of ["it", "en"] as const) {
+      const group = getDomainTopics(1, lang).find((item) =>
+        item.subtopics.some((entry) => entry.checklistKey === "CertificateRevocationCRL")
+      );
+      expect(group?.description).toContain(lang === "it" ? "guida D1, obiettivo 1.4" : "Domain 1 guide, objective 1.4");
+      const guide = lang === "it" ? DOMAIN_GUIDES_IT[1] : DOMAIN_GUIDES_EN[1];
+      expect(guide.objectives.some((objective) => objective.code === "1.4")).toBe(true);
+    }
   });
 
   it("teaches that OCSP good is only a revocation result, not full certificate validation", () => {

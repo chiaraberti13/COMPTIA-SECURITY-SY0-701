@@ -408,21 +408,8 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
           ["OCSP stapling", "Il server allega alla connessione una risposta OCSP firmata e recente", "Deve essere supportato e configurato sul server"],
         ],
       },
-      {
-        title: "Modelli di fiducia dei certificati (1.4)",
-        headers: ["Modello", "Come si stabilisce la fiducia", "Considerazione"],
-        rows: [
-          ["CA pubblica", "Il client dispone di una catena verificabile fino a una root attendibile.", "La catena non basta: controllare anche nome, validità temporale, uso e revoca."],
-          ["CA interna", "La root della PKI aziendale viene distribuita ai client tramite provisioning controllato.", "La CA interna può emettere certificati per i servizi interni; proteggere root e chiavi di firma."],
-          ["Certificato autofirmato", "Il certificato è firmato dalla chiave corrispondente alla propria chiave pubblica.", "La crittografia può essere forte; la fiducia va stabilita separatamente e fuori banda."],
-        ],
-      },
     ],
     commonTraps: [
-      {
-        misconception: "Una risposta OCSP \"good\" prova da sola che il certificato del server è valido.",
-        correction: "good descrive lo stato di revoca riportato dal responder, non l'intera validazione: verifica catena e trust anchor, intervallo temporale, nome/SAN, uso previsto e freschezza della risposta.",
-      },
       {
         "misconception": "TLS 1.3 cifra la chiave di sessione con RSA e PFS protegge ogni compromissione.",
         "correction": "TLS 1.3 ha rimosso il trasporto RSA: RSA può ancora autenticare con firme. DHE/ECDHE autenticato protegge le sessioni passate dalla futura perdita della chiave persistente, non i segreti di sessione rubati o le future impersonificazioni. PSK-only (psk_ke) non offre PFS per i dati applicativi; 0-RTT non ha piena forward secrecy ed è esposto a replay. Fonte: RFC 8446, sezioni 1.2, 2.2, 2.3 ed E.1."
@@ -2060,21 +2047,8 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
           ["OCSP stapling", "The server attaches a recent, signed OCSP response to the connection", "Must be supported and configured on the server"],
         ],
       },
-      {
-        title: "Certificate trust models (1.4)",
-        headers: ["Model", "How trust is established", "Consideration"],
-        rows: [
-          ["Public CA", "The client can build a verifiable chain to a trusted root.", "A chain is not enough: also check name, validity period, usage, and revocation."],
-          ["Internal CA", "The enterprise PKI root is distributed to clients through controlled provisioning.", "An internal CA can issue certificates for internal services; protect the root and signing keys."],
-          ["Self-signed certificate", "The certificate is signed by the key corresponding to its own public key.", "The cryptography can be strong; trust must be established separately and out of band."],
-        ],
-      },
     ],
     commonTraps: [
-      {
-        misconception: "An OCSP \"good\" response by itself proves that the server certificate is valid.",
-        correction: "good describes the revocation status reported by the responder, not complete validation: check the chain and trust anchor, validity period, name/SAN, intended use, and response freshness.",
-      },
       {
         "misconception": "TLS 1.3 encrypts the session key with RSA and PFS protects against every compromise.",
         "correction": "TLS 1.3 removed RSA transport: RSA can still authenticate with signatures. Authenticated DHE/ECDHE protects past sessions against later persistent-key loss, not stolen session secrets or future impersonation. PSK-only (psk_ke) does not provide PFS for application data; 0-RTT lacks full forward secrecy and is exposed to replay. Source: RFC 8446, sections 1.2, 2.2, 2.3 and E.1."

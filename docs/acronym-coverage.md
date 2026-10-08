@@ -19,7 +19,7 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 |---|---|---|
 | Sigle nella Acronym List | 329 | 100% |
 | Ricercabili nel glossario | 244 | 74.2% |
-| Con voce/flashcard dedicata | 79 | 24.0% |
+| Con voce/flashcard dedicata | 81 | 24.6% |
 | Non ancora ricercabili | 85 | 25.8% |
 
 ## Sigle non ancora ricercabili
@@ -142,7 +142,6 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - CMS — Content Management System
 - COOP — Continuity of Operation Planning
 - CRC — Cyclical Redundancy Check
-- CRL — Certificate Revocation List
 - CSP — Cloud Service Provider
 - DAC — Discretionary Access Control
 - DBA — Database Administrator
@@ -213,7 +212,6 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - NTFS — New Technology File System
 - NTP — Network Time Protocol
 - OAUTH — Open Authorization
-- OCSP — Online Certificate Status Protocol
 - OID — Object Identifier
 - OS — Operating System
 - OSPF — Open Shortest Path First
