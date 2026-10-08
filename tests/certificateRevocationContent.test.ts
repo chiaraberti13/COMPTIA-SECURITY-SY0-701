@@ -35,7 +35,7 @@ describe("certificate revocation and trust glossary", () => {
       const group = getDomainTopics(1, lang).find((item) =>
         item.subtopics.some((entry) => entry.checklistKey === "CertificateRevocationCRL")
       );
-      expect(group?.description).toContain(lang === "it" ? "guida D1, obiettivo 1.4" : "Domain 1 guide, objective 1.4");
+      expect(group?.description).toContain(lang === "it" ? "guida D1, obiettivo 1.4" : "Domain 1 (D1) guide, objective 1.4");
       const guide = lang === "it" ? DOMAIN_GUIDES_IT[1] : DOMAIN_GUIDES_EN[1];
       expect(guide.objectives.some((objective) => objective.code === "1.4")).toBe(true);
     }
