@@ -53,7 +53,7 @@ Peso d'esame 28% · 185 domande nel banco del dominio.
 | 4.3 | Eseguire vulnerability management dal discovery alla prioritizzazione, remediation, rescansione, reporting ed eccezioni. | 24 | 0 | 12 | 7 | 5 | 1 | [NIST SP 800-40 Rev. 4](https://csrc.nist.gov/pubs/sp/800/40/r4/final), [FIRST Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
 | 4.4 | Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore. | 16 | 0 | 9 | 3 | 4 | 1 | [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final), [MITRE ATT&CK](https://attack.mitre.org/) |
 | 4.5 | Configurare controlli enterprise quali firewall, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR e proxy. | 21 | 0 | 7 | 10 | 4 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 4.6 | Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning. | 32 | 0 | 18 | 11 | 3 | 1 | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-63B](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) |
+| 4.6 | Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning. | 32 | 0 | 18 | 11 | 3 | 2 | [OASIS SAML 2.0 Core](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf), [IETF RFC 6749](https://www.rfc-editor.org/rfc/rfc6749), [OpenID Foundation OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html), [IETF RFC 4120](https://www.rfc-editor.org/rfc/rfc4120), [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-63B](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) |
 | 4.7 | Usare automazione e orchestrazione valutando repeatability, velocità, integrazioni, errori e rischio di propagazione. | 18 | 0 | 12 | 3 | 3 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.8 | Applicare incident response e forensics preservando evidenze, comunicazioni, contenimento e ritorno controllato in produzione. | 18 | 0 | 11 | 0 | 7 | 1 | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final) |
 | 4.9 | Interpretare fonti dati e log di rete, autenticazione, endpoint, applicazioni, cloud, DNS ed email. | 23 | 0 | 6 | 3 | 14 | 1 | [NIST SP 800-61 Rev. 3](https://csrc.nist.gov/pubs/sp/800/61/r3/final), [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final) |
@@ -89,6 +89,10 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti primarie: obiettivi d'esame, standard, specifiche e norme
 
+- [SAML 2.0 Core](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf) — OASIS
+- [RFC 6749 — OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749) — IETF
+- [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html) — OpenID Foundation
+- [RFC 4120 — Kerberos V5](https://www.rfc-editor.org/rfc/rfc4120) — IETF
 - [RFC 4033 — DNS Security Introduction and Requirements](https://www.rfc-editor.org/rfc/rfc4033) — IETF
 - [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/) — IEEE
 - [CompTIA Security+ (SY0-701) — exam objectives](https://www.comptia.org/certifications/security) — CompTIA

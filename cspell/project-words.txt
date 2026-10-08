@@ -378,3 +378,9 @@ BYOK
 GMAC
 parallelizable
 unforgeable
+
+# IAM glossary: valid Italian words
+asserzioni
+concederle
+illimitata
+autenticano

@@ -18,13 +18,13 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 | Metrica | Conteggio | Quota |
 |---|---|---|
 | Sigle nella Acronym List | 329 | 100% |
-| Ricercabili nel glossario | 244 | 74.2% |
-| Con voce/flashcard dedicata | 82 | 24.9% |
-| Non ancora ricercabili | 85 | 25.8% |
+| Ricercabili nel glossario | 246 | 74.8% |
+| Con voce/flashcard dedicata | 84 | 25.5% |
+| Non ancora ricercabili | 83 | 25.2% |
 
 ## Sigle non ancora ricercabili
 
-85 sigle da aggiungere come voce o alias ricercabile (attività 34 della roadmap):
+83 sigle da aggiungere come voce o alias ricercabile (attività 34 della roadmap):
 
 - **2FA** — Two-factor Authentication
 - **AIS** — Automated Indicator Sharing
@@ -56,7 +56,6 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 - **IRP** — Incident Response Plan
 - **ISP** — Internet Service Provider
 - **ISSO** — Information Systems Security Officer
-- **KDC** — Key Distribution Center
 - **KEK** — Key Encryption Key
 - **MaaS** — Monitoring as a Service
 - **MAN** — Metropolitan Area Network
@@ -98,7 +97,6 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 - **SPIM** — Spam over Internet Messaging
 - **SRTP** — Secure Real-Time Protocol
 - **TCP/IP** — Transmission Control Protocol/Internet Protocol
-- **TGT** — Ticket Granting Ticket
 - **TSIG** — Transaction Signature
 - **UAV** — Unmanned Aerial Vehicle
 - **UEM** — Unified Endpoint Management
@@ -195,6 +193,7 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - IR — Incident Response
 - ISO — International Standards Organization
 - IV — Initialization Vector
+- KDC — Key Distribution Center
 - L2TP — Layer 2 Tunneling Protocol
 - LAN — Local Area Network
 - MAC — Mandatory Access Control / Media Access Control / Message Authentication Code
@@ -240,7 +239,6 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - ROI — Return on Investment
 - RSA — Rivest, Shamir, & Adleman
 - SaaS — Software as a Service
-- SAML — Security Assertions Markup Language
 - SAN — Storage Area Network / Subject Alternative Name
 - SASE — Secure Access Service Edge
 - SD-WAN — Software-defined Wide Area Network
@@ -257,11 +255,11 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - SQLi — SQL Injection
 - SSD — Solid State Drive
 - SSL — Secure Sockets Layer
-- SSO — Single Sign-on
 - STIX — Structured Threat Information eXchange
 - SWG — Secure Web Gateway
 - TACACS+ — Terminal Access Controller Access Control System
 - TAXII — Trusted Automated eXchange of Indicator Information
+- TGT — Ticket Granting Ticket
 - TOC — Time-of-check
 - TOTP — Time-based One-time Password
 - TOU — Time-of-use

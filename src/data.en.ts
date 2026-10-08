@@ -233,6 +233,37 @@ export const GROUP_EN: Record<string, GroupOverride> = {
 
 export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   1: {
+    "SingleSignOn": {
+      "name": "Single Sign-On (SSO)",
+      "definition": "Single authentication reused across multiple applications.",
+      "details": "SSO is an access outcome, not a protocol: it can use Kerberos within an enterprise realm or SAML/OpenID Connect across federated systems. Each application keeps its own permissions and sessions; disabling the IdP does not automatically revoke existing sessions. **Focused Mini-Example:** Kestrelia opens payroll and projects after one login. See MFA, SSO & Identity Federation and Federation.\n\nSource: OASIS SAML 2.0 Core.",
+      "examTip": "SSO implies neither MFA nor permission to access every resource."
+    },
+    "SAML": {
+      "name": "Security Assertion Markup Language (SAML)",
+      "definition": "An XML-based standard for exchanging security assertions, commonly used for federated web authentication.",
+      "details": "The Identity Provider (IdP) authenticates the user; the Service Provider (SP) checks the signed assertion, issuer, recipient/audience and validity period before creating a local session. A signature does not automatically encrypt attributes. **Focused Mini-Example:** the Kestrelia IdP asserts identity to an external payroll portal without sending the password. See Federation and Single Sign-On (SSO).\n\nSource: OASIS SAML 2.0 Core.",
+      "examTip": "A SAML assertion is not an OAuth access token."
+    },
+    "OAuth2": {
+      "name": "OAuth 2.0",
+      "definition": "An authorization framework that grants a client limited access to protected resources.",
+      "details": "A resource owner can delegate a scope to a client; the authorization server issues an access token that the resource server checks before allowing the operation. An access token can be opaque or structured: it is not necessarily JWT and does not by itself prove user identity to the client. **Focused Mini-Example:** Kestrelia lets an app read a calendar without granting write access or sharing a password. See OpenID Connect (OIDC) and Federation.\n\nSource: RFC 6749.",
+      "examTip": "OAuth 2.0 provides delegated authorization, not an authentication protocol."
+    },
+    "OpenIDConnect": {
+      "name": "OpenID Connect (OIDC)",
+      "definition": "An identity layer built on OAuth 2.0 that enables a client to verify end-user authentication.",
+      "details": "The OpenID Provider (OP, IdP role) authenticates the user and issues an ID token JWT to the Relying Party (RP, client). The RP checks signature, issuer, audience, expiration and nonce when applicable. The ID token describes authentication for the client; the access token authorizes API access and may be opaque. **Focused Mini-Example:** Kestrelia signs into an app with OIDC; the app separately uses an access token to read a profile. See OAuth 2.0, SAML and Single Sign-On (SSO).\n\nSource: OpenID Connect Core.",
+      "examTip": "Do not use an ID token as an API access token."
+    },
+    "Kerberos": {
+      "name": "Kerberos",
+      "definition": "A network authentication protocol using tickets issued by a trusted Key Distribution Center.",
+      "details": "The Key Distribution Center (KDC) includes an Authentication Service and a Ticket Granting Service. After initial authentication the client receives a Ticket Granting Ticket (TGT), uses it to request a service ticket for the intended service, then presents that ticket and an authenticator to the service. The TGT is not directly used as a file-server ticket. Key protection, KDC availability and clock synchronization matter. **Focused Mini-Example:** Kestrelia opens a share within its enterprise realm without reentering a password. See Single Sign-On (SSO) and Federation: Kerberos supports cross-realm trust but does not automatically equal SAML/OIDC web federation.\n\nSource: RFC 4120.",
+      "examTip": "An authentication ticket does not imply unlimited authorization; the service enforces permissions."
+    },
+
     SteganographyConcept: {
       "name": "Steganography (Steganografia)",
       "definition": "A technique that embeds a message in a carrier, such as an image or an audio file, to conceal the existence of the communication.",
@@ -835,7 +866,7 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   MFA_SSO_Federation: {
     name: "MFA, SSO & Identity Federation",
     definition: "Multi-factor authentication, Single Sign-On and identity federation technologies across different domains.",
-    details: "The three pillars for guaranteeing modern, secure and user-friendly access in the corporate environment:\n* **MFA (Multi-Factor Authentication):** Requires the convergent use of at least two or more distinct authentication factors chosen from:\n  - *Something you know:* password or PIN.\n  - *Something you have:* smart card, hardware token or app with OTP codes.\n  - *Something you are:* fingerprint, iris, facial recognition (biometrics).\n  - *Somewhere you are:* GPS location, IP address or originating network. *(These four are the factors listed by objective 4.6; the older* Something you do *- typing rhythm, signature dynamics - belonged to the attributes of the previous exam version and is not among the SY0-701 factors.)*\n* **SSO (Single Sign-On):** Allows the user to authenticate only once and access multiple corporate applications and servers without having to re-enter credentials at each step.\n* **Identity Federation:** Extends the concept of SSO beyond the company's boundaries, allowing domains and portals of distinct organizations to trust each other's identities (IdP - Identity Provider vs SP - Service Provider).\n* **Standard Federated Protocols:** SAML (XML-based for enterprise), OAuth 2.0 (an **authorization** framework, not an authentication one: it delegates access to a resource without handing over the password. Its access tokens may be opaque or structured, and **need not be JWTs**) and OIDC (OpenID Connect, an authentication layer built on top of OAuth 2.0).\n\n* **Focused Mini-Example:** An employee connects in the morning and logs in by entering a password and fingerprint on the centralized corporate portal (**MFA**). From that moment, thanks to **SSO**, they can navigate between the cloud sales application (Salesforce) and the external payroll portal (**Federation** through the SAML protocol) without having to type any additional credentials.",
+    details: "See Single Sign-On (SSO), SAML, OAuth 2.0, OpenID Connect (OIDC) and Kerberos. The three pillars for guaranteeing modern, secure and user-friendly access in the corporate environment:\n* **MFA (Multi-Factor Authentication):** Requires the convergent use of at least two or more distinct authentication factors chosen from:\n  - *Something you know:* password or PIN.\n  - *Something you have:* smart card, hardware token or app with OTP codes.\n  - *Something you are:* fingerprint, iris, facial recognition (biometrics).\n  - *Somewhere you are:* GPS location, IP address or originating network. *(These four are the factors listed by objective 4.6; the older* Something you do *- typing rhythm, signature dynamics - belonged to the attributes of the previous exam version and is not among the SY0-701 factors.)*\n* **SSO (Single Sign-On):** Allows the user to authenticate only once and access multiple corporate applications and servers without having to re-enter credentials at each step.\n* **Identity Federation:** Extends the concept of SSO beyond the company's boundaries, allowing domains and portals of distinct organizations to trust each other's identities (IdP - Identity Provider vs SP - Service Provider).\n* **Standard Federated Protocols:** SAML (XML-based for enterprise), OAuth 2.0 (an **authorization** framework, not an authentication one: it delegates access to a resource without handing over the password. Its access tokens may be opaque or structured, and **need not be JWTs**) and OIDC (OpenID Connect, an authentication layer built on top of OAuth 2.0).\n\n* **Focused Mini-Example:** An employee connects in the morning and logs in by entering a password and fingerprint on the centralized corporate portal (**MFA**). From that moment, thanks to **SSO**, they can navigate between the cloud sales application (Salesforce) and the external payroll portal (**Federation** through the SAML protocol) without having to type any additional credentials.",
     examTip: "Identity federation is based on a trust relationship established in advance between the Identity Provider (IdP), which actually authenticates the user, and the Service Provider (SP), which provides the final application.",
   },
   PasswordPoliciesAccount: {
@@ -871,8 +902,8 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   FederationConcept: {
     name: "Federation",
     definition: "Identity Federation: a system that links the identity management systems of different organizations or domains, allowing users to use the same credentials to access multiple external networks or applications.",
-    details: "Main characteristics:\n* **Mutual Trust:** It is based on a preconfigured trust relationship between an Identity Provider (IdP) and a Service Provider (SP).\n* **Cross-Domain SSO:** It enables Single Sign-On beyond corporate boundaries, eliminating the need to create separate accounts for each partner or external SaaS application.\n* **Open Standards:** Commonly implemented through protocols such as SAML 2.0 (enterprise) or OpenID Connect (OIDC, consumer/cloud).\n\n* **Focused Mini-Example:** An employee of a partner company accesses the customer portal of an external bank. Because a **Federation** through SAML is configured between the company and the bank, the browser redirects the user to the company's authentication server, which validates the identity and sends the user back to the bank already authenticated, without sharing the password.",
-    examTip: "Identity federation extends Single Sign-On (SSO) beyond corporate boundaries through standard protocols such as SAML or OIDC and bilateral trust relationships.",
+    details: "See Single Sign-On (SSO), SAML, OAuth 2.0 and OpenID Connect (OIDC).\nMain characteristics:\n* **Configured Trust:** It is based on a preconfigured trust relationship between an Identity Provider (IdP) and a Service Provider (SP).\n* **Cross-Domain SSO:** It enables Single Sign-On beyond corporate boundaries, without sharing the password; the service may still require a local account and provisioning.\n* **Open Standards:** Commonly implemented through protocols such as SAML 2.0 (enterprise) or OpenID Connect (OIDC, consumer/cloud).\n\n* **Focused Mini-Example:** An employee of a partner company accesses the customer portal of an external bank. Because a **Federation** through SAML is configured between the company and the bank, the browser redirects the user to the company's authentication server, which validates the identity and sends the user back to the bank already authenticated, without sharing the password.",
+    examTip: "Identity federation extends Single Sign-On (SSO) beyond corporate boundaries through standard protocols such as SAML or OIDC and configured trust in the IdP.",
   },
   GeographicNetworkRestrictions: {
     name: "Geographic & Network Location Restrictions (Geofencing)",

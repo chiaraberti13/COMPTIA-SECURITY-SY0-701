@@ -1292,7 +1292,12 @@
     "WPAWirelessConcept",
     "XSSAttack",
     "ZeroDayVuln",
-    "ZeroTrustIntro"
+    "ZeroTrustIntro",
+    "Kerberos",
+    "OAuth2",
+    "OpenIDConnect",
+    "SAML",
+    "SingleSignOn"
   ],
   "objectives": [
     "1.1",

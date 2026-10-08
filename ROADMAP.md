@@ -161,13 +161,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 12. SSO, SAML, OAuth e OIDC nel glossario
 
-- [ ] Rendere autonomi SSO, SAML, OAuth 2.0, OpenID Connect e Kerberos, collegandoli al confronto IAM della guida del Dominio 4 (obiettivo 4.6).
+- [x] Rendere autonomi SSO, SAML, OAuth 2.0, OpenID Connect e Kerberos, collegandoli al confronto IAM della guida del Dominio 4 (obiettivo 4.6).
 
 **Evidenza nel repository:** `MFA_SSO_Federation` e `FederationConcept` spiegano già SSO, SAML e la distinzione OAuth/OIDC; questi protocolli non hanno tutti una voce autonoma. LDAP ha già una voce con DN, OU, LDAPS e StartTLS: non ripetere tali contenuti né aggiungere DAP per un mero cenno storico.
 
 **Da realizzare:** organizzare i rimandi per autenticazione, autorizzazione delegata, federazione e SSO. Collegare identity provider, service provider/relying party, asserzione e token nei limiti necessari a comprendere i flussi; spiegare il ruolo dei ticket Kerberos senza equipararlo automaticamente alla federazione web.
 
 **Accettazione:** OAuth non diventa un protocollo di autenticazione; distinguere access token e ID token e non presumere che ogni access token sia JWT. Esempi IT/EN coerenti. Fonti: OASIS SAML, specifiche OAuth/OIDC e RFC 4120.
+
+**Completato l’8 ottobre 2026:** cinque voci canoniche IT/EN nel gruppo IAM esistente (obiettivo 4.6), con fonti OASIS SAML, RFC 6749, OpenID Connect Core e RFC 4120, rimandi alle panoramiche SSO/Federation e flashcard SSO/SAML/OIDC. Aggiunti confronto dei cinque meccanismi e scenario originale nella guida D4.6; distinti autenticazione, autorizzazione delegata, ID token JWT, access token anche opaco e ticket Kerberos (KDC, TGT, service ticket). Precisati account locali, trust configurato e limiti di revoca delle sessioni federate. Aggiornati registri di identificatori/traduzioni e report di copertura; test dedicati verificano reperibilità, fonti, flashcard e parità IT/EN.
 
 ### 13. SELinux, MAC e isolamento applicativo
 

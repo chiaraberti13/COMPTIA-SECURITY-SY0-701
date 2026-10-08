@@ -1357,6 +1357,41 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "SSO e protocolli IAM (4.6)",
+        "headers": [
+          "Concetto",
+          "Scopo",
+          "Flusso e limite"
+        ],
+        "rows": [
+          [
+            "SSO",
+            "Una autenticazione, più applicazioni",
+            "Risultato, non protocollo: Kerberos, SAML o OIDC"
+          ],
+          [
+            "SAML",
+            "Autenticazione federata web",
+            "IdP → asserzione XML firmata → SP → sessione locale"
+          ],
+          [
+            "OAuth 2.0",
+            "Autorizzazione delegata",
+            "Authorization server → access token → resource server/API; token anche opaco"
+          ],
+          [
+            "OpenID Connect (OIDC)",
+            "Identità sopra OAuth 2.0",
+            "OP → ID token JWT → RP; access token separato per API"
+          ],
+          [
+            "Kerberos",
+            "Autenticazione tramite ticket",
+            "KDC → TGT → richiesta service ticket → servizio; non automaticamente federazione web"
+          ]
+        ]
+      },
+      {
         title: "Modelli di controllo degli accessi",
         headers: ["Modello", "Chi decide l'accesso", "Esempio"],
         rows: [
@@ -1497,6 +1532,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
           evidence: "Rapporti aggregati DMARC e intestazioni delle email segnalate dai clienti, con i risultati di SPF, DKIM e DMARC.",
           limit: "DMARC protegge solo il dominio esatto: non ferma domini simili (typosquatting) né un nome visualizzato falso con un altro indirizzo.",
         },
+      },
+      {
+        "objective": "4.6",
+        "title": "Identità o accesso ai dati?",
+        "prompt": "Kestrelia vuole un solo login al portale paghe esterno, consentire a un’app di leggere il calendario e aprire una condivisione nel realm aziendale. Quali meccanismi scegliere?",
+        "reasoning": "SSO è il risultato. SAML o OpenID Connect autenticano verso il portale federato; OAuth 2.0 delega la sola lettura del calendario con scope limitato; Kerberos usa TGT e service ticket per la condivisione. L’ID token OIDC è per il RP, l’access token per l’API e non deve essere JWT. IdP/SP o OP/RP devono verificare le prove ricevute; la federazione non elimina necessariamente gli account locali né revoca automaticamente sessioni esistenti. Vedi le voci autonome del glossario e Federation. Fonti: OASIS SAML 2.0 Core, RFC 6749, OpenID Connect Core e RFC 4120."
       },
       {
         objective: "4.6",
@@ -2996,6 +3037,41 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "SSO and IAM protocols (4.6)",
+        "headers": [
+          "Concept",
+          "Purpose",
+          "Flow and limit"
+        ],
+        "rows": [
+          [
+            "SSO",
+            "One authentication, multiple applications",
+            "An outcome, not a protocol: Kerberos, SAML or OIDC"
+          ],
+          [
+            "SAML",
+            "Federated web authentication",
+            "IdP → signed XML assertion → SP → local session"
+          ],
+          [
+            "OAuth 2.0",
+            "Delegated authorization",
+            "Authorization server → access token → resource server/API; tokens may be opaque"
+          ],
+          [
+            "OpenID Connect (OIDC)",
+            "Identity on top of OAuth 2.0",
+            "OP → ID token JWT → RP; separate access token for APIs"
+          ],
+          [
+            "Kerberos",
+            "Ticket-based authentication",
+            "KDC → TGT → service ticket request → service; not automatically web federation"
+          ]
+        ]
+      },
+      {
         title: "Access control models",
         headers: ["Model", "Who decides access", "Example"],
         rows: [
@@ -3136,6 +3212,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
           evidence: "DMARC aggregate reports and the headers of the emails reported by customers, with the SPF, DKIM and DMARC results.",
           limit: "DMARC protects only the exact domain: it does not stop lookalike domains (typosquatting) or a fake display name with a different address.",
         },
+      },
+      {
+        "objective": "4.6",
+        "title": "Identity or data access?",
+        "prompt": "Kestrelia wants one login to an external payroll portal, an app allowed to read a calendar and access to a share in its enterprise realm. Which mechanisms fit?",
+        "reasoning": "SSO is the outcome. SAML or OpenID Connect authenticate to the federated portal; OAuth 2.0 delegates calendar read access with limited scope; Kerberos uses a TGT and a service ticket for the share. The OIDC ID token is for the RP, the access token for the API and need not be JWT. IdP/SP or OP/RP must validate received evidence; federation does not necessarily eliminate local accounts or automatically revoke existing sessions. See the independent glossary entries and Federation. Sources: OASIS SAML 2.0 Core, RFC 6749, OpenID Connect Core and RFC 4120."
       },
       {
         objective: "4.6",

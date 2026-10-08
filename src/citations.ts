@@ -23,6 +23,10 @@ export interface Citation {
 
 /** How the study text names each cited document. */
 export const MENTIONS: [SourceId, RegExp][] = [
+  ["samlCore", /OASIS SAML 2.0 Core/],
+  ["rfc6749", /RFC 6749/],
+  ["oidcCore", /OpenID Connect Core/],
+  ["rfc4120", /RFC 4120/],
   ["icannHijacking", /ICANN Domain Name Registration Hijacking/],
   ["icannProtection", /ICANN Protect Your Domain Name/],
   ["icannLocks", /ICANN EPP Status Codes/],
@@ -61,6 +65,12 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "1:SingleSignOn": [{ source: "samlCore" }],
+  "1:SAML": [{ source: "samlCore" }],
+  "1:OAuth2": [{ source: "rfc6749" }],
+  "1:OpenIDConnect": [{ source: "oidcCore" }],
+  "1:Kerberos": [{ source: "rfc4120" }],
+
   "2:DomainHijackingAttack": [{ source: "icannHijacking" }, { source: "icannProtection" }, { source: "icannLocks" }, { source: "rfc4033" }],
   "2:WiFiJammingAttack": [{ source: "ieee80211" }, { source: "wifiAlliance" }],
   "2:WiFiDeauthAttack": [{ source: "ieee80211" }, { source: "wifiAlliance" }],

@@ -10,6 +10,11 @@ export interface Source {
 }
 
 export const SOURCES = {
+  samlCore: {"title": "SAML 2.0 Core", "publisher": "OASIS", "url": "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf", "kind": "standard"},
+  rfc6749: {"title": "RFC 6749 \u2014 OAuth 2.0", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc6749", "kind": "standard"},
+  oidcCore: {"title": "OpenID Connect Core 1.0", "publisher": "OpenID Foundation", "url": "https://openid.net/specs/openid-connect-core-1_0.html", "kind": "standard"},
+  rfc4120: {"title": "RFC 4120 \u2014 Kerberos V5", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc4120", "kind": "standard"},
+
   icannHijacking: {"title": "ICANN Domain Name Registration Hijacking", "publisher": "ICANN", "url": "https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en", "kind": "reference"},
   icannProtection: {"title": "ICANN Protect Your Domain Name", "publisher": "ICANN", "url": "https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en", "kind": "reference"},
   icannLocks: {"title": "ICANN EPP Status Codes", "publisher": "ICANN", "url": "https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en", "kind": "reference"},
@@ -93,7 +98,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
   "4.4": mapped("nist80092", "mitreAttack"),
   "4.5": mapped("nist80053", "cisControls"),
-  "4.6": mapped("nist800207", "nist80053", "nist80063b"),
+  "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),
   "4.7": mapped("nist80053", "cisControls"),
   "4.8": mapped("nist80061"),
   "4.9": mapped("nist80061", "nist80092"),
