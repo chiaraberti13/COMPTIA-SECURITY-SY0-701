@@ -40,7 +40,7 @@ le voci scadute, così il dashboard resta deterministico e la scadenza viene com
 
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
-| Mappatura obiettivi → fonti (`SOURCES_MAPPED_ON`) | 2026-10-06 | rivista entro 180 giorni | 🟡 monitorato |
+| Mappatura obiettivi → fonti (`SOURCES_MAPPED_ON`) | 2026-10-08 | rivista entro 180 giorni | 🟡 monitorato |
 | Ultimo giro di test manuali di accessibilità (`MANUAL_A11Y_CHECKED_ON`) | 2026-10-05 | ripetuto entro 180 giorni | 🟡 monitorato |
 
 ## 3. Link
