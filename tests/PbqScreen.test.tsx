@@ -261,3 +261,25 @@ describe("NAC posture PBQ", () => {
     expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
   });
 });
+
+describe("BIA recovery PBQ", () => {
+  it("shows measured evidence, diagnoses frequency assumptions and resets answers", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 307)! as MatchingPbq;
+    renderHarness([pbq]);
+    fireEvent.click(document.getElementById("pbq_start_307")!);
+    const table = screen.getByRole("table", { name: "Piani di recupero misurati" });
+    expect(within(table).getAllByRole("row")).toHaveLength(6);
+    expect(screen.getByRole("region", { name: "Piani di recupero misurati" }).tabIndex).toBe(0);
+    expect(screen.getByRole("link", { name: "SP 800-34 Rev. 1 — Contingency Planning Guide" }).getAttribute("href")).toContain("csrc.nist.gov");
+    for (const p of pbq.prompts) fireEvent.change(screen.getByLabelText(p.text), {
+      target: { value: p.id === "point" ? "frequency" : p.correctOptionId },
+    });
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_match_row_point")!.textContent).toContain("Corretto: 180 minuti");
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("perde 180 minuti");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    for (const p of pbq.prompts) expect((screen.getByLabelText(p.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
+  });
+});

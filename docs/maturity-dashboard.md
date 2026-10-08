@@ -30,7 +30,7 @@ e livello cognitivo in [`docs/coverage-matrix.md`](coverage-matrix.md).
 | Domande per l'obiettivo più scoperto | 15 (1.1: 15, 4.4: 16, 2.3: 17) | ≥ 10 | ✅ raggiunto |
 | Guide di dominio complete | 5 / 5 | 5 / 5 | ✅ raggiunto |
 | Esercizi guidati nelle guide | 46 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
-| Scenari PBQ nel simulatore | 16 | ≥ 1 | ✅ raggiunto |
+| Scenari PBQ nel simulatore | 17 | ≥ 1 | ✅ raggiunto |
 
 ## 2. Freschezza delle revisioni
 

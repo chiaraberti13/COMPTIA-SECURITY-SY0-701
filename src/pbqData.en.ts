@@ -22,6 +22,77 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+307: {
+  "title": "BIA: choose the recovery plan",
+  "scenario": "Kestrelia loses the primary site at 12:00. The BIA defines RTO as the maximum target time until the service is usable again and RPO as the maximum interval of data loss allowed. All times are on the same day. Tests include activation, restoration, dependencies and service verification; stated capacity is sufficient for the assigned service. Choose the plan with the lowest relative cost that meets both limits; costs are fictional units per service. Nominal frequency does not replace the actual recoverable point. Guide D3, objective 3.4; BIA and risk management, objective 5.2.",
+  "prompt": "Match the three services to plans, then interpret limits and evidence. Some options are distractors.",
+  "explanation": "Payments requires RTO 30 minutes and RPO 5 minutes: only A passes, with recovery in 20 minutes and loss of 3 minutes. Orders requires RTO 120 minutes and RPO 30 minutes: A and B pass, but B costs less, with 90 minutes and 15 minutes. Archive requires RTO 480 minutes and RPO 120 minutes: A, B and C pass; C costs less, with 360 minutes and 60 minutes. D loses only 1 minute but takes 600 minutes; E recovers in 10 minutes but loses 180 minutes. RTO concerns service recovery time, RPO the data point. Loss is 12:00 minus the last recoverable point, not the stated frequency. In plan A replication can propagate deletions: isolated versioned copies with retention and restore tests are a separate protection. Hot/warm/cold describe facilities, not guaranteed times: use supplied capacity and measurements, revalidated through periodic tests.",
+  "evidenceTable": {
+    "caption": "Measured recovery plans",
+    "headers": [
+      "Plan / cost",
+      "Site and explicit capacity",
+      "Frequency and last recoverable point",
+      "Measured recovery duration"
+    ],
+    "rows": [
+      [
+        "A / 9",
+        "Hot: application and dependencies active; full capacity",
+        "Replication every minute; 11:57; separate isolated versioned copies",
+        "20 minutes"
+      ],
+      [
+        "B / 5",
+        "Warm: hardware ready; data loading and startup included",
+        "Backup every 15 minutes; 11:45",
+        "90 minutes"
+      ],
+      [
+        "C / 2",
+        "Cold: space and network; hardware installation and recovery included",
+        "Backup every 60 minutes; 11:00",
+        "360 minutes"
+      ],
+      [
+        "D / 1",
+        "Cold: procurement and installation included",
+        "Backup every minute; 11:59",
+        "600 minutes"
+      ],
+      [
+        "E / 3",
+        "Hot: active service; full capacity",
+        "Backup every 15 minutes, latest attempts failed; 09:00",
+        "10 minutes"
+      ]
+    ]
+  },
+  "prompts": {
+    "payments": "Payments: RTO 30 minutes, RPO 5 minutes.",
+    "orders": "Orders: RTO 120 minutes, RPO 30 minutes.",
+    "archive": "Archive: RTO 480 minutes, RPO 120 minutes.",
+    "limits": "Which limit measures time and which measures data loss?",
+    "point": "How many minutes of data does plan E lose?",
+    "copies": "A deletion is propagated by replication A: which separate protection is needed?",
+    "sites": "How should you verify that a site meets requirements?"
+  },
+  "options": {
+    "a": "Plan A",
+    "b": "Plan B",
+    "c": "Plan C",
+    "d": "Plan D",
+    "e": "Plan E",
+    "limits": "RTO: service recovery; RPO: allowed data loss",
+    "loss": "180 minutes from the 09:00 point",
+    "copies": "Isolated versioned copies, retention and restore tests",
+    "capacity": "Measured capacity and duration, compared with RTO and RPO",
+    "swapped": "RTO: data loss; RPO: recovery time",
+    "frequency": "15 minutes because backups are frequent",
+    "replica": "Replication is always an independent backup",
+    "hot": "The hot label guarantees every requirement"
+  }
+},
 503: {
   "title": "NAC posture and remediation access",
   "scenario": "Kestrelia uses a NAC policy inspired by Cisco ISE authorization profiles. User and device identities must be valid and authorized. Approved patches, active disk encryption and active current antimalware are mandatory, verified by a current successful posture report. An installed agent alone does not prove compliance. Policy: invalid identity = block corporate and remediation services; valid identity and all requirements verified = ordinary access only to role services; valid identity with a failed fixable requirement = restricted remediation network; valid identity with an incomplete or unavailable report = restricted provisioning and assessment access, never production. In both restricted networks an ACL permits only corporate DNS and DHCP, the NAC assessment/provisioning service, and corporate update or configuration servers needed for the case; general Internet access, production servers and other endpoints are denied. These exceptions are lab services, not a universal list. After a fix, a successful fresh assessment and a new authorization decision are required. Synthetic data; no known active incident. Guide D4, objectives 4.5 and 4.1; glossary: NAC, Agent, Agentless and Dissolvable Agent (activity 27). A persistent agent remains installed, a dissolvable agent is temporary; agentless describes an approach without a persistent agent, with product-dependent capabilities. Cisco ISE can use temporary scripts even in its method named agentless: the name guarantees neither all checks nor periodic reassessment.",

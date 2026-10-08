@@ -287,13 +287,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 21. RTO, RPO, backup e siti di recupero
 
-- [ ] Aggiungere una PBQ di abbinamento tra requisiti BIA e piani di recupero con tempi e perdita dati dichiarati (obiettivo principale 3.4; collegamento 5.2).
+- [x] Aggiungere una PBQ di abbinamento tra requisiti BIA e piani di recupero con tempi e perdita dati dichiarati (obiettivo principale 3.4; collegamento 5.2).
 
 **Evidenza nel repository:** Esistono domande su RTO/RPO e siti alternativi; manca un esercizio interattivo che valuti insieme tempi di ripristino e intervallo dei dati persi.
 
 **Da realizzare:** associare servizi a piani con frequenza backup/replica, ultimo punto recuperabile e durata misurata del ripristino. Includere siti hot/warm/cold solo con capacità esplicite: il nome del sito, da solo, non dimostra il rispetto del requisito.
 
 **Accettazione:** lo studente distingue limite di perdita dati e tempo obiettivo di recupero; la soluzione è verificabile dai valori forniti, non dall'assunto “replica = backup” o “backup frequente = ripristino rapido”. Fonti: NIST sulla pianificazione di continuità.
+
+**Completato (2026-10-09):** PBQ 307 IT/EN con cinque piani misurati, scelta del costo minimo ammissibile, sette abbinamenti e feedback. Fonte NIST SP 800-34; test indipendenti di calcolo e parità linguistica, verifica componente e controlli automatici. Dettagli in `docs/recovery-pbq.md`. Test Playwright aggiunti; esecuzione browser impedita dal binario Chromium assente.
 
 ### 22. Catena quantitativa AV → EF → SLE → ALE
 

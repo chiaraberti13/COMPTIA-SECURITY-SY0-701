@@ -23,6 +23,155 @@ import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
 {
+  "title": "BIA: scegliere il piano di recupero",
+  "scenario": "Kestrelia perde il sito primario alle 12:00. La BIA definisce RTO come tempo obiettivo massimo fino al servizio nuovamente utilizzabile e RPO come intervallo massimo di dati perdibili. Tutti i tempi sono dello stesso giorno. Le prove includono attivazione, ripristino, dipendenze e verifica del servizio; la capacità indicata è sufficiente per il servizio assegnato. Scegli il piano con il minor costo relativo che soddisfa entrambi i limiti; i costi sono unità fittizie per servizio. La frequenza nominale non sostituisce il punto effettivamente recuperabile. Guida D3, obiettivo 3.4; BIA e gestione del rischio, obiettivo 5.2.",
+  "prompt": "Abbina i tre servizi ai piani, poi interpreta i limiti e le evidenze. Alcune opzioni sono distrattori.",
+  "explanation": "Pagamenti richiede RTO 30 minuti e RPO 5 minuti: solo A passa, con recupero in 20 minuti e perdita di 3 minuti. Ordini richiede RTO 120 minuti e RPO 30 minuti: A e B passano, ma B costa meno, con 90 minuti e 15 minuti. Archivio richiede RTO 480 minuti e RPO 120 minuti: A, B e C passano; C costa meno, con 360 minuti e 60 minuti. D perde solo 1 minuto ma impiega 600 minuti; E recupera in 10 minuti ma perde 180 minuti. RTO riguarda il tempo di recupero del servizio, RPO il punto dei dati. La perdita è 12:00 meno ultimo punto recuperabile, non la frequenza dichiarata. Nel piano A la replica può propagare cancellazioni: le copie versionate isolate con conservazione e prove di ripristino sono una protezione distinta. Hot/warm/cold descrivono dotazioni, non garantiscono tempi: valgono capacità e misure fornite, da rivalidare con prove periodiche.",
+  "evidenceTable": {
+    "caption": "Piani di recupero misurati",
+    "headers": [
+      "Piano / costo",
+      "Sito e capacità esplicite",
+      "Frequenza e ultimo punto recuperabile",
+      "Durata misurata del recupero"
+    ],
+    "rows": [
+      [
+        "A / 9",
+        "Hot: applicazione e dipendenze attive; capacità completa",
+        "Replica ogni minuto; 11:57; copie versionate isolate separate",
+        "20 minuti"
+      ],
+      [
+        "B / 5",
+        "Warm: hardware pronto; caricamento dati e avvio inclusi",
+        "Backup ogni 15 minuti; 11:45",
+        "90 minuti"
+      ],
+      [
+        "C / 2",
+        "Cold: spazio e rete; installazione hardware e recupero inclusi",
+        "Backup ogni 60 minuti; 11:00",
+        "360 minuti"
+      ],
+      [
+        "D / 1",
+        "Cold: approvvigionamento e installazione inclusi",
+        "Backup ogni minuto; 11:59",
+        "600 minuti"
+      ],
+      [
+        "E / 3",
+        "Hot: servizio attivo; capacità completa",
+        "Backup ogni 15 minuti, ultimi tentativi falliti; 09:00",
+        "10 minuti"
+      ]
+    ]
+  },
+  "id": 307,
+  "kind": "matching",
+  "mechanic": "matching",
+  "objective": "3.4",
+  "relatedObjectives": [
+    "5.2"
+  ],
+  "domain": 3,
+  "sources": [
+    "nist80034"
+  ],
+  "prompts": [
+    {
+      "id": "payments",
+      "text": "Pagamenti: RTO 30 minuti, RPO 5 minuti.",
+      "correctOptionId": "a"
+    },
+    {
+      "id": "orders",
+      "text": "Ordini: RTO 120 minuti, RPO 30 minuti.",
+      "correctOptionId": "b"
+    },
+    {
+      "id": "archive",
+      "text": "Archivio: RTO 480 minuti, RPO 120 minuti.",
+      "correctOptionId": "c"
+    },
+    {
+      "id": "limits",
+      "text": "Quale limite misura il tempo e quale la perdita dati?",
+      "correctOptionId": "limits"
+    },
+    {
+      "id": "point",
+      "text": "Quanti minuti di dati perde il piano E?",
+      "correctOptionId": "loss"
+    },
+    {
+      "id": "copies",
+      "text": "Una cancellazione viene propagata dalla replica A: quale protezione distinta serve?",
+      "correctOptionId": "copies"
+    },
+    {
+      "id": "sites",
+      "text": "Come verificare che un sito soddisfi i requisiti?",
+      "correctOptionId": "capacity"
+    }
+  ],
+  "options": [
+    {
+      "id": "a",
+      "text": "Piano A"
+    },
+    {
+      "id": "b",
+      "text": "Piano B"
+    },
+    {
+      "id": "c",
+      "text": "Piano C"
+    },
+    {
+      "id": "d",
+      "text": "Piano D"
+    },
+    {
+      "id": "e",
+      "text": "Piano E"
+    },
+    {
+      "id": "limits",
+      "text": "RTO: recupero del servizio; RPO: perdita dati ammessa"
+    },
+    {
+      "id": "loss",
+      "text": "180 minuti dal punto 09:00"
+    },
+    {
+      "id": "copies",
+      "text": "Copie versionate isolate, conservazione e prove di ripristino"
+    },
+    {
+      "id": "capacity",
+      "text": "Capacità e durata misurate, confrontate con RTO e RPO"
+    },
+    {
+      "id": "swapped",
+      "text": "RTO: perdita dati; RPO: tempo di recupero"
+    },
+    {
+      "id": "frequency",
+      "text": "15 minuti perché il backup è frequente"
+    },
+    {
+      "id": "replica",
+      "text": "La replica è sempre un backup indipendente"
+    },
+    {
+      "id": "hot",
+      "text": "Il nome hot garantisce ogni requisito"
+    }
+  ]
+},
+{
   "id": 503,
   "kind": "control",
   "mechanic": "matching",
