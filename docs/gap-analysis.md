@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 593 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 594 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -22,7 +22,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 |---|---|---|
 | 1 | 105 | 0 |
 | 2 | 83 | 0 |
-| 3 | 176 | 0 |
+| 3 | 177 | 0 |
 | 4 | 135 | 0 |
 | 5 | 94 | 0 |
 
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-72 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+73 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -79,6 +79,7 @@ indirizzi qui sotto.
 - `3:PaaSCloud`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `3:ProtectedManagementFrames`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `3:SaaSCloud`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `3:TLSTerminationOffload`: [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
 - `3:WAFFire`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `4:CISBenchmarkRes`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)

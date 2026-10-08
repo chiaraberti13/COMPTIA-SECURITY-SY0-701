@@ -111,13 +111,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 8. Terminazione TLS nei bilanciatori e confini di fiducia
 
-- [ ] Integrare TLS termination/offload nella guida del Dominio 3 e nel glossario (obiettivo 3.2).
+- [x] Integrare TLS termination/offload nella guida del Dominio 3 e nel glossario (obiettivo 3.2).
 
 **Evidenza nel repository:** `LoadBalancingRes` e `ActiveActivePassiveRes` coprono distribuzione e disponibilità; manca l'approfondimento sulla terminazione TLS/SSL offload e sul percorso verso il backend.
 
 **Da realizzare:** confrontare TLS pass-through, terminazione al bilanciatore e nuova connessione TLS al backend. Spiegare dove sono disponibili i dati in chiaro, custodia delle chiavi e verifica del certificato backend; separare distribuzione del traffico e protezione crittografica. Mantenere SSL offload come alias storico, usando TLS nel testo operativo.
 
 **Accettazione:** due flussi originali mostrano distintamente tratto client–bilanciatore e bilanciatore–backend; HTTPS sul primo tratto non è descritto come garanzia automatica sull'intero percorso. Fonti: documentazione ufficiale di un reverse proxy/bilanciatore e RFC TLS.
+
+**Completato l'8 ottobre 2026:** voce canonica `TLSTerminationOffload` IT/EN nel gruppo «2. Network Security (Obj 3.2)», con tabella comparativa delle tre modalità (pass-through, terminazione con backend in chiaro, terminazione con ri-cifratura) per dove sta il testo in chiaro, la chiave privata e il routing L7/WAF. Due flussi originali distinguono i tratti client–bilanciatore e bilanciatore–backend; precisati custodia della chiave (sul bilanciatore o suo HSM), verifica del certificato del backend nella ri-cifratura e la separazione fra distribuzione del traffico e protezione crittografica. `SSL offload` mantenuto come alias storico, `TLS` nel testo operativo. Aggiunta una trappola sul confine di fiducia nella guida del Dominio 3 (IT/EN) e la citazione RFC 8446. Collegamenti a reverse proxy e tipi di proxy avanzati. Test dedicato `tests/tlsTerminationContent.test.ts`; `npm run check` verde (typecheck, lint, lint:md, spellcheck, 784 test) e artefatti di copertura rigenerati.
 
 ## P2 — reperibilità e approfondimenti mirati
 

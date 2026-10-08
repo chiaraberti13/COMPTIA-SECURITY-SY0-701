@@ -280,6 +280,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "IEEE8021XAuthConcept": "Autenticazione di Rete Centralizzata (AAA)",
   "TrafficCaptureTAPConcept": "Sicurezza & Monitoraggio degli Accessi di Rete",
   "ProxyTypesAdvancedConcept": "Dispositivi di Connettività e Relay",
+  "TLSTerminationOffload": "Dispositivi di Connettività e Relay",
   "ModernCloudNetArchitectures": "Segmentazione e Isolamento di Rete",
   "SDNConcept": "Software-Defined Networking (SDN)",
   "DataPlaneConcept": "Software-Defined Networking (SDN)",

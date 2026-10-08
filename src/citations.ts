@@ -88,6 +88,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "1:MFAImplementationsTokens": [{ source: "nist80063b" }],
   "2:CVSSVuln": [{ source: "firstCvss" }],
   "3:PaaSCloud": [{ source: "owaspTop10" }],
+  "3:TLSTerminationOffload": [{ source: "rfc8446" }],
   "3:SaaSCloud": [{ source: "iso27001" }, { source: "soc2" }],
   "3:APIArchitecture": [{ source: "owaspTop10" }],
   "3:WAFFire": [{ source: "owaspTop10" }],
