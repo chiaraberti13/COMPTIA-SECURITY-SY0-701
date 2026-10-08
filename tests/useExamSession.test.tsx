@@ -185,3 +185,26 @@ describe("wifi PBQ persisted result", () => {
     expect(restored.result.current.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
   });
 });
+
+describe("dmarc PBQ persisted result", () => {
+  it("records the fully correct task once and restores its history after remount", () => {
+    const dmarc = getPbqScenarios("it").find(p => p.id === 403)!;
+    if (dmarc.mechanic !== "matching") throw new Error("dmarc fixture");
+    const item: ExamItem = { kind: "pbq", key: "pbq:403", domain: 4, objectives: ["4.5"], pbq: dmarc };
+    const hook = renderHook(() => {
+      const quiz = useQuizSession({ paused: false });
+      return { exam: useExamSession(quiz.recordExam), quiz };
+    }, { wrapper });
+    act(() => hook.result.current.exam.begin([item], false));
+    for (const p of dmarc.prompts) act(() => hook.result.current.exam.setMatch(p.id, p.correctOptionId));
+    act(() => hook.result.current.exam.finish());
+    act(() => hook.result.current.exam.finish());
+    expect(hook.result.current.quiz.quizHistory).toHaveLength(1);
+    expect(hook.result.current.quiz.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+    expect(hook.result.current.quiz.questionProgress).toEqual({});
+    hook.unmount();
+    const restored = renderHook(() => useQuizSession({ paused: false }), { wrapper });
+    expect(restored.result.current.quizHistory).toHaveLength(1);
+    expect(restored.result.current.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+  });
+});

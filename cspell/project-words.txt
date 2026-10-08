@@ -419,3 +419,8 @@ EAPOL
 didattici
 graduatoria
 interattiva
+
+# DMARC header PBQ
+inferire
+aspf
+adkim

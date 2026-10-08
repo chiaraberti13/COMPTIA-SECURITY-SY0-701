@@ -21,6 +21,37 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+403: {
+  "title": "Email headers and DMARC alignment",
+  "scenario": "Kestrelia’s email gateway analyzes six synthetic messages. From and DKIM header excerpts and the SMTP session MAIL FROM appear in each row; MAIL FROM is the envelope sender, not the display name or another From header. MAIL FROM is nonempty and each message has one From domain and one DKIM signature. SPF and DKIM have already been checked by the trusted gateway: use the stated results, not an Authentication-Results header supplied by the sender. There are no DNS or syntax errors, other signatures or local exceptions to infer. The policy shown in each row is the effective policy for the From domain. For relaxed cases, the already determined Organizational Domains are example.com and example.net: no DNS lookup is required. aspf=s/adkim=s require exact domain equality; r means relaxed alignment within the same Organizational Domain. DMARC passes if at least one of valid aligned SPF or valid aligned DKIM satisfies the requirement. Evaluate pass/fail first; consider the disposition requested by p and the receiver’s decision separately. example.com and example.net are documentation domains. Primary objective 4.5; related objective 2.2.",
+  "prompt": "Match each A–F excerpt to its DMARC result and reason, then assess disposition and the limits of a pass. Some options are distractors.",
+  "prompts": {
+    "p_message_a": "A | From: alerts@example.com | MAIL FROM: bounce@mailer.example.net | SPF=pass | DKIM d=example.com, result=fail | p=reject; aspf=s; adkim=s",
+    "p_message_b": "B | From: alerts@example.com | MAIL FROM: bounce@mailer.example.net | SPF=pass | DKIM d=example.com, result=pass | p=reject; aspf=s; adkim=s",
+    "p_message_c": "C | From: alerts@example.com | MAIL FROM: bounce@example.com | SPF=fail | DKIM d=example.net, result=pass | p=reject; aspf=s; adkim=s",
+    "p_message_d": "D | From: notice@news.example.com | MAIL FROM: bounce@mailer.example.com | SPF=pass | DKIM d=example.net, result=fail | p=quarantine; aspf=r; adkim=r",
+    "p_message_e": "E | From: notice@news.example.com | MAIL FROM: bounce@mailer.example.com | SPF=pass | DKIM d=sign.example.com, result=pass | p=reject; aspf=s; adkim=s",
+    "p_message_f": "F | From: notice@news.example.com | MAIL FROM: bounce@news.example.com | SPF=pass | DKIM d=example.net, result=fail | p=reject; aspf=s; adkim=s",
+    "p_disposition": "For A, distinguish the DMARC result from the disposition requested by p=reject.",
+    "p_limits": "For B, determine what DMARC=pass proves and what it does not guarantee about content and delivery."
+  },
+  "options": {
+    "fail_spf_unaligned": "DMARC=fail: SPF is valid but unaligned; the aligned DKIM signature is not valid.",
+    "pass_dkim": "DMARC=pass through valid DKIM exactly aligned with the From domain; SPF is unaligned.",
+    "fail_dkim_unaligned": "DMARC=fail: DKIM is valid but unaligned; the MAIL FROM domain matches, but SPF fails.",
+    "pass_relaxed_spf": "DMARC=pass through valid SPF and relaxed alignment: the domains share example.com as their Organizational Domain.",
+    "fail_strict": "DMARC=fail: both checks are valid, but neither domain exactly matches news.example.com as required by strict alignment.",
+    "pass_strict_spf": "DMARC=pass through valid SPF with the MAIL FROM domain identical to the From domain; DKIM fails.",
+    "reject_request": "A remains DMARC=fail; p=reject requests rejection, but the final decision depends on the receiver’s local policy.",
+    "pass_not_safety": "B validates authorized use of the From domain; it does not certify harmless content or guarantee delivery or exemption from spam filtering.",
+    "spf_always_pass": "DMARC=pass whenever SPF=pass, regardless of the From domain.",
+    "both_required": "DMARC=fail if either SPF or DKIM fails: both must be valid and aligned.",
+    "related_is_strict": "Strict alignment accepts any subdomain sharing the same Organizational Domain.",
+    "guaranteed_reject": "DMARC=fail with p=reject guarantees that every receiver rejects the message.",
+    "guaranteed_safe": "DMARC=pass guarantees that the message is harmless and delivered."
+  },
+  "explanation": "A. SPF=pass authenticates mailer.example.net, unaligned with example.com; DKIM d=example.com matches but result=fail does not authenticate that identifier. Therefore DMARC=fail. B. DKIM d=example.com is valid and strictly aligned: that alone gives DMARC=pass even with valid but unaligned SPF. C. DKIM d=example.net is valid but unaligned; SPF=fail does not become valid because MAIL FROM matches From. Therefore DMARC=fail. D. news.example.com and mailer.example.com share the stated Organizational Domain example.com: SPF=pass meets relaxed alignment and DMARC=pass even with DKIM=fail. E. mailer.example.com and sign.example.com do not equal news.example.com: strict alignment fails for both even though both checks pass. Therefore DMARC=fail. F. MAIL FROM and From share the domain news.example.com and SPF=pass: DMARC=pass even with DKIM=fail. Disposition: p=reject for A requests rejection on DMARC failures; p=quarantine requests suspicious treatment and p=none requests no DMARC disposition. These preferences do not change pass/fail or guarantee every receiver’s action: local policy may accept a fail or filter a pass. Limits: B’s pass validates use of the From domain, not the sender’s personal identity or absence of malware. Distractors ignore alignment, incorrectly require both mechanisms, confuse relaxed and strict or guarantee rejection/delivery. SPF concerns the envelope sender domain in these cases; DKIM concerns the signature d= domain, not merely the visible name. Sources: RFC 9989 (DMARC, replaces RFC 7489), RFC 7208 (SPF) and RFC 6376 (DKIM), verified on 2026-10-08. Each match earns one diagnostic point; the study PBQ requires all 8 correct, without reproducing proprietary CompTIA scoring."
+},
 305: {
   "title": "Enterprise Wi-Fi and 802.1X roles",
   "scenario": "Kestrelia uses enterprise Wi-Fi with 802.1X. Text topology: laptop software (supplicant) ↔ pass-through access point (authenticator), using EAPOL; access point ↔ RADIUS/EAP backend 10.30.0.10 (authentication server), using RADIUS. The backend terminates the EAP methods; the access point is not the EAP server in this case. Expected server identity: radius.kestrelia.test; the expected CA and name are provisioned in the managed profile. All data is synthetic. Profile A: client and server support EAP-TLS 1.3, individual certificates and protected private keys; mutual certificate authentication without an inner password is required. Profile B: client and backend allow only PEAP with inner EAP-MSCHAPv2, a user password and no client certificate or token. Profile C: backend supports non-EAP PAP inside the tunnel and clients support only EAP-TTLS for that profile; no client certificate. Profiles B/C are instructional interoperability cases, not a security ranking or advice to use legacy methods. Inner credentials are sent only after server validation. The server certificate is not a user factor. Primary objective 4.1; related objective 3.2.",

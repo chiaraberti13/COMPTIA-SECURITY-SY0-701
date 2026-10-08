@@ -30,7 +30,7 @@ e livello cognitivo in [`docs/coverage-matrix.md`](coverage-matrix.md).
 | Domande per l'obiettivo più scoperto | 15 (1.1: 15, 4.4: 16, 2.3: 17) | ≥ 10 | ✅ raggiunto |
 | Guide di dominio complete | 5 / 5 | 5 / 5 | ✅ raggiunto |
 | Esercizi guidati nelle guide | 46 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
-| Scenari PBQ nel simulatore | 13 | ≥ 1 | ✅ raggiunto |
+| Scenari PBQ nel simulatore | 14 | ≥ 1 | ✅ raggiunto |
 
 ## 2. Freschezza delle revisioni
 
@@ -112,6 +112,6 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 
 ## Riepilogo
 
-- Fonti citate: 41 primarie e 24 secondarie (mappate il 2026-10-08).
+- Fonti citate: 44 primarie e 24 secondarie (mappate il 2026-10-08).
 - I controlli marcati ✅ obbligatorio bloccano le pull request tramite branch protection.
 - Le voci 🟡 sono verificate altrove (CI, scheda Security, issue di manutenzione) o soggette a una scadenza sorvegliata.

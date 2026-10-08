@@ -10,6 +10,9 @@ export interface Source {
 }
 
 export const SOURCES = {
+  rfc9989: { title: "RFC 9989 — DMARC", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc9989", kind: "standard" },
+  rfc7208: { title: "RFC 7208 — SPF", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc7208", kind: "standard" },
+  rfc6376: { title: "RFC 6376 — DKIM", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc6376", kind: "standard" },
   ciscoWpa3Modes: { title: "Wi-Fi 6E WLAN Layer 2 Security", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/wireless/catalyst-9800-series-wireless-controllers/220712-configure-and-verify-wi-fi-6e-wlan-layer.html", kind: "reference" },
   ieee8021x: { title: "IEEE 802.1X — Port-Based Network Access Control", publisher: "IEEE", url: "https://1.ieee802.org/security/802-1x/", kind: "standard" },
   rfc3748: { title: "RFC 3748 — EAP", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc3748", kind: "standard" },
@@ -112,7 +115,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
   "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
   "4.4": mapped("nist80092", "mitreAttack"),
-  "4.5": mapped("netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
+  "4.5": mapped("rfc9989", "rfc7208", "rfc6376", "netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
   "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),
   "4.7": mapped("nist80053", "cisControls"),
   "4.8": mapped("nist80061"),

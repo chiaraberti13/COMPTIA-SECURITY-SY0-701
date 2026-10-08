@@ -1,5 +1,8 @@
+import { PBQ_SCENARIOS } from "../src/pbqData";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+
+const domainPbqCount = PBQ_SCENARIOS.filter(p => p.domain === 4).length;
 
 const solution = [
   ["p_supplicant", "client"],
@@ -60,11 +63,11 @@ test("Wi-Fi answer survives exam navigation and language changes; result persist
   for (let d = 1; d <= 5; d++) {
     const slider = page.locator('input[type="range"]').nth(d - 1);
     await slider.focus(); await slider.press("Home");
-    if (d === 4) for (let n = 0; n < 5; n++) await slider.press("ArrowRight");
+    if (d === 4) for (let n = 0; n < domainPbqCount; n++) await slider.press("ArrowRight");
   }
-  await page.locator("#exam_pbq_count").selectOption("5");
+  await page.locator("#exam_pbq_count").selectOption(String(domainPbqCount));
   await page.locator("#start_exam_btn").click();
-  for (let n = 0; n < 5; n++) {
+  for (let n = 0; n < domainPbqCount; n++) {
     if (await page.locator("#pbq_match_p_supplicant").count()) break;
     await page.locator("#exam_next").click();
   }
@@ -79,11 +82,11 @@ test("Wi-Fi answer survives exam navigation and language changes; result persist
   }
   await expect(page.locator("#pbq_match_p_supplicant")).toHaveValue("client");
   await page.locator("#exam_finish").click();
-  await expect(page.locator("#exam_score")).toContainText("1 / 5");
+  await expect(page.locator("#exam_score")).toContainText(`1 / ${domainPbqCount}`);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));
   expect(saved).toHaveLength(1);
-  expect(saved[0]).toMatchObject({ score: 1, total: 5, domains: [4] });
+  expect(saved[0]).toMatchObject({ score: 1, total: domainPbqCount, domains: [4] });
   await page.reload();
   await page.locator("#tab_btn_quiz").click();
-  await expect(page.locator("#quiz_history_box")).toContainText("/5");
+  await expect(page.locator("#quiz_history_box")).toContainText(`/${domainPbqCount}`);
 });

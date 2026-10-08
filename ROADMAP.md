@@ -251,13 +251,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 18. SPF, DKIM e risultato DMARC
 
-- [ ] Aggiungere una PBQ di interpretazione di intestazioni email sintetiche con abbinamento a esito e motivazione DMARC (obiettivo 4.5).
+- [x] Aggiungere una PBQ di interpretazione di intestazioni email sintetiche con abbinamento a esito e motivazione DMARC (obiettivo 4.5).
 
 **Evidenza nel repository:** Le voci SPF/DKIM/DMARC e i quesiti 40190, 40406 e 40200 trattano già i meccanismi; non esiste una PBQ con evidenze di autenticazione e allineamento da applicare.
 
 **Da realizzare:** fornire dominio From, envelope sender, dominio della firma DKIM e risultati dei controlli, con policy DMARC e modalità di allineamento esplicite. Includere SPF valido ma non allineato, DKIM valido e allineato, e nessun meccanismo allineato.
 
 **Accettazione:** pass/fail dipende dall'allineamento richiesto e dal risultato di almeno un meccanismo; separare valutazione DMARC e disposizione del messaggio secondo policy, senza garantire che ogni destinatario applichi la stessa azione. Fonte: specifiche IETF applicabili a SPF/DKIM/DMARC.
+
+**Completato il 2026-10-08:** aggiunta la PBQ originale 403 IT/EN con sei messaggi sintetici, otto abbinamenti e cinque distrattori: SPF/DKIM validi o non validi, allineamento strict/relaxed, risultato DMARC, disposizione richiesta e limiti di sicurezza. Premesse esplicite e domini riservati rendono determinate le risposte; la policy del dominio non garantisce il comportamento del destinatario. Collegate RFC 9989, 7208 e 6376 e gli obiettivi 4.5/2.2; soluzione e limiti in `docs/dmarc-pbq.md`. Aggiornate le spiegazioni dei quesiti 40190, 40406 e 40200 in entrambe le lingue, il registro traduzioni e i report di copertura. Superati 913 test Vitest e 28 test Playwright desktop/mobile (tastiera, IT/EN, feedback, reset, navigazione, storico, axe e overflow), typecheck, lint, Markdown, ortografia IT/EN, build e nove smoke test di produzione.
 
 ### 19. Priorità delle vulnerabilità e verifica della remediation
 

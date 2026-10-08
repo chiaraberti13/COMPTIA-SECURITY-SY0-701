@@ -5,9 +5,14 @@ import { expect, test, type Page } from "@playwright/test";
 const domainPbqCount = PBQ_SCENARIOS.filter(p => p.domain === 4).length;
 
 const solution = [
-  ["p_public_https", "wan_https"], ["p_proxy_api", "dmz_api"],
-  ["p_admin_ssh", "mgmt_ssh"], ["p_firewall_gui", "mgmt_gui"],
-  ["p_shadowed", "remove_broad"], ["p_reply", "state_reply"], ["p_unmatched", "implicit_deny"],
+  ["p_message_a", "fail_spf_unaligned"],
+  ["p_message_b", "pass_dkim"],
+  ["p_message_c", "fail_dkim_unaligned"],
+  ["p_message_d", "pass_relaxed_spf"],
+  ["p_message_e", "fail_strict"],
+  ["p_message_f", "pass_strict_spf"],
+  ["p_disposition", "reject_request"],
+  ["p_limits", "pass_not_safety"]
 ];
 async function open(page: Page) {
   await page.goto("/");
@@ -29,12 +34,12 @@ async function accessible(page: Page) {
   expect(violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => v.id)).toEqual([]);
 }
 for (const lang of ["it", "en"] as const) {
-  test(`${lang}: firewall task can be answered and reset using the keyboard`, async ({ page }) => {
+  test(`${lang}: DMARC task can be answered and reset using the keyboard`, async ({ page }) => {
     await open(page);
     await page.locator(`#lang_btn_${lang}`).click();
     await page.locator("#tab_btn_pbq").click();
-    await page.locator("#pbq_start_303").focus();
-    await page.locator("#pbq_start_303").press("Enter");
+    await page.locator("#pbq_start_403").focus();
+    await page.locator("#pbq_start_403").press("Enter");
     await accessible(page);
     for (const [id, value] of solution) await keyboardMatch(page, id, value);
     await page.locator("#pbq_submit").focus();
@@ -45,13 +50,13 @@ for (const lang of ["it", "en"] as const) {
     await page.locator("#pbq_restart").click();
     for (const [id] of solution) await expect(page.locator(`#pbq_match_${id}`)).toHaveValue("");
     await expect(page.locator("#pbq_submit")).toBeDisabled();
-    for (const [id, value] of solution) await keyboardMatch(page, id, id === "p_shadowed" ? "late_block" : value);
+    for (const [id, value] of solution) await keyboardMatch(page, id, id === "p_message_a" ? "spf_always_pass" : value);
     await page.locator("#pbq_submit").click();
-    await expect(page.locator("#pbq_match_row_p_shadowed")).toContainText(lang === "it" ? "Corretto: Rimuovere R0" : "Correct: Remove overly broad R0");
+    await expect(page.locator("#pbq_match_row_p_message_a")).toContainText(lang === "it" ? "Corretto: DMARC=fail" : "Correct: DMARC=fail");
   });
 }
 
-test("firewall answer survives exam navigation and language changes; result persists after reload", async ({ page }) => {
+test("DMARC answer survives exam navigation and language changes; result persists after reload", async ({ page }) => {
   await open(page);
   await page.locator("#tab_btn_quiz").click();
   for (let d = 1; d <= 5; d++) {
@@ -62,19 +67,19 @@ test("firewall answer survives exam navigation and language changes; result pers
   await page.locator("#exam_pbq_count").selectOption(String(domainPbqCount));
   await page.locator("#start_exam_btn").click();
   for (let n = 0; n < domainPbqCount; n++) {
-    if (await page.locator("#pbq_match_p_public_https").count()) break;
+    if (await page.locator("#pbq_match_p_message_b").count()) break;
     await page.locator("#exam_next").click();
   }
   for (const [id, value] of solution) await keyboardMatch(page, id, value);
   await page.locator("#lang_btn_en").click();
-  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  await expect(page.locator("#pbq_match_p_message_b")).toHaveValue("pass_dkim");
   const next = page.locator("#exam_next");
   if (await next.isEnabled()) {
     await next.click(); await page.locator("#exam_previous").click();
   } else {
     await page.locator("#exam_previous").click(); await next.click();
   }
-  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  await expect(page.locator("#pbq_match_p_message_b")).toHaveValue("pass_dkim");
   await page.locator("#exam_finish").click();
   await expect(page.locator("#exam_score")).toContainText(`1 / ${domainPbqCount}`);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));

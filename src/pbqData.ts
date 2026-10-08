@@ -3,8 +3,8 @@
  *
  * Two scenarios for each of the five roadmap themes (ordering, matching, log
  * interpretation, incident response, control selection), plus firewall
- * segmentation, VPN paths and enterprise Wi-Fi, spread across the five exam
- * domains and tied to official SY0-701 objectives.
+ * segmentation, VPN paths, enterprise Wi-Fi and DMARC analysis, spread across
+ * the five exam domains and tied to official SY0-701 objectives.
  *
  * Content rules (same as the rest of the study content, enforced by
  * tests/contentSafety.test.ts and tests/pbqData.test.ts):
@@ -22,6 +22,121 @@
 import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
+{
+  "id": 403,
+  "kind": "log",
+  "mechanic": "matching",
+  "objective": "4.5",
+  "relatedObjectives": [
+    "2.2"
+  ],
+  "sources": [
+    "rfc9989",
+    "rfc7208",
+    "rfc6376"
+  ],
+  "domain": 4,
+  "title": "Intestazioni email e allineamento DMARC",
+  "scenario": "Il gateway email di Kestrelia analizza sei messaggi sintetici. Gli estratti delle intestazioni From e DKIM e il MAIL FROM della sessione SMTP sono riportati in ogni riga; MAIL FROM è l’envelope sender, non il display name o un header From aggiuntivo. Il MAIL FROM non è vuoto e ogni messaggio ha un solo dominio From e una sola firma DKIM. SPF e DKIM sono già stati verificati dal gateway fidato: usa i risultati dichiarati, non un Authentication-Results inserito dal mittente. Non ci sono errori DNS o di sintassi, né altre firme o eccezioni locali da inferire. La policy indicata in ogni riga è quella effettiva per il dominio From. Per i casi relaxed, gli Organizational Domain già determinati sono example.com ed example.net: non occorre eseguire una ricerca DNS. aspf=s/adkim=s richiedono uguaglianza esatta dei domini; r indica relaxed alignment sullo stesso Organizational Domain. DMARC passa se almeno uno fra SPF valido e allineato oppure DKIM valido e allineato soddisfa il requisito. Valuta prima pass/fail; considera separatamente la disposizione richiesta da p e la scelta del destinatario. example.com ed example.net sono domini documentali. Obiettivo principale 4.5; collegamento 2.2.",
+  "prompt": "Abbina ciascun estratto A–F al risultato DMARC con motivazione, poi valuta disposizione e limiti del pass. Alcune opzioni sono distrattori.",
+  "prompts": [
+    {
+      "id": "p_message_a",
+      "text": "A | From: alerts@example.com | MAIL FROM: bounce@mailer.example.net | SPF=pass | DKIM d=example.com, result=fail | p=reject; aspf=s; adkim=s",
+      "correctOptionId": "fail_spf_unaligned"
+    },
+    {
+      "id": "p_message_b",
+      "text": "B | From: alerts@example.com | MAIL FROM: bounce@mailer.example.net | SPF=pass | DKIM d=example.com, result=pass | p=reject; aspf=s; adkim=s",
+      "correctOptionId": "pass_dkim"
+    },
+    {
+      "id": "p_message_c",
+      "text": "C | From: alerts@example.com | MAIL FROM: bounce@example.com | SPF=fail | DKIM d=example.net, result=pass | p=reject; aspf=s; adkim=s",
+      "correctOptionId": "fail_dkim_unaligned"
+    },
+    {
+      "id": "p_message_d",
+      "text": "D | From: notice@news.example.com | MAIL FROM: bounce@mailer.example.com | SPF=pass | DKIM d=example.net, result=fail | p=quarantine; aspf=r; adkim=r",
+      "correctOptionId": "pass_relaxed_spf"
+    },
+    {
+      "id": "p_message_e",
+      "text": "E | From: notice@news.example.com | MAIL FROM: bounce@mailer.example.com | SPF=pass | DKIM d=sign.example.com, result=pass | p=reject; aspf=s; adkim=s",
+      "correctOptionId": "fail_strict"
+    },
+    {
+      "id": "p_message_f",
+      "text": "F | From: notice@news.example.com | MAIL FROM: bounce@news.example.com | SPF=pass | DKIM d=example.net, result=fail | p=reject; aspf=s; adkim=s",
+      "correctOptionId": "pass_strict_spf"
+    },
+    {
+      "id": "p_disposition",
+      "text": "Per A, distinguere il risultato DMARC dalla disposizione richiesta dalla policy p=reject.",
+      "correctOptionId": "reject_request"
+    },
+    {
+      "id": "p_limits",
+      "text": "Per B, stabilire cosa prova DMARC=pass e cosa non garantisce sul contenuto e sulla consegna.",
+      "correctOptionId": "pass_not_safety"
+    }
+  ],
+  "options": [
+    {
+      "id": "fail_spf_unaligned",
+      "text": "DMARC=fail: SPF è valido ma non allineato; la firma DKIM allineata non è valida."
+    },
+    {
+      "id": "pass_dkim",
+      "text": "DMARC=pass tramite DKIM valido e allineato esattamente al dominio From; SPF non è allineato."
+    },
+    {
+      "id": "fail_dkim_unaligned",
+      "text": "DMARC=fail: DKIM è valido ma non allineato; il dominio MAIL FROM coincide, ma SPF fallisce."
+    },
+    {
+      "id": "pass_relaxed_spf",
+      "text": "DMARC=pass tramite SPF valido e relaxed alignment: i domini condividono example.com come Organizational Domain."
+    },
+    {
+      "id": "fail_strict",
+      "text": "DMARC=fail: entrambi i controlli sono validi, ma nessun dominio coincide esattamente con news.example.com come richiesto da strict alignment."
+    },
+    {
+      "id": "pass_strict_spf",
+      "text": "DMARC=pass tramite SPF valido con dominio MAIL FROM identico al dominio From; DKIM fallisce."
+    },
+    {
+      "id": "reject_request",
+      "text": "A resta DMARC=fail; p=reject richiede il rifiuto, ma la decisione finale dipende dalla policy locale del destinatario."
+    },
+    {
+      "id": "pass_not_safety",
+      "text": "B valida l’uso autorizzato del dominio From; non certifica contenuti innocui né garantisce consegna o esclusione dei filtri antispam."
+    },
+    {
+      "id": "spf_always_pass",
+      "text": "DMARC=pass ogni volta che SPF=pass, indipendentemente dal dominio From."
+    },
+    {
+      "id": "both_required",
+      "text": "DMARC=fail se uno tra SPF e DKIM fallisce: entrambi devono essere validi e allineati."
+    },
+    {
+      "id": "related_is_strict",
+      "text": "Strict alignment accetta qualsiasi sottodominio con lo stesso Organizational Domain."
+    },
+    {
+      "id": "guaranteed_reject",
+      "text": "DMARC=fail con p=reject garantisce che ogni destinatario rifiuti il messaggio."
+    },
+    {
+      "id": "guaranteed_safe",
+      "text": "DMARC=pass garantisce che il messaggio sia innocuo e venga consegnato."
+    }
+  ],
+  "explanation": "A. SPF=pass autentica mailer.example.net, non allineato a example.com; DKIM d=example.com coincide ma result=fail non autentica quell’identificatore. Quindi DMARC=fail. B. DKIM d=example.com è valido e allineato strict: basta questo per DMARC=pass, anche con SPF valido ma non allineato. C. DKIM d=example.net è valido ma non allineato; SPF=fail non diventa valido perché MAIL FROM coincide con From. Quindi DMARC=fail. D. news.example.com e mailer.example.com condividono l’Organizational Domain dichiarato example.com: SPF=pass soddisfa relaxed alignment e DMARC=pass, anche con DKIM=fail. E. mailer.example.com e sign.example.com non sono uguali a news.example.com: strict alignment fallisce per entrambi, anche se i due controlli sono pass. Quindi DMARC=fail. F. MAIL FROM e From hanno lo stesso dominio news.example.com e SPF=pass: DMARC=pass anche con DKIM=fail. Disposizione: p=reject per A richiede rifiuto sui fallimenti DMARC; p=quarantine richiede trattamento sospetto e p=none non richiede una disposizione DMARC. Queste preferenze non cambiano pass/fail e non garantiscono l’azione di ogni destinatario: la policy locale può accettare un fail o filtrare un pass. Limiti: il pass di B valida l’uso del dominio From, non l’identità personale del mittente o l’assenza di malware. I distrattori ignorano l’allineamento, impongono erroneamente entrambi i meccanismi, scambiano relaxed e strict o garantiscono rifiuto/consegna. SPF riguarda il dominio dell’envelope sender in questi casi; DKIM riguarda il dominio d= della firma, non il solo nome visibile. Fonti: RFC 9989 (DMARC, sostituisce RFC 7489), RFC 7208 (SPF) e RFC 6376 (DKIM), verificate il 2026-10-08. Ogni abbinamento vale un punto diagnostico; la PBQ di studio richiede tutti e 8 corretti, senza riprodurre lo scoring proprietario CompTIA."
+},
 {
   "id": 305,
   "kind": "matching",
