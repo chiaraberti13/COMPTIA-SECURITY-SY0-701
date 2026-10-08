@@ -1695,6 +1695,41 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Leggi, regolamenti e standard (5.1/5.4)",
+        "headers": [
+          "Quadro",
+          "Natura e ambito",
+          "Finalità e responsabilità"
+        ],
+        "rows": [
+          [
+            "SOX",
+            "Legge degli Stati Uniti; emittenti nel perimetro SEC",
+            "Reporting finanziario e controlli interni; management responsabile"
+          ],
+          [
+            "GLBA",
+            "Legge degli Stati Uniti; istituzioni finanziarie soggette",
+            "Informazioni finanziarie non pubbliche; regole del regolatore competente"
+          ],
+          [
+            "HIPAA",
+            "Legge/regole degli Stati Uniti; covered entities e business associates",
+            "PHI; Security Rule per ePHI; non ogni dato sanitario ovunque"
+          ],
+          [
+            "GDPR",
+            "Regolamento UE; ambito dell’articolo 3",
+            "Trattamento nel contesto di uno stabilimento UE, o offerta/monitoraggio nei casi previsti fuori UE"
+          ],
+          [
+            "PCI DSS",
+            "Standard di settore globale; programmi e contratti di pagamento",
+            "Dati delle carte/ambiente di pagamento; non è di per sé una legge"
+          ]
+        ]
+      },
+      {
         title: "Documenti di governance",
         headers: ["Documento", "Carattere", "Esempio"],
         rows: [
@@ -1805,6 +1840,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Quale accordo firmare",
         prompt: "Un'azienda sceglie un fornitore per l'hosting del sito. Vuole una disponibilità garantita del 99,9% con penali, un contratto quadro per futuri progetti e, per il primo progetto, una descrizione precisa delle attività e delle scadenze. Quali accordi servono?",
         reasoning: "Un MSA per le condizioni generali della relazione, uno SLA per la disponibilità del 99,9% e le penali, e un SOW per il primo progetto con attività, consegne e tempi. Prima della firma servono due diligence sul fornitore, la verifica di conflitti di interesse e una clausola right-to-audit; se si condividono informazioni riservate durante la trattativa, anche un NDA.",
+      },
+      {
+        "objective": "5.4",
+        "title": "Obblighi diversi nello stesso gruppo",
+        "prompt": "Kestrelia ha un negozio italiano che accetta carte, un emittente soggetto agli obblighi SEC, una società finanziaria nel perimetro FTC e una covered entity sanitaria negli Stati Uniti. Si può applicare la stessa etichetta di compliance a tutto il gruppo?",
+        "reasoning": "No. Verifica attività, giurisdizione, dati e contratti per ogni entità: PCI DSS per l’ambiente di pagamento secondo i programmi e gli accordi pertinenti; SOX per il reporting finanziario dell’emittente; GLBA e FTC Safeguards Rule per la società finanziaria soggetta; HIPAA per covered entity e business associates. Il GDPR si valuta con il suo ambito territoriale, non con la sola cittadinanza. Il management assegna responsabili; il team conserva evidenze, lacune e remediation per compliance reporting interno/esterno. Vedi Compliance, Reporting e le cinque voci nel glossario. Una certificazione o un contratto non sostituisce l’analisi dell’applicabilità. Fonti SEC, FTC, HHS, PCI SSC e EUR-Lex verificate il 2026-10-08."
       },
       {
         objective: "5.4",
@@ -3375,6 +3416,41 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Laws, regulations and standards (5.1/5.4)",
+        "headers": [
+          "Framework",
+          "Nature and scope",
+          "Purpose and accountability"
+        ],
+        "rows": [
+          [
+            "SOX",
+            "U.S. law; issuers within the SEC perimeter",
+            "Financial reporting and internal controls; management accountable"
+          ],
+          [
+            "GLBA",
+            "U.S. law; covered financial institutions",
+            "Nonpublic financial information; competent regulator’s rules"
+          ],
+          [
+            "HIPAA",
+            "U.S. law/rules; covered entities and business associates",
+            "PHI; Security Rule for ePHI; not all health data everywhere"
+          ],
+          [
+            "GDPR",
+            "EU regulation; Article 3 scope",
+            "Processing in the context of an EU establishment, or qualifying offering/monitoring outside the EU"
+          ],
+          [
+            "PCI DSS",
+            "Global industry standard; payment programs and contracts",
+            "Card data/payment environment; not itself a law"
+          ]
+        ]
+      },
+      {
         title: "Governance documents",
         headers: ["Document", "Nature", "Example"],
         rows: [
@@ -3485,6 +3561,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
         title: "Which agreement to sign",
         prompt: "A company selects a vendor to host its website. It wants guaranteed 99.9% availability with penalties, a framework contract for future projects, and, for the first project, a precise description of tasks and deadlines. Which agreements are needed?",
         reasoning: "An MSA for the general terms of the relationship, an SLA for the 99.9% availability and penalties, and an SOW for the first project with tasks, deliverables, and timelines. Before signing, due diligence on the vendor, a conflict-of-interest check, and a right-to-audit clause are needed; if confidential information is shared during negotiation, an NDA as well.",
+      },
+      {
+        "objective": "5.4",
+        "title": "Different obligations within one group",
+        "prompt": "Kestrelia has an Italian card-accepting shop, an issuer subject to SEC reporting, a financial company within FTC jurisdiction and a U.S. healthcare covered entity. Can one compliance label apply to the whole group?",
+        "reasoning": "No. Check activities, jurisdiction, data and contracts for each entity: PCI DSS for the payment environment under relevant programs and agreements; SOX for the issuer’s financial reporting; GLBA and the FTC Safeguards Rule for the covered financial company; HIPAA for the covered entity and business associates. Evaluate GDPR territorial scope rather than citizenship alone. Management assigns owners; the team preserves evidence, gaps and remediation for internal/external compliance reporting. See Compliance, Reporting and the five glossary entries. A certification or contract does not replace applicability analysis. SEC, FTC, HHS, PCI SSC and EUR-Lex sources verified on 2026-10-08."
       },
       {
         objective: "5.4",

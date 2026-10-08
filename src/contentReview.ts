@@ -10,6 +10,12 @@ export interface Source {
 }
 
 export const SOURCES = {
+  sox: { title: "Sarbanes-Oxley Rulemaking and Reports", publisher: "SEC", url: "https://www.sec.gov/spotlight/sarbanes-oxley.htm", kind: "standard" },
+  glba: { title: "Gramm-Leach-Bliley Act", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act", kind: "standard" },
+  ftcSafeguards: { title: "FTC Safeguards Rule", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know", kind: "standard" },
+  hipaaCovered: { title: "HIPAA Covered Entities and Business Associates", publisher: "HHS", url: "https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html", kind: "reference" },
+  hipaaSecurity: { title: "HIPAA Security Rule", publisher: "HHS", url: "https://www.hhs.gov/hipaa/for-professionals/security/index.html", kind: "standard" },
+  pciPrograms: { title: "PCI SSC compliance programs", publisher: "PCI SSC", url: "https://www.pcisecuritystandards.org/faqs/1212/", kind: "reference" },
   samlCore: {"title": "SAML 2.0 Core", "publisher": "OASIS", "url": "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf", "kind": "standard"},
   rfc6749: {"title": "RFC 6749 \u2014 OAuth 2.0", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc6749", "kind": "standard"},
   oidcCore: {"title": "OpenID Connect Core 1.0", "publisher": "OpenID Foundation", "url": "https://openid.net/specs/openid-connect-core-1_0.html", "kind": "standard"},
@@ -57,7 +63,7 @@ export const SOURCES = {
   gdpr: { title: "Regulation (EU) 2016/679 — General Data Protection Regulation", publisher: "EUR-Lex", url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj", kind: "standard" },
   hipaa: { title: "HIPAA — Health Insurance Portability and Accountability Act", publisher: "U.S. Department of Health and Human Services", url: "https://www.hhs.gov/hipaa/index.html", kind: "standard" },
   soc2: { title: "SOC 2 — Trust Services Criteria", publisher: "AICPA", url: "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2", kind: "standard" },
-  pciDss: { title: "PCI Data Security Standard", publisher: "PCI Security Standards Council", url: "https://www.pcisecuritystandards.org/", kind: "standard" },
+  pciDss: { title: "PCI Data Security Standard", publisher: "PCI Security Standards Council", url: "https://www.pcisecuritystandards.org/standards/pci-dss/", kind: "standard" },
   owaspTop10: { title: "OWASP Top 10", publisher: "OWASP Foundation", url: "https://owasp.org/www-project-top-ten/", kind: "reference" },
   cisControls: { title: "CIS Critical Security Controls", publisher: "Center for Internet Security", url: "https://www.cisecurity.org/controls", kind: "reference" },
   mitreAttack: { title: "MITRE ATT&CK", publisher: "MITRE", url: "https://attack.mitre.org/", kind: "reference" },
@@ -102,10 +108,10 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "4.7": mapped("nist80053", "cisControls"),
   "4.8": mapped("nist80061"),
   "4.9": mapped("nist80061", "nist80092"),
-  "5.1": mapped("nistCsf", "iso27001", "nist80037"),
+  "5.1": mapped("sox", "glba", "ftcSafeguards", "nistCsf", "iso27001", "nist80037"),
   "5.2": mapped("nist80030"),
   "5.3": mapped("nist800161", "soc2"),
-  "5.4": mapped("gdpr", "pciDss", "iso27001", "hipaa"),
+  "5.4": mapped("sox", "glba", "ftcSafeguards", "hipaaCovered", "hipaaSecurity", "pciPrograms", "gdpr", "pciDss", "iso27001", "hipaa"),
   "5.5": mapped("nist800115", "soc2"),
   "5.6": mapped("nist80050"),
 };

@@ -3415,6 +3415,31 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   },
   },
   5: {
+    "SarbanesOxleyAct": {
+      "name": "Sarbanes-Oxley Act (SOX)",
+      "definition": "U.S. law addressing financial reporting accountability and internal controls for issuers subject to SEC reporting obligations.",
+      "details": "* **Scope:** issuers within the SEC perimeter, including foreign issuers when relevant obligations apply; not every Italian company. Section 404 concerns internal control over financial reporting; auditor attestation conditions depend on issuer category.\n* **Security and accountability:** accounting-system access, separation of duties, change management and audit trails help demonstrate reliable controls. Management remains accountable; the technical team provides evidence for Compliance and Reporting.\n* **Focused Mini-Example:** Kestrelia, an issuer within the SEC perimeter, documents who approves accounting-system changes and reviews privileged-access logs.\n\nSource: SEC Sarbanes-Oxley Rulemaking. Verified on 2026-10-08.",
+      "examTip": "SOX addresses reliable financial reporting: it is not a general privacy law."
+    },
+    "GrammLeachBlileyAct": {
+      "name": "Gramm-Leach-Bliley Act (GLBA)",
+      "definition": "U.S. law protecting customers’ nonpublic personal financial information at covered financial institutions.",
+      "details": "* **Scope:** depends on financial activities and the competent regulator, not merely the label “bank”. The FTC Safeguards Rule covers institutions within its jurisdiction, not those under another enforcement authority specified by law.\n* **Privacy and security:** GLBA includes information-sharing and protection rules; the Safeguards Rule requires a written security program with administrative, technical and physical safeguards. Link accountability, service-provider oversight, risk assessment and compliance reporting.\n* **Focused Mini-Example:** Kestrelia Finance, covered by the FTC Safeguards Rule, documents its security program and checks how its provider protects customer data.\n\nSources: FTC Gramm-Leach-Bliley Act and FTC Safeguards Rule. Verified on 2026-10-08.",
+      "examTip": "GLBA applies neither automatically to every Italian organization nor only to banks."
+    },
+    "HIPAAComplianceConcept": {
+      "name": "Health Insurance Portability and Accountability Act (HIPAA)",
+      "definition": "U.S. law whose rules protect health information within the scope of covered entities and business associates.",
+      "details": "* **HHS scope:** covered entities include health plans, clearinghouses and healthcare providers conducting specified electronic transactions; business associates handle protected information on their behalf. Not every health app or Italian clinic automatically falls within scope.\n* **Privacy and Security Rule:** the Privacy Rule addresses protected health information (PHI); the Security Rule protects electronic information (ePHI) through administrative, physical and technical safeguards. Assess risks, access and provider agreements; preserve evidence for Compliance and Reporting.\n* **Focused Mini-Example:** a Kestrelia covered entity hires a business associate to back up electronic records and documents the agreement, access and safeguards.\n\nSources: HHS Covered Entities and Business Associates; HHS Security Rule. Verified on 2026-10-08.",
+      "examTip": "HIPAA is a U.S. legal framework, not a universal certification for all health data."
+    },
+    "PCIDSSComplianceConcept": {
+      "name": "Payment Card Industry Data Security Standard (PCI-DSS)",
+      "definition": "Industry standard for protecting payment card data, adopted within payment-brand compliance programs.",
+      "details": "* **Global scope:** entities storing, processing or transmitting cardholder data or sensitive authentication data, or potentially affecting the security of that environment. An Italian merchant may fall within scope.\n* **Nature of the obligation:** PCI DSS is not itself a law. Payment-brand compliance programs and agreements with brands/acquirers may make it mandatory; any applicable legal obligations remain distinct. PCI SSC defines the standard, while brands and acquirers determine validation and reporting.\n* **Focused Mini-Example:** Kestrelia Shop maps payment flows and agrees with its acquirer how to evidence compliance; outsourcing payments does not automatically eliminate responsibilities. See Compliance and Reporting.\n\nSources: PCI DSS; PCI SSC compliance programs. Verified on 2026-10-08.",
+      "examTip": "A standard may be mandatory by contract: “not a law” does not mean optional."
+    },
+
   Governance: {
     name: "Governance",
     definition: "The strategic direction framework that establishes rules, roles and responsibilities to align security with business objectives.",
@@ -3727,8 +3752,8 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
   Compliance: {
     name: "Compliance",
     definition: "The formal alignment of the organization with national laws, industry regulations and contractual obligations.",
-    details: "Compliance is driven by mandatory regulations (e.g. GDPR for data protection in Europe, HIPAA for the healthcare sector in the USA, PCI-DSS for credit card transactions). Non-compliance entails severe monetary penalties, criminal proceedings or the immediate suspension of operating licenses.",
-    examTip: "Compliance does not automatically equal solid security; it simply establishes the minimum legal requirements that the organization must implement.",
+    details: "Distinguish laws and regulations (GDPR, SOX, GLBA and HIPAA within their respective scopes) from the PCI DSS industry standard and contractual obligations. Check jurisdiction, activities, data and contracts before declaring a requirement applicable. Compliance reporting documents controls, evidence, gaps, owners and remediation for management and external parties; see Reporting and the independent entries. Consequences of noncompliance depend on the breached obligation: criminal liability or license suspension are not automatic.\n\n* **Focused Mini-Example:** Kestrelia Shop links applicable obligations to an evidence register and assigns each gap to an owner with a due date.",
+    examTip: "Compliance does not automatically equal solid security; it requires meeting applicable obligations, including contractual ones.",
   },
   Privacy: {
     name: "Privacy",

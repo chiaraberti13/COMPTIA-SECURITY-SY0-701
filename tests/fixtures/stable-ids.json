@@ -1297,7 +1297,11 @@
     "OAuth2",
     "OpenIDConnect",
     "SAML",
-    "SingleSignOn"
+    "SingleSignOn",
+    "GrammLeachBlileyAct",
+    "HIPAAComplianceConcept",
+    "PCIDSSComplianceConcept",
+    "SarbanesOxleyAct"
   ],
   "objectives": [
     "1.1",

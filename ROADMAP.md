@@ -185,13 +185,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 14. Contesto normativo: SOX e GLBA
 
-- [ ] Integrare un confronto normativo essenziale nel Dominio 5 e le voci SOX/GLBA nel glossario (obiettivi 5.1 e 5.4), collegando GDPR, HIPAA e PCI DSS già citati.
+- [x] Integrare un confronto normativo essenziale nel Dominio 5 e le voci SOX/GLBA nel glossario (obiettivi 5.1 e 5.4), collegando GDPR, HIPAA e PCI DSS già citati.
 
 **Evidenza nel repository:** SOX e GLBA non compaiono nelle guide/definizioni analizzate; GDPR ha già una voce, mentre HIPAA e PCI DSS compaiono in vari approfondimenti. Non serve ricostruire una guida giuridica completa.
 
 **Da realizzare:** spiegare ambito statunitense, finalità e tipo di organizzazione interessata da SOX e GLBA; distinguere legge/regolamento, standard di settore e obbligo contrattuale. Rendere HIPAA e PCI DSS autonomamente reperibili riutilizzando il contenuto pertinente. Collegare compliance reporting e responsabilità già trattati.
 
 **Accettazione:** ambito geografico esplicito e nessuna applicabilità automatica a ogni organizzazione italiana; niente importi di sanzioni o classificazioni penali non necessari alla spiegazione. Verificare testo e applicabilità su SEC, FTC, HHS, PCI SSC e fonti istituzionali UE alla data dell'implementazione, registrando la data di verifica.
+
+**Completato l’8 ottobre 2026:** quattro voci canoniche IT/EN autonome e ricercabili (`SarbanesOxleyAct`, `GrammLeachBlileyAct`, `HIPAAComplianceConcept`, `PCIDSSComplianceConcept`) con espansioni e flashcard SOX/GLBA/HIPAA/PCI-DSS. Confronto a cinque quadri con GDPR e scenario originale nella guida D5, collegati agli obiettivi 5.1/5.4 e a Compliance/Reporting. Precisati emittenti nel perimetro SEC, istituzioni finanziarie e regolatore competente, covered entities/business associates, PHI/ePHI e ambiente di pagamento; distinte legge, regolamento, standard di settore e obbligo contrattuale senza applicabilità automatica a ogni impresa italiana. Corretta la generalizzazione di Compliance sulle sanzioni e sulla natura di PCI DSS. Fonti SEC, FTC, HHS, PCI SSC ed EUR-Lex verificate il 2026-10-08; aggiornati report e registri di identificatori/traduzioni. Superati test dedicati e suite completa, typecheck, lint, Markdown, ortografia IT/EN, build e smoke test di produzione.
 
 ## Estensione dell'audit — PBQ e banca delle domande
 

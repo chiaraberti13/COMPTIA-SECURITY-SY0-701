@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 614 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 618 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -24,7 +24,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 | 2 | 85 | 0 |
 | 3 | 182 | 0 |
 | 4 | 137 | 0 |
-| 5 | 94 | 0 |
+| 5 | 98 | 0 |
 
 ## Cifre senza fonte
 
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-81 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+85 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -46,11 +46,11 @@ indirizzi qui sotto.
 - `1:AsymmetricEncryption`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final)
 - `1:DataPlaneZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
 - `1:DiffieHellmanConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
-- `1:DirectiveControl`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `1:DirectiveControl`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/)
 - `1:ECDHConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:EphemeralKeyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:ForwardSecrecyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
-- `1:GapAnalysis`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
+- `1:GapAnalysis`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
 - `1:ImpactAnalysis`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `1:Kerberos`: [RFC 4120 — Kerberos V5](https://www.rfc-editor.org/rfc/rfc4120)
 - `1:KeyAgreementConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
@@ -78,9 +78,9 @@ indirizzi qui sotto.
 - `2:WiFiJammingAttack`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `2:XSSAttack`: [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - `3:APIArchitecture`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- `3:BackupEncryptionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `3:BackupEncryptionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/)
 - `3:DataMaskingSec`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
-- `3:DataTypesConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `3:DataTypesConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `3:EAP-TLS`: [RFC 9190 — EAP-TLS 1.3](https://www.rfc-editor.org/rfc/rfc9190); [Certificate requirements for EAP-TLS and PEAP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/certificate-requirements-eap-tls-peap)
 - `3:EAP-TTLS`: [RFC 5281 — EAP-TTLSv0](https://www.rfc-editor.org/rfc/rfc5281)
 - `3:PaaSCloud`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
@@ -88,9 +88,9 @@ indirizzi qui sotto.
 - `3:ProtectedManagementFrames`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `3:SaaSCloud`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `3:TLSTerminationOffload`: [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
-- `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/)
 - `3:WAFFire`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- `4:CISBenchmarkRes`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `4:CISBenchmarkRes`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `4:CVSS`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `4:IncidentResponseGeneralConcept`: [SP 800-61 Rev. 3 — Incident Response Recommendations](https://csrc.nist.gov/pubs/sp/800/61/r3/final)
 - `4:LegalHoldForensics`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17, par. 3, lett. e
@@ -103,23 +103,27 @@ indirizzi qui sotto.
 - `4:VulnerabilityScannerRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `5:AttestationConcept`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
-- `5:Compliance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `5:Compliance`: [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm); [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `5:DataRetentionRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17
 - `5:DataRolesGovernance`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 24 e artt. 37–39
 - `5:DataSovereigntyConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 3 e artt. 44–49
 - `5:DueDiligence`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:ExternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:GDPRComplianceConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 3, par. 2, e art. 83, par. 5
+- `5:GrammLeachBlileyAct`: [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know)
+- `5:HIPAAComplianceConcept`: [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html); [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html)
 - `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
 - `5:MediaSanitizationRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
 - `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+- `5:PCIDSSComplianceConcept`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [PCI SSC compliance programs](https://www.pcisecuritystandards.org/faqs/1212/)
 - `5:Questionnaires`: [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:RegulatoryAudit`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 58 e art. 83, par. 5; [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
 - `5:ReportingRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
-- `5:RightToAuditClause`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
-- `5:RiskAppetite`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `5:RightToAuditClause`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `5:RiskAppetite`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/)
 - `5:RiskTransferConcept`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
+- `5:SarbanesOxleyAct`: [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm)
 - `5:SelfAssessmentConcept`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
 - `5:Transfer`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 83
 - `5:VendorAssessment`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)

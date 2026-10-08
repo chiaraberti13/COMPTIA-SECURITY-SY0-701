@@ -23,6 +23,12 @@ export interface Citation {
 
 /** How the study text names each cited document. */
 export const MENTIONS: [SourceId, RegExp][] = [
+  ["sox", /\bSOX\b|SEC Sarbanes-Oxley Rulemaking/],
+  ["glba", /\bGLBA\b|FTC Gramm-Leach-Bliley Act/],
+  ["ftcSafeguards", /FTC Safeguards Rule/],
+  ["hipaaCovered", /HHS Covered Entities and Business Associates/],
+  ["hipaaSecurity", /HHS Security Rule/],
+  ["pciPrograms", /PCI SSC compliance programs/],
   ["samlCore", /OASIS SAML 2.0 Core/],
   ["rfc6749", /RFC 6749/],
   ["oidcCore", /OpenID Connect Core/],
@@ -65,6 +71,10 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "5:SarbanesOxleyAct": [{ source: "sox" }],
+  "5:GrammLeachBlileyAct": [{ source: "glba" }, { source: "ftcSafeguards" }],
+  "5:HIPAAComplianceConcept": [{ source: "hipaa" }, { source: "hipaaCovered" }, { source: "hipaaSecurity" }],
+  "5:PCIDSSComplianceConcept": [{ source: "pciDss" }, { source: "pciPrograms" }],
   "1:SingleSignOn": [{ source: "samlCore" }],
   "1:SAML": [{ source: "samlCore" }],
   "1:OAuth2": [{ source: "rfc6749" }],
@@ -129,7 +139,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "5:OrganizationalImpactRes": [{ source: "gdpr" }],
   "5:Transfer": [{ source: "gdpr", locator: { it: "art. 33 e art. 83", en: "Art. 33 and Art. 83" } }],
   "5:RiskTransferConcept": [{ source: "gdpr", locator: { it: "art. 33 e art. 83", en: "Art. 33 and Art. 83" } }],
-  "5:Compliance": [{ source: "gdpr" }, { source: "pciDss" }, { source: "hipaa" }],
+  "5:Compliance": [{ source: "sox" }, { source: "glba" }, { source: "gdpr" }, { source: "pciDss" }, { source: "hipaa" }],
   "5:DueDiligence": [{ source: "iso27001" }, { source: "soc2" }],
   "5:GDPRComplianceConcept": [{ source: "gdpr", locator: { it: "art. 3, par. 2, e art. 83, par. 5", en: "Art. 3(2) and Art. 83(5)" } }],
   "5:DataSovereigntyConcept": [{ source: "gdpr", locator: { it: "art. 3 e artt. 44–49", en: "Art. 3 and Arts. 44–49" } }],

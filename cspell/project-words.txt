@@ -384,3 +384,11 @@ asserzioni
 concederle
 illimitata
 autenticano
+
+# Regulatory glossary: official names and valid Italian words
+Sarbanes
+Oxley
+Rulemaking
+emittenti
+interessare
+esercente

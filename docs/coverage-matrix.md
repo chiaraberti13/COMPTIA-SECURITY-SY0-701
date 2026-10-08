@@ -64,10 +64,10 @@ Peso d'esame 20% · 142 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
 |---|---|---|---|---|---|---|---|---|
-| 5.1 | Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia. | 31 | 7 | 12 | 11 | 1 | 1 | [NIST Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework), [ISO/IEC 27001](https://www.iso.org/standard/27001), [NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final) |
+| 5.1 | Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia. | 31 | 7 | 12 | 11 | 1 | 1 | [SEC Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm), [FTC Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act), [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know), [NIST Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework), [ISO/IEC 27001](https://www.iso.org/standard/27001), [NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final) |
 | 5.2 | Gestire il rischio: identificazione, analisi, registro, appetite/tolerance, risposte, owner, monitoraggio e BIA. | 37 | 7 | 8 | 10 | 12 | 1 | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final) |
 | 5.3 | Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding. | 19 | 2 | 5 | 7 | 5 | 1 | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
-| 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 1 | [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/), [ISO/IEC 27001](https://www.iso.org/standard/27001), [U.S. Department of Health and Human Services HIPAA](https://www.hhs.gov/hipaa/index.html) |
+| 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 2 | [SEC Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm), [FTC Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act), [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know), [HHS HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html), [HHS HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html), [PCI SSC compliance programs](https://www.pcisecuritystandards.org/faqs/1212/), [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/), [ISO/IEC 27001](https://www.iso.org/standard/27001), [U.S. Department of Health and Human Services HIPAA](https://www.hhs.gov/hipaa/index.html) |
 | 5.5 | Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting. | 17 | 1 | 6 | 5 | 5 | 1 | [NIST SP 800-115](https://csrc.nist.gov/pubs/sp/800/115/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
 | 5.6 | Costruire awareness e training misurabili, specifici per ruolo e adattati a comportamento, minacce e cultura. | 18 | 1 | 2 | 9 | 6 | 1 | [NIST SP 800-50 Rev. 1](https://csrc.nist.gov/pubs/sp/800/50/r1/final) |
 
@@ -89,6 +89,10 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti primarie: obiettivi d'esame, standard, specifiche e norme
 
+- [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm) — SEC
+- [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act) — FTC
+- [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know) — FTC
+- [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html) — HHS
 - [SAML 2.0 Core](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf) — OASIS
 - [RFC 6749 — OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749) — IETF
 - [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html) — OpenID Foundation
@@ -121,10 +125,12 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 - [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj) — EUR-Lex
 - [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html) — U.S. Department of Health and Human Services
 - [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) — AICPA
-- [PCI Data Security Standard](https://www.pcisecuritystandards.org/) — PCI Security Standards Council
+- [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/) — PCI Security Standards Council
 
 ### Fonti secondarie: riferimenti di comunità ed enti
 
+- [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html) — HHS
+- [PCI SSC compliance programs](https://www.pcisecuritystandards.org/faqs/1212/) — PCI SSC
 - [ICANN Domain Name Registration Hijacking](https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en) — ICANN
 - [ICANN Protect Your Domain Name](https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en) — ICANN
 - [ICANN EPP Status Codes](https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en) — ICANN
