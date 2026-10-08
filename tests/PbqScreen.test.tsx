@@ -145,13 +145,32 @@ describe("PbqScreen ordering", () => {
 describe("firewall PBQ reset", () => {
   it("shows the authored feedback and clears all answers on restart", () => {
     const pbq = getPbqScenarios("it").find(p => p.id === 303)! as MatchingPbq;
-    renderHarness([pbq]);
+    renderHarness([matching, pbq]);
     fireEvent.click(document.getElementById("pbq_start_303")!);
     for (const p of pbq.prompts) {
       fireEvent.change(screen.getByLabelText(p.text), { target: { value: p.correctOptionId } });
     }
     fireEvent.click(document.getElementById("pbq_submit")!);
     expect(document.getElementById("pbq_feedback")!.textContent).toContain("NAT traduce indirizzi");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    expect(document.getElementById("pbq_summary")).toBeTruthy();
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    expect(document.getElementById("pbq_feedback")).toBeNull();
+    for (const p of pbq.prompts) expect((screen.getByLabelText(p.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
+  });
+});
+
+describe("VPN PBQ reset", () => {
+  it("shows the authored feedback and clears all answers on restart", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 304)! as MatchingPbq;
+    renderHarness([matching, pbq]);
+    fireEvent.click(document.getElementById("pbq_start_304")!);
+    for (const p of pbq.prompts) {
+      fireEvent.change(screen.getByLabelText(p.text), { target: { value: p.correctOptionId } });
+    }
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("Transport mode protegge");
     fireEvent.click(document.getElementById("pbq_next")!);
     expect(document.getElementById("pbq_summary")).toBeTruthy();
     fireEvent.click(document.getElementById("pbq_restart")!);

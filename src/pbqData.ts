@@ -3,7 +3,7 @@
  *
  * Two scenarios for each of the five roadmap themes (ordering, matching, log
  * interpretation, incident response, control selection), plus firewall
- * segmentation, spread across the five exam domains and tied to official SY0-701 objectives.
+ * segmentation and VPN paths, spread across the five exam domains and tied to official SY0-701 objectives.
  *
  * Content rules (same as the rest of the study content, enforced by
  * tests/contentSafety.test.ts and tests/pbqData.test.ts):
@@ -21,6 +21,109 @@
 import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
+{
+  "id": 304,
+  "kind": "matching",
+  "mechanic": "matching",
+  "objective": "3.2",
+  "relatedObjectives": [
+    "1.4",
+    "4.6"
+  ],
+  "sources": [
+    "rfc4301",
+    "rfc7296",
+    "netgateOpenvpnMode"
+  ],
+  "domain": 3,
+  "title": "Percorso VPN e protezione dei due siti",
+  "scenario": "Kestrelia collega sito A (rete 10.10.0.0/24, gateway A pubblico 203.0.113.10) e sito B (rete 10.20.0.0/24, gateway B pubblico 198.51.100.20, server B 10.20.0.20). Topologia testuale: portatile remoto → Internet → gateway A → rete A; rete A → gateway A → Internet → gateway B → rete B/server B. Dati sintetici. Il portatile gestito dispone solo del profilo OpenVPN TLS di accesso remoto verso A, con certificato client individuale, credenziali e MFA tramite backend già configurato. Il client deve validare certificato e identità del server VPN. Per il collegamento intersede è richiesto IKEv2/IPsec ESP con cifratura e integrità, certificati dei gateway e traffic selector 10.10.0.0/24 ↔ 10.20.0.0/24. Gli host interni non terminano IPsec; non sono previsti altri tunnel IP-in-IP. Il server B offre HTTPS e termina TLS sul server stesso. Considera separatamente ciascun collegamento: il profilo remoto non include l’inoltro verso B. La VPN termina sul gateway; non presumere protezione crittografica oltre quel punto o per traffico escluso dai selector. Obiettivo 3.2; collegamenti 1.4 e 4.6.",
+  "prompt": "Abbina requisiti, collegamenti e confini di protezione alla soluzione corretta. Usa i profili e le premesse dichiarati; alcune opzioni sono distrattori.",
+  "prompts": [
+    {
+      "id": "p_remote",
+      "text": "Collegare il portatile del personale al gateway A con il profilo remoto disponibile.",
+      "correctOptionId": "remote_tls"
+    },
+    {
+      "id": "p_sites",
+      "text": "Collegare le reti A e B usando i due gateway e il profilo intersede richiesto.",
+      "correctOptionId": "site_ipsec"
+    },
+    {
+      "id": "p_mode",
+      "text": "Scegliere la modalità ESP per trasportare il pacchetto originale fra host delle due reti, non terminare IPsec sugli host.",
+      "correctOptionId": "esp_tunnel"
+    },
+    {
+      "id": "p_boundary",
+      "text": "Proteggere anche il tratto gateway B → server B: il server è oltre la terminazione VPN e offre HTTPS.",
+      "correctOptionId": "beyond_gateway"
+    },
+    {
+      "id": "p_remote_auth",
+      "text": "Autenticare entrambe le parti e applicare la policy del personale nel profilo remoto dichiarato.",
+      "correctOptionId": "remote_auth"
+    },
+    {
+      "id": "p_peer_auth",
+      "text": "Autenticare reciprocamente i gateway A e B nel profilo IKEv2 dichiarato.",
+      "correctOptionId": "ike_auth"
+    },
+    {
+      "id": "p_scope",
+      "text": "Definire quali flussi A/B sono coperti dal collegamento IPsec e quali accessi sono autorizzati.",
+      "correctOptionId": "selected_traffic"
+    }
+  ],
+  "options": [
+    {
+      "id": "remote_tls",
+      "text": "OpenVPN TLS: portatile → gateway A; la protezione VPN termina sul gateway A."
+    },
+    {
+      "id": "site_ipsec",
+      "text": "IPsec ESP con cifratura e integrità, negoziato tramite IKEv2: gateway A ↔ gateway B."
+    },
+    {
+      "id": "esp_tunnel",
+      "text": "Tunnel mode: pacchetto IP interno protetto da ESP e nuovo header IP esterno con indirizzi dei gateway."
+    },
+    {
+      "id": "beyond_gateway",
+      "text": "HTTPS con TLS fra client e server B, validando il certificato del server; mantenere segmentazione e policy dopo il gateway."
+    },
+    {
+      "id": "remote_auth",
+      "text": "Validare certificato e identità del server VPN; certificato client individuale più credenziali utente e MFA tramite il backend configurato."
+    },
+    {
+      "id": "ike_auth",
+      "text": "IKEv2 con certificati dei gateway: validare catena e identità del peer e verificare la prova della chiave privata; non è autenticazione del personale."
+    },
+    {
+      "id": "selected_traffic",
+      "text": "Policy IPsec e traffic selector per 10.10.0.0/24 ↔ 10.20.0.0/24; routing e regole firewall per gli accessi consentiti."
+    },
+    {
+      "id": "transport",
+      "text": "Transport mode ESP fra gateway: protegge automaticamente tutto il pacchetto originale fra le reti."
+    },
+    {
+      "id": "all_segments",
+      "text": "La VPN protegge automaticamente anche ogni segmento dopo il gateway e ogni destinazione Internet."
+    },
+    {
+      "id": "no_validation",
+      "text": "Non validare il certificato del server VPN, perché il tunnel è cifrato."
+    },
+    {
+      "id": "remote_always_tls",
+      "text": "Qualsiasi accesso remoto usa sempre TLS: IPsec non può collegare un portatile a un gateway."
+    }
+  ],
+  "explanation": "1. Remoto: OpenVPN TLS collega il portatile ad A perché questo è il profilo disponibile, non perché ogni VPN remota usi TLS. Anche IPsec può fornire accesso remoto. 2. Intersede: IKEv2 negozia e autentica le associazioni; ESP con cifratura e integrità protegge i dati fra gateway A e B. 3. Modalità: tunnel mode incapsula il pacchetto originale, incluso il suo header IP interno, e aggiunge un header esterno per i gateway. Con ESP l’header esterno non è cifrato. Transport mode protegge il payload del pacchetto IP, non incapsula da solo l’intero pacchetto originale: non è intercambiabile in questa topologia gateway-to-gateway per host dietro i gateway, senza un ulteriore tunnel. Non è una regola universale che vieti transport mode ai gateway quando agiscono da host. 4. Confine: dopo la decapsulazione il tratto verso server B non è protetto da quella VPN; HTTPS client/server conserva TLS fino al server, ma non protegge ogni altro flusso. Restano necessari segmentazione e autorizzazioni. 5. Remoto/autenticazione: la validazione del server evita di affidarsi a un gateway falso; il profilo impone certificato client, credenziali e MFA del personale, senza contare il certificato server come fattore utente. 6. IKEv2/autenticazione: i certificati e la prova della chiave privata autenticano i peer gateway; non sostituiscono l’identità degli utenti. 7. Ambito: selector, policy, routing e firewall delimitano i flussi protetti e consentiti; un tunnel non autorizza automaticamente tutto. I distrattori confondono transport/tunnel, estendono la protezione oltre i gateway, omettono la validazione del server o dichiarano erroneamente che il remoto usa sempre TLS. Fonti: RFC 4301, RFC 7296 e Netgate OpenVPN Mode Configuration, verificate il 2026-10-08. Ogni abbinamento vale un punto diagnostico; questa PBQ di studio richiede tutti e 7 corretti, senza riprodurre lo scoring proprietario CompTIA."
+},
   {
     "id": 303,
     "kind": "matching",

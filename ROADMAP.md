@@ -227,13 +227,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 16. Percorso VPN e protezione dei due siti
 
-- [ ] Aggiungere una PBQ di abbinamento per scegliere accesso remoto TLS, VPN site-to-site IPsec e modalità tunnel in un'infrastruttura sintetica (obiettivo 3.2).
+- [x] Aggiungere una PBQ di abbinamento per scegliere accesso remoto TLS, VPN site-to-site IPsec e modalità tunnel in un'infrastruttura sintetica (obiettivo 3.2).
 
 **Evidenza nel repository:** Le definizioni VPN/IPsec esistono, ma nessuna delle dieci PBQ richiede di applicarle a una topologia.
 
 **Da realizzare:** associare requisiti e punti di terminazione ai collegamenti corretti; distinguere il tratto protetto dai segmenti oltre il gateway e specificare l'autenticazione necessaria. Usare l'abbinamento esistente e un equivalente testuale della topologia.
 
 **Accettazione:** spiegare perché tunnel e transport mode non sono intercambiabili nel caso proposto e perché un tunnel non protegge automaticamente tutto il traffico successivo alla terminazione. Nessuna falsa equivalenza “accesso remoto = sempre TLS”. Fonti: RFC IPsec/IKE e documentazione VPN ufficiale.
+
+**Completato il 2026-10-08:** aggiunta la PBQ originale 304 con sette abbinamenti e quattro distrattori IT/EN: OpenVPN TLS remoto, IKEv2/IPsec ESP intersede, tunnel mode, limiti dopo la terminazione, autenticazione del personale e dei gateway, selector e policy. Topologia testuale sintetica e premesse rendono le scelte determinate senza equiparare accesso remoto e TLS né vietare universalmente transport mode. Collegate le fonti RFC 4301/RFC 7296 e Netgate e gli obiettivi 3.2/1.4/4.6; documentati soluzione e limiti in `docs/vpn-pbq.md`, aggiornati i report. Corretto “Ripeti” per conservare gli scenari scelti; adattati i test esame ai due scenari del dominio 3. Superati 864 test Vitest e 16 test Playwright desktop/mobile (tastiera, IT/EN, feedback, reset, navigazione, storico, axe e overflow), typecheck, lint, Markdown, ortografia IT/EN, build e smoke test di produzione.
 
 ### 17. Wi-Fi enterprise e ruoli 802.1X
 

@@ -10,6 +10,9 @@ export interface Source {
 }
 
 export const SOURCES = {
+  rfc4301: { title: "RFC 4301 — IPsec Security Architecture", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc4301", kind: "standard" },
+  rfc7296: { title: "RFC 7296 — IKEv2", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc7296", kind: "standard" },
+  netgateOpenvpnMode: { title: "OpenVPN Mode Configuration", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/vpn/openvpn/configure-server-mode.html", kind: "reference" },
   netgateRuleMethodology: { title: "pfSense Rule Methodology", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/rule-methodology.html", kind: "reference" },
   netgateFirewallFundamentals: { title: "pfSense Firewall Fundamentals", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/fundamentals.html", kind: "reference" },
   sox: { title: "Sarbanes-Oxley Rulemaking and Reports", publisher: "SEC", url: "https://www.sec.gov/spotlight/sarbanes-oxley.htm", kind: "standard" },
@@ -98,7 +101,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "2.4": mapped("icannHijacking", "icannProtection", "icannLocks", "rfc4033", "ieee80211", "wifiAlliance", "nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),
-  "3.2": mapped("nist800207", "ieee80211", "wifiAlliance", "cisControls"),
+  "3.2": mapped("rfc4301", "rfc7296", "netgateOpenvpnMode", "nist800207", "ieee80211", "wifiAlliance", "cisControls"),
   "3.3": mapped("nist80057", "gdpr"),
   "3.4": mapped("nist80034"),
   "4.1": mapped("nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),

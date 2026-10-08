@@ -14,6 +14,16 @@ async function configure(page: Page, total = 2) {
   await page.locator("#exam_pbq_count").selectOption("1");
   await expect(page.locator("#start_exam_btn")).toBeEnabled();
 }
+async function currentMatching(page: Page) {
+  const vpn = await page.locator("#pbq_match_p_remote").count();
+  return vpn ? {
+    first: "p_remote", value: "remote_tls", objective: "3.2", total: 7,
+    rest: [["p_sites", "site_ipsec"], ["p_mode", "esp_tunnel"], ["p_boundary", "beyond_gateway"], ["p_remote_auth", "remote_auth"], ["p_peer_auth", "ike_auth"], ["p_scope", "selected_traffic"]],
+  } : {
+    first: "p_rest", value: "atrest", objective: "3.3", total: 4,
+    rest: [["p_transit", "tls"], ["p_test", "mask"], ["p_leak", "dlp"]],
+  };
+}
 async function noAxeErrors(page: Page) {
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
   expect(violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => `${v.id}: ${v.nodes[0]?.target}`)).toEqual([]);
@@ -26,10 +36,11 @@ test("mixed exam keeps answers when skipping, reveals feedback only on submissio
   await expect(page.locator("#exam_timer")).toContainText(/(?:2:00|1:\d{2})/);
   await expect(page.locator("#exam_current")).toContainText("PBQ");
   await expect(page.locator("#exam_explanation")).toHaveCount(0);
-  const firstSelect = page.locator("#pbq_match_p_rest");
+  const task = await currentMatching(page);
+  const firstSelect = page.locator(`#pbq_match_${task.first}`);
   await firstSelect.focus();
   await firstSelect.press("a");
-  await firstSelect.selectOption("atrest");
+  await firstSelect.selectOption(task.value);
   await page.locator("#exam_flag").focus();
   await page.locator("#exam_flag").press("Enter");
   await expect(page.locator("#exam_flag")).toHaveAttribute("aria-pressed", "true");
@@ -37,8 +48,8 @@ test("mixed exam keeps answers when skipping, reveals feedback only on submissio
   await expect(page.locator("#exam_current")).toContainText("MCQ");
   await page.locator("#exam_option_0").click();
   await page.locator("#exam_previous").click();
-  await expect(firstSelect).toHaveValue("atrest");
-  for (const [prompt, value] of [["p_transit", "tls"], ["p_test", "mask"], ["p_leak", "dlp"]]) {
+  await expect(firstSelect).toHaveValue(task.value);
+  for (const [prompt, value] of task.rest) {
     await page.locator(`#pbq_match_${prompt}`).selectOption(value);
   }
   await expect(page.locator("#exam_explanation")).toHaveCount(0);
@@ -48,7 +59,7 @@ test("mixed exam keeps answers when skipping, reveals feedback only on submissio
   await page.locator("#exam_finish").press("Enter");
   await expect(page.locator("#exam_results")).toBeVisible();
   await expect(page.locator("#exam_explanation")).toBeVisible();
-  await expect(page.locator("#exam_objectives")).toContainText("3.3");
+  await expect(page.locator("#exam_objectives")).toContainText(task.objective);
   await expect(page.locator("#exam_domains")).toContainText("/2");
   await noAxeErrors(page);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));
@@ -67,19 +78,20 @@ test("PBQ-only exam works offline in English, reports unanswered work and can re
   await configure(page, 1);
   await page.locator("#start_exam_btn").click();
   await expect(page.locator("#exam_current")).toContainText("PBQ");
-  await page.locator("#pbq_match_p_rest").selectOption("atrest");
+  const task = await currentMatching(page);
+  await page.locator(`#pbq_match_${task.first}`).selectOption(task.value);
   await page.locator("#lang_btn_en").click();
   await expect(page.locator("#exam_screen > h2")).toHaveText("Exam mode: MCQs and PBQs");
-  await expect(page.locator("#pbq_match_p_rest")).toHaveValue("atrest");
+  await expect(page.locator(`#pbq_match_${task.first}`)).toHaveValue(task.value);
   await context.setOffline(true);
   await page.locator("#exam_finish").click();
   await expect(page.locator("#exam_score")).toContainText("0 / 1");
   await expect(page.locator("#exam_results")).toContainText("Incomplete or missing answers: 1.");
-  await expect(page.locator("#exam_objectives")).toContainText("3.3");
-  await expect(page.locator("#exam_explanation")).toContainText("1 of 4 correct");
+  await expect(page.locator("#exam_objectives")).toContainText(task.objective);
+  await expect(page.locator("#exam_explanation")).toContainText(`1 of ${task.total} correct`);
   await noAxeErrors(page);
   await page.locator("#exam_repeat").click();
   await expect(page.locator("#exam_results")).toHaveCount(0);
-  await expect(page.locator("#pbq_match_p_rest")).toHaveValue("");
+  await expect(page.locator(`#pbq_match_${task.first}`)).toHaveValue("");
   await context.setOffline(false);
 });

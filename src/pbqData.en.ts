@@ -21,6 +21,34 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+304: {
+  "title": "VPN paths and protection across two sites",
+  "scenario": "Kestrelia connects site A (network 10.10.0.0/24, public gateway A 203.0.113.10) and site B (network 10.20.0.0/24, public gateway B 198.51.100.20, server B 10.20.0.20). Text topology: remote laptop → Internet → gateway A → network A; network A → gateway A → Internet → gateway B → network B/server B. Synthetic data. The managed laptop has only the OpenVPN TLS remote access profile to A, with an individual client certificate, credentials and MFA through an already configured backend. The client must validate the VPN server certificate and identity. The intersite link requires IKEv2/IPsec ESP with encryption and integrity, gateway certificates and traffic selectors 10.10.0.0/24 ↔ 10.20.0.0/24. Internal hosts do not terminate IPsec; no additional IP-in-IP tunnels are planned. Server B offers HTTPS and terminates TLS on the server itself. Consider each link separately: the remote profile does not include forwarding to B. The VPN terminates at the gateway; do not assume cryptographic protection beyond that point or for traffic excluded by the selectors. Objective 3.2; related objectives 1.4 and 4.6.",
+  "prompt": "Match requirements, links and protection boundaries to the correct solution. Use the stated profiles and premises; some options are distractors.",
+  "prompts": {
+    "p_remote": "Connect the staff laptop to gateway A using the available remote profile.",
+    "p_sites": "Connect networks A and B through their gateways using the required intersite profile.",
+    "p_mode": "Choose the ESP mode that carries the original packet between hosts on the two networks without terminating IPsec on those hosts.",
+    "p_boundary": "Also protect gateway B → server B: the server is beyond VPN termination and offers HTTPS.",
+    "p_remote_auth": "Authenticate both parties and apply the staff policy in the stated remote profile.",
+    "p_peer_auth": "Mutually authenticate gateways A and B in the stated IKEv2 profile.",
+    "p_scope": "Define which A/B flows the IPsec link covers and which access is authorized."
+  },
+  "options": {
+    "remote_tls": "OpenVPN TLS: laptop → gateway A; VPN protection ends at gateway A.",
+    "site_ipsec": "IPsec ESP with encryption and integrity, negotiated through IKEv2: gateway A ↔ gateway B.",
+    "esp_tunnel": "Tunnel mode: inner IP packet protected by ESP and a new outer IP header carrying gateway addresses.",
+    "beyond_gateway": "HTTPS with TLS between client and server B, validating the server certificate; retain segmentation and policy beyond the gateway.",
+    "remote_auth": "Validate the VPN server certificate and identity; individual client certificate plus user credentials and MFA through the configured backend.",
+    "ike_auth": "IKEv2 with gateway certificates: validate the peer chain and identity and verify proof of the private key; this is not staff authentication.",
+    "selected_traffic": "IPsec policy and traffic selectors for 10.10.0.0/24 ↔ 10.20.0.0/24; routing and firewall rules for allowed access.",
+    "transport": "ESP transport mode between gateways: automatically protects the entire original packet between the networks.",
+    "all_segments": "The VPN automatically protects every segment after the gateway and every Internet destination.",
+    "no_validation": "Do not validate the VPN server certificate because the tunnel is encrypted.",
+    "remote_always_tls": "Every remote access connection always uses TLS: IPsec cannot connect a laptop to a gateway."
+  },
+  "explanation": "1. Remote: OpenVPN TLS connects the laptop to A because it is the available profile, not because every remote VPN uses TLS. IPsec can also provide remote access. 2. Intersite: IKEv2 negotiates and authenticates associations; ESP with encryption and integrity protects data between gateways A and B. 3. Mode: tunnel mode encapsulates the original packet, including its inner IP header, and adds an outer header for the gateways. With ESP the outer header is not encrypted. Transport mode protects the IP packet payload and does not by itself encapsulate the entire original packet: it is not interchangeable in this gateway-to-gateway topology for hosts behind the gateways without an additional tunnel. This is not a universal rule forbidding gateways from using transport mode when acting as hosts. 4. Boundary: after decapsulation the path to server B is not protected by that VPN; client/server HTTPS retains TLS up to the server but does not protect every other flow. Segmentation and authorization are still required. 5. Remote/authentication: server validation avoids trusting a false gateway; the profile requires staff client certificates, credentials and MFA, without counting the server certificate as a user factor. 6. IKEv2/authentication: certificates and proof of the private key authenticate gateway peers; they do not replace user identity. 7. Scope: selectors, policy, routing and firewalls delimit protected and allowed flows; a tunnel does not automatically authorize everything. Distractors confuse transport/tunnel, extend protection beyond gateways, omit server validation or incorrectly claim remote access always uses TLS. Sources: RFC 4301, RFC 7296 and Netgate OpenVPN Mode Configuration, verified on 2026-10-08. Each match earns one diagnostic point; this study PBQ requires all 7 correct, without reproducing proprietary CompTIA scoring."
+},
   303: {
     "title": "Firewall rules and segmentation",
     "scenario": "Kestrelia uses a stateful pfSense firewall with Internet (WAN), a routed public screened subnet 203.0.113.0/24 (proxy 203.0.113.10), applications 10.0.20.0/24 (API 10.0.20.10) and management 10.0.30.0/24 (bastion 10.0.30.50; firewall 10.0.30.1). All data is synthetic. Each interface’s rules filter new connections entering that interface from top to bottom: the first match wins. No other floating, group or automatic rules authorize these flows; the state table is initially empty. Reply traffic for an allowed connection uses its state; a new reverse connection is not a reply. Anything unmatched is blocked by implicit deny. On the screened subnet the draft contains, in order: R0 PASS any source 203.0.113.0/24 to any destination 10.0.20.0/24, any protocol/port; R1 PASS proxy to API TCP/8443; R2 BLOCK screened subnet to applications. Listed ports are destination ports; source ports remain ephemeral. NAT is unnecessary in this routed topology. Primary objective 4.5; related objectives 2.5 and 3.2.",

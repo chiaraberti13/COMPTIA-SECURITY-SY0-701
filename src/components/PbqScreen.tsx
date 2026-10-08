@@ -378,7 +378,7 @@ function PbqSummary({ session, scenarios }: { session: PbqSession; scenarios: Pb
       <div className="space-y-2">
         <button
           id="pbq_restart"
-          onClick={() => session.begin(scenarios)}
+          onClick={() => session.begin(session.scenarios.map(p => scenarios.find(localized => localized.id === p.id) ?? p))}
           className="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-bold py-3 rounded transition-all text-xs flex items-center justify-center gap-1.5"
         >
           <RotateCcw className="w-4 h-4" aria-hidden="true" />

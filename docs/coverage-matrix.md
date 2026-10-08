@@ -38,7 +38,7 @@ Peso d'esame 18% · 112 domande nel banco del dominio.
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
 |---|---|---|---|---|---|---|---|---|
 | 3.1 | Confrontare modelli e infrastrutture: cloud service model, deployment model, virtualizzazione, container, IoT/OT, serverless e IaC. | 38 | 0 | 18 | 9 | 11 | 1 | [NIST SP 800-145](https://csrc.nist.gov/pubs/sp/800/145/final), [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final) |
-| 3.2 | Applicare principi di sicurezza a segmentazione, zone, accesso remoto, dispositivi di rete, protocolli e trust boundary. | 31 | 0 | 11 | 15 | 5 | 2 | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [IEEE Std 802.11-2020](https://standards.ieee.org/ieee/802.11/7028/), [Wi-Fi Alliance](https://www.wi-fi.org/discover-wi-fi/security), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
+| 3.2 | Applicare principi di sicurezza a segmentazione, zone, accesso remoto, dispositivi di rete, protocolli e trust boundary. | 31 | 0 | 11 | 15 | 5 | 2 | [IETF RFC 4301](https://www.rfc-editor.org/rfc/rfc4301), [IETF RFC 7296](https://www.rfc-editor.org/rfc/rfc7296), [Netgate OpenVPN Mode Configuration](https://docs.netgate.com/pfsense/en/latest/vpn/openvpn/configure-server-mode.html), [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [IEEE Std 802.11-2020](https://standards.ieee.org/ieee/802.11/7028/), [Wi-Fi Alliance](https://www.wi-fi.org/discover-wi-fi/security), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 3.3 | Proteggere i dati per stato, classificazione e ciclo di vita mediante cifratura, tokenizzazione, masking, DLP e access control. | 24 | 0 | 10 | 13 | 1 | 1 | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj) |
 | 3.4 | Progettare resilienza e recovery con ridondanza, clustering, backup, siti alternativi, testing e obiettivi RTO/RPO. | 23 | 0 | 11 | 3 | 9 | 2 | [NIST SP 800-34 Rev. 1](https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final) |
 
@@ -89,6 +89,8 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti primarie: obiettivi d'esame, standard, specifiche e norme
 
+- [RFC 4301 — IPsec Security Architecture](https://www.rfc-editor.org/rfc/rfc4301) — IETF
+- [RFC 7296 — IKEv2](https://www.rfc-editor.org/rfc/rfc7296) — IETF
 - [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm) — SEC
 - [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act) — FTC
 - [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know) — FTC
@@ -129,6 +131,7 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 
 ### Fonti secondarie: riferimenti di comunità ed enti
 
+- [OpenVPN Mode Configuration](https://docs.netgate.com/pfsense/en/latest/vpn/openvpn/configure-server-mode.html) — Netgate
 - [pfSense Rule Methodology](https://docs.netgate.com/pfsense/en/latest/firewall/rule-methodology.html) — Netgate
 - [pfSense Firewall Fundamentals](https://docs.netgate.com/pfsense/en/latest/firewall/fundamentals.html) — Netgate
 - [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html) — HHS

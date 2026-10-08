@@ -402,3 +402,14 @@ autorizzerebbe
 mascherante
 Netgate
 invariate
+
+# VPN paths PBQ
+intersede
+intercambiabile
+vieti
+decapsulazione
+delimitano
+estendono
+omettono
+intersite
+decapsulation
