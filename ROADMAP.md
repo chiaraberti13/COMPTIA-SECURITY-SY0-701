@@ -359,7 +359,7 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ## Estensione dell'audit — confronto con il PDF ufficiale degli obiettivi SY0-701
 
-Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contro il documento ufficiale *CompTIA Security+ SY0-701 Exam Objectives* (Exam Number SY0-701 V7, Document Version 7.0, © 2023 CompTIA), sotto-obiettivo per sotto-obiettivo sui cinque domini. La copertura di guide, glossario e banca delle domande è risultata ampia: la grande maggioranza delle voci puntate del PDF ha già spiegazione, voce ricercabile o quesito dedicato, e non va duplicata. Il confronto ha però individuato **due sotto-obiettivi non coperti adeguatamente**, documentati sotto con l'evidenza riscontrata. Le attività che seguono non trasformano queste voci in nuovi requisiti d'esame: colmano una lacuna rispetto all'elenco ufficiale, con gli stessi criteri comuni di completamento, parità IT/EN e fonti primarie già richiesti dalla roadmap.
+Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contro il documento ufficiale *CompTIA Security+ SY0-701 Exam Objectives* (Exam Number SY0-701 V7, Document Version 7.0, © 2023 CompTIA), sotto-obiettivo per sotto-obiettivo sui cinque domini **e acronimo per acronimo** sull'intera *Acronym List* finale del PDF (circa 230 sigle, confrontate con match a confine di parola contro `src/data.ts`, `src/data.en.ts`, `src/glossaryIndex.ts`, `src/canonicalTerms.ts` e `src/domainGuides.ts`). La copertura di guide, glossario e banca delle domande è risultata ampia: tutte le sigle centrali dei cinque domini (CIA, AAA, PKI, TLS, IPSec, SAML, OAuth, OIDC, CVSS, CVE, SIEM, EDR/XDR, SPF/DKIM/DMARC, RTO/RPO/MTBF/MTTR, ecc.) hanno già definizione o voce ricercabile e non vanno duplicate. Il confronto ha però individuato **due sotto-obiettivi non coperti adeguatamente** (attività 31–33) e **un insieme di acronimi d'esame rilevanti non reperibili come voce** (attività 34). Le attività che seguono non trasformano queste voci in nuovi requisiti d'esame: colmano una lacuna rispetto all'elenco ufficiale, con gli stessi criteri comuni di completamento, parità IT/EN e fonti primarie già richiesti dalla roadmap.
 
 ### 31. Sensori di rilevamento nella sicurezza fisica (P1 — contenuto)
 
@@ -388,6 +388,25 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
 **Evidenza nel repository:** gli argomenti sono oggi presenti solo come enumerazione dell'obiettivo; non esistono quesiti che richiedano di applicarne le distinzioni in uno scenario. Verificare semanticamente la banca prima di aggiungere ogni quesito, senza dedurre l'assenza dal solo mancato acronimo.
 
 **Accettazione:** almeno due quesiti applicativi con scenario sintetico; ogni domanda si collega alla voce completata nelle attività 31–32 e a un obiettivo principale, con distrattori motivati e spiegazione della risposta corretta e delle alternative. Nessun quesito aggiunto prima del materiale didattico necessario a risolverlo; nessun sensore o vettore presentato come soluzione universale. Verifica IT/EN con Vitest e, dove pertinente, controllo del flusso su mobile.
+
+### 34. Acronimi d'esame rilevanti non reperibili nel glossario (P2 — reperibilità)
+
+- [ ] Rendere ricercabili come acronimo/alias — riutilizzando le spiegazioni esistenti dove il concetto è già presente — le sigle della *Acronym List* SY0-701 che oggi non hanno alcun riscontro nel corpus ma sono pertinenti agli obiettivi, con rimando alla guida del dominio corrispondente.
+
+**Evidenza nel repository:** il confronto dell'intera appendice acronimi (match a confine di parola, maiuscole/minuscole gestite) ha mostrato che le sigle elencate sotto hanno **zero** occorrenze in `src/data.ts`, `src/data.en.ts`, `src/glossaryIndex.ts`, `src/canonicalTerms.ts` e `src/domainGuides.ts`, pur essendo collegate a temi già trattati. Alcune hanno il **concetto già presente ma non l'acronimo ricercabile**; altre mancano del tutto come voce. Non è un invito a catalogare ogni sigla dell'appendice: le voci solo-appendice e non pertinenti agli obiettivi restano escluse (vedi nota finale e la sezione «Argomenti già coperti»).
+
+**Da realizzare** — per gruppo, collegando alla voce/guida esistente senza duplicarla:
+
+- *Threat intelligence (obj 4.3):* **AIS** (Automated Indicator Sharing) come companion di STIX/TAXII già presenti.
+- *Monitoraggio wireless e di rete (obj 4.1/4.5):* **WIDS**, **WIPS**, **NIPS**, companion di NIDS/IPS; distinguere rilevamento wireless da IDS/IPS cablato.
+- *Protocolli sicuri (obj 4.5):* **FTPS**, companion di SFTP già presente; chiarire che FTPS (FTP su TLS) e SFTP (su SSH) sono protocolli diversi.
+- *Gestione endpoint/mobile (obj 4.1):* **UEM** (Unified Endpoint Management), evoluzione di MDM già trattato.
+- *Identità e autenticazione (obj 4.6/4.1):* **PIV** (identità su smart card); **KDC** e **TGT** come meccanismo interno di Kerberos (collegare all'attività 12, senza anticiparne la spiegazione completa); **CHAP**/**MS-CHAP** come protocolli di autenticazione legacy, con avvertenza sui limiti.
+- *Cloud e virtualizzazione (obj 3.1):* **VPC** (Virtual Private Cloud) e **VDI** (Virtual Desktop Infrastructure).
+- *Metriche di resilienza (obj 5.2/3.4):* **MTTF**, companion di MTBF/MTTR già presenti, distinguendo guasto riparabile da non riparabile.
+- *Crittografia (obj 1.4):* rendere ricercabili come acronimo **DSA** (concetto delle firme/ECDSA già presente) e **SED** (self-encrypting drive: espressione già presente, sigla no). Opzionali come companion: **KEK** (collegare all'attività 23 su KMS) e **SCEP** (enrollment, collegare alla PKI).
+
+**Accettazione:** ogni sigla sopra porta alla propria definizione o alla voce esistente tramite ricerca IT/EN; espansione corretta e alias coerenti; nessuna definizione nuova dove il concetto è già spiegato (solo alias/rimando); nessuna sigla inventata nelle flashcard. Le sigle della sola *Acronym List* non pertinenti agli obiettivi (es. BASH, CSU, CTM, ESN, FACL, IDF, MDF, MFD, RACE, RAD, RAS, RIPEMD, RTBH, SDLM, SEH, S-HTTP, SPIM, TSIG, UAV, VBA, VDE, VLSM, VTC, USB OTG, POTS, PBX, MMS, MAN, OTA, P2P, PED, PTZ) **non** vanno promosse a voce, coerentemente con la nota della sezione «Argomenti già coperti». Fonti: documentazione primaria del protocollo/standard pertinente a ciascuna sigla (IETF/RFC, NIST, IEEE, documentazione del produttore), verificata alla data di implementazione.
 
 ## Argomenti già coperti nelle spiegazioni
 
