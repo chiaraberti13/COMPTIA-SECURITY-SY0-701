@@ -3,7 +3,8 @@
  *
  * Two scenarios for each of the five roadmap themes (ordering, matching, log
  * interpretation, incident response, control selection), plus firewall
- * segmentation and VPN paths, spread across the five exam domains and tied to official SY0-701 objectives.
+ * segmentation, VPN paths and enterprise Wi-Fi, spread across the five exam
+ * domains and tied to official SY0-701 objectives.
  *
  * Content rules (same as the rest of the study content, enforced by
  * tests/contentSafety.test.ts and tests/pbqData.test.ts):
@@ -21,6 +22,128 @@
 import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
+{
+  "id": 305,
+  "kind": "matching",
+  "mechanic": "matching",
+  "objective": "4.1",
+  "relatedObjectives": [
+    "3.2"
+  ],
+  "sources": [
+    "ieee8021x",
+    "rfc3748",
+    "rfc9190",
+    "rfc5281",
+    "microsoftPeap"
+  ],
+  "domain": 4,
+  "title": "Wi-Fi enterprise e ruoli 802.1X",
+  "scenario": "Kestrelia usa Wi-Fi enterprise con 802.1X. Topologia testuale: software del portatile (supplicant) ↔ access point in pass-through (authenticator), mediante EAPOL; access point ↔ backend RADIUS/EAP 10.30.0.10 (authentication server), mediante RADIUS. Il backend termina i metodi EAP; l’access point non è il server EAP in questo caso. Identità server attesa: radius.kestrelia.test; CA e nome attesi sono distribuiti nel profilo gestito. Tutti i dati sono sintetici. Profilo A: client e server supportano EAP-TLS 1.3, certificati individuali e chiavi private protette; si richiede autenticazione reciproca con certificati senza password interna. Profilo B: client e backend consentono soltanto PEAP con EAP-MSCHAPv2 interno, password utente e nessun certificato client o token. Profilo C: backend compatibile con PAP non-EAP nel tunnel e client con solo EAP-TTLS per quel profilo; nessun certificato client. I profili B/C sono casi didattici di interoperabilità, non una graduatoria di sicurezza o un consiglio di usare metodi legacy. Le credenziali interne vengono inviate solo dopo la validazione del server. Il certificato server non è un fattore dell’utente. Obiettivo principale 4.1; collegamento 3.2.",
+  "prompt": "Abbina componenti, profili e decisioni alle opzioni corrette. Usa il supporto dichiarato per distinguere i metodi; alcune opzioni sono distrattori.",
+  "prompts": [
+    {
+      "id": "p_supplicant",
+      "text": "Assegnare il ruolo supplicant al componente che richiede accesso e partecipa al metodo EAP.",
+      "correctOptionId": "client"
+    },
+    {
+      "id": "p_authenticator",
+      "text": "Assegnare il ruolo authenticator al componente che controlla l’accesso e inoltra EAP al backend.",
+      "correctOptionId": "ap"
+    },
+    {
+      "id": "p_auth_server",
+      "text": "Assegnare il ruolo authentication server al componente che termina il metodo EAP e verifica le credenziali.",
+      "correctOptionId": "server"
+    },
+    {
+      "id": "p_eap_tls",
+      "text": "Scegliere il metodo del profilo A: certificato client individuale, prova della chiave privata e autenticazione reciproca con certificati, senza password interna.",
+      "correctOptionId": "eap_tls"
+    },
+    {
+      "id": "p_peap",
+      "text": "Scegliere il metodo del profilo B: PEAP con EAP-MSCHAPv2 interno, unico profilo consentito da questi client e dal backend; nessun certificato client.",
+      "correctOptionId": "peap_mschap"
+    },
+    {
+      "id": "p_ttls",
+      "text": "Scegliere il metodo del profilo C: autenticazione PAP non-EAP dentro il tunnel TLS, supportata solo dal profilo EAP-TTLS dichiarato.",
+      "correctOptionId": "ttls_pap"
+    },
+    {
+      "id": "p_server_validation",
+      "text": "Prima di inviare credenziali nel tunnel B/C, decidere come validare il server e gestire un certificato inatteso.",
+      "correctOptionId": "validate_server"
+    },
+    {
+      "id": "p_radius",
+      "text": "Identificare il ruolo di RADIUS nel collegamento access point → backend, senza confonderlo con EAP-TLS/PEAP/EAP-TTLS.",
+      "correctOptionId": "radius_transport"
+    },
+    {
+      "id": "p_factors",
+      "text": "Contare i fattori del personale nel profilo B: password utente e certificato del server, senza token o altro fattore utente.",
+      "correctOptionId": "one_factor"
+    }
+  ],
+  "options": [
+    {
+      "id": "client",
+      "text": "Supplicant: software 802.1X del portatile gestito di Kestrelia."
+    },
+    {
+      "id": "ap",
+      "text": "Authenticator: access point in pass-through; controlla l’accesso e inoltra EAP tramite RADIUS."
+    },
+    {
+      "id": "server",
+      "text": "Authentication server: backend RADIUS/EAP 10.30.0.10; termina EAP e autentica il client."
+    },
+    {
+      "id": "eap_tls",
+      "text": "EAP-TLS: certificati client e server, con validazione delle identità e prova delle chiavi private."
+    },
+    {
+      "id": "peap_mschap",
+      "text": "PEAP con EAP-MSCHAPv2 interno: server autenticato tramite certificato, client tramite credenziali nel tunnel TLS."
+    },
+    {
+      "id": "ttls_pap",
+      "text": "EAP-TTLS con PAP interno non-EAP: certificato server validato e credenziali client inviate soltanto nel tunnel TLS."
+    },
+    {
+      "id": "validate_server",
+      "text": "Profilo distribuito: CA attesa e identità radius.kestrelia.test, catena e validità verificate; rifiutare server inattesi senza approvazione interattiva."
+    },
+    {
+      "id": "radius_transport",
+      "text": "RADIUS trasporta EAP e informazioni AAA fra access point e backend; il metodo EAP è una scelta distinta."
+    },
+    {
+      "id": "one_factor",
+      "text": "Un fattore utente: la password. Il certificato server autentica il server, non è un secondo fattore del personale."
+    },
+    {
+      "id": "swapped_roles",
+      "text": "Supplicant: server RADIUS; authenticator: portatile; authentication server: access point."
+    },
+    {
+      "id": "radius_method",
+      "text": "RADIUS è il metodo EAP che sostituisce EAP-TLS, PEAP ed EAP-TTLS."
+    },
+    {
+      "id": "accept_any",
+      "text": "Accettare qualsiasi certificato server: la presenza del tunnel TLS basta a identificare il server."
+    },
+    {
+      "id": "two_factors",
+      "text": "Due fattori utente: password del personale più certificato del server."
+    }
+  ],
+  "explanation": "1. Supplicant: il software del portatile partecipa ad EAP e presenta le credenziali. 2. Authenticator: l’access point controlla l’accesso e inoltra i messaggi; in questo caso non termina il metodo EAP. 3. Authentication server: il backend RADIUS/EAP verifica le credenziali e restituisce la decisione che l’access point applica. 4. A: EAP-TLS soddisfa l’autenticazione reciproca con certificati e prova delle chiavi private; per TLS 1.3 il riferimento è RFC 9190. 5. B: PEAP/EAP-MSCHAPv2 è determinato dal profilo consentito. PEAP può supportare altri metodi interni, incluso EAP-TLS: non significa sempre password. 6. C: EAP-TTLS può trasportare PAP non-EAP nel tunnel; il supporto dichiarato rende questa la scelta corretta. TTLS non significa sempre PAP e può usare anche metodi EAP interni. 7. Validazione: fidarsi soltanto del certificato presente non basta; verificare catena, CA attesa, validità e identità del server atteso, con profilo distribuito e senza accettare manualmente server inattesi. Applicare anche la policy di revoca prevista dall’implementazione e custodire la chiave privata del client. 8. RADIUS: è il protocollo AAA fra access point e backend, con trasporto dei messaggi EAP; EAPOL copre il tratto client/access point. RADIUS non è un metodo EAP e da solo non garantisce cifratura di tutto il traffico. 9. Fattori: in B la password è un solo fattore utente; il certificato server autentica un’altra parte e non trasforma la password in MFA. I distrattori scambiano i ruoli, confondono RADIUS con EAP, omettono la validazione o contano un falso secondo fattore. 802.1X regola l’accesso: non garantisce da solo protezione da jamming o da ogni AP malevolo. Fonti: IEEE 802.1X, RFC 3748, RFC 9190, RFC 5281 e Microsoft PEAP, verificate il 2026-10-08. Ogni abbinamento vale un punto diagnostico; questa PBQ di studio richiede tutti e 9 corretti, senza riprodurre lo scoring proprietario CompTIA."
+},
 {
   "id": 304,
   "kind": "matching",

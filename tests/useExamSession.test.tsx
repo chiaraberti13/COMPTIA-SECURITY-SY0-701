@@ -162,3 +162,26 @@ describe("vpn PBQ persisted result", () => {
     expect(restored.result.current.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [3] });
   });
 });
+
+describe("wifi PBQ persisted result", () => {
+  it("records the fully correct task once and restores its history after remount", () => {
+    const wifi = getPbqScenarios("it").find(p => p.id === 305)!;
+    if (wifi.mechanic !== "matching") throw new Error("wifi fixture");
+    const item: ExamItem = { kind: "pbq", key: "pbq:305", domain: 4, objectives: ["4.1"], pbq: wifi };
+    const hook = renderHook(() => {
+      const quiz = useQuizSession({ paused: false });
+      return { exam: useExamSession(quiz.recordExam), quiz };
+    }, { wrapper });
+    act(() => hook.result.current.exam.begin([item], false));
+    for (const p of wifi.prompts) act(() => hook.result.current.exam.setMatch(p.id, p.correctOptionId));
+    act(() => hook.result.current.exam.finish());
+    act(() => hook.result.current.exam.finish());
+    expect(hook.result.current.quiz.quizHistory).toHaveLength(1);
+    expect(hook.result.current.quiz.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+    expect(hook.result.current.quiz.questionProgress).toEqual({});
+    hook.unmount();
+    const restored = renderHook(() => useQuizSession({ paused: false }), { wrapper });
+    expect(restored.result.current.quizHistory).toHaveLength(1);
+    expect(restored.result.current.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+  });
+});

@@ -92,6 +92,8 @@ test("PBQ-only exam works offline in English, reports unanswered work and can re
   await noAxeErrors(page);
   await page.locator("#exam_repeat").click();
   await expect(page.locator("#exam_results")).toHaveCount(0);
-  await expect(page.locator(`#pbq_match_${task.first}`)).toHaveValue("");
+  // Repeat draws a fresh random exam; it may choose the other domain-3 PBQ.
+  const repeatedTask = await currentMatching(page);
+  await expect(page.locator(`#pbq_match_${repeatedTask.first}`)).toHaveValue("");
   await context.setOffline(false);
 });

@@ -2,9 +2,15 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const solution = [
-  ["p_public_https", "wan_https"], ["p_proxy_api", "dmz_api"],
-  ["p_admin_ssh", "mgmt_ssh"], ["p_firewall_gui", "mgmt_gui"],
-  ["p_shadowed", "remove_broad"], ["p_reply", "state_reply"], ["p_unmatched", "implicit_deny"],
+  ["p_supplicant", "client"],
+  ["p_authenticator", "ap"],
+  ["p_auth_server", "server"],
+  ["p_eap_tls", "eap_tls"],
+  ["p_peap", "peap_mschap"],
+  ["p_ttls", "ttls_pap"],
+  ["p_server_validation", "validate_server"],
+  ["p_radius", "radius_transport"],
+  ["p_factors", "one_factor"]
 ];
 async function open(page: Page) {
   await page.goto("/");
@@ -26,12 +32,12 @@ async function accessible(page: Page) {
   expect(violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => v.id)).toEqual([]);
 }
 for (const lang of ["it", "en"] as const) {
-  test(`${lang}: firewall task can be answered and reset using the keyboard`, async ({ page }) => {
+  test(`${lang}: Wi-Fi task can be answered and reset using the keyboard`, async ({ page }) => {
     await open(page);
     await page.locator(`#lang_btn_${lang}`).click();
     await page.locator("#tab_btn_pbq").click();
-    await page.locator("#pbq_start_303").focus();
-    await page.locator("#pbq_start_303").press("Enter");
+    await page.locator("#pbq_start_305").focus();
+    await page.locator("#pbq_start_305").press("Enter");
     await accessible(page);
     for (const [id, value] of solution) await keyboardMatch(page, id, value);
     await page.locator("#pbq_submit").focus();
@@ -42,13 +48,13 @@ for (const lang of ["it", "en"] as const) {
     await page.locator("#pbq_restart").click();
     for (const [id] of solution) await expect(page.locator(`#pbq_match_${id}`)).toHaveValue("");
     await expect(page.locator("#pbq_submit")).toBeDisabled();
-    for (const [id, value] of solution) await keyboardMatch(page, id, id === "p_shadowed" ? "late_block" : value);
+    for (const [id, value] of solution) await keyboardMatch(page, id, id === "p_server_validation" ? "accept_any" : value);
     await page.locator("#pbq_submit").click();
-    await expect(page.locator("#pbq_match_row_p_shadowed")).toContainText(lang === "it" ? "Corretto: Rimuovere R0" : "Correct: Remove overly broad R0");
+    await expect(page.locator("#pbq_match_row_p_server_validation")).toContainText(lang === "it" ? "Corretto: Profilo distribuito" : "Correct: Provisioned profile");
   });
 }
 
-test("firewall answer survives exam navigation and language changes; result persists after reload", async ({ page }) => {
+test("Wi-Fi answer survives exam navigation and language changes; result persists after reload", async ({ page }) => {
   await open(page);
   await page.locator("#tab_btn_quiz").click();
   for (let d = 1; d <= 5; d++) {
@@ -59,19 +65,19 @@ test("firewall answer survives exam navigation and language changes; result pers
   await page.locator("#exam_pbq_count").selectOption("5");
   await page.locator("#start_exam_btn").click();
   for (let n = 0; n < 5; n++) {
-    if (await page.locator("#pbq_match_p_public_https").count()) break;
+    if (await page.locator("#pbq_match_p_supplicant").count()) break;
     await page.locator("#exam_next").click();
   }
   for (const [id, value] of solution) await keyboardMatch(page, id, value);
   await page.locator("#lang_btn_en").click();
-  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  await expect(page.locator("#pbq_match_p_supplicant")).toHaveValue("client");
   const next = page.locator("#exam_next");
   if (await next.isEnabled()) {
     await next.click(); await page.locator("#exam_previous").click();
   } else {
     await page.locator("#exam_previous").click(); await next.click();
   }
-  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  await expect(page.locator("#pbq_match_p_supplicant")).toHaveValue("client");
   await page.locator("#exam_finish").click();
   await expect(page.locator("#exam_score")).toContainText("1 / 5");
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));

@@ -10,6 +10,10 @@ export interface Source {
 }
 
 export const SOURCES = {
+  ciscoWpa3Modes: { title: "Wi-Fi 6E WLAN Layer 2 Security", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/wireless/catalyst-9800-series-wireless-controllers/220712-configure-and-verify-wi-fi-6e-wlan-layer.html", kind: "reference" },
+  ieee8021x: { title: "IEEE 802.1X — Port-Based Network Access Control", publisher: "IEEE", url: "https://1.ieee802.org/security/802-1x/", kind: "standard" },
+  rfc3748: { title: "RFC 3748 — EAP", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc3748", kind: "standard" },
+  microsoftPeap: { title: "Protected Extensible Authentication Protocol (PEAP)", publisher: "Microsoft", url: "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-peap/5308642b-90c9-4cc4-beec-fb367325c0f9", kind: "reference" },
   rfc4301: { title: "RFC 4301 — IPsec Security Architecture", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc4301", kind: "standard" },
   rfc7296: { title: "RFC 7296 — IKEv2", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc7296", kind: "standard" },
   netgateOpenvpnMode: { title: "OpenVPN Mode Configuration", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/vpn/openvpn/configure-server-mode.html", kind: "reference" },
@@ -104,7 +108,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "3.2": mapped("rfc4301", "rfc7296", "netgateOpenvpnMode", "nist800207", "ieee80211", "wifiAlliance", "cisControls"),
   "3.3": mapped("nist80057", "gdpr"),
   "3.4": mapped("nist80034"),
-  "4.1": mapped("nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),
+  "4.1": mapped("ciscoWpa3Modes", "ieee8021x", "rfc3748", "microsoftPeap", "nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
   "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
   "4.4": mapped("nist80092", "mitreAttack"),

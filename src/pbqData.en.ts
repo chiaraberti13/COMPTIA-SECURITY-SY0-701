@@ -21,6 +21,38 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+305: {
+  "title": "Enterprise Wi-Fi and 802.1X roles",
+  "scenario": "Kestrelia uses enterprise Wi-Fi with 802.1X. Text topology: laptop software (supplicant) ↔ pass-through access point (authenticator), using EAPOL; access point ↔ RADIUS/EAP backend 10.30.0.10 (authentication server), using RADIUS. The backend terminates the EAP methods; the access point is not the EAP server in this case. Expected server identity: radius.kestrelia.test; the expected CA and name are provisioned in the managed profile. All data is synthetic. Profile A: client and server support EAP-TLS 1.3, individual certificates and protected private keys; mutual certificate authentication without an inner password is required. Profile B: client and backend allow only PEAP with inner EAP-MSCHAPv2, a user password and no client certificate or token. Profile C: backend supports non-EAP PAP inside the tunnel and clients support only EAP-TTLS for that profile; no client certificate. Profiles B/C are instructional interoperability cases, not a security ranking or advice to use legacy methods. Inner credentials are sent only after server validation. The server certificate is not a user factor. Primary objective 4.1; related objective 3.2.",
+  "prompt": "Match components, profiles and decisions to the correct options. Use the stated support to distinguish methods; some options are distractors.",
+  "prompts": {
+    "p_supplicant": "Assign the supplicant role to the component requesting access and participating in the EAP method.",
+    "p_authenticator": "Assign the authenticator role to the component controlling access and forwarding EAP to the backend.",
+    "p_auth_server": "Assign the authentication server role to the component terminating the EAP method and checking credentials.",
+    "p_eap_tls": "Choose the method for profile A: individual client certificate, proof of the private key and mutual certificate authentication, without an inner password.",
+    "p_peap": "Choose the method for profile B: PEAP with inner EAP-MSCHAPv2, the only profile allowed by these clients and the backend; no client certificate.",
+    "p_ttls": "Choose the method for profile C: non-EAP PAP authentication inside the TLS tunnel, supported only by the stated EAP-TTLS profile.",
+    "p_server_validation": "Before sending credentials inside the B/C tunnel, decide how to validate the server and handle an unexpected certificate.",
+    "p_radius": "Identify the role of RADIUS on the access point → backend link without confusing it with EAP-TLS/PEAP/EAP-TTLS.",
+    "p_factors": "Count the staff factors in profile B: user password and server certificate, without a token or another user factor."
+  },
+  "options": {
+    "client": "Supplicant: 802.1X software on the managed Kestrelia laptop.",
+    "ap": "Authenticator: pass-through access point; controls access and forwards EAP through RADIUS.",
+    "server": "Authentication server: RADIUS/EAP backend 10.30.0.10; terminates EAP and authenticates the client.",
+    "eap_tls": "EAP-TLS: client and server certificates, with identity validation and proof of private keys.",
+    "peap_mschap": "PEAP with inner EAP-MSCHAPv2: server authenticated by certificate, client by credentials inside the TLS tunnel.",
+    "ttls_pap": "EAP-TTLS with inner non-EAP PAP: validated server certificate and client credentials sent only inside the TLS tunnel.",
+    "validate_server": "Provisioned profile: expected CA and identity radius.kestrelia.test, checked chain and validity; reject unexpected servers without an interactive override.",
+    "radius_transport": "RADIUS transports EAP and AAA information between access point and backend; the EAP method is a separate choice.",
+    "one_factor": "One user factor: the password. The server certificate authenticates the server, not a second staff factor.",
+    "swapped_roles": "Supplicant: RADIUS server; authenticator: laptop; authentication server: access point.",
+    "radius_method": "RADIUS is the EAP method replacing EAP-TLS, PEAP and EAP-TTLS.",
+    "accept_any": "Accept any server certificate: the presence of a TLS tunnel is enough to identify the server.",
+    "two_factors": "Two user factors: staff password plus server certificate."
+  },
+  "explanation": "1. Supplicant: laptop software participates in EAP and presents credentials. 2. Authenticator: the access point controls access and forwards messages; in this case it does not terminate the EAP method. 3. Authentication server: the RADIUS/EAP backend checks credentials and returns the decision enforced by the access point. 4. A: EAP-TLS meets mutual certificate authentication and proof of private keys; RFC 9190 is the reference for TLS 1.3. 5. B: PEAP/EAP-MSCHAPv2 is determined by the allowed profile. PEAP can support other inner methods, including EAP-TLS: it does not always mean passwords. 6. C: EAP-TTLS can carry non-EAP PAP inside the tunnel; the stated support makes this the correct choice. TTLS does not always mean PAP and can also use inner EAP methods. 7. Validation: merely seeing a certificate is insufficient; check the chain, expected CA, validity and expected server identity, with a provisioned profile and without manually accepting unexpected servers. Also apply the implementation’s revocation policy and protect the client private key. 8. RADIUS: it is the AAA protocol between access point and backend, carrying EAP messages; EAPOL covers the client/access point link. RADIUS is not an EAP method and alone does not guarantee encryption of all traffic. 9. Factors: in B the password is one user factor; the server certificate authenticates another party and does not turn the password into MFA. Distractors swap roles, confuse RADIUS with EAP, omit validation or count a false second factor. 802.1X regulates access: alone it does not guarantee protection from jamming or every malicious AP. Sources: IEEE 802.1X, RFC 3748, RFC 9190, RFC 5281 and Microsoft PEAP, verified on 2026-10-08. Each match earns one diagnostic point; this study PBQ requires all 9 correct, without reproducing proprietary CompTIA scoring."
+},
 304: {
   "title": "VPN paths and protection across two sites",
   "scenario": "Kestrelia connects site A (network 10.10.0.0/24, public gateway A 203.0.113.10) and site B (network 10.20.0.0/24, public gateway B 198.51.100.20, server B 10.20.0.20). Text topology: remote laptop → Internet → gateway A → network A; network A → gateway A → Internet → gateway B → network B/server B. Synthetic data. The managed laptop has only the OpenVPN TLS remote access profile to A, with an individual client certificate, credentials and MFA through an already configured backend. The client must validate the VPN server certificate and identity. The intersite link requires IKEv2/IPsec ESP with encryption and integrity, gateway certificates and traffic selectors 10.10.0.0/24 ↔ 10.20.0.0/24. Internal hosts do not terminate IPsec; no additional IP-in-IP tunnels are planned. Server B offers HTTPS and terminates TLS on the server itself. Consider each link separately: the remote profile does not include forwarding to B. The VPN terminates at the gateway; do not assume cryptographic protection beyond that point or for traffic excluded by the selectors. Objective 3.2; related objectives 1.4 and 4.6.",

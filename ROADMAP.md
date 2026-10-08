@@ -239,13 +239,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 17. Wi-Fi enterprise e ruoli 802.1X
 
-- [ ] Aggiungere una PBQ di abbinamento fra requisiti Wi-Fi, ruoli 802.1X e metodi EAP (obiettivo principale 4.1; collegamento 3.2).
+- [x] Aggiungere una PBQ di abbinamento fra requisiti Wi-Fi, ruoli 802.1X e metodi EAP (obiettivo principale 4.1; collegamento 3.2).
 
 **Evidenza nel repository:** La banca contiene già una domanda sul Wi-Fi con certificati (40199), ma manca un esercizio interattivo che colleghi client, access point, RADIUS e validazione del server.
 
 **Da realizzare:** associare supplicant/authenticator/authentication server ai componenti, quindi profili con certificato client o autenticazione nel tunnel ai metodi pertinenti. Dichiarare le condizioni che distinguono PEAP ed EAP-TTLS ed evitare scelte ugualmente valide. Dipendenza: attività 5 e 11.
 
 **Accettazione:** RADIUS non viene confuso con il metodo EAP e il certificato del server non è contato come fattore aggiuntivo dell'utente. Fonti: IEEE 802.1X e specifiche dei metodi EAP.
+
+**Completato il 2026-10-08:** aggiunta la PBQ originale 305 con nove abbinamenti e quattro distrattori IT/EN: ruoli supplicant/authenticator/authentication server, EAP-TLS, PEAP/EAP-MSCHAPv2, EAP-TTLS/PAP, validazione server, trasporto RADIUS e fattori utente. Topologia testuale sintetica e compatibilità dei profili rendono le scelte determinate, senza confondere RADIUS con EAP né contare il certificato server come MFA del personale. Collegate le fonti IEEE 802.1X, RFC 3748/9190/5281 e Microsoft e gli obiettivi 4.1/3.2; soluzione e limiti in `docs/wifi-pbq.md`. Corretta la spiegazione del quesito 40199 in IT/EN eliminando la graduatoria assoluta EAP e distinguendo la modalità WPA3-Enterprise a 192 bit, con fonte Cisco e registro traduzioni aggiornato. Aggiornati report e test browser per la selezione delle PBQ e la nuova estrazione su ripetizione. Superati 889 test Vitest e 22 test Playwright desktop/mobile (tastiera, IT/EN, feedback, reset, navigazione, storico, axe e overflow), typecheck, lint, Markdown, ortografia IT/EN, build e smoke test di produzione.
 
 ### 18. SPF, DKIM e risultato DMARC
 

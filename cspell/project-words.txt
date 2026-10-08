@@ -413,3 +413,9 @@ estendono
 omettono
 intersite
 decapsulation
+
+# Enterprise Wi-Fi PBQ
+EAPOL
+didattici
+graduatoria
+interattiva
