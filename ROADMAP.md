@@ -401,11 +401,13 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
 
 ### 33. Quiz su sensori fisici e vettori non umani (P2 — quiz)
 
-- [ ] Aggiungere almeno quattro domande originali: due sui sensori di rilevamento fisico (scelta del sensore in funzione del contesto e funzione detective) e due sui vettori non umani (distinzione fra mezzo di consegna e tecnica). Dipendenza: completare prima le attività 31 e 32.
+- [x] Aggiungere almeno quattro domande originali: due sui sensori di rilevamento fisico (scelta del sensore in funzione del contesto e funzione detective) e due sui vettori non umani (distinzione fra mezzo di consegna e tecnica). Dipendenza: completare prima le attività 31 e 32.
 
 **Evidenza nel repository:** gli argomenti sono oggi presenti solo come enumerazione dell'obiettivo; non esistono quesiti che richiedano di applicarne le distinzioni in uno scenario. Verificare semanticamente la banca prima di aggiungere ogni quesito, senza dedurre l'assenza dal solo mancato acronimo.
 
 **Accettazione:** almeno due quesiti applicativi con scenario sintetico; ogni domanda si collega alla voce completata nelle attività 31–32 e a un obiettivo principale, con distrattori motivati e spiegazione della risposta corretta e delle alternative. Nessun quesito aggiunto prima del materiale didattico necessario a risolverlo; nessun sensore o vettore presentato come soluzione universale. Verifica IT/EN con Vitest e, dove pertinente, controllo del flusso su mobile.
+
+**Completato l’8 ottobre 2026:** aggiunte quattro domande originali alla banca, integrate nel flusso localizzato dell'app e tradotte in inglese: due su `Physical Security Controls` (selezione contestuale del sensore a pressione e funzione detective dei sensori) e due su `Threat Vectors & Attack Surfaces` (QR/image-based e dispositivo rimovibile). Tutte usano scenari, quattro opzioni e spiegazioni che motivano la risposta corretta e distinguono i distrattori; le domande sono collegate rispettivamente agli obiettivi 1.2 e 2.2. Test Vitest dedicato per presenza nella banca IT/EN, answer key e mappatura degli obiettivi.
 
 ### 34. Copertura completa della Acronym List SY0-701 (P1 — reperibilità totale)
 
