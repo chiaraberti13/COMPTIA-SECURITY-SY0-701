@@ -54,6 +54,8 @@ export const MENTIONS: [SourceId, RegExp][] = [
   ["nist80037", /SP ?800-37/],
   ["nist80088", /SP ?800-88/],
   ["rfc8446", /RFC ?8446/],
+  ["rfc9190", /RFC ?9190/],
+  ["rfc5281", /RFC ?5281/],
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
@@ -89,6 +91,9 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "2:CVSSVuln": [{ source: "firstCvss" }],
   "3:PaaSCloud": [{ source: "owaspTop10" }],
   "3:TLSTerminationOffload": [{ source: "rfc8446" }],
+  "3:EAP-TLS": [{ source: "rfc9190" }, { source: "microsoftEapCertificates" }],
+  "3:EAP-TTLS": [{ source: "rfc5281" }],
+  "3:PEAP": [{ source: "microsoftEapCertificates" }, { source: "microsoftWifiProfiles" }],
   "3:SaaSCloud": [{ source: "iso27001" }, { source: "soc2" }],
   "3:APIArchitecture": [{ source: "owaspTop10" }],
   "3:WAFFire": [{ source: "owaspTop10" }],

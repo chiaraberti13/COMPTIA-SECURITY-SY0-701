@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { getDomainGuide } from "../src/domainGuides";
 import { getDomainTopics, loadEnglishOverlay } from "../src/localizedData";
+import { CONCEPT_CITATIONS } from "../src/citations";
 
 const methods = ["EAP-TLS", "EAP-TTLS", "PEAP"];
 
@@ -17,9 +18,12 @@ describe("EAP method glossary and server validation", () => {
         expect(topic!.definition.length).toBeGreaterThan(40);
         expect(topic!.details).toMatch(/CA|certificat|certificate/i);
         expect(topic!.examTip).toMatch(/MFA|fattore|factor/i);
+        expect(CONCEPT_CITATIONS[`3:${key}` as keyof typeof CONCEPT_CITATIONS]).toBeDefined();
       }
       const parent = topics.find((entry) => entry.checklistKey === "EAPProtocol_New");
       expect(parent?.definition).not.toMatch(/il più sicuro|most secure|the most secure/i);
+      expect(parent?.details).toMatch(/802\.1X/);
+      expect(parent?.details).not.toMatch(/WPA3-PSK/);
     }
   });
 

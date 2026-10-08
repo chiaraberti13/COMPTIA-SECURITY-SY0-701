@@ -3,6 +3,8 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import * as data from "../src/data";
 import { DOMAIN_GUIDES_IT } from "../src/domainGuides";
+import { EAP_METHOD_GUIDE_COMPARISON } from "../src/eapMethodGuide";
+import { EAP_METHOD_TOPICS } from "../src/eapMethodTopics";
 import type { Question, TopicGroup } from "../src/types";
 
 /**
@@ -49,6 +51,10 @@ function italianSources(): Record<string, string> {
       units[`guide D${d} ${field}`] = fingerprint(value);
     }
   }
+  for (const s of EAP_METHOD_TOPICS.it.subtopics) {
+    units[`concept D3 ${s.checklistKey}`] = fingerprint([s.name, s.definition, s.details, s.examTip, s.keyFormulas, s.comparativeTable]);
+  }
+  units["guide D4 EAP method comparison"] = fingerprint(EAP_METHOD_GUIDE_COMPARISON.it);
   return Object.fromEntries(Object.entries(units).sort(([a], [b]) => a.localeCompare(b)));
 }
 

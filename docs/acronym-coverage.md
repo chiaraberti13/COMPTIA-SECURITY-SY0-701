@@ -19,7 +19,7 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 |---|---|---|
 | Sigle nella Acronym List | 329 | 100% |
 | Ricercabili nel glossario | 244 | 74.2% |
-| Con voce/flashcard dedicata | 81 | 24.6% |
+| Con voce/flashcard dedicata | 82 | 24.9% |
 | Non ancora ricercabili | 85 | 25.8% |
 
 ## Sigle non ancora ricercabili
@@ -225,7 +225,6 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - PCAP — Packet Capture
 - PCI DSS — Payment Card Industry Data Security Standard
 - PDU — Power Distribution Unit
-- PEAP — Protected Extensible Authentication Protocol
 - PGP — Pretty Good Privacy
 - PHI — Personal Health Information
 - PII — Personally Identifiable Information
