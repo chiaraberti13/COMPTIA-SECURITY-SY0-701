@@ -29,7 +29,7 @@ e livello cognitivo in [`docs/coverage-matrix.md`](coverage-matrix.md).
 | Obiettivi ufficiali coperti da domande | 28 / 28 | 28 / 28 | ✅ raggiunto |
 | Domande per l'obiettivo più scoperto | 15 (1.1: 15, 4.4: 16, 2.3: 17) | ≥ 10 | ✅ raggiunto |
 | Guide di dominio complete | 5 / 5 | 5 / 5 | ✅ raggiunto |
-| Esercizi guidati nelle guide | 42 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
+| Esercizi guidati nelle guide | 43 | ≥ 1 per obiettivo (≥ 28) | ✅ raggiunto |
 | Scenari PBQ nel simulatore | 10 | ≥ 1 | ✅ raggiunto |
 
 ## 2. Freschezza delle revisioni
@@ -101,7 +101,7 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
 | Lingua sorgente di verità | Italiano, con overlay inglese e fallback | parità verificata a ogni commit | ✅ raggiunto |
-| Concetti (sottovoci) tradotti e in parità | 583 | 100% | ✅ raggiunto |
+| Concetti (sottovoci) tradotti e in parità | 586 | 100% | ✅ raggiunto |
 | Domande tradotte e in parità | 682 | 100% | ✅ raggiunto |
 
 | Gate di parità | File | Stato |

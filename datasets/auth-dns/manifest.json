@@ -2,7 +2,7 @@
   "id": "auth-dns",
   "version": 1,
   "synthetic": true,
-  "license": "MIT",
+  "license": "GPL-3.0",
   "owner": "chiaraberti13",
   "reviewed": "2026-10-05",
   "nextReview": "2027-01-05",

@@ -334,3 +334,11 @@ steganographic
 
 Sidejacking
 ICANN
+
+# Valid Italian terms used in the Zero Trust lesson.
+coordinando
+Disambiguazione
+Collegalo
+interromperlo
+Descrivi
+rivaluta

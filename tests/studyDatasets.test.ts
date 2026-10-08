@@ -16,14 +16,16 @@ describe("synthetic study evidence", () => {
       for (const name of readdirSync(temporary)) expect(readFileSync(path.join(temporary, name))).toEqual(read(name));
       const manifest = JSON.parse(read("manifest.json").toString());
       expect(manifest.synthetic).toBe(true);
-      expect(manifest.license).toBe("MIT");
+      expect(manifest.license).toBe("GPL-3.0");
       expect(manifest.objectives).toEqual(["2.4", "4.4", "4.8", "4.9"]);
       expect(manifest.files.map((x: { name: string }) => x.name).sort()).toEqual(Object.keys(studyDataset()).sort());
       for (const file of manifest.files) {
         expect(read(file.name).length).toBe(file.bytes);
         expect(createHash("sha256").update(read(file.name)).digest("hex")).toBe(file.sha256);
       }
-      expect(readFileSync("datasets/LICENSE", "utf8")).toContain("MIT License");
+      const license = readFileSync("datasets/LICENSE", "utf8");
+      expect(license).toContain("GNU GENERAL PUBLIC LICENSE");
+      expect(license).toContain("Version 3, 29 June 2007");
     } finally { rmSync(temporary, { recursive: true, force: true }); }
   });
 

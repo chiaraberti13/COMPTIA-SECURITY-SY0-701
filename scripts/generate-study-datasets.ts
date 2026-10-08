@@ -54,7 +54,7 @@ export function generateStudyDataset(root: string) {
   const files = studyDataset();
   for (const [name, data] of Object.entries(files)) writeFileSync(path.join(root, name), data);
   writeFileSync(path.join(root, "manifest.json"), JSON.stringify({
-    id: "auth-dns", version: 1, synthetic: true, license: "MIT", owner: "chiaraberti13",
+    id: "auth-dns", version: 1, synthetic: true, license: "GPL-3.0", owner: "chiaraberti13",
     reviewed: "2026-10-05", nextReview: "2027-01-05", objectives: ["2.4", "4.4", "4.8", "4.9"],
     files: Object.entries(files).map(([name, data]) => ({ name, bytes: data.length, sha256: createHash("sha256").update(data).digest("hex") })),
   }, null, 2) + "\n");

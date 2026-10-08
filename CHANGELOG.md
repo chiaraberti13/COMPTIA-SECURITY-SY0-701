@@ -8,6 +8,12 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Aligned the synthetic dataset generator, manifest and license checks with the GPL-3.0 dataset license already present on main.
+- Allineati generatore, manifest e controlli dei dataset sintetici alla licenza GPL-3.0 già presente su main.
+
+- Added searchable PE, PA and PEP glossary entries, acronym flashcards and a Domain 1 authorization/revocation exercise in IT/EN, aligned with NIST SP 800-207. Corrected related questions and linked the existing control/data plane explanations.
+- Aggiunte voci ricercabili PE, PA e PEP, flashcard degli acronimi ed esercizio di autorizzazione/revoca nella guida del Dominio 1 in IT/EN, coerenti con NIST SP 800-207. Corrette le domande collegate e collegati i contenuti su control/data plane.
+
 - Removed the vulnerable Markdown CLI dependency chain while preserving lint rules and document coverage. Added six generative security properties with fast-check, full dependency auditing in CI, and documented Scorecard governance requirements.
 - Rimossa la catena vulnerabile del CLI Markdown mantenendo regole e copertura dei documenti. Aggiunte sei proprietà generative di sicurezza con fast-check, audit completo delle dipendenze in CI e documentazione dei requisiti di governance Scorecard.
 

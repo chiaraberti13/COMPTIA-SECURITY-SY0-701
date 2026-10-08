@@ -82,6 +82,9 @@ const DOMAIN_1_ACRONYMS = acronymList([
   ["ECC", "Elliptic Curve Cryptography"],
   ["HSM", "Hardware Security Module"],
   ["OCSP", "Online Certificate Status Protocol"],
+  ["PA", "Policy Administrator"],
+  ["PE", "Policy Engine"],
+  ["PEP", "Policy Enforcement Point"],
   ["PKI", "Public Key Infrastructure"],
   ["RSA", "Rivest, Shamir, and Adleman"],
   ["SHA", "Secure Hash Algorithm"],
@@ -230,6 +233,31 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Zero Trust: PE, PA e PEP (1.2)",
+        "headers": [
+          "Ruolo",
+          "Piano",
+          "Responsabilità"
+        ],
+        "rows": [
+          [
+            "Policy Engine (PE)",
+            "Control Plane",
+            "Decide: consenti, nega o revoca usando policy e segnali contestuali."
+          ],
+          [
+            "Policy Administrator (PA)",
+            "Control Plane",
+            "Coordina: esegue il verdetto, prepara token e istruisce il PEP."
+          ],
+          [
+            "Policy Enforcement Point (PEP)",
+            "Data Plane",
+            "Applica: abilita, monitora o termina il percorso verso la risorsa."
+          ]
+        ]
+      },
+      {
         title: "Tipi di controllo: quando agiscono",
         headers: ["Tipo", "Funzione", "Esempio"],
         rows: [
@@ -320,6 +348,10 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      {
+        "misconception": "Il PA scrive le policy e decide autonomamente; il PEP è sempre un firewall separato.",
+        "correction": "PE decide, PA coordina, PEP applica e monitora. Sono ruoli logici, anche nello stesso prodotto; PE e PA formano il Policy Decision Point (PDP). PA qui significa Policy Administrator Zero Trust. Fonte: NIST SP 800-207, sezione 3."
+      },
       { misconception: "L'hash cifra i dati.", correction: "L'hash è una funzione a senso unico: rileva modifiche ma non protegge la confidenzialità e non si decifra." },
       { misconception: "Il salt deve restare segreto.", correction: "Il salt deve essere unico e casuale per ogni password, non segreto: rende inutili le rainbow table e obbliga ad attaccare ogni hash separatamente." },
       { misconception: "La cifratura full-disk protegge anche un computer acceso e sbloccato.", correction: "La full-disk protegge i dati a riposo, per esempio un portatile rubato e spento. Con il sistema sbloccato i dati sono accessibili a utente e malware." },
@@ -347,6 +379,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.2",
+        "title": "Flusso Zero Trust: autorizzazione e revoca",
+        "prompt": "Un consulente (subject) usa un portatile gestito (system) per leggere il portale Kestrelia. Identità MFA e stato del dispositivo soddisfano la policy. Durante la sessione arriva un allarme di compromissione. Descrivi chi decide, chi coordina e chi applica prima e dopo l’allarme.",
+        "reasoning": "1. Il Policy Engine (PE) valuta policy, identità, stato del dispositivo e contesto e autorizza. 2. Il Policy Administrator (PA) esegue il verdetto: prepara le credenziali di sessione previste e istruisce il Policy Enforcement Point (PEP). 3. Il PEP apre il percorso subject/system → risorsa nel Data Plane e monitora la connessione. 4. L’allarme alimenta la verifica continua: il PE rivaluta e revoca, il PA ordina la chiusura, il PEP termina il percorso. PE e PA appartengono al Control Plane; il traffico dei dati non attraversa queste funzioni. Una credenziale valida non garantisce fiducia permanente. Fonte: NIST SP 800-207, sezione 3."
+      },
       {
         "objective": "1.4",
         "title": "Messaggio nascosto o contenuto protetto?",
@@ -1774,6 +1812,31 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     comparisons: [
       {
+        "title": "Zero Trust: PE, PA and PEP (1.2)",
+        "headers": [
+          "Role",
+          "Plane",
+          "Responsibility"
+        ],
+        "rows": [
+          [
+            "Policy Engine (PE)",
+            "Control Plane",
+            "Decides: grant, deny or revoke using policy and contextual signals."
+          ],
+          [
+            "Policy Administrator (PA)",
+            "Control Plane",
+            "Coordinates: executes the verdict, prepares tokens and instructs the PEP."
+          ],
+          [
+            "Policy Enforcement Point (PEP)",
+            "Data Plane",
+            "Enforces: enables, monitors or terminates the path to the resource."
+          ]
+        ]
+      },
+      {
         title: "Control types: when they act",
         headers: ["Type", "Function", "Example"],
         rows: [
@@ -1864,6 +1927,10 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     ],
     commonTraps: [
+      {
+        "misconception": "The PA authors policies and decides independently; the PEP is always a separate firewall.",
+        "correction": "PE decides, PA coordinates, PEP enforces and monitors. These are logical roles, possibly in one product; PE and PA form the Policy Decision Point (PDP). PA here means Zero Trust Policy Administrator. Source: NIST SP 800-207, section 3."
+      },
       { misconception: "Hashing encrypts data.", correction: "A hash is a one-way function: it detects changes but does not protect confidentiality and cannot be decrypted." },
       { misconception: "The salt must be kept secret.", correction: "The salt must be unique and random for every password, not secret: it defeats rainbow tables and forces each hash to be attacked separately." },
       { misconception: "Full-disk encryption also protects a computer that is on and unlocked.", correction: "Full-disk encryption protects data at rest, for example a stolen laptop that is powered off. On an unlocked system the data is available to the user and to malware." },
@@ -1891,6 +1958,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.2",
+        "title": "Zero Trust flow: authorization and revocation",
+        "prompt": "A consultant (subject) uses a managed laptop (system) to read the Kestrelia portal. MFA identity and device posture satisfy policy. A compromise alert arrives during the session. Describe who decides, coordinates and enforces before and after the alert.",
+        "reasoning": "1. The Policy Engine (PE) evaluates policy, identity, device posture and context and grants access. 2. The Policy Administrator (PA) executes the verdict: prepares the required session credentials and instructs the Policy Enforcement Point (PEP). 3. The PEP opens the subject/system → resource path in the Data Plane and monitors the connection. 4. The alert feeds continuous verification: the PE reevaluates and revokes, the PA orders closure, and the PEP terminates the path. PE and PA belong to the Control Plane; data traffic does not cross these functions. Valid credentials do not guarantee permanent trust. Source: NIST SP 800-207, section 3."
+      },
       {
         "objective": "1.4",
         "title": "Hidden message or protected content?",

@@ -87,13 +87,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 6. Ruoli Zero Trust: PE, PA e PEP
 
-- [ ] Rendere autonomi e ricercabili Policy Engine, Policy Administrator e Policy Enforcement Point, collegandoli alla guida del Dominio 1 (obiettivo 1.2).
+- [x] Rendere autonomi e ricercabili Policy Engine, Policy Administrator e Policy Enforcement Point, collegandoli alla guida del Dominio 1 (obiettivo 1.2).
 
 **Evidenza nel repository:** `PolicyDrivenAccessControl` e `ControlPlaneZTA` spiegano già PE/PA; la guida nomina Policy Enforcement Point, ma l'acronimo PEP e le voci autonome non sono disponibili nel glossario.
 
 **Da realizzare:** riutilizzare le spiegazioni esistenti per distinguere decisione della policy, gestione della comunicazione e applicazione del controllo nel data plane. Collegare subject/system, segnali di contesto e verifica continua. Disambiguare il PA Zero Trust da altri significati dello stesso acronimo.
 
 **Accettazione:** un flusso di accesso originale identifica correttamente chi decide, chi coordina e chi applica; ricerca per nomi estesi e acronimi, con collegamenti bidirezionali alle sezioni esistenti. Fonte: NIST SP 800-207.
+
+**Completato l’8 ottobre 2026:** tre voci canoniche IT/EN con nomi estesi, acronimi PE/PA/PEP, citazioni NIST SP 800-207 e flashcard. Collegamenti alle spiegazioni esistenti, confronto dei ruoli e flusso di autorizzazione/revoca nella guida 1.2. Corrette le domande che confondevano la gestione delle policy con il ruolo operativo del PA e precisato il monitoraggio del PEP. Verificati ricerca, rimandi e parità linguistica con test dedicati.
 
 ### 7. Accordo delle chiavi, chiavi effimere e forward secrecy
 
