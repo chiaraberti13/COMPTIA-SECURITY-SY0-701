@@ -392,3 +392,13 @@ Rulemaking
 emittenti
 interessare
 esercente
+
+# Firewall segmentation PBQ
+autorizzino
+vuota
+bozza
+premesse
+autorizzerebbe
+mascherante
+Netgate
+invariate

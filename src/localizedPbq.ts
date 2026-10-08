@@ -3,7 +3,7 @@
  * of truth; the English overlay (src/pbqData.en.ts) carries text only, keyed by
  * the same stable ids.
  *
- * Unlike the ~2 MB question dataset, these ten scenarios are tiny, so the
+ * Unlike the ~2 MB question dataset, these scenarios are small, so the
  * English overlay is imported statically rather than lazily: there is no bundle
  * cost worth deferring, and every language switch finds the text already loaded.
  */

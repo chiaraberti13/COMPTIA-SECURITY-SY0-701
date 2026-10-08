@@ -1,0 +1,83 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test, type Page } from "@playwright/test";
+
+const solution = [
+  ["p_public_https", "wan_https"], ["p_proxy_api", "dmz_api"],
+  ["p_admin_ssh", "mgmt_ssh"], ["p_firewall_gui", "mgmt_gui"],
+  ["p_shadowed", "remove_broad"], ["p_reply", "state_reply"], ["p_unmatched", "implicit_deny"],
+];
+async function open(page: Page) {
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+}
+async function keyboardMatch(page: Page, id: string, value: string) {
+  const select = page.locator(`#pbq_match_${id}`);
+  const index = await select.locator("option").evaluateAll((options, target) => options.findIndex(o => (o as HTMLOptionElement).value === target), value);
+  expect(index).toBeGreaterThan(0);
+  await select.focus();
+  await select.press("Home");
+  for (let n = 0; n < index; n++) await select.press("ArrowDown");
+  await select.press("Tab");
+  await expect(select).toHaveValue(value);
+}
+async function accessible(page: Page) {
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+  const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
+  expect(violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => v.id)).toEqual([]);
+}
+for (const lang of ["it", "en"] as const) {
+  test(`${lang}: firewall task can be answered and reset using the keyboard`, async ({ page }) => {
+    await open(page);
+    await page.locator(`#lang_btn_${lang}`).click();
+    await page.locator("#tab_btn_pbq").click();
+    await page.locator("#pbq_start_303").focus();
+    await page.locator("#pbq_start_303").press("Enter");
+    await accessible(page);
+    for (const [id, value] of solution) await keyboardMatch(page, id, value);
+    await page.locator("#pbq_submit").focus();
+    await page.locator("#pbq_submit").press("Enter");
+    await expect(page.locator("#pbq_feedback")).toContainText(lang === "it" ? "Tutto corretto" : "All correct");
+    await accessible(page);
+    await page.locator("#pbq_next").click();
+    await page.locator("#pbq_restart").click();
+    for (const [id] of solution) await expect(page.locator(`#pbq_match_${id}`)).toHaveValue("");
+    await expect(page.locator("#pbq_submit")).toBeDisabled();
+    for (const [id, value] of solution) await keyboardMatch(page, id, id === "p_shadowed" ? "late_block" : value);
+    await page.locator("#pbq_submit").click();
+    await expect(page.locator("#pbq_match_row_p_shadowed")).toContainText(lang === "it" ? "Corretto: Rimuovere R0" : "Correct: Remove overly broad R0");
+  });
+}
+
+test("firewall answer survives exam navigation and language changes; result persists after reload", async ({ page }) => {
+  await open(page);
+  await page.locator("#tab_btn_quiz").click();
+  for (let d = 1; d <= 5; d++) {
+    const slider = page.locator('input[type="range"]').nth(d - 1);
+    await slider.focus(); await slider.press("Home");
+    if (d === 4) for (let n = 0; n < 4; n++) await slider.press("ArrowRight");
+  }
+  await page.locator("#exam_pbq_count").selectOption("4");
+  await page.locator("#start_exam_btn").click();
+  for (let n = 0; n < 4; n++) {
+    if (await page.locator("#pbq_match_p_public_https").count()) break;
+    await page.locator("#exam_next").click();
+  }
+  for (const [id, value] of solution) await keyboardMatch(page, id, value);
+  await page.locator("#lang_btn_en").click();
+  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  const next = page.locator("#exam_next");
+  if (await next.isEnabled()) {
+    await next.click(); await page.locator("#exam_previous").click();
+  } else {
+    await page.locator("#exam_previous").click(); await next.click();
+  }
+  await expect(page.locator("#pbq_match_p_public_https")).toHaveValue("wan_https");
+  await page.locator("#exam_finish").click();
+  await expect(page.locator("#exam_score")).toContainText("1 / 4");
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));
+  expect(saved).toHaveLength(1);
+  expect(saved[0]).toMatchObject({ score: 1, total: 4, domains: [4] });
+  await page.reload();
+  await page.locator("#tab_btn_quiz").click();
+  await expect(page.locator("#quiz_history_box")).toContainText("/4");
+});

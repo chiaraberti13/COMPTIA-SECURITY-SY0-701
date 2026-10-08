@@ -2,8 +2,8 @@
  * Original performance-based scenarios — Italian source of truth.
  *
  * Two scenarios for each of the five roadmap themes (ordering, matching, log
- * interpretation, incident response, control selection), ten in all, spread
- * across the five exam domains and tied to official SY0-701 objectives.
+ * interpretation, incident response, control selection), plus firewall
+ * segmentation, spread across the five exam domains and tied to official SY0-701 objectives.
  *
  * Content rules (same as the rest of the study content, enforced by
  * tests/contentSafety.test.ts and tests/pbqData.test.ts):
@@ -21,6 +21,108 @@
 import type { Pbq } from "./pbq";
 
 export const PBQ_SCENARIOS: Pbq[] = [
+  {
+    "id": 303,
+    "kind": "matching",
+    "mechanic": "matching",
+    "objective": "4.5",
+    "relatedObjectives": [
+      "2.5",
+      "3.2"
+    ],
+    "sources": [
+      "netgateRuleMethodology",
+      "netgateFirewallFundamentals"
+    ],
+    "domain": 4,
+    "title": "Regole firewall e segmentazione",
+    "scenario": "Kestrelia usa un firewall pfSense stateful con interfacce Internet (WAN), screened subnet pubblica instradata 203.0.113.0/24 (proxy 203.0.113.10), applicazioni 10.0.20.0/24 (API 10.0.20.10) e gestione 10.0.30.0/24 (bastion 10.0.30.50; firewall 10.0.30.1). I dati sono sintetici. Le regole di ciascuna interfaccia filtrano le nuove connessioni in ingresso su quell’interfaccia, dall’alto verso il basso: vince la prima corrispondenza. Non ci sono altre regole floating, di gruppo o automatiche che autorizzino questi flussi; la tabella degli stati è inizialmente vuota. Il traffico di risposta di una connessione autorizzata usa lo stato; una nuova connessione inversa non è una risposta. Tutto ciò che non corrisponde è bloccato dal deny implicito. Sulla screened subnet la bozza contiene, in ordine: R0 PASS qualsiasi sorgente 203.0.113.0/24 verso qualsiasi destinazione 10.0.20.0/24, qualsiasi protocollo/porta; R1 PASS proxy verso API TCP/8443; R2 BLOCK screened subnet verso applicazioni. Le porte indicate sono di destinazione; le porte sorgente restano effimere. Non serve NAT nella topologia instradata. Obiettivo principale 4.5; collegamenti 2.5 e 3.2.",
+    "prompt": "Abbina ogni requisito alla regola o alla decisione corretta. Usa le premesse dichiarate e le opzioni più restrittive; alcune opzioni sono distrattori.",
+    "prompts": [
+      {
+        "id": "p_public_https",
+        "text": "Consentire da Internet solo HTTPS al proxy pubblicato.",
+        "correctOptionId": "wan_https"
+      },
+      {
+        "id": "p_proxy_api",
+        "text": "Consentire al solo proxy di iniziare connessioni verso la sola API su TCP/8443.",
+        "correctOptionId": "dmz_api"
+      },
+      {
+        "id": "p_admin_ssh",
+        "text": "Consentire al solo bastion la gestione SSH di proxy e API.",
+        "correctOptionId": "mgmt_ssh"
+      },
+      {
+        "id": "p_firewall_gui",
+        "text": "Consentire al solo bastion l’accesso HTTPS alla GUI del firewall su 10.0.30.1.",
+        "correctOptionId": "mgmt_gui"
+      },
+      {
+        "id": "p_shadowed",
+        "text": "Correggere R0/R1/R2: la bozza deve consentire solo proxy → API TCP/8443; R2 oggi non blocca i flussi coperti da R0.",
+        "correctOptionId": "remove_broad"
+      },
+      {
+        "id": "p_reply",
+        "text": "Gestire la risposta API → proxy per una connessione TCP/8443 già autorizzata.",
+        "correctOptionId": "state_reply"
+      },
+      {
+        "id": "p_unmatched",
+        "text": "Decidere l’esito di una nuova connessione API → bastion TCP/22 non coperta dalle regole consentite.",
+        "correctOptionId": "implicit_deny"
+      }
+    ],
+    "options": [
+      {
+        "id": "wan_https",
+        "text": "WAN | qualsiasi → 203.0.113.10 | TCP/443 | PASS"
+      },
+      {
+        "id": "dmz_api",
+        "text": "screened subnet | 203.0.113.10 → 10.0.20.10 | TCP/8443 | PASS"
+      },
+      {
+        "id": "mgmt_ssh",
+        "text": "gestione | 10.0.30.50 → {203.0.113.10, 10.0.20.10} | TCP/22 | PASS"
+      },
+      {
+        "id": "mgmt_gui",
+        "text": "gestione | 10.0.30.50 → 10.0.30.1 | TCP/443 | PASS"
+      },
+      {
+        "id": "remove_broad",
+        "text": "Rimuovere R0 troppo ampia; mantenere R1 specifica prima di R2, che blocca gli altri flussi."
+      },
+      {
+        "id": "state_reply",
+        "text": "Usare lo stato esistente; non aggiungere una regola inversa per nuove connessioni."
+      },
+      {
+        "id": "implicit_deny",
+        "text": "BLOCK per deny implicito: è una nuova connessione senza autorizzazione."
+      },
+      {
+        "id": "wide_dmz",
+        "text": "screened subnet | 203.0.113.0/24 → 10.0.20.0/24 | qualsiasi protocollo/porta | PASS"
+      },
+      {
+        "id": "internet_admin",
+        "text": "WAN | qualsiasi → {203.0.113.10, 10.0.20.10} | TCP/22 | PASS"
+      },
+      {
+        "id": "late_block",
+        "text": "Lasciare R0 e R1 invariate; spostare R2 ancora più in basso."
+      },
+      {
+        "id": "nat_only",
+        "text": "Configurare solo NAT senza verificare le regole firewall."
+      }
+    ],
+    "explanation": "1. WAN/HTTPS: la regola consente solo la destinazione proxy e TCP/443, non l’intera screened subnet. 2. Proxy/API: la regola sulla screened subnet limita sorgente, destinazione e TCP/8443. 3. Bastion/SSH: il traffico nasce in gestione, quindi la regola consente TCP/22 dal solo 10.0.30.50 ai due host indicati. 4. Bastion/GUI: TCP/443 dal solo bastion all’indirizzo di gestione del firewall conserva l’accesso amministrativo autorizzato. 5. R0: il PASS ampio precede R1 e R2; ogni flusso che corrisponde a R0 è già consentito. Rimuovere R0 rende efficace R1 prima del BLOCK R2; spostare R2 più in basso non cambia il problema. 6. Risposta: lo stato della connessione proxy/API consente il ritorno; una regola inversa ampia autorizzerebbe anche nuove connessioni non richieste. 7. API/bastion: una nuova connessione TCP/22 non è una risposta e incontra il deny implicito. I distrattori aprono tutte le porte fra subnet, espongono SSH a Internet, lasciano la regola mascherante o scambiano NAT per controllo degli accessi. NAT traduce indirizzi: non sostituisce una policy firewall. Questa è una topologia instradata; altre installazioni possono usare NAT e regole automatiche, escluse esplicitamente dalle premesse. Verificare i flussi consentiti e negati, anche la gestione, prima del rilascio. Fonti: Netgate pfSense Rule Methodology e Firewall Fundamentals, verificate il 2026-10-08. Ogni abbinamento vale un punto diagnostico; nello studio questa PBQ è superata solo con tutti e 7 corretti, senza riprodurre lo scoring proprietario dell’esame."
+  },
   /* ---------------- Ordering (ordinamento) ---------------- */
   {
     id: 101,

@@ -215,13 +215,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 15. Regole firewall e segmentazione
 
-- [ ] Aggiungere una PBQ di abbinamento fra flussi richiesti e regole firewall, con ordine di valutazione e deny implicito dichiarati nello scenario (obiettivo principale 4.5; collegamenti 2.5 e 3.2).
+- [x] Aggiungere una PBQ di abbinamento fra flussi richiesti e regole firewall, con ordine di valutazione e deny implicito dichiarati nello scenario (obiettivo principale 4.5; collegamenti 2.5 e 3.2).
 
 **Evidenza nel repository:** Non esiste una PBQ interattiva di configurazione firewall; la PBQ 401 riconosce indizi nei log e le voci `FirewallRulesPBQ`/`PBQFirewallLogs` sono approfondimenti teorici.
 
 **Da realizzare:** topologia testuale con Internet, screened subnet, rete applicativa e gestione; scegliere sorgente, destinazione, protocollo/porta e azione per ciascun requisito. Includere una regola troppo ampia o mascherata da una precedente. Precisare se il firewall è stateful e come gestisce il traffico di risposta.
 
 **Accettazione:** soluzione limita i flussi al necessario e mantiene la gestione dal segmento autorizzato; scoring ed esplicazione verificano ogni associazione. Non presentare NAT come sostituto delle policy firewall. Fonti: documentazione primaria del firewall scelto per la semantica delle regole.
+
+**Completato il 2026-10-08:** aggiunta la PBQ originale 303, con sette abbinamenti e quattro distrattori IT/EN, topologia instradata pfSense, first match, deny implicito, stato delle connessioni e correzione della regola R0 troppo ampia. Le regole limitano proxy/API e accessi del bastion; NAT è distinto dalla policy firewall. Collegati gli obiettivi 4.5/2.5/3.2 e le fonti primarie Netgate; documentati soluzione e limiti in `docs/firewall-pbq.md`, aggiornati i report. Superati 844 test Vitest e 10 test Playwright su desktop/mobile (tastiera, feedback, reset, cambio lingua, navigazione, storico, axe e overflow), typecheck, lint, Markdown, ortografia IT/EN, build e smoke test di produzione.
 
 ### 16. Percorso VPN e protezione dei due siti
 

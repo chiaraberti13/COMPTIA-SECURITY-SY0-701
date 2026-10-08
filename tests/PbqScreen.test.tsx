@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { getPbqScenarios } from "../src/localizedPbq";
 import PbqScreen from "../src/components/PbqScreen";
 import { usePbqSession } from "../src/hooks/usePbqSession";
 import { LanguageProvider } from "../src/i18n";
@@ -137,5 +138,25 @@ describe("PbqScreen ordering", () => {
     fireEvent.click(document.getElementById("pbq_start_101")!);
     // Each arrow button's aria-label carries the step text it moves.
     expect(screen.getAllByRole("button", { name: /Sposta su:|Sposta giù:/ }).length).toBeGreaterThan(0);
+  });
+});
+
+
+describe("firewall PBQ reset", () => {
+  it("shows the authored feedback and clears all answers on restart", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 303)! as MatchingPbq;
+    renderHarness([pbq]);
+    fireEvent.click(document.getElementById("pbq_start_303")!);
+    for (const p of pbq.prompts) {
+      fireEvent.change(screen.getByLabelText(p.text), { target: { value: p.correctOptionId } });
+    }
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("NAT traduce indirizzi");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    expect(document.getElementById("pbq_summary")).toBeTruthy();
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    expect(document.getElementById("pbq_feedback")).toBeNull();
+    for (const p of pbq.prompts) expect((screen.getByLabelText(p.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
   });
 });

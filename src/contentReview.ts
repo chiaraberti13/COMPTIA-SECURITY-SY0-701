@@ -10,6 +10,8 @@ export interface Source {
 }
 
 export const SOURCES = {
+  netgateRuleMethodology: { title: "pfSense Rule Methodology", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/rule-methodology.html", kind: "reference" },
+  netgateFirewallFundamentals: { title: "pfSense Firewall Fundamentals", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/fundamentals.html", kind: "reference" },
   sox: { title: "Sarbanes-Oxley Rulemaking and Reports", publisher: "SEC", url: "https://www.sec.gov/spotlight/sarbanes-oxley.htm", kind: "standard" },
   glba: { title: "Gramm-Leach-Bliley Act", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act", kind: "standard" },
   ftcSafeguards: { title: "FTC Safeguards Rule", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know", kind: "standard" },
@@ -103,7 +105,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "4.2": mapped("nist80053", "nist80088", "cisControls"),
   "4.3": mapped("nist80040", "firstCvss", "cisaKev"),
   "4.4": mapped("nist80092", "mitreAttack"),
-  "4.5": mapped("nist80053", "cisControls"),
+  "4.5": mapped("netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
   "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),
   "4.7": mapped("nist80053", "cisControls"),
   "4.8": mapped("nist80061"),

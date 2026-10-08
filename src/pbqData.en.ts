@@ -21,6 +21,34 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+  303: {
+    "title": "Firewall rules and segmentation",
+    "scenario": "Kestrelia uses a stateful pfSense firewall with Internet (WAN), a routed public screened subnet 203.0.113.0/24 (proxy 203.0.113.10), applications 10.0.20.0/24 (API 10.0.20.10) and management 10.0.30.0/24 (bastion 10.0.30.50; firewall 10.0.30.1). All data is synthetic. Each interface’s rules filter new connections entering that interface from top to bottom: the first match wins. No other floating, group or automatic rules authorize these flows; the state table is initially empty. Reply traffic for an allowed connection uses its state; a new reverse connection is not a reply. Anything unmatched is blocked by implicit deny. On the screened subnet the draft contains, in order: R0 PASS any source 203.0.113.0/24 to any destination 10.0.20.0/24, any protocol/port; R1 PASS proxy to API TCP/8443; R2 BLOCK screened subnet to applications. Listed ports are destination ports; source ports remain ephemeral. NAT is unnecessary in this routed topology. Primary objective 4.5; related objectives 2.5 and 3.2.",
+    "prompt": "Match each requirement to the correct rule or decision. Use the stated premises and the most restrictive options; some options are distractors.",
+    "explanation": "1. WAN/HTTPS: the rule allows only the proxy destination and TCP/443, not the entire screened subnet. 2. Proxy/API: the screened-subnet rule limits source, destination and TCP/8443. 3. Bastion/SSH: traffic originates on management, so the rule allows TCP/22 only from 10.0.30.50 to the two listed hosts. 4. Bastion/GUI: TCP/443 only from the bastion to the firewall management address preserves authorized administrative access. 5. R0: the broad PASS precedes R1 and R2; every flow matching R0 is already allowed. Removing R0 makes R1 effective before BLOCK R2; moving R2 further down does not fix the problem. 6. Reply: the proxy/API connection state permits the return traffic; a broad reverse rule would also authorize unwanted new connections. 7. API/bastion: a new TCP/22 connection is not a reply and hits implicit deny. Distractors open all ports between subnets, expose SSH to the Internet, retain the shadowing rule or confuse NAT with access control. NAT translates addresses: it does not replace a firewall policy. This is a routed topology; other deployments may use NAT and automatic rules, explicitly excluded by the premises. Verify allowed and denied flows, including management, before release. Sources: Netgate pfSense Rule Methodology and Firewall Fundamentals, verified on 2026-10-08. Each match earns one diagnostic point; this study PBQ passes only when all 7 are correct, without reproducing proprietary exam scoring.",
+    "prompts": {
+      "p_public_https": "Allow only HTTPS from the Internet to the published proxy.",
+      "p_proxy_api": "Allow only the proxy to initiate connections to the API on TCP/8443.",
+      "p_admin_ssh": "Allow only the bastion to administer the proxy and API over SSH.",
+      "p_firewall_gui": "Allow only the bastion HTTPS access to the firewall GUI at 10.0.30.1.",
+      "p_shadowed": "Correct R0/R1/R2: the draft must allow only proxy → API TCP/8443; R2 currently cannot block flows covered by R0.",
+      "p_reply": "Handle the API → proxy reply to an already allowed TCP/8443 connection.",
+      "p_unmatched": "Determine the outcome of a new API → bastion TCP/22 connection not covered by the allowed rules."
+    },
+    "options": {
+      "wan_https": "WAN | any → 203.0.113.10 | TCP/443 | PASS",
+      "dmz_api": "screened subnet | 203.0.113.10 → 10.0.20.10 | TCP/8443 | PASS",
+      "mgmt_ssh": "management | 10.0.30.50 → {203.0.113.10, 10.0.20.10} | TCP/22 | PASS",
+      "mgmt_gui": "management | 10.0.30.50 → 10.0.30.1 | TCP/443 | PASS",
+      "remove_broad": "Remove overly broad R0; keep specific R1 before R2, which blocks other flows.",
+      "state_reply": "Use the existing state; do not add a reverse rule allowing new connections.",
+      "implicit_deny": "BLOCK by implicit deny: this is a new connection with no authorization.",
+      "wide_dmz": "screened subnet | 203.0.113.0/24 → 10.0.20.0/24 | any protocol/port | PASS",
+      "internet_admin": "WAN | any → {203.0.113.10, 10.0.20.10} | TCP/22 | PASS",
+      "late_block": "Leave R0 and R1 unchanged; move R2 even further down.",
+      "nat_only": "Configure only NAT without checking firewall rules."
+    }
+  },
   101: {
     title: "Lifecycle of a TLS certificate",
     scenario:

@@ -1,3 +1,5 @@
+import type { SourceId } from "./contentReview";
+
 /**
  * Performance-based questions (PBQ): the interactive, task-shaped exercises the
  * real SY0-701 exam opens with, where the learner arranges or matches items
@@ -47,6 +49,10 @@ interface PbqBase {
   mechanic: PbqMechanic;
   /** Official SY0-701 objective code the scenario trains, e.g. "4.8". */
   objective: string;
+  /** Secondary objective links; grading remains tied to the primary objective. */
+  relatedObjectives?: string[];
+  /** Primary documentation supporting the scenario semantics. */
+  sources?: SourceId[];
   /** Exam domain 1-5. */
   domain: number;
   title: string;

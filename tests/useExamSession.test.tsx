@@ -115,3 +115,27 @@ describe("exam session", () => {
     expect(Object.keys(result.current.quiz.questionProgress)).toEqual([String(question.id)]);
   });
 });
+
+
+describe("firewall PBQ persisted result", () => {
+  it("records the fully correct task once and restores its history after remount", () => {
+    const firewall = getPbqScenarios("it").find(p => p.id === 303)!;
+    if (firewall.mechanic !== "matching") throw new Error("firewall fixture");
+    const item: ExamItem = { kind: "pbq", key: "pbq:303", domain: 4, objectives: ["4.5"], pbq: firewall };
+    const hook = renderHook(() => {
+      const quiz = useQuizSession({ paused: false });
+      return { exam: useExamSession(quiz.recordExam), quiz };
+    }, { wrapper });
+    act(() => hook.result.current.exam.begin([item], false));
+    for (const p of firewall.prompts) act(() => hook.result.current.exam.setMatch(p.id, p.correctOptionId));
+    act(() => hook.result.current.exam.finish());
+    act(() => hook.result.current.exam.finish());
+    expect(hook.result.current.quiz.quizHistory).toHaveLength(1);
+    expect(hook.result.current.quiz.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+    expect(hook.result.current.quiz.questionProgress).toEqual({});
+    hook.unmount();
+    const restored = renderHook(() => useQuizSession({ paused: false }), { wrapper });
+    expect(restored.result.current.quizHistory).toHaveLength(1);
+    expect(restored.result.current.quizHistory[0]).toMatchObject({ score: 1, total: 1, domains: [4] });
+  });
+});
