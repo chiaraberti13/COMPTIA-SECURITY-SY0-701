@@ -32,7 +32,7 @@ export const DOMAIN_1_ATTACK_QUESTIONS: Question[] = [
 export const DOMAIN_2_ATTACK_QUESTIONS: Question[] = [
   {
     id: 9010, topic: "Vulnerability Types", level: "APPLICAZIONE",
-    scenario: "Una pagina mostra subito, senza memorizzarla, una stringa inserita in un parametro URL. Un input appositamente costruito viene interpretato come markup attivo nel browser.",
+    scenario: "Una pagina mostra subito, senza conservarla, una stringa inserita in un parametro URL. Un input appositamente costruito viene interpretato come markup attivo nel browser.",
     question: "Quale variante di XSS descrive meglio questo flusso?",
     options: ["Reflected XSS", "Stored XSS", "CSRF", "SSRF"],
     answerIndex: 0,
