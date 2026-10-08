@@ -6,19 +6,19 @@ export const PHYSICAL_VECTOR_QUESTIONS: Record<number, Question[]> = {
   1: [
     {
       id: 9001, topic: "Physical Security Controls", level: "APPLICAZIONE",
-      scenario: "Un archivio ha una porta laterale poco illuminata. Si vuole rilevare l'apertura quando qualcuno attraversa la soglia, anche se il movimento è lento e la visuale del sensore può essere ostruita.",
+      scenario: "Un archivio ha una porta laterale buia. Si vuole rilevare l'apertura quando qualcuno attraversa la soglia, anche se il movimento è lento e la vista del sensore può essere coperta.",
       question: "Quale sensore è più adatto a rilevare il peso di una persona che attraversa la soglia?",
       options: ["Sensore di pressione a pavimento", "Sensore a infrarosso passivo (PIR)", "Sensore a ultrasuoni", "Sensore a microonde"],
       answerIndex: 0,
-      explanation: "Il sensore di pressione rileva peso o contatto sulla superficie ed è adatto alla soglia descritta. Un PIR rileva variazioni di calore in movimento e richiede una copertura utile; microonde e ultrasuoni sono sensori attivi di movimento e possono risentire di ostacoli, geometria e interferenze. Nessuna tecnologia è universale: posizione e ambiente vanno valutati."
+      explanation: "Il sensore di pressione rileva peso o contatto sulla superficie ed è adatto alla soglia descritta. Un PIR rileva variazioni di calore in movimento e richiede una copertura utile; microonde e ultrasuoni sono sensori attivi di movimento e possono subire effetti da barriere, disposizione degli spazi e interferenze. Nessuna tecnologia è universale: posizione e ambiente vanno valutati."
     },
     {
       id: 9002, topic: "Physical Security Controls", level: "COMPRENSIONE",
-      scenario: "Un'organizzazione installa sensori di movimento collegati alla sala di controllo e a una telecamera. I sensori non azionano serrature né barriere.",
+      scenario: "Un'organizzazione installa sensori di movimento collegati alla sala di controllo e a una telecamera. I sensori non comandano serrature né barriere.",
       question: "Quale funzione descrive meglio questi sensori?",
       options: ["Detective: rilevano un evento e generano un avviso", "Preventiva: impediscono fisicamente l'accesso", "Correttiva: ripristinano i sistemi dopo l'incidente", "Dissuasiva: scoraggiano da soli ogni tentativo"],
       answerIndex: 0,
-      explanation: "Il sensore è una misura detective: rileva e segnala, mentre una persona o un sistema può verificare l'allarme. Una serratura o un dissuasore fisico può prevenire o ritardare l'accesso; il sensore da solo non lo blocca. Il ripristino è correttivo e la sola presenza di un sensore non garantisce deterrenza."
+      explanation: "Il sensore è una misura detective: rileva e segnala, mentre una persona o un sistema può verificare l'allarme. Una serratura o una barriera fisica può prevenire o ritardare l'accesso; il sensore da solo non lo blocca. Il ripristino è correttivo e la sola presenza di un sensore non scoraggia sempre l'intrusione."
     }
   ],
   2: [
@@ -45,14 +45,14 @@ export const PHYSICAL_VECTOR_QUESTION_EN: Record<number, Record<number, Question
   1: {
     9001: {
       topic: "Physical Security Controls",
-      scenario: "An archive has a poorly lit side door. The organization wants to detect someone crossing the threshold, even if movement is slow and the sensor's line of sight may be obstructed.",
+      scenario: "An archive has a dark side door. The organization wants to detect someone crossing the threshold, even if movement is slow and the sensor's view may be blocked.",
       question: "Which sensor is best suited to detect a person's weight crossing the threshold?",
       options: ["Floor pressure sensor", "Passive infrared (PIR) sensor", "Ultrasonic sensor", "Microwave sensor"],
-      explanation: "A pressure sensor detects weight or contact at the surface and fits the described threshold. A PIR sensor detects moving heat and needs useful coverage; microwave and ultrasonic sensors actively detect motion and can be affected by obstacles, geometry, and interference. No technology is universal: placement and environment matter."
+      explanation: "A pressure sensor detects weight or contact at the surface and fits the described threshold. A PIR sensor detects moving heat and needs useful coverage; microwave and ultrasonic sensors actively detect motion and can be affected by barriers, room layout, and interference. No technology is universal: placement and environment matter."
     },
     9002: {
       topic: "Physical Security Controls",
-      scenario: "An organization installs motion sensors connected to a control room and a camera. The sensors do not operate locks or barriers.",
+      scenario: "An organization installs motion sensors connected to a control room and a camera. The sensors do not control locks or barriers.",
       question: "Which function best describes these sensors?",
       options: ["Detective: they detect an event and raise an alert", "Preventive: they physically block access", "Corrective: they restore systems after an incident", "Deterrent: their presence alone discourages every attempt"],
       explanation: "A sensor is a detective control: it detects and reports, while a person or system can verify the alert. A lock or physical barrier may prevent or delay access; the sensor alone does not block it. Recovery is corrective, and a sensor's presence alone does not guarantee deterrence."
