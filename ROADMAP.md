@@ -427,7 +427,12 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
 
 **Accettazione:** uno script di copertura enumera **tutte** le voci del PDF per sotto-obiettivo e conferma, per ciascuna, spiegazione + ricerca; nessuna voce del PDF presente solo come bullet di `keyTopics`; report di copertura rigenerato e allegato; verifiche automatiche del progetto superate. Aggiornare questo stato a ogni avanzamento, registrando la data di verifica.
 
-**Stato:** il guard per gli **acronimi** è già realizzato (`scripts/acronym-coverage.ts` + `tests/acronymCoverage.test.ts`, vedi attività 34) e fa da modello. Resta da costruire l'equivalente per le **voci di obiettivo** (un elenco strutturato obiettivo→termini atteso, confrontato col contenuto), per trasformare la passata a campione dell'8 ottobre 2026 in un guard esaustivo con fixture «può solo accorciarsi».
+**Stato:** entrambi i guard sono realizzati e girano in CI (`npm test`).
+
+- Acronimi — `scripts/acronym-coverage.ts` + `tests/acronymCoverage.test.ts` (attività 34).
+- Voci di obiettivo — `scripts/objective-coverage.ts` + `tests/objectiveCoverage.test.ts`: confronta un elenco curato di **249 sotto-argomenti** degli obiettivi 1.1–5.6 (con sinonimi IT/EN) contro il contenuto *reso*, escludendo di proposito `keyTopics`/`outcome` (che sono i bullet dell'obiettivo) per non contare come «spiegato» ciò che è solo elencato. Report in `docs/objective-coverage.md`, fixture «può solo accorciarsi» in `tests/fixtures/objectives-uncovered.json`.
+
+**Esito all'8 ottobre 2026:** **239/249 (96,0%)** hanno una voce ricercabile dedicata (glossario o testo didattico di guida); **10 sono spiegati solo in una domanda** del quiz e vanno promossi a voce autonoma (pressure sensor, threat scope reduction, record-level encryption, voice call vector, RFID cloning, configuration enforcement, HIPS, password vaulting, workforce multiplier, key risk indicators); **0 assenti** (nessun gap totale di contenuto). Il guard verifica anche che nulla regredisca a «assente» e che l'elenco scenda solo verso zero. L'elenco curato dei 249 sotto-argomenti è il denominatore vivo: ampliarlo quando emergono nuove voci rende il guard più stringente.
 
 ## Argomenti già coperti nelle spiegazioni
 
