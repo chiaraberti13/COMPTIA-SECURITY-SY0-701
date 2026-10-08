@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as data from "../src/data";
-import { getDomainQuestions, getDomainTopics, isActive } from "../src/localizedData";
+import { getDomainQuestions, getDomainTopics, isActive, sourceQuestionId } from "../src/localizedData";
 import type { Deprecation, Question, TopicGroup } from "../src/types";
 
 /*
@@ -49,7 +49,11 @@ describe("deprecated content", () => {
     const source = DOMAINS.reduce((n, d) => n + sourceQuestions(d).length, 0);
     const shown = DOMAINS.reduce((n, d) => n + getDomainQuestions(d, "it").length, 0);
     const deprecatedQuestions = deprecations().filter(([where]) => /^D\d#/.test(where)).length;
-    expect(shown).toBe(source - deprecatedQuestions);
+    const supplementalQuestions = DOMAINS.reduce(
+      (n, d) => n + getDomainQuestions(d, "it").filter((q) => sourceQuestionId(q.id) >= 9000).length,
+      0
+    );
+    expect(shown).toBe(source - deprecatedQuestions + supplementalQuestions);
     expect(isActive({})).toBe(true);
     expect(isActive({ deprecated: { since: "2026-09-27", reason: "Replaced by a clearer question on the same topic." } })).toBe(false);
   });
