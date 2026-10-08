@@ -74,21 +74,21 @@ export const DOMAIN_2_ATTACK_QUESTIONS: Question[] = [
 
 export const DOMAIN_1_ATTACK_QUESTION_EN: Record<number, QuestionOverride> = {
   9005: {
-    topic: "Cryptography", level: "APPLICATION",
+    topic: "Cryptography",
     scenario: "A team wants to hide a short note inside an attached image so an observer does not immediately notice that a message exists.",
     question: "Which technique best fits the goal, and what limitation should be remembered?",
     options: ["Steganography: it hides the message's presence but does not encrypt its content by itself", "Hashing: it hides and lets the original message be recovered", "Encryption: it makes the existence of a message invisible", "Tokenization: it guarantees the image's authenticity"],
     explanation: "Steganography embeds a message in a carrier to conceal its presence. It does not automatically provide confidentiality, integrity, or authenticity; encrypting the content before hiding it can add confidentiality. A hash is not reversible, encryption does not necessarily hide that data exists, and tokenization replaces values."
   },
   9006: {
-    topic: "Zero Trust Architecture", level: "APPLICATION",
+    topic: "Zero Trust Architecture",
     scenario: "In a Zero Trust network, the Policy Engine has decided that a session may continue. A component must configure the channel and coordinate enforcement of that decision.",
     question: "Which component performs this coordination role?",
     options: ["Policy Administrator (PA)", "Policy Engine (PE)", "Policy Enforcement Point (PEP)", "Identity provider"],
     explanation: "The Policy Administrator coordinates establishing or terminating the communication path based on the Policy Engine's decision. The PE decides, the PEP enforces controls on traffic, and an identity provider supplies identity assertions without replacing these roles."
   },
   9007: {
-    topic: "Cryptography", level: "ANALYSIS",
+    topic: "Cryptography",
     scenario: "Two endpoints agree on ephemeral keys to derive a session secret. The long-term private key used to authenticate sessions is compromised later.",
     question: "Which property can limit exposure of past sessions if ephemeral keys were used and temporary secrets were erased?",
     options: ["Forward secrecy", "Steganography", "Hash collision resistance", "Key escrow"],
@@ -98,35 +98,35 @@ export const DOMAIN_1_ATTACK_QUESTION_EN: Record<number, QuestionOverride> = {
 
 export const DOMAIN_2_ATTACK_QUESTION_EN: Record<number, QuestionOverride> = {
   9010: {
-    topic: "Vulnerability Types", level: "APPLICATION",
+    topic: "Vulnerability Types",
     scenario: "A page immediately displays a string from a URL parameter without storing it. A crafted input is interpreted as active markup in the browser.",
     question: "Which XSS variant best describes this flow?",
     options: ["Reflected XSS", "Stored XSS", "CSRF", "SSRF"],
     explanation: "The content returns in the immediate response and is not persisted: this is reflected XSS. Stored XSS persists in a resource later viewed by other users. CSRF tricks an authenticated browser into sending an action, while SSRF causes the server to make a request."
   },
   9011: {
-    topic: "Vulnerability Types", level: "APPLICATION",
+    topic: "Vulnerability Types",
     scenario: "A site accepts session cookies. In one case, an attacker tricks an authenticated victim's browser into sending a change request; in another, the attacker abuses the server to reach an internal service.",
     question: "Which association correctly distinguishes the two attacks?",
     options: ["The authenticated browser request is CSRF; the server-initiated request to the service is SSRF", "The first is SSRF; the second is CSRF", "Both are stored XSS", "Both are session theft"],
     explanation: "CSRF exploits the browser's trust context and automatically sent credentials; SSRF exploits the server's ability to make requests to unintended destinations. XSS concerns script execution in the browser. Session theft is acquisition or reuse of a session identifier, not the distinction described."
   },
   9012: {
-    topic: "Threat Vectors & Attack Surfaces", level: "ANALYSIS",
+    topic: "Threat Vectors & Attack Surfaces",
     scenario: "An attacker obtains a user's valid session identifier and presents it to the server from another device.",
     question: "Which statement correctly describes the risk and a defensive response?",
     options: ["This is session hijacking; revoking or rotating the session can invalidate the identifier, while login-only MFA does not cancel a session already stolen", "This is only password spraying; changing the password always makes every cookie unusable", "This is DNS poisoning; DNSSEC revokes the identifier", "This is CSRF; SameSite guarantees that a copied session cannot be reused"],
     explanation: "A stolen session identifier may let an attacker take over the authenticated session. Revocation, expiration, and identifier rotation are relevant; login MFA protects initial authentication but by itself does not invalidate an active session. The other choices confuse distinct attacks or attribute guarantees to DNSSEC/SameSite that they do not provide."
   },
   9013: {
-    topic: "Threat Vectors & Attack Surfaces", level: "APPLICATION",
+    topic: "Threat Vectors & Attack Surfaces",
     scenario: "An attacker accesses a company's registrar account and changes the domain's name servers. DNS responses are now consistent with the new delegation.",
     question: "What is the primary cause, and which DNSSEC limitation matters?",
     options: ["Domain hijacking through a compromised registrar account; DNSSEC does not stop an authorized but compromised account from changing delegation", "Typosquatting; DNSSEC prevents any registrar changes", "DNS cache poisoning; DNSSEC prevents account compromise", "DDoS; DNSSEC automatically restores the original name servers"],
     explanation: "Control of the domain was taken by changing its registrar delegation: this is domain hijacking. DNSSEC authenticates signed DNS data and can detect unauthorized response tampering, but it does not stop an actor controlling the registrar account from legitimately changing delegation or signing data. Typosquatting registers a similar-looking domain."
   },
   9014: {
-    topic: "Threat Vectors & Attack Surfaces", level: "COMPREHENSION",
+    topic: "Threat Vectors & Attack Surfaces",
     scenario: "During a call, someone using a convincing pretext asks targeted questions and gathers internal details; later, the person uses stolen identity data to open an account in the victim's name.",
     question: "Which distinction is correct?",
     options: ["Conversational information gathering is elicitation; using the data to impersonate the victim is identity fraud", "The gathering is identity fraud; opening the account is elicitation", "Both are synonyms for pretexting", "Elicitation always requires a technical compromise"],
