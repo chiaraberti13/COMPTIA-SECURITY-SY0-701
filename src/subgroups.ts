@@ -159,6 +159,8 @@ export const SUBGROUP_MAP: Record<string, string> = {
   "VishingSE": "Ingegneria Sociale & Phishing",
   "PretextingSE": "Ingegneria Sociale & Phishing",
   "ImpersonationSE": "Ingegneria Sociale & Phishing",
+  "ElicitationSE": "Ingegneria Sociale & Phishing",
+  "IdentityFraudSE": "Ingegneria Sociale & Phishing",
   "WateringHoleSE": "Ingegneria Sociale & Phishing",
   "TyposquattingSE": "Ingegneria Sociale & Phishing",
   "CloningSE": "Ingegneria Sociale & Phishing",
@@ -389,6 +391,7 @@ export const SUBGROUP_MAP: Record<string, string> = {
 
   // Domain 4
   "HardeningConcept": "Hardening di Sistemi e Dispositivi",
+  "SELinuxOS": "Hardening di Sistemi e Dispositivi",
   "ApplicationSecurityHardening": "Hardening di Sistemi e Dispositivi",
   "ServerHardening": "Hardening di Sistemi e Dispositivi",
   "WorkstationHardening": "Hardening di Sistemi e Dispositivi",

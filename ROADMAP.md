@@ -125,13 +125,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 9. Elicitation e frode d'identità
 
-- [ ] Esplicitare elicitation e identity fraud nella guida del Dominio 2 e nel glossario (obiettivo 2.2), collegandole a pretexting e impersonation.
+- [x] Esplicitare elicitation e identity fraud nella guida del Dominio 2 e nel glossario (obiettivo 2.2), collegandole a pretexting e impersonation.
 
 **Evidenza nel repository:** `PretextingSE` contiene già un esempio di informazioni ottenute con una storia inventata e `ImpersonationSE` descrive la falsa identità; mancano le voci autonome e il confronto con l'uso illecito dell'identità raccolta.
 
 **Da realizzare:** distinguere il pretesto costruito, il ruolo impersonato, l'ottenimento di informazioni durante una conversazione e la frode realizzata usando i dati altrui. Un attacco può combinare queste tecniche: non presentarle come fasi obbligatorie né come sinonimi. Collegare verifica tramite canale indipendente, minimizzazione della divulgazione e segnalazione.
 
 **Accettazione:** un caso sintetico distingue raccolta delle informazioni e successivo abuso dell'identità; riutilizzare gli esempi di pretexting già presenti senza duplicarli. Voci e alias IT/EN reperibili. Fonti: risorse istituzionali CISA per social engineering e FTC per identity theft, con terminologia coerente con gli obiettivi d'esame.
+
+**Completato l'8 ottobre 2026:** voci canoniche `ElicitationSE` e `IdentityFraudSE` (IT/EN) nel gruppo «Social Engineering (Obj 2.2)», sottogruppo «Ingegneria Sociale & Phishing». L'elicitation è definita come raccolta di informazioni *durante* una conversazione, distinta da pretexting (scenario/ruolo costruito a monte) e impersonation (ruolo giocato sul momento), con la precisazione che le tecniche si combinano e non sono fasi obbligatorie né sinonimi. La frode d'identità separa esplicitamente la **raccolta** (furto d'identità, elicitation, phishing) dall'**abuso** dei dati; difese di verifica su canale indipendente, minimizzazione e segnalazione. Esempi sintetici originali, parità IT/EN e test `tests/elicitationSELinuxContent.test.ts`.
 
 ### 10. Certificati, fiducia e revoca nel glossario
 
@@ -165,13 +167,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 13. SELinux, MAC e isolamento applicativo
 
-- [ ] Aggiungere una voce SELinux e approfondire MAC rispetto a DAC nella guida del Dominio 4, collegandoli al Dominio 1 (obiettivi 4.5 e 1.2).
+- [x] Aggiungere una voce SELinux e approfondire MAC rispetto a DAC nella guida del Dominio 4, collegandoli al Dominio 1 (obiettivi 4.5 e 1.2).
 
 **Evidenza nel repository:** `MACConcept` usa già SELinux come esempio e la guida cita SELinux, ma manca una spiegazione autonoma. Distinguere UAC dal sandboxing.
 
 **Da realizzare:** spiegare policy, label e confinamento delle applicazioni, distinguendo DAC, type enforcement e l'eventuale configurazione MLS. Non ridurre ogni policy SELinux al confronto lineare fra clearance e classificazione. Se si introduce UAC nel confronto, descriverlo come controllo dell'elevazione dei privilegi, distinto dall'isolamento di una sandbox.
 
 **Accettazione:** esempio difensivo in cui permessi DAC concessi non bastano ad autorizzare l'accesso secondo la policy MAC; non proporre la disattivazione del controllo come soluzione standard. Fonti: documentazione ufficiale SELinux/distribuzione Linux e Microsoft per UAC.
+
+**Completato l'8 ottobre 2026:** voce canonica `SELinuxOS` (IT/EN) nel gruppo Hardening (sottogruppo «Hardening di Sistemi e Dispositivi»), con l'angolo OS-security complementare a `MACConcept` (modello di accesso). Spiegati etichette e **type enforcement**, la distinzione dall'eventuale **MLS** (non ogni policy è un confronto lineare clearance/classificazione), le modalità `enforcing`/`permissive`/`disabled` e il **confinamento** delle applicazioni. Esempio difensivo originale in cui i permessi **DAC** concessi non bastano perché la policy **MAC** nega (servono entrambi i via libera), con l'avvertenza di correggere la policy anziché disattivare SELinux. Negli examTip, **UAC** descritto come controllo dell'elevazione dei privilegi e distinto dalla **sandbox**. Parità IT/EN e test `tests/elicitationSELinuxContent.test.ts`.
 
 ### 14. Contesto normativo: SOX e GLBA
 
