@@ -28,6 +28,13 @@ export interface GuideComparison {
   rows: string[][];
 }
 
+/** An original process diagram, paired with a complete prose equivalent. */
+export interface GuideFlow {
+  title: string;
+  steps: { title: string; detail: string }[];
+  textEquivalent: string;
+}
+
 export interface DomainGuide {
   domainId: number;
   title: string;
@@ -44,6 +51,7 @@ export interface DomainGuide {
   connections: string[];
   /** Side-by-side comparisons of concepts the exam tends to confuse. */
   comparisons?: GuideComparison[];
+  flows?: GuideFlow[];
   /** Frequent misconceptions, each paired with the correct reading. */
   commonTraps?: { misconception: string; correction: string }[];
   /** Where the exam simplifies: what it expects, and how the topic works in practice. */
@@ -79,6 +87,11 @@ const DOMAIN_1_ACRONYMS = acronymList([
   ["CIA", "Confidentiality, Integrity, and Availability"],
   ["CRL", "Certificate Revocation List"],
   ["CSR", "Certificate Signing Request"],
+  ["DH", "Diffie-Hellman"],
+  ["DHE", "Diffie-Hellman Ephemeral"],
+  ["ECDH", "Elliptic Curve Diffie-Hellman"],
+  ["ECDHE", "Elliptic Curve Diffie-Hellman Ephemeral"],
+  ["PFS", "Perfect Forward Secrecy"],
   ["ECC", "Elliptic Curve Cryptography"],
   ["HSM", "Hardware Security Module"],
   ["OCSP", "Online Certificate Status Protocol"],
@@ -231,7 +244,56 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Zero trust e AAA preparano identity and access management (D4) e le scelte di segmentazione dell'architettura (D3).",
       "Honeypot e honeytoken producono indicatori utilizzati da SIEM, threat hunting e incident response (D4).",
     ],
+    flows: [
+      {
+        "title": "Dall’accordo effimero ai dati protetti (1.4)",
+        "steps": [
+          {
+            "title": "Contributi pubblici",
+            "detail": "Client e server creano coppie ECDHE fresche: si scambiano solo i valori pubblici; i privati restano locali."
+          },
+          {
+            "title": "Segreto e derivazione",
+            "detail": "Entrambi calcolano lo stesso segreto. La KDF deriva chiavi di sessione distinte, senza trasmettere il segreto o usare direttamente il risultato ECDH come chiave AES."
+          },
+          {
+            "title": "Peer autenticato",
+            "detail": "Il client verifica identità, certificato e firma del server sul transcript. RSA può firmare: non trasporta la chiave in TLS 1.3. Il client si autentica se richiesto."
+          },
+          {
+            "title": "Dati e cancellazione",
+            "detail": "I dati applicativi usano cifratura simmetrica autenticata, per esempio AES-GCM. I segreti effimeri e le vecchie chiavi sono eliminati quando non più necessari."
+          }
+        ],
+        "textEquivalent": "Equivalente testuale: client e server contribuiscono valori pubblici ECDHE, calcolano localmente il medesimo segreto e derivano chiavi simmetriche. La verifica del peer lega lo scambio all’identità prevista prima di accettare dati applicativi. I dati sono protetti con AES-GCM; i segreti non più necessari vengono eliminati. È un flusso logico semplificato, non la sequenza completa dei messaggi TLS 1.3: anche parti dell’handshake sono cifrate. Una successiva perdita della sola chiave del certificato non rivela le sessioni passate, se i segreti effimeri sono stati eliminati. Fonti: NIST SP 800-56A; RFC 8446, sezioni 2 e 7."
+      },
+    ],
     comparisons: [
+      {
+        "title": "Key establishment: trasporto o accordo?",
+        "headers": [
+          "Metodo",
+          "Come nasce il segreto",
+          "Limiti"
+        ],
+        "rows": [
+          [
+            "Key transport (RSA)",
+            "Una parte sceglie e cifra il materiale per il destinatario verificato.",
+            "RSA statico non offre PFS; non è il trasporto usato da TLS 1.3. Fonte: NIST SP 800-56B."
+          ],
+          [
+            "Key agreement (DH/ECDH)",
+            "Entrambi contribuiscono e derivano un segreto, poi chiavi simmetriche.",
+            "Serve autenticazione contro MITM; DH/ECDH statico non implica PFS."
+          ],
+          [
+            "DHE/ECDHE + PFS",
+            "Contributi effimeri nuovi e segreti eliminati proteggono le sessioni passate.",
+            "Non protegge una chiave di sessione già rubata o il malware sull’endpoint."
+          ]
+        ]
+      },
       {
         "title": "Zero Trust: PE, PA e PEP (1.2)",
         "headers": [
@@ -349,6 +411,10 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "TLS 1.3 cifra la chiave di sessione con RSA e PFS protegge ogni compromissione.",
+        "correction": "TLS 1.3 ha rimosso il trasporto RSA: RSA può ancora autenticare con firme. DHE/ECDHE autenticato protegge le sessioni passate dalla futura perdita della chiave persistente, non i segreti di sessione rubati o le future impersonificazioni. PSK-only (psk_ke) non offre PFS per i dati applicativi; 0-RTT non ha piena forward secrecy ed è esposto a replay. Fonte: RFC 8446, sezioni 1.2, 2.2, 2.3 ed E.1."
+      },
+      {
         "misconception": "Il PA scrive le policy e decide autonomamente; il PEP è sempre un firewall separato.",
         "correction": "PE decide, PA coordina, PEP applica e monitora. Sono ruoli logici, anche nello stesso prodotto; PE e PA formano il Policy Decision Point (PDP). PA qui significa Policy Administrator Zero Trust. Fonte: NIST SP 800-207, sezione 3."
       },
@@ -379,6 +445,12 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Traffico registrato e chiave rubata",
+        "prompt": "Kestrelia scopre che la chiave privata del certificato è stata rubata oggi. Un attaccante aveva registrato sessioni ECDHE autenticate del mese scorso, i cui segreti sono stati eliminati. Può decifrarle? E se avesse copiato una chiave di sessione dalla memoria?",
+        "reasoning": "La sola chiave del certificato non ricostruisce i segreti effimeri: PFS protegge quelle sessioni passate. Una chiave di sessione copiata espone invece il traffico corrispondente; PFS non ripara il furto. Revoca e sostituisci il certificato, investiga l’endpoint e ripristina la fiducia: PFS non impedisce future impersonificazioni. Con trasporto RSA statico registrato la compromissione avrebbe potuto esporre il premaster secret e le chiavi derivate. Non confondere accordo, autenticazione e cifratura di massa."
+      },
       {
         "objective": "1.2",
         "title": "Flusso Zero Trust: autorizzazione e revoca",
@@ -1810,7 +1882,56 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Zero trust and AAA prepare identity and access management (D4) and segmentation choices in architecture (D3).",
       "Honeypots and honeytokens produce indicators used by SIEM, threat hunting, and incident response (D4).",
     ],
+    flows: [
+      {
+        "title": "From ephemeral agreement to protected data (1.4)",
+        "steps": [
+          {
+            "title": "Public contributions",
+            "detail": "Client and server create fresh ECDHE pairs: only public values are exchanged; private values stay local."
+          },
+          {
+            "title": "Secret and derivation",
+            "detail": "Both compute the same secret. The KDF derives separate session keys without transmitting the secret or using the ECDH result directly as an AES key."
+          },
+          {
+            "title": "Authenticated peer",
+            "detail": "The client verifies server identity, certificate and signature over the transcript. RSA can sign: it does not transport the key in TLS 1.3. Client authentication is optional."
+          },
+          {
+            "title": "Data and erasure",
+            "detail": "Application data uses authenticated symmetric encryption, for example AES-GCM. Ephemeral secrets and old keys are erased when no longer needed."
+          }
+        ],
+        "textEquivalent": "Text equivalent: client and server contribute public ECDHE values, locally compute the same secret and derive symmetric keys. Peer verification binds the exchange to the intended identity before accepting application data. AES-GCM protects data; secrets no longer needed are erased. This is a simplified logical flow, not the complete TLS 1.3 message sequence: parts of the handshake are encrypted too. Later loss of the certificate key alone does not expose past sessions if ephemeral secrets have been erased. Sources: NIST SP 800-56A; RFC 8446, sections 2 and 7."
+      },
+    ],
     comparisons: [
+      {
+        "title": "Key establishment: transport or agreement?",
+        "headers": [
+          "Method",
+          "How the secret is established",
+          "Limits"
+        ],
+        "rows": [
+          [
+            "Key transport (RSA)",
+            "One party chooses and encrypts material for the verified recipient.",
+            "Static RSA does not provide PFS; TLS 1.3 does not use this transport. Source: NIST SP 800-56B."
+          ],
+          [
+            "Key agreement (DH/ECDH)",
+            "Both contribute and derive a secret, then symmetric keys.",
+            "Authentication against MITM is required; static DH/ECDH does not imply PFS."
+          ],
+          [
+            "DHE/ECDHE + PFS",
+            "Fresh ephemeral contributions and erased secrets protect past sessions.",
+            "Does not protect an already stolen session key or endpoint malware."
+          ]
+        ]
+      },
       {
         "title": "Zero Trust: PE, PA and PEP (1.2)",
         "headers": [
@@ -1928,6 +2049,10 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
     ],
     commonTraps: [
       {
+        "misconception": "TLS 1.3 encrypts the session key with RSA and PFS protects against every compromise.",
+        "correction": "TLS 1.3 removed RSA transport: RSA can still authenticate with signatures. Authenticated DHE/ECDHE protects past sessions against later persistent-key loss, not stolen session secrets or future impersonation. PSK-only (psk_ke) does not provide PFS for application data; 0-RTT lacks full forward secrecy and is exposed to replay. Source: RFC 8446, sections 1.2, 2.2, 2.3 and E.1."
+      },
+      {
         "misconception": "The PA authors policies and decides independently; the PEP is always a separate firewall.",
         "correction": "PE decides, PA coordinates, PEP enforces and monitors. These are logical roles, possibly in one product; PE and PA form the Policy Decision Point (PDP). PA here means Zero Trust Policy Administrator. Source: NIST SP 800-207, section 3."
       },
@@ -1958,6 +2083,12 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       },
     },
     practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Recorded traffic and a stolen key",
+        "prompt": "Kestrelia discovers its certificate private key was stolen today. An attacker recorded authenticated ECDHE sessions last month whose secrets were erased. Can they decrypt them? What if they copied a session key from memory?",
+        "reasoning": "The certificate key alone cannot reconstruct erased ephemeral secrets: PFS protects those past sessions. A copied session key instead exposes the corresponding traffic; PFS does not undo theft. Revoke and replace the certificate, investigate the endpoint and restore trust: PFS does not prevent future impersonation. With recorded static RSA transport, compromise could have exposed the premaster secret and derived keys. Distinguish agreement, authentication and bulk encryption."
+      },
       {
         "objective": "1.2",
         "title": "Zero Trust flow: authorization and revocation",

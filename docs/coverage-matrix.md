@@ -17,7 +17,7 @@ Peso d'esame 12% · 110 domande nel banco del dominio.
 | 1.1 | Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato. | 15 | 0 | 4 | 5 | 6 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.2 | Applicare CIA, autenticazione, autorizzazione, accounting, non ripudio, zero trust, gap analysis, sicurezza fisica e deception a uno scenario. | 35 | 1 | 14 | 9 | 11 | 3 | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final), [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) |
 | 1.3 | Valutare un cambiamento sicuro: ownership, impatto, approvazione, test, rollback, documentazione e monitoraggio. | 20 | 1 | 3 | 8 | 8 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
-| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 3 | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [NIST SP 800-56A Rev. 3](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446), [NIST CSRC Glossary](https://csrc.nist.gov/glossary/term/steganography) |
+| 1.4 | Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità. | 42 | 2 | 12 | 16 | 12 | 4 | [NIST SP 800-57 Part 1 Rev. 5](https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final), [NIST SP 800-56A Rev. 3](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final), [NIST SP 800-56B Rev. 2](https://csrc.nist.gov/pubs/sp/800/56/b/r2/final), [IETF RFC 8446](https://www.rfc-editor.org/rfc/rfc8446), [NIST CSRC Glossary](https://csrc.nist.gov/glossary/term/steganography) |
 
 ## Dominio 2 — Minacce, vulnerabilità e mitigazioni
 
@@ -95,6 +95,7 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 - [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) — NIST
 - [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) — NIST
 - [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final) — NIST
+- [SP 800-56B Rev. 2 — Pair-Wise Key-Establishment Using Integer Factorization Cryptography](https://csrc.nist.gov/pubs/sp/800/56/b/r2/final) — NIST
 - [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final) — NIST
 - [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final) — NIST
 - [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final) — NIST

@@ -81,7 +81,8 @@ export function objectivesFromGroupTitle(title: string): string[] {
 /**
  * The expansion of an acronym, derived from the concept.
  *
- * Two reliable shapes carry it:
+ * Three reliable shapes carry it:
+ *  - a named hyphenated compound, "Diffie-Hellman (DH)";
  *  - the name itself, "Standard Operating Procedure (SOP)", where stripping the
  *    parenthetical acronym leaves the expansion;
  *  - a bare-acronym name ("SIEM") whose definition opens with the expansion
@@ -91,6 +92,10 @@ export function objectivesFromGroupTitle(title: string): string[] {
  * wrong expansion would teach the wrong thing.
  */
 export function deriveExpansion(name: string, definition: string): string | null {
+  // A named compound such as Diffie-Hellman (DH) is a real expansion even
+  // though the glossary intentionally indexes it only by acronym.
+  const compound = name.match(/^([A-Za-z]{3,}(?:-[A-Za-z]{3,})+)\s+\([A-Z][A-Z0-9]{1,7}\)$/)?.[1];
+  if (compound && compound.length <= 90) return compound;
   const fromName = cleanExpansion(fullNameOf(name) ?? "");
   if (isPlausibleExpansion(fromName)) return fromName;
 

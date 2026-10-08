@@ -13,14 +13,14 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 586 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 593 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
 
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
-| 1 | 98 | 0 |
+| 1 | 105 | 0 |
 | 2 | 83 | 0 |
 | 3 | 176 | 0 |
 | 4 | 135 | 0 |
@@ -38,21 +38,28 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-65 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+72 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
 
 - `1:AsymmetricEncryption`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final)
 - `1:DataPlaneZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
+- `1:DiffieHellmanConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:DirectiveControl`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/)
+- `1:ECDHConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
+- `1:EphemeralKeyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
+- `1:ForwardSecrecyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:GapAnalysis`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/); [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework)
 - `1:ImpactAnalysis`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
+- `1:KeyAgreementConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
+- `1:KeyTransportConcept`: [SP 800-56B Rev. 2 — Pair-Wise Key-Establishment Using Integer Factorization Cryptography](https://csrc.nist.gov/pubs/sp/800/56/b/r2/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:MFAImplementationsTokens`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `1:PasswordPoliciesAccount`: [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `1:PolicyAdministratorZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
 - `1:PolicyEnforcementPointZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
 - `1:PolicyEngineZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
+- `1:SessionKeyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:SteganographyConcept`: [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography)
 - `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
 - `2:CookieHeaderTampering`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)

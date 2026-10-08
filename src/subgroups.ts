@@ -54,6 +54,13 @@ export const SUBGROUP_MAP: Record<string, string> = {
   // Topic 5: Cryptography
   "SteganographyConcept": "Crittografia",
   "SymmetricEncryption": "Crittografia",
+  "SessionKeyConcept": "Crittografia",
+  "KeyTransportConcept": "Crittografia",
+  "KeyAgreementConcept": "Crittografia",
+  "DiffieHellmanConcept": "Crittografia",
+  "ECDHConcept": "Crittografia",
+  "EphemeralKeyConcept": "Crittografia",
+  "ForwardSecrecyConcept": "Crittografia",
   "AsymmetricEncryption": "Crittografia",
   "HashingConcept": "Crittografia",
   "PKIFundamentals": "Infrastruttura PKI",

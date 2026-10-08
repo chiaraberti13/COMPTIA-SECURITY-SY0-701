@@ -99,13 +99,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 7. Accordo delle chiavi, chiavi effimere e forward secrecy
 
-- [ ] Approfondire key establishment nella guida del Dominio 1 e aggiungere le voci collegate nel glossario (obiettivo 1.4).
+- [x] Approfondire key establishment nella guida del Dominio 1 e aggiungere le voci collegate nel glossario (obiettivo 1.4).
 
 **Evidenza nel repository:** `AsymmetricEncryption` distingue già correttamente DH/ECDH dalla cifratura; perfect forward secrecy compare soprattutto nel contesto WPA3. Manca un percorso generale su chiave di sessione, key transport, key agreement e chiavi effimere.
 
 **Da realizzare:** conservare la distinzione già corretta su DH/ECDH; confrontare consegna di una chiave cifrata e derivazione di un segreto condiviso, poi l'uso della cifratura simmetrica. Definire DH, ECDH, ephemeral key e PFS/forward secrecy, spiegando perché l'autenticazione dei peer resta necessaria.
 
 **Accettazione:** il trasporto RSA della chiave non viene presentato come handshake TLS 1.3; descrivere cosa protegge e cosa non protegge la forward secrecy in caso di compromissione. Fonti: NIST SP 800-56A e RFC 8446. Diagramma originale con equivalente testuale.
+
+**Completato l’8 ottobre 2026:** sette voci canoniche IT/EN, flashcard DH/ECDH/PFS, confronto key transport/key agreement e scenario di compromissione nell’obiettivo 1.4. Diagramma originale responsive con equivalente testuale, autenticazione distinta dall’accordo e limiti PFS (segreti di sessione, endpoint, PSK-only e 0-RTT). Conservata la spiegazione corretta di DH/ECDH e precisato che TLS 1.3 non usa il trasporto RSA. Fonti NIST SP 800-56A/56B e RFC 8446; verifiche automatiche IT/EN, contenuti, accessibilità e layout.
 
 ### 8. Terminazione TLS nei bilanciatori e confini di fiducia
 

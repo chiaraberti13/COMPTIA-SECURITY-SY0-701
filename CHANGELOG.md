@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Added seven IT/EN key-establishment glossary entries, DH/ECDH/PFS flashcards, a transport-versus-agreement comparison and a compromise exercise for objective 1.4. The responsive four-step diagram has a complete text equivalent. Clarified RSA transport, TLS 1.3, peer authentication and forward-secrecy limits with NIST/RFC sources and automated coverage.
+- Aggiunte sette voci IT/EN sul key establishment, flashcard DH/ECDH/PFS, confronto trasporto/accordo ed esercizio sulla compromissione per l’obiettivo 1.4. Il diagramma a quattro passi è responsive e ha un equivalente testuale completo. Precisati trasporto RSA, TLS 1.3, autenticazione dei peer e limiti della forward secrecy con fonti NIST/RFC e test automatici.
+
 - Aligned the synthetic dataset generator, manifest and license checks with the GPL-3.0 dataset license already present on main.
 - Allineati generatore, manifest e controlli dei dataset sintetici alla licenza GPL-3.0 già presente su main.
 

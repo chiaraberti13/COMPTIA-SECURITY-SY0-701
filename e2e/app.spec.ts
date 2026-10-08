@@ -42,6 +42,21 @@ async function headingProblems(page: Page): Promise<string[]> {
 }
 
 test.describe("layout", () => {
+  test("the key establishment diagram has a readable IT/EN equivalent and reflows accessibly", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#guide_h_comparisons_1 > summary").click();
+    for (const lang of ["it", "en"] as const) {
+      if (lang === "en") await page.locator("#lang_btn_en").click();
+      const diagram = page.locator("#guide_h_comparisons_1 figure");
+      await expect(diagram).toBeVisible();
+      await expect(diagram.locator("li")).toHaveCount(4);
+      await expect(diagram.locator("figcaption")).toContainText(lang === "it" ? "Equivalente testuale" : "Text equivalent");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+      expect(await seriousViolations(page)).toEqual([]);
+    }
+  });
+
   test("the study panel is usable and the page never scrolls sideways", async ({ page }) => {
     await openApp(page);
     const panel = await page.locator("#study_panel_wrapper").boundingBox();

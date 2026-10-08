@@ -35,6 +35,10 @@ describe("objectivesFromGroupTitle", () => {
 });
 
 describe("deriveExpansion", () => {
+  it("recognizes a named hyphenated compound without guessing a bare acronym", () => {
+    expect(deriveExpansion("Diffie-Hellman (DH)", "Accordo delle chiavi.")).toBe("Diffie-Hellman");
+    expect(deriveExpansion("DH", "Accordo delle chiavi.")).toBeNull();
+  });
   it("takes the expansion from a 'Full Name (ACR)' style name", () => {
     expect(deriveExpansion("Standard Operating Procedure (SOP)", "ignored")).toBe("Standard Operating Procedure");
   });
@@ -199,7 +203,7 @@ describe("acronym deck over the real content", () => {
     for (const lang of ["it", "en"] as const) {
       for (const card of buildAcronymDeck(getAllTopics(lang))) {
         expect(card.expansion.length, `${card.id} expansion`).toBeGreaterThan(3);
-        expect(/\s/.test(card.expansion), `${card.id} multi-word`).toBe(true);
+        expect(/\s|[A-Za-z]{3,}-[A-Za-z]{3,}/.test(card.expansion), `${card.id} phrase or named compound`).toBe(true);
         expect(card.definition.length, `${card.id} definition`).toBeGreaterThan(10);
         expect(card.id).toBe(card.acronym);
         expect(card.domainId).toBeGreaterThanOrEqual(1);

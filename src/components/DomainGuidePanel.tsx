@@ -1,7 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import { Activity, ArrowRight, BookMarked, CheckSquare, ChevronRight, ExternalLink, Flag, GraduationCap, Sparkles } from "lucide-react";
 import { sourcesOf, type Source } from "../contentReview";
-import type { AttackChain, DomainGuide } from "../domainGuides";
+import type { AttackChain, DomainGuide, GuideFlow } from "../domainGuides";
 import type { DomainRoute, RouteStep } from "../domainRoutes";
 import { useLang } from "../i18n";
 import { actionLabel, type StudyAction } from "../studyPaths";
@@ -12,6 +12,26 @@ import ModuleSummary from "./ModuleSummary";
 import type { GlossaryIndex } from "../glossaryIndex";
 
 const ISSUES_URL = "https://github.com/chiaraberti13/CompTIA-Security-SY0-701/issues";
+
+/** Numbered nodes and connectors reflow vertically on small screens. */
+export function GuideFlowDiagram({ flow, id }: { flow: GuideFlow; id: string }) {
+  return (
+    <figure aria-labelledby={`${id}_title`} className="space-y-3 min-w-0">
+      <h4 id={`${id}_title`} className="text-sm font-semibold text-cyan-300">{flow.title}</h4>
+      <ol role="list" className="grid grid-cols-1 lg:grid-cols-4 gap-5 list-none">
+        {flow.steps.map((step, index) => (
+          <li key={step.title} className="relative min-w-0 rounded-lg border border-cyan-900 bg-slate-950/70 p-3">
+            <span aria-hidden="true" className="text-xs font-mono text-cyan-400">{index + 1}</span>
+            <p className="text-xs font-semibold text-slate-200 break-words">{step.title}</p>
+            <p className="mt-2 text-xs leading-relaxed text-slate-300 break-words">{step.detail}</p>
+            {index < flow.steps.length - 1 && <ArrowRight aria-hidden="true" className="absolute -bottom-5 left-1/2 -translate-x-1/2 rotate-90 lg:rotate-0 lg:bottom-auto lg:top-1/2 lg:left-auto lg:-right-5 lg:translate-x-0 w-5 h-5 text-cyan-400" />}
+          </li>
+        ))}
+      </ol>
+      <figcaption className="text-xs leading-relaxed text-slate-300">{flow.textEquivalent}</figcaption>
+    </figure>
+  );
+}
 
 /** The summary of a guide section folded as a deepening: the tag, then the section heading. */
 function DeepenSummary({ title }: { title: string }) {
@@ -323,6 +343,7 @@ export default function DomainGuidePanel({
         {guide.comparisons && guide.comparisons.length > 0 && (
           <Disclosure variant="deepen" id={`guide_h_comparisons_${d}`} summary={<DeepenSummary title={t("study.comparisons")} />}>
             <div className="space-y-4">
+              {guide.flows?.map((flow, index) => <GuideFlowDiagram key={flow.title} flow={flow} id={`guide_flow_${d}_${index}`} />)}
               {guide.comparisons.map((comparison) => (
                 // A scrollable region must be reachable from the keyboard to scroll it.
                 <div key={comparison.title} className="overflow-x-auto border border-slate-800 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500" tabIndex={0} role="region" aria-label={t("a11y.scrollableTable", { title: comparison.title })}>
