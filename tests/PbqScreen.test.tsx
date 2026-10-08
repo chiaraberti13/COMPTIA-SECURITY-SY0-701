@@ -283,3 +283,24 @@ describe("BIA recovery PBQ", () => {
     expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
   });
 });
+
+describe("quantitative risk PBQ", () => {
+  it("shows calculation evidence, diagnoses a percentage error and resets answers", () => {
+    const pbq = getPbqScenarios("it").find(p => p.id === 308)! as MatchingPbq;
+    renderHarness([pbq]);
+    fireEvent.click(document.getElementById("pbq_start_308")!);
+    const table = screen.getByRole("table", { name: "Dati sintetici per la valutazione quantitativa" });
+    expect(within(table).getAllByRole("row")).toHaveLength(5);
+    expect(screen.getByRole("region", { name: "Dati sintetici per la valutazione quantitativa" }).tabIndex).toBe(0);
+    for (const prompt of pbq.prompts) fireEvent.change(screen.getByLabelText(prompt.text), {
+      target: { value: prompt.id === "ef_before" ? "ef_25" : prompt.correctOptionId },
+    });
+    fireEvent.click(document.getElementById("pbq_submit")!);
+    expect(document.getElementById("pbq_match_row_ef_before")!.textContent).toContain("Corretto: 0,25");
+    expect(document.getElementById("pbq_feedback")!.textContent).toContain("beneficio atteso netto è €54.000");
+    fireEvent.click(document.getElementById("pbq_next")!);
+    fireEvent.click(document.getElementById("pbq_restart")!);
+    for (const prompt of pbq.prompts) expect((screen.getByLabelText(prompt.text) as HTMLSelectElement).value).toBe("");
+    expect((document.getElementById("pbq_submit") as HTMLButtonElement).disabled).toBe(true);
+  });
+});

@@ -299,13 +299,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 22. Catena quantitativa AV → EF → SLE → ALE
 
-- [ ] Aggiungere una PBQ di abbinamento fra dati, risultati di calcolo e trattamento motivato del rischio (obiettivo 5.2).
+- [x] Aggiungere una PBQ di abbinamento fra dati, risultati di calcolo e trattamento motivato del rischio (obiettivo 5.2).
 
 **Evidenza nel repository:** Le formule e i quesiti 50006, 50068 e 50075 sono già presenti; la PBQ 302 classifica strategie di trattamento senza richiedere calcoli. Il nuovo compito integra i passaggi e il rischio residuo.
 
 **Da realizzare:** dati originali con EF in percentuale/frazione e ARO espresso come frequenza annua; far associare SLE e ALE prima e dopo un controllo dal costo annuo dichiarato. Esplicitare gli effetti del controllo e l'incertezza delle stime.
 
 **Accettazione:** unità, conversioni e risultati verificati automaticamente; convenienza economica non presentata come unico criterio per sicurezza, obblighi o rischio per le persone. Usare valori sintetici originali.
+
+**Completato (2026-10-09):** PBQ 308 IT/EN con catena AV → EF → SLE → ALE prima e dopo un controllo, costo annuo, beneficio atteso netto e trattamento motivato. Valori sintetici, unità e conversioni sono ricalcolati nei test; la decisione include rischio residuo, incertezza, obblighi e impatti non monetizzati. Fonte NIST SP 800-30. Dettagli in `docs/risk-calculation-pbq.md`. Test Playwright desktop/mobile aggiunti; esecuzione locale impedita dal binario Chromium assente.
 
 ## P2 — ulteriori voci autonome nel glossario
 

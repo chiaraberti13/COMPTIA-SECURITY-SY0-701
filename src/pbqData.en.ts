@@ -22,6 +22,46 @@ export interface PbqOverride {
 }
 
 export const PBQ_EN: Record<number, PbqOverride> = {
+308: {
+  title: "Quantitative risk chain: AV, EF, SLE and ALE",
+  scenario: "Kestrelia estimates a risk using synthetic values. Before the control: asset value (AV) €800,000, exposure factor (EF) 25%, and annual rate of occurrence (ARO) 0.4. The proposed control costs €18,000 per year and is estimated to reduce EF to 10% and ARO to 0.1. Calculate SLE = AV × EF and ALE = SLE × ARO. Estimates are decision ranges to review, not certain forecasts. No direct risk to people is included in the monetary values.",
+  prompt: "Match data, results and the justified decision. Some options are distractors.",
+  evidenceTable: {
+    caption: "Synthetic data for quantitative risk assessment",
+    headers: ["Item", "Before the control", "After the proposed control"],
+    rows: [
+      ["AV", "€800,000", "€800,000"],
+      ["EF", "25% = 0.25", "10% = 0.10"],
+      ["ARO", "0.4 events/year", "0.1 events/year"],
+      ["Annual control cost", "€0", "€18,000"],
+    ],
+  },
+  prompts: {
+    ef_before: "Conversion of the initial 25% EF",
+    sle_before: "SLE before the control",
+    ale_before: "ALE before the control",
+    sle_after: "SLE after the control",
+    ale_after: "Residual ALE after the control",
+    benefit: "Expected annual ALE reduction, before control cost",
+    net: "Expected annual benefit net of control cost",
+    treatment: "Treatment and justified decision",
+  },
+  options: {
+    ef_025: "0.25",
+    sle_200k: "€200,000 per event",
+    ale_80k: "€80,000 per year",
+    sle_80k: "€80,000 per event",
+    ale_8k: "€8,000 per year",
+    benefit_72k: "€72,000 per year",
+    net_54k: "€54,000 per year",
+    mitigate_review: "Mitigate: expected benefit exceeds cost, but validate assumptions, residual risk, obligations and non-monetized impacts",
+    ef_25: "25",
+    ale_200k: "€200,000 per year",
+    net_72k: "€72,000 net per year",
+    auto_accept: "Accept automatically: economic comparison alone decides every risk",
+  },
+  explanation: "25% becomes 0.25. Before the control: SLE = €800,000 × 0.25 = €200,000 per event; ALE = €200,000 × 0.4/year = €80,000/year. After the control: SLE = €800,000 × 0.10 = €80,000 per event; residual ALE = €80,000 × 0.1/year = €8,000/year. The expected reduction is €80,000 − €8,000 = €72,000/year; subtracting €18,000/year gives an expected net benefit of €54,000/year. The control mitigates estimated frequency and impact; it does not eliminate risk. Cost-effectiveness supports the decision but does not replace legal or contractual obligations, risk tolerance, safety of people, or uncertainty analysis. AV, EF and ARO must be documented, validated and reviewed with scenarios or ranges.",
+},
 307: {
   "title": "BIA: choose the recovery plan",
   "scenario": "Kestrelia loses the primary site at 12:00. The BIA defines RTO as the maximum target time until the service is usable again and RPO as the maximum interval of data loss allowed. All times are on the same day. Tests include activation, restoration, dependencies and service verification; stated capacity is sufficient for the assigned service. Choose the plan with the lowest relative cost that meets both limits; costs are fictional units per service. Nominal frequency does not replace the actual recoverable point. Guide D3, objective 3.4; BIA and risk management, objective 5.2.",

@@ -43,7 +43,7 @@ describe("configurable mixed exams", () => {
   it.each([
     [{ ...counts, 1: -1 }, 0], [{ ...counts, 1: 0.5 }, 0], [{ ...counts, 1: NaN }, 0],
     [{ ...counts, 1: 9999 }, 0], [{ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, 0],
-    [{ ...counts, 1: 90 }, 0], [counts, 10], [counts, -1], [counts, 0.5],
+    [{ ...counts, 1: 90 }, 0], [counts, availableExamPbqs(counts, PBQ_SCENARIOS) + 1], [counts, -1], [counts, 0.5],
   ])("rejects impossible configurations %j / %i", (split, n) => {
     expect(() => assembleExam(split, n, bank, PBQ_SCENARIOS, objectives)).toThrow();
   });
