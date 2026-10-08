@@ -73,7 +73,6 @@ export const PHYSICAL_VECTOR_QUESTION_EN_EXTRA: Record<number, Record<number, Qu
   2: {
     9004: {
       topic: "Threat Vectors & Attack Surfaces",
-      level: "APPLICATION",
       scenario: "An unknown USB drive is left in a parking lot. An employee plugs it in, and a malicious program attempts to run.",
       question: "Which is the vector, distinct from the technique that executes the code?",
       options: ["The removable device is the vector; running the malicious program is the technique", "Running the program is the vector; the USB drive is the technique", "The parking lot is the vector; the USB drive is the payload", "The malware is the vector; physical access is the technique"],
