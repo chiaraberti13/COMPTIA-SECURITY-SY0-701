@@ -101,7 +101,7 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
 | Lingua sorgente di verità | Italiano, con overlay inglese e fallback | parità verificata a ogni commit | ✅ raggiunto |
-| Concetti (sottovoci) tradotti e in parità | 602 | 100% | ✅ raggiunto |
+| Concetti (sottovoci) tradotti e in parità | 605 | 100% | ✅ raggiunto |
 | Domande tradotte e in parità | 682 | 100% | ✅ raggiunto |
 
 | Gate di parità | File | Stato |
@@ -112,6 +112,6 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 
 ## Riepilogo
 
-- Fonti citate: 27 primarie e 15 secondarie (mappate il 2026-10-06).
+- Fonti citate: 29 primarie e 17 secondarie (mappate il 2026-10-08).
 - I controlli marcati ✅ obbligatorio bloccano le pull request tramite branch protection.
 - Le voci 🟡 sono verificate altrove (CI, scheda Security, issue di manutenzione) o soggette a una scadenza sorvegliata.

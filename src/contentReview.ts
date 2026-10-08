@@ -68,7 +68,7 @@ export interface ObjectiveSources {
 }
 
 /** When the sources below were assigned to the objectives. */
-export const SOURCES_MAPPED_ON = "2026-10-06";
+export const SOURCES_MAPPED_ON = "2026-10-08";
 
 const mapped = (...sources: SourceId[]): ObjectiveSources => ({
   sources: ["comptiaSecurityPlus", ...sources],

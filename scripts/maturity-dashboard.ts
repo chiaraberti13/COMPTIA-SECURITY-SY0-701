@@ -35,6 +35,7 @@ import {
 } from "../src/data";
 import { DOMAIN_GUIDES_IT } from "../src/domainGuides";
 import { SOURCES, SOURCES_MAPPED_ON } from "../src/contentReview";
+import { EAP_METHOD_TOPICS } from "../src/eapMethodTopics";
 import { isActive } from "../src/localizedData";
 import { PBQ_SCENARIOS } from "../src/pbqData";
 import { ALL_OBJECTIVES, OFFICIAL_OBJECTIVES, objectivesOfQuestion } from "../src/questionObjectives";
@@ -104,8 +105,10 @@ function questionsByObjective(): Map<string, number> {
 }
 
 /** Concepts (sub-topics), each a unit translated and kept in IT/EN parity. */
-const activeConcepts = (domain: number) =>
-  TOPICS[domain].flatMap((group) => group.subtopics.filter(isActive));
+const activeConcepts = (domain: number) => [
+  ...TOPICS[domain].flatMap((group) => group.subtopics.filter(isActive)),
+  ...(domain === 3 ? EAP_METHOD_TOPICS.it.subtopics.filter(isActive) : []),
+];
 
 export function renderMaturityDashboard(): string {
   const totalQuestions = DOMAINS.reduce((sum, d) => sum + activeQuestions(d).length, 0);

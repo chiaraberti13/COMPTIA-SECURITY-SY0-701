@@ -21,7 +21,7 @@ export const conceptAnchor = (domain: number, checklistKey: string) => `#studio/
 
 export const guideAnchor = (domain: number, objective?: string) => (objective ? `#guida/${domain}/${objective}` : `#guida/${domain}`);
 
-const CONCEPT = /^#studio\/([1-5])\/([A-Za-z][A-Za-z0-9_]{0,63})$/;
+const CONCEPT = /^#studio\/([1-5])\/([A-Za-z][A-Za-z0-9_-]{0,63})$/;
 const GUIDE = /^#guida\/([1-5])(?:\/([1-5]\.[1-9]))?$/;
 
 /**

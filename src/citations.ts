@@ -56,6 +56,8 @@ export const MENTIONS: [SourceId, RegExp][] = [
   ["rfc8446", /RFC ?8446/],
   ["rfc9190", /RFC ?9190/],
   ["rfc5281", /RFC ?5281/],
+  ["microsoftEapCertificates", /requisiti dei certificati EAP-TLS\/PEAP|EAP-TLS\/PEAP certificate requirements/],
+  ["microsoftWifiProfiles", /impostazioni Wi-Fi Intune|Intune Wi-Fi settings/],
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {

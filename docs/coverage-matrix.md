@@ -48,7 +48,7 @@ Peso d'esame 28% · 185 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
 |---|---|---|---|---|---|---|---|---|
-| 4.1 | Applicare baseline, hardening, patching, secure configuration e protezioni per endpoint, mobile, wireless, applicazioni e cloud. | 23 | 0 | 5 | 17 | 1 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [IEEE Std 802.11-2020](https://standards.ieee.org/ieee/802.11/7028/), [Wi-Fi Alliance](https://www.wi-fi.org/discover-wi-fi/security), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls), [OWASP Foundation Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) |
+| 4.1 | Applicare baseline, hardening, patching, secure configuration e protezioni per endpoint, mobile, wireless, applicazioni e cloud. | 23 | 0 | 5 | 17 | 1 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [IEEE Std 802.11-2020](https://standards.ieee.org/ieee/802.11/7028/), [Wi-Fi Alliance](https://www.wi-fi.org/discover-wi-fi/security), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls), [OWASP Foundation Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie), [IETF RFC 9190](https://www.rfc-editor.org/rfc/rfc9190), [IETF RFC 5281](https://www.rfc-editor.org/rfc/rfc5281), [Microsoft Learn Certificate requirements for EAP-TLS and PEAP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/certificate-requirements-eap-tls-peap), [Microsoft Learn Wi-Fi settings for Windows devices in Microsoft Intune](https://learn.microsoft.com/en-us/mem/intune/configuration/wi-fi-settings-windows) |
 | 4.2 | Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset. | 18 | 0 | 13 | 4 | 1 | 1 | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [NIST SP 800-88 Rev. 2](https://csrc.nist.gov/pubs/sp/800/88/r2/final), [Center for Internet Security CIS Critical Security Controls](https://www.cisecurity.org/controls) |
 | 4.3 | Eseguire vulnerability management dal discovery alla prioritizzazione, remediation, rescansione, reporting ed eccezioni. | 24 | 0 | 12 | 7 | 5 | 1 | [NIST SP 800-40 Rev. 4](https://csrc.nist.gov/pubs/sp/800/40/r4/final), [FIRST Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/), [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) |
 | 4.4 | Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore. | 16 | 0 | 9 | 3 | 4 | 1 | [NIST SP 800-92](https://csrc.nist.gov/pubs/sp/800/92/final), [MITRE ATT&CK](https://attack.mitre.org/) |
@@ -83,7 +83,7 @@ I 5 obiettivi con meno domande, da rinforzare per primi:
 
 ## Fonti
 
-Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-10-06); gli obiettivi d'esame
+Le fonti di ogni obiettivo sono in `src/contentReview.ts` (assegnate il 2026-10-08); gli obiettivi d'esame
 CompTIA valgono per tutti e non sono ripetuti nella tabella. Non sono richieste approvazioni umane
 o un secondo revisore; restano obbligatori i controlli automatici del repository.
 
@@ -111,6 +111,8 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 - [SP 800-50 Rev. 1 — Building a Cybersecurity and Privacy Learning Program](https://csrc.nist.gov/pubs/sp/800/50/r1/final) — NIST
 - [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework) — NIST
 - [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446) — IETF
+- [RFC 9190 — EAP-TLS 1.3](https://www.rfc-editor.org/rfc/rfc9190) — IETF
+- [RFC 5281 — EAP-TTLSv0](https://www.rfc-editor.org/rfc/rfc5281) — IETF
 - [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001) — ISO
 - [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj) — EUR-Lex
 - [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html) — U.S. Department of Health and Human Services
@@ -129,6 +131,8 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
 - [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) — OWASP Foundation
 - [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html) — OWASP Foundation
 - [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography) — NIST
+- [Certificate requirements for EAP-TLS and PEAP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/certificate-requirements-eap-tls-peap) — Microsoft Learn
+- [Wi-Fi settings for Windows devices in Microsoft Intune](https://learn.microsoft.com/en-us/mem/intune/configuration/wi-fi-settings-windows) — Microsoft Learn
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — OWASP Foundation
 - [CIS Critical Security Controls](https://www.cisecurity.org/controls) — Center for Internet Security
 - [MITRE ATT&CK](https://attack.mitre.org/) — MITRE
