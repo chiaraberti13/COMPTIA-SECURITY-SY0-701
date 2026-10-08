@@ -289,13 +289,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 23. Key Management System e secure enclave
 
-- [ ] Aggiungere KMS e secure enclave come voci canoniche, con rimandi a TPM/HSM e alla guida del Dominio 1 (obiettivo 1.4).
+- [x] Aggiungere KMS e secure enclave come voci canoniche, con rimandi a TPM/HSM e alla guida del Dominio 1 (obiettivo 1.4).
 
 **Evidenza nel repository:** TPM/HSM hanno voci dedicate; KMS e secure enclave sono argomenti citati nell'obiettivo/guida senza equivalenti voci autonome nelle definizioni analizzate.
 
 **Da realizzare:** distinguere gestione del ciclo di vita delle chiavi, protezione hardware delle operazioni e ambiente isolato; spiegare che una piattaforma KMS può usare HSM e che le proprietà di un enclave dipendono dall'implementazione. Descrivere le caratteristiche hardware nel contesto dell'implementazione che le offre.
 
 **Accettazione:** nomi estesi e acronimi reperibili in entrambe le lingue; confronto originale con TPM/HSM senza duplicare quelle definizioni. Fonti: NIST per key management e documentazione primaria dell'implementazione scelta.
+
+**Completato l'8 ottobre 2026:** voci canoniche `KMSConcept` e `SecureEnclaveConcept` (IT/EN) nel gruppo Cryptography (sottogruppo «Infrastruttura PKI»). KMS = gestione del ciclo di vita delle chiavi (creazione, rotazione, revoca, distruzione, BYOK) che *può usare* un HSM senza esserne sinonimo; secure enclave = ambiente isolato nel processore (TEE) con proprietà dipendenti dall'implementazione. Confronto esplicito con TPM/HSM senza duplicarne le definizioni; esempi originali e parità IT/EN. Test `tests/kmsWirelessNacContent.test.ts`.
 
 ### 24. EOL, EOS ed EOSL: terminologia del supporto
 
@@ -309,13 +311,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 25. CCMP, GCMP e GMAC
 
-- [ ] Rendere CCMP e GMAC autonomamente ricercabili, collegandoli a `GCMPConcept` e al confronto Wi-Fi (obiettivo 4.1).
+- [x] Rendere CCMP e GMAC autonomamente ricercabili, collegandoli a `GCMPConcept` e al confronto Wi-Fi (obiettivo 4.1).
 
 **Evidenza nel repository:** GCMP è già una voce con i limiti corretti delle suite WPA3; CCMP è citato nei dettagli e GMAC non compare nelle definizioni analizzate.
 
 **Da realizzare:** distinguere protocollo di protezione Wi-Fi, modalità di cifratura autenticata e codice di autenticazione. Non presentare GMAC come cifratura del contenuto né GCMP come obbligatorio in ogni rete WPA3. Collegare le attività 5 e 11, senza replicarne il confronto sui metodi di autenticazione.
 
 **Accettazione:** espansione di GMAC verificata sulla fonte primaria; esempi separano riservatezza e integrità. Fonti: NIST SP 800-38D, IEEE e Wi-Fi Alliance.
+
+**Completato l'8 ottobre 2026:** voci canoniche `CCMPConcept` e `GMACConcept` (IT/EN) nel gruppo Network Security (sottogruppo Wi-Fi), accanto a `GCMPConcept`. CCMP (AES in modalità CCM) = cifrario di WPA2 e della modalità di base di WPA3 (CCMP-128), distinto dalla suite a 192 bit (GCMP-256); GMAC = sola integrità/autenticità derivata da GCM, non cifratura e non GCMP. Esempi che separano riservatezza e integrità; parità IT/EN e test dedicato.
 
 ### 26. SD-WAN, SASE, CASB, SWG e FWaaS
 
@@ -329,13 +333,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 27. Agente persistente, dissolvibile e agentless nel NAC
 
-- [ ] Integrare agente dissolvibile/temporaneo e posture assessment nel glossario, collegandoli a `AgentRes`, `AgentlessRes` e `NACNet` (obiettivo 4.5).
+- [x] Integrare agente dissolvibile/temporaneo e posture assessment nel glossario, collegandoli a `AgentRes`, `AgentlessRes` e `NACNet` (obiettivo 4.5).
 
 **Evidenza nel repository:** Il corpus distingue agente e agentless, ma non introduce autonomamente la categoria dissolvibile e la relazione con la valutazione della postura.
 
 **Da realizzare:** distinguere installazione persistente, esecuzione temporanea e verifica senza agente sul dispositivo, con limiti di visibilità e frequenza dei controlli. Descrivere dipendenza da Active Directory e schedulazione secondo il prodotto: non sono limiti universali degli approcci agentless.
 
 **Accettazione:** caso originale seleziona l'approccio secondo requisiti espliciti; disambiguare la quarantena NAC dalla quarantena di un file antimalware. Fonte: documentazione primaria di implementazioni NAC, riportando i limiti del prodotto scelto.
+
+**Completato l'8 ottobre 2026:** voce canonica `DissolvableAgentNAC` (IT/EN) accanto a `AgentRes`/`AgentlessRes`. Distingue agente persistente (visibilità continua), dissolvibile (eseguito una volta al collegamento, poi si rimuove) e agentless; collega il posture assessment NAC con accesso pieno/limitato alla remediation/blocco e rivalutazione. Precisati i limiti dipendenti dal prodotto (Active Directory, frequenza) e la distinzione fra quarantena NAC (di rete) e quarantena di un file antimalware. Esempio originale, parità IT/EN e test dedicato.
 
 ## P2 — nuove domande di comprensione e applicazione
 

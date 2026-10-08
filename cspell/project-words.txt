@@ -360,3 +360,7 @@ medesimo
 semplificato
 decifrarle
 investiga
+BYOK
+GMAC
+parallelizable
+unforgeable

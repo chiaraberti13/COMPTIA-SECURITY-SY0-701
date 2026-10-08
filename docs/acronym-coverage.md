@@ -19,7 +19,7 @@ L'obiettivo è il 100% su entrambi; l'elenco delle sigle mancanti può solo acco
 |---|---|---|
 | Sigle nella Acronym List | 329 | 100% |
 | Ricercabili nel glossario | 244 | 74.2% |
-| Con voce/flashcard dedicata | 78 | 23.7% |
+| Con voce/flashcard dedicata | 79 | 24.0% |
 | Non ancora ricercabili | 85 | 25.8% |
 
 ## Sigle non ancora ricercabili
@@ -135,7 +135,6 @@ Sigle trovabili nel testo del glossario che non hanno ancora una voce con flashc
 - CAPTCHA — Completely Automated Public Turing Test to Tell Computers and Humans Apart
 - CASB — Cloud Access Security Broker
 - CBC — Cipher Block Chaining
-- CCMP — Counter Mode/CBC-MAC Protocol
 - CCTV — Closed-circuit Television
 - CERT — Computer Emergency Response Team
 - CIA — Confidentiality, Integrity, Availability
