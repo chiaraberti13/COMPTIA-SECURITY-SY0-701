@@ -1,4 +1,5 @@
 import type { Lang } from "./i18n";
+import { EAP_METHOD_GUIDE_COMPARISON } from "./eapMethodGuide";
 
 /**
  * How an attack scenario connects to defense: the way in, the damage, the
@@ -3446,7 +3447,9 @@ export const OFFICIAL_DOMAIN_WEIGHTS = [12, 22, 18, 28, 20] as const;
 
 export function getDomainGuide(domainId: number, lang: Lang): DomainGuide {
   const guides = lang === "en" ? EN_DOMAIN_GUIDES : IT_DOMAIN_GUIDES;
-  return guides[domainId] ?? guides[1];
+  const guide = guides[domainId] ?? guides[1];
+  if (domainId !== 4) return guide;
+  return { ...guide, comparisons: [...(guide.comparisons ?? []), EAP_METHOD_GUIDE_COMPARISON[lang]] };
 }
 
 export const DOMAIN_GUIDES_IT = IT_DOMAIN_GUIDES;

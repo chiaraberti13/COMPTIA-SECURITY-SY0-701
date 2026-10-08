@@ -149,13 +149,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 11. Metodi EAP e validazione del server
 
-- [ ] Rendere autonomi EAP-TLS, EAP-TTLS e PEAP nel glossario e affinare il confronto nella guida del Dominio 4 (obiettivo 4.1).
+- [x] Rendere autonomi EAP-TLS, EAP-TTLS e PEAP nel glossario e affinare il confronto nella guida del Dominio 4 (obiettivo 4.1).
 
 **Evidenza nel repository:** `EAPProtocol_New` descrive già i tre metodi, ma usa formule assolute come “il più sicuro di tutti” e collega la sola presenza di certificati alla neutralizzazione degli AP malevoli.
 
 **Da realizzare:** precisare credenziali del client, tunnel e autenticazione del server per ciascun metodo; descrivere validazione della CA e dell'identità del server, provisioning del profilo e custodia della chiave privata. Collegare i ruoli supplicant/authenticator/authentication server di 802.1X senza duplicare la voce esistente. LEAP, EAP-FAST e WPS sono già presenti: non aggiungerli nuovamente.
 
 **Accettazione:** nessuna graduatoria assoluta senza ipotesi; certificato server non contato come secondo fattore dell'utente. Evitare il nome improprio “WPA3-PSK” per descrivere SAE. Fonti: RFC dei metodi EAP e documentazione ufficiale dei profili di autenticazione.
+
+**Completato l'8 ottobre 2026:** aggiunte voci canoniche IT/EN EAP-TLS, EAP-TTLS e PEAP, mantenendo `EAPProtocol_New` come panoramica e collegando i ruoli già spiegati nella voce 802.1X. Precisati credenziali client, tunnel TLS, validazione di CA e identità server, provisioning del profilo e custodia/ciclo di vita delle chiavi private. La guida D4.1 confronta metodi e limiti senza graduatorie assolute; il certificato server non viene contato come secondo fattore. Fonti: RFC 9190, RFC 5281 e Microsoft Learn. Aggiunto test dedicato di reperibilità, contenuti e confronto IT/EN.
 
 ### 12. SSO, SAML, OAuth e OIDC nel glossario
 

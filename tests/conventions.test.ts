@@ -6,6 +6,7 @@ import { getDomainQuestions, questionUid, sourceQuestionId } from "../src/locali
 import type { Question, TopicGroup } from "../src/types";
 import { ALL_OBJECTIVES } from "../src/questionObjectives";
 import { CERTIFICATE_REVOCATION_TOPICS_IT } from "../src/certificateRevocationTopics";
+import { EAP_METHOD_TOPICS } from "../src/eapMethodTopics";
 
 /**
  * Naming conventions and stable identifiers (ROADMAP: "Stabilire convenzioni
@@ -42,6 +43,7 @@ function currentIds(): StableIds {
     concepts: [
       ...DOMAINS.flatMap((d) => sourceTopics(d).flatMap((g) => g.subtopics.map((s) => s.checklistKey))),
       ...CERTIFICATE_REVOCATION_TOPICS_IT.flatMap((g) => g.subtopics.map((s) => s.checklistKey)),
+      ...EAP_METHOD_TOPICS.it.subtopics.map((s) => s.checklistKey),
     ].sort(),
     objectives: [...ALL_OBJECTIVES],
     labs: readdirSync("labs", { withFileTypes: true }).filter((e) => e.isDirectory() && /^\d{2}-/.test(e.name)).map((e) => e.name).sort(),
