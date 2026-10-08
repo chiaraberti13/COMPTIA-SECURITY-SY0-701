@@ -137,13 +137,15 @@ Ogni attività va completata nella guida e nel glossario dove indicato, con:
 
 ### 10. Certificati, fiducia e revoca nel glossario
 
-- [ ] Aggiungere accessi autonomi a CRL, OCSP, OCSP stapling e certificato autofirmato, collegandoli alla guida del Dominio 1 (obiettivo 1.4).
+- [x] Aggiungere accessi autonomi a CRL, OCSP, OCSP stapling e certificato autofirmato, collegandoli alla guida del Dominio 1 (obiettivo 1.4).
 
 **Evidenza nel repository:** `PKIFundamentals` spiega già CRL/OCSP/stapling; esistono voci su CA, certificati, root of trust, wildcard e formati. La lacuna riguarda soprattutto reperibilità e confronto fra certificato autofirmato, CA interna e CA pubblica.
 
 **Da realizzare:** riutilizzare le definizioni di revoca; chiarire trust anchor, catena e distribuzione della fiducia. Un certificato autofirmato non è automaticamente debole sul piano crittografico, ma non offre automaticamente una fiducia verificata da terzi. Separare revoca, scadenza e verifica del nome.
 
 **Accettazione:** ogni acronimo porta alla definizione canonica; distinguere stato “good” OCSP dalla validazione completa del certificato. Fonti: RFC 5280 e RFC 6960, con verifica del contesto TLS per stapling.
+
+**Completato l’8 ottobre 2026:** aggiunte voci IT/EN autonome e ricercabili per CRL, OCSP, OCSP stapling e certificato autofirmato, con alias acronimici, definizioni canoniche e collegamenti a RFC 5280, RFC 6960 e RFC 6066. Le voci spiegano il ruolo del trust anchor e della catena, distinguono CA interna, CA pubblica e certificato autofirmato e separano revoca, scadenza e corrispondenza del nome. Rafforzata la guida D1 (obiettivo 1.4) con confronto dei modelli di fiducia e trappola d'esame sul significato limitato di OCSP good. Aggiunti test per ricerca, parità IT/EN e precisione didattica.
 
 ### 11. Metodi EAP e validazione del server
 

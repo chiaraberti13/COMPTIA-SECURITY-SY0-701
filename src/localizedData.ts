@@ -13,6 +13,7 @@ import {
 } from "./data";
 import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.en";
 import type { Lang } from "./i18n";
+import { CERTIFICATE_REVOCATION_TOPICS_IT, CERTIFICATE_REVOCATION_TOPICS_EN } from "./certificateRevocationTopics";
 import { CANONICAL_TERMS, conceptRef, parseConceptRef } from "./canonicalTerms";
 import {
   PHYSICAL_VECTOR_QUESTIONS,
@@ -179,7 +180,9 @@ function getBaseTopics(domainId: number, lang: Lang): TopicGroup[] {
   const it = IT_TOPICS[domainId] || [];
   // Falls back to Italian if the overlay chunk has not landed yet; the
   // LanguageProvider awaits it before switching, so this is a safety net.
-  if (lang === "it" || !englishOverlay) return it;
+  if (lang === "it" || !englishOverlay) {
+    return domainId === 1 ? [...it, ...CERTIFICATE_REVOCATION_TOPICS_IT] : it;
+  }
   const cache = (baseTopicsCache[lang] ??= {});
   if (!cache[domainId]) {
     // English subtopic overrides are scoped per domain because checklistKeys
@@ -187,7 +190,9 @@ function getBaseTopics(domainId: number, lang: Lang): TopicGroup[] {
     const subOverrides = englishOverlay.SUBTOPIC_EN[domainId] || {};
     cache[domainId] = it.map((g) => localizeGroup(g, englishOverlay!.GROUP_EN, subOverrides));
   }
-  return cache[domainId];
+  return domainId === 1
+    ? [...cache[domainId], ...CERTIFICATE_REVOCATION_TOPICS_EN]
+    : cache[domainId];
 }
 
 const baseTopicsCache: Partial<Record<Lang, Record<number, TopicGroup[]>>> = {};

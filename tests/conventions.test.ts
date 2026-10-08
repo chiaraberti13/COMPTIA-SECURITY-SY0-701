@@ -5,6 +5,7 @@ import * as data from "../src/data";
 import { getDomainQuestions, questionUid, sourceQuestionId } from "../src/localizedData";
 import type { Question, TopicGroup } from "../src/types";
 import { ALL_OBJECTIVES } from "../src/questionObjectives";
+import { CERTIFICATE_REVOCATION_TOPICS_IT } from "../src/certificateRevocationTopics";
 
 /**
  * Naming conventions and stable identifiers (ROADMAP: "Stabilire convenzioni
@@ -38,7 +39,10 @@ const sourceTopics = (d: number) => (data as unknown as Record<string, TopicGrou
 function currentIds(): StableIds {
   return {
     questions: DOMAINS.flatMap((d) => sourceQuestions(d).map((q) => questionUid(d, q.id))).sort((a, b) => a - b),
-    concepts: DOMAINS.flatMap((d) => sourceTopics(d).flatMap((g) => g.subtopics.map((s) => s.checklistKey))).sort(),
+    concepts: [
+      ...DOMAINS.flatMap((d) => sourceTopics(d).flatMap((g) => g.subtopics.map((s) => s.checklistKey))),
+      ...CERTIFICATE_REVOCATION_TOPICS_IT.flatMap((g) => g.subtopics.map((s) => s.checklistKey)),
+    ].sort(),
     objectives: [...ALL_OBJECTIVES],
     labs: readdirSync("labs", { withFileTypes: true }).filter((e) => e.isDirectory() && /^\d{2}-/.test(e.name)).map((e) => e.name).sort(),
   };
