@@ -1,4 +1,5 @@
-import type { Question, QuestionOverride } from "./types";
+import type { Question } from "./types";
+import type { QuestionOverride } from "./data.en";
 
 /**
  * Original questions for Roadmap tasks 31–32. Kept separate from the large
