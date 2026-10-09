@@ -1349,10 +1349,19 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     examTip: "Mind the exam distinction: if the problem is fixed by applying a **patch**, it is a software vulnerability; if it is fixed by **changing a setting**, it is a misconfiguration. Misconfigurations are among the most common causes of real breaches, and the correct countermeasure is a security baseline with continuous verification, not an update.",
   },
   LegacyEOLVuln: {
-    name: "Legacy & End-of-Life Systems",
-    definition: "The structural vulnerability of hardware or software that no longer receives security updates from the vendor because it has passed its end-of-support date.",
-    details: "An **End-of-Life (EOL)** or **legacy** system accumulates vulnerabilities permanently: every newly discovered flaw stays open forever, because no patch will ever ship.\n* **Terminology to separate:** *End-of-Sale* (no longer purchasable), *End-of-Support / EOL* (no more security patches), *legacy* (obsolete technology still in production, sometimes still supported).\n* **Why they stay in service:** business applications that run only on that operating system, industrial and medical equipment certified against one specific version, high migration cost.\n* **Mandatory compensating controls** when decommissioning is not possible: strict **segmentation** into an isolated VLAN, firewall rules allowing only the indispensable flows, removal of Internet access, heightened monitoring and, where available, *virtual patching* through an IPS.\n\n* **Focused Mini-Example:** A hospital runs a CT scanner whose control software sits on an operating system that has been out of support for years and cannot be upgraded without voiding the equipment's certification. The machine is isolated in a dedicated VLAN with no Internet access, reachable only from the reporting workstation through explicit firewall rules.",
-    examTip: "In exam scenarios with a critical system that cannot be updated, the answer is never 'apply the patch' (none exists) nor 'accept the risk' on its own: it is **isolation and segmentation** as a compensating control, together with a documented replacement plan.",
+    name: "Legacy systems, EOL, EOS and EOSL",
+    definition: "Risk from obsolete hardware or software still in operation: sale, maintenance, patches and assistance depend on the milestones and conditions published by the vendor.",
+    details: "**Legacy** describes outdated technology still in use and does not, by itself, prove that support has ended. Acronyms are not universal: check the date, product, version, contract and terms in the vendor policy. In the **Cisco End-of-Life Policy** used as an example, EOL is the whole process; **EOS (End of Sale)** is the date after which the product can no longer be ordered; **LDOS (Last Date of Support)** is the last day of contract-based assistance. Other vendors may use **EOS** for *End of Support* and **EOSL** for *End of Service Life*: always verify the expansion in their policy.\n* **Synthetic calendar:** EOL notice 01/01/2027; end of sale 01/07/2027; ordinary maintenance and scheduled security patches end 01/07/2028; contractual extended support lasts until 01/07/2030. From 02/07/2028 the plan must not rely on new routine patches; an exceptional update remains at the vendor's discretion and does not change the published deadline. Extended support in this case also ends on 02/07/2030.\n* **Management:** inventory versions and contracts, monitor notices, migrate before the deadline and document residual risk. If retirement is not yet possible, reuse **segmentation**, allowlisting, removal of Internet access, enhanced monitoring and **virtual patching** through an IPS; these controls compensate but do not reopen support.\n\n* **Focused Mini-Example:** A CT scanner depends on a legacy system. The hospital verifies in the vendor policy that routine patches end on 01/07/2028, plans replacement and meanwhile isolates the machine in a no-Internet VLAN with only explicitly authorized flows.",
+    comparativeTable: {
+      headers: ["Milestone", "Meaning in the synthetic case", "Operational consequence"],
+      rows: [
+        ["Legacy", "Outdated technology still in use", "Check support: it may still be active"],
+        ["EOS — 01/07/2027", "End of sale in the example policy", "No longer orderable; support and patches may continue"],
+        ["Maintenance end — 01/07/2028", "Scheduled routine patches cease", "Mitigate and accelerate migration; exceptions are not guaranteed"],
+        ["EOSL / LDOS — 01/07/2030", "Extended support in the case ends", "No contractual assistance is expected after the date"],
+      ],
+    },
+    examTip: "Do not equate EOL, EOS and EOSL without the vendor policy. End of sale does not automatically mean end of patches; the risk-relevant date is when planned maintenance and updates cease. Segmentation and virtual patching reduce exposure but do not make the product supported again.",
   },
 
   /* ---- Group 9: Mitigations ---- */
@@ -6195,7 +6204,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
   },
   468: {
     topic: "Vulnerability Types",
-    scenario: "A company's inventory lists fifteen switches and two storage systems that the manufacturer no longer makes or supports. They still work perfectly and nobody intends to replace them, but no update will ever be released for them again, not even a security one.",
+    scenario: "A company's inventory lists fifteen switches and two storage systems that the manufacturer no longer sells and whose final support date in the vendor policy has passed. They still work, but routine updates are no longer planned; exceptional action is not guaranteed.",
     question: "Which of the following are hardware issues that arise from products that are no longer manufactured or supported, but are still usable?",
     options: [
       "A) Legacy vulnerability",
@@ -6203,7 +6212,7 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
       "C) Hardware cloning",
       "D) End-of-life vulnerability",
     ],
-    explanation: "The correct answer is **D) End-of-life vulnerability**.\n\n* **Why it's correct:** An **End-of-life vulnerability** occurs when hardware devices are no longer manufactured or supported by the manufacturer — that is, they have reached the end of their lifecycle — but are still in operational use. No longer receiving security updates, these devices can be exploited by attackers to compromise the systems.\n* **Analysis of the distractors:**\n  * **A) A Legacy vulnerability** concerns obsolete or outdated hardware devices that might still receive some form of limited support; the key distinction from End-of-life is that EOL products are no longer manufactured or supported.\n  * **B) Hardware tampering** consists of physically altering or damaging hardware devices to compromise their functionality, performance or security; it is not related to the end of a product's life.\n  * **C) Hardware cloning** consists of creating unauthorized copies of hardware devices to counterfeit functionality or bypass authentication mechanisms; it is not related to manufacturer support.",
+    explanation: "The correct answer is **D) End-of-life vulnerability**.\n\n* **Why it's correct:** The vendor policy confirms that the final support milestone has passed and routine updates are no longer planned while the devices remain operational. End of sale alone would not be enough: sale, maintenance and support dates may differ.\n* **Analysis of the distractors:**\n  * **A) A legacy vulnerability** concerns outdated technology that might still have maintenance or support; 'legacy' alone does not identify a contractual milestone.\n  * **B) Hardware tampering** physically alters or damages devices; it is unrelated to the support lifecycle.\n  * **C) Hardware cloning** creates unauthorized device copies; it is unrelated to the support lifecycle.\n* **Management:** verify vendor terms, plan replacement, and use segmentation and virtual patching as compensating controls. An exceptional release remains possible at the vendor's discretion but must not be assumed in the risk plan.",
   },
   469: {
     topic: "Indicators of Malicious Activity",

@@ -39,6 +39,7 @@ export const MENTIONS: [SourceId, RegExp][] = [
   ["rfc4033", /RFC 4033/],
   ["ieee80211", /IEEE Std 802\.11/],
   ["wifiAlliance", /Wi-Fi Alliance/],
+  ["ciscoEolPolicy", /Cisco End-of-Life Policy/],
 
   ["owaspSession", /Session Management Cheat Sheet/],
   ["mdnCookies", /MDN Set-Cookie/],
@@ -111,6 +112,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "1:PasswordPoliciesAccount": [{ source: "nist80063b" }],
   "1:MFAImplementationsTokens": [{ source: "nist80063b" }],
   "2:CVSSVuln": [{ source: "firstCvss" }],
+  "2:LegacyEOLVuln": [{ source: "ciscoEolPolicy" }],
   "3:PaaSCloud": [{ source: "owaspTop10" }],
   "3:TLSTerminationOffload": [{ source: "rfc8446" }],
   "3:EAP-TLS": [{ source: "rfc9190" }, { source: "microsoftEapCertificates" }],

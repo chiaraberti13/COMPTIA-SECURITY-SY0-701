@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-85 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+86 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -71,6 +71,7 @@ indirizzi qui sotto.
 - `2:CSRFAttack`: [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 - `2:CVSSVuln`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `2:DomainHijackingAttack`: [ICANN Domain Name Registration Hijacking](https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en); [ICANN Protect Your Domain Name](https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en); [ICANN EPP Status Codes](https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en); [RFC 4033 — DNS Security Introduction and Requirements](https://www.rfc-editor.org/rfc/rfc4033)
+- `2:LegacyEOLVuln`: [Cisco — End-of-Life Policy](https://www.cisco.com/c/en/us/products/eos-eol-policy.html)
 - `2:ReplayAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `2:SessionHijackingAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
 - `2:SSRFAttack`: [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)

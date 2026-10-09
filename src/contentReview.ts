@@ -11,6 +11,7 @@ export interface Source {
 
 export const SOURCES = {
   ciscoIsePosture: { title: "Cisco ISE 3.4 — Compliance", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/td/docs/security/ise/3-4/admin_guide/b_ise_admin_3_4/b_ISE_admin_compliance.html", kind: "reference" },
+  ciscoEolPolicy: { title: "Cisco — End-of-Life Policy", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/products/eos-eol-policy.html", kind: "reference" },
   ciscoIseAgentless: { title: "Cisco ISE — Configure Posture Agentless", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/222260-configure-posture-agentless.html", kind: "reference" },
   tenableCredentialedChecks: { title: "Tenable Nessus Credentialed Checks", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/NessusCredentialedChecks.htm", kind: "reference" },
   tenablePluginRules: { title: "Tenable Nessus Plugin Rules", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/PluginRules.htm", kind: "reference" },
@@ -108,7 +109,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "1.4": mapped("nist80057", "nist80056a", "nist80056b", "rfc8446", "nistSteganography"),
   "2.1": mapped("nist80030", "mitreAttack"),
   "2.2": mapped("icannProtection", "nist800161", "mitreAttack"),
-  "2.3": mapped("nist80053", "owaspTop10", "cisaKev"),
+  "2.3": mapped("nist80053", "owaspTop10", "cisaKev", "ciscoEolPolicy"),
   "2.4": mapped("icannHijacking", "icannProtection", "icannLocks", "rfc4033", "ieee80211", "wifiAlliance", "nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),

@@ -325,13 +325,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 24. EOL, EOS ed EOSL: terminologia del supporto
 
-- [ ] Espandere gli alias EOL/EOS/EOSL e precisare la voce `LegacyEOLVuln` con un confronto fra vendita, manutenzione e supporto (obiettivo 2.3).
+- [x] Espandere gli alias EOL/EOS/EOSL e precisare la voce `LegacyEOLVuln` con un confronto fra vendita, manutenzione e supporto (obiettivo 2.3).
 
 **Evidenza nel repository:** EOSL è assente dal corpus di definizioni analizzato; la voce legacy esistente tende a equiparare EOL e fine supporto: occorre distinguere le tappe secondo la policy del produttore.
 
 **Da realizzare:** spiegare che i produttori usano sigle e milestone diverse, quindi vanno controllate data e condizioni della policy del vendor. Separare tecnologia legacy, fine vendita, fine aggiornamenti ordinari ed eventuale supporto esteso; non inventare una definizione universale di EOS.
 
 **Accettazione:** esempio con calendario sintetico che identifica quando cessano le patch, senza dire che nessun aggiornamento potrà mai essere rilasciato. Riutilizzare segmentation/virtual patching già presenti. Fonte: policy ufficiale del vendor assunto come esempio.
+
+**Completato (2026-10-09):** `LegacyEOLVuln` è ricercabile come EOL, EOS ed EOSL in IT/EN e separa tecnologia legacy, fine vendita, fine manutenzione ordinaria e fine supporto esteso. Calendario sintetico con date e conseguenze operative, nessuna promessa assoluta sugli aggiornamenti eccezionali, controlli compensativi già presenti e domanda 468 riallineata. Fonte primaria e citazione: Cisco End-of-Life Policy. Dettagli in `docs/eol-support-lifecycle.md`; test dedicati alla parità e alle milestone.
 
 ### 25. CCMP, GCMP e GMAC
 

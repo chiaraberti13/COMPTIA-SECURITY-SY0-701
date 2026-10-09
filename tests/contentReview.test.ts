@@ -38,7 +38,7 @@ describe("content source registry", () => {
 
   it("merges the sources of several objectives once each, primary ones first", () => {
     const merged = sourcesOf(["2.3", "4.3"]);
-    expect(merged.map(s => s.publisher)).toEqual(["CompTIA", "NIST", "NIST", "OWASP Foundation", "CISA", "FIRST", "Tenable", "Tenable"]);
+    expect(merged.map(s => s.publisher)).toEqual(["CompTIA", "NIST", "NIST", "OWASP Foundation", "CISA", "Cisco", "FIRST", "Tenable", "Tenable"]);
     expect(merged.map(s => s.title).filter(t => t.startsWith("SP 800-"))).toEqual(["SP 800-53 Rev. 5 — Security and Privacy Controls", "SP 800-40 Rev. 4 — Enterprise Patch Management Planning"]);
   });
 });
