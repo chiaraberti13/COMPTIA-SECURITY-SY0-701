@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AlertTriangle, RefreshCw, Send, Sparkles, X } from "lucide-react";
 import type { AiChat } from "../hooks/useAiChat";
+import type { OfflineStudy } from "../hooks/useOfflineStudy";
 import { useLang } from "../i18n";
 import AiAccessForm from "./AiAccessForm";
 import MarkdownText from "./MarkdownText";
+import OfflineStatus from "./OfflineStatus";
 import { useOnline } from "../network";
 
 /**
@@ -17,10 +19,12 @@ export default function AiTrainerPanel({
   open,
   onClose,
   chat,
+  offline,
 }: {
   open: boolean;
   onClose: () => void;
   chat: AiChat;
+  offline: OfflineStudy;
 }) {
   const { t } = useLang();
   const online = useOnline();
@@ -77,6 +81,9 @@ export default function AiTrainerPanel({
             <span>{t("chat.disclaimer")}</span>
           </p>
           {!online && <p id="ai_offline_notice" role="status" className="px-4 py-2 text-xs text-amber-200 bg-slate-950">{t("offline.ai")}</p>}
+
+          {/* Offline-study readiness flag (moved here from the app footer). */}
+          <OfflineStatus offline={offline} />
 
           {/* Chat messages */}
           <div

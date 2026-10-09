@@ -33,7 +33,7 @@ describe("AI offline", () => {
   });
   it("disables AI actions offline, keeps the draft and enables them on reconnection", () => {
     const connected = vi.spyOn(navigator, "onLine", "get").mockReturnValue(false);
-    function Panel() { return <AiTrainerPanel open chat={useAiChat()} onClose={() => {}} />; }
+    function Panel() { return <AiTrainerPanel open chat={useAiChat()} onClose={() => {}} offline={{ state: { phase: "disabled", updateAvailable: false }, update: () => {} }} />; }
     render(<LanguageProvider><Panel /></LanguageProvider>);
     const input = screen.getByRole("textbox", { name: "Domanda per il Trainer AI" }) as HTMLInputElement;
     fireEvent.change(input, { target: { value: "Explain Zero Trust" } });

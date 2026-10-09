@@ -24,6 +24,7 @@ import { sanitizeChecklist } from "./progressBackup";
 import { buildGlossaryIndex } from "./glossaryIndex";
 import AiTrainerPanel from "./components/AiTrainerPanel";
 import { useAiChat } from "./hooks/useAiChat";
+import { useOfflineStudy } from "./hooks/useOfflineStudy";
 import { useQuizSession } from "./hooks/useQuizSession";
 import { useRemediation } from "./hooks/useRemediation";
 import { useStudySession } from "./hooks/useStudySession";
@@ -34,7 +35,6 @@ import RemediationScreen from "./components/RemediationScreen";
 import QuizQuestionScreen from "./components/QuizQuestionScreen";
 import NewQuestionsModal from "./components/NewQuestionsModal";
 import AppHeader, { type AppTab } from "./components/AppHeader";
-import OfflineStatus from "./components/OfflineStatus";
 import ChecklistSidebar from "./components/ChecklistSidebar";
 import StudyContent from "./components/StudyContent";
 import PbqScreen from "./components/PbqScreen";
@@ -111,6 +111,10 @@ export default function App() {
 
   // The AI Trainer conversation, shared by the panel, the study view and the glossary.
   const chat = useAiChat();
+
+  // Offline-study lifecycle (service worker). Driven here so it keeps running
+  // regardless of the AI Trainer panel, where its indicator is shown.
+  const offline = useOfflineStudy();
 
   // Performance-based scenarios (ordering / matching), their own in-memory run.
   const pbq = usePbqSession();
@@ -580,7 +584,7 @@ export default function App() {
         )}
 
         {/* PERSISTENT COLLAPSIBLE AI SIDEBAR */}
-        <AiTrainerPanel open={sidebarOpen} onClose={() => setSidebarOpen(false)} chat={chat} />
+        <AiTrainerPanel open={sidebarOpen} onClose={() => setSidebarOpen(false)} chat={chat} offline={offline} />
 
         {/* Modal per visualizzare i testi delle nuove domande tradotte */}
         {showNewQuestionsModal && (
@@ -607,7 +611,6 @@ export default function App() {
           {t("disclaimer.verify")}
         </p>
       </footer>
-      <OfflineStatus />
 
       {/* Inline notification (replaces window.alert) */}
       {toast && (

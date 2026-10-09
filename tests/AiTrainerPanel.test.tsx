@@ -30,7 +30,7 @@ const reply = (status: number, body: unknown) =>
 
 function Harness({ onClose = () => {} }: { onClose?: () => void }) {
   const chat = useAiChat();
-  return <AiTrainerPanel open onClose={onClose} chat={chat} />;
+  return <AiTrainerPanel open onClose={onClose} chat={chat} offline={{ state: { phase: "disabled", updateAvailable: false }, update: () => {} }} />;
 }
 
 function renderPanel(onClose?: () => void) {

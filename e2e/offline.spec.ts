@@ -8,8 +8,22 @@ import { createApp } from "../server/app";
 import { createDailyBudget } from "../server/aiGuard";
 import { STORAGE_KEYS } from "../src/storage";
 
+// The offline-study flag now lives inside the AI Trainer panel, which starts
+// closed on phones. Open it to read the flag, then restore the previous state
+// so the layout-sensitive study/quiz steps keep running as before.
+async function expectOfflineStatus(page: Page, pattern: RegExp, timeout?: number) {
+  // Read the panel's open state from the toggle's aria-pressed (authoritative,
+  // and free of the open-animation race that `#ai_sidebar` visibility has).
+  const toggle = page.locator("#toggle_sidebar_btn");
+  await expect(toggle).toBeVisible();
+  const wasOpen = (await toggle.getAttribute("aria-pressed")) === "true";
+  if (!wasOpen) await toggle.click();
+  await expect(page.locator("#offline_status")).toContainText(pattern, timeout ? { timeout } : undefined);
+  if (!wasOpen) await toggle.click();
+}
+
 async function ready(page: Page) {
-  await expect(page.locator("#offline_status")).toContainText(/Pronto per studiare offline|Ready to study offline/, { timeout: 30_000 });
+  await expectOfflineStatus(page, /Pronto per studiare offline|Ready to study offline/, 30_000);
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
 }
 
@@ -40,7 +54,7 @@ for (const initial of ["it", "en"] as const) {
     await context.setOffline(true);
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.locator("#domain_guide_1")).toBeVisible();
-    await expect(page.locator("#offline_status")).toContainText(/Sei offline|You are offline/);
+    await expectOfflineStatus(page, /Sei offline|You are offline/);
     expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).toBe(checklist);
     await expect(checkbox).toHaveAttribute("aria-checked", "true");
     const other = initial === "it" ? "en" : "it";
@@ -116,6 +130,8 @@ test("a completed update waits for the learner and preserves the running quiz un
     const script = readFileSync(join(directory, "sw.js"), "utf8").replace(/const CACHE = PREFIX \+ "[^"]+";/, 'const CACHE = PREFIX + "update-test-generation";');
     writeFileSync(join(directory, "sw.js"), script);
     await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.update());
+    // The update flag lives in the AI Trainer panel; open it (closed on phones).
+    if ((await page.locator("#toggle_sidebar_btn").getAttribute("aria-pressed")) !== "true") await page.locator("#toggle_sidebar_btn").click();
     await expect(page.locator("#offline_update_btn")).toBeVisible({ timeout: 30_000 });
     expect(await page.evaluate(async () => (await navigator.serviceWorker.getRegistration())?.waiting?.state)).toBe("installed");
     expect(await page.locator("#main_quiz_question_screen").textContent()).toBe(before);
