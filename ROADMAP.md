@@ -51,7 +51,7 @@ e validati in CI.
 | Codice ed efficienza (dev / performance) | ✅ | `typecheck`, `lint`, `lint:md` verdi; nessun errore rilevato. Bundle dataset grande ma lazy-split e precompresso (Brotli). |
 | Sicurezza e supply-chain (DevSecOps / privacy) | ✅ | `npm audit` prod+dev: **0 vulnerabilità**. Nessun segreto nel codice. Nessun `</script>` pericoloso in template literal. Dependabot con cooldown 7 giorni attivo. |
 | Accessibilità, UX e visual (a11y / UX / visual) | ✅ | Controlli axe nei test E2E (`@axe-core/playwright`) verdi; navigazione da tastiera testata su desktop e mobile. |
-| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1024** passati (113 file), E2E **163** passati + 1 skip (12 spec), build verde. Nessun test fragile riscontrato in questa sessione. |
+| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1030** passati (114 file), E2E **163** passati + 1 skip (12 spec), build verde. Nessun test fragile riscontrato in questa sessione. |
 | Documentazione e roadmap (technical writer / PM) | ✅ | README bilingui con banner SVG terminale e firma `@chiaraberti13`; CHANGELOG `[Unreleased]` allineato; artefatti `docs/` generati e aggiornati. |
 
 ## Correzioni e attività del mese
@@ -81,11 +81,20 @@ e validati in CI.
   governance). Nessun contenuto inventato: per le 16 voci che fallivano il confronto
   bilingue è stata aggiunta la formulazione realmente presente nella lingua mancante.
   La copertura resta **249/249** con la regola più severa.
+- **Inventario ufficiale completo SY0-701 (#103, Fase A) — fatto.**
+  `scripts/sy0701-inventory.ts` enumera tutte le **654** voci puntate del documento
+  ufficiale degli obiettivi (v7.0, © 2023 CompTIA), il denominatore completo oltre ai
+  249 termini curati. `npm run inventory-coverage` misura l'ampiezza e genera
+  `docs/inventory-coverage.md`: **637/654 (97,4%) bilingui**, 642/654 in almeno una
+  lingua. Le 17 voci non ancora bilingui sono un backlog shrink-only
+  (`tests/fixtures/inventory-not-bilingual.json`, guard `tests/inventoryCoverage.test.ts`),
+  da chiudere un dominio alla volta (Fase B). La Fase A misura ed elenca, non colma.
 
 ## Errori di contenuto noti (tracciati)
 
-Nessuno aperto. Le due attività di accuratezza della revisione (#102, #103) sono
-risolte e verificate; la cronologia resta in Git e nel CHANGELOG.
+Nessuno rotto. Resta un backlog di **17 voci ufficiali non ancora bilingui** (vedi
+`docs/inventory-coverage.md`), da completare con parità IT/EN nelle revisioni
+successive (Fase B del punto #103).
 
 ## Issue aperte
 
@@ -93,7 +102,14 @@ Nessuna issue di revisione aperta.
 
 ## Backlog per priorità
 
-1. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
+1. **P2 — Completare le 17 voci ufficiali non ancora bilingui (#103, Fase B).** Chiudere
+   un dominio alla volta, con parità IT/EN, le voci elencate in
+   `docs/inventory-coverage.md` (es. 3.2 Device placement / Selection of effective
+   controls; 4.5 Protocol/Port selection, Transport method, URL scanning; 5.4
+   Attestation and acknowledgement, Contractual impacts). Il guard shrink-only fa
+   fallire la CI se l'elenco cresce. Stima: media (poche voci per dominio, contenuto
+   verificabile con fonti).
+2. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
    quando Dependabot aprirà le PR (cooldown 7 giorni) e l'ecosistema sarà pronto:
    - `typescript` 5.8 → 7.0 (compilatore nativo): attendere il supporto di
      `typescript-eslint`, `vite` e `vitest`; migrazione pianificata, non in-range.
@@ -110,12 +126,13 @@ Nessuna issue di revisione aperta.
 |---|---|---|---|
 | Domande attive | 682 | 682 | D1 110 · D2 133 · D3 112 · D4 185 · D5 142 |
 | Obiettivi coperti da domande | 28/28 | 28/28 | 100% |
-| Sotto-voci di obiettivo spiegate | 249/249 (una lingua) | 249/249 (IT **e** EN) | regola bilingue più severa (#103) |
+| Sotto-voci di obiettivo spiegate (lista curata) | 249/249 (una lingua) | 249/249 (IT **e** EN) | regola bilingue più severa (#103) |
+| Inventario ufficiale completo (654 voci) | — | 637/654 bilingui (97,4%) | nuovo denominatore completo (#103 Fase A) |
 | Sigle della Acronym List coperte | 329/329 | 329/329 | deck di 366 flashcard |
 | Objective code per sigla d'appendice | 1 per dominio (errato) | 1 per voce (236/236) | mappa `ACRONYM_META` |
 | Guide di dominio | 5/5 | 5/5 | 46 esercizi guidati |
 | Scenari PBQ | 32 | 32 | integrati nell'Esame |
-| Test unitari | 1023 (113 file) | 1024 | +1 test mappatura sigle; tutti verdi |
+| Test unitari | 1023 (113 file) | 1030 (114 file) | +test mappatura sigle e inventario; tutti verdi |
 | Test E2E | 163 + 1 skip (12 spec) | 163 + 1 skip | desktop + mobile, tutti verdi |
 | Bundle (gzip) | index 274 KB · vendor 124 KB · dataset IT 784 KB · dataset EN 720 KB | invariato | dataset lazy-split, precompressi Brotli |
 | Vulnerabilità `npm audit` (prod+dev) | 0 | 0 | — |

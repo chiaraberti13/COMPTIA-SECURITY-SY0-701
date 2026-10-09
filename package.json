@@ -21,6 +21,7 @@
     "gap-analysis": "tsx scripts/gap-analysis.ts",
     "acronym-coverage": "node --import tsx scripts/acronym-coverage.ts",
     "objective-coverage": "node --import tsx scripts/objective-coverage.ts",
+    "inventory-coverage": "node --import tsx scripts/inventory-coverage.ts",
     "spellcheck": "tsx scripts/spellcheck.ts",
     "e2e": "playwright test",
     "e2e:offline": "playwright test offline.spec.ts",
