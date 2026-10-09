@@ -385,11 +385,13 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 29. Quiz su rete, cloud e autenticazione
 
-- [ ] Aggiungere almeno otto domande originali: due su limiti PMF/jamming e suite Wi-Fi, due su EAP/validazione del server, due su terminazione TLS e segmenti protetti, due sulla scelta motivata fra SD-WAN/SASE/CASB/SWG.
+- [x] Aggiungere almeno otto domande originali: due su limiti PMF/jamming e suite Wi-Fi, due su EAP/validazione del server, due su terminazione TLS e segmenti protetti, due sulla scelta motivata fra SD-WAN/SASE/CASB/SWG.
 
 **Evidenza nel repository:** Esistono domande di riconoscimento dei protocolli e architetture, ma non coprono tutte le distinzioni approfondite nelle attività 5, 8, 11, 25 e 26.
 
 **Accettazione:** dipendenze completate prima dei quesiti; le nuove domande chiedono di applicare le condizioni del caso, senza trasformare un acronimo aggiuntivo in un requisito ufficiale. Verificare la differenza rispetto al quesito Wi-Fi 40199 e al quesito SD-WAN 30540.
+
+**Completato (2026-10-09):** aggiunte otto domande originali e bilingui: quattro nel Dominio 4 su limite di PMF rispetto al jamming RF, suite WPA3-Enterprise 192-bit, validazione CA/nome del server RADIUS e scelta PEAP rispetto a EAP-TLS; quattro nel Dominio 3 su ri-cifratura e validazione del backend dopo la terminazione TLS, custodia della chiave sul load balancer, scelta SD-WAN per il solo trasporto e CASB per la governance SaaS distinta da SWG/SASE. Gli scenari sono applicativi, motivano tutti i distrattori e sono distinti dai quesiti 40199 e 30540. Test dedicati verificano parità IT/EN, struttura, temi e mappatura agli obiettivi 3.2 e 4.1.
 
 ### 30. Quiz su IAM, hardening e responsabilità normative
 
