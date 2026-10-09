@@ -9,7 +9,7 @@
  * derived from the study content so the deck never drifts from the dataset.
  */
 import type { TopicGroup } from "./types";
-import { acronymsOf, fullNameOf } from "./glossaryIndex";
+import { acronymsOf, fullNameOf, isAcronym } from "./glossaryIndex";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -96,6 +96,10 @@ export function deriveExpansion(name: string, definition: string): string | null
   // though the glossary intentionally indexes it only by acronym.
   const compound = name.match(/^([A-Za-z]{3,}(?:-[A-Za-z]{3,})+)\s+\([A-Z][A-Z0-9]{1,7}\)$/)?.[1];
   if (compound && compound.length <= 90) return compound;
+  // An explicit "Name (ACRONYM)" is authoritative even when the expansion is
+  // one word (for example "Antivirus (AV)").
+  const explicit = name.match(/^(.+?)\s+\([^)]+\)$/)?.[1]?.trim();
+  if (explicit && explicit.length >= 3 && explicit.length <= 90 && !/[;:!?]/.test(explicit)) return explicit;
   const fromName = cleanExpansion(fullNameOf(name) ?? "");
   if (isPlausibleExpansion(fromName)) return fromName;
 
@@ -208,7 +212,7 @@ export function sanitizeCardProgress(value: unknown): Record<string, CardProgres
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   const safe: Record<string, CardProgress> = {};
   for (const [key, raw] of Object.entries(value)) {
-    if (!/^[A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?$/.test(key) && key !== "P12") continue;
+    if (!isAcronym(key)) continue;
     if (!raw || typeof raw !== "object") continue;
     const item = raw as Partial<CardProgress>;
     if (

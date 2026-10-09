@@ -52,4 +52,11 @@ describe("acronym coverage", () => {
     }
     expect(cov.total).toBe(Object.keys(SY0701_ACRONYMS).length);
   });
+
+  it("reaches complete searchable and dedicated-entry coverage", () => {
+    const cov = acronymCoverage();
+    expect(cov.missing).toEqual([]);
+    expect(cov.searchable).toHaveLength(cov.total);
+    expect(cov.withEntry).toHaveLength(cov.total);
+  });
 });

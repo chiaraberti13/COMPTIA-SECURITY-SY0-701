@@ -35,15 +35,17 @@ export interface GlossaryIndex {
   namePattern: RegExp | null;
 }
 
-const ACRONYM = /^[A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?$/;
-const IN_PARENTHESES = /\(([A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?)\)/g;
+const SPECIAL_ACRONYMS = "(?:2FA|3DES|PCI DSS|SE Linux|USB OTG)";
+const ACRONYM_CORE = "[A-Z][A-Za-z0-9]{0,7}(?:[-/&][A-Z0-9][A-Za-z0-9]{1,8})?\\+?";
+const ACRONYM = new RegExp(`^(?:${SPECIAL_ACRONYMS}|${ACRONYM_CORE})$`);
+const IN_PARENTHESES = new RegExp(`\\((${SPECIAL_ACRONYMS}|${ACRONYM_CORE})\\)`, "g");
 /** Candidate acronyms in running text; a trailing "+" is part of the token. */
-const IN_TEXT = /(?<![A-Za-z0-9-])[A-Z][A-Z0-9]{1,7}(?:-[A-Z0-9]{2,7})?\+?(?![A-Za-z0-9+-])/g;
+const IN_TEXT = new RegExp(`(?<![A-Za-z0-9-])(?:${SPECIAL_ACRONYMS}|${ACRONYM_CORE})(?![A-Za-z0-9+-])`, "g");
 /** A trailing "(ACRONYM)" is the acronym, not part of the full name. */
 const PAREN_SUFFIX = /\s*\([^)]*\)\s*$/;
 
 /** Needs at least two capital letters: "A1" or "Q3" are not acronyms. */
-const isAcronym = (value: string) => value === "P12" || ACRONYM.test(value) && (value.match(/[A-Z]/g) ?? []).length >= 2;
+export const isAcronym = (value: string) => value === "P12" || ACRONYM.test(value) && (value.match(/[A-Z]/g) ?? []).length >= 2;
 
 /** The acronyms a glossary term stands for: the term itself, or any in parentheses. */
 export function acronymsOf(term: string): string[] {
@@ -51,6 +53,9 @@ export function acronymsOf(term: string): string[] {
   const found = new Set<string>();
   if (isAcronym(clean)) found.add(clean);
   for (const match of clean.matchAll(IN_PARENTHESES)) if (isAcronym(match[1])) found.add(match[1]);
+  // CompTIA prints the official token with a space, while the established
+  // industry spelling and the existing glossary entry use a hyphen.
+  if (found.has("PCI-DSS")) found.add("PCI DSS");
   return [...found];
 }
 

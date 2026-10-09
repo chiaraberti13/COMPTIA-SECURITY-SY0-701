@@ -203,7 +203,7 @@ describe("acronym deck over the real content", () => {
     for (const lang of ["it", "en"] as const) {
       for (const card of buildAcronymDeck(getAllTopics(lang))) {
         expect(card.expansion.length, `${card.id} expansion`).toBeGreaterThan(3);
-        expect(/\s|[A-Za-z]{3,}-[A-Za-z]{3,}/.test(card.expansion), `${card.id} phrase or named compound`).toBe(true);
+        expect(/[A-Za-z]{3,}/.test(card.expansion), `${card.id} meaningful expansion`).toBe(true);
         expect(card.definition.length, `${card.id} definition`).toBeGreaterThan(10);
         expect(card.id).toBe(card.acronym);
         expect(card.domainId).toBeGreaterThanOrEqual(1);

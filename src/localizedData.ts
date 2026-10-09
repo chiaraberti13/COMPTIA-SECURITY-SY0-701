@@ -15,6 +15,7 @@ import type { GroupOverride, SubtopicOverride, QuestionOverride } from "./data.e
 import type { Lang } from "./i18n";
 import { CERTIFICATE_REVOCATION_TOPICS_IT, CERTIFICATE_REVOCATION_TOPICS_EN } from "./certificateRevocationTopics";
 import { EAP_METHOD_TOPICS } from "./eapMethodTopics";
+import { acronymAppendixTopics } from "./acronymAppendixTopics";
 import { CANONICAL_TERMS, conceptRef, parseConceptRef } from "./canonicalTerms";
 import {
   PHYSICAL_VECTOR_QUESTIONS,
@@ -209,7 +210,8 @@ function getBaseTopics(domainId: number, lang: Lang): TopicGroup[] {
   if (lang === "it" || !englishOverlay) {
     const localized = refineEapParent(it, "it");
     const withEap = domainId === 3 ? [...localized, EAP_METHOD_TOPICS.it] : localized;
-    return domainId === 1 ? [...withEap, ...CERTIFICATE_REVOCATION_TOPICS_IT] : withEap;
+    const withRevocation = domainId === 1 ? [...withEap, ...CERTIFICATE_REVOCATION_TOPICS_IT] : withEap;
+    return [...withRevocation, ...acronymAppendixTopics(domainId, "it")];
   }
   const cache = (baseTopicsCache[lang] ??= {});
   // English subtopic overrides are scoped per domain because checklistKeys
@@ -220,7 +222,8 @@ function getBaseTopics(domainId: number, lang: Lang): TopicGroup[] {
     cache[domainId] = refineEapParent(localized, "en");
   }
   const withEap = domainId === 3 ? [...cache[domainId], EAP_METHOD_TOPICS.en] : cache[domainId];
-  return domainId === 1 ? [...withEap, ...CERTIFICATE_REVOCATION_TOPICS_EN] : withEap;
+  const withRevocation = domainId === 1 ? [...withEap, ...CERTIFICATE_REVOCATION_TOPICS_EN] : withEap;
+  return [...withRevocation, ...acronymAppendixTopics(domainId, "en")];
 }
 const baseTopicsCache: Partial<Record<Lang, Record<number, TopicGroup[]>>> = {};
 

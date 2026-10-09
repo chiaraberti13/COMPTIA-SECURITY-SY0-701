@@ -72,6 +72,8 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "5:AcronymAppendix_ATT_CK": [{ source: "mitreAttack" }],
+  "5:AcronymAppendix_OWASP": [{ source: "owaspTop10" }],
   "5:SarbanesOxleyAct": [{ source: "sox" }],
   "5:GrammLeachBlileyAct": [{ source: "glba" }, { source: "ftcSafeguards" }],
   "5:HIPAAComplianceConcept": [{ source: "hipaa" }, { source: "hipaaCovered" }, { source: "hipaaSecurity" }],

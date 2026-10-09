@@ -1,6 +1,9 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { getAllTopics, loadEnglishOverlay } from "../src/localizedData";
 import { acronymsOf, buildGlossaryIndex, findGlossaryTerms } from "../src/glossaryIndex";
+import { ACRONYM_APPENDIX } from "../src/acronymAppendixTopics";
+import { buildAcronymDeck } from "../src/flashcards";
+import { SY0701_ACRONYMS } from "../scripts/acronym-coverage";
 
 beforeAll(loadEnglishOverlay);
 
@@ -33,5 +36,22 @@ describe("roadmap acronym appendix additions", () => {
     const index = buildGlossaryIndex([{ name: "EAP-FAST", checklistKey: "fast", definition: "tunnel", details: "", examTip: "" }]);
     expect(findGlossaryTerms(["XEAP-FAST EAP-FASTX"], index)).toEqual([]);
     expect(findGlossaryTerms(["EAP-FAST"], index)).toHaveLength(1);
+  });
+
+  it("keeps every appendix expansion exact and its IT/EN flashcard in parity", () => {
+    expect(ACRONYM_APPENDIX).toHaveLength(236);
+    for (const [acronym, expansion] of ACRONYM_APPENDIX) {
+      expect(expansion, acronym).toBe(SY0701_ACRONYMS[acronym]);
+    }
+    const it = new Map(buildAcronymDeck(getAllTopics("it")).map((card) => [card.acronym, card]));
+    const en = new Map(buildAcronymDeck(getAllTopics("en")).map((card) => [card.acronym, card]));
+    for (const [acronym, expansion] of ACRONYM_APPENDIX) {
+      expect(it.get(acronym)?.expansion, `${acronym} IT`).toBe(expansion);
+      expect(en.get(acronym)?.expansion, `${acronym} EN`).toBe(expansion);
+    }
+  });
+
+  it.each(["ATT&CK", "PCI DSS", "S/MIME", "SE Linux", "TCP/IP", "USB OTG", "MaaS", "SoC"])("indexes the official special token %s", (acronym) => {
+    expect(acronymsOf(`${SY0701_ACRONYMS[acronym]} (${acronym})`)).toContain(acronym);
   });
 });

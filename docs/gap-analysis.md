@@ -13,18 +13,18 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 622 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 858 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
 
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
-| 1 | 116 | 0 |
-| 2 | 85 | 0 |
-| 3 | 186 | 0 |
-| 4 | 137 | 0 |
-| 5 | 98 | 0 |
+| 1 | 131 | 0 |
+| 2 | 94 | 0 |
+| 3 | 218 | 0 |
+| 4 | 151 | 0 |
+| 5 | 264 | 0 |
 
 ## Cifre senza fonte
 
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-86 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+88 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -102,6 +102,8 @@ indirizzi qui sotto.
 - `4:ThreatHuntingIR`: [MITRE ATT&CK](https://attack.mitre.org/)
 - `4:VulnerabilityAssessmentConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `4:VulnerabilityScannerRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `5:AcronymAppendix_ATT_CK`: [MITRE ATT&CK](https://attack.mitre.org/)
+- `5:AcronymAppendix_OWASP`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `5:AttestationConcept`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:Compliance`: [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm); [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)

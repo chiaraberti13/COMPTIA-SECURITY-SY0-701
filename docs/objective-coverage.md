@@ -20,8 +20,8 @@ del tutto (gap di contenuto). L'elenco può solo accorciarsi; l'obiettivo è zer
 | Metrica | Conteggio | Quota |
 |---|---|---|
 | Voci di obiettivo curate | 249 | 100% |
-| Spiegate come voce (glossario o guida) | 242 | 97.2% |
-| Spiegate solo in una domanda | 7 | 2.8% |
+| Spiegate come voce (glossario o guida) | 243 | 97.6% |
+| Spiegate solo in una domanda | 6 | 2.4% |
 | Assenti (gap di contenuto) | 0 | 0.0% |
 
 ## Assenti — gap di contenuto da colmare
@@ -46,7 +46,6 @@ renderle ricercabili come voce autonoma.
 ### Obiettivo 2.5
 
 - Configuration enforcement
-- HIPS
 
 ### Obiettivo 4.6
 

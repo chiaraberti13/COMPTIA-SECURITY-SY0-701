@@ -477,3 +477,23 @@ mutui
 Posticipare
 riapre
 tutelano
+
+# Official CompTIA SY0-701 acronym tokens
+CIRT
+COBO
+DNAT
+FACL
+ISSO
+MSCHAP
+MSSP
+MTTF
+RIPEMD
+RTBH
+SCEP
+SDLM
+SHTTP
+SPIM
+TSIG
+VLSM
+WIDS
+WIPS
