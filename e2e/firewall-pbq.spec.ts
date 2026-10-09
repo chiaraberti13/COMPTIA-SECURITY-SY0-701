@@ -32,7 +32,8 @@ for (const lang of ["it", "en"] as const) {
   test(`${lang}: firewall task can be answered and reset using the keyboard`, async ({ page }) => {
     await open(page);
     await page.locator(`#lang_btn_${lang}`).click();
-    await page.locator("#tab_btn_pbq").click();
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#sim_mode_practice").click();
     await page.locator("#pbq_start_303").focus();
     await page.locator("#pbq_start_303").press("Enter");
     await accessible(page);

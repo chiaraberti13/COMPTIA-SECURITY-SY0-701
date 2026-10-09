@@ -6,6 +6,8 @@ import {
   X,
   AlertTriangle,
   Info,
+  Activity,
+  ClipboardList,
 } from "lucide-react";
 import {
   getDomainTopics,
@@ -91,6 +93,9 @@ export default function App() {
 
   // Navigation & General App State
   const [activeTab, setActiveTab] = useState<AppTab>("studio");
+  // Inside the Simulator tab: the full timed exam, or the PBQ practice drill
+  // (the former standalone "Pratica" tab, folded in here).
+  const [simMode, setSimMode] = useState<"exam" | "practice">("exam");
   // The study area: domain, selected concept and ticked checklist.
   const study = useStudySession();
   const { activeDomain } = study;
@@ -539,7 +544,34 @@ export default function App() {
               <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
 
-              {exam.items.length > 0 ? (
+              {/* Simulator mode: the timed exam, or the PBQ practice drill
+                  (folded in from the former "Pratica" home tab). Shown on the
+                  landing screens only, so it never interrupts an active run. */}
+              {((simMode === "exam" && exam.items.length === 0 && (!quizStarted || (quizCompleted && !remediationActive))) || (simMode === "practice" && (!pbq.started || pbq.finished))) && (
+                <div className="relative grid grid-cols-2 gap-1 rounded-xl bg-slate-900/70 p-1 mb-5" role="tablist" aria-label={t("sim.modeSwitcher")} id="sim_mode_switcher">
+                  {([
+                    { id: "exam", label: t("sim.modeExam"), icon: Activity },
+                    { id: "practice", label: t("sim.modePractice"), icon: ClipboardList },
+                  ] as const).map(({ id, label, icon: Icon }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      role="tab"
+                      id={`sim_mode_${id}`}
+                      aria-selected={simMode === id}
+                      onClick={() => setSimMode(id)}
+                      className={`min-h-11 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${simMode === id ? "bg-cyan-700 text-white shadow-sm" : "text-slate-300 hover:text-white hover:bg-slate-800"}`}
+                    >
+                      <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {simMode === "practice" ? (
+                <div className="relative"><PbqScreen session={pbq} scenarios={PBQ_SCENARIOS} /></div>
+              ) : exam.items.length > 0 ? (
                 <ExamScreen session={exam} onConfigure={exam.exit} onRepeat={handleStartExam} onStudyAction={runStudyAction} />
               ) : !quizStarted ? (
                 <QuizSetupScreen quiz={quiz} setup={setup} maxQuestionsByDomain={maxQuestionsByDomain} dueReviewQuestions={dueReviewQuestions} weakTopicSummary={weakTopicSummary} reviewObjectives={reviewObjectives} objectiveSubtopics={objectiveSubtopics} onReviewObjective={handleReviewObjective} onStudyAction={runStudyAction} questionsByObjective={questionsByObjective} simulationLengths={SIMULATION_LENGTHS} onApplyBlueprint={handleApplyBlueprint} onStartQuiz={handleStartQuiz} onStartExam={handleStartExam} examPbqAvailable={availableExamPbqs(setup.customCounts, PBQ_SCENARIOS)} onStartObjectiveQuiz={() => handleStartObjectiveQuiz()} onStartSmartReview={handleStartSmartReview} onClearHistory={handleClearHistory} onStartNewQuestions={handleStartNewQuestions} onShowNewQuestions={() => setShowNewQuestionsModal(true)} readiness={readiness} onTrainObjective={handleTrainObjective} />
@@ -570,17 +602,6 @@ export default function App() {
             acronymDeck={ACRONYM_DECK}
             onStudyConcept={(card) => runStudyAction({ kind: "concept", domain: card.domainId as 1 | 2 | 3 | 4 | 5, checklistKey: card.conceptKey })}
           />
-        )}
-
-        {/* TAB 4: PERFORMANCE-BASED SCENARIOS (PBQ) */}
-        {activeTab === "pbq" && (
-          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-start justify-center" id="pbq_layout">
-            <div className="w-full max-w-2xl my-auto bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="pbq_panel_container">
-              <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
-              <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
-              <PbqScreen session={pbq} scenarios={PBQ_SCENARIOS} />
-            </div>
-          </main>
         )}
 
         {/* PERSISTENT COLLAPSIBLE AI SIDEBAR */}

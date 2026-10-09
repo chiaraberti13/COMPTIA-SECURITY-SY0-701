@@ -64,10 +64,7 @@ for (const initial of ["it", "en"] as const) {
     await page.locator("#glossary_search_input").fill("SIEM");
     await expect(page.locator("#glossary_grid")).toContainText("SIEM");
 
-    await page.locator("#tab_btn_pbq").click();
-    await page.locator("#pbq_start_all").click();
-    await expect(page.locator("#pbq_active")).toBeVisible();
-    await expect(page.locator("#pbq_prompt")).not.toBeEmpty();
+    // The MCQ quiz and PBQ practice now both live in the Simulator tab.
     await page.locator("#tab_btn_quiz").click();
     await page.getByRole("button", { name: /Mini/ }).first().click();
     await page.locator("#start_quiz_btn").click();
@@ -83,6 +80,12 @@ for (const initial of ["it", "en"] as const) {
     expect(JSON.parse(progress.history ?? "[]").length).toBeGreaterThan(0);
     expect(Object.keys(JSON.parse(progress.questions ?? "{}")).length).toBe(10);
     if (await page.locator("#trigger_remediation_btn").isVisible()) await expect(page.locator("#trigger_remediation_btn")).toBeDisabled();
+
+    // PBQ practice, folded into the Simulator, also runs offline.
+    await page.locator("#sim_mode_practice").click();
+    await page.locator("#pbq_start_all").click();
+    await expect(page.locator("#pbq_active")).toBeVisible();
+    await expect(page.locator("#pbq_prompt")).not.toBeEmpty();
 
     if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
     await expect(page.locator("#ai_offline_notice")).toContainText(/Internet/);

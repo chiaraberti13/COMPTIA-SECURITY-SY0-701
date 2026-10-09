@@ -1,14 +1,13 @@
 import { useRef, type KeyboardEvent } from "react";
-import { FileText, RefreshCw, BookOpen, Activity, MessageSquare, ShieldCheck, ClipboardList } from "lucide-react";
+import { FileText, RefreshCw, BookOpen, Activity, MessageSquare, ShieldCheck } from "lucide-react";
 import { useLang, type UIKey } from "../i18n";
 
-export type AppTab = "studio" | "quiz" | "glossary" | "pbq";
+export type AppTab = "studio" | "quiz" | "glossary";
 
 const TABS: { id: AppTab; label: UIKey; shortLabel: UIKey; icon: typeof BookOpen }[] = [
   { id: "studio", label: "tab.studio", shortLabel: "tab.studioShort", icon: BookOpen },
   { id: "glossary", label: "tab.glossary", shortLabel: "tab.glossaryShort", icon: FileText },
   { id: "quiz", label: "tab.quiz", shortLabel: "tab.quizShort", icon: Activity },
-  { id: "pbq", label: "tab.pbq", shortLabel: "tab.pbqShort", icon: ClipboardList },
 ];
 
 /** A stable two-row notebook header; a single row only where all controls fit. */
@@ -50,7 +49,7 @@ export default function AppHeader({ activeTab, onTabChange, sidebarOpen, onToggl
         </div>
 
         <nav className="row-start-2 col-span-2 min-w-0 border-t border-slate-800/70 pt-2 2xl:row-start-1 2xl:col-start-2 2xl:col-span-1 2xl:border-0 2xl:pt-0" id="navigation_tabs" aria-label={t("a11y.mainNavigation")}>
-          <div className="grid grid-cols-4 gap-1 sm:gap-2 rounded-xl bg-slate-900/70 p-1" role="tablist" aria-label={t("a11y.mainNavigation")}>
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 rounded-xl bg-slate-900/70 p-1" role="tablist" aria-label={t("a11y.mainNavigation")}>
             {TABS.map(({ id, label, shortLabel, icon: Icon }, index) => (
               <button
                 key={id}

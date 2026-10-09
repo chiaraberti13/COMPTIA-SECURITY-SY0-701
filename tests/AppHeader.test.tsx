@@ -59,15 +59,15 @@ describe("AppHeader language switch", () => {
 });
 
 describe("AppHeader navigation", () => {
-  it("keeps AI and language controls outside the four study tabs", () => {
+  it("keeps AI and language controls outside the three study tabs", () => {
     renderHeader();
     const tablist = screen.getByRole("tablist");
-    expect(tablist.querySelectorAll('[role="tab"]')).toHaveLength(4);
+    expect(tablist.querySelectorAll('[role="tab"]')).toHaveLength(3);
     expect(tablist.querySelectorAll("button:not([role='tab'])")).toHaveLength(0);
     expect(screen.getByRole("button", { name: "AI Trainer" }).getAttribute("aria-pressed")).toBe("false");
     expect(screen.getByRole("group", { name: "Lingua" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "Checklist & Studio" }).tabIndex).toBe(0);
-    expect(screen.getByRole("tab", { name: "Scenari Pratici" }).tabIndex).toBe(-1);
+    expect(screen.getByRole("tab", { name: "High-Stakes Simulator" }).tabIndex).toBe(-1);
   });
 
   it("moves focus and activates adjacent or endpoint tabs from the keyboard", () => {
@@ -78,7 +78,7 @@ describe("AppHeader navigation", () => {
     tabs[0].focus();
     fireEvent.keyDown(tabs[0], { key: "ArrowLeft" });
     expect(document.activeElement).toBe(tabs[last]);
-    expect(change).toHaveBeenLastCalledWith("pbq");
+    expect(change).toHaveBeenLastCalledWith("quiz");
     fireEvent.keyDown(tabs[last], { key: "ArrowRight" });
     expect(document.activeElement).toBe(tabs[0]);
     expect(change).toHaveBeenLastCalledWith("studio");
@@ -86,7 +86,7 @@ describe("AppHeader navigation", () => {
     expect(document.activeElement).toBe(tabs[last]);
     fireEvent.keyDown(tabs[last], { key: "Home" });
     expect(document.activeElement).toBe(tabs[0]);
-    fireEvent.click(tabs[2]);
-    expect(change).toHaveBeenLastCalledWith("quiz");
+    fireEvent.click(tabs[1]);
+    expect(change).toHaveBeenLastCalledWith("glossary");
   });
 });

@@ -507,13 +507,15 @@ Modifiche di navigazione e struttura richieste dal proprietario per semplificare
 
 ### 37. Pratica (PBQ): integrarla nel Simulatore e toglierla dalla home (P1 — UX/navigazione)
 
-- [ ] Integrare gli **Scenari Pratici / PBQ** (oggi tab `pbq`, etichette `tab.pbq` "Scenari Pratici" / `tab.pbqShort` "Pratica") **dentro il Simulatore**, dove le PBQ sono già selezionabili tramite il controllo `#exam_pbq_count`.
-- [ ] **Garantire che le PBQ compaiano effettivamente** nel flusso d'esame quando se ne seleziona un numero > 0 all'avvio della simulazione (coprire con test E2E l'estrazione effettiva delle PBQ dal banco per dominio).
-- [ ] Rimuovere **Pratica** dalla barra di navigazione della home.
+- [x] Integrare gli **Scenari Pratici / PBQ** **dentro il Simulatore** (le PBQ restano selezionabili nell'esame tramite `#exam_pbq_count`).
+- [x] **Garantire che le PBQ compaiano effettivamente** nel flusso d'esame quando se ne seleziona un numero > 0 all'avvio della simulazione.
+- [x] Rimuovere **Pratica** dalla barra di navigazione della home.
 
 **Da realizzare:** togliere il tab `pbq` da `AppHeader`, verificare che la configurazione esame del `quiz`/Simulatore permetta di esercitare le PBQ in modalità pratica (eventuale modalità «solo PBQ» già presente), aggiornare le chiavi i18n IT/EN e i test E2E che aprono `#tab_btn_pbq`.
 
 **Accettazione:** nessun tab "Pratica" nella home; dal Simulatore si possono selezionare e svolgere le PBQ; all'avvio con PBQ selezionate esse appaiono realmente nell'esame (verificato da test); parità IT/EN; test, build ed E2E verdi.
+
+**Completato il 9 ottobre 2026:** la home scende da quattro a tre tab (`AppHeader.tsx`, griglia `grid-cols-3`); il tab `pbq` è stato rimosso. Il Simulatore (tab `quiz`) ha ora un **selettore di modalità Simulazione / Pratica PBQ** (`#sim_mode_switcher`, mostrato solo nelle schermate di partenza/risultato, mai durante una prova attiva): la modalità «Pratica PBQ» riusa `PbqScreen` (il drill con feedback immediato, prima tab a sé), mentre la «Simulazione» resta l'esame completo con le PBQ selezionabili via `#exam_pbq_count`. Due test E2E (`exam.spec.ts`, `vpn-pbq.spec.ts` e gli altri `*-pbq`) confermano che le PBQ vengono realmente estratte e compaiono nell'esame. Aggiunte le chiavi i18n IT/EN (`sim.modeExam`, `sim.modePractice`, `sim.modeSwitcher`); aggiornati il test unitario dell'header (tre tab) e tutti i test E2E che aprivano `#tab_btn_pbq` (ora Simulatore → modalità Pratica PBQ). Unit (1023), build ed E2E (163 passati) verdi.
 
 ### 38. Rinominare il Simulatore con un nome più adatto (P1 — copy/UX)
 

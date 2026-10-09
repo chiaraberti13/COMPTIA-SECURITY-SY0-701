@@ -76,7 +76,6 @@ test.describe("layout", () => {
       ["#tab_btn_studio", "#study_panel_wrapper"],
       ["#tab_btn_glossary", "#glossary_root"],
       ["#tab_btn_quiz", "#start_quiz_btn"],
-      ["#tab_btn_pbq", "#pbq_start_all"],
     ] as const) {
       await page.locator(tab).click();
       await expect(page.locator(marker)).toBeVisible();
@@ -88,6 +87,11 @@ test.describe("layout", () => {
     await page.locator("#glossary_view_acronyms").click();
     await expect(page.locator("#flash_start_all")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), "acronym view overflows at 200% zoom").toBe(false);
+    // The PBQ practice drill now lives inside the Simulator, behind its mode switcher.
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#sim_mode_practice").click();
+    await expect(page.locator("#pbq_start_all")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), "PBQ practice view overflows at 200% zoom").toBe(false);
   });
 
   test("the domain guide opens and keeps its tables inside their box", async ({ page }) => {
@@ -106,7 +110,7 @@ test.describe("layout: main menu", () => {
     await openApp(page);
     const nav = page.locator("#navigation_tabs");
     expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
-    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#toggle_sidebar_btn", "#lang_btn_en"]) {
       await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
     }
     // Each tab keeps a readable name, short on phones and full on desktop.
@@ -768,7 +772,9 @@ test.describe("sources", () => {
 test.describe("performance-based scenarios (PBQ)", () => {
   async function openPbq(page: Page) {
     await openApp(page);
-    await page.locator("#tab_btn_pbq").click();
+    // PBQ practice now lives inside the Simulator, behind its mode switcher.
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#sim_mode_practice").click();
     await expect(page.locator("#pbq_setup")).toBeVisible();
   }
 
