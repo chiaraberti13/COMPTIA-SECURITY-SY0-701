@@ -15,11 +15,20 @@ async function configure(page: Page, total = 2) {
   await expect(page.locator("#start_exam_btn")).toBeEnabled();
 }
 async function currentMatching(page: Page) {
-  const vpn = await page.locator("#pbq_match_p_remote").count();
-  return vpn ? {
-    first: "p_remote", value: "remote_tls", objective: "3.2", total: 7,
-    rest: [["p_sites", "site_ipsec"], ["p_mode", "esp_tunnel"], ["p_boundary", "beyond_gateway"], ["p_remote_auth", "remote_auth"], ["p_peer_auth", "ike_auth"], ["p_scope", "selected_traffic"]],
-  } : {
+  // Domain 3 has three matching PBQs; detect which one the random draw placed.
+  if (await page.locator("#pbq_match_p_remote").count()) {
+    return {
+      first: "p_remote", value: "remote_tls", objective: "3.2", total: 7,
+      rest: [["p_sites", "site_ipsec"], ["p_mode", "esp_tunnel"], ["p_boundary", "beyond_gateway"], ["p_remote_auth", "remote_auth"], ["p_peer_auth", "ike_auth"], ["p_scope", "selected_traffic"]],
+    };
+  }
+  if (await page.locator("#pbq_match_payments").count()) {
+    return {
+      first: "payments", value: "a", objective: "3.4", total: 7,
+      rest: [["orders", "b"], ["archive", "c"], ["limits", "limits"], ["point", "loss"], ["copies", "copies"], ["sites", "capacity"]],
+    };
+  }
+  return {
     first: "p_rest", value: "atrest", objective: "3.3", total: 4,
     rest: [["p_transit", "tls"], ["p_test", "mask"], ["p_leak", "dlp"]],
   };

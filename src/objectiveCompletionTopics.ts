@@ -86,8 +86,8 @@ export const OBJECTIVE_COMPLETION_ENTRIES: readonly CompletionEntry[] = [
       en: "Metrics tied to a risk that signal exposure changes against defined thresholds and trigger escalation or treatment.",
     },
     details: {
-      it: "Un KRI deve avere proprietario, fonte dati, frequenza, soglia e azione prevista. Può essere anticipatore, come l'aumento degli account senza MFA, o consuntivo, come incidenti già avvenuti; non ogni KPI operativo è un KRI. **Piccolo Esempio Concentrato:** oltre il 2% di backup falliti per due giorni, il risk owner apre una remediation prima che l'obiettivo di recupero sia compromesso. Fonte primaria: NISTIR 8286D.",
-      en: "A KRI needs an owner, data source, cadence, threshold, and prescribed action. It may be leading, such as growth in accounts without MFA, or lagging, such as incidents already observed; not every operational KPI is a KRI. **Focused Mini-Example:** when failed backups exceed 2% for two days, the risk owner opens remediation before the recovery objective is jeopardized. Primary source: NISTIR 8286D.",
+      it: "Un KRI deve avere proprietario, fonte dati, frequenza, soglia e azione prevista. Può essere anticipatore, come l'aumento degli account senza MFA, o consuntivo, come incidenti già avvenuti; non ogni KPI operativo è un KRI. **Piccolo Esempio Concentrato:** oltre il 2% di backup falliti per due giorni, il risk owner apre una remediation prima che l'obiettivo di recupero sia compromesso. Fonte primaria: NIST IR 8286C Rev. 1.",
+      en: "A KRI needs an owner, data source, cadence, threshold, and prescribed action. It may be leading, such as growth in accounts without MFA, or lagging, such as incidents already observed; not every operational KPI is a KRI. **Focused Mini-Example:** when failed backups exceed 2% for two days, the risk owner opens remediation before the recovery objective is jeopardized. Primary source: NIST IR 8286C Rev. 1.",
     },
     tip: { it: "Il KRI segnala l'esposizione al rischio; la soglia stabilisce quando intervenire; il KPI misura una prestazione.", en: "A KRI signals risk exposure; the threshold says when to act; a KPI measures performance." },
   },
@@ -97,7 +97,7 @@ export function objectiveCompletionTopics(domainId: number, lang: Lang): TopicGr
   const entries = OBJECTIVE_COMPLETION_ENTRIES.filter((entry) => entry.domain === domainId);
   if (entries.length === 0) return [];
   return entries.map((entry) => ({
-    title: lang === "it" ? `Completamento obiettivo ${entry.objective}` : `Objective ${entry.objective} completion`,
+    title: lang === "it" ? `Completamento obiettivo ${entry.objective} (Obj ${entry.objective})` : `Objective ${entry.objective} completion (Obj ${entry.objective})`,
     description: lang === "it" ? "Voce autonoma verificata dall'audit di copertura SY0-701." : "Standalone entry verified by the SY0-701 coverage audit.",
     icon: "CircleCheckBig",
     subtopics: [{

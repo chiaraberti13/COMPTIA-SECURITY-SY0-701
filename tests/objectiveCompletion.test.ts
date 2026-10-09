@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { buildAcronymDeck } from "../src/flashcards";
 import { CONCEPT_CITATIONS } from "../src/citations";
 import { buildGlossaryIndex, findGlossaryTerms } from "../src/glossaryIndex";
 import { getAllTopics, getInitialQuestions, loadEnglishOverlay } from "../src/localizedData";
@@ -36,6 +37,12 @@ describe("objective coverage completion entries", () => {
 
       expect(quiz, `${entry.key} has an applied quiz reference`).toContain(appliedTerms[lang][entry.key]);
     }
+  });
+
+  it.each(["it", "en"] as const)("keeps the KRI card in objective 5.2 drills in %s", (lang) => {
+    const kri = buildAcronymDeck(getAllTopics(lang)).find((card) => card.acronym === "KRI");
+    expect(kri).toBeDefined();
+    expect(kri!.objectives).toEqual(["5.2"]);
   });
 
   it("links every standards-based entry to its primary source", () => {

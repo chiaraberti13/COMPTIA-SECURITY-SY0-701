@@ -120,7 +120,7 @@ indirizzi qui sotto.
 - `5:GrammLeachBlileyAct`: [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know)
 - `5:HIPAAComplianceConcept`: [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html); [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html)
 - `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
-- `5:KeyRiskIndicators`: [NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response](https://csrc.nist.gov/pubs/ir/8286/d/final)
+- `5:KeyRiskIndicators`: [NIST IR 8286C Rev. 1 — Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight](https://csrc.nist.gov/pubs/ir/8286/c/r1/final)
 - `5:MediaSanitizationRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
 - `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)

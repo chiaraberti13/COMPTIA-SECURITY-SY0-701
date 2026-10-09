@@ -377,7 +377,7 @@ nuovo apri una issue.
 ---
 
 <p align="center">
-  <sub>Realizzato con 🛡️ da <a href="https://github.com/chiaraberti13">chiaraberti13</a></sub>
+  <sub>Realizzato con 🛡️ da <a href="https://github.com/chiaraberti13">@chiaraberti13</a></sub>
 </p>
 
 ---
