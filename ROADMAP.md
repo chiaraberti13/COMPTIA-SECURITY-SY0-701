@@ -11,11 +11,14 @@
 
 ## Stato della revisione — 2026-10-09
 
-**Esito complessivo: ⚠️ monitorato.** Tutti i gate automatici sono verdi e non
-sono stati trovati difetti rotti, regressioni o vulnerabilità; restano aperte due
-attività editoriali di accuratezza dei contenuti (issue [#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102)
-e [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103))
-che richiedono una scelta editoriale > 150 righe e non vanno improvvisate.
+**Esito complessivo: ✅ con una nota.** Tutti i gate automatici sono verdi e non
+sono stati trovati difetti rotti, regressioni o vulnerabilità. In questa revisione
+sono state applicate le correzioni di accuratezza dei contenuti: l'appendice sigle è
+stata riscritta con objective code per voce e definizioni funzionali (issue
+[#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102),
+chiusa). Resta aperta una sola attività — l'irrobustimento del metodo di misura della
+copertura bilingue (issue
+[#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103)).
 
 Base della revisione: `main` a `4d16e79`. Nessuna routine di sviluppo attiva
 all'avvio (ultimo commit > 30 minuti).
@@ -43,11 +46,11 @@ e validati in CI.
 
 | Lente | Esito | Note |
 |---|---|---|
-| Contenuti e didattica (Security+ / instructional / traduttore) | ⚠️ | Copertura obiettivi 249/249 e acronimi 329/329 al 100%; parità IT/EN verde. Resta il debito di accuratezza dell'appendice sigle (#102) e del guard di esaustività (#103). |
+| Contenuti e didattica (Security+ / instructional / traduttore) | ✅ | Copertura obiettivi 249/249 e acronimi 329/329 al 100%; parità IT/EN verde. Appendice sigle corretta (objective code per voce + definizioni funzionali, #102). Resta da irrobustire il metodo di misura della copertura bilingue (#103). |
 | Codice ed efficienza (dev / performance) | ✅ | `typecheck`, `lint`, `lint:md` verdi; nessun errore rilevato. Bundle dataset grande ma lazy-split e precompresso (Brotli). |
 | Sicurezza e supply-chain (DevSecOps / privacy) | ✅ | `npm audit` prod+dev: **0 vulnerabilità**. Nessun segreto nel codice. Nessun `</script>` pericoloso in template literal. Dependabot con cooldown 7 giorni attivo. |
 | Accessibilità, UX e visual (a11y / UX / visual) | ✅ | Controlli axe nei test E2E (`@axe-core/playwright`) verdi; navigazione da tastiera testata su desktop e mobile. |
-| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1023** passati (113 file), E2E **163** passati + 1 skip (12 spec), build verde. Nessun test fragile riscontrato in questa sessione. |
+| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1024** passati (113 file), E2E **163** passati + 1 skip (12 spec), build verde. Nessun test fragile riscontrato in questa sessione. |
 | Documentazione e roadmap (technical writer / PM) | ✅ | README bilingui con banner SVG terminale e firma `@chiaraberti13`; CHANGELOG `[Unreleased]` allineato; artefatti `docs/` generati e aggiornati. |
 
 ## Correzioni e attività del mese
@@ -57,41 +60,45 @@ e validati in CI.
   della causa (helper `currentMatching` esteso al PBQ 3.4 `payments`, commit
   `9c2916b`; percorso `vpn-pbq` reso deterministico, `6187d19`) è già su `main`.
   Suite E2E completa rieseguita: 163 passati, 0 falliti.
-- Nessun fix di codice/contenuto necessario in questa revisione: nessun elemento
-  rotto, sbagliato o vulnerabile individuato oltre a quanto già tracciato nelle issue.
+- **Appendice sigle riscritta (#102) — risolta.** Le 236 voci di
+  `src/acronymAppendixTopics.ts` hanno ora un objective code per voce (mappa
+  `ACRONYM_META`) invece di un obiettivo unico per dominio: CHAP/MSCHAP/2FA/PIV →
+  IAM 4.6, ECDSA → 1.4, HIPS → 4.5, SD-WAN → 3.2 e le altre sigle lasciano il
+  contenitore 5.1 per i domini reali. La definizione descrive ora la funzione del
+  termine (non ripete il nome esteso), con disambiguazione per le sigle a più
+  significati (MAC, PAM, RA, RBAC, SAN, SoC). Le sigle sono raggruppate per obiettivo,
+  così ogni flashcard eredita il codice corretto; citazioni di ATT&CK e OWASP spostate
+  nel dominio 2 (`src/citations.ts`). Nuovo test `tests/acronymAppendix.test.ts` lega
+  ogni sigla a un obiettivo SY0-701 valido. 20 forme italiane corrette aggiunte al
+  vocabolario `cspell/`.
 
 ## Errori di contenuto noti (tracciati)
 
-- **Appendice sigle con obiettivo per dominio e definizione a template** (#102):
-  236 voci di `src/acronymAppendixTopics.ts` ricevono un objective code unico per
-  dominio (es. CHAP/2FA/PIV → 1.4 invece del contesto IAM 4.6) e una definizione
-  tautologica. Correzione = audit semantico per voce con objective code e definizione
-  funzionale: > 150 righe e scelta editoriale → resta issue.
-- **Copertura «esaustiva» basata su 249 termini curati** (#103): il denominatore non
-  è l'insieme completo delle sotto-voci del PDF ufficiale e il match accetta una
-  menzione in una sola lingua. Serve un inventario versionato con evidenza per voce e
-  lingua → resta issue.
+- **Metodo di misura della copertura bilingue** (#103): investigato in questa
+  revisione. Irrigidire il match a «entrambe le lingue» (`every` invece di `some`)
+  fa emergere ~16 voci che falliscono il confronto; verificato che la maggioranza
+  sono **artefatti del match** (sinonimo singolare vs testo plurale, es.
+  `geographic restriction` contro «restrictions», per via dei confini di parola),
+  non veri buchi di contenuto, più poche voci realmente presenti in una sola lingua
+  (es. *Independent third-party audit* lato IT). Correzione corretta = rendere il
+  confronto robusto (plurali/stemming) e colmare le poche voci monolingua, senza
+  indebolire il traguardo 249/249 né i test. Resta issue (tooling + contenuto).
 
 ## Issue aperte
 
 | # | Titolo | Tipo | Priorità |
 |---|---|---|---|
-| [#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102) | Appendice acronimi: spiegazioni generiche e obiettivi errati per 236 voci | contenuto / editoriale | P1 |
-| [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103) | Copertura esaustiva bilingue non provata dai 249 termini curati | contenuto / tooling | P2 |
+| [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103) | Copertura esaustiva bilingue: match da irrobustire (plurali/stemming) e poche voci monolingua | tooling / contenuto | P2 |
 
 ## Backlog per priorità
 
-1. **P1 — Audit semantico dell'appendice sigle (#102).** Per ciascuna delle 236 voci:
-   objective code corretto (riallineare CHAP/2FA/PIV e simili al contesto IAM 4.6,
-   HIPS/ECDSA/SD-WAN ai domini reali), definizione funzionale non tautologica, alias
-   e rimandi ai contenuti esistenti, fonti primarie, test sulla mappatura. Riallineare
-   di conseguenza il punto «copertura acronimi» del dashboard. Stima: grande (> 150
-   righe, iterativo per dominio).
-2. **P2 — Guard di copertura esaustiva bilingue (#103).** Inventario versionato
-   derivato dal PDF ufficiale; evidenza per voce *e* lingua (non `some`), objective
-   code e passaggio/checklistKey, esclusione delle mere espansioni di acronimo; test
-   delle omissioni. Stima: grande (> 150 righe + design del guard).
-3. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
+1. **P2 — Robustezza del match di copertura obiettivi (#103).** Rendere `mentions()`
+   tollerante a plurali e forme flesse (o normalizzare i sinonimi), poi passare a
+   evidenza per voce *e* lingua; colmare le poche voci realmente monolingua
+   (es. *Independent third-party audit* IT). Mantenere verde il traguardo di
+   copertura. In prospettiva: inventario versionato derivato dal PDF ufficiale come
+   denominatore completo. Stima: media/grande (tooling + poche voci di contenuto).
+2. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
    quando Dependabot aprirà le PR (cooldown 7 giorni) e l'ecosistema sarà pronto:
    - `typescript` 5.8 → 7.0 (compilatore nativo): attendere il supporto di
      `typescript-eslint`, `vite` e `vitest`; migrazione pianificata, non in-range.
@@ -110,13 +117,14 @@ e validati in CI.
 | Obiettivi coperti da domande | 28/28 | 28/28 | 100% |
 | Sotto-voci di obiettivo spiegate | 249/249 | 249/249 | 100% (vedi #103 per il metodo) |
 | Sigle della Acronym List coperte | 329/329 | 329/329 | deck di 366 flashcard |
+| Objective code per sigla d'appendice | 1 per dominio (errato) | 1 per voce (236/236) | mappa `ACRONYM_META` |
 | Guide di dominio | 5/5 | 5/5 | 46 esercizi guidati |
 | Scenari PBQ | 32 | 32 | integrati nell'Esame |
-| Test unitari | 1023 (113 file) | 1023 | tutti verdi |
+| Test unitari | 1023 (113 file) | 1024 | +1 test mappatura sigle; tutti verdi |
 | Test E2E | 163 + 1 skip (12 spec) | 163 + 1 skip | desktop + mobile, tutti verdi |
 | Bundle (gzip) | index 274 KB · vendor 124 KB · dataset IT 784 KB · dataset EN 720 KB | invariato | dataset lazy-split, precompressi Brotli |
 | Vulnerabilità `npm audit` (prod+dev) | 0 | 0 | — |
-| Issue aperte | 3 (#102, #103, #104) | 2 (#102, #103) | #104 chiusa |
+| Issue aperte | 3 (#102, #103, #104) | 1 (#103) | #104 e #102 chiuse |
 
 ## Argomenti già coperti nelle spiegazioni
 

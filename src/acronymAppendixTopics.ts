@@ -245,63 +245,311 @@ export const ACRONYM_APPENDIX = [
   ["XOR", "Exclusive Or"],
 ] as const;
 
-const DOMAIN_1 = new Set(["2FA", "CFB", "CHAP", "CTM", "DSA", "GPG", "IDEA", "KEK", "MSCHAP", "PIV", "RIPEMD", "S/MIME", "SCEP", "SED", "TSIG"]);
-const DOMAIN_2 = new Set(["IM", "IRC", "MMS", "P2P", "PUP", "SEH", "SPIM", "UAV", "VBA"]);
-const DOMAIN_3 = new Set(["COBO", "CSU", "DNAT", "DSL", "ESN", "FPGA", "GRE", "IDF", "ISP", "MAN", "MBR", "MDF", "MFD", "MTU", "OTA", "PAT", "PBX", "PED", "POP", "POTS", "PTZ", "RAS", "RTP", "SoC", "SRTP", "TCP/IP", "USB OTG", "VDE", "VDI", "VLSM", "VPC", "VTC"]);
-const DOMAIN_4 = new Set(["AIS", "BASH", "CIRT", "FTPS", "MaaS", "ML", "MSSP", "NIPS", "RTBH", "SHTTP", "SOAP", "UEM", "WIDS", "WIPS"]);
+/**
+ * Per-acronym teaching metadata, replacing the earlier one-objective-per-domain
+ * mapping and the tautological template (review issue #102).
+ *
+ * - `obj`: the primary SY0-701 objective where the acronym is most naturally
+ *   studied. One acronym can touch several objectives; this is the single home
+ *   used for grouping and flashcard filtering, chosen against the official
+ *   objective outline, not the acronym's first letter or domain of the list.
+ * - `it` / `en`: a short functional gloss of what the term is or does, so the
+ *   definition states the function instead of repeating the expansion.
+ *
+ * Glosses are written in lower case and self-contained; the renderer below
+ * capitalizes the definition and reuses the gloss inside the analysis.
+ */
+type AcronymMeta = { obj: string; it: string; en: string };
 
-export const acronymAppendixDomain = (acronym: string): number =>
-  DOMAIN_1.has(acronym) ? 1 : DOMAIN_2.has(acronym) ? 2 : DOMAIN_3.has(acronym) ? 3 : DOMAIN_4.has(acronym) ? 4 : 5;
-
-const OBJECTIVE: Record<number, string> = { 1: "1.4", 2: "2.4", 3: "3.1", 4: "4.4", 5: "5.1" };
-const GROUP_TITLE: Record<Lang, Record<number, string>> = {
-  it: {
-    1: "Appendice sigle: controlli e crittografia (Obj 1.4)",
-    2: "Appendice sigle: minacce e vulnerabilità (Obj 2.4)",
-    3: "Appendice sigle: architettura e infrastruttura (Obj 3.1)",
-    4: "Appendice sigle: operazioni di sicurezza (Obj 4.4)",
-    5: "Appendice sigle: governance e programma (Obj 5.1)",
-  },
-  en: {
-    1: "Acronym appendix: controls and cryptography (Obj 1.4)",
-    2: "Acronym appendix: threats and vulnerabilities (Obj 2.4)",
-    3: "Acronym appendix: architecture and infrastructure (Obj 3.1)",
-    4: "Acronym appendix: security operations (Obj 4.4)",
-    5: "Acronym appendix: governance and program (Obj 5.1)",
-  },
+const ACRONYM_META: Record<string, AcronymMeta> = {
+  "2FA": { obj: "4.6", it: "autenticazione che richiede due fattori di categorie diverse", en: "authentication requiring two factors from different categories" },
+  "3DES": { obj: "1.4", it: "cifrario simmetrico a blocchi legacy che applica DES tre volte", en: "legacy symmetric block cipher that applies DES three times" },
+  "AES-256": { obj: "1.4", it: "cifrario simmetrico a blocchi con chiave a 256 bit", en: "symmetric block cipher with a 256-bit key" },
+  "AH": { obj: "3.2", it: "protocollo IPsec che fornisce integrità e autenticità del pacchetto senza cifrarlo", en: "IPsec protocol that provides packet integrity and authenticity without encrypting it" },
+  "AI": { obj: "4.4", it: "tecnologia di analisi automatica usata nel rilevamento e nel monitoraggio", en: "automated analysis technology used in detection and monitoring" },
+  "AIS": { obj: "4.3", it: "scambio automatico di indicatori di minaccia tra organizzazioni", en: "automated exchange of threat indicators between organizations" },
+  "AP": { obj: "4.1", it: "apparato che fornisce connettività wireless alla rete", en: "device that provides wireless connectivity to the network" },
+  "APT": { obj: "2.1", it: "attore di minaccia sofisticato e persistente, spesso statale", en: "a sophisticated, persistent threat actor, often state-sponsored" },
+  "ARP": { obj: "2.4", it: "protocollo che risolve gli IP in indirizzi fisici, bersaglio di poisoning", en: "protocol that resolves IP addresses to hardware addresses, a target of poisoning" },
+  "ASLR": { obj: "2.5", it: "mitigazione che randomizza la memoria per ostacolare gli exploit", en: "mitigation that randomizes memory layout to hinder exploits" },
+  "ATT&CK": { obj: "2.4", it: "base di conoscenza di tattiche e tecniche degli attaccanti", en: "knowledge base of adversary tactics and techniques" },
+  "AV": { obj: "4.4", it: "strumento che rileva e blocca il software malevolo noto", en: "tool that detects and blocks known malicious software" },
+  "BASH": { obj: "4.7", it: "shell dei sistemi Unix usata per lo scripting e l'automazione", en: "Unix shell used for scripting and automation" },
+  "BGP": { obj: "3.1", it: "protocollo di routing tra reti autonome su Internet", en: "routing protocol between autonomous networks on the Internet" },
+  "BIA": { obj: "5.2", it: "analisi che stima l'impatto dell'interruzione dei processi", en: "analysis that estimates the impact of disrupted processes" },
+  "BIOS": { obj: "4.1", it: "firmware di avvio del sistema, oggetto di hardening", en: "system start-up firmware, a hardening target" },
+  "BPDU": { obj: "3.2", it: "messaggio dello spanning tree, protetto dalla BPDU guard", en: "a spanning-tree message protected by BPDU guard" },
+  "CA": { obj: "1.4", it: "entità fidata che emette e firma i certificati digitali", en: "trusted entity that issues and signs digital certificates" },
+  "CAPTCHA": { obj: "2.5", it: "test che distingue gli esseri umani dai bot automatici", en: "test that tells humans apart from automated bots" },
+  "CAR": { obj: "4.8", it: "report che documenta l'azione correttiva dopo un incidente", en: "report documenting the corrective action after an incident" },
+  "CASB": { obj: "3.2", it: "intermediario che applica le policy di sicurezza verso i servizi cloud", en: "broker that enforces security policy toward cloud services" },
+  "CBC": { obj: "1.4", it: "modalità di cifratura a blocchi concatenati", en: "chained-block cipher mode" },
+  "CCTV": { obj: "1.2", it: "videosorveglianza come controllo di sicurezza fisica", en: "video surveillance as a physical security control" },
+  "CERT": { obj: "4.8", it: "squadra che coordina la risposta agli incidenti", en: "team that coordinates incident response" },
+  "CFB": { obj: "1.4", it: "modalità di cifratura a feedback che opera come flusso", en: "feedback cipher mode that operates as a stream" },
+  "CHAP": { obj: "4.6", it: "protocollo di autenticazione a sfida e risposta senza inviare la password", en: "challenge-response authentication protocol that avoids sending the password" },
+  "CIA": { obj: "1.2", it: "triade di riservatezza, integrità e disponibilità", en: "triad of confidentiality, integrity and availability" },
+  "CIO": { obj: "5.1", it: "dirigente responsabile della strategia dei sistemi informativi", en: "executive responsible for information-systems strategy" },
+  "CIRT": { obj: "4.8", it: "squadra dedicata alla risposta agli incidenti informatici", en: "team dedicated to computer incident response" },
+  "CMS": { obj: "3.1", it: "piattaforma per gestire i contenuti web, superficie d'attacco applicativa", en: "platform for managing web content, an application attack surface" },
+  "COBO": { obj: "4.1", it: "modello di dispositivi aziendali a solo uso lavorativo", en: "deployment model of company devices for business use only" },
+  "COOP": { obj: "3.4", it: "pianificazione della continuità operativa", en: "continuity-of-operations planning" },
+  "CP": { obj: "3.4", it: "pianificazione di emergenza per eventi avversi", en: "contingency planning for adverse events" },
+  "CRC": { obj: "1.2", it: "checksum che rileva errori accidentali di trasmissione, non le manomissioni", en: "checksum that detects accidental transmission errors, not tampering" },
+  "CSO": { obj: "5.1", it: "dirigente responsabile della sicurezza aziendale", en: "executive responsible for corporate security" },
+  "CSP": { obj: "3.1", it: "fornitore di servizi cloud, parte della matrice di responsabilità", en: "cloud service provider, part of the responsibility matrix" },
+  "CSU": { obj: "3.1", it: "apparato che collega una rete locale a una linea digitale", en: "device that connects a local network to a digital line" },
+  "CTM": { obj: "1.4", it: "modalità contatore che trasforma un cifrario a blocchi in flusso", en: "counter mode that turns a block cipher into a stream" },
+  "CTO": { obj: "5.1", it: "dirigente responsabile della tecnologia", en: "executive responsible for technology" },
+  "DAC": { obj: "4.6", it: "modello in cui il proprietario della risorsa decide gli accessi", en: "model where the resource owner decides access" },
+  "DBA": { obj: "5.1", it: "ruolo che amministra i database", en: "role that administers databases" },
+  "DDoS": { obj: "2.4", it: "attacco distribuito che satura un servizio per renderlo indisponibile", en: "distributed attack that floods a service to make it unavailable" },
+  "DEP": { obj: "2.5", it: "mitigazione che impedisce l'esecuzione di codice dalle aree dati", en: "mitigation that blocks code execution from data regions" },
+  "DES": { obj: "1.4", it: "cifrario simmetrico a blocchi storico con chiave a 56 bit", en: "historical symmetric block cipher with a 56-bit key" },
+  "DHCP": { obj: "3.1", it: "protocollo che assegna automaticamente gli indirizzi IP", en: "protocol that automatically assigns IP addresses" },
+  "DHE": { obj: "1.4", it: "scambio di chiavi Diffie-Hellman effimero con forward secrecy", en: "ephemeral Diffie-Hellman key exchange with forward secrecy" },
+  "DLL": { obj: "2.4", it: "libreria condivisa, bersaglio di side-loading e hijacking", en: "shared library, a target of side-loading and hijacking" },
+  "DNAT": { obj: "3.2", it: "traduzione dell'indirizzo di destinazione verso un host interno", en: "translation of the destination address toward an internal host" },
+  "DNS": { obj: "3.1", it: "sistema che risolve i nomi di dominio in indirizzi", en: "system that resolves domain names to addresses" },
+  "DNSSEC": { obj: "3.1", it: "estensioni che autenticano le risposte DNS con le firme", en: "extensions that authenticate DNS responses with signatures" },
+  "DoS": { obj: "2.4", it: "attacco che rende un servizio indisponibile", en: "attack that makes a service unavailable" },
+  "DPO": { obj: "5.4", it: "ruolo che vigila sul trattamento dei dati personali", en: "role that oversees personal-data processing" },
+  "DSA": { obj: "1.4", it: "algoritmo di firma digitale basato sul logaritmo discreto", en: "digital signature algorithm based on the discrete logarithm" },
+  "DSL": { obj: "3.1", it: "tecnologia di accesso a banda larga sulla linea telefonica", en: "broadband access technology over the telephone line" },
+  "ECB": { obj: "1.4", it: "modalità di cifratura a blocchi indipendenti, insicura per i dati ripetuti", en: "independent-block cipher mode, insecure for repeated data" },
+  "ECC": { obj: "1.4", it: "crittografia a curve ellittiche con chiavi corte e robuste", en: "elliptic-curve cryptography with short, strong keys" },
+  "ECDHE": { obj: "1.4", it: "scambio di chiavi effimero a curve ellittiche con forward secrecy", en: "ephemeral elliptic-curve key exchange with forward secrecy" },
+  "ECDSA": { obj: "1.4", it: "algoritmo di firma digitale a curve ellittiche", en: "elliptic-curve digital signature algorithm" },
+  "EDR": { obj: "4.5", it: "strumento che rileva e risponde alle minacce sugli endpoint", en: "tool that detects and responds to endpoint threats" },
+  "EFS": { obj: "3.3", it: "cifratura dei file a livello di file system", en: "file-system-level file encryption" },
+  "ERP": { obj: "3.1", it: "sistema gestionale integrato dei processi aziendali", en: "integrated system for enterprise business processes" },
+  "ESN": { obj: "4.1", it: "numero di serie univoco di un dispositivo mobile", en: "unique serial number of a mobile device" },
+  "ESP": { obj: "3.2", it: "protocollo IPsec che cifra e autentica il payload", en: "IPsec protocol that encrypts and authenticates the payload" },
+  "EULA": { obj: "5.1", it: "contratto di licenza d'uso del software", en: "a software end-user license agreement" },
+  "FACL": { obj: "4.6", it: "liste di controllo d'accesso del file system", en: "access control lists of the file system" },
+  "FDE": { obj: "3.3", it: "cifratura dell'intero disco a riposo", en: "encryption of the whole disk at rest" },
+  "FPGA": { obj: "3.1", it: "circuito integrato riprogrammabile sul campo", en: "field-reprogrammable integrated circuit" },
+  "FRR": { obj: "4.6", it: "tasso di falsi rifiuti di un sistema biometrico", en: "false rejection rate of a biometric system" },
+  "FTP": { obj: "4.5", it: "protocollo di trasferimento file in chiaro, da sostituire", en: "cleartext file-transfer protocol, to be replaced" },
+  "FTPS": { obj: "4.5", it: "FTP protetto con TLS, da non confondere con SFTP su SSH", en: "FTP secured with TLS, not to be confused with SFTP over SSH" },
+  "GCM": { obj: "1.4", it: "modalità di cifratura autenticata che unisce riservatezza e integrità", en: "authenticated cipher mode that combines confidentiality and integrity" },
+  "GPG": { obj: "1.4", it: "implementazione aperta di cifratura e firma dei messaggi", en: "open implementation of message encryption and signing" },
+  "GPO": { obj: "4.5", it: "oggetto che applica le configurazioni di sicurezza nei domini Windows", en: "object that applies security configuration across Windows domains" },
+  "GPS": { obj: "4.1", it: "sistema di posizionamento usato per geolocalizzazione e geofencing", en: "positioning system used for geolocation and geofencing" },
+  "GPU": { obj: "2.4", it: "processore grafico sfruttato anche per il cracking delle password", en: "graphics processor also exploited for password cracking" },
+  "GRE": { obj: "3.2", it: "protocollo di tunneling che incapsula altri protocolli", en: "tunneling protocol that encapsulates other protocols" },
+  "HDD": { obj: "4.2", it: "disco magnetico da sanificare prima della dismissione", en: "magnetic disk to sanitize before disposal" },
+  "HIDS": { obj: "4.5", it: "sistema che rileva le intrusioni sul singolo host", en: "system that detects intrusions on a single host" },
+  "HIPS": { obj: "4.5", it: "sistema che previene le intrusioni bloccandole sull'host", en: "system that prevents intrusions by blocking them on the host" },
+  "HMAC": { obj: "1.4", it: "codice di autenticazione del messaggio basato su hash e chiave", en: "message authentication code based on a hash and a key" },
+  "HOTP": { obj: "4.6", it: "password monouso basata su un contatore e HMAC", en: "one-time password based on a counter and HMAC" },
+  "HTML": { obj: "3.1", it: "linguaggio di markup delle pagine web", en: "markup language of web pages" },
+  "HTTP": { obj: "4.5", it: "protocollo web in chiaro, da proteggere con TLS", en: "cleartext web protocol, to be secured with TLS" },
+  "HTTPS": { obj: "4.5", it: "HTTP protetto con TLS", en: "HTTP secured with TLS" },
+  "IAM": { obj: "4.6", it: "disciplina che governa le identità e gli accessi", en: "discipline that governs identities and access" },
+  "ICMP": { obj: "2.4", it: "protocollo diagnostico sfruttato nella ricognizione e nei DoS", en: "diagnostic protocol abused in reconnaissance and DoS" },
+  "IDEA": { obj: "1.4", it: "cifrario simmetrico a blocchi legacy", en: "legacy symmetric block cipher" },
+  "IDF": { obj: "3.1", it: "armadio di distribuzione intermedio del cablaggio", en: "intermediate wiring distribution frame" },
+  "IdP": { obj: "4.6", it: "servizio che autentica gli utenti nelle federazioni", en: "service that authenticates users in federations" },
+  "IDS": { obj: "4.5", it: "sistema che rileva e segnala le intrusioni", en: "system that detects and reports intrusions" },
+  "IEEE": { obj: "5.1", it: "ente che pubblica gli standard di rete", en: "body that publishes networking standards" },
+  "IKE": { obj: "3.2", it: "protocollo che negozia le chiavi delle associazioni IPsec", en: "protocol that negotiates keys for IPsec associations" },
+  "IM": { obj: "2.2", it: "messaggistica istantanea, vettore di phishing e malware", en: "instant messaging, a vector for phishing and malware" },
+  "IMAP": { obj: "4.5", it: "protocollo di accesso alla posta, da proteggere con TLS", en: "mail access protocol, to be secured with TLS" },
+  "IoC": { obj: "4.4", it: "indicatore osservabile di una compromissione", en: "observable indicator of a compromise" },
+  "IP": { obj: "3.1", it: "protocollo di indirizzamento e instradamento dei pacchetti", en: "protocol for addressing and routing packets" },
+  "IR": { obj: "4.8", it: "processo di risposta agli incidenti", en: "the incident response process" },
+  "IRC": { obj: "2.4", it: "chat di rete storica usata anche per il comando e controllo", en: "legacy network chat also used for command and control" },
+  "IRP": { obj: "4.8", it: "piano documentato di risposta agli incidenti", en: "documented incident response plan" },
+  "ISO": { obj: "5.1", it: "ente internazionale di normazione", en: "an international standards organization" },
+  "ISP": { obj: "3.1", it: "fornitore di connettività a Internet", en: "provider of Internet connectivity" },
+  "ISSO": { obj: "5.1", it: "ruolo responsabile della sicurezza dei sistemi informativi", en: "role responsible for information-systems security" },
+  "IV": { obj: "1.4", it: "valore iniziale casuale che rende unica la cifratura", en: "random initial value that makes encryption unique" },
+  "KDC": { obj: "4.6", it: "centro che distribuisce le chiavi in Kerberos", en: "center that distributes keys in Kerberos" },
+  "KEK": { obj: "1.4", it: "chiave usata per cifrare altre chiavi", en: "key used to encrypt other keys" },
+  "L2TP": { obj: "3.2", it: "protocollo di tunneling VPN, abbinato a IPsec", en: "VPN tunneling protocol, paired with IPsec" },
+  "LAN": { obj: "3.1", it: "rete locale che collega i dispositivi in un'area ristretta", en: "local network that connects devices within a small area" },
+  "MaaS": { obj: "4.4", it: "monitoraggio erogato come servizio gestito", en: "monitoring delivered as a managed service" },
+  "MAC": { obj: "4.6", it: "controllo d'accesso obbligatorio; anche indirizzo fisico di rete o codice di autenticazione del messaggio", en: "mandatory access control; also a network hardware address or a message authentication code" },
+  "MAN": { obj: "3.1", it: "rete che collega più sedi in un'area metropolitana", en: "network that connects sites across a metropolitan area" },
+  "MBR": { obj: "2.4", it: "record di avvio del disco, bersaglio di alcuni malware", en: "disk boot record targeted by some malware" },
+  "MD5": { obj: "1.4", it: "funzione hash legacy, vulnerabile alle collisioni", en: "legacy hash function vulnerable to collisions" },
+  "MDF": { obj: "3.1", it: "armadio di distribuzione principale del cablaggio", en: "main wiring distribution frame" },
+  "MFD": { obj: "4.2", it: "dispositivo multifunzione con memoria da sanificare", en: "multifunction device with storage to sanitize" },
+  "MFP": { obj: "4.2", it: "stampante multifunzione, superficie d'attacco di rete", en: "multifunction printer, a network attack surface" },
+  "ML": { obj: "4.4", it: "apprendimento automatico usato nell'analisi di sicurezza", en: "machine learning used in security analytics" },
+  "MMS": { obj: "2.2", it: "messaggistica multimediale, vettore di smishing", en: "multimedia messaging, a smishing vector" },
+  "MPLS": { obj: "3.1", it: "instradamento con etichette sulle reti geografiche", en: "label-based routing over wide-area networks" },
+  "MSCHAP": { obj: "4.6", it: "variante Microsoft del protocollo di autenticazione CHAP", en: "Microsoft variant of the CHAP authentication protocol" },
+  "MSP": { obj: "5.3", it: "fornitore che gestisce l'IT in outsourcing", en: "provider that manages IT under outsourcing" },
+  "MSSP": { obj: "5.3", it: "fornitore che eroga servizi di sicurezza gestiti", en: "provider that delivers managed security services" },
+  "MTBF": { obj: "5.2", it: "tempo medio tra i guasti di un componente riparabile", en: "mean time between failures of a repairable component" },
+  "MTTF": { obj: "5.2", it: "tempo medio al guasto di un componente non riparabile", en: "mean time to failure of a non-repairable component" },
+  "MTTR": { obj: "5.2", it: "tempo medio per ripristinare un servizio", en: "mean time to recover a service" },
+  "MTU": { obj: "3.1", it: "dimensione massima del pacchetto trasmissibile", en: "the maximum transmittable packet size" },
+  "MX": { obj: "3.1", it: "record DNS che indica il server di posta del dominio", en: "DNS record that names a domain's mail server" },
+  "NAT": { obj: "3.2", it: "traduzione degli indirizzi tra rete privata e pubblica", en: "address translation between private and public networks" },
+  "NFC": { obj: "4.1", it: "comunicazione wireless a corto raggio per pagamenti e badge", en: "short-range wireless for payments and badges" },
+  "NIDS": { obj: "4.5", it: "sistema che rileva le intrusioni osservando il traffico di rete", en: "system that detects intrusions by watching network traffic" },
+  "NIPS": { obj: "4.5", it: "sistema che blocca le intrusioni in linea sulla rete", en: "system that blocks intrusions inline on the network" },
+  "NIST": { obj: "5.1", it: "ente che pubblica standard e linee guida di sicurezza", en: "body that publishes security standards and guidelines" },
+  "NTFS": { obj: "4.1", it: "file system Windows con permessi e cifratura", en: "Windows file system with permissions and encryption" },
+  "NTP": { obj: "3.1", it: "protocollo di sincronizzazione dell'orario, critico per i log", en: "time-synchronization protocol, critical for logs" },
+  "OAUTH": { obj: "4.6", it: "framework di autorizzazione delegata tramite token", en: "delegated authorization framework that uses tokens" },
+  "OID": { obj: "1.4", it: "identificatore gerarchico usato nei certificati", en: "hierarchical identifier used in certificates" },
+  "OS": { obj: "4.1", it: "sistema operativo, principale bersaglio di hardening", en: "the operating system, the main hardening target" },
+  "OSPF": { obj: "3.1", it: "protocollo di routing interno a stato dei collegamenti", en: "interior link-state routing protocol" },
+  "OT": { obj: "3.1", it: "tecnologia operativa che controlla i processi industriali", en: "operational technology that controls industrial processes" },
+  "OTA": { obj: "4.1", it: "aggiornamenti e configurazioni distribuiti via etere", en: "updates and configuration delivered over the air" },
+  "OVAL": { obj: "4.4", it: "linguaggio standard per descrivere lo stato delle vulnerabilità", en: "standard language for describing vulnerability state" },
+  "OWASP": { obj: "2.3", it: "progetto aperto sulla sicurezza applicativa noto per la Top 10", en: "open application-security project known for its Top 10" },
+  "P2P": { obj: "2.2", it: "rete paritaria, vettore di esfiltrazione e malware", en: "peer-to-peer network, a vector for exfiltration and malware" },
+  "PAC": { obj: "4.5", it: "file che configura automaticamente il proxy del browser", en: "file that auto-configures the browser proxy" },
+  "PAM": { obj: "4.6", it: "gestione degli accessi privilegiati; anche i moduli di autenticazione di Linux", en: "privileged access management; also Linux pluggable authentication modules" },
+  "PAT": { obj: "3.2", it: "traduzione di molti indirizzi su un'unica porta pubblica", en: "translation of many addresses onto one public port" },
+  "PBKDF2": { obj: "1.4", it: "funzione di derivazione che irrobustisce le password con molte iterazioni", en: "derivation function that strengthens passwords with many iterations" },
+  "PBX": { obj: "3.1", it: "centralino telefonico aziendale", en: "an enterprise telephone exchange" },
+  "PCAP": { obj: "4.9", it: "cattura del traffico di rete per l'analisi", en: "capture of network traffic for analysis" },
+  "PDU": { obj: "3.4", it: "unità di distribuzione dell'alimentazione nei rack", en: "power distribution unit in the racks" },
+  "PED": { obj: "4.1", it: "dispositivo elettronico personale soggetto alle policy aziendali", en: "personal electronic device subject to corporate policy" },
+  "PGP": { obj: "1.4", it: "schema di cifratura e firma della posta a fiducia distribuita", en: "mail encryption and signing scheme with a web of trust" },
+  "PHI": { obj: "5.4", it: "informazioni sanitarie personali da proteggere", en: "personal health information to be protected" },
+  "PII": { obj: "5.4", it: "informazioni che identificano una persona", en: "information that identifies a person" },
+  "PIV": { obj: "4.6", it: "smart card di verifica dell'identità personale", en: "smart card for personal identity verification" },
+  "PKCS": { obj: "1.4", it: "standard per le strutture della crittografia a chiave pubblica", en: "standards for public-key cryptography structures" },
+  "POP": { obj: "4.5", it: "protocollo di scaricamento della posta, da proteggere con TLS", en: "mail download protocol, to be secured with TLS" },
+  "POTS": { obj: "3.1", it: "linea telefonica analogica tradizionale", en: "traditional analog telephone line" },
+  "PPP": { obj: "3.2", it: "protocollo punto-punto per i collegamenti diretti", en: "point-to-point protocol for direct links" },
+  "PPTP": { obj: "3.2", it: "protocollo di tunneling VPN legacy e insicuro", en: "legacy, insecure VPN tunneling protocol" },
+  "PTZ": { obj: "1.2", it: "telecamera motorizzata con zoom per la sorveglianza", en: "motorized zoom camera for surveillance" },
+  "PUP": { obj: "2.4", it: "programma potenzialmente indesiderato installato di nascosto", en: "potentially unwanted program installed covertly" },
+  "RA": { obj: "1.4", it: "autorità di registrazione dei certificati; anche agente di recupero delle chiavi", en: "certificate registration authority; also a key recovery agent" },
+  "RACE": { obj: "1.4", it: "progetto europeo storico alla base di RIPEMD", en: "historical European project behind RIPEMD" },
+  "RAD": { obj: "4.1", it: "metodologia di sviluppo rapido delle applicazioni", en: "rapid application development methodology" },
+  "RAID": { obj: "3.4", it: "ridondanza dei dischi per la disponibilità dei dati", en: "disk redundancy for data availability" },
+  "RAS": { obj: "3.2", it: "server che fornisce accesso remoto alla rete", en: "server that provides remote access to the network" },
+  "RAT": { obj: "2.4", it: "trojan che dà all'attaccante il controllo remoto", en: "trojan that gives the attacker remote control" },
+  "RBAC": { obj: "4.6", it: "controllo d'accesso basato sui ruoli; in alternativa basato su regole", en: "role-based access control; alternatively rule-based" },
+  "RC4": { obj: "1.4", it: "cifrario a flusso legacy e insicuro", en: "legacy, insecure stream cipher" },
+  "RDP": { obj: "4.5", it: "protocollo di desktop remoto, da esporre con prudenza", en: "remote desktop protocol, to expose cautiously" },
+  "RIPEMD": { obj: "1.4", it: "famiglia di funzioni hash legacy", en: "legacy family of hash functions" },
+  "ROI": { obj: "5.2", it: "ritorno sull'investimento, usato nelle decisioni di rischio", en: "return on investment, used in risk decisions" },
+  "RSA": { obj: "1.4", it: "algoritmo asimmetrico per la cifratura e la firma", en: "asymmetric algorithm for encryption and signing" },
+  "RTBH": { obj: "2.5", it: "tecnica di routing che scarta il traffico d'attacco", en: "routing technique that drops attack traffic" },
+  "RTP": { obj: "3.1", it: "protocollo di trasporto per audio e video in tempo reale", en: "transport protocol for real-time audio and video" },
+  "S/MIME": { obj: "1.4", it: "standard per cifrare e firmare la posta con i certificati", en: "standard to encrypt and sign mail with certificates" },
+  "SAN": { obj: "3.3", it: "rete di storage a blocchi; anche il nome alternativo del soggetto in un certificato", en: "block storage network; also a certificate's subject alternative name" },
+  "SASE": { obj: "3.2", it: "architettura che unisce rete e sicurezza erogate dal cloud", en: "architecture that combines networking and security delivered from the cloud" },
+  "SCEP": { obj: "1.4", it: "protocollo di arruolamento automatico dei certificati", en: "protocol for automatic certificate enrollment" },
+  "SD-WAN": { obj: "3.2", it: "rete geografica definita dal software", en: "software-defined wide-area network" },
+  "SDK": { obj: "4.1", it: "kit di sviluppo, superficie della supply chain software", en: "development kit, a software supply-chain surface" },
+  "SDLM": { obj: "4.1", it: "metodologia del ciclo di vita dello sviluppo software", en: "software development lifecycle methodology" },
+  "SE Linux": { obj: "4.5", it: "estensione Linux che applica i controlli d'accesso obbligatori", en: "Linux extension that enforces mandatory access controls" },
+  "SED": { obj: "3.3", it: "disco che cifra i dati in hardware", en: "drive that encrypts data in hardware" },
+  "SEH": { obj: "2.3", it: "gestore delle eccezioni sfruttato in alcuni exploit di buffer overflow", en: "exception handler abused in some buffer-overflow exploits" },
+  "SFTP": { obj: "4.5", it: "trasferimento file sicuro su SSH", en: "secure file transfer over SSH" },
+  "SHA": { obj: "1.4", it: "famiglia di funzioni hash per l'integrità", en: "family of hash functions for integrity" },
+  "SHTTP": { obj: "4.5", it: "protocollo web sicuro storico, distinto da HTTPS e dal moderno TLS", en: "historical secure web protocol, distinct from HTTPS and modern TLS" },
+  "SIM": { obj: "4.1", it: "modulo che identifica l'abbonato mobile, bersaglio di swapping", en: "module that identifies the mobile subscriber, a swapping target" },
+  "SMB": { obj: "4.5", it: "protocollo di condivisione file, bersaglio frequente di attacchi", en: "file-sharing protocol, a frequent attack target" },
+  "SMS": { obj: "2.2", it: "messaggi di testo, vettore di smishing", en: "text messaging, a smishing vector" },
+  "SMTPS": { obj: "4.5", it: "invio della posta protetto con TLS", en: "mail sending secured with TLS" },
+  "SOAP": { obj: "3.1", it: "protocollo di scambio messaggi per i servizi web", en: "message-exchange protocol for web services" },
+  "SOAR": { obj: "4.4", it: "piattaforma che orchestra e automatizza la risposta", en: "platform that orchestrates and automates response" },
+  "SOC": { obj: "4.4", it: "centro che monitora la sicurezza in modo continuo", en: "center that monitors security continuously" },
+  "SoC": { obj: "3.1", it: "sistema integrato su un singolo chip, da non confondere con il Security Operations Center", en: "a system integrated on a single chip, not to be confused with the Security Operations Center" },
+  "SPIM": { obj: "2.2", it: "spam veicolato dalla messaggistica istantanea", en: "spam delivered over instant messaging" },
+  "SQL": { obj: "2.3", it: "linguaggio dei database, bersaglio di injection", en: "database language, a target of injection" },
+  "SRTP": { obj: "3.2", it: "versione sicura del trasporto in tempo reale", en: "secure version of real-time transport" },
+  "SSD": { obj: "4.2", it: "disco a stato solido da sanificare prima della dismissione", en: "solid-state drive to sanitize before disposal" },
+  "SSL": { obj: "1.4", it: "protocollo di cifratura del trasporto legacy, sostituito da TLS", en: "legacy transport encryption protocol, replaced by TLS" },
+  "STIX": { obj: "4.3", it: "formato strutturato per condividere l'intelligence sulle minacce", en: "structured format for sharing threat intelligence" },
+  "SWG": { obj: "3.2", it: "gateway che filtra e protegge il traffico web", en: "gateway that filters and secures web traffic" },
+  "TACACS+": { obj: "4.6", it: "protocollo AAA che separa autenticazione e autorizzazione", en: "AAA protocol that separates authentication and authorization" },
+  "TAXII": { obj: "4.3", it: "protocollo di trasporto dell'intelligence sulle minacce", en: "transport protocol for threat intelligence" },
+  "TCP/IP": { obj: "3.1", it: "suite di protocolli di base di Internet", en: "the core protocol suite of the Internet" },
+  "TGT": { obj: "4.6", it: "ticket iniziale che Kerberos rilascia dopo l'autenticazione", en: "initial ticket Kerberos issues after authentication" },
+  "TOC": { obj: "2.3", it: "momento del controllo in una race condition", en: "the time of check in a race condition" },
+  "TOTP": { obj: "4.6", it: "password monouso basata sul tempo", en: "time-based one-time password" },
+  "TOU": { obj: "2.3", it: "momento dell'uso in una race condition", en: "the time of use in a race condition" },
+  "TSIG": { obj: "3.1", it: "firma che autentica le transazioni DNS", en: "signature that authenticates DNS transactions" },
+  "TTP": { obj: "2.1", it: "tattiche, tecniche e procedure di un attore di minaccia", en: "tactics, techniques and procedures of a threat actor" },
+  "UAT": { obj: "1.3", it: "collaudo di accettazione da parte dell'utente prima del rilascio", en: "user acceptance testing before release" },
+  "UAV": { obj: "2.2", it: "drone, vettore fisico di ricognizione e attacco", en: "a drone, a physical reconnaissance and attack vector" },
+  "UDP": { obj: "3.1", it: "protocollo di trasporto senza connessione", en: "connectionless transport protocol" },
+  "UEFI": { obj: "4.1", it: "firmware di avvio moderno che abilita il secure boot", en: "modern boot firmware that enables secure boot" },
+  "UEM": { obj: "4.1", it: "gestione unificata di tutti gli endpoint", en: "unified management of all endpoints" },
+  "URI": { obj: "3.1", it: "identificatore di una risorsa", en: "an identifier of a resource" },
+  "URL": { obj: "2.2", it: "indirizzo web, vettore di phishing e redirezione", en: "web address, a phishing and redirection vector" },
+  "USB": { obj: "4.1", it: "porta e bus seriale, vettore di dispositivi rimovibili", en: "serial port and bus, a removable-device vector" },
+  "USB OTG": { obj: "4.1", it: "modalità USB che fa agire un dispositivo mobile da host", en: "USB mode that lets a mobile device act as a host" },
+  "UTP": { obj: "3.1", it: "cablaggio in rame non schermato", en: "unshielded copper cabling" },
+  "VBA": { obj: "2.4", it: "linguaggio di macro sfruttato nel malware dei documenti", en: "macro language abused in document malware" },
+  "VDE": { obj: "3.1", it: "ambiente desktop virtuale", en: "a virtual desktop environment" },
+  "VDI": { obj: "3.1", it: "infrastruttura che eroga desktop virtuali centralizzati", en: "infrastructure that delivers centralized virtual desktops" },
+  "VLSM": { obj: "3.1", it: "suddivisione in sottoreti di lunghezza variabile", en: "subnetting with variable-length masks" },
+  "VoIP": { obj: "3.1", it: "telefonia che viaggia sulla rete IP", en: "telephony carried over the IP network" },
+  "VPC": { obj: "3.1", it: "rete isolata e privata all'interno del cloud", en: "isolated private network within the cloud" },
+  "VTC": { obj: "3.1", it: "videoconferenza, superficie d'attacco della collaborazione", en: "video teleconferencing, a collaboration attack surface" },
+  "WAP": { obj: "4.1", it: "punto di accesso wireless", en: "a wireless access point" },
+  "WIDS": { obj: "4.5", it: "sistema che rileva le intrusioni sulla rete wireless", en: "system that detects intrusions on the wireless network" },
+  "WIPS": { obj: "4.5", it: "sistema che blocca le intrusioni wireless", en: "system that blocks wireless intrusions" },
+  "WO": { obj: "5.3", it: "ordine di lavoro che autorizza un'attività del fornitore", en: "work order that authorizes a vendor activity" },
+  "XDR": { obj: "4.5", it: "rilevamento e risposta estesi su più livelli", en: "extended detection and response across layers" },
+  "XML": { obj: "3.1", it: "linguaggio di markup dei dati, bersaglio di injection", en: "data markup language, an injection target" },
+  "XOR": { obj: "1.4", it: "operazione logica alla base di molti cifrari", en: "logical operation underlying many ciphers" },
 };
 
-const keyOf = (acronym: string) => `AcronymAppendix_${acronym.replace(/[^A-Za-z0-9]+/g, "_")}`;
-const LEGACY = new Set(["IDEA", "POTS", "RACE", "RIPEMD", "SHTTP"]);
+/** The SY0-701 objective where an appendix acronym is primarily studied. */
+export const acronymObjective = (acronym: string): string => ACRONYM_META[acronym]?.obj ?? "5.1";
 
-const distinction = (acronym: string, lang: Lang): string => {
-  if (acronym === "FTPS") return lang === "it" ? " Non confonderlo con SFTP, che usa SSH." : " Do not confuse it with SFTP, which uses SSH.";
-  if (acronym === "SoC") return lang === "it" ? " Non confonderlo con SOC, il Security Operations Center." : " Do not confuse it with SOC, the Security Operations Center.";
-  if (acronym === "SHTTP") return lang === "it" ? " È storico e distinto da HTTPS/TLS." : " It is historical and distinct from HTTPS/TLS.";
-  return "";
+/** The domain (1–5) derived from the acronym's primary objective. */
+export const acronymAppendixDomain = (acronym: string): number => Number(acronymObjective(acronym)[0]);
+
+const GROUP_DESCRIPTION: Record<Lang, (obj: string) => string> = {
+  it: (obj) => `Sigle della Acronym List ufficiale SY0-701 collegate all'obiettivo ${obj}, ricercabili e disponibili come flashcard.`,
+  en: (obj) => `Official SY0-701 Acronym List entries tied to objective ${obj}, searchable and available as flashcards.`,
 };
+
+const groupTitle = (lang: Lang, obj: string): string =>
+  lang === "it" ? `Appendice sigle (Obj ${obj})` : `Acronym appendix (Obj ${obj})`;
+
+const capitalize = (text: string): string => (text ? text.charAt(0).toUpperCase() + text.slice(1) : text);
+
+const analysis = (acronym: string, expansion: string, meta: AcronymMeta, lang: Lang): string =>
+  lang === "it"
+    ? `${expansion} (${acronym}) si collega all'obiettivo ${meta.obj}; distingui il nome esteso dalla funzione concreta descritta nello scenario. **Piccolo Esempio Concentrato:** quando una domanda cita ${acronym}, leggila ricordando che è ${meta.it}.`
+    : `${expansion} (${acronym}) maps to objective ${meta.obj}; separate the expanded name from the concrete function the scenario describes. **Focused Mini-Example:** when a question cites ${acronym}, read it bearing in mind that it is ${meta.en}.`;
+
+const examHint = (acronym: string, expansion: string, meta: AcronymMeta, lang: Lang): string =>
+  lang === "it"
+    ? `Memorizza l'associazione esatta ${acronym} ↔ ${expansion} e l'obiettivo ${meta.obj}; poi verifica nella domanda quale funzione o rischio viene richiesto.`
+    : `Memorize the exact ${acronym} ↔ ${expansion} pairing and objective ${meta.obj}; then check which function or risk the question asks about.`;
 
 export function acronymAppendixTopics(domainId: number, lang: Lang): TopicGroup[] {
   const entries = ACRONYM_APPENDIX.filter(([acronym]) => acronymAppendixDomain(acronym) === domainId);
   if (entries.length === 0) return [];
-  return [{
-    title: GROUP_TITLE[lang][domainId],
-    description: lang === "it"
-      ? "Voci autonome della Acronym List ufficiale SY0-701, ricercabili e disponibili come flashcard."
-      : "Standalone entries from the official SY0-701 Acronym List, searchable and available as flashcards.",
-    icon: "BookOpen",
-    subtopics: entries.map(([acronym, expansion]) => ({
-      name: `${expansion} (${acronym})`,
-      checklistKey: keyOf(acronym),
-      definition: lang === "it"
-        ? `${expansion}: termine ${LEGACY.has(acronym) ? "legacy/storico " : ""}della Acronym List SY0-701 usato nel contesto di sicurezza del dominio ${domainId}.${distinction(acronym, lang)}`
-        : `${expansion}: a ${LEGACY.has(acronym) ? "legacy/historical " : ""}term in the SY0-701 Acronym List used in the security context of domain ${domainId}.${distinction(acronym, lang)}`,
-      details: lang === "it"
-        ? `La sigla ${acronym} identifica ${expansion}. Associa la sigla all'obiettivo ${OBJECTIVE[domainId]} e distingui il nome esteso dalla funzione concreta descritta nello scenario. **Piccolo Esempio Concentrato:** in una domanda d'esame, riconoscere ${acronym} permette di classificare subito la tecnologia, il ruolo o il processo citato.`
-        : `The acronym ${acronym} identifies ${expansion}. Link it to objective ${OBJECTIVE[domainId]} and distinguish the expanded name from the concrete function described by the scenario. **Focused Mini-Example:** in an exam question, recognizing ${acronym} immediately helps classify the cited technology, role, or process.`,
-      examTip: lang === "it"
-        ? `Memorizza l'associazione esatta ${acronym} ↔ ${expansion}; poi verifica nella domanda quale funzione o rischio viene richiesto.`
-        : `Memorize the exact ${acronym} ↔ ${expansion} association; then identify which function or risk the question asks about.`,
-    })),
-  }];
+  // One group per objective of this domain, so each flashcard inherits the
+  // acronym's own objective from the "(Obj X.Y)" in the group title.
+  const byObjective = new Map<string, { expansion: string; acronym: string; meta: AcronymMeta }[]>();
+  for (const [acronym, expansion] of entries) {
+    const meta = ACRONYM_META[acronym];
+    const bucket = byObjective.get(meta.obj) ?? [];
+    bucket.push({ acronym, expansion, meta });
+    byObjective.set(meta.obj, bucket);
+  }
+  return [...byObjective.keys()]
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map((obj) => ({
+      title: groupTitle(lang, obj),
+      description: GROUP_DESCRIPTION[lang](obj),
+      icon: "BookOpen",
+      subtopics: byObjective.get(obj)!.map(({ acronym, expansion, meta }) => ({
+        name: `${expansion} (${acronym})`,
+        checklistKey: `AcronymAppendix_${acronym.replace(/[^A-Za-z0-9]+/g, "_")}`,
+        definition: `${capitalize(lang === "it" ? meta.it : meta.en)}.`,
+        details: analysis(acronym, expansion, meta, lang),
+        examTip: examHint(acronym, expansion, meta, lang),
+      })),
+    }));
 }

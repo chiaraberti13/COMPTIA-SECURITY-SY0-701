@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Reworked the acronym appendix (review issue #102): each of the 236 entries now carries its own SY0-701 objective instead of one objective per domain (for example CHAP, MSCHAP, 2FA and PIV move to IAM 4.6; ECDSA, HIPS and SD-WAN leave the 5.1 catch-all for their real domains), and the definition states the term's function instead of repeating the expansion. Acronyms are grouped by objective so each flashcard inherits the right one; ATT&CK and OWASP citations follow to domain 2. A new test ties every appendix acronym to a real objective.
+- Rivista l'appendice delle sigle (issue di revisione #102): ognuna delle 236 voci porta ora il proprio obiettivo SY0-701 invece di un obiettivo unico per dominio (per esempio CHAP, MSCHAP, 2FA e PIV passano a IAM 4.6; ECDSA, HIPS e SD-WAN lasciano il contenitore 5.1 per i domini reali) e la definizione descrive la funzione del termine invece di ripeterne il nome esteso. Le sigle sono raggruppate per obiettivo così ogni flashcard eredita quello corretto; le citazioni di ATT&CK e OWASP seguono nel dominio 2. Un nuovo test lega ogni sigla dell'appendice a un obiettivo reale.
+
 - Added seven IT/EN key-establishment glossary entries, DH/ECDH/PFS flashcards, a transport-versus-agreement comparison and a compromise exercise for objective 1.4. The responsive four-step diagram has a complete text equivalent. Clarified RSA transport, TLS 1.3, peer authentication and forward-secrecy limits with NIST/RFC sources and automated coverage.
 - Aggiunte sette voci IT/EN sul key establishment, flashcard DH/ECDH/PFS, confronto trasporto/accordo ed esercizio sulla compromissione per l’obiettivo 1.4. Il diagramma a quattro passi è responsive e ha un equivalente testuale completo. Precisati trasporto RSA, TLS 1.3, autenticazione dei peer e limiti della forward secrecy con fonti NIST/RFC e test automatici.
 

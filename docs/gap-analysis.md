@@ -20,11 +20,11 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
-| 1 | 133 | 0 |
-| 2 | 95 | 0 |
-| 3 | 218 | 0 |
-| 4 | 153 | 0 |
-| 5 | 265 | 0 |
+| 1 | 157 | 0 |
+| 2 | 116 | 0 |
+| 3 | 251 | 0 |
+| 4 | 221 | 0 |
+| 5 | 119 | 0 |
 
 ## Cifre senza fonte
 
@@ -69,6 +69,8 @@ indirizzi qui sotto.
 - `1:SteganographyConcept`: [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography)
 - `1:ThreatScopeReduction`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
 - `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
+- `2:AcronymAppendix_ATT_CK`: [MITRE ATT&CK](https://attack.mitre.org/)
+- `2:AcronymAppendix_OWASP`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `2:ConfigurationEnforcement`: [SP 800-128 — Guide for Security-Focused Configuration Management](https://csrc.nist.gov/pubs/sp/800/128/upd1/final)
 - `2:CookieHeaderTampering`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
 - `2:CSRFAttack`: [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
@@ -106,8 +108,6 @@ indirizzi qui sotto.
 - `4:ThreatHuntingIR`: [MITRE ATT&CK](https://attack.mitre.org/)
 - `4:VulnerabilityAssessmentConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `4:VulnerabilityScannerRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
-- `5:AcronymAppendix_ATT_CK`: [MITRE ATT&CK](https://attack.mitre.org/)
-- `5:AcronymAppendix_OWASP`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - `5:AttestationConcept`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
 - `5:CertificateOfDestructionRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:Compliance`: [Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm); [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj); [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/); [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html)
