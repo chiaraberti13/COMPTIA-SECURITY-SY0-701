@@ -1994,7 +1994,37 @@ export const SUBTOPIC_EN: Record<number, Record<string, SubtopicOverride>> = {
     name: "Modern Cloud & Secure Access Architectures (SD-WAN, SASE, CASB, Zero Trust, SWG)",
     definition: "The modern cloud-based network and security architectural paradigms to manage distributed connectivity and secure access of remote users.",
     details: "The key technologies include:\n* **SD-WAN (Software-Defined WAN):** A software-programmable WAN architecture that intelligently routes corporate traffic by combining heterogeneous geographic connections (e.g. MPLS, broadband, 5G) to optimize costs and performance.\n* **SASE (Secure Access Service Edge):** A framework that unifies network connectivity (SD-WAN) and security functions (CASB, FWaaS, SWG, Zero Trust) into a single fully cloud-managed service.\n* **CASB (Cloud Access Security Broker):** A software control point or cloud service inserted between corporate users and cloud (SaaS) applications to monitor cloud usage, apply compliance policies, enforce data loss prevention (DLP) controls and detect anomalous access.\n* **FWaaS (Firewall as a Service):** A next-generation firewall solution delivered directly from the cloud, which eliminates the need for local hardware appliances and centralizes the security rules for all employees, including remote ones.\n* **Zero Trust:** A security philosophy summarized in the motto 'Never trust, always verify'. It assumes that any device or user, even if located within the traditional corporate perimeter, is potentially compromised, enforcing continuous authentication and minimum privileges.\n* **SWG (Secure Web Gateway):** A web security solution (on-prem or cloud) that filters users' web traffic by applying malware controls, URL filtering, SSL/TLS inspection and DLP prevention in real time.",
-    examTip: "The CASB is the go-to exam answer when you must monitor, protect and verify the compliance of corporate employees accessing external SaaS cloud applications (such as Office365 or Salesforce).",
+    examTip: "Composite entry replaced by autonomous SD-WAN, SASE, CASB, SWG and FWaaS definitions.",
+  },
+  SDWANArchitecture: {
+    name: "SD-WAN (Software-Defined Wide Area Network)",
+    definition: "Software-managed WAN connectivity architecture that selects paths among sites, cloud and the Internet according to policy and link conditions.",
+    details: "**Role:** connectivity and transport optimization, not a complete security stack. It can combine MPLS, broadband and 5G, measure latency/loss and select a path per application. It can integrate with firewalls or cloud services, but the SD-WAN name does not guarantee CASB, SWG or FWaaS.\n\n* **Focused Mini-Example:** Kestrelia routes voice over the lowest-latency link and backups over the inexpensive line; security policy remains the responsibility of separate controls.",
+    examTip: "SD-WAN = WAN connectivity and path selection. If the scenario also requires converged cloud security for users and sites, evaluate SASE.",
+  },
+  SASEArchitecture: {
+    name: "SASE (Secure Access Service Edge)",
+    definition: "An architecture that converges WAN connectivity and security services delivered from distributed points of presence, with coordinated policy and visibility.",
+    details: "**Relationship:** SASE combines the networking component, typically SD-WAN, with edge/cloud security functions such as SWG, CASB, FWaaS and ZTNA. It is an overall architecture, not one control. Catalogs, integration and delivery vary: the SASE name does not prove that a specific implementation includes every listed service or capability.\n\n* **Focused Mini-Example:** remote users and branches reach the nearest PoP; the platform applies the functions actually purchased and configured before forwarding web, SaaS or private traffic.",
+    examTip: "SASE = converged networking plus security. Always verify the real implementation's components, coverage, policies and enforcement points.",
+  },
+  CASBArchitecture: {
+    name: "CASB (Cloud Access Security Broker)",
+    definition: "A control point for visibility and policy over cloud application and service use, especially SaaS, data and user activity.",
+    details: "A CASB can discover shadow IT, assess cloud apps, enforce DLP and session policy, or use APIs to control data and configuration. Proxy, log and API modes provide different visibility. It is not synonymous with SWG: CASB governs cloud application use and data; SWG primarily inspects web traffic to sites and URLs.\n\n* **Focused Mini-Example:** Kestrelia discovers an unsanctioned SaaS and prevents confidential document downloads to unmanaged devices.",
+    examTip: "CASB = visibility and control for SaaS/cloud. Look for shadow IT, cloud apps, data and session requirements, not URL filtering alone.",
+  },
+  SWGArchitecture: {
+    name: "SWG (Secure Web Gateway)",
+    definition: "A gateway that applies policy to users' web traffic, blocking risky destinations, content and downloads before Internet access.",
+    details: "An SWG can provide URL filtering, antimalware analysis, authorized TLS inspection and DLP on the web channel. It may be an appliance, cloud service or SSE/SASE component. It does not automatically replace a CASB: controlling a web request is not the same as governing data, configuration and internal activity in a SaaS application through APIs.\n\n* **Focused Mini-Example:** Kestrelia blocks malicious site categories and analyzes a browser download; governance of files already in SaaS remains with the CASB.",
+    examTip: "SWG = web traffic, URLs and content. CASB = cloud application use and data; platforms may integrate both, but their roles remain distinct.",
+  },
+  FWaaSArchitecture: {
+    name: "FWaaS (Firewall as a Service)",
+    definition: "Firewall capability delivered as a cloud service to apply network policy to distributed users, sites and workloads without relying only on local appliances.",
+    details: "FWaaS describes a delivery mode: traffic or tunnels reach cloud enforcement points that apply firewall rules and, depending on the product, additional functions. It does not mean every NGFW, SWG or CASB function is included. It may be standalone or a component of SSE/SASE.\n\n* **Focused Mini-Example:** a branch sends non-web traffic to a cloud PoP, where FWaaS applies uniform network rules; SWG handles web browsing separately.",
+    examTip: "FWaaS = firewall delivered from the cloud. The service model does not guarantee the whole SASE catalog or remove the need to verify purchased flows and functions.",
   },
   TLSTerminationOffload: {
     name: "TLS Termination & SSL Offload",

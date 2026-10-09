@@ -349,13 +349,15 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 26. SD-WAN, SASE, CASB, SWG e FWaaS
 
-- [ ] Separare le definizioni canoniche della voce composita `ModernCloudNetArchitectures` e collegarle alla guida del Dominio 3 (obiettivo 3.2).
+- [x] Separare le definizioni canoniche della voce composita `ModernCloudNetArchitectures` e collegarle alla guida del Dominio 3 (obiettivo 3.2).
 
 **Evidenza nel repository:** Le cinque spiegazioni esistono nella stessa voce: l'attività riguarda reperibilità e relazioni, non l'invenzione di contenuti mancanti. Il confronto deve distinguere componenti di connettività e servizi di sicurezza.
 
 **Da realizzare:** dare a ogni acronimo una voce autonoma e riutilizzare i contenuti; chiarire architettura complessiva, componenti e modalità di erogazione. Disambiguare SWG e CASB per web/SaaS; non assumere che ogni implementazione includa tutti i servizi citati nel confronto.
 
 **Accettazione:** ricerca di ogni acronimo porta alla propria definizione e ai rimandi; niente duplicati in glossario o flashcard. Fonti: documentazione primaria delle architetture adottate e fonti istituzionali pertinenti.
+
+**Completato (2026-10-09):** create cinque voci autonome IT/EN (`SDWANArchitecture`, `SASEArchitecture`, `CASBArchitecture`, `SWGArchitecture`, `FWaaSArchitecture`) con ruoli, relazioni ed esempi distinti. La voce composita resta solo come ID deprecato e viene esclusa da glossario, flashcard e studio, evitando duplicati. Chiariti connettività rispetto a sicurezza, SWG rispetto a CASB e variabilità del catalogo SASE; guida 3.2 e fonti Cisco/Microsoft aggiornate. Test dedicati verificano reperibilità, unicità e parità.
 
 ### 27. Agente persistente, dissolvibile e agentless nel NAC
 

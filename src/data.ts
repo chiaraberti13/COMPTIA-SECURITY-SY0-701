@@ -2155,7 +2155,38 @@ export const DOMAIN_3_TOPICS: TopicGroup[] = [
         checklistKey: "ModernCloudNetArchitectures",
         definition: "I moderni paradigmi architetturali di rete e sicurezza basati sul cloud per gestire connettività distribuita e accessi sicuri di utenti remoti.",
         details: "Le tecnologie chiave comprendono:\n* **SD-WAN (Software-Defined WAN):** Architettura WAN programmabile tramite software che instrada in modo intelligente il traffico aziendale combinando connessioni geografiche eterogenee (es. MPLS, banda larga, 5G) per ottimizzare costi e performance.\n* **SASE (Secure Access Service Edge):** Framework che unifica connettività di rete (SD-WAN) e funzionalità di sicurezza (CASB, FWaaS, SWG, Zero Trust) in un unico servizio interamente gestito in cloud.\n* **CASB (Cloud Access Security Broker):** Un punto di controllo software o servizio cloud inserito tra gli utenti aziendali e le applicazioni cloud (SaaS) per monitorare l'uso del cloud, applicare policy di conformità, applicare controlli di prevenzione della perdita di dati (DLP) e rilevare accessi anomali.\n* **FWaaS (Firewall as a Service):** Soluzione firewall di nuova generazione erogata direttamente dal cloud, che elimina la necessità di apparati hardware locali e centralizza le regole di sicurezza per tutti i dipendenti, inclusi quelli remoti.\n* **Zero Trust:** Filosofia di sicurezza riassunta nel motto 'Never trust, always verify'. Presume che qualsiasi dispositivo o utente, anche se situato all'interno del perimetro aziendale tradizionale, sia potenzialmente compromesso, imponendo autenticazione continua e privilegi minimi.\n* **SWG (Secure Web Gateway):** Una soluzione di sicurezza web (on-prem o cloud) che filtra il traffico web degli utenti applicando controlli di malware, URL filtering, ispezione SSL/TLS e prevenzione DLP in tempo reale.",
-        examTip: "Il CASB è la risposta d'esame per eccellenza quando si deve monitorare, proteggere e verificare la conformità di dipendenti aziendali che accedono ad applicazioni cloud SaaS esterne (come Office365 o Salesforce)."
+        examTip: "Voce composita sostituita dalle definizioni autonome SD-WAN, SASE, CASB, SWG e FWaaS.",
+        deprecated: { since: "2026-10-09", reason: "Sostituita da cinque voci autonome per evitare duplicati nel glossario e nelle flashcard." }
+      },
+      {
+        name: "SD-WAN (Software-Defined Wide Area Network)", checklistKey: "SDWANArchitecture",
+        definition: "Architettura di connettività WAN gestita via software che seleziona i percorsi tra sedi, cloud e Internet secondo policy e condizioni dei collegamenti.",
+        details: "**Ruolo:** connettività e ottimizzazione del trasporto, non uno stack di sicurezza completo. Può combinare MPLS, banda larga e 5G, misurare latenza/perdita e scegliere il percorso per applicazione. Può integrarsi con firewall o servizi cloud, ma il nome SD-WAN non garantisce CASB, SWG o FWaaS.\n\n* **Piccolo Esempio Concentrato:** Kestrelia instrada la voce sul collegamento con minore latenza e i backup sulla linea economica; le policy di sicurezza restano responsabilità di controlli separati.",
+        examTip: "SD-WAN = connettività WAN e scelta del percorso. Se lo scenario richiede anche sicurezza cloud convergente per utenti e sedi, valuta SASE."
+      },
+      {
+        name: "SASE (Secure Access Service Edge)", checklistKey: "SASEArchitecture",
+        definition: "Architettura che converge connettività WAN e servizi di sicurezza erogati da punti di presenza distribuiti, con policy e visibilità coordinate.",
+        details: "**Relazione:** SASE combina la componente di rete, tipicamente SD-WAN, con funzioni di sicurezza edge/cloud quali SWG, CASB, FWaaS e ZTNA. È un'architettura complessiva, non un singolo controllo. Cataloghi, integrazione e modalità di erogazione variano: il nome SASE non dimostra che una specifica implementazione includa ogni servizio o capacità citata.\n\n* **Piccolo Esempio Concentrato:** utenti remoti e filiali raggiungono il PoP più vicino; la piattaforma applica le funzioni effettivamente acquistate e configurate prima di inoltrare traffico web, SaaS o privato.",
+        examTip: "SASE = networking più sicurezza convergente. Verifica sempre componenti, copertura, policy e punti di enforcement dell'implementazione reale."
+      },
+      {
+        name: "CASB (Cloud Access Security Broker)", checklistKey: "CASBArchitecture",
+        definition: "Punto di controllo per visibilità e policy sull'uso di applicazioni e servizi cloud, in particolare SaaS, dati e attività degli utenti.",
+        details: "Un CASB può scoprire shadow IT, valutare applicazioni cloud, applicare DLP e policy di sessione o usare API per controllare dati e configurazioni. Le modalità proxy, log e API offrono visibilità diversa. Non è sinonimo di SWG: il CASB governa l'uso delle applicazioni cloud e dei loro dati; lo SWG ispeziona soprattutto il traffico web verso siti e URL.\n\n* **Piccolo Esempio Concentrato:** Kestrelia rileva un SaaS non approvato e impedisce il download di documenti riservati su dispositivi non gestiti.",
+        examTip: "CASB = visibilità e controllo di SaaS/cloud. Cerca requisiti su shadow IT, app cloud, dati e sessioni, non il solo filtraggio URL."
+      },
+      {
+        name: "SWG (Secure Web Gateway)", checklistKey: "SWGArchitecture",
+        definition: "Gateway che applica policy al traffico web degli utenti, bloccando destinazioni, contenuti e download rischiosi prima dell'accesso a Internet.",
+        details: "Uno SWG può offrire URL filtering, analisi antimalware, ispezione TLS quando autorizzata e DLP sul canale web. Può essere appliance, servizio cloud o componente di SSE/SASE. Non sostituisce automaticamente un CASB: controllare una richiesta web non equivale a governare via API dati, configurazioni e attività interne a un'applicazione SaaS.\n\n* **Piccolo Esempio Concentrato:** Kestrelia blocca categorie di siti malevoli e analizza un download dal browser; la governance dei file già presenti nel SaaS resta al CASB.",
+        examTip: "SWG = traffico web, URL e contenuti. CASB = uso e dati delle applicazioni cloud; alcune piattaforme integrano entrambi, ma i ruoli restano distinti."
+      },
+      {
+        name: "FWaaS (Firewall as a Service)", checklistKey: "FWaaSArchitecture",
+        definition: "Funzionalità firewall erogata come servizio cloud per applicare policy di rete a utenti, sedi e carichi distribuiti senza dipendere solo da appliance locali.",
+        details: "FWaaS descrive una modalità di erogazione: traffico o tunnel raggiungono punti di enforcement cloud che applicano regole firewall e, secondo il prodotto, ulteriori funzioni. Non significa che ogni funzione NGFW, SWG o CASB sia inclusa. Può essere autonomo oppure un componente di SSE/SASE.\n\n* **Piccolo Esempio Concentrato:** una filiale invia il traffico non web al PoP cloud, dove FWaaS applica regole di rete uniformi; lo SWG gestisce separatamente la navigazione web.",
+        examTip: "FWaaS = firewall erogato dal cloud. La modalità di servizio non garantisce l'intero catalogo SASE né elimina la necessità di verificare flussi e funzioni acquistate."
       },
       {
         name: "TLS Termination & SSL Offload",

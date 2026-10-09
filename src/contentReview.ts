@@ -12,6 +12,8 @@ export interface Source {
 export const SOURCES = {
   ciscoIsePosture: { title: "Cisco ISE 3.4 — Compliance", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/td/docs/security/ise/3-4/admin_guide/b_ise_admin_3_4/b_ISE_admin_compliance.html", kind: "reference" },
   ciscoEolPolicy: { title: "Cisco — End-of-Life Policy", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/products/eos-eol-policy.html", kind: "reference" },
+  ciscoSase: { title: "Cisco — What Is SASE?", publisher: "Cisco", url: "https://www.cisco.com/site/us/en/learn/topics/security/what-is-secure-access-service-edge-sase.html", kind: "reference" },
+  microsoftDefenderCloudApps: { title: "Microsoft Defender for Cloud Apps overview", publisher: "Microsoft Learn", url: "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps", kind: "reference" },
   ciscoIseAgentless: { title: "Cisco ISE — Configure Posture Agentless", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/222260-configure-posture-agentless.html", kind: "reference" },
   tenableCredentialedChecks: { title: "Tenable Nessus Credentialed Checks", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/NessusCredentialedChecks.htm", kind: "reference" },
   tenablePluginRules: { title: "Tenable Nessus Plugin Rules", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/PluginRules.htm", kind: "reference" },
@@ -113,7 +115,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
   "2.4": mapped("icannHijacking", "icannProtection", "icannLocks", "rfc4033", "ieee80211", "wifiAlliance", "nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
   "2.5": mapped("nist80053", "cisControls"),
   "3.1": mapped("nist800145", "nist800207"),
-  "3.2": mapped("rfc4301", "rfc7296", "netgateOpenvpnMode", "nist800207", "ieee80211", "wifiAlliance", "cisControls"),
+  "3.2": mapped("ciscoSase", "microsoftDefenderCloudApps", "rfc4301", "rfc7296", "netgateOpenvpnMode", "nist800207", "ieee80211", "wifiAlliance", "cisControls"),
   "3.3": mapped("nist80057", "gdpr"),
   "3.4": mapped("nist80034"),
   "4.1": mapped("ciscoWpa3Modes", "ieee8021x", "rfc3748", "microsoftPeap", "nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),

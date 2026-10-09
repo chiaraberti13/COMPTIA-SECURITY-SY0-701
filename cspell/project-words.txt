@@ -457,3 +457,4 @@ equiparare
 ordinabile
 riaprono
 trascorsa
+acquistate

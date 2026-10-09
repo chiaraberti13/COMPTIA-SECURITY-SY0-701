@@ -13,7 +13,7 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 618 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 622 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
@@ -22,7 +22,7 @@ esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello i
 |---|---|---|
 | 1 | 116 | 0 |
 | 2 | 85 | 0 |
-| 3 | 182 | 0 |
+| 3 | 186 | 0 |
 | 4 | 137 | 0 |
 | 5 | 98 | 0 |
 
