@@ -11,14 +11,15 @@
 
 ## Stato della revisione — 2026-10-09
 
-**Esito complessivo: ✅ con una nota.** Tutti i gate automatici sono verdi e non
-sono stati trovati difetti rotti, regressioni o vulnerabilità. In questa revisione
-sono state applicate le correzioni di accuratezza dei contenuti: l'appendice sigle è
-stata riscritta con objective code per voce e definizioni funzionali (issue
-[#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102),
-chiusa). Resta aperta una sola attività — l'irrobustimento del metodo di misura della
-copertura bilingue (issue
+**Esito complessivo: ✅.** Tutti i gate automatici sono verdi e non sono stati
+trovati difetti rotti, regressioni o vulnerabilità. In questa revisione sono state
+applicate e completate entrambe le correzioni di accuratezza dei contenuti:
+l'appendice sigle riscritta con objective code per voce e definizioni funzionali
+(issue [#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102))
+e l'irrobustimento del metodo di misura della copertura bilingue, ora provata in
+entrambe le lingue (issue
 [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103)).
+Entrambe chiuse. Nessuna issue di revisione aperta.
 
 Base della revisione: `main` a `4d16e79`. Nessuna routine di sviluppo attiva
 all'avvio (ultimo commit > 30 minuti).
@@ -46,7 +47,7 @@ e validati in CI.
 
 | Lente | Esito | Note |
 |---|---|---|
-| Contenuti e didattica (Security+ / instructional / traduttore) | ✅ | Copertura obiettivi 249/249 e acronimi 329/329 al 100%; parità IT/EN verde. Appendice sigle corretta (objective code per voce + definizioni funzionali, #102). Resta da irrobustire il metodo di misura della copertura bilingue (#103). |
+| Contenuti e didattica (Security+ / instructional / traduttore) | ✅ | Copertura obiettivi **249/249 provata in entrambe le lingue** (#103) e acronimi 329/329 al 100%; parità IT/EN verde. Appendice sigle corretta (objective code per voce + definizioni funzionali, #102). |
 | Codice ed efficienza (dev / performance) | ✅ | `typecheck`, `lint`, `lint:md` verdi; nessun errore rilevato. Bundle dataset grande ma lazy-split e precompresso (Brotli). |
 | Sicurezza e supply-chain (DevSecOps / privacy) | ✅ | `npm audit` prod+dev: **0 vulnerabilità**. Nessun segreto nel codice. Nessun `</script>` pericoloso in template literal. Dependabot con cooldown 7 giorni attivo. |
 | Accessibilità, UX e visual (a11y / UX / visual) | ✅ | Controlli axe nei test E2E (`@axe-core/playwright`) verdi; navigazione da tastiera testata su desktop e mobile. |
@@ -71,34 +72,28 @@ e validati in CI.
   nel dominio 2 (`src/citations.ts`). Nuovo test `tests/acronymAppendix.test.ts` lega
   ogni sigla a un obiettivo SY0-701 valido. 20 forme italiane corrette aggiunte al
   vocabolario `cspell/`.
+- **Copertura obiettivi provata in entrambe le lingue (#103) — risolta.**
+  `scripts/objective-coverage.ts` ora conta una sotto-voce come spiegata solo se
+  reperibile **sia in IT sia in EN** (`every` invece di `some`); `mentions()` tollera
+  i plurali inglesi e le forme flesse italiane sono portate come sinonimi, così si
+  eliminano i falsi negativi (es. `firewall log` ↔ «firewall logs», `nuova scansione`,
+  `withdrawal of the operating license`, `committee`/`board` per le strutture di
+  governance). Nessun contenuto inventato: per le 16 voci che fallivano il confronto
+  bilingue è stata aggiunta la formulazione realmente presente nella lingua mancante.
+  La copertura resta **249/249** con la regola più severa.
 
 ## Errori di contenuto noti (tracciati)
 
-- **Metodo di misura della copertura bilingue** (#103): investigato in questa
-  revisione. Irrigidire il match a «entrambe le lingue» (`every` invece di `some`)
-  fa emergere ~16 voci che falliscono il confronto; verificato che la maggioranza
-  sono **artefatti del match** (sinonimo singolare vs testo plurale, es.
-  `geographic restriction` contro «restrictions», per via dei confini di parola),
-  non veri buchi di contenuto, più poche voci realmente presenti in una sola lingua
-  (es. *Independent third-party audit* lato IT). Correzione corretta = rendere il
-  confronto robusto (plurali/stemming) e colmare le poche voci monolingua, senza
-  indebolire il traguardo 249/249 né i test. Resta issue (tooling + contenuto).
+Nessuno aperto. Le due attività di accuratezza della revisione (#102, #103) sono
+risolte e verificate; la cronologia resta in Git e nel CHANGELOG.
 
 ## Issue aperte
 
-| # | Titolo | Tipo | Priorità |
-|---|---|---|---|
-| [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103) | Copertura esaustiva bilingue: match da irrobustire (plurali/stemming) e poche voci monolingua | tooling / contenuto | P2 |
+Nessuna issue di revisione aperta.
 
 ## Backlog per priorità
 
-1. **P2 — Robustezza del match di copertura obiettivi (#103).** Rendere `mentions()`
-   tollerante a plurali e forme flesse (o normalizzare i sinonimi), poi passare a
-   evidenza per voce *e* lingua; colmare le poche voci realmente monolingua
-   (es. *Independent third-party audit* IT). Mantenere verde il traguardo di
-   copertura. In prospettiva: inventario versionato derivato dal PDF ufficiale come
-   denominatore completo. Stima: media/grande (tooling + poche voci di contenuto).
-2. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
+1. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
    quando Dependabot aprirà le PR (cooldown 7 giorni) e l'ecosistema sarà pronto:
    - `typescript` 5.8 → 7.0 (compilatore nativo): attendere il supporto di
      `typescript-eslint`, `vite` e `vitest`; migrazione pianificata, non in-range.
@@ -115,7 +110,7 @@ e validati in CI.
 |---|---|---|---|
 | Domande attive | 682 | 682 | D1 110 · D2 133 · D3 112 · D4 185 · D5 142 |
 | Obiettivi coperti da domande | 28/28 | 28/28 | 100% |
-| Sotto-voci di obiettivo spiegate | 249/249 | 249/249 | 100% (vedi #103 per il metodo) |
+| Sotto-voci di obiettivo spiegate | 249/249 (una lingua) | 249/249 (IT **e** EN) | regola bilingue più severa (#103) |
 | Sigle della Acronym List coperte | 329/329 | 329/329 | deck di 366 flashcard |
 | Objective code per sigla d'appendice | 1 per dominio (errato) | 1 per voce (236/236) | mappa `ACRONYM_META` |
 | Guide di dominio | 5/5 | 5/5 | 46 esercizi guidati |
@@ -124,7 +119,7 @@ e validati in CI.
 | Test E2E | 163 + 1 skip (12 spec) | 163 + 1 skip | desktop + mobile, tutti verdi |
 | Bundle (gzip) | index 274 KB · vendor 124 KB · dataset IT 784 KB · dataset EN 720 KB | invariato | dataset lazy-split, precompressi Brotli |
 | Vulnerabilità `npm audit` (prod+dev) | 0 | 0 | — |
-| Issue aperte | 3 (#102, #103, #104) | 1 (#103) | #104 e #102 chiuse |
+| Issue aperte | 3 (#102, #103, #104) | 0 | #104, #102 e #103 chiuse |
 
 ## Argomenti già coperti nelle spiegazioni
 

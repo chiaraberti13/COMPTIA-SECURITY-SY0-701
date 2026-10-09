@@ -3,9 +3,12 @@
  * SY0-701 objectives (1.1–5.6) and whether the app *explains* it — not merely
  * lists it. The content checked is the glossary (entry name, definition,
  * details, exam tip) and the domain guides' teaching text (decision patterns,
- * connections, traps, practice scenarios, comparisons, acronym tables), in IT
- * and EN. The objectives' own `keyTopics`/`outcome` are excluded on purpose: a
- * term that appears only there is listed, not taught.
+ * connections, traps, practice scenarios, comparisons, acronym tables). A
+ * sub-topic counts as explained only when it is referenceable in BOTH languages
+ * (issue #103): `mentions()` must find a synonym in the Italian teaching text
+ * AND in the English one — a single-language match no longer suffices. The
+ * objectives' own `keyTopics`/`outcome` are excluded on purpose: a term that
+ * appears only there is listed, not taught.
  *
  * Deterministic output (no dates), so tests/objectiveCoverage.test.ts fails CI
  * when the committed file is stale or coverage regresses. The list of uncovered
@@ -28,7 +31,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
   "1.1": [
     { term: "Deterrent control", match: ["deterrent", "deterrente"] },
     { term: "Compensating control", match: ["compensating", "compensativo"] },
-    { term: "Directive control", match: ["directive control", "controllo direttivo", "direttivo", "direttiva"] },
+    { term: "Directive control", match: ["directive control", "directive administrative", "controllo direttivo", "direttivo", "direttiva"] },
   ],
   "1.2": [
     { term: "Adaptive identity", match: ["adaptive identity", "identità adattiva"] },
@@ -58,7 +61,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Blockchain", match: ["blockchain"] },
     { term: "Open public ledger", match: ["public ledger", "registro pubblico", "libro mastro"] },
     { term: "Salting", match: ["salting"] },
-    { term: "Key length", match: ["key length", "lunghezza della chiave"] },
+    { term: "Key length", match: ["key length", "256 bit", "lunghezza della chiave"] },
   ],
   "2.1": [
     { term: "Unskilled attacker", match: ["unskilled", "script kiddie", "inesperto"] },
@@ -124,13 +127,13 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "RTOS", match: ["real-time operating system"] },
     { term: "Embedded systems", match: ["embedded", "integrati"] },
     { term: "Responsibility matrix", match: ["responsibility matrix", "matrice di responsabilità"] },
-    { term: "Risk transference", match: ["risk transference", "trasferimento del rischio"] },
+    { term: "Risk transference", match: ["risk transference", "risk transfer", "trasferimento del rischio"] },
   ],
   "3.2": [
     { term: "Jump server", match: ["jump server"] },
     { term: "Proxy server", match: ["proxy server"] },
     { term: "Fail-open/closed", match: ["fail-open", "fail-closed", "fail open", "fail closed"] },
-    { term: "Tap/monitor", match: ["tap/monitor", "port mirror", "tap mode"] },
+    { term: "Tap/monitor", match: ["tap/monitor", "port mirror", "tap mode", "mirroring", "monitoraggio passivo"] },
     { term: "WAF", match: ["web application firewall"] },
     { term: "UTM", match: ["unified threat"] },
     { term: "NGFW", match: ["next-generation firewall"] },
@@ -176,8 +179,8 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Sandboxing", match: ["sandbox"] },
   ],
   "4.2": [
-    { term: "Acquisition/procurement", match: ["procurement", "acquisizione", "approvvigionamento"] },
-    { term: "Assignment/accounting", match: ["assignment/accounting", "assegnazione"] },
+    { term: "Acquisition/procurement", match: ["procurement", "acquisition phase", "acquisizione", "approvvigionamento"] },
+    { term: "Assignment/accounting", match: ["assignment/accounting", "assignment of devices", "assegnazione"] },
     { term: "Inventory", match: ["inventory", "inventario"] },
     { term: "Enumeration asset", match: ["enumeration", "enumerazione"] },
     { term: "Sanitization", match: ["sanitization", "sanitizzazione"] },
@@ -196,7 +199,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "False positive", match: ["false positive", "falso positivo"] },
     { term: "Exposure factor", match: ["exposure factor", "fattore di esposizione"] },
     { term: "Compensating controls remediation", match: ["compensating control", "controllo compensativo"] },
-    { term: "Rescanning", match: ["rescan"] },
+    { term: "Rescanning", match: ["rescan", "nuova scansione", "riscansione"] },
   ],
   "4.4": [
     { term: "Log aggregation", match: ["log aggregation", "aggregazione dei log"] },
@@ -242,7 +245,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Time-of-day restrictions", match: ["time-of-day", "restrizioni orarie"] },
     { term: "Biometrics", match: ["biometric"] },
     { term: "Security keys", match: ["security key", "chiave di sicurezza"] },
-    { term: "Passwordless", match: ["passwordless", "senza password"] },
+    { term: "Passwordless", match: ["passwordless", "without a password", "senza password"] },
     { term: "JIT permissions", match: ["just-in-time"] },
     { term: "Password vaulting", match: ["password vaulting", "password vault", "cassaforte delle password", "vault delle password"] },
     { term: "Ephemeral credentials", match: ["ephemeral credential", "ephemeral", "credenziali effimere", "credenziali temporanee"] },
@@ -267,7 +270,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Preservation forensic", match: ["preservation", "preservazione"] },
   ],
   "4.9": [
-    { term: "Firewall logs", match: ["firewall log"] },
+    { term: "Firewall logs", match: ["firewall log", "log del firewall"] },
     { term: "Endpoint logs", match: ["endpoint log", "log degli endpoint", "log dell'endpoint", "log degli endpoint"] },
     { term: "OS-specific logs", match: ["os-specific", "log del sistema operativo"] },
     { term: "Packet captures", match: ["packet capture", "cattura dei pacchetti"] },
@@ -278,7 +281,7 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "SDLC policy", match: ["SDLC", "software development lifecycle", "secure development lifecycle", "ciclo di vita dello sviluppo", "ciclo di vita di sviluppo"] },
     { term: "Playbooks", match: ["playbook"] },
     { term: "Onboarding/offboarding", match: ["onboarding", "offboarding"] },
-    { term: "Governance structures", match: ["governance structure", "struttura di governance", "comitati"] },
+    { term: "Governance structures", match: ["governance structure", "committee", "board", "struttura di governance", "comitati", "consiglio"] },
     { term: "Data owners", match: ["data owner", "titolare dei dati"] },
     { term: "Data custodians", match: ["custodian", "custode"] },
   ],
@@ -312,11 +315,11 @@ export const OBJECTIVE_TERMS: Readonly<Record<string, ReadonlyArray<ObjectiveTer
     { term: "Right to be forgotten", match: ["right to be forgotten", "diritto all'oblio"] },
     { term: "Controller vs processor", match: ["controller", "titolare del trattamento"] },
     { term: "Data subject", match: ["data subject", "interessato"] },
-    { term: "Loss of license", match: ["loss of license", "perdita della licenza", "revoca della licenza", "perdita di licenza"] },
+    { term: "Loss of license", match: ["loss of license", "withdrawal of the operating license", "perdita della licenza", "revoca della licenza", "perdita di licenza"] },
   ],
   "5.5": [
     { term: "Self-assessments", match: ["self-assessment", "autovalutazione"] },
-    { term: "Independent third-party audit", match: ["third-party audit", "indipendente di terza parte"] },
+    { term: "Independent third-party audit", match: ["third-party audit", "revisore indipendente", "indipendente di terza parte"] },
     { term: "Known environment", match: ["known environment", "ambiente noto"] },
     { term: "Unknown environment", match: ["unknown environment", "ambiente sconosciuto"] },
     { term: "Passive reconnaissance", match: ["passive reconnaissance", "ricognizione passiva"] },
@@ -340,9 +343,15 @@ const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\
 /** Drop Markdown emphasis so a phrase matches across `**bold**` and `*italic*`. */
 const stripEmphasis = (text: string): string => text.replace(/[*`_]/g, "");
 
-/** Whole-token / whole-phrase match, case-insensitive, Unicode-aware boundaries. */
+/**
+ * Whole-token / whole-phrase match, case-insensitive, Unicode-aware boundaries.
+ * An optional English plural suffix (`s`/`es`) is tolerated on the phrase end so
+ * a singular synonym still matches the content's plural ("bollard" ↔ "bollards",
+ * "firewall log" ↔ "firewall logs"); Italian plurals change the stem, so those
+ * forms are carried explicitly in the synonym list instead (issue #103).
+ */
 const mentions = (text: string, phrase: string): boolean =>
-  new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(phrase)}(?![\\p{L}\\p{N}])`, "iu").test(text);
+  new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(phrase)}(?:e?s)?(?![\\p{L}\\p{N}])`, "iu").test(text);
 
 /**
  * The teaching content of one language: glossary entries plus the guides'
@@ -391,12 +400,16 @@ export function objectiveCoverage(): ObjectiveCoverage {
   for (const [code, terms] of Object.entries(OBJECTIVE_TERMS)) {
     for (const { term, match } of terms) {
       total += 1;
-      const inEntry = match.some((m) => LANGS.some((l) => mentions(teachByLang[l], m)));
+      // Explained means explained in BOTH languages (issue #103): a sub-topic
+      // referenceable in only one language is not covered for every learner, so
+      // a single-language match no longer counts. Matching tolerates English
+      // plurals and carries Italian inflected forms as synonyms.
+      const inEntry = LANGS.every((l) => match.some((m) => mentions(teachByLang[l], m)));
       if (inEntry) {
         covered += 1;
         continue;
       }
-      const inQuiz = match.some((m) => LANGS.some((l) => mentions(quizByLang[l], m)));
+      const inQuiz = LANGS.every((l) => match.some((m) => mentions(quizByLang[l], m)));
       missing.push({ code, term, where: inQuiz ? "quizOnly" : "absent" });
     }
   }
@@ -430,16 +443,19 @@ export function renderObjectiveCoverage(): string {
     "",
     "<!-- Generato da scripts/objective-coverage.ts: non modificare a mano, esegui `npm run objective-coverage`. -->",
     "",
-    "Ogni sotto-argomento curato degli obiettivi ufficiali (1.1–5.6) e dove l'app lo **spiega**. Il",
-    "contenuto di riferimento è il glossario (nome, definizione, dettagli, exam tip) e il testo didattico",
-    "delle guide (decision pattern, collegamenti, trappole, scenari, confronti, tabelle degli acronimi),",
-    "in IT ed EN. I `keyTopics` e gli `outcome` degli obiettivi sono esclusi apposta: un termine che",
-    "compare solo lì è elencato, non spiegato. Per le voci non ancora nel glossario/guida si distingue se",
-    "sono comunque spiegate in una **domanda** del quiz (da promuovere a voce ricercabile) o **assenti**",
-    "del tutto (gap di contenuto). L'elenco può solo accorciarsi; l'obiettivo è zero.",
+    "Ogni sotto-argomento curato degli obiettivi ufficiali (1.1–5.6) e dove l'app lo **spiega in",
+    "entrambe le lingue**. Il contenuto di riferimento è il glossario (nome, definizione, dettagli, exam",
+    "tip) e il testo didattico delle guide (decision pattern, collegamenti, trappole, scenari, confronti,",
+    "tabelle degli acronimi). Una voce conta come spiegata solo se è reperibile **sia in italiano sia in",
+    "inglese** (non basta una sola lingua): il match tollera i plurali inglesi e porta le forme flesse",
+    "italiane come sinonimi. I `keyTopics` e gli `outcome` degli obiettivi sono esclusi apposta: un",
+    "termine che compare solo lì è elencato, non spiegato. Per le voci non ancora nel glossario/guida si",
+    "distingue se sono comunque spiegate in una **domanda** del quiz (da promuovere a voce ricercabile) o",
+    "**assenti** del tutto (gap di contenuto). L'elenco può solo accorciarsi; l'obiettivo è zero.",
     "",
     "> **English summary.** Each curated sub-topic of the official SY0-701 objectives and where the app",
-    "> *teaches* it: a referenceable glossary entry / guide passage, only a quiz explanation, or nowhere.",
+    "> *teaches* it **in both languages**: it counts as covered only when a referenceable glossary entry",
+    "> or guide passage exists in Italian *and* in English (a single-language match no longer suffices).",
     "> Generated by `scripts/objective-coverage.ts`; `tests/objectiveCoverage.test.ts` keeps it current",
     "> and the list of not-yet-referenceable sub-topics can only shrink.",
     "",
