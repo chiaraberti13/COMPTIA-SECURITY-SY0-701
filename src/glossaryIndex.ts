@@ -52,6 +52,7 @@ export function acronymsOf(term: string): string[] {
   const clean = term.trim();
   const found = new Set<string>();
   if (isAcronym(clean)) found.add(clean);
+  if (clean.startsWith("GDPR (")) found.add("GDPR");
   for (const match of clean.matchAll(IN_PARENTHESES)) if (isAcronym(match[1])) found.add(match[1]);
   // CompTIA prints the official token with a space, while the established
   // industry spelling and the existing glossary entry use a hyphen.
