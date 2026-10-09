@@ -395,11 +395,13 @@ Le PBQ attuali coprono rilascio dei certificati (101), change management (102), 
 
 ### 30. Quiz su IAM, hardening e responsabilità normative
 
-- [ ] Aggiungere almeno otto domande originali: due su SAML/OAuth/OIDC, due su SELinux/MAC/UAC, due su EOL/EOSL e supporto esteso, due su ambito e distinzione legge/standard di SOX/GLBA/HIPAA/PCI DSS.
+- [x] Aggiungere almeno otto domande originali: due su SAML/OAuth/OIDC, due su SELinux/MAC/UAC, due su EOL/EOSL e supporto esteso, due su ambito e distinzione legge/standard di SOX/GLBA/HIPAA/PCI DSS.
 
 **Evidenza nel repository:** I quesiti esistenti, fra cui 40218 su SAML, non esauriscono le distinzioni delle attività 12–14 e 24. Per le norme, evitare quesiti mnemonici su sanzioni storiche.
 
 **Accettazione:** gli otto quesiti verificano decisioni e concetti distinti; OAuth resta autorizzazione delegata, UAC non diventa sandbox, la cessazione del supporto dipende dalla policy dichiarata. Fonti primarie normative controllate alla data di implementazione. Nessuna domanda aggiunta prima del materiale didattico necessario a risolverla.
+
+**Completato (2026-10-09):** aggiunti otto quesiti applicativi IT/EN: OIDC/OAuth e token d'identità/accesso, OAuth come autorizzazione delegata distinta da SAML; SELinux MAC sopra DAC e UAC come elevazione non sandbox; interpretazione di EOL/EOS/LDOS secondo la policy del produttore e limiti del supporto esteso; ambito di SOX/GLBA e sovrapposizione HIPAA/PCI DSS, chiarendo che PCI DSS è uno standard di settore. Verificate le fonti primarie SEC, FTC, HHS e PCI SSC e aggiunti test su parità, struttura, mappatura e distinzioni richieste.
 
 ## Estensione dell'audit — confronto con il PDF ufficiale degli obiettivi SY0-701
 

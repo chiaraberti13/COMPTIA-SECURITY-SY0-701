@@ -28,6 +28,10 @@ import {
   DOMAIN_2_ATTACK_QUESTION_EN,
 } from "./attackTopicQuestions";
 import { NETWORK_CLOUD_QUESTIONS, NETWORK_CLOUD_QUESTION_EN } from "./networkCloudQuestions";
+import {
+  IAM_HARDENING_COMPLIANCE_QUESTIONS,
+  IAM_HARDENING_COMPLIANCE_QUESTION_EN,
+} from "./iamHardeningComplianceQuestions";
 
 /**
  * Deprecated content stays in the dataset, so its id keeps pointing at
@@ -52,8 +56,8 @@ const IT_QUESTIONS: Record<number, Question[]> = {
   1: [...DOMAIN_1_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[1] ?? []), ...DOMAIN_1_ATTACK_QUESTIONS],
   2: [...DOMAIN_2_QUESTIONS.filter(isActive), ...(PHYSICAL_VECTOR_QUESTIONS[2] ?? []), ...DOMAIN_2_ATTACK_QUESTIONS],
   3: [...DOMAIN_3_QUESTIONS.filter(isActive), ...(NETWORK_CLOUD_QUESTIONS[3] ?? [])],
-  4: [...DOMAIN_4_QUESTIONS.filter(isActive), ...(NETWORK_CLOUD_QUESTIONS[4] ?? [])],
-  5: DOMAIN_5_QUESTIONS.filter(isActive),
+  4: [...DOMAIN_4_QUESTIONS.filter(isActive), ...(NETWORK_CLOUD_QUESTIONS[4] ?? []), ...(IAM_HARDENING_COMPLIANCE_QUESTIONS[4] ?? [])],
+  5: [...DOMAIN_5_QUESTIONS.filter(isActive), ...(IAM_HARDENING_COMPLIANCE_QUESTIONS[5] ?? [])],
 };
 
 /* ------------------------------------------------------------------ *
@@ -268,6 +272,7 @@ export function getDomainQuestions(domainId: number, lang: Lang): Question[] {
         ...(PHYSICAL_VECTOR_QUESTION_EN[domainId] || {}),
         ...(PHYSICAL_VECTOR_QUESTION_EN_EXTRA[domainId] || {}),
         ...(NETWORK_CLOUD_QUESTION_EN[domainId] || {}),
+        ...(IAM_HARDENING_COMPLIANCE_QUESTION_EN[domainId] || {}),
         ...(domainId === 1 ? DOMAIN_1_ATTACK_QUESTION_EN : DOMAIN_2_ATTACK_QUESTION_EN),
       } : {};
     cache[domainId] = it.map((q) => ({
