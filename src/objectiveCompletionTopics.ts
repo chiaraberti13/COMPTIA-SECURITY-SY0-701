@@ -97,7 +97,7 @@ export function objectiveCompletionTopics(domainId: number, lang: Lang): TopicGr
   const entries = OBJECTIVE_COMPLETION_ENTRIES.filter((entry) => entry.domain === domainId);
   if (entries.length === 0) return [];
   return entries.map((entry) => ({
-    title: lang === "it" ? `Completamento obiettivo ${entry.objective}` : `Objective ${entry.objective} completion`,
+    title: lang === "it" ? `Completamento obiettivo ${entry.objective} (Obj ${entry.objective})` : `Objective ${entry.objective} completion (Obj ${entry.objective})`,
     description: lang === "it" ? "Voce autonoma verificata dall'audit di copertura SY0-701." : "Standalone entry verified by the SY0-701 coverage audit.",
     icon: "CircleCheckBig",
     subtopics: [{
