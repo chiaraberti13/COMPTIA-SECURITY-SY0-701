@@ -81,20 +81,25 @@ e validati in CI.
   governance). Nessun contenuto inventato: per le 16 voci che fallivano il confronto
   bilingue è stata aggiunta la formulazione realmente presente nella lingua mancante.
   La copertura resta **249/249** con la regola più severa.
-- **Inventario ufficiale completo SY0-701 (#103, Fase A) — fatto.**
+- **Inventario ufficiale completo SY0-701 e copertura al 100% (#103, Fasi A+B) — fatto.**
   `scripts/sy0701-inventory.ts` enumera tutte le **654** voci puntate del documento
   ufficiale degli obiettivi (v7.0, © 2023 CompTIA), il denominatore completo oltre ai
   249 termini curati. `npm run inventory-coverage` misura l'ampiezza e genera
-  `docs/inventory-coverage.md`: **637/654 (97,4%) bilingui**, 642/654 in almeno una
-  lingua. Le 17 voci non ancora bilingui sono un backlog shrink-only
-  (`tests/fixtures/inventory-not-bilingual.json`, guard `tests/inventoryCoverage.test.ts`),
-  da chiudere un dominio alla volta (Fase B). La Fase A misura ed elenca, non colma.
+  `docs/inventory-coverage.md`. Fase A: baseline 637/654 (97,4%) bilingui con i 17 gap
+  elencati. Fase B: i 17 gap **chiusi** — 2 erano solo sinonimi del matcher da
+  correggere (4.7 configurazioni standard, 5.6 riconoscere il phishing, già spiegati in
+  entrambe le lingue), 15 sono stati coperti con nuovi passaggi didattici bilingui nelle
+  guide di dominio (`connections` del D3/D4/D5: device placement e selezione dei
+  controlli; audit di sistema/processo, classificazione delle vulnerabilità, selezione
+  di protocollo/porta/trasporto, scansione degli URL, assegnazione dei permessi; enti
+  governativi, giurisdizioni locale/regionale, attestazione e riconoscimento, impatti
+  contrattuali, monitoraggio interno ed esterno). Risultato: **654/654 (100%) bilingui**,
+  guard shrink-only a zero (`tests/fixtures/inventory-not-bilingual.json` = `[]`).
 
 ## Errori di contenuto noti (tracciati)
 
-Nessuno rotto. Resta un backlog di **17 voci ufficiali non ancora bilingui** (vedi
-`docs/inventory-coverage.md`), da completare con parità IT/EN nelle revisioni
-successive (Fase B del punto #103).
+Nessuno aperto. Le attività di accuratezza della revisione (#102, #103 Fasi A+B) sono
+risolte e verificate; la cronologia resta in Git e nel CHANGELOG.
 
 ## Issue aperte
 
@@ -102,14 +107,7 @@ Nessuna issue di revisione aperta.
 
 ## Backlog per priorità
 
-1. **P2 — Completare le 17 voci ufficiali non ancora bilingui (#103, Fase B).** Chiudere
-   un dominio alla volta, con parità IT/EN, le voci elencate in
-   `docs/inventory-coverage.md` (es. 3.2 Device placement / Selection of effective
-   controls; 4.5 Protocol/Port selection, Transport method, URL scanning; 5.4
-   Attestation and acknowledgement, Contractual impacts). Il guard shrink-only fa
-   fallire la CI se l'elenco cresce. Stima: media (poche voci per dominio, contenuto
-   verificabile con fonti).
-2. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
+1. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
    quando Dependabot aprirà le PR (cooldown 7 giorni) e l'ecosistema sarà pronto:
    - `typescript` 5.8 → 7.0 (compilatore nativo): attendere il supporto di
      `typescript-eslint`, `vite` e `vitest`; migrazione pianificata, non in-range.
@@ -127,12 +125,12 @@ Nessuna issue di revisione aperta.
 | Domande attive | 682 | 682 | D1 110 · D2 133 · D3 112 · D4 185 · D5 142 |
 | Obiettivi coperti da domande | 28/28 | 28/28 | 100% |
 | Sotto-voci di obiettivo spiegate (lista curata) | 249/249 (una lingua) | 249/249 (IT **e** EN) | regola bilingue più severa (#103) |
-| Inventario ufficiale completo (654 voci) | — | 637/654 bilingui (97,4%) | nuovo denominatore completo (#103 Fase A) |
+| Inventario ufficiale completo (654 voci) | — | **654/654 bilingui (100%)** | denominatore completo; Fase A 637→Fase B 654 (#103) |
 | Sigle della Acronym List coperte | 329/329 | 329/329 | deck di 366 flashcard |
 | Objective code per sigla d'appendice | 1 per dominio (errato) | 1 per voce (236/236) | mappa `ACRONYM_META` |
 | Guide di dominio | 5/5 | 5/5 | 46 esercizi guidati |
 | Scenari PBQ | 32 | 32 | integrati nell'Esame |
-| Test unitari | 1023 (113 file) | 1030 (114 file) | +test mappatura sigle e inventario; tutti verdi |
+| Test unitari | 1023 (113 file) | 1030 (114 file) | +test sigle e inventario ufficiale; tutti verdi |
 | Test E2E | 163 + 1 skip (12 spec) | 163 + 1 skip | desktop + mobile, tutti verdi |
 | Bundle (gzip) | index 274 KB · vendor 124 KB · dataset IT 784 KB · dataset EN 720 KB | invariato | dataset lazy-split, precompressi Brotli |
 | Vulnerabilità `npm audit` (prod+dev) | 0 | 0 | — |

@@ -561,7 +561,7 @@ export const SY0701_INVENTORY: InventoryItem[] = [
   I("4.7", "Use cases", "Integrations and APIs", ["application programming interface", "API", "integrazioni"]),
   I("4.7", "Benefits", "Efficiency/time saving", ["efficiency", "efficienza", "risparmio di tempo"]),
   I("4.7", "Benefits", "Enforcing baselines", ["enforcing baseline", "applicazione delle baseline"]),
-  I("4.7", "Benefits", "Standard infrastructure configurations", ["standard infrastructure configuration", "configurazioni standard"]),
+  I("4.7", "Benefits", "Standard infrastructure configurations", ["standard configuration", "configurazioni standard"]),
   I("4.7", "Benefits", "Scaling in a secure manner", ["scaling", "scalare in modo sicuro"]),
   I("4.7", "Benefits", "Employee retention", ["employee retention", "fidelizzazione del personale"]),
   I("4.7", "Benefits", "Reaction time", ["reaction time", "tempo di reazione"]),
@@ -630,7 +630,7 @@ export const SY0701_INVENTORY: InventoryItem[] = [
   I("5.1", "Governance", "Monitoring and revision", ["monitoring and revision", "monitoraggio e revisione"]),
   I("5.1", "Governance structures", "Boards", ["board", "consigli"]),
   I("5.1", "Governance structures", "Committees", ["committee", "comitati"]),
-  I("5.1", "Governance structures", "Government entities", ["government entit", "enti governativi"]),
+  I("5.1", "Governance structures", "Government entities", ["government entities", "enti governativi"]),
   I("5.1", "Governance structures", "Centralized/decentralized", ["centralized", "decentralized", "centralizzata", "decentralizzata"]),
   I("5.1", "Roles and responsibilities", "Owners", ["owner", "titolari", "proprietari"]),
   I("5.1", "Roles and responsibilities", "Controllers", ["controller", "titolari del trattamento"]),
@@ -731,7 +731,7 @@ export const SY0701_INVENTORY: InventoryItem[] = [
 
   // ---- 5.6 Security awareness ----
   I("5.6", "Phishing", "Campaigns", ["phishing campaign", "campagne di phishing"]),
-  I("5.6", "Phishing", "Recognizing a phishing attempt", ["recognizing a phishing", "riconoscere un tentativo di phishing"]),
+  I("5.6", "Phishing", "Recognizing a phishing attempt", ["identify phishing", "recognizing a phishing", "riconoscere un tentativo di phishing"]),
   I("5.6", "Phishing", "Responding to reported suspicious messages", ["suspicious message", "messaggi sospetti"]),
   I("5.6", "Anomalous behavior", "Risky", ["risky behavior", "comportamento rischioso", "rischioso"]),
   I("5.6", "Anomalous behavior", "Unexpected", ["unexpected behavior", "inatteso", "comportamento inatteso"]),

@@ -21,52 +21,13 @@ con parità IT/EN. L'elenco può solo accorciarsi.
 | Metrica | Conteggio | Quota |
 |---|---|---|
 | Voci ufficiali enumerate | 654 | 100% |
-| Coperte in entrambe le lingue (IT **e** EN) | 637 | 97.4% |
-| Coperte in almeno una lingua (ampiezza) | 642 | 98.2% |
-| Da completare (non ancora bilingui) | 17 | 2.6% |
+| Coperte in entrambe le lingue (IT **e** EN) | 654 | 100.0% |
+| Coperte in almeno una lingua (ampiezza) | 654 | 100.0% |
+| Da completare (non ancora bilingui) | 0 | 0.0% |
 
 ## Voci da completare, per obiettivo
 
 Stato: `solo IT` reperibile solo in italiano, `solo EN` solo in inglese, `assente` in nessuna
 lingua (gap di contenuto o solo formulazione diversa dai sinonimi dell'inventario).
 
-### Obiettivo 3.2
-
-- Device placement (Infrastructure considerations) — `assente`
-- Selection of effective controls (Infrastructure) — `assente`
-
-### Obiettivo 4.3
-
-- System/process audit (Identification) — `assente`
-- Vulnerability classification (Analysis) — `solo EN`
-
-### Obiettivo 4.5
-
-- Port selection (Secure protocols) — `assente`
-- Protocol selection (Secure protocols) — `assente`
-- Transport method (Secure protocols) — `assente`
-- URL scanning (Web filter) — `assente`
-
-### Obiettivo 4.6
-
-- Permission assignments and implications (IAM) — `assente`
-
-### Obiettivo 4.7
-
-- Standard infrastructure configurations (Benefits) — `solo IT`
-
-### Obiettivo 5.1
-
-- Government entities (Governance structures) — `solo IT`
-- Local/regional (External considerations) — `assente`
-
-### Obiettivo 5.4
-
-- Attestation and acknowledgement (Compliance monitoring) — `assente`
-- Contractual impacts (Consequences) — `assente`
-- Internal and external (Compliance monitoring) — `solo EN`
-- Local/regional (Privacy / Legal implications) — `assente`
-
-### Obiettivo 5.6
-
-- Recognizing a phishing attempt (Phishing) — `solo IT`
+Nessuna: ogni voce ufficiale è coperta in entrambe le lingue.

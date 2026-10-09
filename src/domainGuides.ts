@@ -1080,6 +1080,7 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Monitoring e IAM del D4 rendono operativi zero trust e segmentation; BIA e governance del D5 stabiliscono i requisiti di resilienza.",
       "Data sovereignty e classificazione collegano l'architettura agli obblighi di compliance e privacy del D5.",
       "Test di failover ed esercitazioni tabletop sono lo stesso strumento usato dall'incident response nel D4.",
+      "Il posizionamento dei dispositivi (device placement) decide cosa vede ogni controllo — in linea o in copia passiva — e con la selezione dei controlli efficaci si scelgono firewall, WAF, IDS/IPS, proxy e load balancer in base a minaccia, costo e impatto.",
     ],
     comparisons: [
       {
@@ -1354,6 +1355,9 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Architettura del D3 determina log disponibili e punti di enforcement; governance del D5 determina escalation, retention, evidence handling e reporting.",
       "Zero trust e modelli di controllo degli accessi del D1 diventano policy concrete in IAM, NAC e PAM.",
       "Rischio residuo, eccezioni e assicurazione collegano il vulnerability management alla gestione del rischio del D5.",
+      "Nel vulnerability management l'audit di sistema e di processo (system/process audit) trova le debolezze che la scansione non vede, e la classificazione delle vulnerabilità (vulnerability classification) le raggruppa per tipo e gravità prima di assegnare le priorità con CVSS e CVE.",
+      "Rafforzare i protocolli è una catena di scelte: la selezione del protocollo (protocol selection) preferisce la versione sicura, la selezione della porta (port selection) espone solo quella attesa e il metodo di trasporto (transport method) impone il canale cifrato con TLS; il web filter aggiunge la scansione degli URL (URL scanning) per categoria e reputazione.",
+      "L'assegnazione dei permessi (permission assignments) traduce ruoli e policy in diritti concreti: ogni concessione va data col privilegio minimo e rivista, perché le sue implicazioni abilitano l'escalation se i permessi restano eccessivi.",
     ],
     comparisons: [
       {
@@ -1692,6 +1696,8 @@ const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Privacy, retention, legal hold e contratti influenzano logging, forensics, cloud, gestione dei dati e risposta agli incidenti.",
       "Supply chain e vettori legati ai fornitori del D2 sono il motivo per cui la valutazione delle terze parti richiede evidenze e non solo questionari.",
       "La formazione su phishing e social engineering del 5.6 è il controllo umano contro i vettori studiati nel D2.",
+      "Le strutture di governance includono gli enti governativi (government entities) — autorità e regolatori pubblici — mentre le considerazioni esterne cambiano per giurisdizione a livello locale/regionale (local/regional), nazionale e globale.",
+      "Il monitoraggio della conformità unisce attestazione e riconoscimento (attestation and acknowledgement) e si svolge con monitoraggio interno ed esterno (internal and external); la non conformità porta conseguenze oltre multe e sanzioni, inclusi gli impatti contrattuali (contractual impacts).",
     ],
     comparisons: [
       {
@@ -2801,6 +2807,7 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "D4 monitoring and IAM operationalize zero trust and segmentation; D5 BIA and governance set resilience requirements.",
       "Data sovereignty and classification connect architecture to the compliance and privacy obligations in D5.",
       "Failover tests and tabletop exercises are the same tool used by incident response in D4.",
+      "Device placement decides what each control sees — inline or as a passive copy — and the selection of effective controls picks firewall, WAF, IDS/IPS, proxy, and load balancer by threat, cost, and impact.",
     ],
     comparisons: [
       {
@@ -3075,6 +3082,9 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "D3 architecture determines available logs and enforcement points; D5 governance determines escalation, retention, evidence handling, and reporting.",
       "Zero trust and the access control models from D1 become concrete policies in IAM, NAC, and PAM.",
       "Residual risk, exceptions, and insurance connect vulnerability management to risk management in D5.",
+      "In vulnerability management the system/process audit finds weaknesses the scan misses, and vulnerability classification groups them by type and severity before you prioritize with CVSS and CVE.",
+      "Hardening protocols is a chain of choices: protocol selection prefers the secure version, port selection exposes only the expected port, and the transport method enforces the encrypted channel with TLS; the web filter adds URL scanning by category and reputation.",
+      "Permission assignments turn roles and policy into concrete rights: grant each with least privilege and review it, because the implications enable escalation when permissions stay excessive.",
     ],
     comparisons: [
       {
@@ -3413,6 +3423,8 @@ const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
       "Privacy, retention, legal hold, and contracts affect logging, forensics, cloud, data management, and incident response.",
       "Supply chain and vendor-related vectors from D2 are why third-party assessment requires evidence and not only questionnaires.",
       "Phishing and social engineering training in 5.6 is the human control against the vectors studied in D2.",
+      "Governance structures include government entities — public authorities and regulators — while external considerations change by jurisdiction at the local/regional, national, and global level.",
+      "Compliance monitoring combines attestation and acknowledgement with internal and external reviews; non-compliance brings consequences beyond fines and sanctions, including contractual impacts.",
     ],
     comparisons: [
       {
