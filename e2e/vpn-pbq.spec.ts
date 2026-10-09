@@ -1,5 +1,10 @@
+import { PBQ_SCENARIOS } from "../src/pbqData";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+
+// Draw every domain-3 PBQ so the VPN task is always present (future-proof if
+// more domain-3 scenarios are added), matching the other PBQ navigation tests.
+const domainPbqCount = PBQ_SCENARIOS.filter(p => p.domain === 3).length;
 
 const solution = [
   ["p_remote", "remote_tls"],
@@ -58,11 +63,11 @@ test("VPN answer survives exam navigation and language changes; result persists 
   for (let d = 1; d <= 5; d++) {
     const slider = page.locator('input[type="range"]').nth(d - 1);
     await slider.focus(); await slider.press("Home");
-    if (d === 3) for (let n = 0; n < 2; n++) await slider.press("ArrowRight");
+    if (d === 3) for (let n = 0; n < domainPbqCount; n++) await slider.press("ArrowRight");
   }
-  await page.locator("#exam_pbq_count").selectOption("2");
+  await page.locator("#exam_pbq_count").selectOption(String(domainPbqCount));
   await page.locator("#start_exam_btn").click();
-  for (let n = 0; n < 2; n++) {
+  for (let n = 0; n < domainPbqCount; n++) {
     if (await page.locator("#pbq_match_p_remote").count()) break;
     await page.locator("#exam_next").click();
   }
@@ -77,11 +82,11 @@ test("VPN answer survives exam navigation and language changes; result persists 
   }
   await expect(page.locator("#pbq_match_p_remote")).toHaveValue("remote_tls");
   await page.locator("#exam_finish").click();
-  await expect(page.locator("#exam_score")).toContainText("1 / 2");
+  await expect(page.locator("#exam_score")).toContainText(`1 / ${domainPbqCount}`);
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("comptia_sy0701_quiz_history") ?? "[]"));
   expect(saved).toHaveLength(1);
-  expect(saved[0]).toMatchObject({ score: 1, total: 2, domains: [3] });
+  expect(saved[0]).toMatchObject({ score: 1, total: domainPbqCount, domains: [3] });
   await page.reload();
   await page.locator("#tab_btn_quiz").click();
-  await expect(page.locator("#quiz_history_box")).toContainText("/2");
+  await expect(page.locator("#quiz_history_box")).toContainText(`/${domainPbqCount}`);
 });
