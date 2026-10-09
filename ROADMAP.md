@@ -105,18 +105,28 @@ risolte e verificate; la cronologia resta in Git e nel CHANGELOG.
 
 Nessuna issue di revisione aperta.
 
+## Major upgrade dipendenze — valutati in questa revisione
+
+- `motion` 13 → **14**: **applicato.** API `motion/react` (`motion`, `AnimatePresence`,
+  `MotionConfig`) invariate; verdi typecheck, lint, build, unit (1030), E2E (163) e
+  `npm audit` (0 vulnerabilità).
+- `@types/node` 22 → **24**: **applicato.** Allineato al target Node del progetto
+  (`engines` `^22.13.0 || >=24`, `.nvmrc` 24). Scelto il **24**, non l'ultimo 26, per non
+  tipizzare contro un Node major non supportato dal floor. Solo dev-dependency, nessun
+  impatto sul bundle; verdi tutti i gate.
+- `typescript` 5.8 → 7.0 (compilatore nativo): **rinviato, motivo concreto.**
+  `typescript-eslint` non supporta TS 7.0 (errore esplicito all'avvio di `eslint`;
+  tracking [typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940),
+  serve TS ≥ 7.1) e `tsc` 7 segnala un errore di risoluzione dei tipi di `jsdom`.
+  Riesaminare quando `typescript-eslint` pubblicherà il supporto a TS ≥ 7.1.
+
 ## Backlog per priorità
 
-1. **P3 — Valutazione major upgrade dipendenze (Dependabot-driven).** Da esaminare
-   quando Dependabot aprirà le PR (cooldown 7 giorni) e l'ecosistema sarà pronto:
-   - `typescript` 5.8 → 7.0 (compilatore nativo): attendere il supporto di
-     `typescript-eslint`, `vite` e `vitest`; migrazione pianificata, non in-range.
-   - `motion` 13 → 14 (breaking): verificare le API di animazione usate nei componenti.
-   - `@types/node` 22 → 26: legato all'innalzamento del floor `engines` in
-     `package.json` (oggi bloccato, come già per `jsdom` 30 in `dependabot.yml`).
-   Gli aggiornamenti minori/patch restano gestiti automaticamente dalle PR settimanali
-   raggruppate di Dependabot: non applicarli a mano per non aggirare il cooldown di
-   supply-chain.
+1. **P3 — TypeScript 7 (compilatore nativo).** Migrazione pianificata, non in-range:
+   riprovare quando `typescript-eslint` supporterà TS ≥ 7.1 e `jsdom`/toolchain saranno
+   compatibili. Gli aggiornamenti minori/patch restano gestiti dalle PR settimanali
+   raggruppate di Dependabot (cooldown 7 giorni): non applicarli a mano per non aggirare
+   la protezione di supply-chain.
 
 ## Metriche (baseline inizio revisione → dopo revisione)
 

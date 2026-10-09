@@ -21,6 +21,15 @@ updates:
       # package.json "engines". Remove this when the engines floor is raised.
       - dependency-name: jsdom
         update-types: ["version-update:semver-major"]
+      # @types/node is pinned to the Node major the project targets (24, per
+      # .nvmrc and "engines"); a newer major would type against an unsupported
+      # runtime. Raise this together with the engines floor.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 (native compiler) is blocked until typescript-eslint
+      # supports TS >= 7.1 (typescript-eslint#10940). Keep it on the 5.x line.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     groups:
       # One PR for all minor and patch bumps; major versions stay separate so
       # each breaking change can be reviewed and tested on its own.
