@@ -497,3 +497,17 @@ TSIG
 VLSM
 WIDS
 WIPS
+
+# Objective coverage completion vocabulary
+ambigui
+anticipatore
+arricchisce
+attivano
+attribuibili
+avvenuti
+consuntivo
+mantieni
+NISTIR
+rimpiazzare
+risparmiato
+selettiva

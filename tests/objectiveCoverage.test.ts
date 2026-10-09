@@ -50,4 +50,11 @@ describe("objective coverage", () => {
     expect(cov.total).toBe(curated);
     expect(cov.covered + cov.missing.length).toBe(cov.total);
   });
+
+  it("reaches complete referenceable coverage", () => {
+    const cov = objectiveCoverage();
+    expect(cov.total).toBe(249);
+    expect(cov.covered).toBe(cov.total);
+    expect(cov.missing).toEqual([]);
+  });
 });

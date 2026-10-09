@@ -13,18 +13,18 @@ le domande è nella [matrice di copertura](coverage-matrix.md).
 
 ## Concetti senza esempio pratico
 
-0 concetti su 858 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
+0 concetti su 864 non hanno un esempio: né un «Piccolo Esempio Concentrato», né un elenco di
 esempi, né un «per esempio» nel testo. Per aggiungerne uno segui il modello in
 [`content-templates.md`](content-templates.md), in italiano e in inglese, poi togli il concetto da
 `tests/fixtures/concepts-without-example.json`: l'elenco può solo accorciarsi.
 
 | Dominio | Concetti | Senza esempio |
 |---|---|---|
-| 1 | 131 | 0 |
-| 2 | 94 | 0 |
+| 1 | 133 | 0 |
+| 2 | 95 | 0 |
 | 3 | 218 | 0 |
-| 4 | 151 | 0 |
-| 5 | 264 | 0 |
+| 4 | 153 | 0 |
+| 5 | 265 | 0 |
 
 ## Cifre senza fonte
 
@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-88 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+93 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -62,11 +62,14 @@ indirizzi qui sotto.
 - `1:PolicyAdministratorZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
 - `1:PolicyEnforcementPointZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
 - `1:PolicyEngineZTA`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final), Sezione 3: componenti logici
+- `1:RecordLevelEncryption`: [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), controllo SC-28
 - `1:SAML`: [SAML 2.0 Core](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
 - `1:SessionKeyConcept`: [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final); [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `1:SingleSignOn`: [SAML 2.0 Core](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
 - `1:SteganographyConcept`: [CSRC Glossary — Steganography](https://csrc.nist.gov/glossary/term/steganography)
+- `1:ThreatScopeReduction`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
 - `1:ZeroTrustIntro`: [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
+- `2:ConfigurationEnforcement`: [SP 800-128 — Guide for Security-Focused Configuration Management](https://csrc.nist.gov/pubs/sp/800/128/upd1/final)
 - `2:CookieHeaderTampering`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
 - `2:CSRFAttack`: [CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 - `2:CVSSVuln`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
@@ -96,6 +99,7 @@ indirizzi qui sotto.
 - `4:IncidentResponseGeneralConcept`: [SP 800-61 Rev. 3 — Incident Response Recommendations](https://csrc.nist.gov/pubs/sp/800/61/r3/final)
 - `4:LegalHoldForensics`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 17, par. 3, lett. e
 - `4:PackageMonitoringRes`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
+- `4:PasswordVaulting`: [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), controlli IA-5 e AC-2
 - `4:PatchAvailabilityConcept`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
 - `4:PreparationPhase`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj), art. 33 e art. 34
 - `4:SCAP`: [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/)
@@ -116,6 +120,7 @@ indirizzi qui sotto.
 - `5:GrammLeachBlileyAct`: [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know)
 - `5:HIPAAComplianceConcept`: [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html); [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html)
 - `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
+- `5:KeyRiskIndicators`: [NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response](https://csrc.nist.gov/pubs/ir/8286/d/final)
 - `5:MediaSanitizationRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
 - `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
 - `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)

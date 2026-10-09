@@ -20,8 +20,8 @@ del tutto (gap di contenuto). L'elenco può solo accorciarsi; l'obiettivo è zer
 | Metrica | Conteggio | Quota |
 |---|---|---|
 | Voci di obiettivo curate | 249 | 100% |
-| Spiegate come voce (glossario o guida) | 243 | 97.6% |
-| Spiegate solo in una domanda | 6 | 2.4% |
+| Spiegate come voce (glossario o guida) | 249 | 100.0% |
+| Spiegate solo in una domanda | 0 | 0.0% |
 | Assenti (gap di contenuto) | 0 | 0.0% |
 
 ## Assenti — gap di contenuto da colmare
@@ -35,26 +35,4 @@ Nessuna.
 Voci spiegate in una spiegazione di quiz ma senza voce di glossario o passaggio di guida dedicato:
 renderle ricercabili come voce autonoma.
 
-### Obiettivo 1.2
-
-- Threat scope reduction
-
-### Obiettivo 1.4
-
-- Record-level encryption
-
-### Obiettivo 2.5
-
-- Configuration enforcement
-
-### Obiettivo 4.6
-
-- Password vaulting
-
-### Obiettivo 4.7
-
-- Workforce multiplier
-
-### Obiettivo 5.2
-
-- Key risk indicators
+Nessuna.

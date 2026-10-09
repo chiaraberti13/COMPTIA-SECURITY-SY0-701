@@ -112,6 +112,6 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 
 ## Riepilogo
 
-- Fonti citate: 44 primarie e 31 secondarie (mappate il 2026-10-08).
+- Fonti citate: 46 primarie e 31 secondarie (mappate il 2026-10-08).
 - I controlli marcati ✅ obbligatorio bloccano le pull request tramite branch protection.
 - Le voci 🟡 sono verificate altrove (CI, scheda Security, issue di manutenzione) o soggette a una scadenza sorvegliata.

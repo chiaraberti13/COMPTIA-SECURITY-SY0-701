@@ -57,6 +57,8 @@ export const MENTIONS: [SourceId, RegExp][] = [
   ["owaspTop10", /\bOWASP\b/],
   ["mitreAttack", /ATT&CK/],
   ["nist800207", /SP ?800-207/],
+  ["nist800128", /SP ?800-128/],
+  ["nist8286d", /NISTIR ?8286D/],
   ["nist80056a", /SP ?800-56A/],
   ["nist80056b", /SP ?800-56B/],
   ["nist80063b", /SP ?800-63B/],
@@ -72,6 +74,11 @@ export const MENTIONS: [SourceId, RegExp][] = [
 ];
 
 export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+  "1:ThreatScopeReduction": [{ source: "nist800207" }],
+  "1:RecordLevelEncryption": [{ source: "nist80053", locator: { it: "controllo SC-28", en: "control SC-28" } }],
+  "2:ConfigurationEnforcement": [{ source: "nist800128" }],
+  "4:PasswordVaulting": [{ source: "nist80053", locator: { it: "controlli IA-5 e AC-2", en: "controls IA-5 and AC-2" } }],
+  "5:KeyRiskIndicators": [{ source: "nist8286d" }],
   "5:AcronymAppendix_ATT_CK": [{ source: "mitreAttack" }],
   "5:AcronymAppendix_OWASP": [{ source: "owaspTop10" }],
   "5:SarbanesOxleyAct": [{ source: "sox" }],
