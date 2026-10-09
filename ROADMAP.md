@@ -490,6 +490,39 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
 
 **Completato il 9 ottobre 2026:** il guard conferma **249/249 voci (100%) spiegate come contenuto autonomo e ricercabile**, con **0 quiz-only** e **0 assenti**. Promosse a voci bilingui le sei lacune residue: threat scope reduction, record-level encryption, configuration enforcement, password vaulting, workforce multiplier e key risk indicators; HIPS era già stato chiuso dall'appendice degli acronimi. Ogni nuova voce include definizione, distinzione operativa, esempio applicativo, exam tip e collegamento al quiz esistente; i concetti normativi/standard-based riportano fonti primarie NIST. La fixture delle voci scoperte è vuota e il test di CI richiede esplicitamente copertura 249/249.
 
+## P1 — UX e navigazione (richieste del 9 ottobre 2026)
+
+Modifiche di navigazione e struttura richieste dal proprietario per semplificare la home e avvicinare l'esperienza all'esame reale. Tutte le etichette coinvolte sono in `src/i18n.tsx` (locali IT ed EN) e i tab della home in `src/components/AppHeader.tsx` (`TABS`).
+
+### 36. Acronimi: spostare il menu nel Glossario e toglierlo dalla home (P1 — UX/navigazione)
+
+- [ ] Spostare il menu **Acronimi** (oggi tab top-level `flash`, etichette `tab.flash` "Flashcard Acronimi" / `tab.flashShort` "Acronimi") **dentro la sezione Glossario** e rimuoverlo dalla barra di navigazione principale della home.
+- [ ] **Audit degli acronimi esposti nel Glossario:** la quantità di sigle effettivamente visibili/ricercabili dal Glossario appare oggettivamente insufficiente rispetto alla *Acronym List* ufficiale SY0-701. Verificare che **tutte** le sigle presenti nel dataset (glossario + appendice acronimi, vedi `src/acronymAppendixTopics.ts` e `src/glossaryIndex.ts`) siano realmente raggiungibili dal Glossario e non solo dalla sola vista flashcard; correggere ogni mancanza di esposizione.
+
+**Da realizzare:** rendere le flashcard/voci degli acronimi un pannello o filtro interno al Glossario (riuso di `GlossarySection`/`FlashcardScreen`), aggiornare `AppHeader` per togliere il tab, aggiornare le chiavi i18n IT/EN e gli eventuali test E2E che selezionano `#tab_btn_flash`. Confrontare il conteggio degli acronimi mostrati nel Glossario con quello del dataset e con la lista ufficiale.
+
+**Accettazione:** nessun tab "Acronimi" nella home; gli acronimi sono raggiungibili e ricercabili dal Glossario; il conteggio esposto coincide con il dataset (nessuna sigla «nascosta»); parità IT/EN; test e build verdi.
+
+### 37. Pratica (PBQ): integrarla nel Simulatore e toglierla dalla home (P1 — UX/navigazione)
+
+- [ ] Integrare gli **Scenari Pratici / PBQ** (oggi tab `pbq`, etichette `tab.pbq` "Scenari Pratici" / `tab.pbqShort` "Pratica") **dentro il Simulatore**, dove le PBQ sono già selezionabili tramite il controllo `#exam_pbq_count`.
+- [ ] **Garantire che le PBQ compaiano effettivamente** nel flusso d'esame quando se ne seleziona un numero > 0 all'avvio della simulazione (coprire con test E2E l'estrazione effettiva delle PBQ dal banco per dominio).
+- [ ] Rimuovere **Pratica** dalla barra di navigazione della home.
+
+**Da realizzare:** togliere il tab `pbq` da `AppHeader`, verificare che la configurazione esame del `quiz`/Simulatore permetta di esercitare le PBQ in modalità pratica (eventuale modalità «solo PBQ» già presente), aggiornare le chiavi i18n IT/EN e i test E2E che aprono `#tab_btn_pbq`.
+
+**Accettazione:** nessun tab "Pratica" nella home; dal Simulatore si possono selezionare e svolgere le PBQ; all'avvio con PBQ selezionate esse appaiono realmente nell'esame (verificato da test); parità IT/EN; test, build ed E2E verdi.
+
+### 38. Rinominare il Simulatore con un nome più adatto (P1 — copy/UX)
+
+- [ ] Sostituire l'etichetta **Simulatore** (`tab.quizShort` "Simulatore" / "Simulator", `tab.quiz` "High-Stakes Simulator") con un nome più adatto e coerente con l'esperienza d'esame.
+- Opzioni proposte: **"Esame"**, "Test", "Simulazione d'esame".
+- Raccomandazione del verificatore: **"Esame"**, coerente con la modalità già denominata internamente *exam mode* (`exam.title` "Exam mode: MCQs and PBQs"); decisione finale del proprietario.
+
+**Da realizzare:** scelta del termine definitivo, aggiornamento delle chiavi i18n IT/EN (`tab.quiz`, `tab.quizShort` ed eventuali titoli correlati come `quiz.title`), verifica dei riferimenti testuali nei test e nella documentazione.
+
+**Accettazione:** etichetta uniforme e coerente IT/EN in tutta l'app; nessun riferimento residuo a "Simulatore" dove si è scelto il nuovo nome; test e build verdi.
+
 ## Argomenti già coperti nelle spiegazioni
 
 Il confronto non giustifica duplicare le spiegazioni dei seguenti contenuti già presenti. Alcuni vengono comunque ripresi nelle nuove PBQ, perché spiegazione teorica ed esercizio interattivo sono strumenti diversi:
