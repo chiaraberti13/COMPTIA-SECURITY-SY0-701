@@ -67,7 +67,7 @@ describe("AppHeader navigation", () => {
     expect(screen.getByRole("button", { name: "AI Trainer" }).getAttribute("aria-pressed")).toBe("false");
     expect(screen.getByRole("group", { name: "Lingua" })).toBeTruthy();
     expect(screen.getByRole("tab", { name: "Checklist & Studio" }).tabIndex).toBe(0);
-    expect(screen.getByRole("tab", { name: "High-Stakes Simulator" }).tabIndex).toBe(-1);
+    expect(screen.getByRole("tab", { name: "Esame simulato" }).tabIndex).toBe(-1);
   });
 
   it("moves focus and activates adjacent or endpoint tabs from the keyboard", () => {

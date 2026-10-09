@@ -519,13 +519,15 @@ Modifiche di navigazione e struttura richieste dal proprietario per semplificare
 
 ### 38. Rinominare il Simulatore con un nome più adatto (P1 — copy/UX)
 
-- [ ] Sostituire l'etichetta **Simulatore** (`tab.quizShort` "Simulatore" / "Simulator", `tab.quiz` "High-Stakes Simulator") con un nome più adatto e coerente con l'esperienza d'esame.
+- [x] Sostituire l'etichetta **Simulatore** con un nome più adatto e coerente con l'esperienza d'esame.
 - Opzioni proposte: **"Esame"**, "Test", "Simulazione d'esame".
-- Raccomandazione del verificatore: **"Esame"**, coerente con la modalità già denominata internamente *exam mode* (`exam.title` "Exam mode: MCQs and PBQs"); decisione finale del proprietario.
+- Scelta adottata: **"Esame"** (IT) / **"Exam"** (EN), coerente con la modalità *exam mode* già usata internamente.
 
 **Da realizzare:** scelta del termine definitivo, aggiornamento delle chiavi i18n IT/EN (`tab.quiz`, `tab.quizShort` ed eventuali titoli correlati come `quiz.title`), verifica dei riferimenti testuali nei test e nella documentazione.
 
 **Accettazione:** etichetta uniforme e coerente IT/EN in tutta l'app; nessun riferimento residuo a "Simulatore" dove si è scelto il nuovo nome; test e build verdi.
+
+**Completato il 9 ottobre 2026:** la feature non si chiama più "Simulatore"/"Simulator" ma **"Esame"** (IT) / **"Exam"** (EN). Aggiornate le chiavi i18n IT/EN della navigazione e delle schermate collegate: `tab.quizShort` ("Esame"/"Exam"), `tab.quiz` ("Esame simulato"/"Simulated exam", aria-label), `quiz.title`, `quiz.subtitle`, `quiz.startSimulator` ("Avvia esame"/"Start exam"), `quiz.completedTitle` ("Esame completato"/"Exam completed"), `ready.explain` ("soglia di superamento dell'esame"/"Exam pass mark") e l'aria-label del selettore di modalità (`sim.modeSwitcher`). I riferimenti al **concetto d'esame** "Simulations/Simulazioni" (obiettivo 4.x: tabletop/simulation/failover) nei dataset non sono stati toccati perché sono contenuto ufficiale SY0-701, non il nome della funzione. Aggiornato il test unitario dell'header; parità IT/EN garantita da `i18n.test.ts`; unit (1023), build ed E2E (163 passati) verdi.
 
 ## Argomenti già coperti nelle spiegazioni
 
