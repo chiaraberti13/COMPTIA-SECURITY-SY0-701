@@ -376,7 +376,7 @@ with the commit of each fix. To report a new one, open an issue.
 ---
 
 <p align="center">
-  <sub>Made with 🛡️ by <a href="https://github.com/chiaraberti13">chiaraberti13</a></sub>
+  <sub>Made with 🛡️ by <a href="https://github.com/chiaraberti13">@chiaraberti13</a></sub>
 </p>
 
 ---
