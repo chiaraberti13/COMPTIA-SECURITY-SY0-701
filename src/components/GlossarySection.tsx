@@ -21,6 +21,9 @@ import { useLang, translate, type Lang, type UIKey } from "../i18n";
 import { STORAGE_KEYS, readJSON, writeJSON } from "../storage";
 import { sanitizeBookmarks } from "../progressBackup";
 import { canonicalBookmark, conceptRef } from "../canonicalTerms";
+import FlashcardScreen from "./FlashcardScreen";
+import type { FlashcardSession } from "../hooks/useFlashcards";
+import type { AcronymCard } from "../flashcards";
 
 export interface GlossaryTerm {
   id: string;
@@ -208,11 +211,25 @@ const inDomain = (term: GlossaryTerm, domainId: number) => term.domainId === dom
 
 interface GlossarySectionProps {
   onAskAI?: (prompt: string) => void;
+  /**
+   * Acronym flashcard drill, relocated here from its former top-level tab.
+   * Optional so the glossary can still render terms-only in unit tests; the
+   * acronym view switcher appears only when the live app wires these in.
+   */
+  flashcards?: FlashcardSession;
+  acronymDeck?: AcronymCard[];
+  onStudyConcept?: (card: AcronymCard) => void;
 }
 
-export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => {
+export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flashcards, acronymDeck, onStudyConcept }) => {
   const { lang, t } = useLang();
   const allTerms = useMemo(() => buildGlossaryDataset(lang), [lang]);
+
+  // Two views under the Glossary tab: the searchable term cards and the acronym
+  // flashcard drill (previously its own home tab, moved here). The drill shows
+  // only when the parent provides its session and deck.
+  const hasAcronymDrill = Boolean(flashcards && acronymDeck);
+  const [view, setView] = useState<"terms" | "acronyms">("terms");
 
   // Localized label for a (canonical, Italian) category identifier.
   const catLabel = (cat: string): string => {
@@ -327,7 +344,41 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-950 overflow-y-auto custom-scrollbar p-4 md:p-6" id="glossary_root">
       <div className="max-w-7xl w-full mx-auto space-y-6">
-        
+
+        {/* VIEW SWITCHER: searchable terms vs acronym flashcards */}
+        {hasAcronymDrill && (
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-slate-900/70 p-1" role="tablist" aria-label={t("gloss.viewSwitcher")} id="glossary_view_switcher">
+            {([
+              { id: "terms", label: t("tab.glossaryShort"), icon: BookOpen },
+              { id: "acronyms", label: t("tab.flashShort"), icon: Layers },
+            ] as const).map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                id={`glossary_view_${id}`}
+                aria-selected={view === id}
+                onClick={() => setView(id)}
+                className={`min-h-11 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${view === id ? "bg-cyan-700 text-white shadow-sm" : "text-slate-300 hover:text-white hover:bg-slate-800"}`}
+              >
+                <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {hasAcronymDrill && view === "acronyms" && (
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 sm:p-6 relative overflow-hidden shadow-xl" id="glossary_acronyms_panel">
+            <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="relative max-w-2xl mx-auto">
+              <FlashcardScreen session={flashcards!} deck={acronymDeck!} onStudyConcept={onStudyConcept} />
+            </div>
+          </div>
+        )}
+
+        {(!hasAcronymDrill || view === "terms") && (<>
         {/* TOP HERO HEADER */}
         <div className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl relative overflow-hidden" id="glossary_hero">
           <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -725,6 +776,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI }) => 
             })}
           </div>
         )}
+        </>)}
 
       </div>
     </div>

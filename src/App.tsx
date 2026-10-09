@@ -40,7 +40,6 @@ import StudyContent from "./components/StudyContent";
 import PbqScreen from "./components/PbqScreen";
 import { usePbqSession } from "./hooks/usePbqSession";
 import { getPbqScenarios } from "./localizedPbq";
-import FlashcardScreen from "./components/FlashcardScreen";
 import { useFlashcards } from "./hooks/useFlashcards";
 import { buildAcronymDeck, type AcronymCard } from "./flashcards";
 import { computeReadiness, selectReviewObjectives, summarizeRunByObjective } from "./readiness";
@@ -556,13 +555,16 @@ export default function App() {
           </main>
         )}
 
-        {/* TAB 3: GLOSSARIO SY0-701 */}
+        {/* TAB 3: GLOSSARIO SY0-701 (+ acronym flashcards) */}
         {activeTab === "glossary" && (
-          <GlossarySection 
+          <GlossarySection
             onAskAI={(prompt) => {
               setSidebarOpen(true);
               chat.send(prompt);
             }}
+            flashcards={flashcards}
+            acronymDeck={ACRONYM_DECK}
+            onStudyConcept={(card) => runStudyAction({ kind: "concept", domain: card.domainId as 1 | 2 | 3 | 4 | 5, checklistKey: card.conceptKey })}
           />
         )}
 
@@ -573,21 +575,6 @@ export default function App() {
               <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
               <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
               <PbqScreen session={pbq} scenarios={PBQ_SCENARIOS} />
-            </div>
-          </main>
-        )}
-
-        {/* TAB 5: ACRONYM FLASHCARDS */}
-        {activeTab === "flash" && (
-          <main className="flex-1 overflow-y-auto bg-slate-950 p-3 sm:p-8 flex items-start justify-center" id="flash_layout">
-            <div className="w-full max-w-2xl my-auto bg-slate-900 border border-slate-800 rounded-lg p-4 sm:p-8 relative overflow-hidden shadow-2xl" id="flash_panel_container">
-              <div className="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
-              <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl" />
-              <FlashcardScreen
-                session={flashcards}
-                deck={ACRONYM_DECK}
-                onStudyConcept={(card) => runStudyAction({ kind: "concept", domain: card.domainId as 1 | 2 | 3 | 4 | 5, checklistKey: card.conceptKey })}
-              />
             </div>
           </main>
         )}

@@ -496,12 +496,14 @@ Modifiche di navigazione e struttura richieste dal proprietario per semplificare
 
 ### 36. Acronimi: spostare il menu nel Glossario e toglierlo dalla home (P1 — UX/navigazione)
 
-- [ ] Spostare il menu **Acronimi** (oggi tab top-level `flash`, etichette `tab.flash` "Flashcard Acronimi" / `tab.flashShort` "Acronimi") **dentro la sezione Glossario** e rimuoverlo dalla barra di navigazione principale della home.
-- [ ] **Audit degli acronimi esposti nel Glossario:** la quantità di sigle effettivamente visibili/ricercabili dal Glossario appare oggettivamente insufficiente rispetto alla *Acronym List* ufficiale SY0-701. Verificare che **tutte** le sigle presenti nel dataset (glossario + appendice acronimi, vedi `src/acronymAppendixTopics.ts` e `src/glossaryIndex.ts`) siano realmente raggiungibili dal Glossario e non solo dalla sola vista flashcard; correggere ogni mancanza di esposizione.
+- [x] Spostare il menu **Acronimi** (ex tab top-level `flash`) **dentro la sezione Glossario** e rimuoverlo dalla barra di navigazione principale della home.
+- [x] **Audit degli acronimi esposti nel Glossario:** verificato che tutte le sigle del dataset sono raggiungibili dal Glossario.
 
 **Da realizzare:** rendere le flashcard/voci degli acronimi un pannello o filtro interno al Glossario (riuso di `GlossarySection`/`FlashcardScreen`), aggiornare `AppHeader` per togliere il tab, aggiornare le chiavi i18n IT/EN e gli eventuali test E2E che selezionano `#tab_btn_flash`. Confrontare il conteggio degli acronimi mostrati nel Glossario con quello del dataset e con la lista ufficiale.
 
 **Accettazione:** nessun tab "Acronimi" nella home; gli acronimi sono raggiungibili e ricercabili dal Glossario; il conteggio esposto coincide con il dataset (nessuna sigla «nascosta»); parità IT/EN; test e build verdi.
+
+**Completato il 9 ottobre 2026:** la home passa da cinque a quattro tab (`AppHeader.tsx`, griglia `grid-cols-4`); il tab `flash` è stato rimosso. Il Glossario (`GlossarySection.tsx`) ha ora un selettore di vista **Glossario / Acronimi**: la vista «Acronimi» riusa `FlashcardScreen` con il deck completo. L'app monta il drill solo nel Glossario (props `flashcards`/`acronymDeck`/`onStudyConcept`), opzionali così i test unitari del glossario restano validi. **Audit copertura:** il deck degli acronimi conta **366 carte**, che coprono le **329** sigle della *Acronym List* ufficiale (guard `tests/acronymCoverage.test.ts`, invariato) più collisioni e token non standard; portando il deck completo nel Glossario, tutte le sigle del dataset sono raggiungibili dalla vista «Acronimi» oltre che dal testo delle voci ricercabili. Chiavi i18n IT/EN aggiornate (`gloss.viewSwitcher`), test E2E `header.spec.ts`/`app.spec.ts` adeguati al nuovo percorso (Glossario → vista Acronimi); unit (1023), build ed E2E verdi.
 
 ### 37. Pratica (PBQ): integrarla nel Simulatore e toglierla dalla home (P1 — UX/navigazione)
 

@@ -77,13 +77,17 @@ test.describe("layout", () => {
       ["#tab_btn_glossary", "#glossary_root"],
       ["#tab_btn_quiz", "#start_quiz_btn"],
       ["#tab_btn_pbq", "#pbq_start_all"],
-      ["#tab_btn_flash", "#flash_start_all"],
     ] as const) {
       await page.locator(tab).click();
       await expect(page.locator(marker)).toBeVisible();
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
       expect(overflow, `${tab} overflows at 200% zoom`).toBe(false);
     }
+    // The acronym drill now lives inside the Glossary, behind its view switcher.
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
+    await expect(page.locator("#flash_start_all")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), "acronym view overflows at 200% zoom").toBe(false);
   });
 
   test("the domain guide opens and keeps its tables inside their box", async ({ page }) => {
@@ -102,7 +106,7 @@ test.describe("layout: main menu", () => {
     await openApp(page);
     const nav = page.locator("#navigation_tabs");
     expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
-    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#tab_btn_flash", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#tab_btn_pbq", "#toggle_sidebar_btn", "#lang_btn_en"]) {
       await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
     }
     // Each tab keeps a readable name, short on phones and full on desktop.
@@ -167,7 +171,8 @@ test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
 
   test("acronym flashcards, chooser and a revealed card", async ({ page }) => {
     await openApp(page);
-    await page.locator("#tab_btn_flash").click();
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
     await expect(page.locator("#flash_start_all")).toBeVisible();
     expect(await seriousViolations(page)).toEqual([]);
     // Reveal a card so axe also checks the answer side and the verdict buttons.
@@ -825,7 +830,8 @@ test.describe("performance-based scenarios (PBQ)", () => {
 test.describe("acronym flashcards", () => {
   async function openFlash(page: Page) {
     await openApp(page);
-    await page.locator("#tab_btn_flash").click();
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
     await expect(page.locator("#flash_setup")).toBeVisible();
   }
 

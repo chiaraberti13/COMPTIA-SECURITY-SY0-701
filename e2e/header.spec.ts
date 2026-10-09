@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
-const controls = ["tab_btn_studio", "tab_btn_glossary", "tab_btn_quiz", "tab_btn_pbq", "tab_btn_flash", "toggle_sidebar_btn", "lang_btn_it", "lang_btn_en"];
+const controls = ["tab_btn_studio", "tab_btn_glossary", "tab_btn_quiz", "tab_btn_pbq", "toggle_sidebar_btn", "lang_btn_it", "lang_btn_en"];
 
 // Notebook widths straddle the former lg breakpoint, where the fixed-height
 // wrapping header pushed the language switch below its border.
@@ -47,8 +47,8 @@ test("header navigation works by keyboard with visible selected state and access
   await expect(page.locator("#tab_btn_glossary")).toHaveAttribute("aria-selected", "true");
   await expect(page.locator("#glossary_root")).toBeVisible();
   await page.keyboard.press("End");
-  await expect(page.locator("#tab_btn_flash")).toBeFocused();
-  await expect(page.locator("#flash_start_all")).toBeVisible();
+  await expect(page.locator("#tab_btn_pbq")).toBeFocused();
+  await expect(page.locator("#pbq_layout")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(page.locator("#toggle_sidebar_btn")).toBeFocused();
   const { violations } = await new AxeBuilder({ page }).include("#app_header")

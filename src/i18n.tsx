@@ -582,6 +582,7 @@ const it = {
 
   // Glossary
   "gloss.badge": "Glossario Ufficiale SY0-701",
+  "gloss.viewSwitcher": "Vista del glossario: termini o flashcard degli acronimi",
   "gloss.termsCount": "{n} Termini & Acronimi",
   "gloss.heroTitle": "Glossario & Dizionario di Cybersecurity",
   "gloss.heroSubtitle": "Consulta definizioni dettagliate, acronimi ufficiali, protocolli e consigli d'esame per padroneggiare tutti i concetti chiave richiesti dalla certificazione CompTIA Security+.",
@@ -1159,6 +1160,7 @@ const en: Record<UIKey, string> = {
 
   // Glossary
   "gloss.badge": "Official SY0-701 Glossary",
+  "gloss.viewSwitcher": "Glossary view: terms or acronym flashcards",
   "gloss.termsCount": "{n} Terms & Acronyms",
   "gloss.heroTitle": "Cybersecurity Glossary & Dictionary",
   "gloss.heroSubtitle": "Browse detailed definitions, official acronyms, protocols and exam tips to master all the key concepts required by the CompTIA Security+ certification.",
