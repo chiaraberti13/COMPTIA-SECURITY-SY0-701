@@ -1239,4 +1239,385 @@ export const PBQ_SCENARIOS: Pbq[] = [
     explanation:
       "La cifratura a riposo protegge i dati sul disco di un portatile rubato. La cifratura in transito (TLS) protegge i dati mentre viaggiano in rete. Il mascheramento sostituisce i valori reali con dati realistici ma fittizi negli ambienti non di produzione. Il DLP controlla i dati in uscita e blocca l'invio di documenti riservati. L'hashing, qui distrattore, è a senso unico e serve a verificare l'integrità o a conservare le password, non a proteggere dati che devono restare leggibili.",
   },
+  {
+    id: 309,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "1.2",
+    domain: 1,
+    title: "Componenti dell'architettura Zero Trust",
+    scenario:
+      "Kestrelia adotta un'architettura Zero Trust secondo il modello NIST SP 800-207, distinguendo il piano di controllo dal piano dei dati.",
+    prompt:
+      "Abbina ogni componente alla sua funzione. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_pe", text: "Valuta le policy e decide se concedere o negare ogni singola richiesta di accesso.", correctOptionId: "pe" },
+      { id: "p_pa", text: "Genera, applica e revoca le credenziali di sessione in base alla decisione presa.", correctOptionId: "pa" },
+      { id: "p_pep", text: "Sul piano dei dati stabilisce, monitora e termina la connessione tra soggetto e risorsa.", correctOptionId: "pep" },
+      { id: "p_subject", text: "L'utente o il servizio che richiede l'accesso a una risorsa protetta.", correctOptionId: "subject" },
+    ],
+    options: [
+      { id: "pe", text: "Policy Engine (motore delle policy)" },
+      { id: "pa", text: "Policy Administrator (amministratore delle policy)" },
+      { id: "pep", text: "Policy Enforcement Point (punto di applicazione)" },
+      { id: "subject", text: "Soggetto richiedente" },
+      { id: "implicit", text: "Zona di fiducia implicita" },
+    ],
+    explanation:
+      "Policy Engine e Policy Administrator insieme formano il Policy Decision Point sul piano di controllo: il primo decide, il secondo attua la decisione gestendo le credenziali di sessione. Il Policy Enforcement Point sta sul piano dei dati e apre o chiude concretamente la connessione verso la risorsa. Il soggetto è chi richiede l'accesso. La «zona di fiducia implicita», qui distrattore, è proprio ciò che Zero Trust elimina: nessun accesso è fidato solo per la posizione di rete.",
+  },
+  {
+    id: 310,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "2.1",
+    domain: 2,
+    title: "Attori di minaccia e motivazioni",
+    scenario:
+      "Il team di threat intelligence di Kestrelia profila quattro episodi in base all'attore più probabile.",
+    prompt:
+      "Abbina ogni profilo all'attore di minaccia corretto. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_apt", text: "Gruppo con ingenti risorse e finanziamenti statali, conduce campagne persistenti di spionaggio su obiettivi strategici.", correctOptionId: "nation" },
+      { id: "p_crime", text: "Organizzazione strutturata il cui scopo è il profitto economico; gestisce ransomware su larga scala.", correctOptionId: "crime" },
+      { id: "p_hacktivist", text: "Agisce per una causa ideologica o politica e deturpa i siti per diffondere un messaggio.", correctOptionId: "hacktivist" },
+      { id: "p_insider", text: "Dipendente autorizzato che abusa dei propri accessi per vendetta dopo un licenziamento annunciato.", correctOptionId: "insider" },
+      { id: "p_unskilled", text: "Usa strumenti e script preconfezionati di altri senza comprenderne il funzionamento.", correctOptionId: "unskilled" },
+    ],
+    options: [
+      { id: "nation", text: "Stato-nazione (APT)" },
+      { id: "crime", text: "Criminalità organizzata" },
+      { id: "hacktivist", text: "Hacktivista" },
+      { id: "insider", text: "Minaccia interna (insider)" },
+      { id: "unskilled", text: "Attaccante inesperto (script kiddie)" },
+      { id: "shadow", text: "Shadow IT" },
+    ],
+    explanation:
+      "Gli attori si distinguono per risorse, sofisticazione, posizione (interna/esterna) e motivazione. Lo stato-nazione punta allo spionaggio con risorse elevate e persistenza; la criminalità organizzata è mossa dal profitto; l'hacktivista da una causa; l'insider sfrutta accessi legittimi, spesso per vendetta; l'inesperto riusa strumenti altrui. Lo Shadow IT, qui distrattore, è tecnologia interna non autorizzata: un rischio, non un attore mosso da una motivazione ostile.",
+  },
+  {
+    id: 311,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "2.3",
+    domain: 2,
+    title: "Tipi di vulnerabilità",
+    scenario:
+      "Durante un assessment Kestrelia cataloga le debolezze rilevate sui propri sistemi.",
+    prompt:
+      "Abbina ogni descrizione al tipo di vulnerabilità. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_toctou", text: "Tra il controllo di un permesso e l'uso effettivo della risorsa esiste una finestra temporale sfruttabile.", correctOptionId: "race" },
+      { id: "p_overflow", text: "Un input più lungo del previsto sovrascrive la memoria adiacente e altera il flusso di esecuzione.", correctOptionId: "overflow" },
+      { id: "p_vmescape", text: "Da una macchina virtuale un processo riesce a raggiungere l'hypervisor e le altre VM.", correctOptionId: "vmescape" },
+      { id: "p_legacy", text: "Un sistema operativo fuori supporto non riceve più patch di sicurezza.", correctOptionId: "legacy" },
+      { id: "p_reuse", text: "Memoria o storage riassegnati conservano i dati del tenant precedente.", correctOptionId: "reuse" },
+    ],
+    options: [
+      { id: "race", text: "Race condition (TOCTOU)" },
+      { id: "overflow", text: "Buffer overflow" },
+      { id: "vmescape", text: "VM escape (fuga dalla macchina virtuale)" },
+      { id: "legacy", text: "Sistema legacy / end-of-life" },
+      { id: "reuse", text: "Riuso delle risorse" },
+      { id: "sidechannel", text: "Attacco side-channel" },
+    ],
+    explanation:
+      "La race condition (TOCTOU, time-of-check/time-of-use) sfrutta la finestra tra verifica e uso. Il buffer overflow scrive oltre il buffer e può dirottare l'esecuzione. La VM escape rompe l'isolamento verso l'hypervisor. Un sistema legacy è vulnerabile perché non riceve più patch. Il riuso delle risorse espone dati residui in memoria o storage riassegnati. L'attacco side-channel, qui distrattore, inferisce segreti da consumi, tempi o emissioni, non da una delle condizioni descritte.",
+  },
+  {
+    id: 312,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "2.5",
+    domain: 2,
+    title: "Tecniche di mitigazione aziendali",
+    scenario:
+      "Kestrelia pianifica interventi di riduzione del rischio su asset e reti diversi.",
+    prompt:
+      "Abbina ogni intervento alla tecnica di mitigazione corretta. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_ot", text: "Separare la rete OT/ICS dalla rete aziendale per limitare il movimento laterale.", correctOptionId: "segmentation" },
+      { id: "p_retire", text: "Rimuovere software e dati e dismettere in modo sicuro un server a fine vita.", correctOptionId: "decommissioning" },
+      { id: "p_baseline", text: "Applicare e far rispettare in continuo una baseline di configurazione tramite GPO o MDM.", correctOptionId: "config" },
+      { id: "p_helpdesk", text: "Concedere all'helpdesk solo i privilegi minimi necessari al suo ruolo.", correctOptionId: "leastpriv" },
+      { id: "p_harden", text: "Disattivare porte e servizi inutilizzati e rimuovere gli account di default.", correctOptionId: "hardening" },
+    ],
+    options: [
+      { id: "segmentation", text: "Segmentazione della rete" },
+      { id: "decommissioning", text: "Dismissione sicura (decommissioning)" },
+      { id: "config", text: "Enforcement della configurazione" },
+      { id: "leastpriv", text: "Privilegio minimo" },
+      { id: "hardening", text: "Hardening (irrobustimento)" },
+      { id: "monitoring", text: "Monitoraggio continuo" },
+    ],
+    explanation:
+      "La segmentazione isola reti con requisiti diversi (OT/ICS) e frena il movimento laterale. La dismissione sicura rimuove dati e sistema a fine vita. L'enforcement della configurazione mantiene nel tempo una baseline nota. Il privilegio minimo limita i diritti al necessario. L'hardening riduce la superficie d'attacco disattivando ciò che non serve. Il monitoraggio continuo, qui distrattore, rileva ma non rimuove la debolezza descritta in ciascun intervento.",
+  },
+  {
+    id: 313,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "3.1",
+    domain: 3,
+    title: "Implicazioni dei modelli architetturali",
+    scenario:
+      "Kestrelia valuta dove collocare nuovi carichi di lavoro e quali vincoli di sicurezza comportano.",
+    prompt:
+      "Abbina ogni caratteristica al modello architetturale corretto. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_faas", text: "Esegue codice su richiesta senza gestire i server, con fatturazione per invocazione.", correctOptionId: "serverless" },
+      { id: "p_scada", text: "Dispositivi di campo e PLC con controllo in tempo reale, dove disponibilità e sicurezza fisica vengono prima di tutto.", correctOptionId: "scada" },
+      { id: "p_micro", text: "Applicazione suddivisa in piccoli servizi indipendenti che comunicano via API.", correctOptionId: "microservices" },
+      { id: "p_iac", text: "Infrastruttura descritta in modelli dichiarativi versionati e ricreabile in modo ripetibile.", correctOptionId: "iac" },
+      { id: "p_container", text: "Più carichi condividono lo stesso kernel del sistema operativo con isolamento leggero basato su immagini.", correctOptionId: "container" },
+    ],
+    options: [
+      { id: "serverless", text: "Serverless (FaaS)" },
+      { id: "scada", text: "SCADA / ICS" },
+      { id: "microservices", text: "Microservizi" },
+      { id: "iac", text: "Infrastructure as Code (IaC)" },
+      { id: "container", text: "Containerizzazione" },
+      { id: "iot", text: "Internet of Things (IoT)" },
+    ],
+    explanation:
+      "Il serverless sposta la gestione del runtime sul provider e cambia il modello di responsabilità. SCADA/ICS controlla processi fisici: la priorità è la disponibilità e la safety, spesso con protocolli legacy. I microservizi aumentano la superficie di API da proteggere. L'IaC rende la configurazione versionabile e ripetibile, ma un errore nei modelli si propaga ovunque. La containerizzazione condivide il kernel, quindi l'isolamento è più debole di una VM. L'IoT, qui distrattore, riguarda dispositivi vincolati con default deboli, non descritti negli altri casi.",
+  },
+  {
+    id: 103,
+    kind: "ordering",
+    mechanic: "ordering",
+    objective: "4.2",
+    domain: 4,
+    title: "Ciclo di vita di un asset hardware",
+    scenario:
+      "Kestrelia ritira un lotto di portatili che contengono dati riservati e ne gestisce il ciclo di vita fino alla distruzione certificata.",
+    prompt:
+      "Ordina le fasi di gestione dell'asset, dall'acquisizione alla distruzione.",
+    steps: [
+      { id: "s_acq", text: "Acquisizione e registrazione dell'asset nell'inventario." },
+      { id: "s_assign", text: "Assegnazione a un proprietario responsabile e classificazione dei dati." },
+      { id: "s_monitor", text: "Monitoraggio e tracciamento dell'asset durante l'uso operativo." },
+      { id: "s_decom", text: "Dismissione: ritiro dal servizio e rimozione dalle operazioni." },
+      { id: "s_sanitize", text: "Sanitizzazione dei supporti (cancellazione sicura, degaussing o crypto-erase)." },
+      { id: "s_destroy", text: "Distruzione fisica e rilascio del certificato di distruzione." },
+    ],
+    explanation:
+      "La gestione dell'asset segue un ciclo preciso: prima si acquisisce e si inventaria, poi si assegna a un proprietario e si classificano i dati, quindi si monitora durante l'uso. A fine vita si dismette (ritiro dal servizio), poi si sanitizza il supporto e solo infine si distrugge fisicamente, documentando il tutto con un certificato di distruzione. Sanitizzazione prima della distruzione: su un supporto che potrebbe essere riutilizzato la cancellazione sicura viene prima; il certificato chiude la catena di custodia.",
+  },
+  {
+    id: 314,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "4.4",
+    domain: 4,
+    title: "Strumenti e attività di monitoraggio",
+    scenario:
+      "Il SOC di Kestrelia assegna ogni esigenza allo strumento o all'attività di monitoraggio corretta.",
+    prompt:
+      "Abbina ogni esigenza allo strumento o all'attività corretta. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_correlate", text: "Raccoglie e correla eventi da molte sorgenti e genera avvisi centralizzati.", correctOptionId: "siem" },
+      { id: "p_poll", text: "Interroga i dispositivi di rete e riceve trap sullo stato e sui guasti.", correctOptionId: "snmp" },
+      { id: "p_scap", text: "Protocollo standard per automatizzare la verifica di vulnerabilità e configurazioni (CVE, CVSS, OVAL).", correctOptionId: "scap" },
+      { id: "p_tuning", text: "Riduce i falsi positivi regolando soglie e regole degli avvisi.", correctOptionId: "tuning" },
+      { id: "p_flows", text: "Registra i metadati dei flussi di traffico di rete per l'analisi.", correctOptionId: "netflow" },
+    ],
+    options: [
+      { id: "siem", text: "SIEM" },
+      { id: "snmp", text: "SNMP" },
+      { id: "scap", text: "SCAP" },
+      { id: "tuning", text: "Tuning degli avvisi" },
+      { id: "netflow", text: "NetFlow" },
+      { id: "dlp", text: "DLP" },
+    ],
+    explanation:
+      "Il SIEM aggrega e correla i log di molte sorgenti e produce avvisi. SNMP raccoglie telemetria dai dispositivi e ne riceve le trap. SCAP standardizza e automatizza i controlli di vulnerabilità e configurazione (CVE, CVSS, OVAL). Il tuning degli avvisi abbassa il rumore dei falsi positivi. NetFlow registra i metadati dei flussi (chi parla con chi), non il contenuto. Il DLP, qui distrattore, previene l'esfiltrazione di dati: non è uno strumento di monitoraggio dello stato o dei flussi.",
+  },
+  {
+    id: 315,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "4.6",
+    domain: 4,
+    title: "Fattori di autenticazione a più fattori",
+    scenario:
+      "Kestrelia rafforza l'accesso combinando fattori di autenticazione di categorie diverse.",
+    prompt:
+      "Abbina ogni metodo alla categoria di fattore corretta. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_fingerprint", text: "Scansione dell'impronta digitale all'accesso.", correctOptionId: "inherence" },
+      { id: "p_key", text: "Chiave di sicurezza hardware o codice temporaneo generato da un'app (TOTP).", correctOptionId: "possession" },
+      { id: "p_pin", text: "PIN o password memorizzati dall'utente.", correctOptionId: "knowledge" },
+      { id: "p_geo", text: "Accesso consentito solo da una posizione geografica attesa (geofencing).", correctOptionId: "location" },
+      { id: "p_keystroke", text: "Analisi del ritmo di digitazione e del comportamento d'uso.", correctOptionId: "behavior" },
+    ],
+    options: [
+      { id: "knowledge", text: "Qualcosa che sai" },
+      { id: "possession", text: "Qualcosa che hai" },
+      { id: "inherence", text: "Qualcosa che sei" },
+      { id: "location", text: "Da qualche parte dove sei" },
+      { id: "behavior", text: "Qualcosa che fai" },
+      { id: "sso", text: "Single Sign-On (SSO)" },
+    ],
+    explanation:
+      "L'autenticazione è davvero a più fattori solo quando combina categorie diverse: qualcosa che sai (PIN), che hai (chiave/TOTP), che sei (impronta). Le categorie meno ovvie sono «da qualche parte dove sei» (posizione/geofencing) e «qualcosa che fai» (biometria comportamentale, come il ritmo di digitazione). Il Single Sign-On, qui distrattore, è un meccanismo di comodità che propaga una sola autenticazione a più servizi: non è un fattore.",
+  },
+  {
+    id: 104,
+    kind: "ordering",
+    mechanic: "ordering",
+    objective: "4.7",
+    domain: 4,
+    title: "Playbook di automazione e orchestrazione (SOAR)",
+    scenario:
+      "Kestrelia automatizza con un playbook SOAR la risposta a un avviso di malware su un endpoint.",
+    prompt:
+      "Ordina i passi del playbook, dall'attivazione alla chiusura.",
+    steps: [
+      { id: "s_trigger", text: "Un avviso del SIEM attiva automaticamente il playbook." },
+      { id: "s_enrich", text: "Arricchimento: interroga threat intelligence e reputazione degli indicatori." },
+      { id: "s_decide", text: "Logica decisionale con guardrail: valuta la gravità ed evita azioni non consentite." },
+      { id: "s_contain", text: "Contenimento automatico: isola l'endpoint tramite API dell'EDR e disabilita l'account." },
+      { id: "s_ticket", text: "Apertura del ticket ed escalation/notifica agli analisti." },
+      { id: "s_report", text: "Chiusura e report dell'esecuzione per audit e metriche." },
+    ],
+    explanation:
+      "Un playbook SOAR parte da un trigger (l'avviso del SIEM), poi arricchisce gli indicatori con contesto esterno prima di decidere. La logica decisionale applica i guardrail, barriere che impediscono azioni pericolose o non autorizzate. Solo allora agisce: contiene l'endpoint via API dell'EDR e disabilita l'account. Apre quindi il ticket con eventuale escalation umana e infine chiude registrando l'esecuzione per audit e metriche. L'arricchimento prima della decisione evita contenimenti inutili su falsi positivi.",
+  },
+  {
+    id: 105,
+    kind: "ordering",
+    mechanic: "ordering",
+    objective: "5.6",
+    domain: 5,
+    title: "Ciclo di un programma di sensibilizzazione",
+    scenario:
+      "Kestrelia avvia un programma di security awareness per tutto il personale.",
+    prompt:
+      "Ordina le fasi del programma, dalla pianificazione al miglioramento ricorrente.",
+    steps: [
+      { id: "s_assess", text: "Analisi dei rischi comportamentali e definizione degli obiettivi del programma." },
+      { id: "s_develop", text: "Sviluppo dei contenuti e delle policy di sicurezza da comunicare." },
+      { id: "s_execute", text: "Esecuzione: erogazione della formazione a tutto il personale." },
+      { id: "s_phish", text: "Campagne di phishing simulato per misurare riconoscimento e segnalazione." },
+      { id: "s_report", text: "Monitoraggio e reportistica delle metriche (iniziale e ricorrente)." },
+      { id: "s_improve", text: "Revisione ricorrente e aggiornamento del programma sulla base dei risultati." },
+    ],
+    explanation:
+      "Un programma di sensibilizzazione segue un ciclo: prima si analizzano i rischi comportamentali e si fissano gli obiettivi, poi si sviluppano contenuti e policy, quindi si esegue erogando la formazione. Le campagne di phishing simulato misurano se le persone riconoscono e segnalano gli attacchi. Le metriche si monitorano e si riportano sia all'avvio sia in modo ricorrente, alimentando una revisione periodica che mantiene efficace il programma nel tempo. La sensibilizzazione è un programma continuo, non un corso una tantum.",
+  },
+  {
+    id: 316,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "5.1",
+    domain: 5,
+    title: "Gerarchia dei documenti di governance",
+    scenario:
+      "Il team di governance di Kestrelia riordina la documentazione di sicurezza.",
+    prompt:
+      "Abbina ogni documento alla sua definizione. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_policy", text: "Dichiarazione di alto livello, obbligatoria, che fissa l'intento e le responsabilità.", correctOptionId: "policy" },
+      { id: "p_standard", text: "Requisiti specifici e obbligatori (per esempio la lunghezza minima delle password) a supporto di una policy.", correctOptionId: "standard" },
+      { id: "p_procedure", text: "Istruzioni passo-passo su come eseguire concretamente un'attività.", correctOptionId: "procedure" },
+      { id: "p_guideline", text: "Raccomandazioni consigliate ma non obbligatorie.", correctOptionId: "guideline" },
+    ],
+    options: [
+      { id: "policy", text: "Policy" },
+      { id: "standard", text: "Standard" },
+      { id: "procedure", text: "Procedura" },
+      { id: "guideline", text: "Linea guida" },
+      { id: "regulation", text: "Legge/regolamento esterno" },
+    ],
+    explanation:
+      "La policy fissa l'intento e la direzione, ed è obbligatoria. Lo standard traduce la policy in requisiti specifici e misurabili, anch'essi obbligatori. La procedura descrive i passi operativi per rispettare lo standard. La linea guida offre raccomandazioni non vincolanti. La legge o il regolamento esterno, qui distrattore, è imposto dall'esterno: la governance interna deve rispettarlo, ma non è un documento della sua stessa gerarchia.",
+  },
+  {
+    id: 317,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "5.3",
+    domain: 5,
+    title: "Accordi e attività con terze parti",
+    scenario:
+      "Kestrelia formalizza i rapporti con fornitori e partner lungo la supply chain.",
+    prompt:
+      "Abbina ogni descrizione all'accordo o all'attività corretta. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_sla", text: "Garantisce livelli di servizio misurabili, come disponibilità del 99,9% e tempi di risposta.", correctOptionId: "sla" },
+      { id: "p_sow", text: "Elenca deliverable, tempistiche e milestone specifici di un progetto.", correctOptionId: "sow" },
+      { id: "p_audit", text: "Clausola che consente al cliente di verificare direttamente i controlli del fornitore.", correctOptionId: "audit" },
+      { id: "p_nda", text: "Protegge le informazioni riservate scambiate tra le parti.", correctOptionId: "nda" },
+      { id: "p_mou", text: "Esprime l'intento comune tra le parti, con scarsa vincolatività legale.", correctOptionId: "mou" },
+    ],
+    options: [
+      { id: "sla", text: "SLA (accordo sul livello di servizio)" },
+      { id: "sow", text: "SOW (capitolato di lavoro)" },
+      { id: "audit", text: "Clausola di diritto all'audit" },
+      { id: "nda", text: "NDA (accordo di riservatezza)" },
+      { id: "mou", text: "MOU/MOA (memorandum d'intesa)" },
+      { id: "bpa", text: "BPA (accordo tra partner d'affari)" },
+    ],
+    explanation:
+      "Lo SLA fissa livelli di servizio misurabili e le penali in caso di mancato rispetto. Il SOW definisce deliverable e tempistiche puntuali di un progetto. La clausola di diritto all'audit permette al cliente di verificare i controlli del fornitore. L'NDA tutela le informazioni riservate. Il MOU/MOA esprime un intento comune con scarsa vincolatività. Il BPA, qui distrattore, regola un rapporto di partnership commerciale con ripartizione di utili e responsabilità: non descrive nessuna delle situazioni elencate.",
+  },
+  {
+    id: 318,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "5.4",
+    domain: 5,
+    title: "Conformità e privacy",
+    scenario:
+      "L'ufficio compliance di Kestrelia classifica situazioni legate agli obblighi normativi e alla privacy.",
+    prompt:
+      "Abbina ogni situazione al concetto corretto. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_fine", text: "Un'autorità impone una sanzione pecuniaria per il mancato rispetto di un obbligo.", correctOptionId: "fine" },
+      { id: "p_attest", text: "Dichiarazione formale e firmata che i controlli richiesti sono in atto.", correctOptionId: "attestation" },
+      { id: "p_rtbf", text: "Un interessato chiede la cancellazione dei propri dati personali.", correctOptionId: "rtbf" },
+      { id: "p_inventory", text: "Mappare dove risiedono i dati personali trattati e per quanto tempo conservarli.", correctOptionId: "inventory" },
+      { id: "p_license", text: "La perdita della licenza operativa come conseguenza della non conformità.", correctOptionId: "license" },
+    ],
+    options: [
+      { id: "fine", text: "Multa/sanzione pecuniaria" },
+      { id: "attestation", text: "Attestazione di conformità" },
+      { id: "rtbf", text: "Diritto all'oblio" },
+      { id: "inventory", text: "Inventario e retention dei dati" },
+      { id: "license", text: "Perdita della licenza" },
+      { id: "duecare", text: "Due care (diligenza ragionevole)" },
+    ],
+    explanation:
+      "Le conseguenze della non conformità includono multe, sanzioni, danno reputazionale, impatti contrattuali e, nei casi gravi, la perdita della licenza operativa. L'attestazione è la dichiarazione firmata che i controlli sono attuati. Sul fronte privacy, il diritto all'oblio è la richiesta di cancellazione dei dati personali dell'interessato, mentre l'inventario e la retention stabiliscono dove risiedono i dati e per quanto tempo. La due care, qui distrattore, è la diligenza ragionevole nell'adottare controlli: un principio, non una delle situazioni descritte.",
+  },
+  {
+    id: 319,
+    kind: "matching",
+    mechanic: "matching",
+    objective: "5.5",
+    domain: 5,
+    title: "Audit, assessment e penetration test",
+    scenario:
+      "Kestrelia pianifica verifiche interne ed esterne e un penetration test su un'applicazione.",
+    prompt:
+      "Abbina ogni descrizione al tipo corretto di verifica. Un'opzione è un distrattore.",
+    prompts: [
+      { id: "p_internal", text: "Il team interno verifica la conformità dei controlli e riferisce alla direzione.", correctOptionId: "internal" },
+      { id: "p_external", text: "Una terza parte indipendente esamina i controlli ed emette un'attestazione.", correctOptionId: "external" },
+      { id: "p_known", text: "I tester ricevono in anticipo architettura e credenziali complete.", correctOptionId: "known" },
+      { id: "p_unknown", text: "I tester partono senza alcuna informazione interna sul bersaglio.", correctOptionId: "unknown" },
+      { id: "p_passive", text: "Raccolta di informazioni senza interagire direttamente con il bersaglio (OSINT).", correctOptionId: "passive" },
+    ],
+    options: [
+      { id: "internal", text: "Audit interno" },
+      { id: "external", text: "Audit esterno / attestazione" },
+      { id: "known", text: "Ambiente noto (known environment)" },
+      { id: "unknown", text: "Ambiente ignoto (unknown environment)" },
+      { id: "passive", text: "Ricognizione passiva" },
+      { id: "active", text: "Ricognizione attiva" },
+    ],
+    explanation:
+      "L'audit interno è condotto dal personale dell'organizzazione per la direzione; quello esterno da una terza parte indipendente che rilascia un'attestazione. Nei penetration test l'ambiente noto fornisce ai tester architettura e credenziali complete (white box), l'ambiente ignoto nessuna informazione iniziale (black box). La ricognizione passiva raccoglie dati senza toccare il bersaglio (OSINT). La ricognizione attiva, qui distrattore, interroga direttamente il bersaglio con scansioni: utile, ma è l'opposto di quella passiva descritta.",
+  },
 ];

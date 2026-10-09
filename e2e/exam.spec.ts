@@ -15,7 +15,8 @@ async function configure(page: Page, total = 2) {
   await expect(page.locator("#start_exam_btn")).toBeEnabled();
 }
 async function currentMatching(page: Page) {
-  // Domain 3 has three matching PBQs; detect which one the random draw placed.
+  // Domain 3 has several matching PBQs; detect which one the random draw placed
+  // by its unique first prompt.
   if (await page.locator("#pbq_match_p_remote").count()) {
     return {
       first: "p_remote", value: "remote_tls", objective: "3.2", total: 7,
@@ -26,6 +27,12 @@ async function currentMatching(page: Page) {
     return {
       first: "payments", value: "a", objective: "3.4", total: 7,
       rest: [["orders", "b"], ["archive", "c"], ["limits", "limits"], ["point", "loss"], ["copies", "copies"], ["sites", "capacity"]],
+    };
+  }
+  if (await page.locator("#pbq_match_p_faas").count()) {
+    return {
+      first: "p_faas", value: "serverless", objective: "3.1", total: 5,
+      rest: [["p_scada", "scada"], ["p_micro", "microservices"], ["p_iac", "iac"], ["p_container", "container"]],
     };
   }
   return {
