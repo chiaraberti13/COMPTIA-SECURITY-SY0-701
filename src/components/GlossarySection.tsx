@@ -70,7 +70,10 @@ function determineCategory(sub: Subtopic, groupTitle: string): GlossaryTerm["cat
   // Acronimi e Protocolli
   if (
     /^(AAA|CIA|MFA|SSO|SAML|OIDC|LDAP|RADIUS|TACACS\+|DNSSEC|DKIM|SPF|DMARC|IPSEC|TLS|SSH|HTTPS|SNMP|BGP|OSPF|EAP|GCMP|SAE|TKIP|MIC|WPA\d?|RBAC|ABAC|MAC|DAC|RuBAC|PKI|CRL|OCSP|CSR|CA|HSM|TPM|CVE|CVSS|SIEM|SOAR|XDR|EDR|NDR|EPP|NIDS|NIPS|HIDS|HIPS|NGFW|WAF|UTM|SWG|CASB|SASE|ZTNA|DLP|SAST|DAST|IAST|RAID|UPS|SLA|MOU|MOA|ISA|NDA|DPA|GDPR|HIPAA|PCI|NIST|CIS|ISO|BIA|BCP|DRP|RTO|RPO|ALE|SLE|ARO|AV|EF|MTTR|MTTD|MTBF|MTTF)$/.test(sub.name) ||
-    /protocollo|protocol|acronimo|standard/i.test(groupTitle) ||
+    // The acronym appendix (group "Appendice sigle…" / "Acronym appendix…")
+    // is the official SY0-701 acronym list; every one of its entries belongs
+    // in this category, not in the generic "Concetti Cardine" fallback.
+    /protocollo|protocol|acronimo|acronym|standard|sigle/i.test(groupTitle) ||
     /protocollo|algoritmo/i.test(sub.definition)
   ) {
     return "Acronimi & Protocolli";
