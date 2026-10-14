@@ -10,7 +10,7 @@
 #
 #   docker build -t comptia-labs labs/container
 #   bash labs/container/run.sh 11
-FROM ubuntu:noble-20260917@sha256:9bb148f8a4e622539bc24b0b312e66da1bafcceedebeb703dbbc183530ba2d7d
+FROM ubuntu:noble-20260917@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
 # --no-install-recommends: solo le dipendenze necessarie. Gli indici di apt si
 # cancellano nello stesso strato, così non restano nell'immagine. nginx crea
