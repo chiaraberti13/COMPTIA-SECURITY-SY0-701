@@ -9,19 +9,21 @@
 > priorities, rebuilt each monthly review; completed items are dropped (history
 > lives in Git, the CHANGELOG and the issues).
 
-## Stato della revisione — 2026-10-09
+## Stato della revisione — 2026-10-17
 
-**Esito complessivo: ✅.** Tutti i gate automatici sono verdi e non sono stati
-trovati difetti rotti, regressioni o vulnerabilità. In questa revisione sono state
-applicate e completate entrambe le correzioni di accuratezza dei contenuti:
-l'appendice sigle riscritta con objective code per voce e definizioni funzionali
-(issue [#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102))
-e l'irrobustimento del metodo di misura della copertura bilingue, ora provata in
-entrambe le lingue (issue
-[#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103)).
-Entrambe chiuse. Nessuna issue di revisione aperta.
+**Esito complessivo: ✅.** Tutti i gate automatici sono stati rieseguiti verdi
+sulla baseline corrente, dopo l'atterraggio su `main` degli aggiornamenti
+Dependabot raggruppati settimanali (PR
+[#107](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/pull/107)–[#111](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/pull/111):
+gruppo npm minor/patch, digest Docker `node` e `ubuntu`, gruppo github-actions).
+Nessun difetto rotto, regressione o vulnerabilità introdotti dagli aggiornamenti.
+Le correzioni di accuratezza dei contenuti delle revisioni precedenti (appendice
+sigle, issue [#102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102);
+copertura bilingue provata in entrambe le lingue e inventario ufficiale al 100%,
+issue [#103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103))
+restano chiuse e verificate. Nessuna issue di revisione aperta.
 
-Base della revisione: `main` a `4d16e79`. Nessuna routine di sviluppo attiva
+Base della revisione: `main` a `fc4ff2b`. Nessuna routine di sviluppo attiva
 all'avvio (ultimo commit > 30 minuti).
 
 ## Origine e perimetro
@@ -114,7 +116,7 @@ Nessuna issue di revisione aperta.
   (`engines` `^22.13.0 || >=24`, `.nvmrc` 24). Scelto il **24**, non l'ultimo 26, per non
   tipizzare contro un Node major non supportato dal floor. Solo dev-dependency, nessun
   impatto sul bundle; verdi tutti i gate.
-- `typescript` 5.8 → 7.0 (compilatore nativo): **rinviato, motivo concreto.**
+- `typescript` 5.9 → 7.0 (compilatore nativo): **rinviato, motivo concreto.**
   `typescript-eslint` non supporta TS 7.0 (errore esplicito all'avvio di `eslint`;
   tracking [typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940),
   serve TS ≥ 7.1) e `tsc` 7 segnala un errore di risoluzione dei tipi di `jsdom`.
