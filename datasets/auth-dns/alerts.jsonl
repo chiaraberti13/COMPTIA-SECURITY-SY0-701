@@ -1,0 +1,2 @@
+{"id":"A1","rule":"failures-followed-by-success","severity":"medium","evidence":["E1","E2","E3","E4"],"hypothesis":{"it":"Possibile tentativo di indovinare una password; verificare con l’utente.","en":"Possible password guessing; verify with the user."}}
+{"id":"A2","rule":"periodic-dns","severity":"low","evidence":["E5","E6","E7"],"hypothesis":{"it":"Periodicità DNS: possibile automazione lecita o beaconing, non prova di compromissione.","en":"Periodic DNS: possible legitimate automation or beaconing, not proof of compromise."}}

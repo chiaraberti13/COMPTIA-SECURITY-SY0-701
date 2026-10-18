@@ -1,0 +1,146 @@
+/** Authoritative source catalogue and mapping for all SY0-701 objectives. */
+
+export type SourceKind = "exam" | "standard" | "reference";
+
+export interface Source {
+  title: string;
+  publisher: string;
+  url: string;
+  kind: SourceKind;
+}
+
+export const SOURCES = {
+  ciscoIsePosture: { title: "Cisco ISE 3.4 — Compliance", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/td/docs/security/ise/3-4/admin_guide/b_ise_admin_3_4/b_ISE_admin_compliance.html", kind: "reference" },
+  ciscoEolPolicy: { title: "Cisco — End-of-Life Policy", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/products/eos-eol-policy.html", kind: "reference" },
+  ciscoSase: { title: "Cisco — What Is SASE?", publisher: "Cisco", url: "https://www.cisco.com/site/us/en/learn/topics/security/what-is-secure-access-service-edge-sase.html", kind: "reference" },
+  microsoftDefenderCloudApps: { title: "Microsoft Defender for Cloud Apps overview", publisher: "Microsoft Learn", url: "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps", kind: "reference" },
+  ciscoIseAgentless: { title: "Cisco ISE — Configure Posture Agentless", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/security/identity-services-engine/222260-configure-posture-agentless.html", kind: "reference" },
+  tenableCredentialedChecks: { title: "Tenable Nessus Credentialed Checks", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/NessusCredentialedChecks.htm", kind: "reference" },
+  tenablePluginRules: { title: "Tenable Nessus Plugin Rules", publisher: "Tenable", url: "https://docs.tenable.com/nessus/Content/PluginRules.htm", kind: "reference" },
+  rfc9989: { title: "RFC 9989 — DMARC", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc9989", kind: "standard" },
+  rfc7208: { title: "RFC 7208 — SPF", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc7208", kind: "standard" },
+  rfc6376: { title: "RFC 6376 — DKIM", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc6376", kind: "standard" },
+  ciscoWpa3Modes: { title: "Wi-Fi 6E WLAN Layer 2 Security", publisher: "Cisco", url: "https://www.cisco.com/c/en/us/support/docs/wireless/catalyst-9800-series-wireless-controllers/220712-configure-and-verify-wi-fi-6e-wlan-layer.html", kind: "reference" },
+  ieee8021x: { title: "IEEE 802.1X — Port-Based Network Access Control", publisher: "IEEE", url: "https://1.ieee802.org/security/802-1x/", kind: "standard" },
+  rfc3748: { title: "RFC 3748 — EAP", publisher: "IETF", url: "https://datatracker.ietf.org/doc/html/rfc3748", kind: "standard" },
+  microsoftPeap: { title: "Protected Extensible Authentication Protocol (PEAP)", publisher: "Microsoft", url: "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-peap/5308642b-90c9-4cc4-beec-fb367325c0f9", kind: "reference" },
+  rfc4301: { title: "RFC 4301 — IPsec Security Architecture", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc4301", kind: "standard" },
+  rfc7296: { title: "RFC 7296 — IKEv2", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc7296", kind: "standard" },
+  netgateOpenvpnMode: { title: "OpenVPN Mode Configuration", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/vpn/openvpn/configure-server-mode.html", kind: "reference" },
+  netgateRuleMethodology: { title: "pfSense Rule Methodology", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/rule-methodology.html", kind: "reference" },
+  netgateFirewallFundamentals: { title: "pfSense Firewall Fundamentals", publisher: "Netgate", url: "https://docs.netgate.com/pfsense/en/latest/firewall/fundamentals.html", kind: "reference" },
+  sox: { title: "Sarbanes-Oxley Rulemaking and Reports", publisher: "SEC", url: "https://www.sec.gov/spotlight/sarbanes-oxley.htm", kind: "standard" },
+  glba: { title: "Gramm-Leach-Bliley Act", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act", kind: "standard" },
+  ftcSafeguards: { title: "FTC Safeguards Rule", publisher: "FTC", url: "https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know", kind: "standard" },
+  hipaaCovered: { title: "HIPAA Covered Entities and Business Associates", publisher: "HHS", url: "https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html", kind: "reference" },
+  hipaaSecurity: { title: "HIPAA Security Rule", publisher: "HHS", url: "https://www.hhs.gov/hipaa/for-professionals/security/index.html", kind: "standard" },
+  pciPrograms: { title: "PCI SSC compliance programs", publisher: "PCI SSC", url: "https://www.pcisecuritystandards.org/faqs/1212/", kind: "reference" },
+  samlCore: {"title": "SAML 2.0 Core", "publisher": "OASIS", "url": "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf", "kind": "standard"},
+  rfc6749: {"title": "RFC 6749 \u2014 OAuth 2.0", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc6749", "kind": "standard"},
+  oidcCore: {"title": "OpenID Connect Core 1.0", "publisher": "OpenID Foundation", "url": "https://openid.net/specs/openid-connect-core-1_0.html", "kind": "standard"},
+  rfc4120: {"title": "RFC 4120 \u2014 Kerberos V5", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc4120", "kind": "standard"},
+
+  icannHijacking: {"title": "ICANN Domain Name Registration Hijacking", "publisher": "ICANN", "url": "https://www.icann.org/en/icann-acronyms-and-terms/domain-name-registration-hijacking-en", "kind": "reference"},
+  icannProtection: {"title": "ICANN Protect Your Domain Name", "publisher": "ICANN", "url": "https://www.icann.org/en/blogs/details/do-you-have-a-domain-name-heres-what-you-need-to-know-26-3-2018-en", "kind": "reference"},
+  icannLocks: {"title": "ICANN EPP Status Codes", "publisher": "ICANN", "url": "https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en", "kind": "reference"},
+  rfc4033: {"title": "RFC 4033 — DNS Security Introduction and Requirements", "publisher": "IETF", "url": "https://www.rfc-editor.org/rfc/rfc4033", "kind": "standard"},
+  ieee80211: {"title": "IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications", "publisher": "IEEE", "url": "https://standards.ieee.org/ieee/802.11/7028/", "kind": "standard"},
+  wifiAlliance: {"title": "Wi-Fi Alliance — WPA3 Specification and security", "publisher": "Wi-Fi Alliance", "url": "https://www.wi-fi.org/discover-wi-fi/security", "kind": "reference"},
+
+  owaspSession: { title: "Session Management Cheat Sheet", publisher: "OWASP Foundation", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", kind: "reference" },
+  mdnCookies: { title: "MDN Set-Cookie", publisher: "MDN", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie", kind: "reference" },
+  owaspXss: {"title": "XSS Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html", "kind": "reference"},
+  owaspCsrf: {"title": "CSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
+  owaspSsrf: {"title": "SSRF Prevention Cheat Sheet", "publisher": "OWASP Foundation", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html", "kind": "reference"},
+
+  nistSteganography: { title: "CSRC Glossary — Steganography", publisher: "NIST", url: "https://csrc.nist.gov/glossary/term/steganography", kind: "reference" },
+  comptiaSecurityPlus: { title: "CompTIA Security+ (SY0-701) — exam objectives", publisher: "CompTIA", url: "https://www.comptia.org/certifications/security", kind: "exam" },
+  nist80053: { title: "SP 800-53 Rev. 5 — Security and Privacy Controls", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", kind: "standard" },
+  nist800207: { title: "SP 800-207 — Zero Trust Architecture", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/207/final", kind: "standard" },
+  nist800128: { title: "SP 800-128 — Guide for Security-Focused Configuration Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/128/upd1/final", kind: "standard" },
+  nist8286c: { title: "NIST IR 8286C Rev. 1 — Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight", publisher: "NIST", url: "https://csrc.nist.gov/pubs/ir/8286/c/r1/final", kind: "standard" },
+  nist8286d: { title: "NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response", publisher: "NIST", url: "https://csrc.nist.gov/pubs/ir/8286/d/final", kind: "standard" },
+  nist80056a: { title: "SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/a/r3/final", kind: "standard" },
+  nist80056b: { title: "SP 800-56B Rev. 2 — Pair-Wise Key-Establishment Using Integer Factorization Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/b/r2/final", kind: "standard" },
+  nist80063b: { title: "SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/63/b/4/final", kind: "standard" },
+  nist80037: { title: "SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", kind: "standard" },
+  nist80088: { title: "SP 800-88 Rev. 2 — Guidelines for Media Sanitization", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/88/r2/final", kind: "standard" },
+  nist80057: { title: "SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", kind: "standard" },
+  nist800145: { title: "SP 800-145 — The NIST Definition of Cloud Computing", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/145/final", kind: "standard" },
+  nist80034: { title: "SP 800-34 Rev. 1 — Contingency Planning Guide", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final", kind: "standard" },
+  nist80040: { title: "SP 800-40 Rev. 4 — Enterprise Patch Management Planning", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/40/r4/final", kind: "standard" },
+  nist80092: { title: "SP 800-92 — Guide to Computer Security Log Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/92/final", kind: "standard" },
+  nist80061: { title: "SP 800-61 Rev. 3 — Incident Response Recommendations", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/61/r3/final", kind: "standard" },
+  nist80030: { title: "SP 800-30 Rev. 1 — Guide for Conducting Risk Assessments", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/30/r1/final", kind: "standard" },
+  nist800161: { title: "SP 800-161 Rev. 1 — Cybersecurity Supply Chain Risk Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final", kind: "standard" },
+  nist800115: { title: "SP 800-115 — Technical Guide to Information Security Testing", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/115/final", kind: "standard" },
+  nist80050: { title: "SP 800-50 Rev. 1 — Building a Cybersecurity and Privacy Learning Program", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/50/r1/final", kind: "standard" },
+  nistCsf: { title: "Cybersecurity Framework (CSF) 2.0", publisher: "NIST", url: "https://www.nist.gov/cyberframework", kind: "standard" },
+  rfc8446: { title: "RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc8446", kind: "standard" },
+  rfc9190: { title: "RFC 9190 — EAP-TLS 1.3", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc9190", kind: "standard" },
+  rfc5281: { title: "RFC 5281 — EAP-TTLSv0", publisher: "IETF", url: "https://www.rfc-editor.org/rfc/rfc5281", kind: "standard" },
+  microsoftEapCertificates: { title: "Certificate requirements for EAP-TLS and PEAP", publisher: "Microsoft Learn", url: "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/certificate-requirements-eap-tls-peap", kind: "reference" },
+  microsoftWifiProfiles: { title: "Wi-Fi settings for Windows devices in Microsoft Intune", publisher: "Microsoft Learn", url: "https://learn.microsoft.com/en-us/mem/intune/configuration/wi-fi-settings-windows", kind: "reference" },
+  iso27001: { title: "ISO/IEC 27001 — Information security management systems", publisher: "ISO", url: "https://www.iso.org/standard/27001", kind: "standard" },
+  gdpr: { title: "Regulation (EU) 2016/679 — General Data Protection Regulation", publisher: "EUR-Lex", url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj", kind: "standard" },
+  hipaa: { title: "HIPAA — Health Insurance Portability and Accountability Act", publisher: "U.S. Department of Health and Human Services", url: "https://www.hhs.gov/hipaa/index.html", kind: "standard" },
+  soc2: { title: "SOC 2 — Trust Services Criteria", publisher: "AICPA", url: "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2", kind: "standard" },
+  pciDss: { title: "PCI Data Security Standard", publisher: "PCI Security Standards Council", url: "https://www.pcisecuritystandards.org/standards/pci-dss/", kind: "standard" },
+  owaspTop10: { title: "OWASP Top 10", publisher: "OWASP Foundation", url: "https://owasp.org/www-project-top-ten/", kind: "reference" },
+  cisControls: { title: "CIS Critical Security Controls", publisher: "Center for Internet Security", url: "https://www.cisecurity.org/controls", kind: "reference" },
+  mitreAttack: { title: "MITRE ATT&CK", publisher: "MITRE", url: "https://attack.mitre.org/", kind: "reference" },
+  cisaKev: { title: "Known Exploited Vulnerabilities Catalog", publisher: "CISA", url: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog", kind: "reference" },
+  firstCvss: { title: "Common Vulnerability Scoring System (CVSS)", publisher: "FIRST", url: "https://www.first.org/cvss/", kind: "reference" },
+} as const satisfies Record<string, Source>;
+
+export type SourceId = keyof typeof SOURCES;
+
+export interface ObjectiveSources {
+  /** Primary sources first, then secondary ones. */
+  sources: SourceId[];
+}
+
+/** When the sources below were assigned to the objectives. */
+export const SOURCES_MAPPED_ON = "2026-10-08";
+
+const mapped = (...sources: SourceId[]): ObjectiveSources => ({
+  sources: ["comptiaSecurityPlus", ...sources],
+});
+
+export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
+  "1.1": mapped("nist80053"),
+  "1.2": mapped("nist800207", "nist80053"),
+  "1.3": mapped("nist80053", "cisControls"),
+  "1.4": mapped("nist80057", "nist80056a", "nist80056b", "rfc8446", "nistSteganography"),
+  "2.1": mapped("nist80030", "mitreAttack"),
+  "2.2": mapped("icannProtection", "nist800161", "mitreAttack"),
+  "2.3": mapped("nist80053", "owaspTop10", "cisaKev", "ciscoEolPolicy"),
+  "2.4": mapped("icannHijacking", "icannProtection", "icannLocks", "rfc4033", "ieee80211", "wifiAlliance", "nist80061", "mitreAttack", "owaspXss", "owaspCsrf", "owaspSsrf", "owaspSession", "mdnCookies", "nist80063b"),
+  "2.5": mapped("nist80053", "nist800128", "cisControls"),
+  "3.1": mapped("nist800145", "nist800207"),
+  "3.2": mapped("ciscoSase", "microsoftDefenderCloudApps", "rfc4301", "rfc7296", "netgateOpenvpnMode", "nist800207", "ieee80211", "wifiAlliance", "cisControls"),
+  "3.3": mapped("nist80057", "gdpr"),
+  "3.4": mapped("nist80034"),
+  "4.1": mapped("ciscoWpa3Modes", "ieee8021x", "rfc3748", "microsoftPeap", "nist80053", "ieee80211", "wifiAlliance", "cisControls", "owaspSession", "mdnCookies", "rfc9190", "rfc5281", "microsoftEapCertificates", "microsoftWifiProfiles"),
+  "4.2": mapped("nist80053", "nist80088", "cisControls"),
+  "4.3": mapped("nist80040", "firstCvss", "cisaKev", "tenableCredentialedChecks", "tenablePluginRules"),
+  "4.4": mapped("nist80092", "mitreAttack"),
+  "4.5": mapped("ciscoIsePosture", "ciscoIseAgentless", "rfc9989", "rfc7208", "rfc6376", "netgateRuleMethodology", "netgateFirewallFundamentals", "nist80053", "cisControls"),
+  "4.6": mapped("samlCore", "rfc6749", "oidcCore", "rfc4120", "nist800207", "nist80053", "nist80063b"),
+  "4.7": mapped("nist80053", "cisControls"),
+  "4.8": mapped("nist80061"),
+  "4.9": mapped("nist80061", "nist80092"),
+  "5.1": mapped("sox", "glba", "ftcSafeguards", "nistCsf", "iso27001", "nist80037"),
+  "5.2": mapped("nist80030", "nist8286d", "nist8286c"),
+  "5.3": mapped("nist800161", "soc2"),
+  "5.4": mapped("sox", "glba", "ftcSafeguards", "hipaaCovered", "hipaaSecurity", "pciPrograms", "gdpr", "pciDss", "iso27001", "hipaa"),
+  "5.5": mapped("nist800115", "soc2"),
+  "5.6": mapped("nist80050"),
+};
+
+/** The sources of a set of objectives, each once, primary ones first. */
+export function sourcesOf(codes: readonly string[]): Source[] {
+  const ids = [...new Set(codes.flatMap(code => OBJECTIVE_SOURCES[code]?.sources ?? []))];
+  const rank = (id: SourceId) => (SOURCES[id].kind === "reference" ? 1 : 0);
+  return ids.sort((a, b) => rank(a) - rank(b)).map(id => SOURCES[id]);
+}

@@ -1,0 +1,275 @@
+From ff76457b21eda3ea04429c74f487c04a11cb3d60 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Fri, 9 Oct 2026 08:58:59 +0200
+Subject: [PATCH 1/4] =?UTF-8?q?fix(verify):=20usa=20la=20firma=20@chiarabe?=
+ =?UTF-8?q?rti13=20=E2=80=94=20rispetta=20lo=20standard=20del=20repository?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ README.it.md | 2 +-
+ README.md    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/README.it.md b/README.it.md
+index b127e9d..e2686d0 100644
+--- a/README.it.md
++++ b/README.it.md
+@@ -377,7 +377,7 @@ nuovo apri una issue.
+ ---
+ 
+ <p align="center">
+-  <sub>Realizzato con 🛡️ da <a href="https://github.com/chiaraberti13">chiaraberti13</a></sub>
++  <sub>Realizzato con 🛡️ da <a href="https://github.com/chiaraberti13">@chiaraberti13</a></sub>
+ </p>
+ 
+ ---
+diff --git a/README.md b/README.md
+index 404bea9..b4ad730 100644
+--- a/README.md
++++ b/README.md
+@@ -376,7 +376,7 @@ with the commit of each fix. To report a new one, open an issue.
+ ---
+ 
+ <p align="center">
+-  <sub>Made with 🛡️ by <a href="https://github.com/chiaraberti13">chiaraberti13</a></sub>
++  <sub>Made with 🛡️ by <a href="https://github.com/chiaraberti13">@chiaraberti13</a></sub>
+ </p>
+ 
+ ---
+-- 
+2.51.1
+
+
+From 95f6b432f40483a723d8c2f59bce812551450ac8 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Fri, 9 Oct 2026 09:00:09 +0200
+Subject: [PATCH 2/4] =?UTF-8?q?fix(verify):=20associa=20KRI=20all=E2=80=99?=
+ =?UTF-8?q?obiettivo=205.2=20=E2=80=94=20ripristina=20il=20filtro=20delle?=
+ =?UTF-8?q?=20flashcard?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/objectiveCompletionTopics.ts  | 2 +-
+ tests/objectiveCompletion.test.ts | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/objectiveCompletionTopics.ts b/src/objectiveCompletionTopics.ts
+index 1399d04..a048b54 100644
+--- a/src/objectiveCompletionTopics.ts
++++ b/src/objectiveCompletionTopics.ts
+@@ -97,7 +97,7 @@ export function objectiveCompletionTopics(domainId: number, lang: Lang): TopicGr
+   const entries = OBJECTIVE_COMPLETION_ENTRIES.filter((entry) => entry.domain === domainId);
+   if (entries.length === 0) return [];
+   return entries.map((entry) => ({
+-    title: lang === "it" ? `Completamento obiettivo ${entry.objective}` : `Objective ${entry.objective} completion`,
++    title: lang === "it" ? `Completamento obiettivo ${entry.objective} (Obj ${entry.objective})` : `Objective ${entry.objective} completion (Obj ${entry.objective})`,
+     description: lang === "it" ? "Voce autonoma verificata dall'audit di copertura SY0-701." : "Standalone entry verified by the SY0-701 coverage audit.",
+     icon: "CircleCheckBig",
+     subtopics: [{
+diff --git a/tests/objectiveCompletion.test.ts b/tests/objectiveCompletion.test.ts
+index b8e5962..0d4f82f 100644
+--- a/tests/objectiveCompletion.test.ts
++++ b/tests/objectiveCompletion.test.ts
+@@ -1,4 +1,5 @@
+ import { beforeAll, describe, expect, it } from "vitest";
++import { buildAcronymDeck } from "../src/flashcards";
+ import { CONCEPT_CITATIONS } from "../src/citations";
+ import { buildGlossaryIndex, findGlossaryTerms } from "../src/glossaryIndex";
+ import { getAllTopics, getInitialQuestions, loadEnglishOverlay } from "../src/localizedData";
+@@ -38,6 +39,12 @@ describe("objective coverage completion entries", () => {
+     }
+   });
+ 
++  it.each(["it", "en"] as const)("keeps the KRI card in objective 5.2 drills in %s", (lang) => {
++    const kri = buildAcronymDeck(getAllTopics(lang)).find((card) => card.acronym === "KRI");
++    expect(kri).toBeDefined();
++    expect(kri!.objectives).toEqual(["5.2"]);
++  });
++
+   it("links every standards-based entry to its primary source", () => {
+     for (const [domain, key] of [[1, "ThreatScopeReduction"], [1, "RecordLevelEncryption"], [2, "ConfigurationEnforcement"], [4, "PasswordVaulting"], [5, "KeyRiskIndicators"]] as const) {
+       expect(CONCEPT_CITATIONS[`${domain}:${key}`]?.length, key).toBeGreaterThan(0);
+-- 
+2.51.1
+
+
+From c5accc90af8c8d37eade5c75984a60f2b1ac43e3 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Fri, 9 Oct 2026 09:01:09 +0200
+Subject: [PATCH 3/4] =?UTF-8?q?fix(verify):=20riapre=20i=20punti=2034=20e?=
+ =?UTF-8?q?=2035=20=E2=80=94=20copertura=20dichiarata=20non=20dimostrata?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ ROADMAP.md | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/ROADMAP.md b/ROADMAP.md
+index db1760b..114e792 100644
+--- a/ROADMAP.md
++++ b/ROADMAP.md
+@@ -445,7 +445,7 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
+ 
+ ### 34. Copertura completa della Acronym List SY0-701 (P1 — reperibilità totale)
+ 
+-- [x] Rendere **ogni** sigla della *Acronym List* ufficiale SY0-701 presente e ricercabile nell'app (voce di glossario con espansione, alias IT/EN e flashcard), senza eccezioni. Dove il concetto è già spiegato, aggiungere l'acronimo come alias/rimando alla voce esistente; dove manca del tutto, creare una voce autonoma con definizione sintetica e rimando alla guida del dominio pertinente.
++- [ ] Rendere **ogni** sigla della *Acronym List* ufficiale SY0-701 presente e ricercabile nell'app (voce di glossario con espansione, alias IT/EN e flashcard), senza eccezioni. Dove il concetto è già spiegato, aggiungere l'acronimo come alias/rimando alla voce esistente; dove manca del tutto, creare una voce autonoma con definizione sintetica e rimando alla guida del dominio pertinente.
+ 
+ **Obiettivo di copertura:** 100% delle 329 voci della *Acronym List* del PDF ufficiale. La misura autoritativa è ora lo script `scripts/acronym-coverage.ts` (`npm run acronym-coverage`), che genera `docs/acronym-coverage.md` e alimenta il guard di CI `tests/acronymCoverage.test.ts`. Alla verifica dell'8 ottobre 2026 risultano, sul contenuto effettivamente reso nell'app (glossario + guide, in IT ed EN, con match a confine di parola): **244 sigle ricercabili (74,2%)**, **78 con voce/flashcard dedicata (23,7%)**, **85 non ancora ricercabili (25,8%)**. Questa misura è più severa del grep manuale iniziale (che dava 73, includendo file di codice, maiuscole/minuscole e occorrenze nelle sole domande): fa fede lo script. Questa attività elimina il vincolo precedente che escludeva le sigle «solo-appendice»: su richiesta esplicita, tutte le sigle del PDF vanno rese disponibili. L'elenco vivo delle mancanti è in `tests/fixtures/acronyms-missing.json` e `docs/acronym-coverage.md`; il guard impedisce regressioni e la lista può solo accorciarsi fino a zero.
+ 
+@@ -471,9 +471,11 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
+ 
+ **Completato il 9 ottobre 2026:** copertura portata a **329/329 sigle ricercabili e 329/329 con voce/flashcard dedicata** in italiano e inglese. Aggiunta un'appendice data-driven distribuita nei cinque domini con espansioni fedeli alla lista ufficiale, ID stabili, esempi e suggerimenti d'esame; le tecnologie storiche sono marcate `legacy/storico` e le collisioni rilevanti (FTPS/SFTP, SoC/SOC, SHTTP/HTTPS) sono esplicitate. L'indicizzatore e il salvataggio dei progressi riconoscono anche token ufficiali non standard (`2FA`, `3DES`, `ATT&CK`, `AES-256`, `PCI DSS`, `S/MIME`, `SE Linux`, `TCP/IP`, `USB OTG`, `MaaS`, `SoC`). Il report è stato rigenerato, la fixture delle mancanti è vuota e i test impongono copertura dedicata al 100%, espansioni esatte e parità delle flashcard IT/EN.
+ 
++**Verifica del 9 ottobre 2026 — attività riaperta:** i conteggi 329/329 descrivono reperibilità ed espansione, non accuratezza didattica. Le 236 voci generate hanno spiegazioni generiche e mappature per dominio da correggere; il completamento dichiarato sopra non soddisfa i criteri di qualità. Vedi [issue #102](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/102).
++
+ ### 35. Copertura dettagliata e completa di tutti gli obiettivi SY0-701 (P1 — copertura)
+ 
+-- [x] Garantire che **ogni voce puntata e sub-puntata** di tutti i sotto-obiettivi (da 1.1 a 5.6) del PDF ufficiale abbia una spiegazione autonoma e ricercabile nell'app, non solo una menzione nell'elenco `keyTopics` della guida. L'obiettivo è la copertura esaustiva: nessun termine d'esame deve esistere solo come enumerazione.
++- [ ] Garantire che **ogni voce puntata e sub-puntata** di tutti i sotto-obiettivi (da 1.1 a 5.6) del PDF ufficiale abbia una spiegazione autonoma e ricercabile nell'app, non solo una menzione nell'elenco `keyTopics` della guida. L'obiettivo è la copertura esaustiva: nessun termine d'esame deve esistere solo come enumerazione.
+ 
+ **Da realizzare:** audit sistematico obiettivo per obiettivo (riusare e aggiornare `scripts/coverage-matrix.ts` e `scripts/gap-analysis.ts`) che, per ciascuna voce del PDF, verifichi la presenza di: definizione/spiegazione, voce o alias ricercabile, e almeno un rimando applicativo (quiz o PBQ) dove pertinente. Ogni lacuna rilevata diventa un'attività di contenuto con gli stessi criteri comuni di completamento (parità IT/EN, fonti primarie, esempi sintetici, accessibilità). Le attività 1–34 restano i gap già individuati; questa attività chiude gli eventuali residui non ancora elencati, fino a copertura dichiarata al 100%.
+ 
+@@ -490,6 +492,8 @@ Il terzo confronto dell'**8 ottobre 2026** verifica il corpus direttamente contr
+ 
+ **Completato il 9 ottobre 2026:** il guard conferma **249/249 voci (100%) spiegate come contenuto autonomo e ricercabile**, con **0 quiz-only** e **0 assenti**. Promosse a voci bilingui le sei lacune residue: threat scope reduction, record-level encryption, configuration enforcement, password vaulting, workforce multiplier e key risk indicators; HIPS era già stato chiuso dall'appendice degli acronimi. Ogni nuova voce include definizione, distinzione operativa, esempio applicativo, exam tip e collegamento al quiz esistente; i concetti normativi/standard-based riportano fonti primarie NIST. La fixture delle voci scoperte è vuota e il test di CI richiede esplicitamente copertura 249/249.
+ 
++**Verifica del 9 ottobre 2026 — attività riaperta:** 249/249 è il risultato di un elenco curato e di match testuali, anche in una sola lingua; non dimostra copertura esaustiva delle voci ufficiali né spiegazioni autonome corrette per obiettivo. Il completamento dichiarato sopra resta non accettato finché inventario completo e prove bilingui non saranno verificati. Vedi [issue #103](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/103).
++
+ ## Argomenti già coperti nelle spiegazioni
+ 
+ Il confronto non giustifica duplicare le spiegazioni dei seguenti contenuti già presenti. Alcuni vengono comunque ripresi nelle nuove PBQ, perché spiegazione teorica ed esercizio interattivo sono strumenti diversi:
+-- 
+2.51.1
+
+
+From f0e12c9746eea82db050dbbc8e3fc69ede69a2b9 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Fri, 9 Oct 2026 09:03:03 +0200
+Subject: [PATCH 4/4] =?UTF-8?q?fix(verify):=20cita=20NIST=208286C=20per=20?=
+ =?UTF-8?q?KRI=20=E2=80=94=20allinea=20fonte=20e=20spiegazione?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ docs/coverage-matrix.md          | 3 ++-
+ docs/gap-analysis.md             | 2 +-
+ docs/maturity-dashboard.md       | 2 +-
+ src/citations.ts                 | 3 ++-
+ src/contentReview.ts             | 3 ++-
+ src/objectiveCompletionTopics.ts | 4 ++--
+ 6 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/docs/coverage-matrix.md b/docs/coverage-matrix.md
+index 8cf3f0f..467e6d0 100644
+--- a/docs/coverage-matrix.md
++++ b/docs/coverage-matrix.md
+@@ -65,7 +65,7 @@ Peso d'esame 20% · 142 domande nel banco del dominio.
+ | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
+ |---|---|---|---|---|---|---|---|---|
+ | 5.1 | Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia. | 31 | 7 | 12 | 11 | 1 | 1 | [SEC Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm), [FTC Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act), [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know), [NIST Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework), [ISO/IEC 27001](https://www.iso.org/standard/27001), [NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final) |
+-| 5.2 | Gestire il rischio: identificazione, analisi, registro, appetite/tolerance, risposte, owner, monitoraggio e BIA. | 37 | 7 | 8 | 10 | 12 | 1 | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final), [NISTIR 8286D](https://csrc.nist.gov/pubs/ir/8286/d/final) |
++| 5.2 | Gestire il rischio: identificazione, analisi, registro, appetite/tolerance, risposte, owner, monitoraggio e BIA. | 37 | 7 | 8 | 10 | 12 | 1 | [NIST SP 800-30 Rev. 1](https://csrc.nist.gov/pubs/sp/800/30/r1/final), [NISTIR 8286D](https://csrc.nist.gov/pubs/ir/8286/d/final), [NIST IR 8286C Rev. 1](https://csrc.nist.gov/pubs/ir/8286/c/r1/final) |
+ | 5.3 | Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding. | 19 | 2 | 5 | 7 | 5 | 1 | [NIST SP 800-161 Rev. 1](https://csrc.nist.gov/pubs/sp/800/161/r1/upd1/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
+ | 5.4 | Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze. | 27 | 4 | 13 | 7 | 3 | 2 | [SEC Sarbanes-Oxley Rulemaking and Reports](https://www.sec.gov/spotlight/sarbanes-oxley.htm), [FTC Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act), [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know), [HHS HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html), [HHS HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html), [PCI SSC compliance programs](https://www.pcisecuritystandards.org/faqs/1212/), [EUR-Lex Regulation (EU) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj), [PCI Security Standards Council PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/), [ISO/IEC 27001](https://www.iso.org/standard/27001), [U.S. Department of Health and Human Services HIPAA](https://www.hhs.gov/hipaa/index.html) |
+ | 5.5 | Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting. | 17 | 1 | 6 | 5 | 5 | 1 | [NIST SP 800-115](https://csrc.nist.gov/pubs/sp/800/115/final), [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2) |
+@@ -110,6 +110,7 @@ o un secondo revisore; restano obbligatori i controlli automatici del repository
+ - [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) — NIST
+ - [SP 800-207 — Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) — NIST
+ - [SP 800-128 — Guide for Security-Focused Configuration Management](https://csrc.nist.gov/pubs/sp/800/128/upd1/final) — NIST
++- [NIST IR 8286C Rev. 1 — Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight](https://csrc.nist.gov/pubs/ir/8286/c/r1/final) — NIST
+ - [NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response](https://csrc.nist.gov/pubs/ir/8286/d/final) — NIST
+ - [SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography](https://csrc.nist.gov/pubs/sp/800/56/a/r3/final) — NIST
+ - [SP 800-56B Rev. 2 — Pair-Wise Key-Establishment Using Integer Factorization Cryptography](https://csrc.nist.gov/pubs/sp/800/56/b/r2/final) — NIST
+diff --git a/docs/gap-analysis.md b/docs/gap-analysis.md
+index 83e528d..d580895 100644
+--- a/docs/gap-analysis.md
++++ b/docs/gap-analysis.md
+@@ -120,7 +120,7 @@ indirizzi qui sotto.
+ - `5:GrammLeachBlileyAct`: [Gramm-Leach-Bliley Act](https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act); [FTC Safeguards Rule](https://www.ftc.gov/business-guidance/resources/ftc-safeguards-rule-what-your-business-needs-know)
+ - `5:HIPAAComplianceConcept`: [HIPAA — Health Insurance Portability and Accountability Act](https://www.hhs.gov/hipaa/index.html); [HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html); [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html)
+ - `5:InternalAudit`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001)
+-- `5:KeyRiskIndicators`: [NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response](https://csrc.nist.gov/pubs/ir/8286/d/final)
++- `5:KeyRiskIndicators`: [NIST IR 8286C Rev. 1 — Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight](https://csrc.nist.gov/pubs/ir/8286/c/r1/final)
+ - `5:MediaSanitizationRes`: [SP 800-88 Rev. 2 — Guidelines for Media Sanitization](https://csrc.nist.gov/pubs/sp/800/88/r2/final)
+ - `5:NISTRes`: [Cybersecurity Framework (CSF) 2.0](https://www.nist.gov/cyberframework); [SP 800-53 Rev. 5 — Security and Privacy Controls](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final); [SP 800-37 Rev. 2 — Risk Management Framework for Information Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/37/r2/final)
+ - `5:OrganizationalImpactRes`: [Regulation (EU) 2016/679 — General Data Protection Regulation](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+diff --git a/docs/maturity-dashboard.md b/docs/maturity-dashboard.md
+index 4e1b1cb..b167f59 100644
+--- a/docs/maturity-dashboard.md
++++ b/docs/maturity-dashboard.md
+@@ -112,6 +112,6 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
+ 
+ ## Riepilogo
+ 
+-- Fonti citate: 46 primarie e 31 secondarie (mappate il 2026-10-08).
++- Fonti citate: 47 primarie e 31 secondarie (mappate il 2026-10-08).
+ - I controlli marcati ✅ obbligatorio bloccano le pull request tramite branch protection.
+ - Le voci 🟡 sono verificate altrove (CI, scheda Security, issue di manutenzione) o soggette a una scadenza sorvegliata.
+diff --git a/src/citations.ts b/src/citations.ts
+index a988eb2..adb2cfc 100644
+--- a/src/citations.ts
++++ b/src/citations.ts
+@@ -58,6 +58,7 @@ export const MENTIONS: [SourceId, RegExp][] = [
+   ["mitreAttack", /ATT&CK/],
+   ["nist800207", /SP ?800-207/],
+   ["nist800128", /SP ?800-128/],
++  ["nist8286c", /NIST IR 8286C Rev\. 1/],
+   ["nist8286d", /NISTIR ?8286D/],
+   ["nist80056a", /SP ?800-56A/],
+   ["nist80056b", /SP ?800-56B/],
+@@ -78,7 +79,7 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
+   "1:RecordLevelEncryption": [{ source: "nist80053", locator: { it: "controllo SC-28", en: "control SC-28" } }],
+   "2:ConfigurationEnforcement": [{ source: "nist800128" }],
+   "4:PasswordVaulting": [{ source: "nist80053", locator: { it: "controlli IA-5 e AC-2", en: "controls IA-5 and AC-2" } }],
+-  "5:KeyRiskIndicators": [{ source: "nist8286d" }],
++  "5:KeyRiskIndicators": [{ source: "nist8286c" }],
+   "5:AcronymAppendix_ATT_CK": [{ source: "mitreAttack" }],
+   "5:AcronymAppendix_OWASP": [{ source: "owaspTop10" }],
+   "5:SarbanesOxleyAct": [{ source: "sox" }],
+diff --git a/src/contentReview.ts b/src/contentReview.ts
+index 09b3169..6d2a67b 100644
+--- a/src/contentReview.ts
++++ b/src/contentReview.ts
+@@ -58,6 +58,7 @@ export const SOURCES = {
+   nist80053: { title: "SP 800-53 Rev. 5 — Security and Privacy Controls", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final", kind: "standard" },
+   nist800207: { title: "SP 800-207 — Zero Trust Architecture", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/207/final", kind: "standard" },
+   nist800128: { title: "SP 800-128 — Guide for Security-Focused Configuration Management", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/128/upd1/final", kind: "standard" },
++  nist8286c: { title: "NIST IR 8286C Rev. 1 — Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight", publisher: "NIST", url: "https://csrc.nist.gov/pubs/ir/8286/c/r1/final", kind: "standard" },
+   nist8286d: { title: "NISTIR 8286D — Using Business Impact Analysis to Inform Risk Prioritization and Response", publisher: "NIST", url: "https://csrc.nist.gov/pubs/ir/8286/d/final", kind: "standard" },
+   nist80056a: { title: "SP 800-56A Rev. 3 — Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/a/r3/final", kind: "standard" },
+   nist80056b: { title: "SP 800-56B Rev. 2 — Pair-Wise Key-Establishment Using Integer Factorization Cryptography", publisher: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/56/b/r2/final", kind: "standard" },
+@@ -130,7 +131,7 @@ export const OBJECTIVE_SOURCES: Record<string, ObjectiveSources> = {
+   "4.8": mapped("nist80061"),
+   "4.9": mapped("nist80061", "nist80092"),
+   "5.1": mapped("sox", "glba", "ftcSafeguards", "nistCsf", "iso27001", "nist80037"),
+-  "5.2": mapped("nist80030", "nist8286d"),
++  "5.2": mapped("nist80030", "nist8286d", "nist8286c"),
+   "5.3": mapped("nist800161", "soc2"),
+   "5.4": mapped("sox", "glba", "ftcSafeguards", "hipaaCovered", "hipaaSecurity", "pciPrograms", "gdpr", "pciDss", "iso27001", "hipaa"),
+   "5.5": mapped("nist800115", "soc2"),
+diff --git a/src/objectiveCompletionTopics.ts b/src/objectiveCompletionTopics.ts
+index a048b54..3017839 100644
+--- a/src/objectiveCompletionTopics.ts
++++ b/src/objectiveCompletionTopics.ts
+@@ -86,8 +86,8 @@ export const OBJECTIVE_COMPLETION_ENTRIES: readonly CompletionEntry[] = [
+       en: "Metrics tied to a risk that signal exposure changes against defined thresholds and trigger escalation or treatment.",
+     },
+     details: {
+-      it: "Un KRI deve avere proprietario, fonte dati, frequenza, soglia e azione prevista. Può essere anticipatore, come l'aumento degli account senza MFA, o consuntivo, come incidenti già avvenuti; non ogni KPI operativo è un KRI. **Piccolo Esempio Concentrato:** oltre il 2% di backup falliti per due giorni, il risk owner apre una remediation prima che l'obiettivo di recupero sia compromesso. Fonte primaria: NISTIR 8286D.",
+-      en: "A KRI needs an owner, data source, cadence, threshold, and prescribed action. It may be leading, such as growth in accounts without MFA, or lagging, such as incidents already observed; not every operational KPI is a KRI. **Focused Mini-Example:** when failed backups exceed 2% for two days, the risk owner opens remediation before the recovery objective is jeopardized. Primary source: NISTIR 8286D.",
++      it: "Un KRI deve avere proprietario, fonte dati, frequenza, soglia e azione prevista. Può essere anticipatore, come l'aumento degli account senza MFA, o consuntivo, come incidenti già avvenuti; non ogni KPI operativo è un KRI. **Piccolo Esempio Concentrato:** oltre il 2% di backup falliti per due giorni, il risk owner apre una remediation prima che l'obiettivo di recupero sia compromesso. Fonte primaria: NIST IR 8286C Rev. 1.",
++      en: "A KRI needs an owner, data source, cadence, threshold, and prescribed action. It may be leading, such as growth in accounts without MFA, or lagging, such as incidents already observed; not every operational KPI is a KRI. **Focused Mini-Example:** when failed backups exceed 2% for two days, the risk owner opens remediation before the recovery objective is jeopardized. Primary source: NIST IR 8286C Rev. 1.",
+     },
+     tip: { it: "Il KRI segnala l'esposizione al rischio; la soglia stabilisce quando intervenire; il KPI misura una prestazione.", en: "A KRI signals risk exposure; the threshold says when to act; a KPI measures performance." },
+   },
+-- 
+2.51.1
+

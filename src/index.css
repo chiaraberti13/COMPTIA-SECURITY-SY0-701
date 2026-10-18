@@ -1,0 +1,39 @@
+/* Fonts are bundled with the app (Fontsource, SIL OFL 1.1) instead of loaded
+   from Google Fonts: no third-party request reveals the visitor's IP address,
+   and the Content-Security-Policy can allow fonts and styles from 'self' only. */
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* The header is sticky: scrolling to an element (anchors, focus, "jump to"
+   buttons) must stop below it, not under it. */
+html {
+  scroll-padding-top: 8rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0f172a; /* Deep slate background for a high-contrast premium feel */
+  color: #f8fafc;
+}
+
+/* Custom scrollbar for an elegant look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

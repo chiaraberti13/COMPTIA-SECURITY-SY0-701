@@ -1,0 +1,6 @@
+{
+  "name": "Security+ Domain 5 Trainer",
+  "description": "An interactive, high-stakes trainer and exam simulator for CompTIA Security+ SY0-701 covering Domain 1 (General Security Concepts), Domain 2 (Threats, Vulnerabilities, and Mitigations), Domain 3 (Security Architecture), Domain 4 (Security Operations) and Domain 5 (Security Program Management and Oversight) featuring study modules, custom quizzes, and an AI Cybersecurity Trainer assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

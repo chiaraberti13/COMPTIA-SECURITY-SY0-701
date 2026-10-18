@@ -1,0 +1,3647 @@
+import type { Lang } from "./i18n";
+import { EAP_METHOD_GUIDE_COMPARISON } from "./eapMethodGuide";
+
+/**
+ * How an attack scenario connects to defense: the way in, the damage, the
+ * controls that stop it, the evidence that shows it, and what those controls
+ * cannot do.
+ */
+export interface AttackChain {
+  vector: string;
+  impact: string;
+  mitigation: string;
+  evidence: string;
+  limit: string;
+}
+
+export interface GuideScenario {
+  title: string;
+  prompt: string;
+  reasoning: string;
+  /** Present on scenarios that describe an attack. */
+  attackChain?: AttackChain;
+}
+
+/** A compact comparison table; every row has one cell per header. */
+export interface GuideComparison {
+  title: string;
+  headers: string[];
+  rows: string[][];
+}
+
+/** An original process diagram, paired with a complete prose equivalent. */
+export interface GuideFlow {
+  title: string;
+  steps: { title: string; detail: string }[];
+  textEquivalent: string;
+}
+
+export interface DomainGuide {
+  domainId: number;
+  title: string;
+  weight: number;
+  purpose: string;
+  /**
+   * `keyTopics` lists the official sub-topics of the objective, so the guide
+   * doubles as a syllabus checklist. Optional while the guides are enriched
+   * one domain at a time.
+   */
+  objectives: { code: string; outcome: string; keyTopics?: string[] }[];
+  studyPath: { title: string; rationale: string }[];
+  decisionPatterns: string[];
+  connections: string[];
+  /** Side-by-side comparisons of concepts the exam tends to confuse. */
+  comparisons?: GuideComparison[];
+  flows?: GuideFlow[];
+  /** Frequent misconceptions, each paired with the correct reading. */
+  commonTraps?: { misconception: string; correction: string }[];
+  /** Where the exam simplifies: what it expects, and how the topic works in practice. */
+  examVsPractice?: { topic: string; exam: string; practice: string }[];
+  appliedScenario: GuideScenario;
+  /** Extra exercises, each tied to the objective it trains. */
+  practiceScenarios?: (GuideScenario & { objective: string })[];
+  /** End-of-module summary: the ideas to keep after studying the domain. */
+  keyPoints: string[];
+  /** End-of-module summary: the acronyms of the domain, the same in both languages. */
+  acronyms: GuideAcronym[];
+  /** Self-assessment: what the learner should be able to do. */
+  readinessChecks: string[];
+}
+
+/** An exam acronym with its official English expansion. */
+export interface GuideAcronym {
+  acronym: string;
+  expansion: string;
+}
+
+const acronymList = (entries: [string, string][]): GuideAcronym[] =>
+  entries.map(([acronym, expansion]) => ({ acronym, expansion }));
+
+/*
+ * The acronyms of each domain, as the CompTIA acronym list expands them. They
+ * are shared by the Italian and English guides: the exam uses the English
+ * expansion in both.
+ */
+const DOMAIN_1_ACRONYMS = acronymList([
+  ["AAA", "Authentication, Authorization, and Accounting"],
+  ["AES", "Advanced Encryption Standard"],
+  ["CIA", "Confidentiality, Integrity, and Availability"],
+  ["CRL", "Certificate Revocation List"],
+  ["CSR", "Certificate Signing Request"],
+  ["DH", "Diffie-Hellman"],
+  ["DHE", "Diffie-Hellman Ephemeral"],
+  ["ECDH", "Elliptic Curve Diffie-Hellman"],
+  ["ECDHE", "Elliptic Curve Diffie-Hellman Ephemeral"],
+  ["PFS", "Perfect Forward Secrecy"],
+  ["ECC", "Elliptic Curve Cryptography"],
+  ["HSM", "Hardware Security Module"],
+  ["OCSP", "Online Certificate Status Protocol"],
+  ["PA", "Policy Administrator"],
+  ["PE", "Policy Engine"],
+  ["PEP", "Policy Enforcement Point"],
+  ["PKI", "Public Key Infrastructure"],
+  ["RSA", "Rivest, Shamir, and Adleman"],
+  ["SHA", "Secure Hash Algorithm"],
+  ["TPM", "Trusted Platform Module"],
+]);
+const DOMAIN_2_ACRONYMS = acronymList([
+  ["ACL", "Access Control List"],
+  ["APT", "Advanced Persistent Threat"],
+  ["BEC", "Business Email Compromise"],
+  ["CSRF", "Cross-Site Request Forgery"],
+  ["CVE", "Common Vulnerabilities and Exposures"],
+  ["CVSS", "Common Vulnerability Scoring System"],
+  ["DDoS", "Distributed Denial of Service"],
+  ["OSINT", "Open-Source Intelligence"],
+  ["TOCTOU", "Time-of-Check to Time-of-Use"],
+  ["XSS", "Cross-Site Scripting"],
+]);
+const DOMAIN_3_ACRONYMS = acronymList([
+  ["IaaS", "Infrastructure as a Service"],
+  ["ICS", "Industrial Control System"],
+  ["IDS", "Intrusion Detection System"],
+  ["IPS", "Intrusion Prevention System"],
+  ["MTD", "Maximum Tolerable Downtime"],
+  ["NGFW", "Next-Generation Firewall"],
+  ["PaaS", "Platform as a Service"],
+  ["RPO", "Recovery Point Objective"],
+  ["RTO", "Recovery Time Objective"],
+  ["SaaS", "Software as a Service"],
+  ["SCADA", "Supervisory Control and Data Acquisition"],
+  ["SDN", "Software-Defined Networking"],
+  ["UTM", "Unified Threat Management"],
+  ["VLAN", "Virtual Local Area Network"],
+  ["VPN", "Virtual Private Network"],
+  ["WAF", "Web Application Firewall"],
+]);
+const DOMAIN_4_ACRONYMS = acronymList([
+  ["ABAC", "Attribute-Based Access Control"],
+  ["DAC", "Discretionary Access Control"],
+  ["DKIM", "DomainKeys Identified Mail"],
+  ["DLP", "Data Loss Prevention"],
+  ["DMARC", "Domain-based Message Authentication, Reporting, and Conformance"],
+  ["EDR", "Endpoint Detection and Response"],
+  ["MAC", "Mandatory Access Control"],
+  ["MDM", "Mobile Device Management"],
+  ["RBAC", "Role-Based Access Control"],
+  ["SAML", "Security Assertion Markup Language"],
+  ["SIEM", "Security Information and Event Management"],
+  ["SOAR", "Security Orchestration, Automation, and Response"],
+  ["SPF", "Sender Policy Framework"],
+]);
+const DOMAIN_5_ACRONYMS = acronymList([
+  ["ALE", "Annualized Loss Expectancy"],
+  ["ARO", "Annualized Rate of Occurrence"],
+  ["AUP", "Acceptable Use Policy"],
+  ["AV", "Asset Value"],
+  ["BIA", "Business Impact Analysis"],
+  ["EF", "Exposure Factor"],
+  ["MOA", "Memorandum of Agreement"],
+  ["MOU", "Memorandum of Understanding"],
+  ["MSA", "Master Service Agreement"],
+  ["NDA", "Non-Disclosure Agreement"],
+  ["SLA", "Service-Level Agreement"],
+  ["SLE", "Single Loss Expectancy"],
+  ["SOW", "Statement of Work"],
+]);
+
+const IT_DOMAIN_GUIDES: Record<number, DomainGuide> = {
+  1: {
+    domainId: 1,
+    title: "Concetti generali di sicurezza",
+    weight: 12,
+    purpose: "Costruisce il linguaggio decisionale dell'intero esame: classificare i controlli, collegare CIA e non ripudio alle tecnologie appropriate, progettare l'accesso secondo zero trust, governare il cambiamento e scegliere primitive crittografiche in base al requisito. Non basta ricordare una definizione: occorre riconoscere quale proprietà manca e quale controllo la ripristina.",
+    objectives: [
+      {
+        code: "1.1",
+        outcome: "Distinguere categorie e tipi di controllo, separando lo scopo del controllo dal modo in cui viene implementato.",
+        keyTopics: [
+          "Categorie: technical, managerial, operational, physical",
+          "Tipi: preventive, deterrent, detective, corrective, compensating, directive",
+          "Uno stesso controllo può avere più tipi: conta la funzione richiesta dallo scenario",
+        ],
+      },
+      {
+        code: "1.2",
+        outcome: "Applicare CIA, autenticazione, autorizzazione, accounting, non ripudio, zero trust, gap analysis, sicurezza fisica e deception a uno scenario.",
+        keyTopics: [
+          "CIA e non-repudiation",
+          "AAA: autenticazione di persone e di sistemi, modelli di autorizzazione, accounting",
+          "Gap analysis: stato attuale rispetto allo stato obiettivo",
+          "Zero trust, control plane: adaptive identity, threat scope reduction, policy-driven access control, Policy Engine, Policy Administrator",
+          "Zero trust, data plane: implicit trust zones, subject/system, Policy Enforcement Point",
+          "Sicurezza fisica: bollards, access control vestibule, fencing, video surveillance, security guard, access badge, lighting",
+          "Sensori: infrared, pressure, microwave, ultrasonic",
+          "Deception: honeypot, honeynet, honeyfile, honeytoken",
+        ],
+      },
+      {
+        code: "1.3",
+        outcome: "Valutare un cambiamento sicuro: ownership, impatto, approvazione, test, rollback, documentazione e monitoraggio.",
+        keyTopics: [
+          "Processi: approval process, ownership, stakeholders, impact analysis, test results, backout plan, maintenance window, standard operating procedure",
+          "Implicazioni tecniche: allow lists/deny lists, restricted activities, downtime, service restart, application restart, legacy applications, dependencies",
+          "Documentazione: aggiornamento di diagrammi, policy e procedure",
+          "Version control",
+        ],
+      },
+      {
+        code: "1.4",
+        outcome: "Selezionare algoritmi, hashing, firma, certificati e gestione delle chiavi in funzione di confidenzialità, integrità e identità.",
+        keyTopics: [
+          "PKI: public key, private key, key escrow",
+          "Livelli di cifratura: full-disk, partition, file, volume, database, record",
+          "Cifratura di trasporto, simmetrica e asimmetrica, key exchange, algoritmi e key length",
+          "Strumenti: TPM, HSM, key management system, secure enclave",
+          "Offuscamento: steganography, tokenization, data masking",
+          "Hashing, salting, digital signatures, key stretching",
+          "Blockchain e open public ledger",
+          "Certificati: certificate authorities, CRL, OCSP, self-signed, third-party, root of trust, CSR, wildcard",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Parti dal requisito", rationale: "Per ogni scenario chiediti se il bisogno primario è confidenzialità, integrità, disponibilità, autenticità o non ripudio." },
+      { title: "2. Classifica il controllo", rationale: "Identifica prima la categoria (manageriale, operativa, tecnica o fisica), poi il tipo (preventivo, detective, correttivo, deterrente, compensativo o direttivo)." },
+      { title: "3. Togli la fiducia implicita", rationale: "Studia zero trust come flusso: il soggetto chiede accesso, il Policy Engine decide, il Policy Administrator comunica la decisione, il Policy Enforcement Point la applica. Poi collega sicurezza fisica e deception alla stessa idea di difesa a strati." },
+      { title: "4. Collega la crittografia al caso d'uso", rationale: "Cifratura protegge la confidenzialità; hashing rileva modifiche; MAC aggiunge autenticità condivisa; firma digitale offre integrità, autenticità e non ripudio." },
+      { title: "5. Segui la vita di chiavi e certificati", rationale: "Generazione della coppia di chiavi, CSR, emissione da parte della CA, catena fino alla root of trust, verifica della revoca (CRL/OCSP), custodia della chiave privata in TPM, HSM o KMS." },
+      { title: "6. Inserisci il cambiamento nel ciclo di vita", rationale: "Una modifica sicura comprende baseline, analisi d'impatto e delle dipendenze, approvazione, test, maintenance window, backout plan, aggiornamento della documentazione e verifica post-implementazione." },
+    ],
+    decisionPatterns: [
+      "Se la domanda chiede la BEST soluzione, traduci prima il requisito nella proprietà di sicurezza richiesta; solo dopo confronta le tecnologie.",
+      "Un controllo compensativo riduce il rischio quando il controllo principale non è fattibile: non è automaticamente equivalente né una deroga senza approvazione.",
+      "Per le firme, il mittente firma con la propria chiave privata e il destinatario verifica con la chiave pubblica del mittente; cifrare con la chiave pubblica del destinatario risolve invece la confidenzialità.",
+      "Zero trust: la posizione in rete non concede fiducia. Se lo scenario chiede CHI decide, la risposta è il Policy Engine; se chiede CHI blocca o consente la connessione, è il Policy Enforcement Point.",
+      "Se lo scenario chiede di rilevare un attaccante già presente senza toccare la produzione, pensa alla deception: qualsiasi interazione con honeypot, honeyfile o honeytoken è sospetta per definizione.",
+      "Per conservare password scegli hash con salt unico e key stretching (Argon2, bcrypt, PBKDF2): non cifratura reversibile e non un hash veloce da solo.",
+      "Se serve lo stato di revoca aggiornato di un certificato, OCSP (meglio con stapling) è preferibile alla CRL, che viene pubblicata a intervalli.",
+      "Se la domanda chiede cosa preparare PRIMA di una modifica, cerca analisi d'impatto, approvazione, test e backout plan; DOPO la modifica, aggiornamento della documentazione e verifica.",
+    ],
+    connections: [
+      "La classificazione dei controlli sostiene mitigazioni (D2), architettura (D3), hardening e monitoring (D4), governance e risk treatment (D5).",
+      "PKI e gestione delle chiavi ricompaiono in TLS, autenticazione, protezione dei dati, incident response e continuità operativa.",
+      "Il change management collega governance, configurazioni sicure, vulnerabilità introdotte e capacità di rollback.",
+      "Zero trust e AAA preparano identity and access management (D4) e le scelte di segmentazione dell'architettura (D3).",
+      "Honeypot e honeytoken producono indicatori utilizzati da SIEM, threat hunting e incident response (D4).",
+    ],
+    flows: [
+      {
+        "title": "Dall’accordo effimero ai dati protetti (1.4)",
+        "steps": [
+          {
+            "title": "Contributi pubblici",
+            "detail": "Client e server creano coppie ECDHE fresche: si scambiano solo i valori pubblici; i privati restano locali."
+          },
+          {
+            "title": "Segreto e derivazione",
+            "detail": "Entrambi calcolano lo stesso segreto. La KDF deriva chiavi di sessione distinte, senza trasmettere il segreto o usare direttamente il risultato ECDH come chiave AES."
+          },
+          {
+            "title": "Peer autenticato",
+            "detail": "Il client verifica identità, certificato e firma del server sul transcript. RSA può firmare: non trasporta la chiave in TLS 1.3. Il client si autentica se richiesto."
+          },
+          {
+            "title": "Dati e cancellazione",
+            "detail": "I dati applicativi usano cifratura simmetrica autenticata, per esempio AES-GCM. I segreti effimeri e le vecchie chiavi sono eliminati quando non più necessari."
+          }
+        ],
+        "textEquivalent": "Equivalente testuale: client e server contribuiscono valori pubblici ECDHE, calcolano localmente il medesimo segreto e derivano chiavi simmetriche. La verifica del peer lega lo scambio all’identità prevista prima di accettare dati applicativi. I dati sono protetti con AES-GCM; i segreti non più necessari vengono eliminati. È un flusso logico semplificato, non la sequenza completa dei messaggi TLS 1.3: anche parti dell’handshake sono cifrate. Una successiva perdita della sola chiave del certificato non rivela le sessioni passate, se i segreti effimeri sono stati eliminati. Fonti: NIST SP 800-56A; RFC 8446, sezioni 2 e 7."
+      },
+    ],
+    comparisons: [
+      {
+        "title": "Key establishment: trasporto o accordo?",
+        "headers": [
+          "Metodo",
+          "Come nasce il segreto",
+          "Limiti"
+        ],
+        "rows": [
+          [
+            "Key transport (RSA)",
+            "Una parte sceglie e cifra il materiale per il destinatario verificato.",
+            "RSA statico non offre PFS; non è il trasporto usato da TLS 1.3. Fonte: NIST SP 800-56B."
+          ],
+          [
+            "Key agreement (DH/ECDH)",
+            "Entrambi contribuiscono e derivano un segreto, poi chiavi simmetriche.",
+            "Serve autenticazione contro MITM; DH/ECDH statico non implica PFS."
+          ],
+          [
+            "DHE/ECDHE + PFS",
+            "Contributi effimeri nuovi e segreti eliminati proteggono le sessioni passate.",
+            "Non protegge una chiave di sessione già rubata o il malware sull’endpoint."
+          ]
+        ]
+      },
+      {
+        "title": "Zero Trust: PE, PA e PEP (1.2)",
+        "headers": [
+          "Ruolo",
+          "Piano",
+          "Responsabilità"
+        ],
+        "rows": [
+          [
+            "Policy Engine (PE)",
+            "Control Plane",
+            "Decide: consenti, nega o revoca usando policy e segnali contestuali."
+          ],
+          [
+            "Policy Administrator (PA)",
+            "Control Plane",
+            "Coordina: esegue il verdetto, prepara token e istruisce il PEP."
+          ],
+          [
+            "Policy Enforcement Point (PEP)",
+            "Data Plane",
+            "Applica: abilita, monitora o termina il percorso verso la risorsa."
+          ]
+        ]
+      },
+      {
+        title: "Tipi di controllo: quando agiscono",
+        headers: ["Tipo", "Funzione", "Esempio"],
+        rows: [
+          ["Preventive", "Impedisce che l'evento accada", "Regola firewall, MFA, serratura"],
+          ["Deterrent", "Scoraggia il tentativo, senza impedirlo", "Cartello di videosorveglianza (CCTV), illuminazione"],
+          ["Detective", "Rileva e registra l'evento", "IDS, revisione dei log, sensore di movimento"],
+          ["Corrective", "Riporta la situazione alla normalità dopo l'evento", "Ripristino da backup, patch dopo un incidente"],
+          ["Compensating", "Riduce il rischio quando il controllo principale non è applicabile", "Isolare in una VLAN dedicata un sistema legacy non aggiornabile"],
+          ["Directive", "Indica il comportamento atteso", "Policy, procedura, obbligo contrattuale"],
+        ],
+      },
+      {
+        title: "Primitive crittografiche: cosa garantiscono",
+        headers: ["Soluzione", "Garantisce", "Chiave usata", "Non garantisce"],
+        rows: [
+          ["Cifratura simmetrica (AES)", "Confidenzialità, anche di grandi volumi", "Una chiave segreta condivisa", "Identità del mittente, non ripudio"],
+          ["Cifratura asimmetrica (RSA, ECC)", "Confidenzialità di piccoli dati e scambio di chiavi", "Chiave pubblica del destinatario", "Prestazioni su grandi volumi"],
+          ["Hash (SHA-256)", "Integrità: rileva modifiche", "Nessuna", "Confidenzialità, autenticità"],
+          ["HMAC", "Integrità e autenticità tra chi condivide la chiave", "Chiave segreta condivisa", "Non ripudio: entrambe le parti hanno la chiave"],
+          ["Firma digitale", "Integrità, autenticità e non ripudio", "Chiave privata del firmatario", "Confidenzialità"],
+        ],
+      },
+      {
+        title: "Dove vivono le chiavi",
+        headers: ["Strumento", "Cos'è", "Indizio tipico nella domanda"],
+        rows: [
+          ["TPM", "Chip sulla scheda madre del singolo dispositivo", "Cifratura del disco legata all'hardware, measured boot"],
+          ["HSM", "Dispositivo dedicato e certificato per operazioni crittografiche ad alto volume", "Chiavi della CA, pagamenti, molte firme al secondo"],
+          ["Key management system", "Servizio centrale per il ciclo di vita delle chiavi", "Rotazione, revoca e audit delle chiavi su molti sistemi o in cloud"],
+          ["Secure enclave", "Area isolata del processore", "Proteggere dati e chiavi durante l'uso, anche da un sistema operativo compromesso"],
+        ],
+      },
+      {
+        "title": "Steganografia e protezione dei dati (1.4)",
+        "headers": [
+          "Tecnica",
+          "Scopo",
+          "Recupero del dato",
+          "Limite"
+        ],
+        "rows": [
+          [
+            "Steganografia (Steganography)",
+            "Nasconde un messaggio in un contenitore: immagine o audio",
+            "Estrazione con il metodo previsto, talvolta con una chiave",
+            "Non garantisce riservatezza, integrità o autenticità; il messaggio può essere scoperto"
+          ],
+          [
+            "Cifratura (Encryption)",
+            "Rende il contenuto illeggibile senza la chiave",
+            "Decifratura con la chiave corretta",
+            "Non nasconde necessariamente l'esistenza della comunicazione"
+          ],
+          [
+            "Hashing",
+            "Produce un'impronta per confrontare i dati",
+            "Non è progettato per ricostruire il dato originale",
+            "Da solo non autentica il mittente né nasconde il contenuto"
+          ],
+          [
+            "Tokenization",
+            "Sostituisce il dato con un token",
+            "Tramite il servizio autorizzato; vault o schema vaultless",
+            "Proteggere anche il servizio di detokenizzazione"
+          ],
+          [
+            "Data masking",
+            "Limita il dato visibile, ad esempio ****1234",
+            "Dipende dal metodo: la copia può perdere informazioni",
+            "Il dato originale può restare nello storage"
+          ],
+          [
+            "Offuscamento del codice",
+            "Rende difficile analizzare un programma mantenendone il comportamento",
+            "Analisi del programma; nessuna garanzia crittografica",
+            "Non sostituisce la cifratura dei segreti né implica un contenitore steganografico"
+          ]
+        ]
+      },
+      {
+        title: "Verifica della revoca dei certificati",
+        headers: ["Meccanismo", "Come funziona", "Punto debole"],
+        rows: [
+          ["CRL", "La CA pubblica periodicamente l'elenco dei certificati revocati", "Aggiornamento non immediato, elenco che cresce"],
+          ["OCSP", "Il client chiede lo stato di un singolo certificato al responder", "Il responder vede quali siti visita il client e deve essere raggiungibile"],
+          ["OCSP stapling", "Il server allega alla connessione una risposta OCSP firmata e recente", "Deve essere supportato e configurato sul server"],
+        ],
+      },
+    ],
+    commonTraps: [
+      {
+        "misconception": "TLS 1.3 cifra la chiave di sessione con RSA e PFS protegge ogni compromissione.",
+        "correction": "TLS 1.3 ha rimosso il trasporto RSA: RSA può ancora autenticare con firme. DHE/ECDHE autenticato protegge le sessioni passate dalla futura perdita della chiave persistente, non i segreti di sessione rubati o le future impersonificazioni. PSK-only (psk_ke) non offre PFS per i dati applicativi; 0-RTT non ha piena forward secrecy ed è esposto a replay. Fonte: RFC 8446, sezioni 1.2, 2.2, 2.3 ed E.1."
+      },
+      {
+        "misconception": "Il PA scrive le policy e decide autonomamente; il PEP è sempre un firewall separato.",
+        "correction": "PE decide, PA coordina, PEP applica e monitora. Sono ruoli logici, anche nello stesso prodotto; PE e PA formano il Policy Decision Point (PDP). PA qui significa Policy Administrator Zero Trust. Fonte: NIST SP 800-207, sezione 3."
+      },
+      { misconception: "L'hash cifra i dati.", correction: "L'hash è una funzione a senso unico: rileva modifiche ma non protegge la confidenzialità e non si decifra." },
+      { misconception: "Il salt deve restare segreto.", correction: "Il salt deve essere unico e casuale per ogni password, non segreto: rende inutili le rainbow table e obbliga ad attaccare ogni hash separatamente." },
+      { misconception: "La cifratura full-disk protegge anche un computer acceso e sbloccato.", correction: "La full-disk protegge i dati a riposo, per esempio un portatile rubato e spento. Con il sistema sbloccato i dati sono accessibili a utente e malware." },
+      { misconception: "Un certificato wildcard copre tutti i sottodomini.", correction: "*.example.com copre un solo livello (www.example.com) ma non example.com né a.b.example.com." },
+      { misconception: "Un controllo compensativo equivale ad accettare il rischio.", correction: "Il controllo compensativo riduce il rischio con una misura alternativa approvata; l'accettazione del rischio è una decisione formale di non ridurlo ulteriormente." },
+      { misconception: "Un honeypot blocca gli attacchi.", correction: "Un honeypot serve a rilevare e studiare l'attaccante: non ha valore di produzione e non impedisce l'attacco ai sistemi reali." },
+      { misconception: "Una chiave più lunga è sempre più robusta, qualunque sia l'algoritmo.", correction: "La lunghezza si confronta all'interno della stessa famiglia: una chiave ECC da 256 bit offre una sicurezza paragonabile a RSA da 3072 bit." },
+      { misconception: "Il backout plan si scrive se la modifica fallisce.", correction: "Il backout plan si prepara e si verifica prima della maintenance window, come condizione per l'approvazione del cambiamento." },
+    ],
+    examVsPractice: [
+      { topic: "Categorie e tipi di controllo", exam: "Ogni controllo ha una categoria (tecnico, gestionale, operativo, fisico) e un tipo (preventivo, rilevativo, correttivo…) da scegliere in base alle parole chiave dello scenario.", practice: "I cataloghi usati nelle aziende, come NIST SP 800-53, raggruppano i controlli per famiglie (accessi, audit, configurazione…) e la stessa misura svolge spesso più funzioni. Conta documentare quale rischio copre e verificare che funzioni, non l'etichetta." },
+      { topic: "Zero Trust", exam: "Zero Trust si riconosce dai suoi termini: control plane e data plane, policy decision point e policy enforcement point, verifica continua.", practice: "Non si compra un prodotto Zero Trust: è una migrazione graduale, descritta in NIST SP 800-207, in cui identità, dispositivi e applicazioni passano uno alla volta ai nuovi controlli e convivono a lungo con la rete tradizionale." },
+      { topic: "Crittografia", exam: "Si sceglie l'algoritmo giusto per l'uso: AES per i dati, RSA o ECC per lo scambio di chiavi e le firme, SHA-256 per l'integrità.", practice: "Nessuno implementa un algoritmo da zero: si usano librerie e protocolli standard, come TLS 1.3, con le configurazioni raccomandate. I problemi reali sono quasi sempre nella gestione di chiavi e certificati: scadenze, rotazione, chiavi private finite nel posto sbagliato." },
+    ],
+    appliedScenario: {
+      title: "Pacchetto di configurazione alterato",
+      prompt: "Un team distribuisce configurazioni firmate agli appliance. L'hash del file ricevuto non coincide e la firma non è valida. Quale problema è dimostrato e qual è la FIRST action sicura?",
+      reasoning: "Integrità e autenticità non sono dimostrate: il pacchetto non va applicato. Blocca la distribuzione, preserva file e log, verifica certificato/catena e provenienza, quindi riparti dall'artefatto approvato tramite il processo di change management. Cifrare il file non correggerebbe una firma non valida.",
+      attackChain: {
+        vector: "Manomissione del pacchetto lungo la catena di distribuzione o nel repository degli artefatti.",
+        impact: "Configurazione malevola sugli appliance: backdoor, regole disattivate, perdita di integrità dell'intera flotta.",
+        mitigation: "Verifica obbligatoria di firma e hash prima dell'applicazione, chiavi di firma protette in un HSM, distribuzione solo tramite change management.",
+        evidence: "Hash non corrispondente, errore di verifica della firma, log del sistema di distribuzione e del repository.",
+        limit: "La firma prova solo che il pacchetto viene da chi possiede la chiave: se la chiave o la pipeline di build sono compromesse, un pacchetto malevolo risulta valido.",
+      },
+    },
+    practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Traffico registrato e chiave rubata",
+        "prompt": "Kestrelia scopre che la chiave privata del certificato è stata rubata oggi. Un attaccante aveva registrato sessioni ECDHE autenticate del mese scorso, i cui segreti sono stati eliminati. Può decifrarle? E se avesse copiato una chiave di sessione dalla memoria?",
+        "reasoning": "La sola chiave del certificato non ricostruisce i segreti effimeri: PFS protegge quelle sessioni passate. Una chiave di sessione copiata espone invece il traffico corrispondente; PFS non ripara il furto. Revoca e sostituisci il certificato, investiga l’endpoint e ripristina la fiducia: PFS non impedisce future impersonificazioni. Con trasporto RSA statico registrato la compromissione avrebbe potuto esporre il premaster secret e le chiavi derivate. Non confondere accordo, autenticazione e cifratura di massa."
+      },
+      {
+        "objective": "1.2",
+        "title": "Flusso Zero Trust: autorizzazione e revoca",
+        "prompt": "Un consulente (subject) usa un portatile gestito (system) per leggere il portale Kestrelia. Identità MFA e stato del dispositivo soddisfano la policy. Durante la sessione arriva un allarme di compromissione. Descrivi chi decide, chi coordina e chi applica prima e dopo l’allarme.",
+        "reasoning": "1. Il Policy Engine (PE) valuta policy, identità, stato del dispositivo e contesto e autorizza. 2. Il Policy Administrator (PA) esegue il verdetto: prepara le credenziali di sessione previste e istruisce il Policy Enforcement Point (PEP). 3. Il PEP apre il percorso subject/system → risorsa nel Data Plane e monitora la connessione. 4. L’allarme alimenta la verifica continua: il PE rivaluta e revoca, il PA ordina la chiusura, il PEP termina il percorso. PE e PA appartengono al Control Plane; il traffico dei dati non attraversa queste funzioni. Una credenziale valida non garantisce fiducia permanente. Fonte: NIST SP 800-207, sezione 3."
+      },
+      {
+        "objective": "1.4",
+        "title": "Messaggio nascosto o contenuto protetto?",
+        "prompt": "Kestrelia prepara una figura e una registrazione audio sintetiche. Vuole prima nascondere che trasportano una frase di prova, poi rendere la frase illeggibile a chi riesce a estrarla. Quali tecniche soddisfano i due requisiti?",
+        "reasoning": "La steganografia nasconde il messaggio nel contenitore; la cifratura ne protegge il contenuto con una chiave. Nessuna delle due equivale a hashing, tokenizzazione o mascheramento. Ricompressione e conversione possono distruggere il messaggio nascosto; la steganografia da sola non ne verifica integrità o autore. L'offuscamento del codice riguarda invece la leggibilità del programma."
+      },
+      {
+        objective: "1.1",
+        title: "Sistema industriale non aggiornabile",
+        prompt: "Un controller industriale usa un sistema operativo non più supportato e il fornitore vieta di installare agenti o patch. Il team lo sposta in una VLAN dedicata, consente solo il traffico verso la console di gestione e monitora quel segmento. Come si classifica meglio questa misura?",
+        reasoning: "È un controllo tecnico di tipo compensativo: il controllo principale (patching) non è applicabile e la segmentazione riduce il rischio residuo con una misura alternativa. Non è correttivo, perché non ripara un evento già avvenuto, e la descrizione come solo preventivo perde il motivo per cui è stato scelto. Va documentato e approvato come eccezione.",
+      },
+      {
+        objective: "1.2",
+        title: "Accesso di un consulente in zero trust",
+        prompt: "Un consulente si autentica correttamente con MFA, ma il suo portatile non ha la cifratura del disco attiva. La policy aziendale richiede dispositivi conformi per accedere all'applicazione HR. Quale componente prende la decisione di negare l'accesso e quale lo impedisce materialmente?",
+        reasoning: "Il Policy Engine valuta identità, stato del dispositivo e contesto e decide di negare; il Policy Administrator comunica la decisione; il Policy Enforcement Point blocca la sessione. È un esempio di adaptive identity e policy-driven access control: una credenziale valida non basta se il contesto non è conforme.",
+      },
+      {
+        objective: "1.2",
+        title: "Chiave cloud esca nel repository",
+        prompt: "Il team inserisce in un repository interno una chiave di accesso cloud finta, senza permessi reali, e configura un allarme se qualcuno prova a usarla. Tre mesi dopo l'allarme scatta da un indirizzo esterno. Che tecnologia è stata usata e che cosa dimostra l'allarme?",
+        reasoning: "È un honeytoken, una tecnica di deception. Nessun utente legittimo ha motivo di usarlo, quindi l'allarme è un indicatore ad alta affidabilità che il contenuto del repository è stato esposto o copiato. La risposta corretta è avviare l'incident response sul repository e sulle credenziali reali, non limitarsi a eliminare il token.",
+        attackChain: {
+          vector: "Esposizione o copia del repository interno: credenziali rubate, repository reso pubblico, insider.",
+          impact: "Chi ha la copia può cercarvi segreti reali, codice e informazioni sull'infrastruttura.",
+          mitigation: "Rotazione dei segreti reali presenti nel repository, revisione degli accessi, secret scanning, repository privati con MFA.",
+          evidence: "Alert del honeytoken con indirizzo di origine e orario, log di accesso e di clonazione del repository.",
+          limit: "Il honeytoken rileva solo chi prova a usarlo: non impedisce l'esposizione, non dice quando è avvenuta e un attaccante prudente può ignorarlo.",
+        },
+      },
+      {
+        objective: "1.3",
+        title: "Patch che riavvia un servizio condiviso",
+        prompt: "Una patch critica per il server web richiede il riavvio del servizio. Sullo stesso server gira un'API usata dal gestionale (ERP), e le workstation hanno un allow list delle applicazioni basata sugli hash. Che cosa deve contenere la richiesta di change prima dell'approvazione?",
+        reasoning: "Analisi d'impatto che includa le dipendenze (l'API e il gestionale ERP), una maintenance window concordata con gli stakeholder, risultati di test in un ambiente di prova, un backout plan verificato e l'aggiornamento dell'allow list se cambiano gli hash dei binari. Dopo l'intervento vanno aggiornati diagrammi e procedure e la modifica va tracciata nel version control delle configurazioni.",
+      },
+      {
+        objective: "1.4",
+        title: "Archiviazione delle password di un nuovo portale",
+        prompt: "Un nuovo portale clienti deve conservare le password degli utenti. Uno sviluppatore propone AES-256 con la chiave nel file di configurazione, un altro SHA-256 senza altro. Quale soluzione è la BEST?",
+        reasoning: "Nessuna delle due: serve un algoritmo di key stretching come Argon2id, bcrypt o PBKDF2 con salt unico per ogni utente. AES è reversibile, quindi chi ottiene la chiave ottiene tutte le password; SHA-256 da solo è troppo veloce e, senza salt, esposto alle rainbow table.",
+      },
+      {
+        objective: "1.4",
+        title: "Revoca dopo la compromissione della chiave",
+        prompt: "La chiave privata del certificato di un sito pubblico è stata esposta. Il certificato viene revocato, ma alcuni client continuano ad accettarlo per ore. Quale meccanismo riduce questo intervallo senza pesare su ogni client?",
+        reasoning: "OCSP stapling: il server allega alla connessione una risposta OCSP firmata e recente, così il client conosce lo stato del certificato senza scaricare una CRL, che viene aggiornata solo periodicamente. Va comunque generata una nuova coppia di chiavi con una nuova CSR: riemettere il certificato con la stessa chiave non risolve la compromissione.",
+      },
+    ],
+    keyPoints: [
+      "Ogni controllo ha una categoria (tecnico, gestionale, operativo, fisico) e un tipo (preventivo, deterrente, rilevativo, correttivo, compensativo, direttivo): sono due domande diverse sullo stesso controllo.",
+      "La triade CIA dice che cosa proteggere; il non ripudio richiede una firma digitale, perché un hash o un MAC non legano il messaggio a una sola persona.",
+      "Zero Trust non si fida della posizione in rete: il Policy Engine decide, il Policy Administrator trasmette la decisione e il Policy Enforcement Point la applica, a ogni richiesta.",
+      "Il change management protegge la disponibilità: approvazione, analisi d'impatto, finestra di manutenzione, piano di backout e test dopo la modifica.",
+      "La crittografia simmetrica (AES) cifra i dati, quella asimmetrica (RSA, ECC) scambia chiavi e firma, l'hashing (SHA-256) verifica l'integrità.",
+      "Le chiavi valgono quanto la loro custodia: TPM nel singolo dispositivo, HSM per le chiavi dell'organizzazione, revoca dei certificati tramite CRL o OCSP.",
+    ],
+    acronyms: DOMAIN_1_ACRONYMS,
+    readinessChecks: [
+      "Sai distinguere categoria e tipo dello stesso controllo senza confonderli.",
+      "Sai motivare la scelta tra hashing, MAC, firma digitale e cifratura.",
+      "Sai ordinare un cambiamento dal requisito alla verifica post-implementazione.",
+      "Sai indicare il ruolo di Policy Engine, Policy Administrator e Policy Enforcement Point.",
+      "Sai scegliere tra TPM, HSM, key management system e secure enclave a partire dallo scenario.",
+      "Sai spiegare CSR, catena dei certificati, CRL e OCSP e il limite di un certificato wildcard.",
+    ],
+  },
+  2: {
+    domainId: 2,
+    title: "Minacce, vulnerabilità e mitigazioni",
+    weight: 22,
+    purpose: "Trasforma indicatori tecnici e contesto aziendale in una catena di ragionamento: attore e motivazione → vettore e superficie → vulnerabilità → indicatori → mitigazione. L'obiettivo è distinguere la causa dall'effetto e scegliere il controllo più specifico che interrompe l'attacco.",
+    objectives: [
+      {
+        code: "2.1",
+        outcome: "Confrontare attori, attributi e motivazioni per stimare capacità, intento, accesso e probabilità.",
+        keyTopics: [
+          "Attori: nation-state, unskilled attacker, hacktivist, insider threat, organized crime, shadow IT",
+          "Attributi: internal/external, resources/funding, level of sophistication/capability",
+          "Motivazioni: data exfiltration, espionage, service disruption, blackmail, financial gain, philosophical/political beliefs, ethical, revenge, disruption/chaos, war",
+        ],
+      },
+      {
+        code: "2.2",
+        outcome: "Analizzare vettori e superfici di attacco, inclusi social engineering, supply chain, cloud, wireless e removable media.",
+        keyTopics: [
+          "Message-based: email, SMS, instant messaging; image-based, file-based, voice call",
+          "Removable device, vulnerable software (client-based e agentless), unsupported systems and applications",
+          "Reti non sicure: wireless, wired, Bluetooth; open service ports; default credentials",
+          "Supply chain: managed service providers (MSP), vendors, suppliers",
+          "Human vectors: phishing, vishing, smishing, misinformation/disinformation, impersonation, business email compromise, pretexting, watering hole, brand impersonation, typosquatting",
+        ],
+      },
+      {
+        code: "2.3",
+        outcome: "Riconoscere vulnerabilità applicative, hardware, cloud, virtualizzazione, mobile, crittografiche e di configurazione.",
+        keyTopics: [
+          "Applicative: memory injection, buffer overflow, race conditions (time-of-check, time-of-use), malicious update",
+          "Operating system (OS)-based; web-based: SQL injection (SQLi), cross-site scripting (XSS)",
+          "Hardware: firmware, end-of-life, legacy",
+          "Virtualizzazione: VM escape, resource reuse; cloud-specific",
+          "Supply chain: service provider, hardware provider, software provider",
+          "Cryptographic, misconfiguration, zero-day",
+          "Mobile device: side loading, jailbreaking",
+        ],
+      },
+      {
+        code: "2.4",
+        outcome: "Interpretare indicatori di malware, attacchi di rete, credenziali, applicazioni e comportamenti anomali.",
+        keyTopics: [
+          "Malware: ransomware, trojan, worm, spyware, bloatware, virus, keylogger, logic bomb, rootkit",
+          "Attacchi fisici: brute force, RFID cloning, environmental",
+          "Attacchi di rete: DDoS (amplified, reflected), DNS attacks, wireless, on-path, credential replay, malicious code",
+          "Attacchi applicativi: injection, buffer overflow, replay, privilege escalation, forgery, directory traversal",
+          "Attacchi crittografici: downgrade, collision, birthday",
+          "Attacchi alle password: spraying, brute force",
+          "Indicatori: account lockout, concurrent session usage, blocked content, impossible travel, resource consumption, resource inaccessibility, out-of-cycle logging, published/documented, missing logs",
+        ],
+      },
+      {
+        code: "2.5",
+        outcome: "Selezionare mitigazioni coerenti con il vettore: segmentation, hardening, patching, least privilege, allowlisting, isolamento e monitoring.",
+        keyTopics: [
+          "Segmentation, access control (ACL, permissions), application allow list, isolation",
+          "Patching, encryption, monitoring, least privilege, configuration enforcement, decommissioning",
+          "Hardening: encryption, installation of endpoint protection, host-based firewall, host-based intrusion prevention system (HIPS), disabling ports/protocols, default password changes, removal of unnecessary software",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Modella l'avversario", rationale: "Capacità, risorse, sofisticazione, accesso interno/esterno e motivazione cambiano sia la probabilità sia i controlli prioritari." },
+      { title: "2. Segui il percorso d'attacco", rationale: "Separa initial access, execution, persistence, privilege escalation, lateral movement, command and control ed exfiltration." },
+      { title: "3. Leggi gli indicatori in contesto", rationale: "Un singolo evento raramente prova un incidente; correla identità, host, rete, orario, baseline e intelligence." },
+      { title: "4. Mitiga causa e propagazione", rationale: "Preferisci il controllo che rimuove o riduce la vulnerabilità; aggiungi segmentazione e rilevamento per limitare blast radius e tempo di permanenza." },
+      { title: "5. Riconosci la famiglia dell'attacco", rationale: "Prima di scegliere il controllo, decidi se il sintomo indica malware, un attacco alle credenziali, alla rete, all'applicazione o alla crittografia: ogni famiglia ha mitigazioni tipiche diverse." },
+      { title: "6. Riduci la superficie prima dell'incidente", rationale: "Hardening, cambio delle credenziali di default, chiusura di porte e protocolli inutili, rimozione del software superfluo e dismissione dei sistemi end-of-life tolgono all'attaccante i vettori più facili." },
+    ],
+    decisionPatterns: [
+      "Non confondere vettore, vulnerabilità ed exploit: il vettore è il percorso, la vulnerabilità è la debolezza, l'exploit è il mezzo che la sfrutta.",
+      "Per FIRST action durante un attacco attivo, valuta sicurezza delle persone e contenimento; per la correzione permanente, rimuovi la causa e verifica l'efficacia.",
+      "Una mitigazione è migliore quando interrompe la tecnica osservata con il minor impatto operativo accettabile, non quando è semplicemente il controllo più potente.",
+      "Molti account, pochi tentativi ciascuno, con password comuni: è password spraying. Molti tentativi su un solo account fino al blocco: è brute force.",
+      "Impossible travel o sessioni concorrenti dallo stesso account indicano credenziali o token compromessi: revoca le sessioni, non limitarti al cambio password.",
+      "Missing logs e out-of-cycle logging suggeriscono che qualcuno sta coprendo le tracce: preserva le evidenze e confronta con i log inoltrati a un sistema centrale.",
+      "Se un attaccante forza l'uso di una versione vecchia di un protocollo è un downgrade attack: la mitigazione è disabilitare le versioni deboli, non aggiungere un altro controllo a valle.",
+      "Shadow IT è tecnologia non autorizzata usata di solito per comodità, non per nuocere: la risposta è governance e un'alternativa approvata, non trattarla come un insider malevolo.",
+    ],
+    connections: [
+      "Domain hijacking collega il phishing dell’obiettivo 2.2 alla compromissione del registrar o del provider DNS dell’obiettivo 2.4; Typosquatting usa invece un nome distinto.",
+      "Jamming RF, deautenticazione e disassociazione sono attacchi wireless alla disponibilità dell’obiettivo 2.4; la protezione dei frame di gestione (PMF) e WPA3 del D3 e le wireless security settings del D4 (obiettivi 3.2 e 4.1) dicono quali difendono e quali no.",
+      "Le mitigazioni dipendono dai modelli architetturali e dai trust boundary del D3.",
+      "Indicatori, vulnerability management, SIEM e incident response diventano processi operativi nel D4.",
+      "Threat intelligence, risk appetite e priorità di remediation dipendono da governance e rischio del D5.",
+      "Tipi di controllo e zero trust del D1 danno il vocabolario per classificare ogni mitigazione di questo dominio.",
+      "Il rischio di supply chain collega vendor assessment e contratti del D5 alle vulnerabilità di update malevoli e service provider.",
+    ],
+    comparisons: [
+      {
+        "title": "Interferenza, jamming RF e deautenticazione",
+        "headers": [
+          "Caso",
+          "Livello e meccanismo",
+          "Che cosa aiuta"
+        ],
+        "rows": [
+          [
+            "Interferenza accidentale",
+            "Fisico; sorgenti non ostili sullo stesso canale",
+            "Site survey, scelta del canale, riduzione delle sorgenti"
+          ],
+          [
+            "Jamming RF intenzionale",
+            "Fisico; rumore o segnali che saturano la banda",
+            "Analisi di spettro, localizzazione, sicurezza fisica; non PMF"
+          ],
+          [
+            "Deautenticazione/disassociazione",
+            "Frame di gestione contraffatti, non disturbo radio",
+            "PMF/802.11w sui frame robusti; monitoraggio se non attivabile"
+          ]
+        ]
+      },
+      {
+        "title": "Domain hijacking, DNS poisoning e typosquatting",
+        "headers": [
+          "Caso",
+          "Componente alterato",
+          "Controllo da verificare"
+        ],
+        "rows": [
+          [
+            "Domain hijacking al registrar",
+            "Account di gestione; delega o registrazione del dominio esistente",
+            "MFA, accessi limitati, recupero sicuro, lock con ambito verificato"
+          ],
+          [
+            "Compromissione DNS autorevole",
+            "Account del provider; record della zona esistente",
+            "Accessi al provider, audit e verifica dei record"
+          ],
+          [
+            "DNS poisoning",
+            "Risposta o cache del resolver; zona legittima invariata",
+            "Validazione DNSSEC con catena di fiducia valida"
+          ],
+          [
+            "Typosquatting",
+            "Altro dominio con nome somigliante",
+            "Verifica del nome esatto e difese contro il phishing"
+          ]
+        ]
+      },
+      {
+        "title": "Sessione, intercettazione e replay",
+        "headers": [
+          "Tecnica",
+          "Che cosa accade",
+          "Limite della difesa"
+        ],
+        "rows": [
+          [
+            "On-path",
+            "Intercettazione del traffico in transito",
+            "TLS protegge il transito, non un token sottratto al dispositivo"
+          ],
+          [
+            "Session hijacking / Sidejacking",
+            "Riuso di un ID di sessione valido sottratto",
+            "MFA al login non invalida automaticamente il token rubato"
+          ],
+          [
+            "Replay attack",
+            "Ripresentazione di un messaggio già valido",
+            "Firma e cifratura non garantiscono freschezza o unicità"
+          ],
+          [
+            "Cookie & Header Tampering",
+            "Modifica di valori controllati dal client",
+            "Cookie e header non sostituiscono autorizzazione sul server"
+          ]
+        ]
+      },
+      {
+        "title": "XSS, CSRF e SSRF: componente e difesa",
+        "headers": [
+          "Attacco",
+          "Componente che agisce",
+          "Fiducia sfruttata",
+          "Difesa principale"
+        ],
+        "rows": [
+          [
+            "Reflected XSS",
+            "Browser della vittima",
+            "Input della richiesta interpretato nella risposta",
+            "Output encoding contestuale"
+          ],
+          [
+            "Stored XSS",
+            "Browser di chi visita la pagina",
+            "Input salvato interpretato come codice",
+            "Output encoding; sanitizzazione se si consente HTML"
+          ],
+          [
+            "CSRF / XSRF",
+            "Browser con sessione attiva",
+            "Credenziali automatiche scambiate per intenzione",
+            "Token anti-CSRF verificato e controllo origine; SameSite aggiuntivo"
+          ],
+          [
+            "SSRF",
+            "Server applicativo",
+            "Accesso del server a destinazioni scelte da input non fidato",
+            "Verifica destinazioni, redirect e uscita dalla rete"
+          ],
+          [
+            "SQLi",
+            "Database tramite la query applicativa",
+            "Input interpretato come istruzione SQL",
+            "Query parametrizzate; validazione aggiuntiva"
+          ]
+        ]
+      },
+
+      {
+        title: "Attori delle minacce",
+        headers: ["Attore", "Motivazione tipica", "Risorse e capacità", "Indizio nello scenario"],
+        rows: [
+          ["Nation-state", "Espionage, war, service disruption", "Molto alte, persistenza a lungo termine (APT)", "Obiettivi strategici, strumenti su misura, attacchi pazienti"],
+          ["Organized crime", "Financial gain, blackmail", "Alte, organizzazione di tipo aziendale", "Ransomware, estorsione, frodi su pagamenti"],
+          ["Hacktivist", "Philosophical/political beliefs", "Variabili", "Defacement, DDoS, pubblicazione di dati per una causa"],
+          ["Insider threat", "Revenge, financial gain", "Accesso interno legittimo", "Abuso di permessi esistenti, attività fuori orario o fuori ruolo"],
+          ["Unskilled attacker", "Disruption/chaos, notorietà", "Basse, strumenti già pronti", "Attacchi rumorosi con tool pubblici e senza adattamento"],
+          ["Shadow IT", "Comodità, produttività", "Interno, senza intento malevolo", "Servizi cloud o dispositivi non approvati dall'IT"],
+        ],
+      },
+      {
+        title: "Famiglie di malware",
+        headers: ["Tipo", "Come agisce", "Indizio tipico"],
+        rows: [
+          ["Virus", "Si attacca a un file o programma e si diffonde quando viene eseguito", "File infetti che si moltiplicano dopo l'apertura"],
+          ["Worm", "Si propaga da solo in rete sfruttando una vulnerabilità", "Traffico di scansione e infezioni rapide senza azione dell'utente"],
+          ["Trojan", "Si presenta come software legittimo e apre un accesso", "Programma scaricato da fonte non ufficiale che contatta un server esterno"],
+          ["Ransomware", "Cifra o sottrae i dati e chiede un riscatto", "Estensioni dei file cambiate, nota di riscatto, picco di scritture su disco"],
+          ["Rootkit", "Si nasconde a livello di kernel o firmware", "Processi e file invisibili agli strumenti del sistema compromesso"],
+          ["Logic bomb", "Si attiva al verificarsi di una condizione o data", "Danno che parte in un momento preciso, spesso dopo l'uscita di un dipendente"],
+          ["Keylogger", "Registra i tasti premuti", "Credenziali rubate anche con password robuste"],
+          ["Spyware", "Raccoglie attività e dati dell'utente", "Traffico verso terze parti, impostazioni del browser cambiate"],
+          ["Bloatware", "Software preinstallato non necessario", "Più superficie d'attacco e risorse consumate senza beneficio"],
+        ],
+      },
+      {
+        title: "Attacchi alle credenziali e alla crittografia",
+        headers: ["Attacco", "Come funziona", "Mitigazione principale"],
+        rows: [
+          ["Brute force", "Molti tentativi su uno stesso account", "Blocco dopo tentativi falliti, MFA, password robuste"],
+          ["Password spraying", "Poche password comuni provate su molti account", "MFA, blocco delle password comuni, rilevamento sui tentativi distribuiti"],
+          ["Credential replay", "Riuso di credenziali o hash catturati", "MFA, canali cifrati, protocolli di autenticazione moderni"],
+          ["Downgrade", "Forza l'uso di una versione debole di un protocollo", "Disabilitare versioni e cifrari obsoleti"],
+          ["Collision / birthday", "Trova due input con lo stesso hash", "Algoritmi di hash con output più lungo, come SHA-256"],
+        ],
+      },
+      {
+        title: "Attacchi applicativi",
+        headers: ["Attacco", "Cosa sfrutta", "Mitigazione principale"],
+        rows: [
+          ["SQL injection", "Input inserito in una query al database", "Query parametrizzate e validazione dell'input"],
+          ["Cross-site scripting", "Script eseguito nel browser di un'altra vittima", "Codifica dell'output e Content Security Policy"],
+          ["Directory traversal", "Percorsi come ../ per uscire dalla cartella prevista", "Normalizzazione dei percorsi e permessi minimi sul file system"],
+          ["Buffer overflow", "Scrittura oltre i limiti di un'area di memoria", "Controllo dei limiti, linguaggi memory-safe, DEP e ASLR"],
+          ["Race condition", "Intervallo tra controllo e uso di una risorsa (TOCTOU)", "Operazioni atomiche e lock sulle risorse"],
+          ["Replay", "Riutilizzo di una richiesta valida catturata", "Nonce, timestamp e token di sessione a scadenza"],
+          ["Forgery", "Richiesta falsificata a nome della vittima o del server", "Token anti-CSRF, cookie SameSite, filtro delle destinazioni per SSRF"],
+        ],
+      },
+      {
+        title: "Indicatori di attività malevola",
+        headers: ["Indicatore", "Cosa può significare", "Prima verifica"],
+        rows: [
+          ["Account lockout", "Brute force contro l'account", "Origine e numero dei tentativi"],
+          ["Concurrent session usage", "Credenziali usate da due soggetti", "Dispositivi e indirizzi delle sessioni attive"],
+          ["Impossible travel", "Accesso da luoghi incompatibili in poco tempo", "Posizione, VPN aziendali e validità della sessione"],
+          ["Blocked content", "Tentativi di raggiungere siti o file malevoli", "Host e utente che hanno generato il blocco"],
+          ["Resource consumption", "Mining, esfiltrazione o DDoS in corso", "Processi e connessioni che consumano risorse"],
+          ["Resource inaccessibility", "Ransomware o negazione del servizio", "File cifrati o servizi saturi"],
+          ["Out-of-cycle logging", "Attività in orari o momenti insoliti", "Chi era autorizzato a operare in quel momento"],
+          ["Missing logs", "Cancellazione delle tracce", "Confronto con i log inoltrati a un sistema centrale"],
+          ["Published/documented", "Dati o vulnerabilità già resi pubblici", "Verifica della fonte e dell'esposizione reale"],
+        ],
+      },
+    ],
+    commonTraps: [
+      {
+        "misconception": "La protezione dei frame di gestione (PMF) ferma anche il jamming RF.",
+        "correction": "La PMF/802.11w autentica i frame di gestione robusti e blocca deautenticazione e disassociazione contraffatte, ma il jamming agisce sul livello fisico e nega comunque il canale. Contro il disturbo radio servono analisi di spettro, localizzazione e sicurezza fisica."
+      },
+      {
+        "misconception": "Una passphrase robusta impedisce la deautenticazione.",
+        "correction": "La passphrase cifra i dati, non autentica i frame di gestione: la deautenticazione contraffatta funziona anche con password lunghissime. La difesa è la PMF sui frame di gestione robusti, non copre però beacon e probe precedenti all’associazione."
+      },
+      {
+        "misconception": "DNSSEC impedisce la compromissione dell’account registrar.",
+        "correction": "DNSSEC autentica dati DNS, non l’operatore dell’account. Proteggere registrar, provider DNS e recupero; cambiamenti amministrativi possono alterare dati firmati o la catena di fiducia."
+      },
+      {
+        "misconception": "Un transfer lock blocca ogni cambiamento DNS.",
+        "correction": "clientTransferProhibited riguarda il trasferimento. Verificare separatamente protezione degli aggiornamenti, ambito del registry lock e accessi al provider della zona autorevole."
+      },
+      {
+        "misconception": "TLS e MFA impediscono ogni furto della sessione.",
+        "correction": "TLS protegge il transito e MFA il login; un ID valido sottratto può ancora essere riusato. Servono protezione del token, rotazione, scadenza e revoca sul server."
+      },
+      {
+        "misconception": "Un messaggio firmato non può essere riprodotto.",
+        "correction": "La firma prova integrità e origine, non unicità. Il protocollo deve verificare nonce o contatori e, se usa finestre temporali, rilevare anche i duplicati."
+      },
+      {
+        "misconception": "HttpOnly impedisce XSS.",
+        "correction": "HttpOnly limita la lettura dei cookie da JavaScript, ma lo script può ancora eseguire azioni con la sessione. Eliminare il punto di esecuzione con output encoding o sanitizzazione appropriata."
+      },
+      {
+        "misconception": "SameSite blocca ogni CSRF.",
+        "correction": "SameSite limita i cookie cross-site, ma non verifica ogni intenzione: sottodomini same-site e operazioni che cambiano stato via GET richiedono difese aggiuntive e controlli lato server."
+      },
+
+      { misconception: "Un worm ha bisogno che l'utente apra un file.", correction: "Il worm si propaga da solo sfruttando una vulnerabilità di rete; è il virus che richiede l'esecuzione di un file o programma infetto." },
+      { misconception: "Password spraying e brute force sono la stessa cosa.", correction: "Il brute force prova molte password su un account e provoca blocchi; lo spraying prova poche password comuni su molti account per restare sotto la soglia di blocco." },
+      { misconception: "Dopo un account compromesso basta cambiare la password.", correction: "Sessioni, token OAuth e regole di persistenza possono restare validi: vanno revocati e rimossi, e va trovata la causa dell'accesso." },
+      { misconception: "Lo shadow IT è un insider threat malevolo.", correction: "Lo shadow IT nasce di solito da comodità e produttività: è un rischio da governare con policy e alternative approvate, non un attacco intenzionale." },
+      { misconception: "Contro una vulnerabilità zero-day non si può fare nulla.", correction: "Mancando la patch si usano controlli compensativi: segmentazione, least privilege, allow list, rilevamento comportamentale e riduzione della superficie esposta." },
+      { misconception: "Il cross-site scripting attacca direttamente il database.", correction: "L'XSS esegue script nel browser di un'altra vittima; è la SQL injection che manipola le query al database." },
+      { misconception: "Reflected e amplified DDoS sono sinonimi.", correction: "Nel reflected l'attaccante falsifica l'indirizzo della vittima come mittente; nell'amplified sfrutta servizi che rispondono con molti più dati della richiesta. Spesso sono combinati." },
+      { misconception: "Un sistema end-of-life si protegge con il patching regolare.", correction: "Un sistema end-of-life non riceve più patch: servono isolamento, controlli compensativi e un piano di dismissione." },
+    ],
+    examVsPractice: [
+      { topic: "Attori della minaccia", exam: "Ogni attore ha motivazioni e risorse da manuale: lo stato nazionale conduce campagne APT, l'hacktivista cerca visibilità, l'insider sfrutta l'accesso che ha.", practice: "Attribuire un attacco è lento e incerto, e raramente cambia la difesa. I team di sicurezza ragionano sulle tecniche osservate, per esempio con MITRE ATT&CK, più che sull'identità di chi attacca." },
+      { topic: "Gestione delle vulnerabilità", exam: "Una vulnerabilità ha un nome, un punteggio CVSS e un rimedio: si applica la patch.", practice: "Le priorità nascono dal contesto: punteggio CVSS, sfruttamento reale (per esempio il catalogo CISA KEV) ed esposizione dell'asset. Molte vulnerabilità non si correggono subito, per compatibilità o fermo macchina, e restano a lungo coperte da controlli compensativi." },
+      { topic: "Indicatori di attività malevola", exam: "Un indicatore punta a un attacco preciso: tanti login falliti indicano un brute force, un picco di traffico un DDoS.", practice: "Lo stesso segnale ha spesso cause innocue: un servizio configurato male, un backup notturno, un aggiornamento. Servono una baseline del comportamento normale e la correlazione di più fonti, e i falsi positivi sono la normalità del lavoro quotidiano." },
+    ],
+    appliedScenario: {
+      title: "Compromissione cloud con persistenza",
+      prompt: "Dopo un login anomalo, un account crea una regola di inoltro email e autorizza un'app OAuth. Quali elementi correlare e quali controlli interrompono davvero l'attacco?",
+      reasoning: "Correla sign-in, MFA, audit della mailbox, consenso OAuth, IP/device e timeline. Contieni revocando sessioni e token, disabilitando o limitando l'account e rimuovendo regola e app malevola; poi correggi la causa con credenziali, policy di consenso, MFA resistente al phishing e monitoring. Il solo reset password può lasciare validi token e persistenza.",
+      attackChain: {
+        vector: "Credenziali o sessione rubate, per esempio con phishing o furto di token, seguite dal consenso a un'app OAuth malevola.",
+        impact: "Esfiltrazione continua della posta tramite la regola di inoltro e accesso persistente tramite l'app, anche dopo il cambio della password.",
+        mitigation: "Revoca di sessioni e token, rimozione di regola e app, MFA resistente al phishing, policy che limita il consenso alle app, blocco dell'inoltro esterno.",
+        evidence: "Log di accesso e MFA, audit della mailbox con la creazione della regola, log di consenso OAuth, IP e dispositivo.",
+        limit: "La MFA protegge l'accesso con password, ma non un token di sessione già rubato né un consenso concesso dall'utente stesso.",
+      },
+    },
+    practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Wi-Fi che cade: jamming o deautenticazione?",
+        "prompt": "Nella sede Kestrelia due piani perdono il Wi-Fi. Al piano A i client vengono espulsi in blocco ogni pochi secondi e l’analisi mostra frame di deautenticazione con il MAC dell’access point; la rete è WPA2 con passphrase robusta. Al piano B nessun frame anomalo, ma l’analizzatore di spettro mostra rumore continuo a banda larga sul 2.4 GHz. Come si classificano i due casi e quali difese valgono per ciascuno?",
+        "reasoning": "Piano A è deautenticazione: frame di gestione contraffatti, non disturbo radio. La passphrase non c’entra perché non autentica i frame di gestione; la difesa è la PMF/802.11w (obbligatoria in WPA3) che autentica i frame di gestione robusti, oppure il monitoraggio wireless per localizzare la sorgente se la PMF non è attivabile. Piano B è jamming RF al livello fisico: cifratura, WPA3 e PMF non lo fermano perché non proteggono la portante; servono analisi di spettro, localizzazione e sicurezza fisica, e il cambio di canale aiuta solo se il disturbo è parziale. Collega 3.2 e 4.1: la PMF protegge i frame di gestione robusti, non ogni frame né il canale radio. Nessuna delle due soluzioni prevede attaccare una rete."
+      },
+      {
+        "objective": "2.4",
+        "title": "Il nome è giusto, la delega è cambiata",
+        "prompt": "Nella simulazione Kestrelia, gli utenti digitano kestrelia.example senza errori. Il log del registrar mostra un cambio non approvato dei nameserver dopo una falsa email di rinnovo. La cache del resolver riflette la nuova delega: quale componente è compromesso?",
+        "reasoning": "È domain hijacking tramite l’account registrar: è cambiata la gestione del dominio legittimo. Non basta svuotare la cache e non è typosquatting. La falsa email collega il vettore phishing dell’obiettivo 2.2 all’attacco dell’obiettivo 2.4. Conservare l’audit, contattare il registrar tramite canale noto, contenere accessi e recupero, ripristinare delega e controllare record e DNSSEC. Un cambio DNS isolato non prova un attacco: qui lo rendono significativo assenza di approvazione e accesso anomalo."
+      },
+      {
+        "objective": "2.4",
+        "title": "Il transfer lock non basta",
+        "prompt": "Kestrelia protegge il dominio con clientTransferProhibited. Un account DNS compromesso modifica un record nella zona e il servizio lo firma normalmente. L’account del registrar non cambia e il resolver valida la risposta. Quali controlli mancano?",
+        "reasoning": "Il blocco riguarda il trasferimento tra registrar, non ogni modifica dei record presso il provider DNS. DNSSEC valida origine e integrità: non autorizza la persona che ha modificato dati poi firmati. Servono accessi limitati e MFA anche al provider, audit delle modifiche e ripristino dei record. Valutare update lock e registry lock per le operazioni cui si applicano; non presentarli come blocco universale. Se la catena DNSSEC diventasse incoerente, l’esito potrebbe essere un errore di validazione anziché il reindirizzamento."
+      },
+      {
+        "objective": "2.4",
+        "title": "Sessione sottratta dopo MFA",
+        "prompt": "Nel portale di prova Kestrelia, il login con MFA emette SESSION-DEMO-A. Una copia sintetica arriva da un altro client via TLS ed è accettata. Dopo la revoca sul server, la stessa copia è rifiutata. Quale attacco mostra il flusso e che cosa dimostra TLS?",
+        "reasoning": "Flusso: utente → autenticazione → ID emesso → ID sottratto → richiesta da altro client → accettazione finché valido → revoca server → rifiuto. È session hijacking: non occorre ripetere identica operazione né essere on-path. TLS protegge il transito; MFA protegge il login, non annulla una sessione rubata. Collegare al Dominio 4 rotazione dopo autenticazione e cambio privilegi, scadenza e revoca server. Correlare anomalie con il contesto senza registrare token reali."
+      },
+      {
+        "objective": "2.4",
+        "title": "Un ruolo scritto nel cookie",
+        "prompt": "Un client di prova Kestrelia cambia un cookie da role=user a role=admin e modifica un header di autorizzazione. Il trasporto è TLS. Il server deve concedere l’accesso al record amministrativo? Quale verifica rende efficace la difesa?",
+        "reasoning": "No: cookie e header provengono dal client. Il server risolve una sessione valida oppure verifica firma e condizioni del token, quindi autorizza identità e azione sulla risorsa. TLS non rende affidabile il ruolo modificato. Secure, HttpOnly e SameSite riducono rischi specifici ma non sostituiscono questa decisione. Eliminare un cookie locale non revoca una copia ancora valida sul server; verificare anche scadenza e revoca effettive."
+      },
+      {
+        "objective": "2.4",
+        "title": "XSS riflesso o persistente?",
+        "prompt": "Nella simulazione Kestrelia, una ricerca sintetica compare come codice attivo nella risposta immediata. Una recensione di prova salvata provoca invece lo stesso comportamento a ogni visita successiva. Che differenza mostrano i due casi e cosa verifichi?",
+        "reasoning": "Il primo caso è reflected XSS; il secondo è stored XSS. In entrambi agisce il browser. Verifica origine dell'input, risposta e record salvato senza dedurre esecuzione da un solo log sospetto. Mostrare testo richiede encoding contestuale; consentire HTML richiede sanitizzazione. HttpOnly non elimina l'esecuzione. Le query parametrizzate restano una difesa SQLi."
+      },
+      {
+        "objective": "2.4",
+        "title": "Richiesta con cookie senza intenzione",
+        "prompt": "Un utente Kestrelia autenticato apre una pagina estranea che induce il browser a modificare il recapito sintetico del portale. Il server accetta il cookie senza verificare un token. Non è stato iniettato codice nel portale: quale attacco riconosci?",
+        "reasoning": "È CSRF, anche chiamato XSRF: il browser invia la sessione, ma il server non verifica l'intenzione. Collegare i token e i cookie sicuri già spiegati in Application Security del Dominio 4. HttpOnly non blocca l'invio del cookie; SameSite è uno strato aggiuntivo, non una garanzia universale. Non confondere richiesta indotta con furto della sessione o XSS."
+      },
+      {
+        "objective": "2.4",
+        "title": "Anteprima che raggiunge un servizio interno",
+        "prompt": "Kestrelia importa immagini da un catalogo esterno approvato. In un test sintetico, un redirect induce il backend a contattare un servizio interno escluso dal catalogo. Quale componente invia la richiesta e quale controllo deve verificare il nuovo indirizzo?",
+        "reasoning": "Il backend compie la richiesta: è SSRF. Controllare destinazioni autorizzate, indirizzi risolti, redirect e uscita dalla rete. Un filtro sul solo URL iniziale può fallire dopo un redirect. Un token CSRF protegge un'altra relazione di fiducia e l'output encoding previene un altro tipo di interpretazione. Correlare le richieste in uscita; una connessione non prova da sola un'esfiltrazione."
+      },
+
+      {
+        objective: "2.1",
+        title: "Condivisione file non approvata",
+        prompt: "Il team marketing usa un servizio cloud personale di condivisione file per scambiare bozze con un'agenzia, perché lo strumento aziendale è lento. Nei file ci sono dati di clienti. Quale tipo di attore e quale motivazione descrivono meglio la situazione, e qual è la risposta più adatta?",
+        reasoning: "È shadow IT: attore interno, senza intento malevolo, motivato da comodità e produttività. Il rischio reale è l'esposizione dei dati fuori dai controlli aziendali. La risposta è fermare la condivisione, valutare l'esposizione, offrire un'alternativa approvata e aggiornare la policy; trattarlo come un insider malevolo sarebbe sproporzionato e non risolverebbe la causa.",
+      },
+      {
+        objective: "2.2",
+        title: "Accesso remoto del fornitore gestito",
+        prompt: "Un managed service provider (MSP) amministra i server tramite uno strumento di accesso remoto con un account condiviso e privilegi da amministratore di dominio. Lo strumento del fornitore viene compromesso. Quale vettore è stato usato e quali controlli avrebbero limitato l'impatto?",
+        reasoning: "È un vettore di supply chain tramite MSP. Limitano l'impatto: account nominativi con MFA per il fornitore, least privilege invece dei privilegi di dominio, accesso limitato nel tempo e da sistemi dedicati, monitoraggio delle sessioni e clausole contrattuali su sicurezza e notifica degli incidenti.",
+      },
+      {
+        objective: "2.3",
+        title: "Controllo e uso non atomici",
+        prompt: "Un servizio verifica che un file temporaneo appartenga all'utente e, qualche millisecondo dopo, lo apre con privilegi elevati. Un attaccante sostituisce il file con un collegamento a un file di sistema tra le due operazioni. Quale vulnerabilità viene sfruttata?",
+        reasoning: "È una race condition di tipo time-of-check to time-of-use (TOCTOU): lo stato verificato cambia prima dell'uso. La correzione è rendere l'operazione atomica, per esempio aprendo il file una sola volta e verificando i permessi sul descrittore già aperto, ed eseguire il servizio con i privilegi minimi necessari.",
+        attackChain: {
+          vector: "Sostituzione del file con un link tra il controllo e l'uso: una race condition.",
+          impact: "Il servizio con privilegi elevati legge o scrive un file di sistema: privilege escalation.",
+          mitigation: "Operazione atomica (aprire una volta e controllare il descrittore già aperto), rifiuto dei link simbolici, directory temporanee private, privilegi minimi.",
+          evidence: "Log di audit del file system con la creazione del link e l'accesso al file di sistema, log del servizio, modifiche ai file di sistema.",
+          limit: "I privilegi minimi riducono il danno ma non chiudono la race, che solo l'operazione atomica elimina; l'attacco dura millisecondi e lascia poche tracce.",
+        },
+      },
+      {
+        objective: "2.4",
+        title: "Un tentativo per account",
+        prompt: "In venti minuti il sistema di autenticazione registra un solo login fallito per ciascuno di 900 account diversi, tutti dalla stessa rete esterna e con la stessa password stagionale. Nessun account viene bloccato, uno riesce ad accedere. Quale attacco è in corso e quale indicatore lo rivela?",
+        reasoning: "È password spraying: poche password comuni su molti account per restare sotto la soglia di blocco. L'indicatore non è l'account lockout, ma la distribuzione dei tentativi falliti per origine e password. La risposta è bloccare l'origine, reimpostare le credenziali dell'account compromesso revocandone le sessioni, imporre MFA e vietare le password comuni.",
+        attackChain: {
+          vector: "Password spraying: poche password comuni provate su molti account dalla stessa rete esterna.",
+          impact: "Accesso con l'account compromesso e movimento successivo con i suoi permessi.",
+          mitigation: "MFA, divieto di password comuni o stagionali, blocco dell'origine, revoca delle sessioni e reset delle credenziali dell'account compromesso.",
+          evidence: "Log di autenticazione aggregati per origine: un tentativo fallito per account, molti account, stessa rete, un accesso riuscito.",
+          limit: "Il blocco dell'account dopo N tentativi non scatta, perché ogni account riceve un solo tentativo; il blocco dell'origine si aggira cambiando rete.",
+        },
+      },
+      {
+        objective: "2.4",
+        title: "Un'ora mancante nei log",
+        prompt: "Durante un'indagine su un server, il registro locale non contiene eventi tra le 02:00 e le 03:00, mentre il SIEM ha ricevuto da quel server un'ondata di eventi di amministrazione subito prima del vuoto. Che cosa suggeriscono questi indicatori e come procedi?",
+        reasoning: "Missing logs dopo attività amministrativa fuori orario suggeriscono che qualcuno ha cancellato le tracce. Preserva l'immagine del server e i log centrali, che fanno fede perché inoltrati prima della cancellazione, ricostruisci la timeline dal SIEM e verifica quali account amministrativi erano attivi. Il vuoto nei log è esso stesso un'evidenza.",
+        attackChain: {
+          vector: "Accesso amministrativo al server con un account privilegiato compromesso o abusato, seguito dalla cancellazione dei log locali.",
+          impact: "Attività non tracciata sul server e indagine ostacolata: una tecnica di anti-forensics.",
+          mitigation: "Inoltro in tempo reale dei log a un SIEM, log centrali immutabili, PAM con sessioni registrate, alert sulla cancellazione dei log.",
+          evidence: "Buco nel log locale, eventi amministrativi nel SIEM prima del buco, eventi di cancellazione dei log se inoltrati, immagine del server.",
+          limit: "Il SIEM conserva solo ciò che è stato inoltrato prima della cancellazione: quello che l'attaccante ha fatto dopo aver fermato l'agente di inoltro non c'è.",
+        },
+      },
+      {
+        objective: "2.5",
+        title: "Chiosco in un'area pubblica",
+        prompt: "Un chiosco informativo per il pubblico usa un sistema operativo generico con credenziali di default, porte USB accessibili, software di prova preinstallato e servizi di rete non necessari. Quale insieme di misure di hardening è il più appropriato?",
+        reasoning: "Cambiare le credenziali di default, disabilitare le porte e i protocolli non necessari compresi USB e servizi di rete, rimuovere il software superfluo, applicare un application allow list che consenta solo l'app del chiosco, attivare firewall host-based e protezione endpoint e isolare il chiosco in un segmento dedicato. Ogni misura elimina un vettore specifico dello scenario.",
+        attackChain: {
+          vector: "Accesso fisico e locale: credenziali predefinite, porte USB, software e servizi di rete superflui.",
+          impact: "Controllo del chiosco, installazione di malware e punto d'appoggio verso la rete interna.",
+          mitigation: "Credenziali cambiate, USB e servizi disattivati, allow list delle applicazioni, firewall host, protezione endpoint, segmento di rete dedicato.",
+          evidence: "Log di accesso locale, eventi di collegamento USB, applicazioni bloccate dall'allow list, traffico anomalo dal segmento del chiosco.",
+          limit: "L'hardening non protegge dalla manomissione fisica dell'hardware, come aprire il case o collegare un dispositivo interno: servono anche controlli fisici e sorveglianza.",
+        },
+      },
+    ],
+    keyPoints: [
+      "Un attore si riconosce da motivazione e risorse: lo stato nazionale conduce campagne APT, il crimine organizzato cerca profitto, l'hacktivist visibilità, l'insider abusa dell'accesso che ha.",
+      "Vettore e superficie d'attacco non coincidono: il vettore è la via d'ingresso (email, supporto rimovibile, fornitore), la superficie è tutto ciò che è esposto.",
+      "Una vulnerabilità è una debolezza, un indicatore è la traccia del suo sfruttamento: CVE identifica la vulnerabilità, CVSS ne misura la gravità tecnica.",
+      "Il malware si distingue dal comportamento: il virus ha bisogno di un ospite, il worm si propaga da solo, il trojan si traveste, il rootkit si nasconde, la logic bomb aspetta una condizione.",
+      "Gli attacchi alle credenziali si leggono nei log: il password spraying è un tentativo su molti account, il brute force molti tentativi su un account, il credential replay riusa credenziali valide.",
+      "La mitigazione parte dal controllo primario (patch, configurazione sicura, segmentazione, privilegi minimi) e ricorre a un controllo compensativo quando il primario non è applicabile.",
+    ],
+    acronyms: DOMAIN_2_ACRONYMS,
+    readinessChecks: [
+      "Sai ricostruire una kill chain essenziale partendo da log e sintomi.",
+      "Sai distinguere una vulnerabilità da un indicatore della sua exploitation.",
+      "Sai motivare una mitigazione primaria e un controllo compensativo per lo stesso scenario.",
+      "Sai associare ogni attore alla sua motivazione tipica e alle risorse di cui dispone.",
+      "Sai distinguere virus, worm, trojan, rootkit e logic bomb dai loro indizi.",
+      "Sai riconoscere password spraying, credential replay e downgrade dagli indicatori.",
+    ],
+  },
+  3: {
+    domainId: 3,
+    title: "Architettura di sicurezza",
+    weight: 18,
+    purpose: "Richiede di progettare protezioni coerenti con modelli cloud, on-premises, ibridi, virtualizzati e zero trust. Ogni scelta va valutata rispetto a trust boundary, responsabilità condivise, flussi di dati, disponibilità, scalabilità e superficie d'attacco.",
+    objectives: [
+      {
+        code: "3.1",
+        outcome: "Confrontare modelli e infrastrutture: cloud service model, deployment model, virtualizzazione, container, IoT/OT, serverless e IaC.",
+        keyTopics: [
+          "Cloud: responsibility matrix, considerazioni sull'ibrido, third-party vendors",
+          "Infrastructure as code (IaC), serverless, microservices, on-premises, centralized vs decentralized",
+          "Rete: physical isolation (air-gapped), logical segmentation, software-defined networking (SDN)",
+          "Containerization, virtualization, IoT, industrial control systems (ICS)/SCADA, real-time operating system (RTOS), embedded systems, high availability",
+          "Considerazioni: availability, resilience, cost, responsiveness, scalability, ease of deployment, risk transference, ease of recovery, patch availability, inability to patch, power, compute",
+        ],
+      },
+      {
+        code: "3.2",
+        outcome: "Applicare principi di sicurezza a segmentazione, zone, accesso remoto, dispositivi di rete, protocolli e trust boundary.",
+        keyTopics: [
+          "Device placement, security zones, attack surface, connectivity",
+          "Failure modes: fail-open, fail-closed; device attribute: active vs passive, inline vs tap/monitor",
+          "Network appliances: jump server, proxy server, IPS/IDS, load balancer, sensors",
+          "Port security: 802.1X, EAP",
+          "Firewall types: web application firewall (WAF), unified threat management (UTM), next-generation firewall (NGFW), layer 4/layer 7",
+          "Comunicazione e accesso sicuri: VPN, remote access, tunneling (TLS, IPSec); SD-WAN per connettività; Secure Access Service Edge (SASE) come architettura convergente; CASB per SaaS/cloud, SWG per traffico web, FWaaS per firewall cloud",
+          "Selection of effective controls",
+        ],
+      },
+      {
+        code: "3.3",
+        outcome: "Proteggere i dati per stato, classificazione e ciclo di vita mediante cifratura, tokenizzazione, masking, DLP e access control.",
+        keyTopics: [
+          "Data types: regulated, trade secret, intellectual property, legal information, financial information, human- and non-human-readable",
+          "Classificazioni: sensitive, confidential, public, restricted, private, critical",
+          "Data states: data at rest, data in transit, data in use; data sovereignty, geolocation",
+          "Metodi: geographic restrictions, encryption, hashing, masking, tokenization, obfuscation, segmentation, permission restrictions",
+        ],
+      },
+      {
+        code: "3.4",
+        outcome: "Progettare resilienza e recovery con ridondanza, clustering, backup, siti alternativi, testing e obiettivi RTO/RPO.",
+        keyTopics: [
+          "High availability: load balancing vs clustering",
+          "Site considerations: hot, cold, warm, geographic dispersion; platform diversity, multi-cloud systems",
+          "Continuity of operations; capacity planning: people, technology, infrastructure",
+          "Testing: tabletop exercises, fail over, simulation, parallel processing",
+          "Backups: onsite/offsite, frequency, encryption, snapshots, recovery, replication, journaling",
+          "Power: generators, uninterruptible power supply (UPS)",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Disegna confini e flussi", rationale: "Individua utenti, workload, dati, ingressi/uscite, control plane, data plane e passaggi tra livelli di fiducia." },
+      { title: "2. Assegna le responsabilità", rationale: "Nel cloud il provider protegge l'infrastruttura sottostante, mentre il cliente conserva responsabilità variabili su dati, identità, configurazioni e workload." },
+      { title: "3. Applica difesa in profondità", rationale: "Combina identità, segmentation, secure protocols, hardening, monitoring e protezione dei dati senza affidarti a un solo perimetro." },
+      { title: "4. Progetta per il guasto", rationale: "Allinea alta disponibilità e disaster recovery al BIA: RTO guida il tempo di ripristino, RPO la perdita di dati tollerabile, MTD il limite massimo sostenibile." },
+      { title: "5. Posiziona e configura gli apparati", rationale: "Per ogni dispositivo decidi zona, modalità inline o tap, comportamento in caso di guasto (fail-open o fail-closed) e se deve bloccare o solo rilevare." },
+      { title: "6. Classifica prima di proteggere", rationale: "Tipo di dato, classificazione, stato e giurisdizione determinano il controllo: cifratura, tokenization, masking, restrizioni geografiche o di permesso." },
+    ],
+    decisionPatterns: [
+      "Zero trust non significa fidarsi della rete interna: verifica esplicitamente, applica least privilege e valuta continuamente identità, dispositivo, risorsa e contesto.",
+      "Alta disponibilità mantiene il servizio durante guasti locali; disaster recovery ripristina capacità dopo un evento maggiore. Possono coesistere ma non sono sinonimi.",
+      "La segmentazione limita il movimento laterale solo se i flussi tra segmenti sono esplicitamente controllati e monitorati.",
+      "Se il requisito è bloccare un attacco in tempo reale serve un dispositivo inline (IPS, NGFW, WAF); se è solo osservare senza toccare il traffico basta un sensore passivo su tap o porta di monitoraggio (IDS).",
+      "Fail-closed privilegia la confidenzialità, fail-open la disponibilità: scegli in base a che cosa l'organizzazione non può permettersi di perdere, e ricorda che la sicurezza delle persone viene prima.",
+      "Per sistemi ICS/SCADA, RTOS o embedded che non si possono aggiornare, la risposta tipica è isolamento o segmentazione con controlli compensativi, non il patching.",
+      "Per applicazioni web la protezione specifica è il WAF (layer 7); per un'unica appliance tuttofare in una piccola sede è l'UTM; per filtrare per applicazione e utente è l'NGFW.",
+      "Replication non sostituisce il backup: copia anche cancellazioni e cifrature del ransomware. Per ripristinare serve una copia con versioni, isolata o immutabile.",
+    ],
+    connections: [
+      "I requisiti crittografici del D1 diventano scelte concrete per dati at rest, in transit e in use.",
+      "Le vulnerabilità del D2 permettono di valutare superficie d'attacco e controlli compensativi dell'architettura.",
+      "Monitoring e IAM del D4 rendono operativi zero trust e segmentation; BIA e governance del D5 stabiliscono i requisiti di resilienza.",
+      "Data sovereignty e classificazione collegano l'architettura agli obblighi di compliance e privacy del D5.",
+      "Test di failover ed esercitazioni tabletop sono lo stesso strumento usato dall'incident response nel D4.",
+      "Il posizionamento dei dispositivi (device placement) decide cosa vede ogni controllo — in linea o in copia passiva — e con la selezione dei controlli efficaci si scelgono firewall, WAF, IDS/IPS, proxy e load balancer in base a minaccia, costo e impatto.",
+    ],
+    comparisons: [
+      {
+        title: "Responsabilità condivisa nel cloud",
+        headers: ["Modello", "Il provider gestisce", "Il cliente gestisce"],
+        rows: [
+          ["IaaS", "Data center, hardware, rete fisica, hypervisor", "Sistema operativo, patch, applicazioni, dati, identità, configurazione di rete"],
+          ["PaaS", "Anche sistema operativo e runtime della piattaforma", "Codice applicativo, dati, identità, configurazione dei servizi"],
+          ["SaaS", "Anche l'applicazione", "Dati, utenti e permessi, configurazione di sicurezza dell'applicazione"],
+        ],
+      },
+      {
+        title: "Apparati di rete e posizionamento",
+        headers: ["Apparato", "Modalità tipica", "Scopo"],
+        rows: [
+          ["IDS", "Passivo, su tap o porta di monitoraggio", "Rileva e genera allarmi, non blocca"],
+          ["IPS", "Inline, attivo", "Rileva e blocca il traffico malevolo"],
+          ["WAF", "Inline davanti all'applicazione web (layer 7)", "Blocca SQL injection, XSS e attacchi HTTP"],
+          ["NGFW", "Inline al perimetro o tra zone", "Filtra per applicazione, utente e contenuto, non solo per porta"],
+          ["UTM", "Inline, appliance unica", "Firewall, antivirus, filtro web e VPN in un solo apparato"],
+          ["Jump server", "In una zona di amministrazione", "Punto unico e controllato per amministrare i sistemi interni"],
+          ["Proxy server", "Tra client e Internet", "Filtra, registra e intermedia le richieste"],
+          ["Load balancer", "Davanti a un gruppo di server", "Distribuisce il carico e rimuove i nodi guasti"],
+        ],
+      },
+      {
+        title: "Comportamento in caso di guasto",
+        headers: ["Modalità", "Cosa succede se il dispositivo si guasta", "Quando si sceglie"],
+        rows: [
+          ["Fail-open", "Il traffico passa senza controllo", "Quando la disponibilità conta più del filtro"],
+          ["Fail-closed", "Il traffico viene bloccato", "Quando la confidenzialità conta più della disponibilità"],
+        ],
+      },
+      {
+        title: "Siti alternativi",
+        headers: ["Sito", "Tempo di attivazione", "Costo", "Contenuto"],
+        rows: [
+          ["Hot site", "Minuti o ore", "Alto", "Hardware, software e dati aggiornati, pronto a subentrare"],
+          ["Warm site", "Ore o giorni", "Medio", "Hardware e connettività, dati da ripristinare"],
+          ["Cold site", "Giorni o settimane", "Basso", "Spazio, alimentazione e raffreddamento, niente o quasi di installato"],
+        ],
+      },
+      {
+        title: "Tecniche di copia dei dati",
+        headers: ["Tecnica", "Cosa fa", "Limite"],
+        rows: [
+          ["Backup offsite", "Copia conservata lontano dal sito principale", "Il ripristino richiede tempo"],
+          ["Snapshot", "Immagine di un sistema o volume in un istante", "Se resta sullo stesso storage non protegge da un guasto di quello storage"],
+          ["Replication", "Copia continua dei dati verso un altro sistema", "Replica anche cancellazioni e dati cifrati dal ransomware"],
+          ["Journaling", "Registra ogni modifica e permette il ripristino a un istante preciso", "Richiede spazio e un punto di partenza integro"],
+        ],
+      },
+      {
+        title: "Stati del dato",
+        headers: ["Stato", "Esempio", "Protezione tipica"],
+        rows: [
+          ["Data at rest", "Database, disco, backup", "Cifratura di disco, database o record, permessi"],
+          ["Data in transit", "Traffico tra client e server", "TLS, IPSec, VPN"],
+          ["Data in use", "Dati in memoria durante l'elaborazione", "Secure enclave, controllo degli accessi, masking a video"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "La protezione dei frame di gestione (PMF) cifra tutti i frame di gestione e protegge da ogni DoS wireless.", correction: "La PMF/802.11w copre i frame di gestione robusti: riservatezza e integrità per l’unicast, integrità (BIP) per i frame indirizzati a gruppo. Non cifra ogni frame, non protegge beacon e probe precedenti all’associazione e non ferma il jamming RF, che agisce al livello fisico. È obbligatoria in WPA3 e non è legata a 802.11ac." },
+      { misconception: "Load balancing e clustering sono la stessa cosa.", correction: "Il load balancing distribuisce le richieste su più nodi attivi; il clustering fa lavorare più nodi come un unico sistema e garantisce il failover quando uno cade." },
+      { misconception: "Se il client parla in HTTPS con il bilanciatore, l'intero percorso fino al backend è cifrato.", correction: "Dipende dalla modalità: con la terminazione TLS (SSL offload) il bilanciatore decifra e può inoltrare al backend in chiaro, lasciando esposto il tratto interno. Servono il TLS pass-through o la ri-cifratura verso il backend, con verifica del suo certificato." },
+      { misconception: "Un IDS blocca gli attacchi.", correction: "L'IDS è passivo: rileva e allerta. Per bloccare serve un dispositivo inline come l'IPS." },
+      { misconception: "Una VLAN equivale a un air gap.", correction: "La VLAN è segmentazione logica sulla stessa infrastruttura; l'air gap è isolamento fisico, senza alcun collegamento di rete." },
+      { misconception: "Con la replication non servono più i backup.", correction: "La replication copia subito anche errori, cancellazioni e file cifrati dal ransomware; servono backup con versioni, isolati o immutabili." },
+      { misconception: "Nel SaaS la sicurezza è tutta del provider.", correction: "Anche nel SaaS il cliente resta responsabile di dati, utenti, permessi e configurazioni di sicurezza dell'applicazione." },
+      { misconception: "Un hot site garantisce di non perdere dati.", correction: "L'hot site riduce il tempo di ripristino (RTO); la perdita di dati (RPO) dipende da quanto spesso i dati vengono replicati o copiati." },
+      { misconception: "Data sovereignty e geolocation sono sinonimi.", correction: "La data sovereignty riguarda le giurisdizioni applicabili ai dati, considerando anche residenza e obblighi extraterritoriali; la geolocation individua dove si trova un dispositivo o un utente e serve per applicare restrizioni geografiche." },
+      { misconception: "Un UPS mantiene i sistemi accesi per tutto un blackout lungo.", correction: "L'UPS copre l'interruzione breve e il tempo necessario all'avvio del generatore, che sostiene i blackout lunghi." },
+    ],
+    examVsPractice: [
+      { topic: "Responsabilità condivisa nel cloud", exam: "La tabella IaaS, PaaS e SaaS dice con precisione che cosa gestisce il fornitore e che cosa il cliente.", practice: "Il confine cambia da servizio a servizio e dipende dal contratto. La maggior parte degli incidenti cloud nasce da configurazioni del cliente, come identità con troppi permessi o archivi resi pubblici per errore, non da falle del fornitore." },
+      { topic: "Segmentazione della rete", exam: "DMZ, VLAN e air gap sono disegnati con confini netti fra zone di fiducia.", practice: "Con cloud, lavoro remoto e servizi SaaS i confini si sfumano: si segmenta sempre più per identità e applicazione (microsegmentazione). Un diagramma non basta: la segmentazione va verificata con test, perché regole di eccezione aggiunte negli anni la erodono." },
+      { topic: "Backup e continuità", exam: "RPO e RTO sono numeri dati nello scenario, e il tipo di backup si sceglie di conseguenza.", practice: "RPO e RTO vengono dalla business impact analysis e valgono solo se il ripristino è stato provato. Un backup mai ripristinato è una speranza, non una garanzia; contro il ransomware servono anche copie immutabili o isolate dalla rete." },
+    ],
+    appliedScenario: {
+      title: "Servizio ibrido con RPO stretto",
+      prompt: "Un portale critico usa API pubbliche e un database on-premises. Il BIA richiede RTO di 2 ore e RPO di 15 minuti. Quali decisioni architetturali sono necessarie?",
+      reasoning: "Separa tier pubblico, applicativo e dati con flussi allowlist; applica identità workload e logging centralizzato. Replica o esegui backup con frequenza capace di rispettare 15 minuti e predisponi capacità alternativa testata entro 2 ore. Un backup giornaliero o un sito cold non soddisfano automaticamente gli obiettivi, anche se riducono il costo.",
+    },
+    practiceScenarios: [
+      {
+        objective: "3.1",
+        title: "Impianto industriale non aggiornabile",
+        prompt: "Un impianto di trattamento delle acque usa un sistema SCADA con controllori che eseguono un RTOS certificato: il fornitore non rilascia patch e ogni modifica richiederebbe una nuova certificazione. La direzione vuole collegare l'impianto alla rete aziendale per avere report in tempo reale. Qual è l'approccio architetturale più adatto?",
+        reasoning: "Poiché i sistemi non si possono aggiornare (inability to patch), la protezione deve venire dall'architettura: una rete ICS separata, collegata alla rete aziendale solo tramite una zona intermedia con flussi unidirezionali o strettamente limitati, monitoraggio passivo del traffico industriale e accesso di manutenzione tramite jump server. Se il requisito di sicurezza prevale su quello dei report, la scelta resta l'air gap.",
+      },
+      {
+        objective: "3.2",
+        title: "IPS davanti a un servizio critico",
+        prompt: "Un ospedale mette un IPS inline davanti al sistema che invia i referti ai reparti. Il team discute se configurarlo fail-open o fail-closed. Quali elementi decidono la scelta?",
+        reasoning: "Conta che cosa è inaccettabile perdere. Se un guasto dell'IPS interrompesse l'invio dei referti mettendo a rischio i pazienti, la disponibilità prevale e si sceglie fail-open, compensando con monitoraggio e allarmi sul guasto dell'IPS. Se il servizio esponesse dati la cui riservatezza è prioritaria e l'interruzione fosse tollerabile, si sceglierebbe fail-closed. La decisione va documentata e approvata.",
+      },
+      {
+        objective: "3.2",
+        title: "Amministratori da remoto",
+        prompt: "Gli amministratori di sistema lavorano spesso fuori sede e oggi raggiungono i server via RDP esposto su Internet. Quale architettura riduce la superficie d'attacco mantenendo l'accesso?",
+        reasoning: "Chiudere RDP verso Internet, far passare l'accesso da una VPN o da un servizio SASE con MFA e verifica del dispositivo, e consentire l'amministrazione solo da un jump server in una zona dedicata, con sessioni registrate. I server accettano connessioni di gestione solo dal jump server, così un'unica porta d'ingresso controllata sostituisce molte porte esposte.",
+      },
+      {
+        objective: "3.3",
+        title: "Dati dei clienti europei nel cloud",
+        prompt: "Un'azienda con clienti nell'UE vuole spostare il database clienti su un provider cloud che, per risparmiare, replica automaticamente i dati in regioni fuori dall'UE. Quali concetti entrano in gioco e che cosa va configurato?",
+        reasoning: "Entra in gioco la data sovereignty: residenza e accessi influiscono sulle giurisdizioni applicabili. Per i trattamenti soggetti al GDPR, i trasferimenti verso paesi terzi richiedono il rispetto degli artt. 44–49; la cittadinanza non è il criterio decisivo. Vanno configurate restrizioni geografiche sulle regioni di archiviazione e di replica, cifratura con chiavi gestite dall'azienda e una classificazione del dato come regolamentato, verificando le clausole contrattuali del provider.",
+      },
+      {
+        objective: "3.4",
+        title: "Scelta del sito alternativo",
+        prompt: "Un'azienda di e-commerce ha un RTO di 8 ore e un RPO di 1 ora, con un budget che non consente un secondo data center completamente attivo. Quale combinazione di sito alternativo e protezione dei dati è la più adatta?",
+        reasoning: "Un warm site, con hardware e connettività già pronti, può essere attivato entro 8 ore senza il costo di un hot site; un cold site richiederebbe probabilmente più tempo. Per l'RPO di 1 ora servono replication o backup con frequenza almeno oraria verso il sito alternativo. Il piano va verificato con un test di failover, non solo con un tabletop.",
+      },
+      {
+        objective: "3.4",
+        title: "Ransomware sul database replicato",
+        prompt: "Un ransomware cifra il database principale. La replica sincrona nel secondo data center risulta cifrata anch'essa pochi secondi dopo. Che cosa è mancato nell'architettura di resilienza e come si ripristina?",
+        reasoning: "La replication garantisce disponibilità, ma copia immediatamente anche la cifratura. È mancata una copia con versioni e isolata: snapshot immutabili, backup offline o offsite, o journaling che consenta di tornare a un istante precedente all'attacco. Il ripristino parte dall'ultimo punto integro verificato, dopo aver eliminato la causa dell'infezione.",
+        attackChain: {
+          vector: "Ransomware che cifra il database primario; la replica sincrona propaga la cifratura.",
+          impact: "Dati indisponibili in entrambi i data center: la ridondanza non offre alcun punto di ripristino.",
+          mitigation: "Snapshot immutabili, backup offline o offsite, journaling con ripristino a un istante precedente, rimozione della causa prima del ripristino.",
+          evidence: "Alert dell'EDR sul processo di cifratura, picco di scritture sul database, nota di riscatto, log di replica con l'orario di propagazione.",
+          limit: "La replica protegge dalla perdita di un sito, non dalla corruzione logica: copia fedelmente anche la cifratura, in pochi secondi.",
+        },
+      },
+    ],
+    keyPoints: [
+      "Nel cloud la responsabilità è condivisa: in IaaS il cliente gestisce sistema operativo, applicazioni e dati, in PaaS applicazioni e dati, in SaaS soprattutto dati e accessi.",
+      "L'architettura limita il raggio d'azione di un attacco: segmentazione, VLAN e zone separano ciò che non deve comunicare, e un dispositivo in linea può fallire aperto (fail-open) o chiuso (fail-closed).",
+      "Ogni dispositivo ha uno scopo: l'IDS rileva, l'IPS in linea blocca, il WAF protegge le applicazioni web, l'NGFW filtra per applicazione, il jump server concentra l'accesso amministrativo.",
+      "Il dato si protegge secondo stato (a riposo, in transito, in uso), classificazione e giurisdizione: cifratura, hashing, tokenizzazione e mascheramento rispondono a esigenze diverse.",
+      "RTO è il tempo entro cui ripristinare, RPO la quantità di dati che si può perdere: da questi dipendono il tipo di backup e il sito alternativo (hot, warm, cold).",
+      "La replica garantisce disponibilità ma copia anche gli errori e la cifratura di un ransomware: servono copie versionate, immutabili o offline.",
+    ],
+    acronyms: DOMAIN_3_ACRONYMS,
+    readinessChecks: [
+      "Sai delimitare responsabilità cliente/provider in IaaS, PaaS e SaaS.",
+      "Sai scegliere tra segmentazione, isolamento, ridondanza e recovery in base al requisito.",
+      "Sai derivare una soluzione di backup e sito alternativo da RTO, RPO e MTD.",
+      "Sai scegliere tra IDS e IPS, inline e tap, fail-open e fail-closed.",
+      "Sai distinguere WAF, NGFW, UTM, proxy e jump server dal loro scopo.",
+      "Sai collegare stato, classificazione e giurisdizione del dato al metodo di protezione.",
+    ],
+  },
+  4: {
+    domainId: 4,
+    title: "Operazioni di sicurezza",
+    weight: 28,
+    purpose: "È il dominio più pesante e più orientato all'azione. Misura la capacità di rendere operativi i controlli: hardening, asset e vulnerability management, IAM, monitoring, automazione, analisi dei log e incident response. Nelle domande FIRST/NEXT, l'ordine delle azioni è spesso decisivo.",
+    objectives: [
+      {
+        code: "4.1",
+        outcome: "Applicare baseline, hardening, patching, secure configuration e protezioni per endpoint, mobile, wireless, applicazioni e cloud.",
+        keyTopics: [
+          "Secure baselines: establish, deploy, maintain",
+          "Hardening targets: mobile devices, workstations, switches, routers, cloud infrastructure, servers, ICS/SCADA, embedded systems, RTOS, IoT devices",
+          "Wireless: installation considerations (site surveys, heat maps)",
+          "Mobile solutions: mobile device management (MDM); deployment models BYOD, COPE, CYOD; connection methods cellular, Wi-Fi, Bluetooth",
+          "Wireless security settings: WPA3, AAA/RADIUS, cryptographic protocols, authentication protocols",
+          "Application security: input validation, secure cookies, static code analysis, code signing",
+          "Sandboxing, monitoring",
+        ],
+      },
+      {
+        code: "4.2",
+        outcome: "Gestire inventario, ownership, classificazione, ciclo di vita, sanitizzazione e dismissione degli asset.",
+        keyTopics: [
+          "Acquisition/procurement process",
+          "Assignment/accounting: ownership, classification",
+          "Monitoring/asset tracking: inventory, enumeration",
+          "Disposal/decommissioning: sanitization, destruction, certification, data retention",
+        ],
+      },
+      {
+        code: "4.3",
+        outcome: "Eseguire vulnerability management dal discovery alla prioritizzazione, remediation, rescansione, reporting ed eccezioni.",
+        keyTopics: [
+          "Identificazione: vulnerability scan; application security (static analysis, dynamic analysis, package monitoring); penetration testing; system/process audit",
+          "Threat feed: OSINT, proprietary/third-party, information-sharing organization, dark web",
+          "Responsible disclosure program, bug bounty program",
+          "Analisi: confirmation (false positive, false negative), prioritize, CVSS, CVE, vulnerability classification, exposure factor, environmental variables, industry/organizational impact, risk tolerance",
+          "Risposta: patching, insurance, segmentation, compensating controls, exceptions and exemptions",
+          "Validazione: rescanning, audit, verification; reporting",
+        ],
+      },
+      {
+        code: "4.4",
+        outcome: "Analizzare alert e attività con log, SIEM, scansioni, intelligence e baseline per distinguere segnale e rumore.",
+        keyTopics: [
+          "Monitoring computing resources: systems, applications, infrastructure",
+          "Attività: log aggregation, alerting, scanning, reporting, archiving, alert response and remediation/validation (quarantine, alert tuning)",
+          "Strumenti: Security Content Automation Protocol (SCAP), benchmarks, agents/agentless, SIEM, antivirus, DLP, SNMP traps, NetFlow, vulnerability scanners",
+        ],
+      },
+      {
+        code: "4.5",
+        outcome: "Configurare controlli enterprise quali firewall, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR e proxy.",
+        keyTopics: [
+          "Firewall: rules, access lists, ports/protocols, screened subnets",
+          "IDS/IPS: trends, signatures",
+          "Web filter: agent-based, centralized proxy, URL scanning, content categorization, block rules, reputation",
+          "Operating system security: Group Policy, SELinux",
+          "Secure protocols: protocol selection, port selection, transport method",
+          "DNS filtering; email security: DMARC, DKIM, SPF, gateway",
+          "File integrity monitoring, DLP, network access control (NAC), EDR/XDR, user behavior analytics",
+        ],
+      },
+      {
+        code: "4.6",
+        outcome: "Implementare IAM: provisioning, federation, MFA, authorization, least privilege, access review e deprovisioning.",
+        keyTopics: [
+          "Provisioning/de-provisioning user accounts, permission assignments and implications, identity proofing",
+          "Federation, single sign-on (SSO): LDAP, OAuth, SAML; interoperability, attestation",
+          "Access controls: mandatory, discretionary, role-based, rule-based, attribute-based, time-of-day restrictions, least privilege",
+          "MFA: biometrics, hard/soft authentication tokens, security keys; something you know, something you have, something you are, somewhere you are",
+          "Password: length, complexity, reuse, expiration, age; password managers, passwordless",
+          "Privileged access management: just-in-time permissions, password vaulting, ephemeral credentials",
+        ],
+      },
+      {
+        code: "4.7",
+        outcome: "Usare automazione e orchestrazione valutando repeatability, velocità, integrazioni, errori e rischio di propagazione.",
+        keyTopics: [
+          "Casi d'uso: user provisioning, resource provisioning, guard rails, security groups, ticket creation, escalation, enabling/disabling services and access, continuous integration and testing, integrations and APIs",
+          "Benefici: efficiency/time saving, enforcing baselines, standard infrastructure configurations, scaling in a secure manner, employee retention, reaction time, workforce multiplier",
+          "Altre considerazioni: complexity, cost, single point of failure, technical debt, ongoing supportability",
+        ],
+      },
+      {
+        code: "4.8",
+        outcome: "Applicare incident response e forensics preservando evidenze, comunicazioni, contenimento e ritorno controllato in produzione.",
+        keyTopics: [
+          "Processo: preparation, detection, analysis, containment, eradication, recovery, lessons learned",
+          "Training; testing: tabletop exercise, simulation; root cause analysis; threat hunting",
+          "Digital forensics: legal hold, chain of custody, acquisition, reporting, preservation, e-discovery",
+        ],
+      },
+      {
+        code: "4.9",
+        outcome: "Interpretare fonti dati e log di rete, autenticazione, endpoint, applicazioni, cloud, DNS ed email.",
+        keyTopics: [
+          "Log data: firewall logs, application logs, endpoint logs, OS-specific security logs, IPS/IDS logs, network logs, metadata",
+          "Data sources: vulnerability scans, automated reports, dashboards, packet captures",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Conosci lo stato normale", rationale: "Inventario, ownership, baseline e sincronizzazione temporale rendono interpretabili vulnerabilità, drift, log e alert." },
+      { title: "2. Riduci preventivamente l'esposizione", rationale: "Applica hardening, patching, least privilege, segmentation e secure configuration secondo criticità e compatibilità." },
+      { title: "3. Correlazione prima della conclusione", rationale: "Valida un alert usando più fonti, timeline, identità, host e contesto; preserva i dati volatili quando la risposta forense lo richiede." },
+      { title: "4. Rispondi in ordine", rationale: "Segui preparation; detection/analysis; containment; eradication; recovery; lessons learned, adattando il contenimento a sicurezza, impatto e autorizzazioni." },
+      { title: "5. Governa le identità per tutto il ciclo", rationale: "Identity proofing, provisioning con least privilege, access review periodiche, privilegi temporanei tramite PAM e deprovisioning tempestivo evitano accumulo di permessi e account orfani." },
+      { title: "6. Automatizza ciò che è ripetibile", rationale: "Provisioning, ticket, escalation e isolamento possono essere automatizzati con guard rail e test; valuta complessità, costo, single point of failure e debito tecnico prima di farlo." },
+    ],
+    decisionPatterns: [
+      "FIRST non significa sempre spegnere: prima valida l'evento e considera evidenze volatili, safety e piano di risposta; durante un attacco confermato, contiene per limitare il danno.",
+      "Una scansione identifica potenziali debolezze; la validazione riduce i falsi positivi; la prioritizzazione combina severità, exploitability, esposizione, valore dell'asset e contesto aziendale.",
+      "Autenticazione prova chi sei, autorizzazione decide cosa puoi fare, accounting registra cosa hai fatto; MFA richiede fattori di categorie diverse.",
+      "Se lo scenario parla di spoofing del dominio aziendale nelle email, la risposta è SPF, DKIM e DMARC con una policy di quarantena o rifiuto, non un filtro sui contenuti.",
+      "Per sapere quanto e verso chi è stato trasferito basta NetFlow o i metadata; per sapere che cosa è stato trasferito serve una packet capture.",
+      "Un dipendente che cambia ruolo e conserva i vecchi permessi indica privilege creep: la risposta è access review e attestation, con permessi assegnati per ruolo.",
+      "Troppi alert falsi si risolvono con alert tuning e baseline, non disattivando la regola: una regola spenta produce falsi negativi.",
+      "Per dischi SSD e flash la sanitizzazione affidabile è la crypto erase o la distruzione fisica; il degaussing funziona solo sui supporti magnetici.",
+    ],
+    connections: [
+      "Session hijacking, replay e cookie manipolati del D2 collegano TLS, rotazione, scadenza/revoca server e cookie sicuri all’Application Security del D4.",
+      "Le primitive e i controlli del D1 diventano configurazioni, procedure e verifiche operative.",
+      "TTP, vulnerabilità e indicatori del D2 alimentano detection engineering, threat hunting e prioritizzazione.",
+      "Architettura del D3 determina log disponibili e punti di enforcement; governance del D5 determina escalation, retention, evidence handling e reporting.",
+      "Zero trust e modelli di controllo degli accessi del D1 diventano policy concrete in IAM, NAC e PAM.",
+      "Rischio residuo, eccezioni e assicurazione collegano il vulnerability management alla gestione del rischio del D5.",
+      "Nel vulnerability management l'audit di sistema e di processo (system/process audit) trova le debolezze che la scansione non vede, e la classificazione delle vulnerabilità (vulnerability classification) le raggruppa per tipo e gravità prima di assegnare le priorità con CVSS e CVE.",
+      "Rafforzare i protocolli è una catena di scelte: la selezione del protocollo (protocol selection) preferisce la versione sicura, la selezione della porta (port selection) espone solo quella attesa e il metodo di trasporto (transport method) impone il canale cifrato con TLS; il web filter aggiunge la scansione degli URL (URL scanning) per categoria e reputazione.",
+      "L'assegnazione dei permessi (permission assignments) traduce ruoli e policy in diritti concreti: ogni concessione va data col privilegio minimo e rivista, perché le sue implicazioni abilitano l'escalation se i permessi restano eccessivi.",
+    ],
+    comparisons: [
+      {
+        "title": "SSO e protocolli IAM (4.6)",
+        "headers": [
+          "Concetto",
+          "Scopo",
+          "Flusso e limite"
+        ],
+        "rows": [
+          [
+            "SSO",
+            "Una autenticazione, più applicazioni",
+            "Risultato, non protocollo: Kerberos, SAML o OIDC"
+          ],
+          [
+            "SAML",
+            "Autenticazione federata web",
+            "IdP → asserzione XML firmata → SP → sessione locale"
+          ],
+          [
+            "OAuth 2.0",
+            "Autorizzazione delegata",
+            "Authorization server → access token → resource server/API; token anche opaco"
+          ],
+          [
+            "OpenID Connect (OIDC)",
+            "Identità sopra OAuth 2.0",
+            "OP → ID token JWT → RP; access token separato per API"
+          ],
+          [
+            "Kerberos",
+            "Autenticazione tramite ticket",
+            "KDC → TGT → richiesta service ticket → servizio; non automaticamente federazione web"
+          ]
+        ]
+      },
+      {
+        title: "Modelli di controllo degli accessi",
+        headers: ["Modello", "Chi decide l'accesso", "Esempio"],
+        rows: [
+          ["Mandatory (MAC)", "Il sistema, in base a etichette di classificazione", "Documento Segreto leggibile solo da chi ha nulla osta Segreto"],
+          ["Discretionary (DAC)", "Il proprietario della risorsa", "L'autore di un file decide con chi condividerlo"],
+          ["Role-based (RBAC)", "Il ruolo assegnato all'utente", "Tutti gli addetti alla contabilità accedono al gestionale fatture"],
+          ["Rule-based", "Regole generali valide per tutti", "Nessun accesso al server da reti esterne"],
+          ["Attribute-based (ABAC)", "Attributi di utente, risorsa e contesto", "Accesso solo se reparto, dispositivo conforme e orario coincidono"],
+        ],
+      },
+      {
+        title: "Modelli di dispositivi mobili",
+        headers: ["Modello", "Proprietà", "Controllo aziendale"],
+        rows: [
+          ["BYOD", "Del dipendente", "Limitato: di solito un contenitore aziendale gestito via MDM"],
+          ["CYOD", "Dell'azienda, scelto da un elenco approvato", "Pieno sul dispositivo"],
+          ["COPE", "Dell'azienda, con uso personale consentito", "Pieno, con separazione tra dati aziendali e personali"],
+        ],
+      },
+      {
+        title: "Autenticazione della posta",
+        headers: ["Meccanismo", "Che cosa verifica", "Come"],
+        rows: [
+          ["SPF", "Che il server di invio sia autorizzato per il dominio", "Elenco dei server autorizzati pubblicato nel DNS"],
+          ["DKIM", "Che il messaggio non sia stato alterato e provenga dal dominio", "Firma digitale nell'intestazione, chiave pubblica nel DNS"],
+          ["DMARC", "Che cosa fare se SPF e DKIM falliscono", "Policy nel DNS (none, quarantine, reject) e report di esito"],
+        ],
+      },
+      {
+        title: "Esiti di una scansione",
+        headers: ["Esito", "Significato", "Rischio"],
+        rows: [
+          ["True positive", "Vulnerabilità segnalata e reale", "Va gestita"],
+          ["False positive", "Vulnerabilità segnalata ma inesistente", "Tempo sprecato e fiducia nello strumento ridotta"],
+          ["True negative", "Nessuna segnalazione e nessuna vulnerabilità", "Nessuno"],
+          ["False negative", "Vulnerabilità reale non segnalata", "Il più pericoloso: dà una falsa sicurezza"],
+        ],
+      },
+      {
+        title: "Fine vita degli asset",
+        headers: ["Attività", "Che cosa fa", "Quando"],
+        rows: [
+          ["Sanitization", "Rende i dati irrecuperabili lasciando riutilizzabile il supporto (sovrascrittura, crypto erase, degaussing)", "Riuso interno, restituzione di hardware in leasing"],
+          ["Destruction", "Distrugge fisicamente il supporto (triturazione, polverizzazione, incenerimento)", "Dati molto sensibili o supporti non sanitizzabili"],
+          ["Certification", "Documenta che sanitizzazione o distruzione sono avvenute", "Sempre, soprattutto se affidata a terzi"],
+          ["Data retention", "Stabilisce quanto conservare i dati prima di eliminarli", "Prima della dismissione, in base a leggi e policy"],
+        ],
+      },
+      {
+        title: "Fasi dell'incident response",
+        headers: ["Fase", "Obiettivo", "Esempio"],
+        rows: [
+          ["Preparation", "Essere pronti prima dell'incidente", "Piano, contatti, strumenti, formazione, esercitazioni"],
+          ["Detection", "Accorgersi dell'evento", "Alert del SIEM o dell'EDR, segnalazione di un utente"],
+          ["Analysis", "Confermare e capire portata e impatto", "Correlazione dei log, timeline, host coinvolti"],
+          ["Containment", "Fermare la propagazione", "Isolare l'host, disabilitare l'account"],
+          ["Eradication", "Rimuovere la causa", "Eliminare malware e persistenza, chiudere la vulnerabilità"],
+          ["Recovery", "Tornare al servizio in modo controllato", "Ripristino da stato fidato e monitoraggio rafforzato"],
+          ["Lessons learned", "Migliorare processi e controlli", "Revisione post-incidente e root cause analysis"],
+        ],
+      },
+      {
+        title: "Fonti dati per le indagini",
+        headers: ["Fonte", "Che cosa mostra", "Domanda a cui risponde"],
+        rows: [
+          ["Firewall logs", "Connessioni consentite e bloccate", "Chi ha provato a raggiungere che cosa?"],
+          ["Endpoint logs", "Processi, file, modifiche sull'host", "Che cosa è stato eseguito sulla macchina?"],
+          ["OS-specific security logs", "Accessi, privilegi, modifiche agli account", "Chi si è autenticato e con quali permessi?"],
+          ["IPS/IDS logs", "Traffico che corrisponde a firme o anomalie", "Quale attacco noto è stato tentato?"],
+          ["NetFlow", "Chi ha parlato con chi, quando e quanto", "Quanti dati sono usciti e verso dove?"],
+          ["Packet captures", "Il contenuto completo del traffico", "Che cosa è stato trasmesso esattamente?"],
+          ["Metadata", "Informazioni su file e messaggi, non il contenuto", "Chi ha creato o inviato un file, e quando?"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "Fra le wireless security settings, WPA3 e la PMF rendono la rete immune agli attacchi wireless.", correction: "WPA3 e la protezione dei frame di gestione (PMF/802.11w) neutralizzano la deautenticazione contraffatta e irrobustiscono l’autenticazione, ma non difendono dal jamming RF né da ogni DoS, perché il disturbo radio agisce al livello fisico. Contro di esso servono site survey, analisi di spettro e sicurezza fisica." },
+      { misconception: "Il punteggio CVSS decide da solo la priorità.", correction: "Il CVSS misura la gravità tecnica; la priorità dipende anche da esposizione, exploit disponibili, valore dell'asset, variabili ambientali e tolleranza al rischio." },
+      { misconception: "Un falso positivo è più pericoloso di un falso negativo.", correction: "Il falso negativo è il più pericoloso: una vulnerabilità o un attacco reale non vengono segnalati. Il falso positivo costa tempo e riduce la fiducia negli alert." },
+      { misconception: "La catena di custodia serve solo se si andrà in tribunale.", correction: "Non si sa in anticipo se l'incidente finirà in giudizio: la catena di custodia va documentata dall'acquisizione della prima evidenza." },
+      { misconception: "Legal hold significa fare un backup dei dati.", correction: "Il legal hold sospende la cancellazione ordinaria dei dati rilevanti per un contenzioso, anche se la policy di retention ne prevederebbe l'eliminazione." },
+      { misconception: "Password e PIN insieme sono autenticazione a più fattori.", correction: "Sono due fattori della stessa categoria (qualcosa che sai): per l'MFA servono categorie diverse, come password più token o biometria." },
+      { misconception: "Rule-based e role-based access control sono la stessa cosa.", correction: "Il role-based assegna permessi in base al ruolo dell'utente; il rule-based applica regole generali a tutti, per esempio fasce orarie o reti di provenienza." },
+      { misconception: "L'automazione riduce sempre il rischio.", correction: "Un errore automatizzato si propaga ovunque in pochi secondi: servono test, guard rail, approvazioni e attenzione a complessità, single point of failure e debito tecnico." },
+      { misconception: "Il degaussing cancella anche i dischi SSD.", correction: "Il degaussing agisce solo sui supporti magnetici; per SSD e memorie flash servono crypto erase, comandi di secure erase o distruzione fisica." },
+    ],
+    examVsPractice: [
+      { topic: "Baseline di hardening", exam: "Si applica la baseline sicura e il sistema risulta protetto.", practice: "Le baseline, come i CIS Benchmarks, si adattano: alcune impostazioni rompono applicazioni e richiedono eccezioni documentate. Poi la configurazione si allontana dalla baseline con il tempo (drift), e va misurata di continuo." },
+      { topic: "Risposta agli incidenti", exam: "Le fasi seguono un ordine preciso: preparazione, rilevamento, analisi, contenimento, eradicazione, ripristino, lezioni apprese.", practice: "Nella realtà le fasi si sovrappongono e si ripetono: mentre si contiene si scoprono nuovi sistemi coinvolti. Decisioni come isolare un server di produzione spettano anche al business, e la documentazione accompagna tutto l'incidente, non solo la fine." },
+      { topic: "SIEM e monitoraggio", exam: "Il SIEM rileva l'attacco e genera l'allarme.", practice: "Un SIEM vede solo i log che riceve e riconosce solo ciò per cui esiste una regola. Il lavoro vero è scegliere le fonti, tarare le regole e gestire il volume degli allarmi, altrimenti gli analisti smettono di guardarli." },
+    ],
+    appliedScenario: {
+      title: "PowerShell e beacon DNS",
+      prompt: "EDR segnala PowerShell offuscato su una workstation e il SIEM mostra query DNS periodiche verso un dominio appena registrato. Qual è la sequenza operativa corretta?",
+      reasoning: "Valida e correla processo, utente, parent process, DNS, proxy e autenticazioni; se l'attività è confermata, isola l'host preservando le evidenze richieste. Determina lo scope su altri endpoint, eradica persistenza e causa iniziale, ripristina da stato fidato e monitora recidive. Cancellare subito il file può distruggere evidenza e non interrompere credenziali o persistenza altrove.",
+      attackChain: {
+        vector: "PowerShell offuscato eseguito sulla postazione, tipicamente dopo un phishing, con un canale di comando e controllo via DNS.",
+        impact: "Controllo remoto della postazione, furto di credenziali e movimento laterale.",
+        mitigation: "Isolamento dell'host, eradicazione della persistenza, reset delle credenziali esposte, logging degli script block di PowerShell e constrained language mode, filtro DNS sui domini appena registrati.",
+        evidence: "Alert dell'EDR con processo padre e utente, query DNS periodiche nel SIEM, log del proxy e di autenticazione.",
+        limit: "Il filtro DNS blocca il dominio noto, ma l'attaccante ne registra un altro; l'EDR vede il processo sull'host, non le credenziali già usate altrove.",
+      },
+    },
+    practiceScenarios: [
+      {
+        objective: "4.1",
+        title: "Smartphone personali per la forza vendita",
+        prompt: "La forza vendita vuole leggere la posta aziendale sui propri smartphone personali. L'azienda deve proteggere i dati dei clienti ma non può gestire le foto e le app private dei dipendenti. Quale modello e quale controllo sono i più adatti?",
+        reasoning: "Il modello è BYOD, con un MDM che crea un contenitore aziendale separato: impone PIN, cifratura e versione minima del sistema, e consente di cancellare da remoto solo i dati aziendali. COPE o CYOD darebbero più controllo, ma richiedono dispositivi di proprietà aziendale, cosa che lo scenario esclude.",
+      },
+      {
+        objective: "4.2",
+        title: "Server in leasing da restituire",
+        prompt: "Un'azienda deve restituire al fornitore 40 server in leasing con dischi SSD che contenevano dati di pagamento. Quale procedura di dismissione è corretta?",
+        reasoning: "Verificare prima le regole di data retention, poi sanitizzare gli SSD con crypto erase o secure erase del produttore, dato che il degaussing non funziona sulle memorie flash. Se il contratto o la sensibilità dei dati lo richiedono, i dischi vanno trattenuti e distrutti fisicamente. In ogni caso serve un certificato di sanitizzazione o distruzione e l'aggiornamento dell'inventario.",
+      },
+      {
+        objective: "4.3",
+        title: "Due vulnerabilità, una sola finestra",
+        prompt: "La scansione segnala una vulnerabilità con CVSS 9.8 su un server interno raggiungibile solo da una VLAN di amministrazione, e una con CVSS 7.5 su un server web esposto a Internet per cui esiste un exploit pubblico usato attivamente. C'è tempo per una sola patch questa notte. Quale ha la priorità?",
+        reasoning: "Il server esposto, con CVSS 7.5: esposizione a Internet ed exploit attivo aumentano la probabilità in modo decisivo. Le variabili ambientali abbassano il rischio reale della 9.8, già mitigata dalla segmentazione. Dopo la patch va eseguita una rescansione per verificare la remediation, e la 9.8 va pianificata o gestita come eccezione documentata.",
+      },
+      {
+        objective: "4.4",
+        title: "SIEM sommerso dagli alert",
+        prompt: "Un nuovo SIEM genera 3000 alert al giorno per accessi falliti, quasi tutti di un'applicazione di backup che usa una password scaduta. Gli analisti propongono di disattivare la regola. Qual è la risposta corretta?",
+        reasoning: "Correggere la causa, cioè la credenziale dell'applicazione di backup, e fare alert tuning: escludere quell'account di servizio noto o alzare la soglia in base alla baseline, mantenendo la regola attiva per tutti gli altri. Disattivare la regola creerebbe un falso negativo proprio sui tentativi di brute force che deve rilevare.",
+      },
+      {
+        objective: "4.5",
+        title: "Email false a nome dell'azienda",
+        prompt: "I clienti ricevono email di phishing che sembrano inviate dal dominio aziendale. Il dominio pubblica un record SPF ma non usa DKIM e non ha una policy DMARC. Che cosa va configurato?",
+        reasoning: "Firmare la posta in uscita con DKIM e pubblicare un record DMARC, partendo da p=none per raccogliere i report e arrivando a quarantine o reject quando tutti i flussi legittimi risultano allineati. DMARC dice ai server riceventi che cosa fare dei messaggi che falliscono SPF e DKIM, e i report mostrano chi sta usando il dominio.",
+        attackChain: {
+          vector: "Spoofing del dominio aziendale nel mittente delle email di phishing.",
+          impact: "Clienti ingannati, con furto di credenziali o pagamenti, e danno alla reputazione del marchio.",
+          mitigation: "Firma DKIM, record DMARC portato da p=none a quarantine o reject, allineamento di tutti i flussi legittimi.",
+          evidence: "Rapporti aggregati DMARC e intestazioni delle email segnalate dai clienti, con i risultati di SPF, DKIM e DMARC.",
+          limit: "DMARC protegge solo il dominio esatto: non ferma domini simili (typosquatting) né un nome visualizzato falso con un altro indirizzo.",
+        },
+      },
+      {
+        "objective": "4.6",
+        "title": "Identità o accesso ai dati?",
+        "prompt": "Kestrelia vuole un solo login al portale paghe esterno, consentire a un’app di leggere il calendario e aprire una condivisione nel realm aziendale. Quali meccanismi scegliere?",
+        "reasoning": "SSO è il risultato. SAML o OpenID Connect autenticano verso il portale federato; OAuth 2.0 delega la sola lettura del calendario con scope limitato; Kerberos usa TGT e service ticket per la condivisione. L’ID token OIDC è per il RP, l’access token per l’API e non deve essere JWT. IdP/SP o OP/RP devono verificare le prove ricevute; la federazione non elimina necessariamente gli account locali né revoca automaticamente sessioni esistenti. Vedi le voci autonome del glossario e Federation. Fonti: OASIS SAML 2.0 Core, RFC 6749, OpenID Connect Core e RFC 4120."
+      },
+      {
+        objective: "4.6",
+        title: "Permessi accumulati",
+        prompt: "Un'audit scopre che un dipendente passato dall'ufficio acquisti alla contabilità può ancora approvare ordini e, allo stesso tempo, registrare pagamenti. Quale problema è emerso e come si previene?",
+        reasoning: "È privilege creep, che qui viola anche la separazione dei compiti. Vanno rimossi subito i permessi del vecchio ruolo. Per prevenirlo servono permessi assegnati per ruolo (RBAC), un processo di cambio mansione che revochi i privilegi precedenti e access review periodiche in cui i responsabili confermano i permessi (attestation).",
+      },
+      {
+        objective: "4.7",
+        title: "Disattivazione automatica degli account",
+        prompt: "L'azienda vuole disattivare automaticamente gli account quando il sistema HR registra una cessazione, tramite API tra HR e directory. Quali benefici e quali rischi vanno valutati?",
+        reasoning: "Benefici: tempo di reazione ridotto, niente account orfani, meno lavoro manuale e applicazione uniforme della policy. Rischi: un errore nei dati HR o nello script potrebbe disattivare molti account insieme, e l'integrazione diventa un single point of failure da mantenere. Servono test, un limite al numero di disattivazioni per esecuzione, log, allarmi e una procedura manuale di riserva.",
+      },
+      {
+        objective: "4.8",
+        title: "Indagine su un insider",
+        prompt: "L'ufficio legale sospetta che un dirigente stia copiando progetti riservati prima di passare a un concorrente, e prevede una causa. Quali attività di digital forensics vanno avviate per prime?",
+        reasoning: "Attivare un legal hold su mailbox, file e log rilevanti, così che la retention ordinaria non li cancelli; acquisire le evidenze con metodi forensi, calcolando gli hash e lavorando su copie; documentare la catena di custodia fin dalla prima acquisizione. L'indagine va coordinata con legale e HR, senza allertare il dirigente prima della preservazione.",
+        attackChain: {
+          vector: "Un insider con accesso legittimo copia progetti riservati tramite email personale, cloud o supporti rimovibili.",
+          impact: "Perdita di proprietà intellettuale a favore di un concorrente, con probabile contenzioso.",
+          mitigation: "Legal hold, DLP sui canali di uscita, privilegi minimi sui progetti, revoca degli accessi alla cessazione del rapporto.",
+          evidence: "Log di accesso ai file, alert DLP, log di email e proxy, eventi USB, copie forensi con hash e catena di custodia.",
+          limit: "L'accesso è autorizzato, quindi i controlli di accesso non scattano; la DLP non vede ciò che viene fotografato o copiato su canali che non ispeziona.",
+        },
+      },
+      {
+        objective: "4.9",
+        title: "Quanto è uscito, e che cosa",
+        prompt: "Un server di file ha inviato 12 GB verso un indirizzo estero durante la notte. Il team vuole sapere subito l'entità del trasferimento e poi, se possibile, che cosa contenesse. Quali fonti dati usare?",
+        reasoning: "Per volume, orari, indirizzi e porte bastano NetFlow e i log del firewall, disponibili subito e leggeri da analizzare. Per il contenuto serve una packet capture, utile solo se il traffico era già registrato e non cifrato; altrimenti si ricorre ai log dell'endpoint e ai metadata dei file letti in quell'intervallo.",
+        attackChain: {
+          vector: "Esfiltrazione notturna dal file server verso un indirizzo estero.",
+          impact: "Violazione della riservatezza, con possibili obblighi di notifica secondo la natura dei dati.",
+          mitigation: "Filtro del traffico in uscita (egress filtering), DLP, alert sui volumi anomali, segmentazione del file server.",
+          evidence: "NetFlow e log del firewall per volume, orari e destinazioni; PCAP per il contenuto, se disponibile; log dell'endpoint e metadati dei file letti.",
+          limit: "NetFlow mostra quanto e verso dove, non che cosa: con traffico cifrato nemmeno il PCAP rivela il contenuto.",
+        },
+      },
+    ],
+    keyPoints: [
+      "La risposta agli incidenti segue un ordine: preparazione, rilevazione, analisi, contenimento, eradicazione, ripristino e lezioni apprese; la FIRST action dipende dalla fase in cui ci si trova.",
+      "Un'indagine correla più fonti su una sola timeline: log di endpoint, rete, autenticazione e applicazioni, raccolti nel SIEM e conservati con la catena di custodia.",
+      "La gestione delle vulnerabilità è un ciclo: identificare, analizzare, dare priorità (non solo con il CVSS, anche con esposizione e valore dell'asset), correggere e verificare con una nuova scansione.",
+      "Identità e accessi sono passi distinti: autenticazione, autorizzazione, federazione (SAML, OpenID Connect), provisioning e revisione periodica degli accessi.",
+      "Il modello di accesso si sceglie dallo scenario: MAC per etichette imposte, DAC per decisione del proprietario, RBAC per ruolo, ABAC per attributi e contesto.",
+      "La posta si protegge con SPF, DKIM e DMARC insieme: SPF autorizza i server, DKIM firma i messaggi, DMARC dice che cosa fare di quelli che non superano i controlli.",
+    ],
+    acronyms: DOMAIN_4_ACRONYMS,
+    readinessChecks: [
+      "Sai ordinare le fasi di incident response e giustificare la FIRST action.",
+      "Sai correlare almeno tre fonti di log su una timeline coerente.",
+      "Sai prioritizzare vulnerabilità oltre il solo punteggio CVSS e verificare la remediation.",
+      "Sai distinguere authentication, authorization, federation, provisioning e access review.",
+      "Sai scegliere tra MAC, DAC, RBAC, rule-based e ABAC a partire dallo scenario.",
+      "Sai spiegare SPF, DKIM e DMARC e scegliere la fonte dati giusta per un'indagine.",
+    ],
+  },
+  5: {
+    domainId: 5,
+    title: "Gestione e supervisione del programma di sicurezza",
+    weight: 20,
+    purpose: "Collega obiettivi aziendali, rischio e controlli. Richiede di distinguere governance, policy, standard, procedure e linee guida; quantificare o qualificare il rischio; gestire terze parti, compliance, privacy, audit e awareness con evidenze verificabili.",
+    objectives: [
+      {
+        code: "5.1",
+        outcome: "Stabilire governance con ruoli, responsabilità, policy hierarchy, reporting, data ownership e allineamento alla strategia.",
+        keyTopics: [
+          "Guidelines; policies: AUP, information security policies, business continuity, disaster recovery, incident response, SDLC, change management",
+          "Standards: password, access control, physical security, encryption",
+          "Procedures: change management, onboarding/offboarding, playbooks",
+          "External considerations: regulatory, legal, industry, local/regional, national, global; monitoring and revision",
+          "Governance structures: boards, committees, government entities, centralized/decentralized",
+          "Ruoli per sistemi e dati: owners, controllers, processors, custodians/stewards",
+        ],
+      },
+      {
+        code: "5.2",
+        outcome: "Gestire il rischio: identificazione, analisi, registro, appetite/tolerance, risposte, owner, monitoraggio e BIA.",
+        keyTopics: [
+          "Risk identification; risk assessment: ad hoc, recurring, one-time, continuous",
+          "Risk analysis: qualitative, quantitative, SLE, ALE, ARO, probability, likelihood, exposure factor, impact",
+          "Risk register: key risk indicators, risk owners, risk threshold",
+          "Risk tolerance; risk appetite: expansionary, conservative, neutral",
+          "Strategie: transfer, accept (exemption, exception), avoid, mitigate; risk reporting",
+          "Business impact analysis: RTO, RPO, MTTR, MTBF",
+        ],
+      },
+      {
+        code: "5.3",
+        outcome: "Valutare il rischio delle terze parti lungo selezione, due diligence, contratti, monitoraggio, incident notification e offboarding.",
+        keyTopics: [
+          "Vendor assessment: penetration testing, right-to-audit clause, evidence of internal audits, independent assessments, supply chain analysis",
+          "Vendor selection: due diligence, conflict of interest",
+          "Agreement types: SLA, MOA, MOU, MSA, WO/SOW, NDA, BPA",
+          "Vendor monitoring, questionnaires, rules of engagement",
+        ],
+      },
+      {
+        code: "5.4",
+        outcome: "Applicare compliance e privacy considerando obblighi, giurisdizione, minimizzazione, retention, data subject e conseguenze.",
+        keyTopics: [
+          "Compliance reporting: internal, external",
+          "Consequences of non-compliance: fines, sanctions, reputational damage, loss of license, contractual impacts",
+          "Compliance monitoring: due diligence/care, attestation and acknowledgement, internal and external, automation",
+          "Privacy: legal implications (local/regional, national, global), data subject, controller vs processor, ownership, data inventory and retention, right to be forgotten",
+        ],
+      },
+      {
+        code: "5.5",
+        outcome: "Distinguere audit e assessment, raccogliere evidenze e seguire finding, remediation, attestazioni e reporting.",
+        keyTopics: [
+          "Attestation",
+          "Internal: compliance, audit committee, self-assessments",
+          "External: regulatory, examinations, assessment, independent third-party audit",
+          "Penetration testing: physical, offensive, defensive, integrated, known environment, partially known environment, unknown environment",
+          "Reconnaissance: passive, active",
+        ],
+      },
+      {
+        code: "5.6",
+        outcome: "Costruire awareness e training misurabili, specifici per ruolo e adattati a comportamento, minacce e cultura.",
+        keyTopics: [
+          "Phishing: campaigns, recognizing a phishing attempt, responding to reported suspicious messages",
+          "Anomalous behavior recognition: risky, unexpected, unintentional",
+          "User guidance and training: policy/handbooks, situational awareness, insider threat, password management, removable media and cables, social engineering, operational security, hybrid/remote work environments",
+          "Reporting and monitoring: initial, recurring; development, execution",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Parti da obiettivi e autorità", rationale: "Definisci chi decide, chi possiede rischio e dati, quali obblighi si applicano e quali risultati il programma deve sostenere." },
+      { title: "2. Valuta il rischio", rationale: "Collega asset, minaccia, vulnerabilità, likelihood e impatto; documenta assunzioni, rischio inerente, controlli e rischio residuo." },
+      { title: "3. Scegli e approva la risposta", rationale: "Mitigate, transfer, avoid o accept devono rispettare appetite/tolerance, costo, fattibilità, owner e autorità di accettazione." },
+      { title: "4. Dimostra e migliora", rationale: "Metriche, audit, assessment, test, eccezioni, formazione e riesami trasformano la governance in evidenza e miglioramento continuo." },
+      { title: "5. Porta le regole fuori dall'azienda", rationale: "Il rischio dei fornitori si governa con due diligence, questionari, diritto di audit, accordi adeguati (SLA, MSA, SOW, NDA) e monitoraggio continuo fino all'offboarding." },
+      { title: "6. Rendi le persone parte dei controlli", rationale: "Campagne di phishing, formazione per ruolo e un canale di segnalazione semplice trasformano gli utenti in sensori; misura i risultati nel tempo, non solo la partecipazione." },
+    ],
+    decisionPatterns: [
+      "SLE = valore dell'asset × exposure factor; ALE = SLE × ARO. La stima supporta una decisione, ma non sostituisce requisiti legali, safety o risk appetite.",
+      "RTO è il target per ripristinare un servizio, RPO il massimo intervallo di dati perdibili, MTD il massimo tempo totale di interruzione sostenibile; in un piano coerente RTO non supera MTD.",
+      "Una policy esprime l'intento obbligatorio; uno standard stabilisce requisiti uniformi; una procedura descrive i passi; una guideline offre raccomandazioni flessibili.",
+      "Il trasferimento del rischio, per esempio con un'assicurazione, sposta l'impatto economico ma non la responsabilità: l'organizzazione resta accountable verso clienti e autorità.",
+      "Un controllo si giustifica economicamente quando il suo costo annuo è inferiore alla riduzione dell'ALE che produce.",
+      "Il controller decide perché e come trattare i dati personali; il processor li tratta per suo conto e secondo le sue istruzioni.",
+      "Se lo scenario chiede un test che simuli un attaccante esterno senza informazioni, è un unknown environment; se chiede la massima copertura in poco tempo, è un known environment.",
+      "Una campagna di phishing si valuta dal tasso di segnalazione e dal suo andamento nel tempo, non solo dal tasso di clic; punire chi sbaglia riduce le segnalazioni.",
+    ],
+    connections: [
+      "Il risk treatment seleziona e giustifica i controlli studiati nei D1-D4.",
+      "BIA, RTO, RPO e MTD definiscono i requisiti che l'architettura resiliente del D3 deve realizzare e il D4 deve testare.",
+      "Privacy, retention, legal hold e contratti influenzano logging, forensics, cloud, gestione dei dati e risposta agli incidenti.",
+      "Supply chain e vettori legati ai fornitori del D2 sono il motivo per cui la valutazione delle terze parti richiede evidenze e non solo questionari.",
+      "La formazione su phishing e social engineering del 5.6 è il controllo umano contro i vettori studiati nel D2.",
+      "Le strutture di governance includono gli enti governativi (government entities) — autorità e regolatori pubblici — mentre le considerazioni esterne cambiano per giurisdizione a livello locale/regionale (local/regional), nazionale e globale.",
+      "Il monitoraggio della conformità unisce attestazione e riconoscimento (attestation and acknowledgement) e si svolge con monitoraggio interno ed esterno (internal and external); la non conformità porta conseguenze oltre multe e sanzioni, inclusi gli impatti contrattuali (contractual impacts).",
+    ],
+    comparisons: [
+      {
+        "title": "Leggi, regolamenti e standard (5.1/5.4)",
+        "headers": [
+          "Quadro",
+          "Natura e ambito",
+          "Finalità e responsabilità"
+        ],
+        "rows": [
+          [
+            "SOX",
+            "Legge degli Stati Uniti; emittenti nel perimetro SEC",
+            "Reporting finanziario e controlli interni; management responsabile"
+          ],
+          [
+            "GLBA",
+            "Legge degli Stati Uniti; istituzioni finanziarie soggette",
+            "Informazioni finanziarie non pubbliche; regole del regolatore competente"
+          ],
+          [
+            "HIPAA",
+            "Legge/regole degli Stati Uniti; covered entities e business associates",
+            "PHI; Security Rule per ePHI; non ogni dato sanitario ovunque"
+          ],
+          [
+            "GDPR",
+            "Regolamento UE; ambito dell’articolo 3",
+            "Trattamento nel contesto di uno stabilimento UE, o offerta/monitoraggio nei casi previsti fuori UE"
+          ],
+          [
+            "PCI DSS",
+            "Standard di settore globale; programmi e contratti di pagamento",
+            "Dati delle carte/ambiente di pagamento; non è di per sé una legge"
+          ]
+        ]
+      },
+      {
+        title: "Documenti di governance",
+        headers: ["Documento", "Carattere", "Esempio"],
+        rows: [
+          ["Policy", "Intento obbligatorio, approvato dalla direzione", "Tutti gli accessi remoti devono usare MFA"],
+          ["Standard", "Requisito uniforme e misurabile", "Password di almeno 14 caratteri"],
+          ["Procedure", "Passi da eseguire, in ordine", "Come creare un account per un nuovo assunto"],
+          ["Guideline", "Raccomandazione, non obbligatoria", "Suggerimenti per creare passphrase facili da ricordare"],
+        ],
+      },
+      {
+        title: "Ruoli su sistemi e dati",
+        headers: ["Ruolo", "Responsabilità", "Esempio"],
+        rows: [
+          ["Owner", "È accountable per il dato: lo classifica e decide chi può accedervi", "Il direttore commerciale per i dati dei clienti"],
+          ["Controller", "Stabilisce finalità e modalità del trattamento dei dati personali", "L'azienda che raccoglie i dati dei propri dipendenti"],
+          ["Processor", "Tratta i dati per conto del controller e secondo le sue istruzioni", "Il fornitore cloud che gestisce le buste paga"],
+          ["Custodian/steward", "Applica ogni giorno i controlli decisi dall'owner", "Il team IT che esegue backup e gestisce i permessi"],
+        ],
+      },
+      {
+        title: "Strategie di risposta al rischio",
+        headers: ["Strategia", "Che cosa fa", "Esempio"],
+        rows: [
+          ["Mitigate", "Riduce probabilità o impatto con controlli", "Installare MFA per ridurre il furto di credenziali"],
+          ["Transfer", "Sposta l'impatto economico su un terzo", "Stipulare una polizza cyber"],
+          ["Avoid", "Elimina l'attività che genera il rischio", "Rinunciare a un servizio non essenziale esposto a Internet"],
+          ["Accept", "Accetta formalmente il rischio residuo, con eventuale exception o exemption", "Rischio basso sotto la soglia, firmato dal risk owner"],
+        ],
+      },
+      {
+        title: "Analisi quantitativa del rischio",
+        headers: ["Grandezza", "Formula", "Esempio"],
+        rows: [
+          ["Exposure factor (EF)", "Percentuale del valore persa in un evento", "25%"],
+          ["SLE", "Valore dell'asset × EF", "200.000 € × 25% = 50.000 €"],
+          ["ARO", "Numero di eventi attesi in un anno", "0,5, cioè un evento ogni 2 anni"],
+          ["ALE", "SLE × ARO", "50.000 € × 0,5 = 25.000 € all'anno"],
+        ],
+      },
+      {
+        title: "Metriche della business impact analysis",
+        headers: ["Metrica", "Che cosa misura", "Esempio"],
+        rows: [
+          ["RTO", "Tempo entro cui ripristinare il servizio", "Il portale deve tornare attivo entro 4 ore"],
+          ["RPO", "Quantità massima di dati perdibili, espressa in tempo", "Al massimo 15 minuti di ordini persi"],
+          ["MTTR", "Tempo medio per riparare un componente guasto", "In media 3 ore per sostituire un disco"],
+          ["MTBF", "Tempo medio tra due guasti di un componente riparabile", "Un guasto ogni 10.000 ore di funzionamento"],
+        ],
+      },
+      {
+        title: "Accordi con terze parti",
+        headers: ["Accordo", "Scopo", "Indizio nello scenario"],
+        rows: [
+          ["SLA", "Livelli di servizio misurabili e penali", "Disponibilità del 99,9% e tempi di risposta"],
+          ["MSA", "Condizioni generali di una relazione continuativa", "Contratto quadro sotto cui si firmano più progetti"],
+          ["WO/SOW", "Attività, consegne e tempi di un singolo lavoro", "Descrizione precisa di un progetto di penetration test"],
+          ["NDA", "Obbligo di riservatezza", "Condividere informazioni sensibili prima di un accordo"],
+          ["MOU", "Intesa di massima, di solito non vincolante", "Due enti dichiarano l'intenzione di collaborare"],
+          ["MOA", "Accordo più formale sulle condizioni di una collaborazione", "Due enti definiscono ruoli e risorse condivise"],
+          ["BPA", "Rapporto tra partner commerciali", "Ripartizione di responsabilità e profitti in una joint venture"],
+        ],
+      },
+      {
+        title: "Ambienti di penetration test",
+        headers: ["Ambiente", "Informazioni fornite al tester", "Che cosa simula"],
+        rows: [
+          ["Known environment", "Complete: architettura, codice, credenziali", "Un insider informato; massima copertura in poco tempo"],
+          ["Partially known environment", "Parziali, per esempio un account utente", "Un attaccante con un primo accesso"],
+          ["Unknown environment", "Nessuna", "Un attaccante esterno che parte da zero"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "Con un'assicurazione il rischio non è più dell'organizzazione.", correction: "La polizza trasferisce l'impatto economico, non la responsabilità: verso clienti e autorità l'organizzazione resta accountable." },
+      { misconception: "Chiunque in IT può accettare un rischio.", correction: "Può accettarlo solo l'owner o l'autorità designata, entro il risk appetite, con una decisione documentata; non si può accettare la violazione di un obbligo di legge." },
+      { misconception: "Il custodian è il proprietario del dato.", correction: "L'owner è accountable e decide classificazione e accessi; il custodian applica ogni giorno i controlli che l'owner ha stabilito." },
+      { misconception: "Controller e processor hanno le stesse responsabilità.", correction: "Il controller decide finalità e modalità del trattamento; il processor agisce per suo conto e secondo le sue istruzioni, con obblighi propri ma diversi." },
+      { misconception: "Un MOU è un contratto vincolante.", correction: "Il MOU esprime di solito un'intesa di massima non vincolante; gli obblighi misurabili e le penali stanno in SLA, MSA o SOW." },
+      { misconception: "MTBF misura il tempo necessario per riparare.", correction: "Il tempo di riparazione è l'MTTR; l'MTBF misura l'affidabilità, cioè il tempo medio tra un guasto e il successivo." },
+      { misconception: "L'analisi qualitativa è inutile rispetto a quella quantitativa.", correction: "La qualitativa è rapida e adatta quando mancano dati economici affidabili; la quantitativa richiede valori monetari e frequenze credibili." },
+      { misconception: "Un penetration test in unknown environment è sempre il migliore.", correction: "Simula meglio un attaccante esterno, ma a parità di tempo copre meno; il known environment trova più vulnerabilità. La scelta dipende dall'obiettivo del test." },
+    ],
+    examVsPractice: [
+      { topic: "Analisi quantitativa del rischio", exam: "Con SLE, ARO e ALE si calcola una perdita annua precisa e la si confronta con il costo del controllo.", practice: "ARO ed exposure factor sono stime incerte, spesso basate su pochi dati. L'ALE serve a confrontare ordini di grandezza e a motivare una spesa davanti alla direzione, non a prevedere la perdita esatta." },
+      { topic: "Conformità e sicurezza", exam: "Rispettare una norma o superare un audit dimostra che i controlli richiesti sono presenti.", practice: "Un audit superato fotografa un momento e un perimetro definiti. La sicurezza richiede controlli che funzionino ogni giorno, anche fuori da quel perimetro: si può essere conformi e vulnerabili nello stesso momento." },
+      { topic: "Rischio delle terze parti", exam: "Questionari di sicurezza, SLA e clausole contrattuali gestiscono il rischio del fornitore.", practice: "Un questionario è un'autodichiarazione. Conta verificare evidenze indipendenti, come un report SOC 2 o i risultati di un test, e prevedere nel contratto l'obbligo di notificare gli incidenti e il diritto di audit." },
+    ],
+    appliedScenario: {
+      title: "Fornitore che tratta dati personali",
+      prompt: "Un nuovo SaaS elaborerà dati personali critici. Il questionario è positivo, ma il contratto non specifica notifica degli incidenti né cancellazione dei dati. Si può approvare il rischio?",
+      reasoning: "La due diligence tecnica non sostituisce requisiti contrattuali e privacy. Registra il rischio, definisci DPA, tempi di notifica, retention/cancellazione, subprocessor, diritto di audit, ritorno dei dati e responsabilità; valuta i controlli residui. Solo l'autorità designata può accettare il rischio residuo, e non può derogare a un obbligo legale applicabile.",
+    },
+    practiceScenarios: [
+      {
+        objective: "5.1",
+        title: "Buste paga affidate a un fornitore",
+        prompt: "Un'azienda affida l'elaborazione delle buste paga a un fornitore cloud. Il direttore HR decide quali dati servono e chi li vede, il fornitore li elabora secondo il contratto, e il team IT interno gestisce l'integrazione e i backup. Chi ricopre i ruoli di owner, controller, processor e custodian?",
+        reasoning: "L'azienda è il controller, perché stabilisce finalità e modalità del trattamento; il fornitore è il processor, perché tratta i dati per suo conto. Il direttore HR è l'owner del dato: lo classifica e decide gli accessi. Il team IT è il custodian, perché applica ogni giorno i controlli. I ruoli vanno scritti nelle policy e nel contratto.",
+      },
+      {
+        objective: "5.2",
+        title: "Il controllo conviene?",
+        prompt: "Un server di commercio elettronico vale 200.000 €. Un attacco ne distruggerebbe il 25% del valore e si stima un evento ogni 2 anni. Un controllo che eliminerebbe quasi del tutto il rischio costa 40.000 € all'anno. Qual è l'ALE e il controllo è giustificato economicamente?",
+        reasoning: "SLE = 200.000 € × 25% = 50.000 €; ARO = 0,5; ALE = 50.000 € × 0,5 = 25.000 € all'anno. Un controllo da 40.000 € all'anno costa più della perdita attesa che evita, quindi non è giustificato solo in termini economici. Possono giustificarlo obblighi di legge, danni reputazionali non stimati o un risk appetite conservativo; altrimenti si valuta un controllo meno costoso o il trasferimento del rischio.",
+      },
+      {
+        objective: "5.3",
+        title: "Quale accordo firmare",
+        prompt: "Un'azienda sceglie un fornitore per l'hosting del sito. Vuole una disponibilità garantita del 99,9% con penali, un contratto quadro per futuri progetti e, per il primo progetto, una descrizione precisa delle attività e delle scadenze. Quali accordi servono?",
+        reasoning: "Un MSA per le condizioni generali della relazione, uno SLA per la disponibilità del 99,9% e le penali, e un SOW per il primo progetto con attività, consegne e tempi. Prima della firma servono due diligence sul fornitore, la verifica di conflitti di interesse e una clausola right-to-audit; se si condividono informazioni riservate durante la trattativa, anche un NDA.",
+      },
+      {
+        "objective": "5.4",
+        "title": "Obblighi diversi nello stesso gruppo",
+        "prompt": "Kestrelia ha un negozio italiano che accetta carte, un emittente soggetto agli obblighi SEC, una società finanziaria nel perimetro FTC e una covered entity sanitaria negli Stati Uniti. Si può applicare la stessa etichetta di compliance a tutto il gruppo?",
+        "reasoning": "No. Verifica attività, giurisdizione, dati e contratti per ogni entità: PCI DSS per l’ambiente di pagamento secondo i programmi e gli accordi pertinenti; SOX per il reporting finanziario dell’emittente; GLBA e FTC Safeguards Rule per la società finanziaria soggetta; HIPAA per covered entity e business associates. Il GDPR si valuta con il suo ambito territoriale, non con la sola cittadinanza. Il management assegna responsabili; il team conserva evidenze, lacune e remediation per compliance reporting interno/esterno. Vedi Compliance, Reporting e le cinque voci nel glossario. Una certificazione o un contratto non sostituisce l’analisi dell’applicabilità. Fonti SEC, FTC, HHS, PCI SSC e EUR-Lex verificate il 2026-10-08."
+      },
+      {
+        objective: "5.4",
+        title: "Richiesta di cancellazione e obblighi fiscali",
+        prompt: "Un ex cliente chiede la cancellazione di tutti i suoi dati in base al diritto all'oblio. L'azienda conserva anche le sue fatture, che la legge impone di tenere per 10 anni. Come si risponde correttamente?",
+        reasoning: "Si cancellano i dati non più necessari, come quelli di marketing e il profilo online, e si conservano solo quelli soggetti a un obbligo di legge, limitandone l'uso a quello scopo e cancellandoli alla scadenza. La risposta al richiedente va data entro i tempi di legge e documentata. Serve un data inventory aggiornato per sapere dove si trovano i dati.",
+      },
+      {
+        objective: "5.5",
+        title: "Simulare un attaccante esterno",
+        prompt: "Il consiglio di amministrazione chiede di verificare quanto un attaccante esterno, senza alcuna informazione interna, possa entrare nella rete aziendale. Che tipo di test serve e che cosa va definito prima?",
+        reasoning: "Un penetration test offensivo in unknown environment, che parte dalla ricognizione passiva (fonti pubbliche, DNS) e poi attiva (scansioni). Prima dell'inizio vanno firmate le rules of engagement: perimetro, orari, tecniche consentite o escluse, contatti di emergenza e gestione dei dati trovati. I risultati vanno riportati come finding con remediation e verifica.",
+      },
+      {
+        objective: "5.6",
+        title: "Risultati della campagna di phishing",
+        prompt: "Nella prima campagna di phishing simulato il 18% dei dipendenti ha cliccato e solo il 4% ha segnalato il messaggio. La direzione propone sanzioni per chi ha cliccato. Qual è l'approccio più efficace?",
+        reasoning: "Formazione immediata e breve per chi ha cliccato, un pulsante di segnalazione semplice e campagne ricorrenti per misurare l'andamento. L'indicatore principale è il tasso di segnalazione, che deve crescere, insieme al calo dei clic nel tempo. Sanzionare gli errori riduce le segnalazioni e nasconde gli incidenti reali; le misure disciplinari vanno riservate ai casi di negligenza ripetuta prevista dalla policy.",
+      },
+    ],
+    keyPoints: [
+      "Il rischio si quantifica con SLE = AV × EF e ALE = SLE × ARO; il risultato orienta la decisione, ma dipende da stime.",
+      "Il rischio si tratta in quattro modi: mitigare, trasferire (per esempio con un'assicurazione), evitare o accettare, entro l'appetito e la tolleranza al rischio decisi dalla direzione.",
+      "Ogni accordo ha il suo scopo: SLA per i livelli di servizio, NDA per la riservatezza, MOU per un'intesa di solito non vincolante, MSA per le condizioni generali e SOW per il lavoro specifico.",
+      "Nei dati personali i ruoli sono distinti: il titolare (controller) decide finalità e mezzi, il responsabile (processor) tratta per suo conto, il custode gestisce la tecnologia.",
+      "Audit e valutazioni producono evidenze: un finding diventa un'azione con un owner, una scadenza e una prova di chiusura.",
+      "Un penetration test richiede autorizzazione scritta e rules of engagement: ambito, orari, tecniche ammesse e contatti definiti prima di iniziare.",
+    ],
+    acronyms: DOMAIN_5_ACRONYMS,
+    readinessChecks: [
+      "Sai calcolare SLE, ARO e ALE e interpretarne i limiti decisionali.",
+      "Sai distinguere risk appetite, tolerance, threshold, rischio inerente e residuo.",
+      "Sai scegliere il documento o accordo corretto e identificare owner e approvatore.",
+      "Sai trasformare un audit finding in remediation tracciabile con evidenza di chiusura.",
+      "Sai distinguere owner, controller, processor e custodian in uno scenario.",
+      "Sai scegliere il tipo di penetration test e le rules of engagement adatte all'obiettivo.",
+    ],
+  },
+};
+
+const EN_DOMAIN_GUIDES: Record<number, DomainGuide> = {
+  1: {
+    domainId: 1,
+    title: "General Security Concepts",
+    weight: 12,
+    purpose: "Builds the decision language used throughout the exam: classify controls, connect CIA and non-repudiation to suitable technologies, design access around zero trust, govern change, and select cryptographic primitives from the requirement. Memorizing a definition is not enough; you must recognize which property is missing and which control restores it.",
+    objectives: [
+      {
+        code: "1.1",
+        outcome: "Distinguish control categories and types, separating what a control is intended to achieve from how it is implemented.",
+        keyTopics: [
+          "Categories: technical, managerial, operational, physical",
+          "Types: preventive, deterrent, detective, corrective, compensating, directive",
+          "One control can have several types: what matters is the function the scenario asks for",
+        ],
+      },
+      {
+        code: "1.2",
+        outcome: "Apply CIA, authentication, authorization, accounting, non-repudiation, zero trust, gap analysis, physical security, and deception to a scenario.",
+        keyTopics: [
+          "CIA and non-repudiation",
+          "AAA: authenticating people and systems, authorization models, accounting",
+          "Gap analysis: current state compared with the target state",
+          "Zero trust, control plane: adaptive identity, threat scope reduction, policy-driven access control, Policy Engine, Policy Administrator",
+          "Zero trust, data plane: implicit trust zones, subject/system, Policy Enforcement Point",
+          "Physical security: bollards, access control vestibule, fencing, video surveillance, security guard, access badge, lighting",
+          "Sensors: infrared, pressure, microwave, ultrasonic",
+          "Deception: honeypot, honeynet, honeyfile, honeytoken",
+        ],
+      },
+      {
+        code: "1.3",
+        outcome: "Evaluate secure change through ownership, impact, approval, testing, rollback, documentation, and monitoring.",
+        keyTopics: [
+          "Processes: approval process, ownership, stakeholders, impact analysis, test results, backout plan, maintenance window, standard operating procedure",
+          "Technical implications: allow lists/deny lists, restricted activities, downtime, service restart, application restart, legacy applications, dependencies",
+          "Documentation: updating diagrams, policies, and procedures",
+          "Version control",
+        ],
+      },
+      {
+        code: "1.4",
+        outcome: "Select algorithms, hashing, signatures, certificates, and key management for confidentiality, integrity, and identity requirements.",
+        keyTopics: [
+          "PKI: public key, private key, key escrow",
+          "Encryption levels: full-disk, partition, file, volume, database, record",
+          "Transport encryption, symmetric and asymmetric encryption, key exchange, algorithms, and key length",
+          "Tools: TPM, HSM, key management system, secure enclave",
+          "Obfuscation: steganography, tokenization, data masking",
+          "Hashing, salting, digital signatures, key stretching",
+          "Blockchain and open public ledger",
+          "Certificates: certificate authorities, CRL, OCSP, self-signed, third-party, root of trust, CSR, wildcard",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Start with the requirement", rationale: "For every scenario, ask whether the primary need is confidentiality, integrity, availability, authenticity, or non-repudiation." },
+      { title: "2. Classify the control", rationale: "Identify the category first (managerial, operational, technical, or physical), then the type (preventive, detective, corrective, deterrent, compensating, or directive)." },
+      { title: "3. Remove implicit trust", rationale: "Study zero trust as a flow: the subject requests access, the Policy Engine decides, the Policy Administrator relays the decision, and the Policy Enforcement Point applies it. Then connect physical security and deception to the same idea of layered defense." },
+      { title: "4. Map cryptography to the use case", rationale: "Encryption protects confidentiality; hashing detects change; a MAC adds shared authenticity; a digital signature provides integrity, authenticity, and non-repudiation." },
+      { title: "5. Follow the life of keys and certificates", rationale: "Key pair generation, CSR, issuance by the CA, the chain up to the root of trust, revocation checking (CRL/OCSP), and custody of the private key in a TPM, HSM, or KMS." },
+      { title: "6. Put change into a life cycle", rationale: "Secure change includes a baseline, impact and dependency analysis, approval, testing, a maintenance window, a backout plan, documentation updates, and post-implementation verification." },
+    ],
+    decisionPatterns: [
+      "When a question asks for the BEST solution, translate the requirement into a security property before comparing technologies.",
+      "A compensating control reduces risk when the primary control is not feasible; it is not automatically equivalent or an unapproved exception.",
+      "For signatures, the sender signs with their private key and the recipient verifies with the sender's public key; encrypting with the recipient's public key instead addresses confidentiality.",
+      "Zero trust: network location grants no trust. If the scenario asks WHO decides, the answer is the Policy Engine; if it asks WHO allows or blocks the connection, it is the Policy Enforcement Point.",
+      "If the scenario asks how to detect an attacker who is already inside without touching production, think deception: any interaction with a honeypot, honeyfile, or honeytoken is suspicious by definition.",
+      "To store passwords, choose hashing with a unique salt and key stretching (Argon2, bcrypt, PBKDF2): not reversible encryption and not a fast hash on its own.",
+      "When you need current revocation status for a certificate, OCSP (preferably with stapling) beats a CRL, which is published at intervals.",
+      "If the question asks what to prepare BEFORE a change, look for impact analysis, approval, testing, and a backout plan; AFTER the change, documentation updates and verification.",
+    ],
+    connections: [
+      "Control classification supports mitigations (D2), architecture (D3), hardening and monitoring (D4), and governance and risk treatment (D5).",
+      "PKI and key management reappear in TLS, authentication, data protection, incident response, and business continuity.",
+      "Change management connects governance, secure configurations, introduced vulnerabilities, and rollback capability.",
+      "Zero trust and AAA prepare identity and access management (D4) and segmentation choices in architecture (D3).",
+      "Honeypots and honeytokens produce indicators used by SIEM, threat hunting, and incident response (D4).",
+    ],
+    flows: [
+      {
+        "title": "From ephemeral agreement to protected data (1.4)",
+        "steps": [
+          {
+            "title": "Public contributions",
+            "detail": "Client and server create fresh ECDHE pairs: only public values are exchanged; private values stay local."
+          },
+          {
+            "title": "Secret and derivation",
+            "detail": "Both compute the same secret. The KDF derives separate session keys without transmitting the secret or using the ECDH result directly as an AES key."
+          },
+          {
+            "title": "Authenticated peer",
+            "detail": "The client verifies server identity, certificate and signature over the transcript. RSA can sign: it does not transport the key in TLS 1.3. Client authentication is optional."
+          },
+          {
+            "title": "Data and erasure",
+            "detail": "Application data uses authenticated symmetric encryption, for example AES-GCM. Ephemeral secrets and old keys are erased when no longer needed."
+          }
+        ],
+        "textEquivalent": "Text equivalent: client and server contribute public ECDHE values, locally compute the same secret and derive symmetric keys. Peer verification binds the exchange to the intended identity before accepting application data. AES-GCM protects data; secrets no longer needed are erased. This is a simplified logical flow, not the complete TLS 1.3 message sequence: parts of the handshake are encrypted too. Later loss of the certificate key alone does not expose past sessions if ephemeral secrets have been erased. Sources: NIST SP 800-56A; RFC 8446, sections 2 and 7."
+      },
+    ],
+    comparisons: [
+      {
+        "title": "Key establishment: transport or agreement?",
+        "headers": [
+          "Method",
+          "How the secret is established",
+          "Limits"
+        ],
+        "rows": [
+          [
+            "Key transport (RSA)",
+            "One party chooses and encrypts material for the verified recipient.",
+            "Static RSA does not provide PFS; TLS 1.3 does not use this transport. Source: NIST SP 800-56B."
+          ],
+          [
+            "Key agreement (DH/ECDH)",
+            "Both contribute and derive a secret, then symmetric keys.",
+            "Authentication against MITM is required; static DH/ECDH does not imply PFS."
+          ],
+          [
+            "DHE/ECDHE + PFS",
+            "Fresh ephemeral contributions and erased secrets protect past sessions.",
+            "Does not protect an already stolen session key or endpoint malware."
+          ]
+        ]
+      },
+      {
+        "title": "Zero Trust: PE, PA and PEP (1.2)",
+        "headers": [
+          "Role",
+          "Plane",
+          "Responsibility"
+        ],
+        "rows": [
+          [
+            "Policy Engine (PE)",
+            "Control Plane",
+            "Decides: grant, deny or revoke using policy and contextual signals."
+          ],
+          [
+            "Policy Administrator (PA)",
+            "Control Plane",
+            "Coordinates: executes the verdict, prepares tokens and instructs the PEP."
+          ],
+          [
+            "Policy Enforcement Point (PEP)",
+            "Data Plane",
+            "Enforces: enables, monitors or terminates the path to the resource."
+          ]
+        ]
+      },
+      {
+        title: "Control types: when they act",
+        headers: ["Type", "Function", "Example"],
+        rows: [
+          ["Preventive", "Stops the event from happening", "Firewall rule, MFA, door lock"],
+          ["Deterrent", "Discourages the attempt without stopping it", "CCTV warning sign, lighting"],
+          ["Detective", "Detects and records the event", "IDS, log review, motion sensor"],
+          ["Corrective", "Restores normal operation after the event", "Restore from backup, patch after an incident"],
+          ["Compensating", "Reduces risk when the primary control cannot be applied", "Isolating an unpatchable legacy system in a dedicated VLAN"],
+          ["Directive", "States the expected behavior", "Policy, procedure, contractual obligation"],
+        ],
+      },
+      {
+        title: "Cryptographic primitives: what they guarantee",
+        headers: ["Solution", "Guarantees", "Key used", "Does not guarantee"],
+        rows: [
+          ["Symmetric encryption (AES)", "Confidentiality, including for large volumes", "One shared secret key", "Sender identity, non-repudiation"],
+          ["Asymmetric encryption (RSA, ECC)", "Confidentiality of small data and key exchange", "Recipient's public key", "Performance on large volumes"],
+          ["Hash (SHA-256)", "Integrity: detects changes", "None", "Confidentiality, authenticity"],
+          ["HMAC", "Integrity and authenticity between key holders", "Shared secret key", "Non-repudiation: both parties hold the key"],
+          ["Digital signature", "Integrity, authenticity, and non-repudiation", "Signer's private key", "Confidentiality"],
+        ],
+      },
+      {
+        title: "Where keys live",
+        headers: ["Tool", "What it is", "Typical clue in the question"],
+        rows: [
+          ["TPM", "Chip on the motherboard of a single device", "Disk encryption tied to hardware, measured boot"],
+          ["HSM", "Dedicated, certified device for high-volume cryptographic operations", "CA keys, payments, many signatures per second"],
+          ["Key management system", "Central service for the key life cycle", "Rotation, revocation, and auditing of keys across many systems or in the cloud"],
+          ["Secure enclave", "Isolated area of the processor", "Protecting data and keys in use, even from a compromised operating system"],
+        ],
+      },
+      {
+        "title": "Steganography and data protection (1.4)",
+        "headers": [
+          "Technique",
+          "Purpose",
+          "Data recovery",
+          "Limit"
+        ],
+        "rows": [
+          [
+            "Steganography (Steganografia)",
+            "Hides a message in a carrier: image or audio",
+            "Extraction using the intended method, sometimes with a key",
+            "Does not guarantee confidentiality, integrity or authenticity; the message may be discovered"
+          ],
+          [
+            "Encryption",
+            "Makes content unreadable without the key",
+            "Decryption with the correct key",
+            "Does not necessarily hide the existence of the communication"
+          ],
+          [
+            "Hashing",
+            "Produces a fingerprint to compare data",
+            "Not designed to reconstruct the original data",
+            "Alone it neither authenticates the sender nor hides content"
+          ],
+          [
+            "Tokenization",
+            "Replaces data with a token",
+            "Through the authorized service; vault or vaultless scheme",
+            "Also protect the detokenization service"
+          ],
+          [
+            "Data masking",
+            "Limits visible data, for example ****1234",
+            "Depends on the method: the copy may lose information",
+            "The original data may remain in storage"
+          ],
+          [
+            "Code obfuscation",
+            "Makes a program difficult to analyze while preserving behavior",
+            "Program analysis; no cryptographic guarantee",
+            "Does not replace encryption of secrets or imply a steganographic carrier"
+          ]
+        ]
+      },
+      {
+        title: "Certificate revocation checking",
+        headers: ["Mechanism", "How it works", "Weakness"],
+        rows: [
+          ["CRL", "The CA periodically publishes the list of revoked certificates", "Not updated immediately, list keeps growing"],
+          ["OCSP", "The client asks a responder for the status of one certificate", "The responder sees which sites the client visits and must be reachable"],
+          ["OCSP stapling", "The server attaches a recent, signed OCSP response to the connection", "Must be supported and configured on the server"],
+        ],
+      },
+    ],
+    commonTraps: [
+      {
+        "misconception": "TLS 1.3 encrypts the session key with RSA and PFS protects against every compromise.",
+        "correction": "TLS 1.3 removed RSA transport: RSA can still authenticate with signatures. Authenticated DHE/ECDHE protects past sessions against later persistent-key loss, not stolen session secrets or future impersonation. PSK-only (psk_ke) does not provide PFS for application data; 0-RTT lacks full forward secrecy and is exposed to replay. Source: RFC 8446, sections 1.2, 2.2, 2.3 and E.1."
+      },
+      {
+        "misconception": "The PA authors policies and decides independently; the PEP is always a separate firewall.",
+        "correction": "PE decides, PA coordinates, PEP enforces and monitors. These are logical roles, possibly in one product; PE and PA form the Policy Decision Point (PDP). PA here means Zero Trust Policy Administrator. Source: NIST SP 800-207, section 3."
+      },
+      { misconception: "Hashing encrypts data.", correction: "A hash is a one-way function: it detects changes but does not protect confidentiality and cannot be decrypted." },
+      { misconception: "The salt must be kept secret.", correction: "The salt must be unique and random for every password, not secret: it defeats rainbow tables and forces each hash to be attacked separately." },
+      { misconception: "Full-disk encryption also protects a computer that is on and unlocked.", correction: "Full-disk encryption protects data at rest, for example a stolen laptop that is powered off. On an unlocked system the data is available to the user and to malware." },
+      { misconception: "A wildcard certificate covers every subdomain.", correction: "*.example.com covers one level (www.example.com) but not example.com or a.b.example.com." },
+      { misconception: "A compensating control is the same as accepting the risk.", correction: "A compensating control reduces risk through an approved alternative measure; risk acceptance is a formal decision not to reduce it further." },
+      { misconception: "A honeypot blocks attacks.", correction: "A honeypot exists to detect and study the attacker: it has no production value and does not stop attacks on real systems." },
+      { misconception: "A longer key is always stronger, whatever the algorithm.", correction: "Key length is compared within the same family: a 256-bit ECC key offers security comparable to 3072-bit RSA." },
+      { misconception: "The backout plan is written if the change fails.", correction: "The backout plan is prepared and verified before the maintenance window, as a condition for approving the change." },
+    ],
+    examVsPractice: [
+      { topic: "Control categories and types", exam: "Every control has one category (technical, managerial, operational, physical) and one type (preventive, detective, corrective…) to pick from the keywords of the scenario.", practice: "The catalogs companies use, such as NIST SP 800-53, group controls into families (access, audit, configuration…) and the same measure often serves several functions. What counts is documenting which risk it covers and checking that it works, not the label." },
+      { topic: "Zero Trust", exam: "Zero Trust is recognized by its terms: control plane and data plane, policy decision point and policy enforcement point, continuous verification.", practice: "You cannot buy a Zero Trust product: it is a gradual migration, described in NIST SP 800-207, in which identities, devices and applications move to the new controls one at a time and live alongside the traditional network for a long time." },
+      { topic: "Cryptography", exam: "You pick the right algorithm for the use: AES for data, RSA or ECC for key exchange and signatures, SHA-256 for integrity.", practice: "Nobody implements an algorithm from scratch: you use standard libraries and protocols, such as TLS 1.3, with the recommended configurations. The real problems are almost always in managing keys and certificates: expiry, rotation, private keys ending up in the wrong place." },
+    ],
+    appliedScenario: {
+      title: "Altered configuration package",
+      prompt: "A team distributes signed configurations to appliances. The received file's hash does not match and its signature is invalid. What problem is demonstrated, and what is the safe FIRST action?",
+      reasoning: "Integrity and authenticity have not been established, so the package must not be applied. Stop distribution, preserve the file and logs, verify the certificate, chain, and origin, then restart from the approved artifact through change management. Encrypting the file would not correct an invalid signature.",
+      attackChain: {
+        vector: "Tampering with the package in the distribution chain or in the artifact repository.",
+        impact: "Malicious configuration on the appliances: backdoors, disabled rules, loss of integrity across the fleet.",
+        mitigation: "Mandatory signature and hash verification before applying, signing keys protected in an HSM, distribution only through change management.",
+        evidence: "Mismatched hash, signature verification failure, distribution system and repository logs.",
+        limit: "A signature proves only that the package comes from whoever holds the key: if the key or the build pipeline is compromised, a malicious package verifies as valid.",
+      },
+    },
+    practiceScenarios: [
+      {
+        "objective": "1.4",
+        "title": "Recorded traffic and a stolen key",
+        "prompt": "Kestrelia discovers its certificate private key was stolen today. An attacker recorded authenticated ECDHE sessions last month whose secrets were erased. Can they decrypt them? What if they copied a session key from memory?",
+        "reasoning": "The certificate key alone cannot reconstruct erased ephemeral secrets: PFS protects those past sessions. A copied session key instead exposes the corresponding traffic; PFS does not undo theft. Revoke and replace the certificate, investigate the endpoint and restore trust: PFS does not prevent future impersonation. With recorded static RSA transport, compromise could have exposed the premaster secret and derived keys. Distinguish agreement, authentication and bulk encryption."
+      },
+      {
+        "objective": "1.2",
+        "title": "Zero Trust flow: authorization and revocation",
+        "prompt": "A consultant (subject) uses a managed laptop (system) to read the Kestrelia portal. MFA identity and device posture satisfy policy. A compromise alert arrives during the session. Describe who decides, coordinates and enforces before and after the alert.",
+        "reasoning": "1. The Policy Engine (PE) evaluates policy, identity, device posture and context and grants access. 2. The Policy Administrator (PA) executes the verdict: prepares the required session credentials and instructs the Policy Enforcement Point (PEP). 3. The PEP opens the subject/system → resource path in the Data Plane and monitors the connection. 4. The alert feeds continuous verification: the PE reevaluates and revokes, the PA orders closure, and the PEP terminates the path. PE and PA belong to the Control Plane; data traffic does not cross these functions. Valid credentials do not guarantee permanent trust. Source: NIST SP 800-207, section 3."
+      },
+      {
+        "objective": "1.4",
+        "title": "Hidden message or protected content?",
+        "prompt": "Kestrelia prepares a synthetic picture and audio recording. It first wants to hide that they carry a test phrase, then make that phrase unreadable to anyone who extracts it. Which techniques meet the two requirements?",
+        "reasoning": "Steganography hides the message in the carrier; encryption protects its content with a key. Neither is equivalent to hashing, tokenization or masking. Recompression and conversion may destroy the hidden message; steganography alone does not verify its integrity or author. Code obfuscation instead concerns the readability of the program."
+      },
+      {
+        objective: "1.1",
+        title: "Unpatchable industrial system",
+        prompt: "An industrial controller runs an operating system that is no longer supported, and the vendor forbids installing agents or patches. The team moves it to a dedicated VLAN, allows traffic only to the management console, and monitors that segment. How is this measure best classified?",
+        reasoning: "It is a technical control of the compensating type: the primary control (patching) cannot be applied, and segmentation reduces the residual risk through an alternative measure. It is not corrective, because it does not repair an event that has already happened, and calling it merely preventive misses why it was chosen. It must be documented and approved as an exception.",
+      },
+      {
+        objective: "1.2",
+        title: "Contractor access under zero trust",
+        prompt: "A contractor authenticates successfully with MFA, but their laptop does not have disk encryption enabled. Company policy requires compliant devices to reach the HR application. Which component makes the decision to deny access, and which one physically prevents it?",
+        reasoning: "The Policy Engine evaluates identity, device posture, and context and decides to deny; the Policy Administrator relays the decision; the Policy Enforcement Point blocks the session. This is an example of adaptive identity and policy-driven access control: a valid credential is not enough if the context is not compliant.",
+      },
+      {
+        objective: "1.2",
+        title: "Decoy cloud key in the repository",
+        prompt: "The team places a fake cloud access key with no real permissions in an internal repository and configures an alert if anyone tries to use it. Three months later the alert fires from an external address. What technology was used, and what does the alert prove?",
+        reasoning: "It is a honeytoken, a deception technique. No legitimate user has any reason to use it, so the alert is a high-confidence indicator that the repository content has been exposed or copied. The correct response is to start incident response on the repository and the real credentials, not just to delete the token.",
+        attackChain: {
+          vector: "Exposure or copying of the internal repository: stolen credentials, a repository made public, an insider.",
+          impact: "Whoever holds the copy can search it for real secrets, code and infrastructure details.",
+          mitigation: "Rotate the real secrets found in the repository, review access, secret scanning, private repositories with MFA.",
+          evidence: "Honeytoken alert with source address and time, repository access and clone logs.",
+          limit: "The honeytoken detects only someone who tries to use it: it does not prevent the exposure, does not say when it happened, and a careful attacker may ignore it.",
+        },
+      },
+      {
+        objective: "1.3",
+        title: "Patch that restarts a shared service",
+        prompt: "A critical patch for the web server requires a service restart. The same server hosts an API used by the ERP system, and workstations enforce a hash-based application allow list. What must the change request contain before approval?",
+        reasoning: "An impact analysis that includes dependencies (the API and the ERP), a maintenance window agreed with stakeholders, test results from a staging environment, a verified backout plan, and an allow list update if binary hashes change. After the change, diagrams and procedures must be updated and the change tracked in the configuration version control.",
+      },
+      {
+        objective: "1.4",
+        title: "Password storage for a new portal",
+        prompt: "A new customer portal must store user passwords. One developer proposes AES-256 with the key in the configuration file; another proposes plain SHA-256. Which solution is BEST?",
+        reasoning: "Neither: use a key stretching algorithm such as Argon2id, bcrypt, or PBKDF2 with a unique salt per user. AES is reversible, so whoever obtains the key obtains every password; SHA-256 on its own is too fast and, without a salt, exposed to rainbow tables.",
+      },
+      {
+        objective: "1.4",
+        title: "Revocation after key compromise",
+        prompt: "The private key behind a public website's certificate has been exposed. The certificate is revoked, but some clients keep accepting it for hours. Which mechanism shortens this window without burdening every client?",
+        reasoning: "OCSP stapling: the server attaches a recent, signed OCSP response to the connection, so the client learns the certificate status without downloading a CRL, which is only updated periodically. A new key pair with a new CSR is still required: reissuing the certificate with the same key does not fix the compromise.",
+      },
+    ],
+    keyPoints: [
+      "Every control has a category (technical, managerial, operational, physical) and a type (preventive, deterrent, detective, corrective, compensating, directive): two different questions about the same control.",
+      "The CIA triad says what to protect; non-repudiation needs a digital signature, because a hash or a MAC does not bind the message to a single person.",
+      "Zero Trust does not trust network location: the Policy Engine decides, the Policy Administrator relays the decision and the Policy Enforcement Point applies it, on every request.",
+      "Change management protects availability: approval, impact analysis, a maintenance window, a backout plan and testing after the change.",
+      "Symmetric cryptography (AES) encrypts data, asymmetric cryptography (RSA, ECC) exchanges keys and signs, hashing (SHA-256) checks integrity.",
+      "Keys are only as safe as their storage: a TPM in a single device, an HSM for the organization's keys, certificate revocation through CRL or OCSP.",
+    ],
+    acronyms: DOMAIN_1_ACRONYMS,
+    readinessChecks: [
+      "You can distinguish the category and type of the same control without confusing them.",
+      "You can justify a choice among hashing, MAC, digital signature, and encryption.",
+      "You can order a change from requirement through post-implementation verification.",
+      "You can state the role of the Policy Engine, Policy Administrator, and Policy Enforcement Point.",
+      "You can choose among TPM, HSM, key management system, and secure enclave from the scenario.",
+      "You can explain CSR, certificate chain, CRL, and OCSP, and the limit of a wildcard certificate.",
+    ],
+  },
+  2: {
+    domainId: 2,
+    title: "Threats, Vulnerabilities, and Mitigations",
+    weight: 22,
+    purpose: "Turns technical indicators and business context into a reasoning chain: actor and motivation → vector and attack surface → vulnerability → indicators → mitigation. The goal is to separate cause from effect and select the most specific control that interrupts the attack.",
+    objectives: [
+      {
+        code: "2.1",
+        outcome: "Compare actors, attributes, and motivations to estimate capability, intent, access, and likelihood.",
+        keyTopics: [
+          "Actors: nation-state, unskilled attacker, hacktivist, insider threat, organized crime, shadow IT",
+          "Attributes: internal/external, resources/funding, level of sophistication/capability",
+          "Motivations: data exfiltration, espionage, service disruption, blackmail, financial gain, philosophical/political beliefs, ethical, revenge, disruption/chaos, war",
+        ],
+      },
+      {
+        code: "2.2",
+        outcome: "Analyze vectors and attack surfaces, including social engineering, supply chain, cloud, wireless, and removable media.",
+        keyTopics: [
+          "Message-based: email, SMS, instant messaging; image-based, file-based, voice call",
+          "Removable device, vulnerable software (client-based and agentless), unsupported systems and applications",
+          "Unsecure networks: wireless, wired, Bluetooth; open service ports; default credentials",
+          "Supply chain: managed service providers (MSP), vendors, suppliers",
+          "Human vectors: phishing, vishing, smishing, misinformation/disinformation, impersonation, business email compromise, pretexting, watering hole, brand impersonation, typosquatting",
+        ],
+      },
+      {
+        code: "2.3",
+        outcome: "Recognize application, hardware, cloud, virtualization, mobile, cryptographic, and configuration vulnerabilities.",
+        keyTopics: [
+          "Application: memory injection, buffer overflow, race conditions (time-of-check, time-of-use), malicious update",
+          "Operating system (OS)-based; web-based: SQL injection (SQLi), cross-site scripting (XSS)",
+          "Hardware: firmware, end-of-life, legacy",
+          "Virtualization: VM escape, resource reuse; cloud-specific",
+          "Supply chain: service provider, hardware provider, software provider",
+          "Cryptographic, misconfiguration, zero-day",
+          "Mobile device: side loading, jailbreaking",
+        ],
+      },
+      {
+        code: "2.4",
+        outcome: "Interpret indicators of malware, network, credential, application, and anomalous-behavior attacks.",
+        keyTopics: [
+          "Malware: ransomware, trojan, worm, spyware, bloatware, virus, keylogger, logic bomb, rootkit",
+          "Physical attacks: brute force, RFID cloning, environmental",
+          "Network attacks: DDoS (amplified, reflected), DNS attacks, wireless, on-path, credential replay, malicious code",
+          "Application attacks: injection, buffer overflow, replay, privilege escalation, forgery, directory traversal",
+          "Cryptographic attacks: downgrade, collision, birthday",
+          "Password attacks: spraying, brute force",
+          "Indicators: account lockout, concurrent session usage, blocked content, impossible travel, resource consumption, resource inaccessibility, out-of-cycle logging, published/documented, missing logs",
+        ],
+      },
+      {
+        code: "2.5",
+        outcome: "Select vector-aligned mitigations: segmentation, hardening, patching, least privilege, allowlisting, isolation, and monitoring.",
+        keyTopics: [
+          "Segmentation, access control (ACL, permissions), application allow list, isolation",
+          "Patching, encryption, monitoring, least privilege, configuration enforcement, decommissioning",
+          "Hardening: encryption, installation of endpoint protection, host-based firewall, host-based intrusion prevention system (HIPS), disabling ports/protocols, default password changes, removal of unnecessary software",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Model the adversary", rationale: "Capability, resources, sophistication, internal or external access, and motivation change both likelihood and control priorities." },
+      { title: "2. Follow the attack path", rationale: "Separate initial access, execution, persistence, privilege escalation, lateral movement, command and control, and exfiltration." },
+      { title: "3. Read indicators in context", rationale: "One event rarely proves an incident; correlate identity, host, network, time, baseline, and intelligence." },
+      { title: "4. Mitigate cause and spread", rationale: "Prefer the control that removes or reduces the vulnerability; add segmentation and detection to limit blast radius and dwell time." },
+      { title: "5. Recognize the attack family", rationale: "Before choosing the control, decide whether the symptom points to malware or to a credential, network, application, or cryptographic attack: each family has different typical mitigations." },
+      { title: "6. Shrink the surface before the incident", rationale: "Hardening, changing default credentials, closing unneeded ports and protocols, removing unnecessary software, and decommissioning end-of-life systems take the easiest vectors away from the attacker." },
+    ],
+    decisionPatterns: [
+      "Do not confuse vector, vulnerability, and exploit: the vector is the path, the vulnerability is the weakness, and the exploit is the means that abuses it.",
+      "For the FIRST action during an active attack, consider human safety and containment; for the permanent correction, remove the cause and verify effectiveness.",
+      "A mitigation is better when it interrupts the observed technique with the least acceptable operational impact, not when it is simply the strongest control.",
+      "Many accounts, few attempts each, with common passwords: that is password spraying. Many attempts against one account until lockout: that is brute force.",
+      "Impossible travel or concurrent sessions on the same account point to compromised credentials or tokens: revoke the sessions rather than only changing the password.",
+      "Missing logs and out-of-cycle logging suggest someone is covering their tracks: preserve evidence and compare with the logs forwarded to a central system.",
+      "If an attacker forces the use of an old protocol version, it is a downgrade attack: the mitigation is disabling the weak versions, not adding another control downstream.",
+      "Shadow IT is unauthorized technology usually adopted for convenience, not to cause harm: the response is governance and an approved alternative, not treating it as a malicious insider.",
+    ],
+    connections: [
+      "Domain hijacking connects phishing in objective 2.2 to registrar or DNS provider compromise in objective 2.4; Typosquatting instead uses a separate name.",
+      "RF jamming, deauthentication and disassociation are wireless availability attacks in objective 2.4; Protected Management Frames (PMF) and WPA3 in D3 and the wireless security settings in D4 (objectives 3.2 and 4.1) say which ones they defend against and which they do not.",
+      "Mitigations depend on the architectural models and trust boundaries in D3.",
+      "Indicators, vulnerability management, SIEM, and incident response become operational processes in D4.",
+      "Threat intelligence, risk appetite, and remediation priority depend on governance and risk in D5.",
+      "Control types and zero trust from D1 provide the vocabulary for classifying every mitigation in this domain.",
+      "Supply chain risk connects vendor assessment and contracts in D5 to the vulnerabilities of malicious updates and service providers.",
+    ],
+    comparisons: [
+      {
+        "title": "Interference, RF jamming and deauthentication",
+        "headers": [
+          "Case",
+          "Layer and mechanism",
+          "What helps"
+        ],
+        "rows": [
+          [
+            "Accidental interference",
+            "Physical; non-hostile sources on the same channel",
+            "Site survey, channel choice, reducing sources"
+          ],
+          [
+            "Intentional RF jamming",
+            "Physical; noise or signals saturating the band",
+            "Spectrum analysis, localization, physical security; not PMF"
+          ],
+          [
+            "Deauthentication/disassociation",
+            "Forged management frames, not radio interference",
+            "PMF/802.11w on robust frames; monitoring if not enabled"
+          ]
+        ]
+      },
+      {
+        "title": "Domain hijacking, DNS poisoning and typosquatting",
+        "headers": [
+          "Case",
+          "Altered component",
+          "Control to check"
+        ],
+        "rows": [
+          [
+            "Domain hijacking at the registrar",
+            "Management account; delegation or registration of the existing domain",
+            "MFA, limited access, secure recovery, locks with verified scope"
+          ],
+          [
+            "Authoritative DNS compromise",
+            "Provider account; existing zone records",
+            "Provider access, audit and record checks"
+          ],
+          [
+            "DNS poisoning",
+            "Resolver response or cache; legitimate zone unchanged",
+            "DNSSEC validation with a valid trust chain"
+          ],
+          [
+            "Typosquatting",
+            "Another domain with a similar name",
+            "Exact name verification and phishing defenses"
+          ]
+        ]
+      },
+      {
+        "title": "Sessions, interception and replay",
+        "headers": [
+          "Technique",
+          "What happens",
+          "Defense limitation"
+        ],
+        "rows": [
+          [
+            "On-path",
+            "Interception of traffic in transit",
+            "TLS protects transit, not a token stolen from the device"
+          ],
+          [
+            "Session hijacking / Sidejacking",
+            "Reuse of a stolen valid session ID",
+            "MFA at login does not automatically invalidate the stolen token"
+          ],
+          [
+            "Replay attack",
+            "Resubmission of a previously valid message",
+            "Signing and encryption do not guarantee freshness or uniqueness"
+          ],
+          [
+            "Cookie & Header Tampering",
+            "Modification of client-controlled values",
+            "Cookies and headers do not replace server-side authorization"
+          ]
+        ]
+      },
+      {
+        "title": "XSS, CSRF and SSRF: component and defense",
+        "headers": [
+          "Attack",
+          "Component acting",
+          "Trust exploited",
+          "Primary defense"
+        ],
+        "rows": [
+          [
+            "Reflected XSS",
+            "Victim browser",
+            "Request input interpreted in the response",
+            "Contextual output encoding"
+          ],
+          [
+            "Stored XSS",
+            "Page visitor browser",
+            "Saved input interpreted as code",
+            "Output encoding; sanitization when HTML is allowed"
+          ],
+          [
+            "CSRF / XSRF",
+            "Browser with an active session",
+            "Automatic credentials mistaken for intent",
+            "Verified anti-CSRF token and origin check; additional SameSite"
+          ],
+          [
+            "SSRF",
+            "Application server",
+            "Server access to destinations chosen by untrusted input",
+            "Validate destinations, redirects and network egress"
+          ],
+          [
+            "SQLi",
+            "Database through the application query",
+            "Input interpreted as SQL instructions",
+            "Parameterized queries; additional validation"
+          ]
+        ]
+      },
+
+      {
+        title: "Threat actors",
+        headers: ["Actor", "Typical motivation", "Resources and capability", "Clue in the scenario"],
+        rows: [
+          ["Nation-state", "Espionage, war, service disruption", "Very high, long-term persistence (APT)", "Strategic targets, custom tools, patient attacks"],
+          ["Organized crime", "Financial gain, blackmail", "High, organized like a business", "Ransomware, extortion, payment fraud"],
+          ["Hacktivist", "Philosophical/political beliefs", "Variable", "Defacement, DDoS, publishing data for a cause"],
+          ["Insider threat", "Revenge, financial gain", "Legitimate internal access", "Abuse of existing permissions, activity outside hours or role"],
+          ["Unskilled attacker", "Disruption/chaos, notoriety", "Low, ready-made tools", "Noisy attacks with public tools and no adaptation"],
+          ["Shadow IT", "Convenience, productivity", "Internal, without malicious intent", "Cloud services or devices not approved by IT"],
+        ],
+      },
+      {
+        title: "Malware families",
+        headers: ["Type", "How it works", "Typical clue"],
+        rows: [
+          ["Virus", "Attaches to a file or program and spreads when it runs", "Infected files multiplying after being opened"],
+          ["Worm", "Spreads on its own across the network by exploiting a vulnerability", "Scanning traffic and fast infections with no user action"],
+          ["Trojan", "Poses as legitimate software and opens access", "A program downloaded from an unofficial source that contacts an external server"],
+          ["Ransomware", "Encrypts or steals data and demands a ransom", "Changed file extensions, ransom note, spike in disk writes"],
+          ["Rootkit", "Hides at kernel or firmware level", "Processes and files invisible to the tools of the compromised system"],
+          ["Logic bomb", "Activates when a condition or date is met", "Damage starting at a precise moment, often after an employee leaves"],
+          ["Keylogger", "Records keystrokes", "Stolen credentials even with strong passwords"],
+          ["Spyware", "Collects user activity and data", "Traffic to third parties, changed browser settings"],
+          ["Bloatware", "Unnecessary preinstalled software", "More attack surface and resources used with no benefit"],
+        ],
+      },
+      {
+        title: "Credential and cryptographic attacks",
+        headers: ["Attack", "How it works", "Main mitigation"],
+        rows: [
+          ["Brute force", "Many attempts against the same account", "Lockout after failed attempts, MFA, strong passwords"],
+          ["Password spraying", "A few common passwords tried against many accounts", "MFA, banning common passwords, detection of distributed attempts"],
+          ["Credential replay", "Reuse of captured credentials or hashes", "MFA, encrypted channels, modern authentication protocols"],
+          ["Downgrade", "Forces the use of a weak protocol version", "Disabling obsolete versions and ciphers"],
+          ["Collision / birthday", "Finds two inputs with the same hash", "Hash algorithms with longer output, such as SHA-256"],
+        ],
+      },
+      {
+        title: "Application attacks",
+        headers: ["Attack", "What it exploits", "Main mitigation"],
+        rows: [
+          ["SQL injection", "Input placed into a database query", "Parameterized queries and input validation"],
+          ["Cross-site scripting", "Script executed in another victim's browser", "Output encoding and Content Security Policy"],
+          ["Directory traversal", "Paths such as ../ to escape the intended folder", "Path normalization and least privilege on the file system"],
+          ["Buffer overflow", "Writing beyond the bounds of a memory area", "Bounds checking, memory-safe languages, DEP and ASLR"],
+          ["Race condition", "The gap between checking and using a resource (TOCTOU)", "Atomic operations and locks on resources"],
+          ["Replay", "Reuse of a captured valid request", "Nonces, timestamps, and expiring session tokens"],
+          ["Forgery", "A forged request on behalf of the victim or the server", "Anti-CSRF tokens, SameSite cookies, destination filtering for SSRF"],
+        ],
+      },
+      {
+        title: "Indicators of malicious activity",
+        headers: ["Indicator", "What it may mean", "First check"],
+        rows: [
+          ["Account lockout", "Brute force against the account", "Origin and number of attempts"],
+          ["Concurrent session usage", "Credentials used by two parties", "Devices and addresses of the active sessions"],
+          ["Impossible travel", "Access from incompatible locations in a short time", "Location, corporate VPNs, and session validity"],
+          ["Blocked content", "Attempts to reach malicious sites or files", "Host and user that triggered the block"],
+          ["Resource consumption", "Mining, exfiltration, or DDoS in progress", "Processes and connections consuming resources"],
+          ["Resource inaccessibility", "Ransomware or denial of service", "Encrypted files or saturated services"],
+          ["Out-of-cycle logging", "Activity at unusual times or moments", "Who was authorized to operate at that time"],
+          ["Missing logs", "Tracks being deleted", "Comparison with the logs forwarded to a central system"],
+          ["Published/documented", "Data or vulnerabilities already made public", "Verifying the source and the real exposure"],
+        ],
+      },
+    ],
+    commonTraps: [
+      {
+        "misconception": "Protected Management Frames (PMF) also stop RF jamming.",
+        "correction": "PMF/802.11w authenticates robust management frames and blocks forged deauthentication and disassociation, but jamming acts at the physical layer and denies the channel anyway. Against radio interference you need spectrum analysis, localization and physical security."
+      },
+      {
+        "misconception": "A strong passphrase prevents deauthentication.",
+        "correction": "The passphrase encrypts data, it does not authenticate management frames: forged deauthentication works even with very long passwords. The defense is PMF on robust management frames, which does not cover pre-association beacons and probes."
+      },
+      {
+        "misconception": "DNSSEC prevents registrar account compromise.",
+        "correction": "DNSSEC authenticates DNS data, not the account operator. Protect the registrar, DNS provider and recovery; administrative changes may alter signed data or the trust chain."
+      },
+      {
+        "misconception": "A transfer lock blocks every DNS change.",
+        "correction": "clientTransferProhibited concerns transfer. Separately check update protection, registry lock scope and access to the authoritative zone provider."
+      },
+      {
+        "misconception": "TLS and MFA prevent every session theft.",
+        "correction": "TLS protects transit and MFA protects login; a stolen valid ID can still be reused. Token protection, rotation, expiration and server-side revocation are required."
+      },
+      {
+        "misconception": "A signed message cannot be replayed.",
+        "correction": "A signature proves integrity and origin, not uniqueness. The protocol must check nonces or counters and, when using time windows, also detect duplicates."
+      },
+      {
+        "misconception": "HttpOnly prevents XSS.",
+        "correction": "HttpOnly limits JavaScript access to cookies, but the script can still act using the session. Remove the execution point with appropriate output encoding or sanitization."
+      },
+      {
+        "misconception": "SameSite blocks every CSRF.",
+        "correction": "SameSite limits cross-site cookies but does not verify every intent: same-site subdomains and state-changing GET operations require additional defenses and server-side checks."
+      },
+
+      { misconception: "A worm needs the user to open a file.", correction: "A worm spreads on its own by exploiting a network vulnerability; it is a virus that requires an infected file or program to be executed." },
+      { misconception: "Password spraying and brute force are the same thing.", correction: "Brute force tries many passwords against one account and causes lockouts; spraying tries a few common passwords against many accounts to stay below the lockout threshold." },
+      { misconception: "After an account compromise, changing the password is enough.", correction: "Sessions, OAuth tokens, and persistence rules can remain valid: they must be revoked and removed, and the cause of the access must be found." },
+      { misconception: "Shadow IT is a malicious insider threat.", correction: "Shadow IT usually comes from convenience and productivity: it is a risk to govern with policy and approved alternatives, not an intentional attack." },
+      { misconception: "Nothing can be done against a zero-day vulnerability.", correction: "Without a patch, compensating controls apply: segmentation, least privilege, allow lists, behavioral detection, and reducing the exposed surface." },
+      { misconception: "Cross-site scripting attacks the database directly.", correction: "XSS runs scripts in another victim's browser; it is SQL injection that manipulates database queries." },
+      { misconception: "Reflected and amplified DDoS are synonyms.", correction: "In a reflected attack the attacker spoofs the victim's address as the sender; in an amplified attack it abuses services that reply with far more data than the request. They are often combined." },
+      { misconception: "An end-of-life system is protected by regular patching.", correction: "An end-of-life system no longer receives patches: it needs isolation, compensating controls, and a decommissioning plan." },
+    ],
+    examVsPractice: [
+      { topic: "Threat actors", exam: "Every actor has textbook motives and resources: the nation state runs APT campaigns, the hacktivist seeks visibility, the insider abuses the access they have.", practice: "Attributing an attack is slow and uncertain, and rarely changes the defense. Security teams reason about the observed techniques, for example with MITRE ATT&CK, more than about who is attacking." },
+      { topic: "Vulnerability management", exam: "A vulnerability has a name, a CVSS score and a fix: you apply the patch.", practice: "Priorities come from context: CVSS score, real-world exploitation (for example the CISA KEV catalog) and exposure of the asset. Many vulnerabilities are not fixed straight away, because of compatibility or downtime, and stay covered by compensating controls for a long time." },
+      { topic: "Indicators of malicious activity", exam: "An indicator points to a specific attack: many failed logins mean brute force, a traffic spike means DDoS.", practice: "The same signal often has innocent causes: a misconfigured service, a nightly backup, an update. You need a baseline of normal behavior and the correlation of several sources, and false positives are the everyday norm." },
+    ],
+    appliedScenario: {
+      title: "Cloud compromise with persistence",
+      prompt: "After an anomalous sign-in, an account creates an email forwarding rule and authorizes an OAuth app. Which evidence should be correlated, and which controls actually interrupt the attack?",
+      reasoning: "Correlate sign-in and MFA events, mailbox audit, OAuth consent, IP/device, and timeline. Contain by revoking sessions and tokens, disabling or restricting the account, and removing the malicious rule and app; then correct the cause with credential action, consent policy, phishing-resistant MFA, and monitoring. A password reset alone may leave tokens and persistence valid.",
+      attackChain: {
+        vector: "Stolen credentials or session, for example through phishing or token theft, followed by consent to a malicious OAuth app.",
+        impact: "Ongoing mail exfiltration through the forwarding rule and persistent access through the app, even after a password change.",
+        mitigation: "Revoke sessions and tokens, remove the rule and the app, phishing-resistant MFA, a policy restricting app consent, block external forwarding.",
+        evidence: "Sign-in and MFA logs, the mailbox audit showing the rule creation, OAuth consent logs, IP and device.",
+        limit: "MFA protects sign-in with a password, but not a session token already stolen or a consent granted by the user themselves.",
+      },
+    },
+    practiceScenarios: [
+      {
+        "objective": "2.4",
+        "title": "Wi-Fi going down: jamming or deauthentication?",
+        "prompt": "At the Kestrelia site two floors lose Wi-Fi. On floor A clients are kicked off en masse every few seconds and analysis shows deauthentication frames with the access point's MAC; the network is WPA2 with a strong passphrase. On floor B there are no anomalous frames, but the spectrum analyzer shows continuous broadband noise on 2.4 GHz. How are the two cases classified and which defenses apply to each?",
+        "reasoning": "Floor A is deauthentication: forged management frames, not radio interference. The passphrase is irrelevant because it does not authenticate management frames; the defense is PMF/802.11w (mandatory in WPA3), which authenticates robust management frames, or wireless monitoring to locate the source if PMF cannot be enabled. Floor B is RF jamming at the physical layer: encryption, WPA3 and PMF do not stop it because they do not protect the carrier; spectrum analysis, localization and physical security are needed, and changing channel helps only if the interference is partial. This connects 3.2 and 4.1: PMF protects robust management frames, not every frame nor the radio channel. Neither solution involves attacking a network."
+      },
+      {
+        "objective": "2.4",
+        "title": "Correct name, changed delegation",
+        "prompt": "In the Kestrelia simulation, users type kestrelia.example without mistakes. The registrar log shows an unapproved nameserver change after a fake renewal email. The resolver cache reflects the new delegation: which component is compromised?",
+        "reasoning": "This is domain hijacking through the registrar account: management of the legitimate domain changed. Flushing the cache is insufficient and this is not typosquatting. The fake email connects the phishing vector in objective 2.2 to the attack in objective 2.4. Preserve the audit, contact the registrar through a known channel, contain access and recovery, restore delegation and check records and DNSSEC. An isolated DNS change does not prove an attack: here lack of approval and anomalous access make it significant."
+      },
+      {
+        "objective": "2.4",
+        "title": "A transfer lock is insufficient",
+        "prompt": "Kestrelia protects its domain with clientTransferProhibited. A compromised DNS account changes a zone record and the service signs it normally. The registrar account does not change and the resolver validates the response. Which controls are missing?",
+        "reasoning": "The lock concerns transfer between registrars, not every record change at the DNS provider. DNSSEC validates origin and integrity: it does not authorize the person who changed subsequently signed data. Limited access and MFA at the provider, change audit and record restoration are required. Evaluate update locks and registry locks for applicable operations; do not present them as universal blocks. If the DNSSEC chain became inconsistent, validation failure rather than redirection could result."
+      },
+      {
+        "objective": "2.4",
+        "title": "Session stolen after MFA",
+        "prompt": "In the Kestrelia test portal, login with MFA issues SESSION-DEMO-A. A synthetic copy arrives from another client over TLS and is accepted. After server-side revocation, the same copy is rejected. Which attack does this flow show and what does TLS prove?",
+        "reasoning": "Flow: user → authentication → ID issued → ID stolen → request from another client → acceptance while valid → server revocation → rejection. This is session hijacking: neither repeating an identical operation nor an on-path position is required. TLS protects transit; MFA protects login, not a stolen session. Connect Domain 4 rotation after authentication and privilege changes, expiration and server-side revocation. Correlate anomalies with context without logging real tokens."
+      },
+      {
+        "objective": "2.4",
+        "title": "A role written in a cookie",
+        "prompt": "A Kestrelia test client changes a cookie from role=user to role=admin and modifies an authorization header. The transport uses TLS. Should the server grant access to the administrative record? Which check makes the defense effective?",
+        "reasoning": "No: cookies and headers come from the client. The server resolves a valid session or verifies the token signature and conditions, then authorizes the identity and action on the resource. TLS does not make the modified role trustworthy. Secure, HttpOnly and SameSite reduce specific risks but do not replace this decision. Deleting a local cookie does not revoke a copy still valid on the server; also verify effective expiration and revocation."
+      },
+      {
+        "objective": "2.4",
+        "title": "Reflected or stored XSS?",
+        "prompt": "In the Kestrelia simulation, a synthetic search appears as active code in the immediate response. A saved test review instead causes the same behavior on every later visit. What distinction do the cases show and what do you verify?",
+        "reasoning": "The first case is reflected XSS; the second is stored XSS. The browser acts in both. Check input origin, response and saved record without inferring execution from one suspicious log. Displaying text requires contextual encoding; allowing HTML requires sanitization. HttpOnly does not eliminate execution. Parameterized queries remain a SQLi defense."
+      },
+      {
+        "objective": "2.4",
+        "title": "Cookie-bearing request without intent",
+        "prompt": "An authenticated Kestrelia user opens an unrelated page that causes the browser to change the portal test contact address. The server accepts the cookie without checking a token. No code was injected into the portal: which attack do you recognize?",
+        "reasoning": "This is CSRF, also called XSRF: the browser sends the session, but the server does not verify intent. Connect to tokens and secure cookies already explained in Application Security in Domain 4. HttpOnly does not block cookie sending; SameSite is an additional layer, not a universal guarantee. Do not confuse an induced request with session theft or XSS."
+      },
+      {
+        "objective": "2.4",
+        "title": "Preview reaching an internal service",
+        "prompt": "Kestrelia imports images from an approved external catalog. In a synthetic test, a redirect causes the backend to contact an internal service excluded from the catalog. Which component sends the request and which control must check the new address?",
+        "reasoning": "The backend makes the request: this is SSRF. Check authorized destinations, resolved addresses, redirects and network egress. Filtering only the initial URL can fail after a redirect. A CSRF token protects a different trust relationship and output encoding prevents a different interpretation. Correlate outbound requests; a connection alone does not prove exfiltration."
+      },
+
+      {
+        objective: "2.1",
+        title: "Unapproved file sharing",
+        prompt: "The marketing team uses a personal cloud file-sharing service to exchange drafts with an agency because the corporate tool is slow. The files contain customer data. Which type of actor and which motivation best describe the situation, and what is the most suitable response?",
+        reasoning: "It is shadow IT: an internal actor without malicious intent, motivated by convenience and productivity. The real risk is data exposure outside corporate controls. The response is to stop the sharing, assess the exposure, offer an approved alternative, and update the policy; treating it as a malicious insider would be disproportionate and would not fix the cause.",
+      },
+      {
+        objective: "2.2",
+        title: "Managed provider remote access",
+        prompt: "A managed service provider (MSP) administers the servers through a remote access tool with a shared account and domain administrator privileges. The provider's tool is compromised. Which vector was used, and which controls would have limited the impact?",
+        reasoning: "It is a supply chain vector through an MSP. The impact is limited by: named accounts with MFA for the provider, least privilege instead of domain privileges, time-limited access from dedicated systems, session monitoring, and contractual clauses on security and incident notification.",
+      },
+      {
+        objective: "2.3",
+        title: "Non-atomic check and use",
+        prompt: "A service checks that a temporary file belongs to the user and, a few milliseconds later, opens it with elevated privileges. Between the two operations an attacker replaces the file with a link to a system file. Which vulnerability is being exploited?",
+        reasoning: "It is a time-of-check to time-of-use (TOCTOU) race condition: the verified state changes before use. The fix is to make the operation atomic, for example opening the file once and checking permissions on the already open descriptor, and to run the service with the minimum privileges required.",
+        attackChain: {
+          vector: "Replacing the file with a link between the check and the use: a race condition.",
+          impact: "The privileged service reads or writes a system file: privilege escalation.",
+          mitigation: "An atomic operation (open once and check the already open descriptor), refusing symbolic links, private temporary directories, least privilege.",
+          evidence: "File system audit logs showing the link creation and the access to the system file, service logs, changes to system files.",
+          limit: "Least privilege reduces the damage but does not close the race, which only the atomic operation removes; the attack lasts milliseconds and leaves few traces.",
+        },
+      },
+      {
+        objective: "2.4",
+        title: "One attempt per account",
+        prompt: "Within twenty minutes the authentication system records a single failed sign-in for each of 900 different accounts, all from the same external network and with the same seasonal password. No account is locked out, and one succeeds. Which attack is under way, and which indicator reveals it?",
+        reasoning: "It is password spraying: a few common passwords against many accounts to stay below the lockout threshold. The indicator is not account lockout but the distribution of failed attempts by origin and password. The response is to block the origin, reset the compromised account's credentials while revoking its sessions, enforce MFA, and ban common passwords.",
+        attackChain: {
+          vector: "Password spraying: a few common passwords tried against many accounts from the same external network.",
+          impact: "Access with the compromised account and further movement with its permissions.",
+          mitigation: "MFA, a ban on common or seasonal passwords, blocking the origin, revoking sessions and resetting the compromised account's credentials.",
+          evidence: "Authentication logs aggregated by origin: one failed attempt per account, many accounts, the same network, one successful sign-in.",
+          limit: "Account lockout after N attempts never triggers, because each account gets one attempt; blocking the origin is bypassed by changing network.",
+        },
+      },
+      {
+        objective: "2.4",
+        title: "A missing hour in the logs",
+        prompt: "During an investigation of a server, the local log has no events between 02:00 and 03:00, while the SIEM received a burst of administrative events from that server just before the gap. What do these indicators suggest, and how do you proceed?",
+        reasoning: "Missing logs after out-of-hours administrative activity suggest someone deleted their tracks. Preserve the server image and the central logs, which are authoritative because they were forwarded before the deletion, rebuild the timeline from the SIEM, and check which administrative accounts were active. The gap in the logs is itself evidence.",
+        attackChain: {
+          vector: "Administrative access to the server with a compromised or abused privileged account, followed by deletion of the local logs.",
+          impact: "Untracked activity on the server and a hindered investigation: an anti-forensics technique.",
+          mitigation: "Real-time log forwarding to a SIEM, immutable central logs, PAM with recorded sessions, alerts on log clearing.",
+          evidence: "The gap in the local log, administrative events in the SIEM before the gap, log-clearing events if forwarded, the server image.",
+          limit: "The SIEM holds only what was forwarded before the deletion: whatever the attacker did after stopping the forwarding agent is missing.",
+        },
+      },
+      {
+        objective: "2.5",
+        title: "Kiosk in a public area",
+        prompt: "A public information kiosk runs a general-purpose operating system with default credentials, accessible USB ports, preinstalled trial software, and unnecessary network services. Which set of hardening measures is most appropriate?",
+        reasoning: "Change the default credentials, disable unneeded ports and protocols including USB and network services, remove unnecessary software, apply an application allow list that permits only the kiosk app, enable a host-based firewall and endpoint protection, and isolate the kiosk in a dedicated segment. Each measure removes a specific vector from the scenario.",
+        attackChain: {
+          vector: "Physical and local access: default credentials, USB ports, unnecessary software and network services.",
+          impact: "Control of the kiosk, malware installation and a foothold toward the internal network.",
+          mitigation: "Changed credentials, USB and services disabled, an application allow list, a host firewall, endpoint protection, a dedicated network segment.",
+          evidence: "Local sign-in logs, USB connection events, applications blocked by the allow list, unusual traffic from the kiosk segment.",
+          limit: "Hardening does not protect against physical tampering with the hardware, such as opening the case or attaching an internal device: physical controls and surveillance are needed too.",
+        },
+      },
+    ],
+    keyPoints: [
+      "An actor is recognized by motivation and resources: a nation state runs APT campaigns, organized crime seeks profit, a hacktivist visibility, an insider abuses the access they have.",
+      "Attack vector and attack surface differ: the vector is the way in (email, removable media, a supplier), the surface is everything that is exposed.",
+      "A vulnerability is a weakness, an indicator is the trace of its exploitation: CVE identifies the vulnerability, CVSS scores its technical severity.",
+      "Malware is told apart by behavior: a virus needs a host, a worm spreads by itself, a trojan disguises itself, a rootkit hides, a logic bomb waits for a condition.",
+      "Credential attacks show in the logs: password spraying is one attempt on many accounts, brute force many attempts on one account, credential replay reuses valid credentials.",
+      "Mitigation starts from the primary control (patching, secure configuration, segmentation, least privilege) and falls back on a compensating control when the primary one cannot be applied.",
+    ],
+    acronyms: DOMAIN_2_ACRONYMS,
+    readinessChecks: [
+      "You can reconstruct an essential attack chain from logs and symptoms.",
+      "You can distinguish a vulnerability from an indicator of its exploitation.",
+      "You can justify a primary mitigation and a compensating control for the same scenario.",
+      "You can match each actor to its typical motivation and available resources.",
+      "You can tell virus, worm, trojan, rootkit, and logic bomb apart from their clues.",
+      "You can recognize password spraying, credential replay, and downgrade from the indicators.",
+    ],
+  },
+  3: {
+    domainId: 3,
+    title: "Security Architecture",
+    weight: 18,
+    purpose: "Requires protections that fit cloud, on-premises, hybrid, virtualized, and zero-trust models. Every choice should be evaluated against trust boundaries, shared responsibilities, data flows, availability, scalability, and attack surface.",
+    objectives: [
+      {
+        code: "3.1",
+        outcome: "Compare models and infrastructure: cloud service and deployment models, virtualization, containers, IoT/OT, serverless, and IaC.",
+        keyTopics: [
+          "Cloud: responsibility matrix, hybrid considerations, third-party vendors",
+          "Infrastructure as code (IaC), serverless, microservices, on-premises, centralized vs decentralized",
+          "Network: physical isolation (air-gapped), logical segmentation, software-defined networking (SDN)",
+          "Containerization, virtualization, IoT, industrial control systems (ICS)/SCADA, real-time operating system (RTOS), embedded systems, high availability",
+          "Considerations: availability, resilience, cost, responsiveness, scalability, ease of deployment, risk transference, ease of recovery, patch availability, inability to patch, power, compute",
+        ],
+      },
+      {
+        code: "3.2",
+        outcome: "Apply security principles to segmentation, zones, remote access, network devices, protocols, and trust boundaries.",
+        keyTopics: [
+          "Device placement, security zones, attack surface, connectivity",
+          "Failure modes: fail-open, fail-closed; device attribute: active vs passive, inline vs tap/monitor",
+          "Network appliances: jump server, proxy server, IPS/IDS, load balancer, sensors",
+          "Port security: 802.1X, EAP",
+          "Firewall types: web application firewall (WAF), unified threat management (UTM), next-generation firewall (NGFW), layer 4/layer 7",
+          "Secure communication and access: VPN, remote access, tunneling (TLS, IPSec); SD-WAN for connectivity; Secure Access Service Edge (SASE) as a converged architecture; CASB for SaaS/cloud, SWG for web traffic, FWaaS for cloud firewalling",
+          "Selection of effective controls",
+        ],
+      },
+      {
+        code: "3.3",
+        outcome: "Protect data by state, classification, and life cycle using encryption, tokenization, masking, DLP, and access control.",
+        keyTopics: [
+          "Data types: regulated, trade secret, intellectual property, legal information, financial information, human- and non-human-readable",
+          "Classifications: sensitive, confidential, public, restricted, private, critical",
+          "Data states: data at rest, data in transit, data in use; data sovereignty, geolocation",
+          "Methods: geographic restrictions, encryption, hashing, masking, tokenization, obfuscation, segmentation, permission restrictions",
+        ],
+      },
+      {
+        code: "3.4",
+        outcome: "Design resilience and recovery with redundancy, clustering, backups, alternate sites, testing, and RTO/RPO objectives.",
+        keyTopics: [
+          "High availability: load balancing vs clustering",
+          "Site considerations: hot, cold, warm, geographic dispersion; platform diversity, multi-cloud systems",
+          "Continuity of operations; capacity planning: people, technology, infrastructure",
+          "Testing: tabletop exercises, fail over, simulation, parallel processing",
+          "Backups: onsite/offsite, frequency, encryption, snapshots, recovery, replication, journaling",
+          "Power: generators, uninterruptible power supply (UPS)",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Draw boundaries and flows", rationale: "Identify users, workloads, data, ingress and egress, control plane, data plane, and crossings between trust levels." },
+      { title: "2. Assign responsibilities", rationale: "In cloud, the provider secures underlying infrastructure while the customer retains varying responsibility for data, identities, configurations, and workloads." },
+      { title: "3. Apply defense in depth", rationale: "Combine identity, segmentation, secure protocols, hardening, monitoring, and data protection without relying on a single perimeter." },
+      { title: "4. Design for failure", rationale: "Align high availability and disaster recovery to the BIA: RTO guides restoration time, RPO tolerable data loss, and MTD the maximum sustainable limit." },
+      { title: "5. Place and configure the appliances", rationale: "For every device decide its zone, inline or tap mode, behavior on failure (fail-open or fail-closed), and whether it must block or only detect." },
+      { title: "6. Classify before you protect", rationale: "Data type, classification, state, and jurisdiction determine the control: encryption, tokenization, masking, geographic or permission restrictions." },
+    ],
+    decisionPatterns: [
+      "Zero trust does not mean trusting the internal network: verify explicitly, enforce least privilege, and continuously assess identity, device, resource, and context.",
+      "High availability keeps service running through local failures; disaster recovery restores capability after a major event. They can coexist but are not synonyms.",
+      "Segmentation limits lateral movement only when traffic between segments is explicitly controlled and monitored.",
+      "If the requirement is to block an attack in real time you need an inline device (IPS, NGFW, WAF); if it is only to observe without touching traffic, a passive sensor on a tap or monitoring port is enough (IDS).",
+      "Fail-closed favors confidentiality, fail-open favors availability: choose based on what the organization cannot afford to lose, and remember that people safety comes first.",
+      "For ICS/SCADA, RTOS, or embedded systems that cannot be updated, the typical answer is isolation or segmentation with compensating controls, not patching.",
+      "For web applications the specific protection is the WAF (layer 7); for a single all-in-one appliance in a small office it is the UTM; to filter by application and user it is the NGFW.",
+      "Replication does not replace backup: it also copies deletions and ransomware encryption. Restoring requires a versioned, isolated, or immutable copy.",
+    ],
+    connections: [
+      "D1 cryptographic requirements become concrete choices for data at rest, in transit, and in use.",
+      "D2 vulnerabilities help evaluate architectural attack surface and compensating controls.",
+      "D4 monitoring and IAM operationalize zero trust and segmentation; D5 BIA and governance set resilience requirements.",
+      "Data sovereignty and classification connect architecture to the compliance and privacy obligations in D5.",
+      "Failover tests and tabletop exercises are the same tool used by incident response in D4.",
+      "Device placement decides what each control sees — inline or as a passive copy — and the selection of effective controls picks firewall, WAF, IDS/IPS, proxy, and load balancer by threat, cost, and impact.",
+    ],
+    comparisons: [
+      {
+        title: "Shared responsibility in the cloud",
+        headers: ["Model", "The provider manages", "The customer manages"],
+        rows: [
+          ["IaaS", "Data center, hardware, physical network, hypervisor", "Operating system, patches, applications, data, identities, network configuration"],
+          ["PaaS", "Also the operating system and platform runtime", "Application code, data, identities, service configuration"],
+          ["SaaS", "Also the application", "Data, users and permissions, application security configuration"],
+        ],
+      },
+      {
+        title: "Network appliances and placement",
+        headers: ["Appliance", "Typical mode", "Purpose"],
+        rows: [
+          ["IDS", "Passive, on a tap or monitoring port", "Detects and raises alerts, does not block"],
+          ["IPS", "Inline, active", "Detects and blocks malicious traffic"],
+          ["WAF", "Inline in front of the web application (layer 7)", "Blocks SQL injection, XSS, and HTTP attacks"],
+          ["NGFW", "Inline at the perimeter or between zones", "Filters by application, user, and content, not only by port"],
+          ["UTM", "Inline, single appliance", "Firewall, antivirus, web filter, and VPN in one device"],
+          ["Jump server", "In an administration zone", "A single, controlled point for administering internal systems"],
+          ["Proxy server", "Between clients and the Internet", "Filters, logs, and brokers requests"],
+          ["Load balancer", "In front of a group of servers", "Distributes load and removes failed nodes"],
+        ],
+      },
+      {
+        title: "Behavior on failure",
+        headers: ["Mode", "What happens if the device fails", "When it is chosen"],
+        rows: [
+          ["Fail-open", "Traffic passes without inspection", "When availability matters more than filtering"],
+          ["Fail-closed", "Traffic is blocked", "When confidentiality matters more than availability"],
+        ],
+      },
+      {
+        title: "Alternate sites",
+        headers: ["Site", "Activation time", "Cost", "Contents"],
+        rows: [
+          ["Hot site", "Minutes or hours", "High", "Up-to-date hardware, software, and data, ready to take over"],
+          ["Warm site", "Hours or days", "Medium", "Hardware and connectivity, data to be restored"],
+          ["Cold site", "Days or weeks", "Low", "Space, power, and cooling, little or nothing installed"],
+        ],
+      },
+      {
+        title: "Data copy techniques",
+        headers: ["Technique", "What it does", "Limit"],
+        rows: [
+          ["Offsite backup", "A copy kept away from the primary site", "Restoring takes time"],
+          ["Snapshot", "An image of a system or volume at one instant", "If it stays on the same storage it does not protect against that storage failing"],
+          ["Replication", "Continuous copy of data to another system", "Also replicates deletions and data encrypted by ransomware"],
+          ["Journaling", "Records every change and allows restoring to a precise instant", "Needs space and a clean starting point"],
+        ],
+      },
+      {
+        title: "Data states",
+        headers: ["State", "Example", "Typical protection"],
+        rows: [
+          ["Data at rest", "Database, disk, backup", "Disk, database, or record encryption, permissions"],
+          ["Data in transit", "Traffic between client and server", "TLS, IPSec, VPN"],
+          ["Data in use", "Data in memory during processing", "Secure enclave, access control, on-screen masking"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "Protected Management Frames (PMF) encrypt all management frames and protect against every wireless DoS.", correction: "PMF/802.11w covers robust management frames: confidentiality and integrity for unicast, integrity (BIP) for group-addressed frames. It does not encrypt every frame, does not protect pre-association beacons and probes and does not stop RF jamming, which acts at the physical layer. It is mandatory in WPA3 and not tied to 802.11ac." },
+      { misconception: "Load balancing and clustering are the same thing.", correction: "Load balancing distributes requests across several active nodes; clustering makes several nodes work as a single system and provides failover when one goes down." },
+      { misconception: "If the client speaks HTTPS to the balancer, the whole path to the backend is encrypted.", correction: "It depends on the mode: with TLS termination (SSL offload) the balancer decrypts and may forward to the backend in cleartext, leaving the internal leg exposed. You need TLS pass-through or re-encryption to the backend, verifying its certificate." },
+      { misconception: "An IDS blocks attacks.", correction: "An IDS is passive: it detects and alerts. Blocking requires an inline device such as an IPS." },
+      { misconception: "A VLAN is equivalent to an air gap.", correction: "A VLAN is logical segmentation on the same infrastructure; an air gap is physical isolation, with no network connection at all." },
+      { misconception: "With replication, backups are no longer needed.", correction: "Replication immediately copies errors, deletions, and files encrypted by ransomware as well; versioned, isolated, or immutable backups are required." },
+      { misconception: "In SaaS, security is entirely the provider's job.", correction: "Even in SaaS the customer remains responsible for data, users, permissions, and the application's security configuration." },
+      { misconception: "A hot site guarantees no data loss.", correction: "A hot site reduces restoration time (RTO); data loss (RPO) depends on how often data is replicated or copied." },
+      { misconception: "Data sovereignty and geolocation are synonyms.", correction: "Data sovereignty concerns applicable jurisdictions, including residency and extraterritorial obligations; geolocation determines where a device or user is and is used to enforce geographic restrictions." },
+      { misconception: "A UPS keeps systems running through a long blackout.", correction: "A UPS covers the short interruption and the time needed for the generator to start, which sustains long blackouts." },
+    ],
+    examVsPractice: [
+      { topic: "Shared responsibility in the cloud", exam: "The IaaS, PaaS and SaaS table states exactly what the provider manages and what the customer does.", practice: "The boundary changes from service to service and depends on the contract. Most cloud incidents come from customer configuration, such as identities with too many permissions or storage made public by mistake, not from provider flaws." },
+      { topic: "Network segmentation", exam: "DMZ, VLAN and air gap are drawn with sharp boundaries between trust zones.", practice: "With cloud, remote work and SaaS services the boundaries blur: segmentation increasingly follows identity and application (microsegmentation). A diagram is not enough: segmentation must be verified with tests, because exception rules added over the years erode it." },
+      { topic: "Backup and continuity", exam: "RPO and RTO are numbers given in the scenario, and the backup type follows from them.", practice: "RPO and RTO come from the business impact analysis and are worth something only if restoring has been tested. A backup never restored is a hope, not a guarantee; against ransomware you also need immutable copies or copies isolated from the network." },
+    ],
+    appliedScenario: {
+      title: "Hybrid service with a tight RPO",
+      prompt: "A critical portal uses public APIs and an on-premises database. The BIA requires a 2-hour RTO and a 15-minute RPO. Which architectural decisions are necessary?",
+      reasoning: "Separate public, application, and data tiers with allowlisted flows; apply workload identity and centralized logging. Replicate or back up frequently enough to meet 15 minutes and provide tested alternate capacity within 2 hours. A daily backup or cold site does not automatically meet the objectives, even if it lowers cost.",
+    },
+    practiceScenarios: [
+      {
+        objective: "3.1",
+        title: "Industrial plant that cannot be updated",
+        prompt: "A water treatment plant uses a SCADA system whose controllers run a certified RTOS: the vendor releases no patches, and every change would require recertification. Management wants to connect the plant to the corporate network for real-time reports. What is the most suitable architectural approach?",
+        reasoning: "Because the systems cannot be updated (inability to patch), protection must come from the architecture: a separate ICS network, connected to the corporate network only through an intermediate zone with one-way or tightly limited flows, passive monitoring of industrial traffic, and maintenance access through a jump server. If the security requirement outweighs the reporting one, the choice remains an air gap.",
+      },
+      {
+        objective: "3.2",
+        title: "IPS in front of a critical service",
+        prompt: "A hospital places an inline IPS in front of the system that sends test results to the wards. The team debates whether to configure it fail-open or fail-closed. Which elements decide the choice?",
+        reasoning: "What matters is what is unacceptable to lose. If an IPS failure interrupted the delivery of results and put patients at risk, availability prevails and fail-open is chosen, compensated by monitoring and alerts on the IPS failure. If the service exposed data whose confidentiality is the priority and an interruption were tolerable, fail-closed would be chosen. The decision must be documented and approved.",
+      },
+      {
+        objective: "3.2",
+        title: "Remote administrators",
+        prompt: "System administrators often work off site and currently reach the servers through RDP exposed to the Internet. Which architecture reduces the attack surface while keeping access?",
+        reasoning: "Close RDP to the Internet, route access through a VPN or a SASE service with MFA and device verification, and allow administration only from a jump server in a dedicated zone, with recorded sessions. The servers accept management connections only from the jump server, so a single controlled entry point replaces many exposed ports.",
+      },
+      {
+        objective: "3.3",
+        title: "European customer data in the cloud",
+        prompt: "A company with customers in the EU wants to move its customer database to a cloud provider that, to save money, automatically replicates data to regions outside the EU. Which concepts are involved, and what must be configured?",
+        reasoning: "Data sovereignty is involved: residency and access affect applicable jurisdictions. For processing subject to the GDPR, transfers to third countries must meet Arts. 44–49; citizenship is not the deciding criterion. Configure geographic restrictions on the storage and replication regions, encryption with company-managed keys, and a classification of the data as regulated, while checking the provider's contractual clauses.",
+      },
+      {
+        objective: "3.4",
+        title: "Choosing the alternate site",
+        prompt: "An e-commerce company has an 8-hour RTO and a 1-hour RPO, with a budget that does not allow a second fully active data center. Which combination of alternate site and data protection is most suitable?",
+        reasoning: "A warm site, with hardware and connectivity already in place, can be activated within 8 hours without the cost of a hot site; a cold site would probably take longer. The 1-hour RPO requires replication or backups at least hourly to the alternate site. The plan must be verified with a failover test, not only with a tabletop exercise.",
+      },
+      {
+        objective: "3.4",
+        title: "Ransomware on the replicated database",
+        prompt: "Ransomware encrypts the primary database. The synchronous replica in the second data center turns out to be encrypted as well a few seconds later. What was missing from the resilience architecture, and how is it restored?",
+        reasoning: "Replication guarantees availability, but it immediately copies the encryption too. A versioned, isolated copy was missing: immutable snapshots, offline or offsite backups, or journaling that allows returning to an instant before the attack. Restoration starts from the last verified clean point, after removing the cause of the infection.",
+        attackChain: {
+          vector: "Ransomware that encrypts the primary database; synchronous replication propagates the encryption.",
+          impact: "Data unavailable in both data centers: the redundancy offers no restore point.",
+          mitigation: "Immutable snapshots, offline or offsite backups, journaling with point-in-time restore, removing the cause before restoring.",
+          evidence: "An EDR alert on the encryption process, a spike of writes on the database, the ransom note, replication logs with the propagation time.",
+          limit: "Replication protects against the loss of a site, not against logical corruption: it faithfully copies the encryption too, within seconds.",
+        },
+      },
+    ],
+    keyPoints: [
+      "In the cloud, responsibility is shared: in IaaS the customer manages the operating system, applications and data, in PaaS the applications and data, in SaaS mainly data and access.",
+      "Architecture limits an attack's blast radius: segmentation, VLANs and zones separate what must not communicate, and an inline device can fail open or fail closed.",
+      "Each device has one purpose: an IDS detects, an inline IPS blocks, a WAF protects web applications, an NGFW filters by application, a jump server funnels administrative access.",
+      "Data is protected according to its state (at rest, in transit, in use), classification and jurisdiction: encryption, hashing, tokenization and masking answer different needs.",
+      "RTO is the time within which to restore, RPO the amount of data that can be lost: they decide the kind of backup and of alternate site (hot, warm, cold).",
+      "Replication provides availability but also copies mistakes and ransomware encryption: versioned, immutable or offline copies are needed.",
+    ],
+    acronyms: DOMAIN_3_ACRONYMS,
+    readinessChecks: [
+      "You can delimit customer and provider responsibilities in IaaS, PaaS, and SaaS.",
+      "You can choose among segmentation, isolation, redundancy, and recovery based on the requirement.",
+      "You can derive a backup and alternate-site solution from RTO, RPO, and MTD.",
+      "You can choose between IDS and IPS, inline and tap, fail-open and fail-closed.",
+      "You can tell WAF, NGFW, UTM, proxy, and jump server apart by their purpose.",
+      "You can connect data state, classification, and jurisdiction to the protection method.",
+    ],
+  },
+  4: {
+    domainId: 4,
+    title: "Security Operations",
+    weight: 28,
+    purpose: "The heaviest and most action-oriented domain. It measures the ability to operationalize controls through hardening, asset and vulnerability management, IAM, monitoring, automation, log analysis, and incident response. In FIRST/NEXT questions, action order is often decisive.",
+    objectives: [
+      {
+        code: "4.1",
+        outcome: "Apply baselines, hardening, patching, secure configuration, and protections for endpoints, mobile, wireless, applications, and cloud.",
+        keyTopics: [
+          "Secure baselines: establish, deploy, maintain",
+          "Hardening targets: mobile devices, workstations, switches, routers, cloud infrastructure, servers, ICS/SCADA, embedded systems, RTOS, IoT devices",
+          "Wireless: installation considerations (site surveys, heat maps)",
+          "Mobile solutions: mobile device management (MDM); deployment models BYOD, COPE, CYOD; connection methods cellular, Wi-Fi, Bluetooth",
+          "Wireless security settings: WPA3, AAA/RADIUS, cryptographic protocols, authentication protocols",
+          "Application security: input validation, secure cookies, static code analysis, code signing",
+          "Sandboxing, monitoring",
+        ],
+      },
+      {
+        code: "4.2",
+        outcome: "Manage asset inventory, ownership, classification, life cycle, sanitization, and disposal.",
+        keyTopics: [
+          "Acquisition/procurement process",
+          "Assignment/accounting: ownership, classification",
+          "Monitoring/asset tracking: inventory, enumeration",
+          "Disposal/decommissioning: sanitization, destruction, certification, data retention",
+        ],
+      },
+      {
+        code: "4.3",
+        outcome: "Perform vulnerability management from discovery through prioritization, remediation, rescanning, reporting, and exceptions.",
+        keyTopics: [
+          "Identification: vulnerability scan; application security (static analysis, dynamic analysis, package monitoring); penetration testing; system/process audit",
+          "Threat feed: OSINT, proprietary/third-party, information-sharing organization, dark web",
+          "Responsible disclosure program, bug bounty program",
+          "Analysis: confirmation (false positive, false negative), prioritize, CVSS, CVE, vulnerability classification, exposure factor, environmental variables, industry/organizational impact, risk tolerance",
+          "Response: patching, insurance, segmentation, compensating controls, exceptions and exemptions",
+          "Validation: rescanning, audit, verification; reporting",
+        ],
+      },
+      {
+        code: "4.4",
+        outcome: "Analyze alerts and activity with logs, SIEM, scans, intelligence, and baselines to separate signal from noise.",
+        keyTopics: [
+          "Monitoring computing resources: systems, applications, infrastructure",
+          "Activities: log aggregation, alerting, scanning, reporting, archiving, alert response and remediation/validation (quarantine, alert tuning)",
+          "Tools: Security Content Automation Protocol (SCAP), benchmarks, agents/agentless, SIEM, antivirus, DLP, SNMP traps, NetFlow, vulnerability scanners",
+        ],
+      },
+      {
+        code: "4.5",
+        outcome: "Configure enterprise controls such as firewalls, IDS/IPS, DNS filtering, DLP, NAC, EDR/XDR, and proxies.",
+        keyTopics: [
+          "Firewall: rules, access lists, ports/protocols, screened subnets",
+          "IDS/IPS: trends, signatures",
+          "Web filter: agent-based, centralized proxy, URL scanning, content categorization, block rules, reputation",
+          "Operating system security: Group Policy, SELinux",
+          "Secure protocols: protocol selection, port selection, transport method",
+          "DNS filtering; email security: DMARC, DKIM, SPF, gateway",
+          "File integrity monitoring, DLP, network access control (NAC), EDR/XDR, user behavior analytics",
+        ],
+      },
+      {
+        code: "4.6",
+        outcome: "Implement IAM: provisioning, federation, MFA, authorization, least privilege, access review, and deprovisioning.",
+        keyTopics: [
+          "Provisioning/de-provisioning user accounts, permission assignments and implications, identity proofing",
+          "Federation, single sign-on (SSO): LDAP, OAuth, SAML; interoperability, attestation",
+          "Access controls: mandatory, discretionary, role-based, rule-based, attribute-based, time-of-day restrictions, least privilege",
+          "MFA: biometrics, hard/soft authentication tokens, security keys; something you know, something you have, something you are, somewhere you are",
+          "Passwords: length, complexity, reuse, expiration, age; password managers, passwordless",
+          "Privileged access management: just-in-time permissions, password vaulting, ephemeral credentials",
+        ],
+      },
+      {
+        code: "4.7",
+        outcome: "Use automation and orchestration while evaluating repeatability, speed, integrations, errors, and propagation risk.",
+        keyTopics: [
+          "Use cases: user provisioning, resource provisioning, guard rails, security groups, ticket creation, escalation, enabling/disabling services and access, continuous integration and testing, integrations and APIs",
+          "Benefits: efficiency/time saving, enforcing baselines, standard infrastructure configurations, scaling in a secure manner, employee retention, reaction time, workforce multiplier",
+          "Other considerations: complexity, cost, single point of failure, technical debt, ongoing supportability",
+        ],
+      },
+      {
+        code: "4.8",
+        outcome: "Apply incident response and forensics while preserving evidence, communications, containment, and controlled return to production.",
+        keyTopics: [
+          "Process: preparation, detection, analysis, containment, eradication, recovery, lessons learned",
+          "Training; testing: tabletop exercise, simulation; root cause analysis; threat hunting",
+          "Digital forensics: legal hold, chain of custody, acquisition, reporting, preservation, e-discovery",
+        ],
+      },
+      {
+        code: "4.9",
+        outcome: "Interpret network, authentication, endpoint, application, cloud, DNS, and email data sources and logs.",
+        keyTopics: [
+          "Log data: firewall logs, application logs, endpoint logs, OS-specific security logs, IPS/IDS logs, network logs, metadata",
+          "Data sources: vulnerability scans, automated reports, dashboards, packet captures",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Know normal state", rationale: "Inventory, ownership, baselines, and time synchronization make vulnerabilities, drift, logs, and alerts interpretable." },
+      { title: "2. Reduce exposure proactively", rationale: "Apply hardening, patching, least privilege, segmentation, and secure configuration according to criticality and compatibility." },
+      { title: "3. Correlate before concluding", rationale: "Validate an alert with multiple sources, a timeline, identity, host, and context; preserve volatile data when forensic response requires it." },
+      { title: "4. Respond in order", rationale: "Follow preparation; detection/analysis; containment; eradication; recovery; lessons learned, adapting containment to safety, impact, and authorization." },
+      { title: "5. Govern identities through their whole life", rationale: "Identity proofing, provisioning with least privilege, periodic access reviews, temporary privileges through PAM, and prompt deprovisioning prevent permission build-up and orphaned accounts." },
+      { title: "6. Automate what is repeatable", rationale: "Provisioning, tickets, escalation, and isolation can be automated with guard rails and testing; weigh complexity, cost, single point of failure, and technical debt before doing so." },
+    ],
+    decisionPatterns: [
+      "FIRST does not always mean power off: validate the event and consider volatile evidence, safety, and the response plan; during a confirmed attack, contain to limit harm.",
+      "A scan identifies potential weaknesses; validation reduces false positives; prioritization combines severity, exploitability, exposure, asset value, and business context.",
+      "Authentication proves who you are, authorization decides what you may do, and accounting records what you did; MFA requires factors from different categories.",
+      "If the scenario describes spoofing of the company domain in email, the answer is SPF, DKIM, and DMARC with a quarantine or reject policy, not a content filter.",
+      "To know how much was transferred and to whom, NetFlow or metadata is enough; to know what was transferred, you need a packet capture.",
+      "An employee who changes role and keeps the old permissions points to privilege creep: the answer is access review and attestation, with permissions assigned by role.",
+      "Too many false alerts are solved with alert tuning and baselines, not by disabling the rule: a disabled rule produces false negatives.",
+      "For SSD and flash drives, reliable sanitization is crypto erase or physical destruction; degaussing works only on magnetic media.",
+    ],
+    connections: [
+      "Session hijacking, replay and manipulated cookies in D2 connect TLS, rotation, server-side expiration/revocation and secure cookies to Application Security in D4.",
+      "D1 primitives and controls become operational configurations, procedures, and checks.",
+      "D2 TTPs, vulnerabilities, and indicators feed detection engineering, threat hunting, and prioritization.",
+      "D3 architecture determines available logs and enforcement points; D5 governance determines escalation, retention, evidence handling, and reporting.",
+      "Zero trust and the access control models from D1 become concrete policies in IAM, NAC, and PAM.",
+      "Residual risk, exceptions, and insurance connect vulnerability management to risk management in D5.",
+      "In vulnerability management the system/process audit finds weaknesses the scan misses, and vulnerability classification groups them by type and severity before you prioritize with CVSS and CVE.",
+      "Hardening protocols is a chain of choices: protocol selection prefers the secure version, port selection exposes only the expected port, and the transport method enforces the encrypted channel with TLS; the web filter adds URL scanning by category and reputation.",
+      "Permission assignments turn roles and policy into concrete rights: grant each with least privilege and review it, because the implications enable escalation when permissions stay excessive.",
+    ],
+    comparisons: [
+      {
+        "title": "SSO and IAM protocols (4.6)",
+        "headers": [
+          "Concept",
+          "Purpose",
+          "Flow and limit"
+        ],
+        "rows": [
+          [
+            "SSO",
+            "One authentication, multiple applications",
+            "An outcome, not a protocol: Kerberos, SAML or OIDC"
+          ],
+          [
+            "SAML",
+            "Federated web authentication",
+            "IdP → signed XML assertion → SP → local session"
+          ],
+          [
+            "OAuth 2.0",
+            "Delegated authorization",
+            "Authorization server → access token → resource server/API; tokens may be opaque"
+          ],
+          [
+            "OpenID Connect (OIDC)",
+            "Identity on top of OAuth 2.0",
+            "OP → ID token JWT → RP; separate access token for APIs"
+          ],
+          [
+            "Kerberos",
+            "Ticket-based authentication",
+            "KDC → TGT → service ticket request → service; not automatically web federation"
+          ]
+        ]
+      },
+      {
+        title: "Access control models",
+        headers: ["Model", "Who decides access", "Example"],
+        rows: [
+          ["Mandatory (MAC)", "The system, based on classification labels", "A Secret document readable only by those with Secret clearance"],
+          ["Discretionary (DAC)", "The owner of the resource", "The author of a file decides whom to share it with"],
+          ["Role-based (RBAC)", "The role assigned to the user", "All accounting staff can access the invoicing system"],
+          ["Rule-based", "General rules that apply to everyone", "No access to the server from external networks"],
+          ["Attribute-based (ABAC)", "Attributes of user, resource, and context", "Access only if department, compliant device, and time of day all match"],
+        ],
+      },
+      {
+        title: "Mobile device models",
+        headers: ["Model", "Ownership", "Corporate control"],
+        rows: [
+          ["BYOD", "The employee's", "Limited: usually a corporate container managed through MDM"],
+          ["CYOD", "The company's, chosen from an approved list", "Full control of the device"],
+          ["COPE", "The company's, with personal use allowed", "Full, with separation between corporate and personal data"],
+        ],
+      },
+      {
+        title: "Email authentication",
+        headers: ["Mechanism", "What it verifies", "How"],
+        rows: [
+          ["SPF", "That the sending server is authorized for the domain", "A list of authorized servers published in DNS"],
+          ["DKIM", "That the message was not altered and comes from the domain", "A digital signature in the header, with the public key in DNS"],
+          ["DMARC", "What to do if SPF and DKIM fail", "A policy in DNS (none, quarantine, reject) and outcome reports"],
+        ],
+      },
+      {
+        title: "Scan outcomes",
+        headers: ["Outcome", "Meaning", "Risk"],
+        rows: [
+          ["True positive", "Reported vulnerability that is real", "Must be handled"],
+          ["False positive", "Reported vulnerability that does not exist", "Wasted time and reduced trust in the tool"],
+          ["True negative", "No report and no vulnerability", "None"],
+          ["False negative", "Real vulnerability that was not reported", "The most dangerous: it gives a false sense of security"],
+        ],
+      },
+      {
+        title: "End of life for assets",
+        headers: ["Activity", "What it does", "When"],
+        rows: [
+          ["Sanitization", "Makes data unrecoverable while leaving the media reusable (overwriting, crypto erase, degaussing)", "Internal reuse, returning leased hardware"],
+          ["Destruction", "Physically destroys the media (shredding, pulverizing, incineration)", "Highly sensitive data or media that cannot be sanitized"],
+          ["Certification", "Documents that sanitization or destruction took place", "Always, especially when outsourced"],
+          ["Data retention", "Sets how long data is kept before deletion", "Before decommissioning, based on laws and policy"],
+        ],
+      },
+      {
+        title: "Incident response phases",
+        headers: ["Phase", "Goal", "Example"],
+        rows: [
+          ["Preparation", "Being ready before the incident", "Plan, contacts, tools, training, exercises"],
+          ["Detection", "Noticing the event", "SIEM or EDR alert, a user report"],
+          ["Analysis", "Confirming and understanding scope and impact", "Log correlation, timeline, affected hosts"],
+          ["Containment", "Stopping the spread", "Isolating the host, disabling the account"],
+          ["Eradication", "Removing the cause", "Removing malware and persistence, closing the vulnerability"],
+          ["Recovery", "Returning to service in a controlled way", "Restoring from trusted state with heightened monitoring"],
+          ["Lessons learned", "Improving processes and controls", "Post-incident review and root cause analysis"],
+        ],
+      },
+      {
+        title: "Data sources for investigations",
+        headers: ["Source", "What it shows", "Question it answers"],
+        rows: [
+          ["Firewall logs", "Allowed and blocked connections", "Who tried to reach what?"],
+          ["Endpoint logs", "Processes, files, and changes on the host", "What was executed on the machine?"],
+          ["OS-specific security logs", "Sign-ins, privileges, account changes", "Who authenticated, and with which permissions?"],
+          ["IPS/IDS logs", "Traffic matching signatures or anomalies", "Which known attack was attempted?"],
+          ["NetFlow", "Who talked to whom, when, and how much", "How much data left, and where to?"],
+          ["Packet captures", "The full content of the traffic", "What exactly was transmitted?"],
+          ["Metadata", "Information about files and messages, not their content", "Who created or sent a file, and when?"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "Among wireless security settings, WPA3 and PMF make the network immune to wireless attacks.", correction: "WPA3 and Protected Management Frames (PMF/802.11w) neutralize forged deauthentication and strengthen authentication, but they do not defend against RF jamming or every DoS, because radio interference acts at the physical layer. Against it you need site surveys, spectrum analysis and physical security." },
+      { misconception: "The CVSS score alone decides priority.", correction: "CVSS measures technical severity; priority also depends on exposure, available exploits, asset value, environmental variables, and risk tolerance." },
+      { misconception: "A false positive is more dangerous than a false negative.", correction: "The false negative is the most dangerous: a real vulnerability or attack goes unreported. A false positive costs time and reduces trust in alerts." },
+      { misconception: "Chain of custody only matters if the case goes to court.", correction: "Nobody knows in advance whether an incident will end up in court: chain of custody must be documented from the acquisition of the first piece of evidence." },
+      { misconception: "Legal hold means backing up the data.", correction: "A legal hold suspends the routine deletion of data relevant to litigation, even when the retention policy would otherwise remove it." },
+      { misconception: "A password and a PIN together are multifactor authentication.", correction: "They are two factors from the same category (something you know): MFA requires different categories, such as a password plus a token or biometrics." },
+      { misconception: "Rule-based and role-based access control are the same thing.", correction: "Role-based assigns permissions by the user's role; rule-based applies general rules to everyone, for example time windows or source networks." },
+      { misconception: "Automation always reduces risk.", correction: "An automated mistake spreads everywhere in seconds: it needs testing, guard rails, approvals, and attention to complexity, single point of failure, and technical debt." },
+      { misconception: "Degaussing also erases SSD drives.", correction: "Degaussing works only on magnetic media; SSDs and flash memory need crypto erase, secure erase commands, or physical destruction." },
+    ],
+    examVsPractice: [
+      { topic: "Hardening baselines", exam: "You apply the secure baseline and the system is protected.", practice: "Baselines, such as the CIS Benchmarks, get adapted: some settings break applications and need documented exceptions. Then the configuration drifts away from the baseline over time, and has to be measured continuously." },
+      { topic: "Incident response", exam: "The phases follow a precise order: preparation, detection, analysis, containment, eradication, recovery, lessons learned.", practice: "In reality the phases overlap and repeat: while containing, you discover new affected systems. Decisions such as isolating a production server also belong to the business, and documentation runs through the whole incident, not only the end." },
+      { topic: "SIEM and monitoring", exam: "The SIEM detects the attack and raises the alarm.", practice: "A SIEM sees only the logs it receives and recognizes only what a rule exists for. The real work is choosing the sources, tuning the rules and managing the volume of alerts, otherwise analysts stop looking at them." },
+    ],
+    appliedScenario: {
+      title: "PowerShell and DNS beaconing",
+      prompt: "EDR flags obfuscated PowerShell on a workstation, and the SIEM shows periodic DNS queries to a newly registered domain. What is the correct operational sequence?",
+      reasoning: "Validate and correlate the process, user, parent process, DNS, proxy, and authentication data; if confirmed, isolate the host while preserving required evidence. Scope other endpoints, eradicate persistence and the initial cause, restore from trusted state, and monitor for recurrence. Immediately deleting the file can destroy evidence and may not interrupt stolen credentials or persistence elsewhere.",
+      attackChain: {
+        vector: "Obfuscated PowerShell running on the workstation, typically after phishing, with a command-and-control channel over DNS.",
+        impact: "Remote control of the workstation, credential theft and lateral movement.",
+        mitigation: "Host isolation, eradicating persistence, resetting exposed credentials, PowerShell script block logging and constrained language mode, DNS filtering of newly registered domains.",
+        evidence: "An EDR alert with parent process and user, periodic DNS queries in the SIEM, proxy and authentication logs.",
+        limit: "DNS filtering blocks the known domain, but the attacker registers another; EDR sees the process on the host, not credentials already used elsewhere.",
+      },
+    },
+    practiceScenarios: [
+      {
+        objective: "4.1",
+        title: "Personal smartphones for the sales force",
+        prompt: "The sales force wants to read corporate email on their own personal smartphones. The company must protect customer data but cannot manage employees' private photos and apps. Which model and which control are most suitable?",
+        reasoning: "The model is BYOD, with an MDM that creates a separate corporate container: it enforces a PIN, encryption, and a minimum operating system version, and allows remote wiping of corporate data only. COPE or CYOD would give more control, but they require company-owned devices, which the scenario rules out.",
+      },
+      {
+        objective: "4.2",
+        title: "Leased servers to return",
+        prompt: "A company must return 40 leased servers with SSD drives that held payment data to the vendor. Which decommissioning procedure is correct?",
+        reasoning: "First check the data retention rules, then sanitize the SSDs with crypto erase or the manufacturer's secure erase, since degaussing does not work on flash memory. If the contract or the sensitivity of the data requires it, the drives are kept and physically destroyed. In every case a certificate of sanitization or destruction is needed, and the inventory must be updated.",
+      },
+      {
+        objective: "4.3",
+        title: "Two vulnerabilities, one window",
+        prompt: "The scan reports a CVSS 9.8 vulnerability on an internal server reachable only from an administration VLAN, and a CVSS 7.5 vulnerability on an Internet-facing web server with a public exploit in active use. There is time for only one patch tonight. Which one takes priority?",
+        reasoning: "The exposed server, with CVSS 7.5: Internet exposure and an active exploit raise likelihood decisively. Environmental variables lower the real risk of the 9.8, already mitigated by segmentation. After patching, a rescan must verify the remediation, and the 9.8 must be scheduled or handled as a documented exception.",
+      },
+      {
+        objective: "4.4",
+        title: "SIEM flooded with alerts",
+        prompt: "A new SIEM generates 3000 alerts a day for failed sign-ins, almost all from a backup application using an expired password. The analysts propose disabling the rule. What is the correct response?",
+        reasoning: "Fix the cause, that is the backup application's credential, and tune the alert: exclude that known service account or raise the threshold based on the baseline, keeping the rule active for everyone else. Disabling the rule would create a false negative exactly on the brute-force attempts it is meant to detect.",
+      },
+      {
+        objective: "4.5",
+        title: "Fake email in the company's name",
+        prompt: "Customers receive phishing emails that appear to come from the company domain. The domain publishes an SPF record but does not use DKIM and has no DMARC policy. What must be configured?",
+        reasoning: "Sign outgoing mail with DKIM and publish a DMARC record, starting with p=none to collect reports and moving to quarantine or reject once all legitimate flows are aligned. DMARC tells receiving servers what to do with messages that fail SPF and DKIM, and the reports show who is using the domain.",
+        attackChain: {
+          vector: "Spoofing the company domain in the sender of phishing emails.",
+          impact: "Deceived customers, with stolen credentials or payments, and damage to the brand's reputation.",
+          mitigation: "DKIM signing, a DMARC record moved from p=none to quarantine or reject, alignment of all legitimate flows.",
+          evidence: "DMARC aggregate reports and the headers of the emails reported by customers, with the SPF, DKIM and DMARC results.",
+          limit: "DMARC protects only the exact domain: it does not stop lookalike domains (typosquatting) or a fake display name with a different address.",
+        },
+      },
+      {
+        "objective": "4.6",
+        "title": "Identity or data access?",
+        "prompt": "Kestrelia wants one login to an external payroll portal, an app allowed to read a calendar and access to a share in its enterprise realm. Which mechanisms fit?",
+        "reasoning": "SSO is the outcome. SAML or OpenID Connect authenticate to the federated portal; OAuth 2.0 delegates calendar read access with limited scope; Kerberos uses a TGT and a service ticket for the share. The OIDC ID token is for the RP, the access token for the API and need not be JWT. IdP/SP or OP/RP must validate received evidence; federation does not necessarily eliminate local accounts or automatically revoke existing sessions. See the independent glossary entries and Federation. Sources: OASIS SAML 2.0 Core, RFC 6749, OpenID Connect Core and RFC 4120."
+      },
+      {
+        objective: "4.6",
+        title: "Accumulated permissions",
+        prompt: "An audit finds that an employee who moved from purchasing to accounting can still approve orders and, at the same time, record payments. What problem has emerged, and how is it prevented?",
+        reasoning: "It is privilege creep, which here also violates separation of duties. The old role's permissions must be removed at once. Prevention requires permissions assigned by role (RBAC), a job-change process that revokes previous privileges, and periodic access reviews in which managers confirm the permissions (attestation).",
+      },
+      {
+        objective: "4.7",
+        title: "Automatic account disabling",
+        prompt: "The company wants to disable accounts automatically when the HR system records a termination, through an API between HR and the directory. Which benefits and which risks must be assessed?",
+        reasoning: "Benefits: shorter reaction time, no orphaned accounts, less manual work, and uniform policy enforcement. Risks: an error in the HR data or in the script could disable many accounts at once, and the integration becomes a single point of failure to maintain. It needs testing, a cap on disablements per run, logging, alerts, and a manual fallback procedure.",
+      },
+      {
+        objective: "4.8",
+        title: "Insider investigation",
+        prompt: "The legal department suspects an executive is copying confidential designs before joining a competitor, and expects litigation. Which digital forensics activities must start first?",
+        reasoning: "Place a legal hold on the relevant mailboxes, files, and logs so that routine retention does not delete them; acquire evidence with forensic methods, computing hashes and working on copies; document chain of custody from the first acquisition. The investigation must be coordinated with legal and HR, without alerting the executive before preservation.",
+        attackChain: {
+          vector: "An insider with legitimate access copies confidential designs through personal email, cloud storage or removable media.",
+          impact: "Loss of intellectual property to a competitor, with likely litigation.",
+          mitigation: "Legal hold, DLP on exit channels, least privilege on the designs, revoking access when employment ends.",
+          evidence: "File access logs, DLP alerts, email and proxy logs, USB events, forensic copies with hashes and chain of custody.",
+          limit: "The access is authorized, so access controls do not trigger; DLP does not see what is photographed or copied over channels it does not inspect.",
+        },
+      },
+      {
+        objective: "4.9",
+        title: "How much left, and what",
+        prompt: "A file server sent 12 GB to a foreign address overnight. The team wants to know the size of the transfer immediately and then, if possible, what it contained. Which data sources should be used?",
+        reasoning: "For volume, times, addresses, and ports, NetFlow and firewall logs are enough, available immediately and light to analyze. The content requires a packet capture, useful only if the traffic was already being recorded and was not encrypted; otherwise rely on endpoint logs and the metadata of files read in that window.",
+        attackChain: {
+          vector: "Overnight exfiltration from the file server to a foreign address.",
+          impact: "A confidentiality breach, with possible notification duties depending on the nature of the data.",
+          mitigation: "Egress filtering, DLP, alerts on anomalous volumes, file server segmentation.",
+          evidence: "NetFlow and firewall logs for volume, times and destinations; PCAP for content, if available; endpoint logs and metadata of the files read.",
+          limit: "NetFlow shows how much and where, not what: with encrypted traffic even a PCAP does not reveal the content.",
+        },
+      },
+    ],
+    keyPoints: [
+      "Incident response follows an order: preparation, detection, analysis, containment, eradication, recovery and lessons learned; the FIRST action depends on the current phase.",
+      "An investigation correlates several sources on one timeline: endpoint, network, authentication and application logs, gathered in the SIEM and kept with chain of custody.",
+      "Vulnerability management is a cycle: identify, analyze, prioritize (not only by CVSS, also by exposure and asset value), remediate and verify with a new scan.",
+      "Identity and access are distinct steps: authentication, authorization, federation (SAML, OpenID Connect), provisioning and periodic access review.",
+      "The access model follows from the scenario: MAC for enforced labels, DAC for owner decisions, RBAC for roles, ABAC for attributes and context.",
+      "Email is protected by SPF, DKIM and DMARC together: SPF authorizes servers, DKIM signs messages, DMARC says what to do with those that fail the checks.",
+    ],
+    acronyms: DOMAIN_4_ACRONYMS,
+    readinessChecks: [
+      "You can order incident-response phases and justify the FIRST action.",
+      "You can correlate at least three log sources into a coherent timeline.",
+      "You can prioritize vulnerabilities beyond CVSS alone and verify remediation.",
+      "You can distinguish authentication, authorization, federation, provisioning, and access review.",
+      "You can choose among MAC, DAC, RBAC, rule-based, and ABAC from the scenario.",
+      "You can explain SPF, DKIM, and DMARC and pick the right data source for an investigation.",
+    ],
+  },
+  5: {
+    domainId: 5,
+    title: "Security Program Management and Oversight",
+    weight: 20,
+    purpose: "Connects business goals, risk, and controls. It requires distinguishing governance, policies, standards, procedures, and guidelines; quantifying or qualifying risk; and managing third parties, compliance, privacy, audits, and awareness with verifiable evidence.",
+    objectives: [
+      {
+        code: "5.1",
+        outcome: "Establish governance through roles, responsibilities, policy hierarchy, reporting, data ownership, and strategic alignment.",
+        keyTopics: [
+          "Guidelines; policies: AUP, information security policies, business continuity, disaster recovery, incident response, SDLC, change management",
+          "Standards: password, access control, physical security, encryption",
+          "Procedures: change management, onboarding/offboarding, playbooks",
+          "External considerations: regulatory, legal, industry, local/regional, national, global; monitoring and revision",
+          "Governance structures: boards, committees, government entities, centralized/decentralized",
+          "Roles for systems and data: owners, controllers, processors, custodians/stewards",
+        ],
+      },
+      {
+        code: "5.2",
+        outcome: "Manage risk through identification, analysis, the risk register, appetite/tolerance, responses, owners, monitoring, and BIA.",
+        keyTopics: [
+          "Risk identification; risk assessment: ad hoc, recurring, one-time, continuous",
+          "Risk analysis: qualitative, quantitative, SLE, ALE, ARO, probability, likelihood, exposure factor, impact",
+          "Risk register: key risk indicators, risk owners, risk threshold",
+          "Risk tolerance; risk appetite: expansionary, conservative, neutral",
+          "Strategies: transfer, accept (exemption, exception), avoid, mitigate; risk reporting",
+          "Business impact analysis: RTO, RPO, MTTR, MTBF",
+        ],
+      },
+      {
+        code: "5.3",
+        outcome: "Assess third-party risk across selection, due diligence, contracts, monitoring, incident notification, and offboarding.",
+        keyTopics: [
+          "Vendor assessment: penetration testing, right-to-audit clause, evidence of internal audits, independent assessments, supply chain analysis",
+          "Vendor selection: due diligence, conflict of interest",
+          "Agreement types: SLA, MOA, MOU, MSA, WO/SOW, NDA, BPA",
+          "Vendor monitoring, questionnaires, rules of engagement",
+        ],
+      },
+      {
+        code: "5.4",
+        outcome: "Apply compliance and privacy with attention to obligations, jurisdiction, minimization, retention, data subjects, and consequences.",
+        keyTopics: [
+          "Compliance reporting: internal, external",
+          "Consequences of non-compliance: fines, sanctions, reputational damage, loss of license, contractual impacts",
+          "Compliance monitoring: due diligence/care, attestation and acknowledgement, internal and external, automation",
+          "Privacy: legal implications (local/regional, national, global), data subject, controller vs processor, ownership, data inventory and retention, right to be forgotten",
+        ],
+      },
+      {
+        code: "5.5",
+        outcome: "Distinguish audits and assessments, gather evidence, and track findings, remediation, attestations, and reporting.",
+        keyTopics: [
+          "Attestation",
+          "Internal: compliance, audit committee, self-assessments",
+          "External: regulatory, examinations, assessment, independent third-party audit",
+          "Penetration testing: physical, offensive, defensive, integrated, known environment, partially known environment, unknown environment",
+          "Reconnaissance: passive, active",
+        ],
+      },
+      {
+        code: "5.6",
+        outcome: "Build measurable, role-specific awareness and training adapted to behavior, threats, and culture.",
+        keyTopics: [
+          "Phishing: campaigns, recognizing a phishing attempt, responding to reported suspicious messages",
+          "Anomalous behavior recognition: risky, unexpected, unintentional",
+          "User guidance and training: policy/handbooks, situational awareness, insider threat, password management, removable media and cables, social engineering, operational security, hybrid/remote work environments",
+          "Reporting and monitoring: initial, recurring; development, execution",
+        ],
+      },
+    ],
+    studyPath: [
+      { title: "1. Start with goals and authority", rationale: "Define who decides, who owns risk and data, which obligations apply, and which outcomes the program must support." },
+      { title: "2. Assess risk", rationale: "Connect asset, threat, vulnerability, likelihood, and impact; document assumptions, inherent risk, controls, and residual risk." },
+      { title: "3. Select and approve the response", rationale: "Mitigate, transfer, avoid, or accept must fit appetite/tolerance, cost, feasibility, ownership, and acceptance authority." },
+      { title: "4. Demonstrate and improve", rationale: "Metrics, audits, assessments, tests, exceptions, training, and reviews turn governance into evidence and continuous improvement." },
+      { title: "5. Extend the rules beyond the company", rationale: "Vendor risk is governed through due diligence, questionnaires, audit rights, suitable agreements (SLA, MSA, SOW, NDA), and continuous monitoring through offboarding." },
+      { title: "6. Make people part of the controls", rationale: "Phishing campaigns, role-based training, and a simple reporting channel turn users into sensors; measure results over time, not only participation." },
+    ],
+    decisionPatterns: [
+      "SLE = asset value × exposure factor; ALE = SLE × ARO. The estimate supports a decision but does not override legal requirements, safety, or risk appetite.",
+      "RTO is the target for restoring a service, RPO the maximum tolerable data-loss interval, and MTD the maximum total sustainable outage; in a coherent plan, RTO does not exceed MTD.",
+      "A policy states mandatory intent; a standard sets uniform requirements; a procedure describes steps; a guideline offers flexible recommendations.",
+      "Transferring risk, for example through insurance, moves the financial impact but not the responsibility: the organization remains accountable to customers and authorities.",
+      "A control is economically justified when its annual cost is lower than the reduction in ALE it produces.",
+      "The controller decides why and how personal data is processed; the processor handles it on the controller's behalf and according to its instructions.",
+      "If the scenario asks for a test that simulates an external attacker with no information, it is an unknown environment; if it asks for maximum coverage in little time, it is a known environment.",
+      "A phishing campaign is judged by the reporting rate and its trend over time, not only by the click rate; punishing mistakes reduces reporting.",
+    ],
+    connections: [
+      "Risk treatment selects and justifies the controls studied in D1-D4.",
+      "BIA, RTO, RPO, and MTD define requirements that D3 resilient architecture must implement and D4 must test.",
+      "Privacy, retention, legal hold, and contracts affect logging, forensics, cloud, data management, and incident response.",
+      "Supply chain and vendor-related vectors from D2 are why third-party assessment requires evidence and not only questionnaires.",
+      "Phishing and social engineering training in 5.6 is the human control against the vectors studied in D2.",
+      "Governance structures include government entities — public authorities and regulators — while external considerations change by jurisdiction at the local/regional, national, and global level.",
+      "Compliance monitoring combines attestation and acknowledgement with internal and external reviews; non-compliance brings consequences beyond fines and sanctions, including contractual impacts.",
+    ],
+    comparisons: [
+      {
+        "title": "Laws, regulations and standards (5.1/5.4)",
+        "headers": [
+          "Framework",
+          "Nature and scope",
+          "Purpose and accountability"
+        ],
+        "rows": [
+          [
+            "SOX",
+            "U.S. law; issuers within the SEC perimeter",
+            "Financial reporting and internal controls; management accountable"
+          ],
+          [
+            "GLBA",
+            "U.S. law; covered financial institutions",
+            "Nonpublic financial information; competent regulator’s rules"
+          ],
+          [
+            "HIPAA",
+            "U.S. law/rules; covered entities and business associates",
+            "PHI; Security Rule for ePHI; not all health data everywhere"
+          ],
+          [
+            "GDPR",
+            "EU regulation; Article 3 scope",
+            "Processing in the context of an EU establishment, or qualifying offering/monitoring outside the EU"
+          ],
+          [
+            "PCI DSS",
+            "Global industry standard; payment programs and contracts",
+            "Card data/payment environment; not itself a law"
+          ]
+        ]
+      },
+      {
+        title: "Governance documents",
+        headers: ["Document", "Nature", "Example"],
+        rows: [
+          ["Policy", "Mandatory intent, approved by management", "All remote access must use MFA"],
+          ["Standard", "Uniform, measurable requirement", "Passwords of at least 14 characters"],
+          ["Procedure", "Steps to perform, in order", "How to create an account for a new hire"],
+          ["Guideline", "Recommendation, not mandatory", "Tips for creating memorable passphrases"],
+        ],
+      },
+      {
+        title: "Roles for systems and data",
+        headers: ["Role", "Responsibility", "Example"],
+        rows: [
+          ["Owner", "Accountable for the data: classifies it and decides who may access it", "The sales director for customer data"],
+          ["Controller", "Determines the purposes and means of processing personal data", "The company collecting its own employees' data"],
+          ["Processor", "Processes data on the controller's behalf and according to its instructions", "The cloud provider running payroll"],
+          ["Custodian/steward", "Applies day to day the controls decided by the owner", "The IT team running backups and managing permissions"],
+        ],
+      },
+      {
+        title: "Risk response strategies",
+        headers: ["Strategy", "What it does", "Example"],
+        rows: [
+          ["Mitigate", "Reduces likelihood or impact through controls", "Deploying MFA to reduce credential theft"],
+          ["Transfer", "Moves the financial impact to a third party", "Buying a cyber insurance policy"],
+          ["Avoid", "Eliminates the activity that creates the risk", "Dropping a non-essential Internet-facing service"],
+          ["Accept", "Formally accepts the residual risk, possibly with an exception or exemption", "Low risk below the threshold, signed by the risk owner"],
+        ],
+      },
+      {
+        title: "Quantitative risk analysis",
+        headers: ["Measure", "Formula", "Example"],
+        rows: [
+          ["Exposure factor (EF)", "Percentage of value lost in one event", "25%"],
+          ["SLE", "Asset value × EF", "200,000 EUR × 25% = 50,000 EUR"],
+          ["ARO", "Number of events expected in a year", "0.5, that is one event every 2 years"],
+          ["ALE", "SLE × ARO", "50,000 EUR × 0.5 = 25,000 EUR per year"],
+        ],
+      },
+      {
+        title: "Business impact analysis metrics",
+        headers: ["Metric", "What it measures", "Example"],
+        rows: [
+          ["RTO", "Time within which the service must be restored", "The portal must be back within 4 hours"],
+          ["RPO", "Maximum amount of data that can be lost, expressed as time", "At most 15 minutes of orders lost"],
+          ["MTTR", "Average time to repair a failed component", "On average 3 hours to replace a disk"],
+          ["MTBF", "Average time between two failures of a repairable component", "One failure every 10,000 hours of operation"],
+        ],
+      },
+      {
+        title: "Third-party agreements",
+        headers: ["Agreement", "Purpose", "Clue in the scenario"],
+        rows: [
+          ["SLA", "Measurable service levels and penalties", "99.9% availability and response times"],
+          ["MSA", "General terms of an ongoing relationship", "A framework contract under which several projects are signed"],
+          ["WO/SOW", "Tasks, deliverables, and timelines of a single piece of work", "A precise description of a penetration test project"],
+          ["NDA", "Confidentiality obligation", "Sharing sensitive information before an agreement"],
+          ["MOU", "Broad understanding, usually not binding", "Two organizations state their intention to cooperate"],
+          ["MOA", "A more formal agreement on the terms of a cooperation", "Two organizations define roles and shared resources"],
+          ["BPA", "Relationship between business partners", "Sharing responsibilities and profits in a joint venture"],
+        ],
+      },
+      {
+        title: "Penetration test environments",
+        headers: ["Environment", "Information given to the tester", "What it simulates"],
+        rows: [
+          ["Known environment", "Complete: architecture, code, credentials", "An informed insider; maximum coverage in little time"],
+          ["Partially known environment", "Partial, for example a user account", "An attacker with an initial foothold"],
+          ["Unknown environment", "None", "An external attacker starting from scratch"],
+        ],
+      },
+    ],
+    commonTraps: [
+      { misconception: "With insurance, the risk no longer belongs to the organization.", correction: "The policy transfers the financial impact, not the responsibility: toward customers and authorities the organization remains accountable." },
+      { misconception: "Anyone in IT can accept a risk.", correction: "Only the owner or the designated authority may accept it, within the risk appetite, with a documented decision; accepting a breach of a legal obligation is not possible." },
+      { misconception: "The custodian is the owner of the data.", correction: "The owner is accountable and decides classification and access; the custodian applies day to day the controls the owner has set." },
+      { misconception: "Controller and processor have the same responsibilities.", correction: "The controller decides the purposes and means of processing; the processor acts on its behalf and according to its instructions, with obligations of its own but different ones." },
+      { misconception: "An MOU is a binding contract.", correction: "An MOU usually expresses a broad, non-binding understanding; measurable obligations and penalties belong in an SLA, MSA, or SOW." },
+      { misconception: "MTBF measures the time needed to repair.", correction: "Repair time is MTTR; MTBF measures reliability, that is the average time between one failure and the next." },
+      { misconception: "Qualitative analysis is useless compared with quantitative analysis.", correction: "Qualitative analysis is fast and suitable when reliable financial data is missing; quantitative analysis requires credible monetary values and frequencies." },
+      { misconception: "An unknown-environment penetration test is always the best.", correction: "It better simulates an external attacker, but for the same time it covers less; a known environment finds more vulnerabilities. The choice depends on the goal of the test." },
+    ],
+    examVsPractice: [
+      { topic: "Quantitative risk analysis", exam: "With SLE, ARO and ALE you calculate a precise annual loss and compare it with the cost of the control.", practice: "ARO and exposure factor are uncertain estimates, often based on little data. ALE is for comparing orders of magnitude and justifying spending to management, not for predicting the exact loss." },
+      { topic: "Compliance and security", exam: "Meeting a standard or passing an audit shows that the required controls are in place.", practice: "A passed audit is a snapshot of a set moment and scope. Security needs controls that work every day, including outside that scope: you can be compliant and vulnerable at the same time." },
+      { topic: "Third-party risk", exam: "Security questionnaires, SLAs and contract clauses manage the supplier's risk.", practice: "A questionnaire is a self-declaration. What counts is checking independent evidence, such as a SOC 2 report or test results, and writing into the contract the duty to notify incidents and the right to audit." },
+    ],
+    appliedScenario: {
+      title: "Vendor processing personal data",
+      prompt: "A new SaaS will process critical personal data. Its questionnaire is positive, but the contract omits incident notification and data deletion. Can the risk be approved?",
+      reasoning: "Technical due diligence does not replace contractual and privacy requirements. Record the risk and define the DPA, notification timelines, retention/deletion, subprocessors, audit rights, data return, and liability; then assess residual controls. Only the designated authority may accept residual risk, and it cannot waive an applicable legal obligation.",
+    },
+    practiceScenarios: [
+      {
+        objective: "5.1",
+        title: "Payroll entrusted to a vendor",
+        prompt: "A company entrusts payroll processing to a cloud provider. The HR director decides which data is needed and who can see it, the provider processes it under the contract, and the internal IT team manages the integration and backups. Who holds the owner, controller, processor, and custodian roles?",
+        reasoning: "The company is the controller, because it determines the purposes and means of processing; the provider is the processor, because it processes the data on the company's behalf. The HR director is the data owner: they classify it and decide access. The IT team is the custodian, because it applies the controls day to day. The roles must be written into the policies and the contract.",
+      },
+      {
+        objective: "5.2",
+        title: "Is the control worth it?",
+        prompt: "An e-commerce server is worth 200,000 EUR. An attack would destroy 25% of its value, and one event is expected every 2 years. A control that would almost eliminate the risk costs 40,000 EUR per year. What is the ALE, and is the control economically justified?",
+        reasoning: "SLE = 200,000 EUR × 25% = 50,000 EUR; ARO = 0.5; ALE = 50,000 EUR × 0.5 = 25,000 EUR per year. A control costing 40,000 EUR per year costs more than the expected loss it prevents, so it is not justified on economic grounds alone. Legal obligations, unestimated reputational damage, or a conservative risk appetite may justify it; otherwise a cheaper control or risk transfer should be considered.",
+      },
+      {
+        objective: "5.3",
+        title: "Which agreement to sign",
+        prompt: "A company selects a vendor to host its website. It wants guaranteed 99.9% availability with penalties, a framework contract for future projects, and, for the first project, a precise description of tasks and deadlines. Which agreements are needed?",
+        reasoning: "An MSA for the general terms of the relationship, an SLA for the 99.9% availability and penalties, and an SOW for the first project with tasks, deliverables, and timelines. Before signing, due diligence on the vendor, a conflict-of-interest check, and a right-to-audit clause are needed; if confidential information is shared during negotiation, an NDA as well.",
+      },
+      {
+        "objective": "5.4",
+        "title": "Different obligations within one group",
+        "prompt": "Kestrelia has an Italian card-accepting shop, an issuer subject to SEC reporting, a financial company within FTC jurisdiction and a U.S. healthcare covered entity. Can one compliance label apply to the whole group?",
+        "reasoning": "No. Check activities, jurisdiction, data and contracts for each entity: PCI DSS for the payment environment under relevant programs and agreements; SOX for the issuer’s financial reporting; GLBA and the FTC Safeguards Rule for the covered financial company; HIPAA for the covered entity and business associates. Evaluate GDPR territorial scope rather than citizenship alone. Management assigns owners; the team preserves evidence, gaps and remediation for internal/external compliance reporting. See Compliance, Reporting and the five glossary entries. A certification or contract does not replace applicability analysis. SEC, FTC, HHS, PCI SSC and EUR-Lex sources verified on 2026-10-08."
+      },
+      {
+        objective: "5.4",
+        title: "Erasure request and tax obligations",
+        prompt: "A former customer asks for all of their data to be deleted under the right to be forgotten. The company also keeps their invoices, which the law requires keeping for 10 years. What is the correct response?",
+        reasoning: "Delete the data that is no longer needed, such as marketing data and the online profile, and keep only the data subject to a legal obligation, restricting its use to that purpose and deleting it when the period ends. The reply to the requester must be given within the legal deadline and documented. An up-to-date data inventory is needed to know where the data is.",
+      },
+      {
+        objective: "5.5",
+        title: "Simulating an external attacker",
+        prompt: "The board of directors asks to verify how far an external attacker, with no internal information, could get into the corporate network. What kind of test is needed, and what must be defined first?",
+        reasoning: "An offensive penetration test in an unknown environment, starting with passive reconnaissance (public sources, DNS) and then active reconnaissance (scans). Before it starts, the rules of engagement must be signed: scope, hours, allowed or excluded techniques, emergency contacts, and handling of any data found. Results must be reported as findings with remediation and verification.",
+      },
+      {
+        objective: "5.6",
+        title: "Phishing campaign results",
+        prompt: "In the first simulated phishing campaign 18% of employees clicked and only 4% reported the message. Management proposes sanctions for those who clicked. What is the most effective approach?",
+        reasoning: "Short, immediate training for those who clicked, a simple report button, and recurring campaigns to measure the trend. The main indicator is the reporting rate, which should rise, together with clicks falling over time. Sanctioning mistakes reduces reporting and hides real incidents; disciplinary measures should be reserved for repeated negligence as defined by policy.",
+      },
+    ],
+    keyPoints: [
+      "Risk is quantified with SLE = AV × EF and ALE = SLE × ARO; the result guides the decision, but it rests on estimates.",
+      "Risk is handled in four ways: mitigate, transfer (for example through insurance), avoid or accept, within the risk appetite and tolerance set by leadership.",
+      "Each agreement has its purpose: an SLA for service levels, an NDA for confidentiality, an MOU for a usually non-binding understanding, an MSA for general terms and an SOW for the specific work.",
+      "For personal data the roles are distinct: the controller decides purposes and means, the processor processes data on its behalf, the custodian manages the technology.",
+      "Audits and assessments produce evidence: a finding becomes an action with an owner, a deadline and proof of closure.",
+      "A penetration test requires written authorization and rules of engagement: scope, hours, allowed techniques and contacts defined before starting.",
+    ],
+    acronyms: DOMAIN_5_ACRONYMS,
+    readinessChecks: [
+      "You can calculate SLE, ARO, and ALE and interpret their decision limits.",
+      "You can distinguish risk appetite, tolerance, threshold, and inherent and residual risk.",
+      "You can select the correct document or agreement and identify its owner and approver.",
+      "You can turn an audit finding into tracked remediation with closure evidence.",
+      "You can distinguish owner, controller, processor, and custodian in a scenario.",
+      "You can choose the type of penetration test and the rules of engagement suited to the goal.",
+    ],
+  },
+};
+
+export const OFFICIAL_DOMAIN_WEIGHTS = [12, 22, 18, 28, 20] as const;
+
+export function getDomainGuide(domainId: number, lang: Lang): DomainGuide {
+  const guides = lang === "en" ? EN_DOMAIN_GUIDES : IT_DOMAIN_GUIDES;
+  const guide = guides[domainId] ?? guides[1];
+  if (domainId !== 4) return guide;
+  return { ...guide, comparisons: [...(guide.comparisons ?? []), EAP_METHOD_GUIDE_COMPARISON[lang]] };
+}
+
+export const DOMAIN_GUIDES_IT = IT_DOMAIN_GUIDES;
+export const DOMAIN_GUIDES_EN = EN_DOMAIN_GUIDES;
+
+/**
+ * A stable identifier for a self-assessment point, the same in both languages.
+ * It hashes the Italian text (FNV-1a), so a rewritten point starts unticked
+ * instead of inheriting the answer given to the old one.
+ */
+export function readinessCheckId(domainId: number, index: number): string {
+  const text = IT_DOMAIN_GUIDES[domainId]?.readinessChecks[index] ?? "";
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return `D${domainId}-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}

@@ -1,0 +1,39 @@
+name: 📚 Content error · Errore nei contenuti
+description: A wrong, outdated or unclear fact in a question, guide, glossary entry or translation. · Un'informazione sbagliata, superata o poco chiara in domande, guide, glossario o traduzioni.
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you: a wrong fact taught to many learners is a real bug. · Grazie: un'informazione sbagliata insegnata a molti studenti è un bug vero.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where is it? · Dove si trova?
+      options:
+        - Exam question · Domanda del simulatore
+        - Domain guide · Guida di dominio
+        - Study subtopic or glossary · Sottovoce di studio o glossario
+        - Translation only (IT/EN differ) · Solo traduzione (IT ed EN diverse)
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Domain and item · Dominio e voce
+      description: Domain, objective (e.g. 2.4) and question text or title of the entry. · Dominio, obiettivo (es. 2.4) e testo della domanda o titolo della voce.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong · Che cosa è sbagliato
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction and source · Correzione proposta e fonte
+      description: Official CompTIA objectives, NIST, RFC, OWASP, CIS or vendor documentation. · Obiettivi ufficiali CompTIA, NIST, RFC, OWASP, CIS o documentazione del produttore.
+    validations:
+      required: true

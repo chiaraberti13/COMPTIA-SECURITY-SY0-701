@@ -1,0 +1,13 @@
+# Only what the build needs goes into the build context: no secrets, no
+# history, no local artefacts.
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+dist
+coverage
+test-results
+playwright-report
+*.log

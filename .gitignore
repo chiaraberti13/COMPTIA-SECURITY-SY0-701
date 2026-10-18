@@ -1,0 +1,23 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+# Synthetic lab datasets are versioned on purpose (labs/README.md, "Dati sintetici").
+!labs/*/data/*.log
+.env*
+!.env.example
+
+# Scratch directory for throwaway analysis scripts
+.tmp/
+
+# Playwright output
+test-results/
+playwright-report/
+
+# Extracted Italian and English texts checked by npm run spellcheck
+.spellcheck/
+
+# Local Vercel linkage and generated deployment output
+.vercel/

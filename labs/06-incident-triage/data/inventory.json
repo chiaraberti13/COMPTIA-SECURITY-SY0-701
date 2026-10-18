@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "WEB-01": {"owner": "e-commerce", "criticality": "high"},
+    "DB-01": {"owner": "e-commerce", "criticality": "high"},
+    "FS-01": {"owner": "amministrazione", "criticality": "high"},
+    "WS-042": {"owner": "l.bianchi, contabilità", "criticality": "medium"},
+    "WS-017": {"owner": "reception", "criticality": "low"},
+    "IDP": {"owner": "IT", "criticality": "critical"},
+    "MAIL": {"owner": "IT", "criticality": "high"}
+  },
+  "approved_scanners": ["10.0.9.5"],
+  "approved_transfers": [{"host": "FS-01", "dst": "203.0.113.99", "purpose": "backup off-site notturno"}]
+}

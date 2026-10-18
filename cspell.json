@@ -1,0 +1,20 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "name": "project-words",
+      "path": "./cspell/project-words.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": [
+    "project-words"
+  ],
+  "ignoreRegExpList": [
+    "^\\S+\\t",
+    "`[^`\\n]*`",
+    "\\b[\\w-]+(?:\\.[\\w-]+)*\\.(?:example|test|invalid)(?:\\.com)?\\b",
+    "\\*\\*[A-Z]\\*\\*[a-z]+"
+  ]
+}

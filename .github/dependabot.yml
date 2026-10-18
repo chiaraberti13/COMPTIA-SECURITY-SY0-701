@@ -1,0 +1,83 @@
+# Dependabot version updates.
+# Docs: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+#
+# Security updates (for dependencies with a published advisory) are opened as
+# soon as an advisory appears and are not delayed by the cooldown below; enable
+# them under Settings > Code security > Dependabot security updates.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # Leave new releases a week to be noticed and pulled if compromised before
+    # they are proposed here (supply-chain protection).
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    ignore:
+      # jsdom 30 needs Node ^22.22.2 or ^24.15.0, above the floor declared in
+      # package.json "engines". Remove this when the engines floor is raised.
+      - dependency-name: jsdom
+        update-types: ["version-update:semver-major"]
+      # @types/node is pinned to the Node major the project targets (24, per
+      # .nvmrc and "engines"); a newer major would type against an unsupported
+      # runtime. Raise this together with the engines floor.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 (native compiler) is blocked until typescript-eslint
+      # supports TS >= 7.1 (typescript-eslint#10940). Keep it on the 5.x line.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+    groups:
+      # One PR for all minor and patch bumps; major versions stay separate so
+      # each breaking change can be reviewed and tested on its own.
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+
+  # Base images of the Dockerfile, pinned by digest: Dependabot proposes the new
+  # digest (and tag) when the image is rebuilt with security fixes.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    ignore:
+      # The runtime runs the Node binary of this build image, so its patches and
+      # digests must keep flowing (they carry Node security releases). A new
+      # major is a planned migration together with .nvmrc and "engines".
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "deps(docker)"
+
+  # Base image of the lab container (labs/container/Dockerfile), pinned by
+  # digest. Its apt package versions are updated by hand.
+  - package-ecosystem: docker
+    directory: /labs/container
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "deps(docker)"

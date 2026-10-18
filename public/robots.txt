@@ -1,0 +1,4 @@
+# A self-hosted study app: nothing to hide from crawlers, nothing to index
+# beyond the single page.
+User-agent: *
+Allow: /

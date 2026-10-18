@@ -1,0 +1,202 @@
+name: Security
+
+# Supply-chain and code security checks, separate from CI so that each job has
+# only the permissions it needs and fails with a readable name.
+#
+# Every third-party action is pinned to a full commit SHA with the release in a
+# trailing comment (enforced by tests/workflows.test.ts); Dependabot proposes
+# updates. The weekly run catches advisories and CodeQL queries published after
+# the code was merged.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "23 4 * * 1" # Mondays 04:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # gitleaks-action lists the commits of a pull request through the API.
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Full history: a secret removed in a later commit is still leaked.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Uses .gitleaks.toml at the repository root (default rules plus narrow,
+      # documented exceptions). No licence key is needed for a personal account.
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Commenting on the PR would need pull-requests: write; the job
+          # summary and the failed check are enough.
+          GITLEAKS_ENABLE_COMMENTS: false
+          # Pinned: .gitleaks.toml uses top-level [[allowlists]] with
+          # targetRules, which gitleaks reads only from 8.25.0. The action's
+          # default (8.24.3) ignored them silently, so the weekly full-history
+          # scan reported identifiers as secrets. tests/workflows.test.ts
+          # keeps the pin.
+          GITLEAKS_VERSION: "8.30.1"
+
+  audit:
+    name: Dependency audit (npm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      # Keep a separate production result, then also audit development tooling.
+      # A clean server tree must not hide vulnerable build or test dependencies.
+      - name: npm audit (production, high and critical)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: npm audit (all dependencies, all severities)
+        run: npm audit --audit-level=low
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      # Blocks a pull request that adds or upgrades to a dependency with a known
+      # high or critical vulnerability, or under a licence not listed here. The
+      # list is exactly the licences already in package-lock.json, all
+      # compatible with distributing the app under MIT: permissive ones, MPL-2.0
+      # (file-level copyleft, only lightningcss, a build tool), OFL-1.1 (the
+      # bundled fonts), CC-BY-4.0 (caniuse-lite data), and Python-2.0 and PSF-2.0
+      # (argparse 2 and 3, the same Python Software Foundation licence, development
+      # only). No GPL, LGPL, AGPL or SSPL. tests/workflows.test.ts
+      # keeps the list and the lockfile in step.
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT, MIT-0, ISC, Apache-2.0, BSD-2-Clause, BSD-3-Clause, 0BSD, BlueOak-1.0.0, CC0-1.0, CC-BY-4.0, OFL-1.1, MPL-2.0, Python-2.0, PSF-2.0
+          # One package outside the list, by name, never a licence for all:
+          # the list of common English misspellings that cspell reads
+          # (CC BY-SA 4.0). It is a development tool's word list and never
+          # reaches the app; tests/workflows.test.ts checks it stays dev-only.
+          allow-dependencies-licenses: pkg:npm/%40cspell/dict-en-common-misspellings
+
+  codeql:
+    name: CodeQL (JavaScript/TypeScript)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      # Upload of the results to the Security tab.
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # TypeScript is analysed from source: no build step is needed.
+      - uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          queries: security-extended
+
+      - uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          category: /language:javascript-typescript
+
+  sbom:
+    name: SBOM (CycloneDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Install scripts are not needed to list the dependency tree.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # Software bill of materials of what ships with the server: every
+      # production package with version, licence and purl. Kept as a build
+      # artifact, to answer "are we affected?" when a new advisory appears.
+      - name: Generate SBOM
+        run: npm sbom --omit dev --sbom-format cyclonedx --sbom-type application > sbom.cdx.json
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cdx.json
+          retention-days: 90
+
+  image-scan:
+    name: Container image scan (Grype)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Upload of the findings to the Security tab.
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build the image
+        run: docker build --tag comptia-sy0701:scan .
+
+      # Known vulnerabilities in the operating-system packages and libraries of
+      # the image. Only findings that already have a fix are reported, and the
+      # build fails for high or critical ones: an unfixed CVE in the base image
+      # cannot be acted on here, and Dependabot proposes the patched base image
+      # as soon as one is published.
+      - name: Scan with Grype
+        id: scan
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: comptia-sy0701:scan
+          # Narrow, justified exceptions: see the comments in .grype.yaml.
+          config: .grype.yaml
+          fail-build: true
+          severity-cutoff: high
+          only-fixed: true
+          output-format: sarif
+
+      # A readable list in the job log when the scan fails (the SARIF goes to
+      # the Security tab, which not everyone can open).
+      - name: List the findings
+        if: failure() && steps.scan.outcome == 'failure'
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: comptia-sy0701:scan
+          config: .grype.yaml
+          fail-build: false
+          only-fixed: true
+          output-format: table
+
+      - name: Upload the findings
+        if: always() && steps.scan.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+          category: container-image

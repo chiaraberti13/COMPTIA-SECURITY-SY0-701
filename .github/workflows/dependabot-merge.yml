@@ -1,0 +1,93 @@
+name: Dependabot auto-merge
+
+# Merges a Dependabot pull request by itself, without a person, once every
+# check on its latest commit is green: CI (typecheck, lint, tests, build, e2e,
+# containers), Security (dependency review with the licence allow-list,
+# secrets, audit) and Docs. Dependabot already waits seven days after each
+# release (cooldown in .github/dependabot.yml).
+#
+# Why workflow_run and not pull_request: it starts when one of those workflows
+# finishes, runs the code of main (never the pull request's), and checks out
+# nothing, so the updated dependencies never run with this write token. Each
+# finishing workflow triggers it; only the last one, with every check green,
+# merges.
+#
+# The merge made with the job token does not start the push workflows on main
+# (GitHub blocks that to avoid loops), so the job starts CI, Security and Docs
+# on main itself. A pull request that changes files under .github/workflows
+# (the github-actions group) can be merged only by a token with the Workflows
+# permission: set the AUTOMERGE_TOKEN secret (a fine-grained token for this
+# repository with Contents, Pull requests and Workflows read and write) and
+# the job uses it; without it the job fails on those pull requests and says so.
+
+on:
+  workflow_run:
+    workflows: [CI, Security, Docs]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: dependabot-merge-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    name: Merge when every check is green
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      actions: write
+    steps:
+      - name: Check the pull request and its checks, then merge
+        env:
+          GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN || github.token }}
+          JOB_TOKEN: ${{ github.token }}
+          USES_JOB_TOKEN: ${{ secrets.AUTOMERGE_TOKEN == '' }}
+          GH_REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+
+          # The open pull request whose latest commit is the one just checked.
+          pr="$(gh api "repos/$GH_REPO/commits/$HEAD_SHA/pulls" \
+            --jq '[.[] | select(.state == "open" and .head.sha == env.HEAD_SHA)][0].number // empty')"
+          if [ -z "$pr" ]; then echo "No open pull request on $HEAD_SHA: nothing to merge."; exit 0; fi
+
+          # Opened by Dependabot and with no commit from anyone else.
+          author="$(gh api "repos/$GH_REPO/pulls/$pr" --jq .user.login)"
+          others="$(gh api "repos/$GH_REPO/pulls/$pr/commits" --paginate \
+            --jq '.[] | select(.author.login != "dependabot[bot]") | .sha')"
+          if [ "$author" != "dependabot[bot]" ] || [ -n "$others" ]; then
+            echo "Pull request #$pr has commits not made by Dependabot: a person reviews it."; exit 0
+          fi
+
+          # CI, Security and Docs each finished successfully on this commit...
+          for workflow in CI Security Docs; do
+            conclusion="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$HEAD_SHA&event=pull_request" \
+              --jq "[.workflow_runs[] | select(.name == \"$workflow\")] | sort_by(.created_at) | last | .conclusion // \"missing\"")"
+            if [ "$conclusion" != success ]; then
+              echo "$workflow on #$pr: $conclusion. The last workflow to finish will try again."; exit 0
+            fi
+          done
+          # ...and no check run on it is pending or failed.
+          pending="$(gh api "repos/$GH_REPO/commits/$HEAD_SHA/check-runs?per_page=100" --paginate \
+            --jq '.check_runs[] | select(.status != "completed" or (.conclusion | IN("success", "skipped", "neutral") | not)) | "\(.name): \(.status) \(.conclusion)"')"
+          if [ -n "$pending" ]; then printf 'Not merging #%s yet:\n%s\n' "$pr" "$pending"; exit 0; fi
+
+          # --match-head-commit: if Dependabot pushed again meanwhile, GitHub refuses.
+          gh pr merge "$pr" --merge --match-head-commit "$HEAD_SHA"
+          echo "Merged #$pr."
+
+          # A merge made with the job token starts no workflow on main: start them.
+          if [ "$USES_JOB_TOKEN" = true ]; then
+            for workflow in ci.yml security.yml docs.yml; do
+              GH_TOKEN="$JOB_TOKEN" gh workflow run "$workflow" --ref main
+            done
+          fi

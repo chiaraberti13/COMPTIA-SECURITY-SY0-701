@@ -1,0 +1,7 @@
+{"id":"E1","timestamp":"2026-10-01T09:00:00Z","source":"auth","host":"workstation-01","user":"student-01","action":"login","outcome":"failure","src":"192.0.2.10"}
+{"id":"E2","timestamp":"2026-10-01T09:00:10Z","source":"auth","host":"workstation-01","user":"student-01","action":"login","outcome":"failure","src":"192.0.2.10"}
+{"id":"E3","timestamp":"2026-10-01T09:00:20Z","source":"auth","host":"workstation-01","user":"student-01","action":"login","outcome":"failure","src":"192.0.2.10"}
+{"id":"E4","timestamp":"2026-10-01T09:00:30Z","source":"auth","host":"workstation-01","user":"student-01","action":"login","outcome":"success","src":"192.0.2.10"}
+{"id":"E5","timestamp":"2026-10-01T09:01:00Z","source":"dns","host":"workstation-01","action":"query","src":"192.0.2.10","dst":"192.0.2.53","query":"updates.training.invalid","type":"A","packet":1}
+{"id":"E6","timestamp":"2026-10-01T09:02:00Z","source":"dns","host":"workstation-01","action":"query","src":"192.0.2.10","dst":"192.0.2.53","query":"updates.training.invalid","type":"A","packet":2}
+{"id":"E7","timestamp":"2026-10-01T09:03:00Z","source":"dns","host":"workstation-01","action":"query","src":"192.0.2.10","dst":"192.0.2.53","query":"updates.training.invalid","type":"A","packet":3}

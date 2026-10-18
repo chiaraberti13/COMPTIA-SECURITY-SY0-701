@@ -1,0 +1,869 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test, type Page } from "@playwright/test";
+
+/** WCAG 2.x level A and AA rules, including the 2.2 additions (target size). */
+const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+
+async function openApp(page: Page) {
+  await page.goto("/");
+  await expect(page.locator("#domain_guide_1")).toBeVisible();
+  // The bundled fonts use font-display: swap, so the layout reflows when they
+  // arrive: a click aimed before the swap can land beside its button.
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
+}
+
+/** Serious and critical axe violations, formatted for a readable failure. */
+async function seriousViolations(page: Page): Promise<string[]> {
+  const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  return violations
+    .filter((v) => v.impact === "serious" || v.impact === "critical")
+    .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes[0]?.target.join(" ")}`);
+}
+
+/**
+ * Problems in the visible heading outline: not exactly one h1, or a level that
+ * jumps more than one step down (h2 → h4), which leaves screen-reader users
+ * navigating by headings with a missing section (WCAG 1.3.1).
+ */
+async function headingProblems(page: Page): Promise<string[]> {
+  const outline = await page.$$eval("h1, h2, h3, h4, h5, h6", (els) =>
+    els
+      .filter((el) => el.getClientRects().length > 0)
+      .map((el) => ({ level: Number(el.tagName[1]), text: (el.textContent ?? "").trim().slice(0, 50) }))
+  );
+  const problems: string[] = [];
+  const h1 = outline.filter((h) => h.level === 1).length;
+  if (h1 !== 1) problems.push(`${h1} h1 elements`);
+  outline.forEach((h, i) => {
+    const previous = i === 0 ? 1 : outline[i - 1].level;
+    if (h.level > previous + 1) problems.push(`h${previous} → h${h.level}: ${h.text}`);
+  });
+  return problems;
+}
+
+test.describe("layout", () => {
+  test("the key establishment diagram has a readable IT/EN equivalent and reflows accessibly", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#guide_h_comparisons_1 > summary").click();
+    for (const lang of ["it", "en"] as const) {
+      if (lang === "en") await page.locator("#lang_btn_en").click();
+      const diagram = page.locator("#guide_h_comparisons_1 figure");
+      await expect(diagram).toBeVisible();
+      await expect(diagram.locator("li")).toHaveCount(4);
+      await expect(diagram.locator("figcaption")).toContainText(lang === "it" ? "Equivalente testuale" : "Text equivalent");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+      expect(await seriousViolations(page)).toEqual([]);
+    }
+  });
+
+  test("the study panel is usable and the page never scrolls sideways", async ({ page }) => {
+    await openApp(page);
+    const panel = await page.locator("#study_panel_wrapper").boundingBox();
+    // Regression guard: on phones this panel once collapsed to 0 px.
+    expect(panel?.height ?? 0).toBeGreaterThan(300);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    expect(overflow).toBe(false);
+  });
+
+  test("the layout reflows at 200% zoom without sideways scrolling (WCAG 1.4.10)", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "zoom is measured from the desktop width");
+    // 200% zoom halves the available CSS space: a 1280 px desktop becomes 640.
+    // This backs the manual zoom check in docs/accessibility-manual-tests.md.
+    await page.setViewportSize({ width: 640, height: 900 });
+    await openApp(page);
+    for (const [tab, marker] of [
+      ["#tab_btn_studio", "#study_panel_wrapper"],
+      ["#tab_btn_glossary", "#glossary_root"],
+      ["#tab_btn_quiz", "#start_quiz_btn"],
+    ] as const) {
+      await page.locator(tab).click();
+      await expect(page.locator(marker)).toBeVisible();
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+      expect(overflow, `${tab} overflows at 200% zoom`).toBe(false);
+    }
+    // The acronym drill now lives inside the Glossary, behind its view switcher.
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
+    await expect(page.locator("#flash_start_all")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), "acronym view overflows at 200% zoom").toBe(false);
+    // The PBQ practice drill now lives inside the Simulator, behind its mode switcher.
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#sim_mode_practice").click();
+    await expect(page.locator("#pbq_start_all")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), "PBQ practice view overflows at 200% zoom").toBe(false);
+  });
+
+  test("the domain guide opens and keeps its tables inside their box", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    // The comparison tables are a deepening, folded until asked for.
+    await page.locator("#guide_h_comparisons_1 > summary").click();
+    await expect(page.locator("#domain_guide_1 table").first()).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    expect(overflow).toBe(false);
+  });
+});
+
+test.describe("layout: main menu", () => {
+  test("every section of the menu is visible at once, without scrolling it sideways", async ({ page }) => {
+    await openApp(page);
+    const nav = page.locator("#navigation_tabs");
+    expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
+    for (const id of ["#tab_btn_studio", "#tab_btn_glossary", "#tab_btn_quiz", "#toggle_sidebar_btn", "#lang_btn_en"]) {
+      await expect(page.locator(id)).toBeInViewport({ ratio: 1 });
+    }
+    // Each tab keeps a readable name, short on phones and full on desktop.
+    await expect(page.getByRole("tab", { name: /Glossario/ })).toBeVisible();
+  });
+
+  test("the icons for browsers and phones are served", async ({ page, request }) => {
+    await openApp(page);
+    for (const href of ["/favicon.ico", "/favicon.svg", "/apple-touch-icon.png", "/manifest.webmanifest"]) {
+      expect(await page.locator(`link[href="${href}"]`).count(), href).toBe(1);
+      const res = await request.get(href);
+      expect(res.status(), href).toBe(200);
+      expect(res.headers()["content-type"], href).not.toContain("text/html");
+    }
+    const manifest = await (await request.get("/manifest.webmanifest")).json();
+    for (const icon of manifest.icons) expect((await request.get(icon.src)).status(), icon.src).toBe(200);
+  });
+});
+
+test.describe("layout: simulator", () => {
+  test("the top of the quiz panel can always be reached by scrolling", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await expect(page.locator("#start_quiz_btn")).toBeAttached();
+    // Regression guard: a centred flex scroller once cut off the top of the
+    // set-up on phones, above the scroll origin where no scrolling reaches.
+    const [container, panel] = await Promise.all([
+      page.locator("#quiz_layout").boundingBox(),
+      page.locator("#quiz_panel_container").boundingBox(),
+    ]);
+    expect(panel!.y).toBeGreaterThanOrEqual(container!.y);
+  });
+});
+
+test.describe("accessibility (axe, WCAG 2.2 AA)", () => {
+  test("study view with the domain guide open", async ({ page }) => {
+    await openApp(page);
+    // Open the guide and every deepening in it, so axe checks the folded content too.
+    await page.locator("#domain_guide_1").evaluate((el) => {
+      (el as HTMLDetailsElement).open = true;
+      for (const details of el.querySelectorAll("details")) details.open = true;
+    });
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("glossary view", async ({ page }) => {
+    // axe walks all 550 glossary entries: ~25 s with parallel workers, close to
+    // the 30 s default. slow() triples the budget instead of hiding the check.
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_glossary").click();
+    await expect(page.locator("#glossary_root")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("exam simulator setup", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await expect(page.locator("#start_quiz_btn")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("acronym flashcards, chooser and a revealed card", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
+    await expect(page.locator("#flash_start_all")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+    // Reveal a card so axe also checks the answer side and the verdict buttons.
+    await page.locator("#flash_start_all").click();
+    await page.locator("#flash_reveal").click();
+    await expect(page.locator("#flash_answer_text")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+});
+
+test.describe("keyboard", () => {
+  test("a question can be answered and the verdict is announced without a mouse", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").focus();
+    await page.keyboard.press("Enter");
+    await page.locator("#start_quiz_btn").focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    const options = page.locator("#quiz_options_list [role=radio], #quiz_options_list [role=checkbox]");
+    await expect(options.first()).toBeVisible();
+
+    // Digits select options; a "choose TWO" question needs a second one.
+    await page.keyboard.press("1");
+    if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+    await expect(options.first()).toHaveAttribute("aria-checked", "true");
+
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+    await expect(page.locator("#quiz_feedback_announcer")).not.toBeEmpty();
+    await expect(page.locator("#quiz_feedback_announcer")).toHaveAttribute("role", "status");
+    // Colour is never the only cue: the right option says so in words (WCAG 1.4.1).
+    await expect(page.locator("#quiz_options_list")).toContainText("Risposta corretta");
+    await expect(page.locator("#quiz_options_list")).toContainText("La tua risposta");
+
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_feedback_box")).toBeHidden();
+    await expect(page.locator("#quiz_feedback_announcer")).toBeEmpty();
+  });
+});
+
+test.describe("your data (export, import, delete)", () => {
+  async function openSimulator(page: Page) {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await expect(page.locator("#data_controls")).toBeVisible();
+  }
+
+  test("export downloads a backup of this browser's progress", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true })));
+    await openSimulator(page);
+    const [download] = await Promise.all([page.waitForEvent("download"), page.locator("#data_export_btn").click()]);
+    expect(download.suggestedFilename()).toMatch(/^security-plus-progress-\d{4}-\d{2}-\d{2}\.json$/);
+    const backup = JSON.parse(await (await download.createReadStream()).toArray().then((c) => Buffer.concat(c).toString()));
+    expect(backup.app).toBe("comptia-security-sy0-701");
+    expect(backup.data.checklist).toEqual({ WPA3EnterpriseRes: true });
+  });
+
+  test("a file from elsewhere is rejected with an explanation", async ({ page }) => {
+    await openSimulator(page);
+    await page.locator("#data_import_input").setInputFiles({
+      name: "other.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({ app: "another-app", schema: 1, data: {} })),
+    });
+    await expect(page.locator("#data_status")).toHaveText(/non è un backup di questa app/);
+    await expect(page.locator("#data_confirm_box")).toBeHidden();
+  });
+
+  test("import asks for confirmation, then replaces the progress", async ({ page }) => {
+    await openSimulator(page);
+    const backup = {
+      app: "comptia-security-sy0-701",
+      schema: 1,
+      exportedAt: "2026-09-20T10:00:00.000Z",
+      data: { checklist: { HoneynetDeception: true }, bookmarks: [], quizHistory: [], questionProgress: {} },
+    };
+    await page.locator("#data_import_input").setInputFiles({
+      name: "backup.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(backup)),
+    });
+    await expect(page.locator("#data_confirm_box")).toContainText("1 argomenti completati");
+    await Promise.all([page.waitForEvent("load"), page.locator("#data_confirm_btn").click()]);
+    const stored = await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"));
+    expect(JSON.parse(stored ?? "{}")).toEqual({ HoneynetDeception: true });
+  });
+
+  test("delete all needs a second confirmation and empties this browser's storage", async ({ page }) => {
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem("seeded")) {
+        localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true }));
+        sessionStorage.setItem("seeded", "1");
+      }
+    });
+    await openSimulator(page);
+    await page.locator("#data_delete_btn").click();
+    await expect(page.locator("#data_confirm_box")).toBeVisible();
+    await page.locator("#data_cancel_btn").click();
+    expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).not.toBeNull();
+
+    await page.locator("#data_delete_btn").click();
+    await Promise.all([page.waitForEvent("load"), page.locator("#data_confirm_btn").click()]);
+    expect(await page.evaluate(() => localStorage.getItem("comptia_sy0701_checklist"))).toBeNull();
+  });
+});
+
+test.describe("AI transparency", () => {
+  test("the AI Trainer always shows its limits and a privacy warning", async ({ page }) => {
+    await openApp(page);
+    // The panel starts open on wide screens and closed on phones.
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await expect(page.locator("#ai_disclaimer")).toContainText("possono contenere errori");
+    await expect(page.locator("#ai_disclaimer")).toContainText("dati personali");
+  });
+});
+
+test.describe("Content-Security-Policy", () => {
+  test("no view breaks the policy or contacts another origin, and the bundled fonts load", async ({ page, baseURL }) => {
+    const origin = new URL(baseURL!).origin;
+    const foreign: string[] = [];
+    page.on("request", (request) => {
+      const url = new URL(request.url());
+      if (/^https?:$/.test(url.protocol) && url.origin !== origin) foreign.push(request.url());
+    });
+    await page.addInitScript(() => {
+      const seen: string[] = [];
+      (window as unknown as { __csp: string[] }).__csp = seen;
+      document.addEventListener("securitypolicyviolation", (e) => seen.push(`${e.violatedDirective} ${e.blockedURI}`));
+    });
+
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#tab_btn_glossary").click();
+    await expect(page.locator("#glossary_root")).toBeVisible();
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#start_quiz_btn").click();
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await page.keyboard.press("1");
+    if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+
+    expect(await page.evaluate(() => (window as unknown as { __csp: string[] }).__csp)).toEqual([]);
+    expect(foreign).toEqual([]);
+    expect(await page.evaluate(() => document.fonts.check('16px "Inter Variable"'))).toBe(true);
+    const csp = (await page.request.get("/")).headers()["content-security-policy"];
+    expect(csp).not.toContain("unsafe-inline");
+  });
+});
+
+test.describe("quiz by objective", () => {
+  test("drills every question of one official objective, chosen with the keyboard", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    const select = page.locator("#objective_select");
+    await expect(page.locator("#objective_start_btn")).toBeDisabled();
+    expect(await select.locator("option[value]:not([value=''])").count()).toBe(28);
+    expect(await seriousViolations(page)).toEqual([]);
+
+    await select.selectOption("1.1");
+    const label = await select.locator("option[value='1.1']").textContent();
+    const expected = Number(label?.match(/\((\d+) /)?.[1]);
+    expect(expected).toBeGreaterThanOrEqual(10);
+
+    await page.locator("#objective_start_btn").focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await expect(page.getByText(`1 DI ${expected}`, { exact: false })).toBeVisible();
+  });
+
+  test("at the end, points back to the guide section on that objective", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#objective_select").selectOption("1.1");
+    await page.locator("#objective_start_btn").click();
+
+    // Answer every question by keyboard until the results screen appears.
+    for (let i = 0; i < 60 && !(await page.locator("#quiz_completed_screen").isVisible()); i++) {
+      await expect(page.locator("#quiz_options_list")).toBeVisible();
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#objective_followup_box")).toContainText("1.1");
+
+    await page.locator("#objective_followup_btn").click();
+    await expect(page.locator("#domain_guide_1")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_1_1")).toBeFocused();
+    await expect(page.locator("#guide_objective_1_1")).toBeInViewport();
+  });
+});
+
+test.describe("exam simulation (configurable blueprint)", () => {
+  test("a length button splits the exam by the official weights and turns the timer on", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+
+    await page.locator("#blueprint_btn_20").click();
+    await expect(page.locator("#blueprint_btn_20")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#timer_toggle_input")).toBeChecked();
+    // 20 split across the five domains by weight adds up to 20.
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("20");
+  });
+
+  test("the results break down the run by objective and link each to its guide", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#blueprint_btn_20").click();
+    await page.locator("#start_quiz_btn").click();
+
+    for (let i = 0; i < 40 && !(await page.locator("#quiz_completed_screen").isVisible()); i++) {
+      await expect(page.locator("#quiz_options_list")).toBeVisible();
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      await page.keyboard.press("Enter");
+    }
+
+    const box = page.locator("#run_objectives_box");
+    await expect(box).toBeVisible();
+    // The score is stated in words (a percentage), never by the coloured bar alone.
+    await expect(box).toContainText("%");
+
+    await box.locator("[id^='run_objective_open_']").first().click();
+    // The link leaves the results and opens a domain guide in the study view.
+    await expect(page.locator("#quiz_completed_screen")).toBeHidden();
+    await expect(page.locator("details[id^='domain_guide_'][open]").first()).toBeVisible();
+  });
+});
+
+test.describe("study paths (Where do I start?)", () => {
+  test("open for a new learner, folded once there is progress", async ({ page }) => {
+    await openApp(page);
+    await expect(page.locator("#study_paths")).toHaveAttribute("open", "");
+    await expect(page.locator("#study_path_beginner")).toHaveAttribute("aria-pressed", "true");
+
+    await page.evaluate(() => localStorage.setItem("comptia_sy0701_checklist", JSON.stringify({ WPA3EnterpriseRes: true })));
+    await page.reload();
+    await expect(page.locator("#domain_guide_1")).toBeVisible();
+    await expect(page.locator("#study_paths")).not.toHaveAttribute("open", "");
+  });
+
+  test("the exam path prepares a 90-question simulation with the timer on", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#study_path_exam").click();
+    await page.locator("#study_path_steps").getByRole("button").first().click();
+    await expect(page.locator("#start_quiz_btn")).toBeFocused();
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("90");
+    await expect(page.locator("#timer_toggle_input")).toBeChecked();
+    await expect(page.locator("#custom_quiz_summary_box")).toContainText("~90 min");
+  });
+
+  test("a guide step opens that domain's guide and moves focus to it", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#study_path_steps").getByRole("button", { name: /Dominio 2/ }).click();
+    await expect(page.locator("#domain_guide_2")).toHaveAttribute("open", "");
+    await expect(page.locator("#domain_guide_2_summary")).toBeFocused();
+  });
+});
+
+test.describe("AI access code", () => {
+  test("asks for the code when the server requires it, then sends it with the next question", async ({ page }) => {
+    const sentCodes: (string | undefined)[] = [];
+    await page.route("**/api/chat", async (route) => {
+      const code = route.request().headers()["x-access-token"];
+      sentCodes.push(code);
+      if (code !== "correct-horse-battery-staple") {
+        await route.fulfill({ status: 401, json: { code: "access_token_required", error: "code needed" } });
+      } else {
+        await route.fulfill({ status: 200, json: { reply: "Risposta sbloccata" } });
+      }
+    });
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await expect(page.locator("#ai_access_form")).toHaveCount(0);
+
+    await page.locator("#chat_text_input").fill("Che cos'è l'ALE?");
+    await page.locator("#chat_submit_btn").click();
+    await expect(page.locator("#ai_access_form")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+
+    await page.locator("#ai_access_input").fill("correct-horse-battery-staple");
+    await page.locator("#ai_access_submit").click();
+    await expect(page.locator("#ai_access_form")).toHaveCount(0);
+
+    await page.locator("#chat_text_input").fill("Che cos'è l'ALE?");
+    await page.locator("#chat_submit_btn").click();
+    await expect(page.locator("#ai_sidebar")).toContainText("Risposta sbloccata");
+    expect(sentCodes).toEqual([undefined, "correct-horse-battery-staple"]);
+  });
+});
+
+test.describe("glossary terms in context", () => {
+  test("after an answer, a glossary acronym shows its definition in place", async ({ page }) => {
+    test.slow();
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#objective_select").selectOption("4.4"); // alerting and monitoring: SIEM, SOAR, ...
+    await page.locator("#objective_start_btn").click();
+
+    const hints = page.locator("#quiz_glossary_hints");
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quiz_feedback_box")).toBeVisible();
+      if (await hints.isVisible()) break;
+      await page.keyboard.press("Enter");
+    }
+    await expect(hints).toBeVisible();
+
+    const chip = hints.getByRole("button").first();
+    await expect(chip).toHaveAttribute("aria-expanded", "false");
+    await chip.click();
+    await expect(chip).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#quiz_glossary_definition")).not.toBeEmpty();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("a concept studied in two domains is one glossary entry, with the other domain named", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_search_input").fill("CVSS");
+    // CVSS is defined in Domain 4 (canonical) and studied again in Domain 2.
+    await expect(page.locator("#glossary_card_CVSS")).toHaveCount(1);
+    await expect(page.locator("#glossary_card_CVSSVuln")).toHaveCount(0);
+    await expect(page.locator("#glossary_also_in_CVSS")).toContainText("Dom 2");
+  });
+});
+
+test.describe("AI output is untrusted", () => {
+  test("HTML, scripts and javascript: links in an answer are shown as text, never run", async ({ page }) => {
+    const hostile =
+      'Here is **bold**. <img src="x" onerror="window.__pwned = true"> ' +
+      '<script>window.__pwned = true</script> [click me](javascript:window.__pwned=true)';
+    await page.route("**/api/chat", (route) => route.fulfill({ status: 200, json: { reply: hostile } }));
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await page.locator("#chat_text_input").fill("Explain XSS");
+    await page.locator("#chat_submit_btn").click();
+
+    const log = page.locator("#chat_messages_area");
+    await expect(log).toContainText("<img");
+    await expect(log.locator("img, script, a[href^='javascript' i], [onerror]")).toHaveCount(0);
+    expect(await page.evaluate(() => (window as unknown as { __pwned?: boolean }).__pwned)).toBeUndefined();
+  });
+
+  test("an answer of the wrong shape is refused with a message, not shown", async ({ page }) => {
+    await page.route("**/api/chat", (route) => route.fulfill({ status: 200, json: { reply: { html: "<b>x</b>" } } }));
+
+    await openApp(page);
+    if (!(await page.locator("#ai_sidebar").isVisible())) await page.locator("#toggle_sidebar_btn").click();
+    await page.locator("#chat_text_input").fill("Explain XSS");
+    await page.locator("#chat_submit_btn").click();
+
+    await expect(page.locator("#chat_messages_area")).toContainText("risposta del server non valida");
+    await expect(page.locator("#chat_messages_area")).not.toContainText("[object Object]");
+  });
+});
+
+test.describe("domain routes (before you start, where to go next)", () => {
+  test("a next step jumps to the linked objective in another domain's guide", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1_summary").click();
+    await expect(page.locator("#guide_before_1")).toContainText("TCP/IP");
+    await page.locator("#guide_next_1").getByRole("button", { name: "Vai all'obiettivo 3.3" }).click();
+    await expect(page.locator("#domain_guide_3")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_3_3")).toBeFocused();
+    await expect(page.locator("#guide_objective_3_3")).toBeInViewport();
+
+    // And back: a prerequisite of Domain 3 points to cryptography in Domain 1.
+    await page.locator("#guide_before_3").getByRole("button", { name: "Vai all'obiettivo 1.4" }).click();
+    await expect(page.locator("#guide_objective_1_4")).toBeFocused();
+  });
+
+  test("the table of contents jumps to a section and moves focus to its heading", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    await page.locator("#guide_contents_1").getByRole("link", { name: "Errori comuni" }).click();
+    await expect(page.locator("#guide_h_traps_1")).toBeFocused();
+    await expect(page.locator("#guide_h_traps_1")).toBeInViewport();
+  });
+});
+
+test.describe("adaptive remediation", () => {
+  const aiQuestion = (i: number) => ({
+    id: 9_000_000 + i,
+    topic: `Topic ${i}`,
+    level: "ANALISI",
+    scenario: `A business scenario number ${i}.`,
+    question: `Which is the BEST option ${i}?`,
+    options: ["A", "B", "C", "D"],
+    answerIndex: 0,
+    explanation: `A is best in scenario ${i}.`,
+  });
+
+  test("after a run, the AI questions can be answered with the keyboard, then the results come back", async ({ page }) => {
+    await page.route("**/api/quiz/remediation", (route) =>
+      route.fulfill({ status: 200, json: { questions: [0, 1, 2].map(aiQuestion) } })
+    );
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    await page.getByRole("button", { name: /Mini/ }).first().click();
+    await page.locator("#start_quiz_btn").click();
+
+    // Answer every question with the last options: some will be wrong.
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press("4");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("3");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+
+    await page.locator("#trigger_remediation_btn").click();
+    await expect(page.locator("#remediation_question_screen")).toBeVisible();
+    await expect(page.locator("#remediation_ai_notice")).toBeVisible();
+
+    for (let i = 0; i < 3; i++) {
+      await expect(page.locator("#remediation_q_header")).toContainText(`${i + 1}`);
+      await page.keyboard.press("1");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#remediation_ended_screen")).toBeVisible();
+    await expect(page.locator("#remediation_score_digits")).toHaveText("3 / 3");
+
+    await page.locator("#remediation_end_btn").click();
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+  });
+});
+
+test.describe("stable links", () => {
+  test("a concept link opens that concept, and each concept offers its own link", async ({ page }) => {
+    // Opened from another tab and domain: the link must switch both.
+    await page.goto("/#studio/4/CVE");
+    await expect(page.locator("#concept_card_CVE")).toBeVisible();
+    await expect(page.locator("#concept_title_CVE")).toBeFocused();
+    await expect(page.locator("#concept_link_CVE")).toHaveAttribute("href", "#studio/4/CVE");
+
+    // A link inside the app works too (the hash changes, the page does not reload).
+    await page.evaluate(() => (window.location.hash = "#studio/1/HashingConcept"));
+    await expect(page.locator("#concept_title_HashingConcept")).toBeFocused();
+
+    // An unknown or forged link leaves the page as it is.
+    await page.evaluate(() => (window.location.hash = "#studio/1/<img src=x onerror=alert(1)>"));
+    await expect(page.locator("#concept_card_HashingConcept")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+
+  test("a concept that names a law lists it as a cited source, with the article", async ({ page }) => {
+    await page.goto("/#studio/5/GDPRComplianceConcept");
+    // Sources are reference material: folded in the concept's deepening until asked for.
+    const sources = page.locator("#concept_sources_GDPRComplianceConcept");
+    await expect(sources).toBeHidden();
+    await page.locator("#concept_more_GDPRComplianceConcept > summary").click();
+    await expect(sources).toBeVisible();
+    const link = sources.getByRole("link", { name: /General Data Protection Regulation/ });
+    await expect(link).toHaveAttribute("href", "https://eur-lex.europa.eu/eli/reg/2016/679/oj");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(sources).toContainText("art. 83, par. 5");
+  });
+
+  test("a guide link opens the guide at that objective", async ({ page }) => {
+    await page.goto("/#guida/2/2.4");
+    await expect(page.locator("#domain_guide_2")).toHaveAttribute("open", "");
+    await expect(page.locator("#guide_objective_2_4")).toBeInViewport();
+  });
+});
+
+test.describe("heading structure", () => {
+  test("every view has one h1 and never skips a heading level", async ({ page }) => {
+    await page.route("**/api/quiz/remediation", (route) =>
+      route.fulfill({
+        status: 200,
+        json: {
+          questions: [0, 1, 2].map((i) => ({
+            id: 9_100_000 + i,
+            topic: `Topic ${i}`,
+            level: "ANALISI",
+            scenario: `A business scenario number ${i}.`,
+            question: `Which is the BEST option ${i}?`,
+            options: ["A", "B", "C", "D"],
+            answerIndex: 0,
+            explanation: `A is best in scenario ${i}.`,
+          })),
+        },
+      })
+    );
+    await openApp(page);
+    await page.locator("#domain_guide_1 > summary").click();
+    expect(await headingProblems(page), "study").toEqual([]);
+
+    await page.locator("#tab_btn_glossary").click();
+    await expect(page.locator("#glossary_root")).toBeVisible();
+    expect(await headingProblems(page), "glossary").toEqual([]);
+
+    await page.locator("#tab_btn_quiz").click();
+    expect(await headingProblems(page), "quiz set-up").toEqual([]);
+
+    await page.getByRole("button", { name: /Mini/ }).first().click();
+    await page.locator("#start_quiz_btn").click();
+    expect(await headingProblems(page), "question").toEqual([]);
+
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press("4");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("3");
+      await page.keyboard.press("Enter");
+      if (i === 0) expect(await headingProblems(page), "answer feedback").toEqual([]);
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+    expect(await headingProblems(page), "results").toEqual([]);
+
+    await page.locator("#trigger_remediation_btn").click();
+    await expect(page.locator("#remediation_question_screen")).toBeVisible();
+    expect(await headingProblems(page), "remediation question").toEqual([]);
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press("1");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+    await expect(page.locator("#remediation_ended_screen")).toBeVisible();
+    expect(await headingProblems(page), "remediation results").toEqual([]);
+  });
+});
+
+test.describe("exam readiness", () => {
+  /** Answers every question of the run on screen with the first option(s). */
+  async function answerAll(page: Page) {
+    while (await page.locator("#quiz_confirm_btn").isVisible()) {
+      await page.keyboard.press("1");
+      if (await page.locator("#quiz_confirm_btn").isDisabled()) await page.keyboard.press("2");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Enter");
+    }
+  }
+
+  test("before any answer it says so; after a run it shows progress and trains the weakest objective", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#tab_btn_quiz").click();
+    const panel = page.locator("#readiness_panel");
+    await expect(panel).not.toHaveAttribute("open", "");
+    await panel.locator(":scope > summary").click();
+    await expect(page.locator("#readiness_empty")).toBeVisible();
+    await expect(page.locator("#readiness_accuracy")).toContainText("n.d.");
+
+    await page.locator("#objective_select").selectOption("1.1");
+    await page.locator("#objective_start_btn").click();
+    await answerAll(page);
+    await expect(page.locator("#quiz_completed_screen")).toBeVisible();
+
+    // Progress is read back from this browser's storage.
+    await page.reload();
+    await page.locator("#tab_btn_quiz").click();
+    await expect(panel).toHaveAttribute("open", "");
+    await expect(page.locator("#readiness_accuracy")).toContainText("%");
+    // Domain 1 now has answers, in the table (desktop) or the cards (phone).
+    await expect(page.locator("#readiness_domains tbody tr, #readiness_domain_cards li").filter({ visible: true }).first()).toContainText(/[1-9]\d* su \d+/);
+    await expect(page.locator("#readiness_untouched")).toContainText("su 28");
+    expect(await seriousViolations(page)).toEqual([]);
+
+    const train = page.locator("#readiness_weak_list").getByRole("button", { name: "Allena l'obiettivo 1.1" });
+    await expect(train).toBeVisible();
+    await train.click();
+    await expect(page.locator("#quiz_options_list")).toBeVisible();
+    await answerAll(page);
+    await expect(page.locator("#objective_followup_btn")).toContainText("1.1");
+  });
+});
+
+test.describe("sources", () => {
+  test("the domain guide lists its sources without a human approval counter", async ({ page }) => {
+    await openApp(page);
+    await page.locator("#domain_guide_1_summary").click();
+    const sources = page.locator("#guide_sources_1");
+    await sources.locator(":scope > summary").click();
+    await expect(page.locator("[id^=guide_review_status_]")).toHaveCount(0);
+    await expect(sources.getByRole("link", { name: /SP 800-53/ })).toHaveAttribute("href", /^https:\/\/csrc\.nist\.gov\//);
+    await expect(sources.getByRole("link", { name: /Segnalalo con una issue/ })).toHaveAttribute("rel", "noopener noreferrer");
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+});
+
+test.describe("performance-based scenarios (PBQ)", () => {
+  async function openPbq(page: Page) {
+    await openApp(page);
+    // PBQ practice now lives inside the Simulator, behind its mode switcher.
+    await page.locator("#tab_btn_quiz").click();
+    await page.locator("#sim_mode_practice").click();
+    await expect(page.locator("#pbq_setup")).toBeVisible();
+  }
+
+  test("the chooser and an active scenario pass axe (WCAG 2.2 AA)", async ({ page }) => {
+    await openPbq(page);
+    expect(await seriousViolations(page)).toEqual([]);
+    // Open the first scenario in the list and re-check the interactive task.
+    await page.locator("[id^=pbq_start_]").first().click();
+    await expect(page.locator("#pbq_active")).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+    expect(await headingProblems(page)).toEqual([]);
+  });
+
+  test("a matching scenario is graded with a worded verdict", async ({ page }) => {
+    await openPbq(page);
+    // Scenario 301 (social engineering) is a matching task.
+    await page.locator("#pbq_start_301").click();
+    await expect(page.locator("#pbq_match_list")).toBeVisible();
+
+    // Assign every prompt its correct option, then check the answer.
+    for (const [prompt, option] of [
+      ["p_ceo", "bec"],
+      ["p_sms", "smishing"],
+      ["p_usb", "baiting"],
+      ["p_call", "vishing"],
+    ] as const) {
+      await page.locator(`#pbq_match_${prompt}`).selectOption(option);
+    }
+    await expect(page.locator("#pbq_submit")).toBeEnabled();
+    await page.locator("#pbq_submit").click();
+
+    // The verdict is announced and written in words, not colour alone.
+    await expect(page.locator("#pbq_feedback_announcer")).toHaveAttribute("role", "status");
+    await expect(page.locator("#pbq_feedback")).toContainText("Tutto corretto");
+    await page.locator("#pbq_next").click();
+    await expect(page.locator("#pbq_summary")).toBeVisible();
+  });
+
+  test("ordering steps is operable from the keyboard", async ({ page }) => {
+    await openPbq(page);
+    // Scenario 201 (incident response) is an ordering task.
+    await page.locator("#pbq_start_201").click();
+    await expect(page.locator("#pbq_order_list")).toBeVisible();
+
+    const ids = () => page.locator("#pbq_order_list > li").evaluateAll((els) => els.map((el) => el.id));
+    const before = await ids();
+    const firstStep = before[0].replace("pbq_step_", "");
+    // The down arrow of the first row moves it below the second, from the keyboard.
+    await page.locator(`#pbq_down_${firstStep}`).focus();
+    await page.keyboard.press("Enter");
+    const after = await ids();
+    expect(after[1]).toBe(`pbq_step_${firstStep}`);
+
+    await page.locator("#pbq_submit").click();
+    await expect(page.locator("#pbq_feedback")).toBeVisible();
+  });
+});
+
+test.describe("acronym flashcards", () => {
+  async function openFlash(page: Page) {
+    await openApp(page);
+    await page.locator("#tab_btn_glossary").click();
+    await page.locator("#glossary_view_acronyms").click();
+    await expect(page.locator("#flash_setup")).toBeVisible();
+  }
+
+  test("studies a card and self-assesses it from the keyboard", async ({ page }) => {
+    await openFlash(page);
+    await page.locator("#flash_start_all").click();
+
+    const prompt = await page.locator("#flash_prompt").textContent();
+    expect(prompt?.trim().length ?? 0).toBeGreaterThan(0);
+
+    // Space reveals the answer; the reveal is announced to screen readers.
+    await page.locator("#flash_reveal").focus();
+    await page.keyboard.press(" ");
+    await expect(page.locator("#flash_answer_text")).toBeVisible();
+    await expect(page.locator("#flash_answer_announcer")).toContainText(/\S/);
+
+    // "2" marks the card known and advances to the next one.
+    await page.keyboard.press("2");
+    await expect(page.locator("#flash_prompt")).not.toHaveText(prompt ?? "");
+  });
+
+  test("filters the deck by domain before starting", async ({ page }) => {
+    await openFlash(page);
+    const allCount = await page.locator("#flash_start_all").textContent();
+    await page.locator("#flash_domain").selectOption("4");
+    const domainCount = await page.locator("#flash_start_all").textContent();
+    expect(domainCount).not.toBe(allCount);
+  });
+});

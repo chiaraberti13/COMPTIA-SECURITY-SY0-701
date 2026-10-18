@@ -1,0 +1,22 @@
+# Link checker configuration (https://lychee.cli.rs/config/), used by
+# .github/workflows/docs.yml. Internal links (files and #anchors in this
+# repository) are checked on every change with --offline; external links are
+# checked once a week, because a remote site can break without any commit here.
+
+# A link to "CONTRIBUTING.md#some-section" must point to a heading that exists.
+include_fragments = "anchor-only"
+
+# Local servers from the setup instructions are not reachable in CI.
+exclude_loopback = true
+
+# Hosts that answer bots with errors while working fine in a browser.
+exclude = [
+  # Needs a signed-in GitHub account; the security policy links to it on purpose.
+  '^https://github\.com/.+/security/advisories/new$',
+]
+
+max_retries = 3
+retry_wait_time = 5
+timeout = 20
+# 429 means "slow down", not "broken".
+accept = ["200..=299", "429"]

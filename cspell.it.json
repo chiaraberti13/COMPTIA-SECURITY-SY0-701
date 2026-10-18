@@ -1,0 +1,31 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "name": "project-words",
+      "path": "./cspell/project-words.txt",
+      "addWords": true
+    },
+    {
+      "name": "italian-project",
+      "path": "./cspell/italian-project.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": [
+    "project-words",
+    "italian-project"
+  ],
+  "ignoreRegExpList": [
+    "^\\S+\\t",
+    "`[^`\\n]*`",
+    "\\b[\\w-]+(?:\\.[\\w-]+)*\\.(?:example|test|invalid)(?:\\.com)?\\b",
+    "\\*\\*[A-Z]\\*\\*[a-z]+",
+    "\\b(?:dall|dell|all|nell|sull|coll|l|un|quest|quell)[\u2019']"
+  ],
+  "flagWords": [
+    "vida",
+    "contraffando"
+  ]
+}

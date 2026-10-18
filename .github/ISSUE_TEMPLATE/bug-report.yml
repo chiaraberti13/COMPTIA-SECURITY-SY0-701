@@ -1,0 +1,39 @@
+name: 🐞 App bug · Bug dell'app
+description: Something in the application does not work as expected. · Qualcosa nell'applicazione non funziona come previsto.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste API keys, `.env` contents or personal data. · Non incollare chiavi API, contenuto del `.env` o dati personali.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened and what you expected · Che cosa è successo e che cosa ti aspettavi
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce · Passi per riprodurre
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, device and language · Browser, dispositivo e lingua
+      placeholder: Firefox 131, Android phone, IT
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Where does it run? · Dove gira?
+      options:
+        - Public deployment · Installazione pubblica
+        - Local, npm run dev · In locale, npm run dev
+        - Local, npm run build && npm start · In locale, build di produzione
+        - Other · Altro
