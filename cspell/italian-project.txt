@@ -1188,6 +1188,7 @@ attribuisce
 attribuiti
 attributi
 attributo
+attribuzione
 attrito
 attua
 attuabile
@@ -3285,6 +3286,7 @@ dannoso
 dare
 darebbe
 darebbero
+dargli
 darsi
 data
 database

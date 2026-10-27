@@ -9713,6 +9713,51 @@ export const DOMAIN_4_QUESTIONS: Question[] = [
     ],
     answerIndex: 0,
     explanation: "La risposta corretta è la **A) Automatizzare l'arricchimento e la chiusura degli avvisi ripetitivi a basso rischio**.\n\n* **Perché è la corretta:** Fra i benefici dell'automazione l'obiettivo 4.7 elenca la **permanenza del personale** (*employee retention*): togliere alle persone il lavoro ripetitivo e noioso riduce il burnout e trattiene chi ha competenze preziose. Lo scenario indica una causa precisa, gli avvisi ripetitivi e la ricerca manuale delle stesse informazioni, e l'automazione la elimina: un playbook raccoglie il contesto da tutte le console e chiude i casi a basso rischio già noti, mentre gli analisti si dedicano alle indagini vere.\n* **Perché le altre non sono corrette:**\n  * **B) Alzare tutte le soglie** riduce gli avvisi ma anche le rilevazioni vere, e non è automazione: aumenta il rischio invece di ridurre il lavoro inutile.\n  * **C) Assumere altri analisti** non è un workforce multiplier, che significa far rendere di più le persone che ci sono. Distribuisce su più persone lo stesso lavoro che le fa andare via.\n  * **D) La rotazione dei turni** cambia gli orari ma non il contenuto del lavoro, che è la causa indicata. Il tempo di reazione, inoltre, non ha a che fare con la permanenza del personale.\n\n* **Trappola d'esame:** le opzioni accoppiano una misura a un beneficio: devono essere giusti **entrambi**. B e C citano benefici reali dell'automazione, ma le misure proposte non sono automazione o non li producono.\n* **Piccolo Esempio Concentrato:** un SOC che automatizza l'arricchimento con reputazione degli IP, geolocalizzazione e storico dell'utente può ridurre di molti minuti il tempo di ogni avviso. Su centinaia di avvisi al giorno, sono ore di lavoro ripetitivo restituite alle indagini."
+  },
+  {
+    id: 429,
+    topic: "Identity & Access Management",
+    level: "APPLICAZIONE",
+    scenario: "Un portale di Kestrelia richiede password e codice di un'app di autenticazione. Dopo il login, un dipendente modifica l'identificativo di una fattura nell'URL della richiesta e visualizza la fattura di un altro cliente, per la quale non ha alcun permesso.",
+    question: "Quale intervento corregge più direttamente il difetto descritto?",
+    options: [
+      "A) Aumentare la lunghezza minima della password",
+      "B) Ridurre la durata della sessione autenticata",
+      "C) Verificare lato server i permessi sulla fattura a ogni richiesta",
+      "D) Nascondere nell'interfaccia l'identificativo della fattura"
+    ],
+    answerIndex: 2,
+    explanation: "La risposta corretta è la **C) Verificare lato server i permessi sulla fattura a ogni richiesta**.\n\n* **Perché è la corretta:** il difetto si manifesta **dopo** l'autenticazione. L'utente è riconosciuto, ma il server non controlla se *quella* identità possa leggere *quella* risorsa: è una falla di autorizzazione (Insecure Direct Object Reference, IDOR). Si corregge imponendo il controllo di autorizzazione lato server a ogni richiesta, che lega l'identità autenticata alla singola fattura e rifiuta la lettura non consentita.\n* **Analisi dei distrattori:**\n  * **A)** Una password più lunga rafforza l'autenticazione, ma il login funziona già: non impedisce a un utente riconosciuto di leggere la fattura altrui.\n  * **B)** Una sessione più breve riduce la finestra d'uso di una sessione rubata, ma durante la sessione legittima l'accesso non autorizzato resta possibile.\n  * **D)** Nascondere l'identificativo nell'interfaccia è sicurezza tramite segretezza: chi costruisce la richiesta direttamente al server aggira il controllo."
+  },
+  {
+    id: 430,
+    topic: "Multi-Factor Authentication",
+    level: "APPLICAZIONE",
+    scenario: "Kestrelia protegge un'applicazione con password e PIN e vuole introdurre una vera autenticazione a più fattori (MFA).",
+    question: "Quale modifica soddisfa il requisito combinando due categorie di fattori diverse?",
+    options: [
+      "A) Aggiungere una domanda segreta a password e PIN",
+      "B) Sostituire il PIN con la prova crittografica di una chiave di sicurezza fisica (FIDO2/WebAuthn)",
+      "C) Sostituire il PIN con una seconda password indipendente",
+      "D) Richiedere di nuovo password e PIN dopo cinque minuti"
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Sostituire il PIN con la prova crittografica di una chiave di sicurezza fisica (FIDO2/WebAuthn)**.\n\n* **Perché è la corretta:** la password è «qualcosa che sai» (conoscenza) e la chiave di sicurezza è «qualcosa che hai» (possesso). Per avere MFA i fattori devono appartenere a **categorie distinte**: è proprio il salto di categoria che la risposta introduce. Password e PIN, invece, sono entrambi conoscenza.\n* **Analisi dei distrattori:**\n  * **A)** La domanda segreta è ancora «qualcosa che sai»: resta un solo fattore, la conoscenza.\n  * **C)** Una seconda password è anch'essa conoscenza: due segreti della stessa categoria non fanno MFA.\n  * **D)** Ripetere gli stessi controlli dopo cinque minuti aggiunge un passaggio, non una categoria di fattore diversa."
+  },
+  {
+    id: 431,
+    topic: "Privileged Access Management",
+    level: "APPLICAZIONE",
+    scenario: "Una consulente di Kestrelia deve amministrare un server per una manutenzione di due ore. L'azienda richiede che ogni attività sia attribuibile alla singola persona e che non resti alcun privilegio amministrativo permanente.",
+    question: "Quale soluzione soddisfa meglio entrambi i requisiti?",
+    options: [
+      "A) Account personale amministrativo permanente con autenticazione a più fattori",
+      "B) Account amministrativo condiviso con cambio password a fine intervento",
+      "C) Account personale amministrativo permanente con registrazione delle attività",
+      "D) Account personale con elevazione Just-in-Time (JIT) di due ore e registrazione delle attività"
+    ],
+    answerIndex: 3,
+    explanation: "La risposta corretta è la **D) Account personale con elevazione Just-in-Time (JIT) di due ore e registrazione delle attività**.\n\n* **Perché è la corretta:** l'account personale rende ogni azione attribuibile alla consulente; l'elevazione Just-in-Time (JIT) concede il privilegio solo per la finestra necessaria e lo fa scadere da solo, così non resta alcun accesso amministrativo permanente; la registrazione permette di ricostruire le attività. La soluzione copre entrambi i vincoli dello scenario.\n* **Analisi dei distrattori:**\n  * **A)** L'identità è individuale e il login è protetto, ma il privilegio amministrativo resta permanente, contro il secondo requisito.\n  * **B)** L'account condiviso impedisce di attribuire le azioni alla singola persona; cambiare la password a fine intervento non equivale alla scadenza automatica del privilegio.\n  * **C)** I log aiutano l'attribuzione, ma i privilegi amministrativi restano permanenti."
   }
 ];
 

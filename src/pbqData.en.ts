@@ -861,4 +861,24 @@ export const PBQ_EN: Record<number, PbqOverride> = {
   },
   explanation: "An internal audit is run by the organization's own staff for management; an external one by an independent third party that issues an attestation. In penetration tests, a known environment gives testers full architecture and credentials (white box), an unknown environment no initial information (black box). Passive reconnaissance gathers data without touching the target (OSINT). Active reconnaissance, a distractor here, queries the target directly with scans: useful, but the opposite of the passive one described.",
 },
+504: {
+  title: "Least privilege: which permissions the script needs",
+  scenario: "A Kestrelia script must read the app.log log file, find the lines with errors, and save the result to report.txt inside a folder dedicated to reports. It must not modify the logs or any other system files. A colleague suggests running it as root «to avoid permission problems».",
+  prompt: "Match each decision to the permission that applies least privilege. Some options are distractors.",
+  prompts: {
+    p_account: "The identity the script runs as.",
+    p_read: "The read permission the task requires.",
+    p_write: "The write permission the task requires.",
+    p_deny: "What the script must not be able to do.",
+  },
+  options: {
+    dedicated: "Run it as a dedicated unprivileged user (for example log_reader)",
+    read_log: "Read the app.log log file",
+    write_report: "Write the report into the results folder",
+    no_change: "Modify the logs or change the system configuration: deny it",
+    root: "Run it as root, so there are no permission problems",
+    full: "Grant read and write on any file in the system",
+  },
+  explanation: "Least privilege grants only the access the task requires. The script should run as a dedicated unprivileged user, may read only app.log and write only the report into its folder; modifying the logs or the system configuration is outside the task and must be denied (deny by default). Running it as root or granting read and write on any file, the two distractors, would make the script work but give it powers it does not need: if it held a bug or were compromised, the damage would be far greater. It is like handing over every key to the building to someone who only needs to read one document in one room.",
+},
 };
