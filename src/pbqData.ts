@@ -1620,4 +1620,32 @@ export const PBQ_SCENARIOS: Pbq[] = [
     explanation:
       "L'audit interno è condotto dal personale dell'organizzazione per la direzione; quello esterno da una terza parte indipendente che rilascia un'attestazione. Nei penetration test l'ambiente noto fornisce ai tester architettura e credenziali complete (white box), l'ambiente ignoto nessuna informazione iniziale (black box). La ricognizione passiva raccoglie dati senza toccare il bersaglio (OSINT). La ricognizione attiva, qui distrattore, interroga direttamente il bersaglio con scansioni: utile, ma è l'opposto di quella passiva descritta.",
   },
+  {
+    id: 504,
+    kind: "control",
+    mechanic: "matching",
+    objective: "4.6",
+    domain: 4,
+    title: "Minimo privilegio: quali permessi servono allo script",
+    scenario:
+      "Uno script di Kestrelia deve leggere il file di log app.log, cercare le righe con errori e salvare il risultato nel file report.txt dentro una cartella dedicata ai report. Non deve modificare i log né altri file del sistema. Un collega propone di eseguirlo come root «per evitare problemi di permessi».",
+    prompt:
+      "Abbina ogni decisione al permesso che applica il minimo privilegio. Alcune opzioni sono distrattori.",
+    prompts: [
+      { id: "p_account", text: "L'identità con cui eseguire lo script.", correctOptionId: "dedicated" },
+      { id: "p_read", text: "Il permesso di lettura necessario al compito.", correctOptionId: "read_log" },
+      { id: "p_write", text: "Il permesso di scrittura necessario al compito.", correctOptionId: "write_report" },
+      { id: "p_deny", text: "Ciò che lo script non deve poter fare.", correctOptionId: "no_change" },
+    ],
+    options: [
+      { id: "dedicated", text: "Eseguirlo con un utente dedicato senza privilegi (per esempio lettore_log)" },
+      { id: "read_log", text: "Leggere il file di log app.log" },
+      { id: "write_report", text: "Scrivere il report nella cartella dei risultati" },
+      { id: "no_change", text: "Modificare i log o cambiare la configurazione del sistema: va negato" },
+      { id: "root", text: "Eseguirlo come root, così non ci sono problemi di permessi" },
+      { id: "full", text: "Concedere lettura e scrittura su qualunque file del sistema" },
+    ],
+    explanation:
+      "Il minimo privilegio concede solo gli accessi che il compito richiede. Lo script va eseguito con un utente dedicato senza privilegi, può leggere soltanto app.log e scrivere soltanto il report nella sua cartella; modificare i log o la configurazione del sistema è estraneo al compito e va negato (deny by default). Eseguirlo come root o dargli lettura e scrittura su qualunque file, i due distrattori, farebbe funzionare lo script ma gli darebbe poteri inutili: se contenesse un errore o venisse compromesso, il danno sarebbe molto maggiore. È come consegnare tutte le chiavi dell'edificio a chi deve solo leggere un documento in una stanza.",
+  },
 ];

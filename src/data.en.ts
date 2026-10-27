@@ -10637,6 +10637,42 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **A) Automate the enrichment and closure of repetitive low-risk alerts**.\n\n* **Why it's correct:** Among the benefits of automation, objective 4.7 lists **employee retention**: taking repetitive, tedious work away from people reduces burnout and keeps those with valuable skills. The scenario gives a precise cause, the repetitive alerts and the manual lookup of the same information, and automation removes it: a playbook gathers the context from every console and closes known low-risk cases, while the analysts focus on real investigations.\n* **Why the others are not correct:**\n  * **B) Raising every threshold** reduces alerts but also true detections, and it is not automation: it increases risk instead of reducing useless work.\n  * **C) Hiring more analysts** is not a workforce multiplier, which means getting more out of the people already there. It spreads over more people the same work that is driving them away.\n  * **D) Shift rotation** changes the hours but not the content of the work, which is the stated cause. Reaction time, moreover, has nothing to do with employee retention.\n\n* **Exam trap:** the options pair a measure with a benefit: **both** must be right. B and C name real benefits of automation, but the proposed measures are not automation or do not produce them.\n* **Focused Mini-Example:** a SOC that automates enrichment with IP reputation, geolocation and user history can cut many minutes from each alert. Over hundreds of alerts a day, that is hours of repetitive work given back to investigations."
   },
+  429: {
+    topic: "Identity & Access Management",
+    scenario: "A Kestrelia portal requires a password and a code from an authenticator app. After logging in, an employee changes the invoice identifier in the request URL and views another customer's invoice, for which they have no permission.",
+    question: "Which action most directly fixes the described flaw?",
+    options: [
+      "A) Increase the minimum password length",
+      "B) Shorten the authenticated session lifetime",
+      "C) Check the invoice permissions server-side on every request",
+      "D) Hide the invoice identifier in the interface"
+    ],
+    explanation: "The correct answer is **C) Check the invoice permissions server-side on every request**.\n\n* **Why it's correct:** the flaw shows up **after** authentication. The user is recognized, but the server does not check whether *that* identity may read *that* resource: this is an authorization flaw (Insecure Direct Object Reference, IDOR). It is fixed by enforcing the authorization check server-side on every request, which ties the authenticated identity to the specific invoice and refuses the unauthorized read.\n* **Analysis of the distractors:**\n  * **A)** A longer password strengthens authentication, but the login already works: it does not stop a recognized user from reading someone else's invoice.\n  * **B)** A shorter session reduces the window for a stolen session, but during the legitimate session the unauthorized access is still possible.\n  * **D)** Hiding the identifier in the interface is security through obscurity: whoever crafts the request directly to the server bypasses the control."
+  },
+  430: {
+    topic: "Multi-Factor Authentication",
+    scenario: "Kestrelia protects an application with a password and a PIN and wants to introduce true multi-factor authentication (MFA).",
+    question: "Which change meets the requirement by combining two different factor categories?",
+    options: [
+      "A) Add a security question to the password and PIN",
+      "B) Replace the PIN with cryptographic proof from a physical security key (FIDO2/WebAuthn)",
+      "C) Replace the PIN with a second independent password",
+      "D) Ask for the password and PIN again after five minutes"
+    ],
+    explanation: "The correct answer is **B) Replace the PIN with cryptographic proof from a physical security key (FIDO2/WebAuthn)**.\n\n* **Why it's correct:** the password is «something you know» (knowledge) and the security key is «something you have» (possession). For MFA the factors must belong to **distinct categories**, and that is exactly the jump this answer introduces. The password and PIN, by contrast, are both knowledge.\n* **Analysis of the distractors:**\n  * **A)** The security question is still «something you know»: it stays a single factor, knowledge.\n  * **C)** A second password is also knowledge: two secrets of the same category are not MFA.\n  * **D)** Repeating the same checks after five minutes adds a step, not a different factor category."
+  },
+  431: {
+    topic: "Privileged Access Management",
+    scenario: "A Kestrelia consultant must administer a server for a two-hour maintenance window. The company requires that every activity be attributable to the individual person and that no permanent administrative privilege remain.",
+    question: "Which solution best meets both requirements?",
+    options: [
+      "A) A permanent personal administrative account with multi-factor authentication",
+      "B) A shared administrative account with a password change at the end of the work",
+      "C) A permanent personal administrative account with activity logging",
+      "D) A personal account with a two-hour Just-in-Time (JIT) elevation and activity logging"
+    ],
+    explanation: "The correct answer is **D) A personal account with a two-hour Just-in-Time (JIT) elevation and activity logging**.\n\n* **Why it's correct:** the personal account makes every action attributable to the consultant; the Just-in-Time (JIT) elevation grants the privilege only for the window needed and lets it expire on its own, so no permanent administrative access remains; the logging allows the activities to be reconstructed. The solution covers both constraints in the scenario.\n* **Analysis of the distractors:**\n  * **A)** The identity is individual and the login is protected, but the administrative privilege stays permanent, against the second requirement.\n  * **B)** The shared account prevents attributing actions to the individual person; changing the password at the end is not the same as the automatic expiry of the privilege.\n  * **C)** Logs help attribution, but the administrative privileges stay permanent."
+  },
   },
 
   5: {
