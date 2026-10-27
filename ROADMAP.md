@@ -51,9 +51,9 @@ e validati in CI.
 |---|---|---|
 | Contenuti e didattica (Security+ / instructional / traduttore) | ✅ | Copertura obiettivi **249/249 provata in entrambe le lingue** (#103) e acronimi 329/329 al 100%; parità IT/EN verde. Appendice sigle corretta (objective code per voce + definizioni funzionali, #102). |
 | Codice ed efficienza (dev / performance) | ✅ | `typecheck`, `lint`, `lint:md` verdi; nessun errore rilevato. Bundle dataset grande ma lazy-split e precompresso (Brotli). |
-| Sicurezza e supply-chain (DevSecOps / privacy) | ✅ | `npm audit` prod+dev: **0 vulnerabilità**. Nessun segreto nel codice. Nessun `</script>` pericoloso in template literal. Dependabot con cooldown 7 giorni attivo. |
+| Sicurezza e supply-chain (DevSecOps / privacy) | ✅ | `npm audit` prod+dev: **0 vulnerabilità** (corrette in sessione 3 segnalazioni transitive — `body-parser`, `undici`, `ip-address` — via `npm audit fix`, sola `package-lock.json`). Nessun segreto nel codice. Nessun `</script>` pericoloso in template literal. L'audit delle dipendenze è ora prodotto mensilmente dal workflow `maintenance.yml` (Dependabot e i workflow CI/security sono stati rimossi dal manutentore). |
 | Accessibilità, UX e visual (a11y / UX / visual) | ✅ | Controlli axe nei test E2E (`@axe-core/playwright`) verdi; navigazione da tastiera testata su desktop e mobile. |
-| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1030** passati (114 file), E2E **163** passati + 1 skip (12 spec), build verde. Nessun test fragile riscontrato in questa sessione. |
+| CI/CD e qualità (QA / DevSecOps) | ✅ | Unit **1026** passati (114 file), build verde, smoke verde (9 controlli). Corretti 2 test obsoleti (`workflows.test.ts`, `conventions.test.ts`) che referenziavano file rimossi (`security.yml`, `dependabot.yml`), senza disabilitarne la logica valida sui workflow residui. |
 | Documentazione e roadmap (technical writer / PM) | ✅ | README bilingui con banner SVG terminale e firma `@chiaraberti13`; CHANGELOG `[Unreleased]` allineato; artefatti `docs/` generati e aggiornati. |
 
 ## Correzioni e attività del mese
