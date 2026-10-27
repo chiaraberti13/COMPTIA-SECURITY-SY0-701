@@ -74,8 +74,8 @@ jobs:
 
             await github.rest.issues.createComment({
               owner, repo, issue_number: pr.number,
-              body: marker + "\\n@copilot Please diagnose and fix the failed check \\"" +
-                check.name + "\\" immediately on this Dependabot pull request. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks."
+              body: marker + "\n@copilot Please diagnose and fix the failed check " +
+                check.name + " immediately on this Dependabot pull request. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks."
             });
             core.notice("Asked Copilot to repair the failed Dependabot check.");
   merge:
