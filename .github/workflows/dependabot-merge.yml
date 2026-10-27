@@ -24,8 +24,6 @@ on:
   workflow_run:
     workflows: [CI, Security, Docs]
     types: [completed]
-  check_run:
-    types: [completed]
 
 permissions: {}
 
@@ -34,62 +32,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-
-  repair:
-    if: >-
-      github.event_name == 'check_run' &&
-      github.event.check_run.conclusion == 'failure' &&
-      github.event.check_run.name != 'repair' &&
-      github.event.check_run.name != 'Repair failed Dependabot check'
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: read
-    steps:
-      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
-        with:
-          script: |
-            const check = context.payload.check_run;
-            const { owner, repo } = context.repo;
-            const prs = await github.paginate(github.rest.pulls.list, {
-              owner, repo, state: "open", per_page: 100
-            });
-            const pr = prs.find(item =>
-              item.user.login === "dependabot[bot]" &&
-              item.head.sha === check.head_sha
-            );
-            if (!pr) {
-              core.notice("No open Dependabot pull request matches this failed check.");
-              return;
-            }
-
-            const marker = "<!-- dependabot-auto-repair:" + check.head_sha + " -->";
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner, repo, issue_number: pr.number, per_page: 100
-            });
-            if (comments.some(comment => comment.body?.includes(marker))) {
-              core.notice("A repair request already exists for this commit.");
-              return;
-            }
-
-            await github.rest.issues.createComment({
-              owner, repo, issue_number: pr.number,
-              body: marker + "\n@copilot Please diagnose and fix the failed check " +
-                check.name + " immediately on this Dependabot pull request. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks."
-            });
-            core.notice("Asked Copilot to repair the failed Dependabot check.");
   merge:
     name: Merge when every check is green
     if: >-
       github.event.workflow_run.event == 'pull_request' &&
-      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       checks: read
       actions: write
-      issues: write
     steps:
       - name: Check the pull request and its checks, then merge
         env:
@@ -118,18 +72,8 @@ jobs:
           for workflow in CI Security Docs; do
             conclusion="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$HEAD_SHA&event=pull_request" \
               --jq "[.workflow_runs[] | select(.name == \"$workflow\")] | sort_by(.created_at) | last | .conclusion // \"missing\"")"
-            if [ "$conclusion" = failure ]; then
-              marker="<!-- dependabot-auto-repair:$HEAD_SHA -->"
-              comments="$(gh api "repos/$GH_REPO/issues/$pr/comments?per_page=100" --paginate --jq '.[].body')"
-              if ! printf '%s' "$comments" | grep -Fq "$marker"; then
-                gh api "repos/$GH_REPO/issues/$pr/comments" \
-                  -f body="$marker @copilot Please diagnose and fix the failing checks on this Dependabot pull request immediately. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks. Failed workflow: $workflow."
-              fi
-              echo "$workflow on #$pr failed; requested a targeted Copilot repair."
-              exit 0
-            fi
             if [ "$conclusion" != success ]; then
-              echo "$workflow on #$pr: $conclusion; waiting for remaining checks."; exit 0
+              echo "$workflow on #$pr: $conclusion. The last workflow to finish will try again."; exit 0
             fi
           done
           # ...and no check run on it is pending or failed.
