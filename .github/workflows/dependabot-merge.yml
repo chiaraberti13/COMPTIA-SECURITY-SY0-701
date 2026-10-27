@@ -73,21 +73,11 @@ jobs:
             conclusion="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$HEAD_SHA&event=pull_request" \
               --jq "[.workflow_runs[] | select(.name == \"$workflow\")] | sort_by(.created_at) | last | .conclusion // \"missing\"")"
             if [ "$conclusion" = failure ]; then
-              failed_checks="$(gh api "repos/$GH_REPO/commits/$HEAD_SHA/check-runs?per_page=100" --paginate \
-                --jq '[.check_runs[] | select(.status == "completed" and .conclusion == "failure") | .name] | unique | join(", ")')"
               marker="<!-- dependabot-auto-repair:$HEAD_SHA -->"
-              existing="$(gh api "repos/$GH_REPO/issues/$pr/comments?per_page=100" --paginate \
-                --jq "[.[] | select(.body | contains(\"$marker\"))] | length")"
-              if [ "$existing" = "0" ]; then
-                attempts="$(gh api "repos/$GH_REPO/issues/$pr/comments?per_page=100" --paginate \
-                  --jq '[.[] | select(.body | contains("<!-- dependabot-auto-repair:"))] | length')"
-                if [ "$attempts" -lt 2 ]; then
-                  body="$marker
-@copilot Please diagnose and fix the failing checks on this Dependabot pull request immediately. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks. Failed workflow: $workflow. Failed checks: ${failed_checks:-$workflow run failed; inspect its logs}."
-                  gh api "repos/$GH_REPO/issues/$pr/comments" -f body="$body"
-                else
-                  echo "Automatic repair limit reached for #$pr; leaving it open."
-                fi
+              comments="$(gh api "repos/$GH_REPO/issues/$pr/comments?per_page=100" --paginate --jq '.[].body')"
+              if ! printf '%s' "$comments" | grep -Fq "$marker"; then
+                gh api "repos/$GH_REPO/issues/$pr/comments" \
+                  -f body="$marker @copilot Please diagnose and fix the failing checks on this Dependabot pull request immediately. Make only a targeted correction on this PR branch, do not disable or bypass checks, and rerun the affected checks. Failed workflow: $workflow."
               fi
               echo "$workflow on #$pr failed; requested a targeted Copilot repair."
               exit 0
