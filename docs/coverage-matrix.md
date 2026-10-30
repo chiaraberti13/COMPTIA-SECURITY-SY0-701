@@ -33,7 +33,7 @@ Peso d'esame 22% · 133 domande nel banco del dominio.
 
 ## Dominio 3 — Architettura di sicurezza
 
-Peso d'esame 18% · 112 domande nel banco del dominio.
+Peso d'esame 18% · 114 domande nel banco del dominio.
 
 | Obiettivo | Risultato atteso | Domande | R | C | Ap | An | Esercizi guidati | Fonti |
 |---|---|---|---|---|---|---|---|---|

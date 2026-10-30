@@ -8425,6 +8425,30 @@ export const QUESTION_EN: Record<number, Record<number, QuestionOverride>> = {
     ],
     explanation: "The correct answer is **D) Jump server**.\n\n* **Why it's correct:** A **jump server** (also known as a jump host or bastion host) is an intermediary server through which administrators connect to other servers. This layer provides a means of controlled access, reducing the exposure of the underlying infrastructure: administrators connect first to the jump server, then from there to the target servers, without directly exposing the latter to the Internet.\n* **Analysis of the distractors:**\n  * **A) The proxy server** mainly acts as an intermediary for client requests toward server resources, focusing on the control and optimization of Internet traffic, not on secure administrative access to internal servers.\n  * **B) The firewall** filters inbound and outbound traffic based on configured policies; it is not designed to provide an intermediary access point for administrative management.\n  * **C) The VPN** creates secure encrypted connections for remote access, but does not provide the centralized control and auditing of administrative sessions that a jump server offers.\n\n* **Focused Mini-Example:** Kelly Innovations configures a jump server (bastion host) in a DMZ: all administrators SSH first to the jump server (`ssh admin@jumphost.kelly.example`), then from there to the internal servers (`ssh server-prod-01`). The jump server logs every session (complete audit trail), has mandatory MFA, and the internal servers' SSH ports are accessible ONLY from the jump server's IP. If an administrator's credentials are compromised, the attacker can access only the jump server, not directly the production servers.",
   },
+  584: {
+    topic: "Backup & Recovery",
+    scenario: "Kestrelia's logistics application goes down because of a fault at **09:15** and becomes fully usable again at **10:45**. The last recoverable data point is from **08:55**, and there is no other source to recover the operations after it. For this service the company BIA set an RTO of two hours and an RPO of ten minutes.",
+    question: "How should the two objectives be judged against this recovery?",
+    options: [
+      "A) Both objectives are met.",
+      "B) The recovery time is within the RTO, but the data loss exceeds the RPO.",
+      "C) The data loss is within the RPO, but the recovery time exceeds the RTO.",
+      "D) Neither objective is met."
+    ],
+    explanation: "The correct answer is **B) The recovery time is within the RTO, but the data loss exceeds the RPO**.\n\n* **Why it's correct:** the two measures must be computed separately. The **recovery time** runs from the outage to the service being usable again: 10:45 − 09:15 = **90 minutes**, within the two hours (120 minutes) of the RTO. The **data-loss window** runs from the last recoverable point to the outage: 09:15 − 08:55 = **20 minutes**, and because there is no other source it exceeds the **10 minutes** of the RPO. One objective is met, the other is not.\n* **Analysis of the distractors:**\n  * **A)** ignores that the 20 minutes of missing data exceed the 10-minute RPO.\n  * **C)** swaps the two results: it is the recovery time that stays within the limit, not the data loss.\n  * **D)** treats the recovery time as failed too, when it actually stays within the two hours.\n\n* **Focused Mini-Example:** meeting one objective does not imply meeting the other. Here the service comes back quickly enough (RTO met) yet still loses too much work (RPO exceeded): tightening the RPO means making the recovery points more recent, a change distinct from shortening the restart time.",
+  },
+  585: {
+    topic: "Backup & Recovery",
+    scenario: "A Kestrelia booking application has an RTO of sixty minutes and an RPO of fifteen minutes. Recovery tests show recovery points at most eight minutes from the outage, but making the service usable again takes a hundred minutes, because the environment has to be rebuilt and configured by hand.",
+    question: "Which action directly addresses the objective that is not being met?",
+    options: [
+      "A) Pre-stage the recovery environment and automate the restart, then measure the recovery time again.",
+      "B) Create recovery points every five minutes without changing the restart procedure.",
+      "C) Keep several months of backups while leaving the restart times unchanged.",
+      "D) Add a second data replica without touching the restart procedure."
+    ],
+    explanation: "The correct answer is **A) Pre-stage the recovery environment and automate the restart, then measure the recovery time again**.\n\n* **Why it's correct:** first identify which threshold is exceeded. The recoverable data is at most eight minutes old, within the fifteen-minute RPO: the data objective is met. It is the hundred minutes of restart that exceed the sixty-minute RTO. The action must therefore target the **recovery time**: an environment already prepared, an automated procedure, and a fresh measurement proving it stays within sixty minutes.\n* **Analysis of the distractors:**\n  * **B)** improves an RPO that is already met and does nothing about the slow procedure.\n  * **C)** extends the history kept but leaves the restart time unchanged.\n  * **D)** adds a copy of the data without demonstrating any reduction in recovery time.\n\n* **Focused Mini-Example:** automation alone does not guarantee reaching sixty minutes; the new process must be tested and measured. A stated RTO holds only when a recovery test confirms it.",
+  },
   },
   4: {
   11: {

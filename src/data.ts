@@ -11437,6 +11437,36 @@ export const DOMAIN_3_QUESTIONS: Question[] = [
     ],
     answerIndex: 3,
     explanation: "La risposta corretta è la **D) Jump server**.\n\n* **Perché è la corretta:** Un **jump server** (noto anche come jump host o bastion host) è un server intermediario attraverso cui gli amministratori si connettono ad altri server. Questo strato fornisce un mezzo di accesso controllato, riducendo l'esposizione dell'infrastruttura sottostante: gli amministratori si connettono prima al jump server, poi da lì ai server target, senza esporre direttamente questi ultimi a internet.\n* **Analisi dei distrattori:**\n  * **A) Il proxy server** funge principalmente da intermediario per le richieste dei client verso risorse server, con focus sul controllo e ottimizzazione del traffico internet, non sull'accesso amministrativo sicuro ai server interni.\n  * **B) Il firewall** filtra il traffico in entrata e uscita in base a policy configurate, non è progettato per fornire un punto di accesso intermediario per la gestione amministrativa.\n  * **C) La VPN** crea connessioni cifrate sicure per l'accesso remoto, ma non fornisce il controllo centralizzato e l'auditing delle sessioni amministrative che un jump server offre.\n\n* **Piccolo Esempio Concentrato:** Kelly Innovations configura un jump server (bastion host) in una DMZ: tutti gli amministratori SSH prima al jump server (`ssh admin@jumphost.kelly.example`), poi da lì ai server interni (`ssh server-prod-01`). Il jump server registra ogni sessione (audit trail completo), ha MFA obbligatoria, e le porte SSH dei server interni sono accessibili SOLO dall'IP del jump server. Se le credenziali di un amministratore vengono compromesse, l'attaccante può accedere solo al jump server, non direttamente ai server di produzione."
+  },
+  {
+    id: 584,
+    topic: "Backup & Recovery",
+    level: "ANALISI",
+    scenario: "Il gestionale della logistica di Kestrelia si interrompe per un guasto alle **09:15** e torna pienamente utilizzabile alle **10:45**. L'ultimo punto di dati recuperabile risale alle **08:55** e non esistono altre fonti da cui recuperare le operazioni successive. Per questo servizio la BIA aziendale ha fissato un RTO di due ore e un RPO di dieci minuti.",
+    question: "Come vanno valutati i due obiettivi rispetto a questo ripristino?",
+    options: [
+      "A) Entrambi gli obiettivi sono rispettati.",
+      "B) Il tempo di ripristino rientra nell'RTO, ma la perdita di dati supera l'RPO.",
+      "C) La perdita di dati rientra nell'RPO, ma il tempo di ripristino supera l'RTO.",
+      "D) Nessuno dei due obiettivi è rispettato."
+    ],
+    answerIndex: 1,
+    explanation: "La risposta corretta è la **B) Il tempo di ripristino rientra nell'RTO, ma la perdita di dati supera l'RPO**.\n\n* **Perché è la corretta:** le due misure vanno calcolate separatamente. Il **tempo di ripristino** va dall'interruzione alla riattivazione: 10:45 − 09:15 = **90 minuti**, entro le due ore (120 minuti) dell'RTO. La **finestra di dati persi** va dall'ultimo punto recuperabile all'interruzione: 09:15 − 08:55 = **20 minuti**, e poiché non esistono altre fonti supera i **10 minuti** dell'RPO. Un obiettivo è raggiunto, l'altro no.\n* **Analisi dei distrattori:**\n  * **A)** ignora che i 20 minuti di dati mancanti superano l'RPO di 10 minuti.\n  * **C)** inverte i due risultati: è il tempo di ripristino a rientrare nel limite, non la perdita di dati.\n  * **D)** considera fallito anche il tempo di ripristino, che invece resta dentro le due ore.\n\n* **Piccolo Esempio Concentrato:** rispettare un obiettivo non implica rispettare l'altro. Qui si riparte abbastanza in fretta (RTO soddisfatto) ma si perde comunque troppo lavoro (RPO superato): per ridurre l'RPO occorre rendere più recenti i punti di recupero, un intervento distinto da quello che accorcia i tempi di riattivazione."
+  },
+  {
+    id: 585,
+    topic: "Backup & Recovery",
+    level: "ANALISI",
+    scenario: "Un'applicazione di prenotazioni di Kestrelia ha un RTO di sessanta minuti e un RPO di quindici minuti. Le prove di ripristino mostrano punti di recupero distanti al massimo otto minuti dall'interruzione, ma per rendere di nuovo utilizzabile il servizio servono cento minuti, perché l'ambiente va ricostruito e configurato a mano.",
+    question: "Quale intervento affronta direttamente l'obiettivo non rispettato?",
+    options: [
+      "A) Preparare in anticipo l'ambiente di ripristino e automatizzare la riattivazione, poi misurare di nuovo il tempo di recupero.",
+      "B) Creare punti di recupero ogni cinque minuti senza modificare la procedura di riattivazione.",
+      "C) Conservare diversi mesi di backup lasciando invariati i tempi di riattivazione.",
+      "D) Aggiungere una seconda replica dei dati senza intervenire sulla procedura di riattivazione."
+    ],
+    answerIndex: 0,
+    explanation: "La risposta corretta è la **A) Preparare in anticipo l'ambiente di ripristino e automatizzare la riattivazione, poi misurare di nuovo il tempo di recupero**.\n\n* **Perché è la corretta:** prima si individua quale soglia è superata. I dati recuperabili distano al massimo otto minuti, dentro l'RPO di quindici: l'obiettivo sui dati è rispettato. Sono i cento minuti di riattivazione a superare l'RTO di sessanta. L'intervento deve quindi agire sul **tempo di ripristino**: ambiente già predisposto, procedura automatizzata e una nuova misurazione che dimostri di rientrare nei sessanta minuti.\n* **Analisi dei distrattori:**\n  * **B)** migliora un RPO che è già rispettato e non tocca la procedura lenta.\n  * **C)** estende lo storico disponibile ma lascia invariato il tempo di riattivazione.\n  * **D)** aggiunge una copia dei dati senza dimostrare alcuna riduzione del tempo di ripristino.\n\n* **Piccolo Esempio Concentrato:** automatizzare non garantisce da solo di arrivare a sessanta minuti; il nuovo processo va provato e misurato. Un RTO dichiarato vale solo quando una prova di ripristino lo conferma."
   }
 ];
 

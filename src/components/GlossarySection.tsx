@@ -44,6 +44,15 @@ export interface GlossaryTerm {
 }
 
 /**
+ * Lower-cases and strips diacritics so the search matches regardless of
+ * accents: an Italian learner who types "integrita" or "disponibilita" still
+ * finds "Integrità" and "Disponibilità". Decomposing to NFD separates each
+ * accent into a combining mark (U+0300–U+036F) that is then removed.
+ */
+const foldText = (value: string): string =>
+  value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+/**
  * Per-domain accent colours for badges and filter pills.
  * Domain names are not stored here: they come from the i18n dictionary
  * (`glossDom.<id>.title` / `.short`) so they follow the active language.
@@ -328,14 +337,14 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
       if (onlyAcronyms && !item.isAcronym) return false;
       if (onlyBookmarks && !bookmarkedIds.includes(item.id)) return false;
 
-      // Search term
+      // Search term (accent-insensitive: see foldText)
       if (searchTerm.trim() !== "") {
-        const query = searchTerm.toLowerCase().trim();
-        const matchName = item.term.toLowerCase().includes(query);
-        const matchDef = item.definition.toLowerCase().includes(query);
-        const matchDet = item.details.toLowerCase().includes(query);
-        const matchGroup = item.groupTitle.toLowerCase().includes(query);
-        const matchTip = item.examTip ? item.examTip.toLowerCase().includes(query) : false;
+        const query = foldText(searchTerm.trim());
+        const matchName = foldText(item.term).includes(query);
+        const matchDef = foldText(item.definition).includes(query);
+        const matchDet = foldText(item.details).includes(query);
+        const matchGroup = foldText(item.groupTitle).includes(query);
+        const matchTip = item.examTip ? foldText(item.examTip).includes(query) : false;
 
         return matchName || matchDef || matchDet || matchGroup || matchTip;
       }
