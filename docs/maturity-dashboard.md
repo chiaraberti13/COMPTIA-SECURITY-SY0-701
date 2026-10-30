@@ -25,7 +25,7 @@ e livello cognitivo in [`docs/coverage-matrix.md`](coverage-matrix.md).
 
 | Indicatore | Valore | Obiettivo | Stato |
 |---|---|---|---|
-| Domande attive nella banca | 685 (D1 110, D2 133, D3 112, D4 188, D5 142) | crescente, nessuna regressione | ✅ raggiunto |
+| Domande attive nella banca | 687 (D1 110, D2 133, D3 114, D4 188, D5 142) | crescente, nessuna regressione | ✅ raggiunto |
 | Obiettivi ufficiali coperti da domande | 28 / 28 | 28 / 28 | ✅ raggiunto |
 | Domande per l'obiettivo più scoperto | 15 (1.1: 15, 4.4: 16, 2.3: 17) | ≥ 10 | ✅ raggiunto |
 | Guide di dominio complete | 5 / 5 | 5 / 5 | ✅ raggiunto |
@@ -102,7 +102,7 @@ segnala le traduzioni inglesi da rileggere dopo una modifica al testo italiano.
 |---|---|---|---|
 | Lingua sorgente di verità | Italiano, con overlay inglese e fallback | parità verificata a ogni commit | ✅ raggiunto |
 | Concetti (sottovoci) tradotti e in parità | 618 | 100% | ✅ raggiunto |
-| Domande tradotte e in parità | 685 | 100% | ✅ raggiunto |
+| Domande tradotte e in parità | 687 | 100% | ✅ raggiunto |
 
 | Gate di parità | File | Stato |
 |---|---|---|
