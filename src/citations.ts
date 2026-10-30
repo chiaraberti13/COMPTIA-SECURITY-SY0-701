@@ -43,6 +43,7 @@ export const MENTIONS: [SourceId, RegExp][] = [
 
   ["owaspSession", /Session Management Cheat Sheet/],
   ["mdnCookies", /MDN Set-Cookie/],
+  ["owaspSqli", /SQL Injection Prevention Cheat Sheet/],
   ["owaspXss", /XSS Prevention Cheat Sheet/],
   ["owaspCsrf", /CSRF Prevention Cheat Sheet/],
   ["owaspSsrf", /SSRF Prevention Cheat Sheet/],
@@ -99,6 +100,8 @@ export const CONCEPT_CITATIONS: Partial<Record<ConceptRef, Citation[]>> = {
   "2:SessionHijackingAttack": [{ source: "owaspSession" }],
   "2:ReplayAttack": [{ source: "owaspSession" }, { source: "nist80063b" }],
   "2:CookieHeaderTampering": [{ source: "owaspSession" }, { source: "mdnCookies" }],
+  "2:SQLi_New": [{ source: "owaspSqli" }, { source: "owaspXss" }],
+  "3:SanitizationSec_New": [{ source: "owaspSqli" }, { source: "owaspXss" }],
   "2:XSSAttack": [{ source: "owaspXss" }],
   "2:CSRFAttack": [{ source: "owaspCsrf" }],
   "2:SSRFAttack": [{ source: "owaspSsrf" }],
