@@ -38,7 +38,7 @@ Nessuna.
 
 ## Fonti delle affermazioni normative
 
-93 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
+95 concetti nominano una legge, uno standard o un sistema di punteggio; ognuno cita il documento,
 e l'articolo quando il testo afferma una regola precisa. Le citazioni sono in `src/citations.ts` e
 compaiono sotto ogni concetto nell'area di studio; il controllo settimanale dei link verifica gli
 indirizzi qui sotto.
@@ -79,6 +79,7 @@ indirizzi qui sotto.
 - `2:LegacyEOLVuln`: [Cisco — End-of-Life Policy](https://www.cisco.com/c/en/us/products/eos-eol-policy.html)
 - `2:ReplayAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html); [SP 800-63B — Digital Identity Guidelines: Authentication and Authenticator Management](https://csrc.nist.gov/pubs/sp/800/63/b/4/final)
 - `2:SessionHijackingAttack`: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
+- `2:SQLi_New`: [SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html); [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - `2:SSRFAttack`: [SSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html)
 - `2:WiFiDeauthAttack`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `2:WiFiJammingAttack`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
@@ -93,6 +94,7 @@ indirizzi qui sotto.
 - `3:PEAP`: [Certificate requirements for EAP-TLS and PEAP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/certificate-requirements-eap-tls-peap); [Wi-Fi settings for Windows devices in Microsoft Intune](https://learn.microsoft.com/en-us/mem/intune/configuration/wi-fi-settings-windows)
 - `3:ProtectedManagementFrames`: [IEEE Std 802.11-2020 — Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications](https://standards.ieee.org/ieee/802.11/7028/); [Wi-Fi Alliance — WPA3 Specification and security](https://www.wi-fi.org/discover-wi-fi/security)
 - `3:SaaSCloud`: [ISO/IEC 27001 — Information security management systems](https://www.iso.org/standard/27001); [SOC 2 — Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- `3:SanitizationSec_New`: [SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html); [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - `3:TLSTerminationOffload`: [RFC 8446 — The Transport Layer Security (TLS) Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc8446)
 - `3:TokenizationSec`: [PCI Data Security Standard](https://www.pcisecuritystandards.org/standards/pci-dss/)
 - `3:WAFFire`: [OWASP Top 10](https://owasp.org/www-project-top-ten/)

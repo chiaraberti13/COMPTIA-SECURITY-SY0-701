@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Clarified SQL injection defenses, HTML sanitization and question 310 in IT/EN: bind SQL values, encode plain-text output for its context and keep input validation complementary. Preserved existing identifiers and quiz structure.
+- Chiarite le difese SQL injection, la sanitizzazione HTML e la domanda 310 in IT/EN: valori SQL associati come parametri, codifica contestuale del testo in uscita e validazione complementare. Preservati identificatori e struttura dei quiz.
+
 - Evaluated the pending major dependency upgrades (review backlog). Adopted `motion` 13 → 14 (the `motion/react` APIs in use are unchanged; typecheck, lint, build, unit, E2E and `npm audit` all green) and `@types/node` 22 → 24, aligned with the project's Node target (`.nvmrc` 24, `engines ^22.13.0 || >=24`) rather than the newer 26 that would type against an unsupported runtime. Deferred TypeScript 7.0 with a concrete reason: `typescript-eslint` does not yet support TS 7 (typescript-eslint#10940, needs ≥ 7.1). Pinned these decisions in `.github/dependabot.yml`.
 - Valutati i major upgrade di dipendenze ancora in sospeso (backlog di revisione). Adottati `motion` 13 → 14 (le API `motion/react` usate sono invariate; verdi typecheck, lint, build, unit, E2E e `npm audit`) e `@types/node` 22 → 24, allineato al target Node del progetto (`.nvmrc` 24, `engines ^22.13.0 || >=24`) invece del più recente 26 che tipizzerebbe contro un runtime non supportato. Rinviato TypeScript 7.0 con motivo concreto: `typescript-eslint` non supporta ancora TS 7 (typescript-eslint#10940, serve ≥ 7.1). Decisioni fissate in `.github/dependabot.yml`.
 
