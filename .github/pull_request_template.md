@@ -17,18 +17,18 @@
 - [ ] New interactions work with the keyboard and are labelled in both languages · Le nuove interazioni funzionano da tastiera e hanno etichette in entrambe le lingue
 - [ ] `CHANGELOG.md` updated under *Unreleased*; `ROADMAP.md` updated if an item changed state · `CHANGELOG.md` aggiornato in *Unreleased*; `ROADMAP.md` aggiornato se una voce ha cambiato stato
 
-## Verifica comune
+## Common checks
 
-- [ ] Ho descritto il problema, la soluzione e il riferimento alla issue o alla roadmap, se pertinente.
-- [ ] Ho indicato comandi o passi delle verifiche, risultati e controlli non eseguiti con il motivo.
-- [ ] Ho valutato sicurezza, privacy, accessibilità e compatibilità, spiegando gli aspetti non applicabili.
-- [ ] Ho aggiornato la documentazione e le lingue interessate dalla modifica.
-- [ ] I dati di esempio sono sintetici e non includono credenziali o dati personali.
+- [ ] Described the problem, solution and relevant issue or roadmap item.
+- [ ] Listed verification commands or steps, outcomes and omitted checks with reasons.
+- [ ] Considered security, privacy, accessibility and compatibility; explained non-applicable aspects.
+- [ ] Updated English documentation and both READMEs where affected.
+- [ ] Used synthetic examples without credentials or personal data.
 
-### Evidenze e limiti
+### Evidence and limitations
 
-<!-- Riporta qui risultati concreti; non dichiarare superate verifiche non eseguite. -->
+<!-- Report actual outcomes; do not claim checks that were not performed. -->
 
-### Compatibilità e ripristino
+### Compatibility and rollback
 
-<!-- Indica eventuali migrazioni e come annullare la modifica, oppure perché non applicabile. -->
+<!-- Explain migrations and how to revert, or why not applicable. -->

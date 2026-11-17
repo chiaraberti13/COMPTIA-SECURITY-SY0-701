@@ -8,6 +8,8 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Standardized community documents and issue/PR forms in English while preserving both README editions and bilingual study content.
+
 - Uniformate le indicazioni della comunità e aggiunti dichiarazione e modulo di segnalazione per l'accessibilità; mantenuti i template didattici e le istruzioni specifiche.
 - Standardized community guidance and added an accessibility statement and reporting form, preserving study templates and project-specific instructions.
 

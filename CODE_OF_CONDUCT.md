@@ -1,16 +1,10 @@
 # Code of Conduct · Codice di condotta
 
-[English](#english) · [Italiano](#italiano)
-
----
-
-## English
-
 This project helps anyone prepare for the CompTIA Security+ exam and understand information
 security. Everyone who takes part (with an issue, a pull request, a review or a comment) commits
 to making it a place where learning is safe, beginners included.
 
-### What we expect
+## What we expect
 
 - Respect for people, including when criticising content or code: discuss the idea, not whoever
   proposed it.
@@ -19,7 +13,7 @@ to making it a place where learning is safe, beginners included.
 - Ethics: offensive knowledge and techniques are discussed only to defend systems you own or are
   authorised to test, as set out in the [rules of engagement of the labs](labs/README.md).
 
-### What is not acceptable
+## What is not acceptable
 
 - Insults, harassment, discriminatory or sexualised comments, personal attacks.
 - Publishing other people's personal data without their consent.
@@ -27,7 +21,7 @@ to making it a place where learning is safe, beginners included.
   authorisation, distribute malware or stolen credentials.
 - Carrying on after someone has asked you to stop.
 
-### How to report
+## How to report
 
 - Offensive content in issues, pull requests or comments: use GitHub's **Report content** feature
   (the "…" menu on the comment) and, if you wish, tell the maintainer privately through the
@@ -42,47 +36,6 @@ discussions. It is inspired by the [Contributor Covenant](https://www.contributo
 
 ---
 
-## Italiano
+## Reporting and enforcement
 
-Questo progetto aiuta chiunque a prepararsi all'esame CompTIA Security+ e a capire la sicurezza
-informatica. Chi partecipa (con una issue, una pull request, una revisione o un commento) si
-impegna a renderlo un luogo in cui imparare è sicuro, anche per chi è alle prime armi.
-
-### Che cosa ci aspettiamo
-
-- Rispetto per le persone, anche quando si critica un contenuto o un pezzo di codice: si discute
-  l'idea, non chi l'ha proposta.
-- Pazienza con chi inizia: una domanda di base è una domanda legittima.
-- Precisione e onestà: citare le fonti, dire quando non si è sicuri, riconoscere un errore.
-- Etica: conoscenze e tecniche offensive si discutono solo per difendere sistemi propri o
-  autorizzati, come stabilito dalle [regole d'ingaggio dei laboratori](labs/README.md).
-
-### Che cosa non è accettabile
-
-- Insulti, molestie, commenti discriminatori o sessualizzati, attacchi personali.
-- Pubblicare dati personali di altri senza il loro consenso.
-- Chiedere o fornire aiuto per attaccare sistemi di terzi, aggirare controlli senza
-  autorizzazione, distribuire malware o credenziali rubate.
-- Insistere dopo che qualcuno ha chiesto di smettere.
-
-### Come segnalare
-
-- Contenuti offensivi in issue, pull request o commenti: usa la funzione **Report content** di
-  GitHub (il menu «…» sul commento) e, se vuoi, avvisa in privato chi mantiene il progetto tramite
-  il profilo GitHub [@chiaraberti13](https://github.com/chiaraberti13).
-- Una vulnerabilità di sicurezza non è una questione di condotta: segui [`SECURITY.md`](SECURITY.md).
-
-Le segnalazioni sono trattate con riservatezza. Chi mantiene il progetto può modificare o
-rimuovere commenti, chiudere discussioni e, nei casi gravi o ripetuti, escludere una persona dal
-progetto, spiegando la decisione.
-
-Questo codice vale in tutti gli spazi del progetto: repository, issue, pull request e discussioni.
-È ispirato al [Contributor Covenant](https://www.contributor-covenant.org/).
-
----
-
-## Segnalazioni e gestione
-
-La manutentrice del repository, [Chiara Berti](https://github.com/chiaraberti13), gestisce le segnalazioni relative alla partecipazione al progetto. Usa le funzioni di segnalazione di GitHub sul contenuto interessato per abusi sulla piattaforma; per il confronto con la manutentrice usa un contatto privato già verificato. Se non disponi di un contatto, puoi chiedere soltanto come raggiungerla tramite una issue, senza descrivere pubblicamente persone, accuse o informazioni riservate.
-
-Le segnalazioni vengono valutate nel contesto, limitando la diffusione delle informazioni alle persone necessarie. Le misure possono comprendere una richiesta di modifica, la rimozione del contenuto o limitazioni alla partecipazione, proporzionate al comportamento. È possibile chiedere un riesame fornendo elementi aggiuntivi. Per vulnerabilità tecniche consulta [SECURITY.md](SECURITY.md).
+Report incidents privately through a verified contact published by the repository owner. If none is available, request a private contact without publishing incident details. Do not post private evidence or personal information publicly. The maintainer reviews reports, considers context and may request changes, remove content or restrict participation. Information is shared only as needed to investigate and respond; absolute confidentiality cannot be guaranteed.
