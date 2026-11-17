@@ -1,4 +1,4 @@
-# Code of Conduct · Codice di condotta
+# Code of Conduct
 
 This project helps anyone prepare for the CompTIA Security+ exam and understand information
 security. Everyone who takes part (with an issue, a pull request, a review or a comment) commits
