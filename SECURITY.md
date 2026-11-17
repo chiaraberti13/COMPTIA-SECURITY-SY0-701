@@ -62,3 +62,12 @@ Indica versione o commit interessato, impatto, passaggi riproducibili o una prov
 ### Ambito e uso responsabile
 
 Questa policy copre il repository. Esegui test esclusivamente su sistemi e dati di tua proprietà o per i quali possiedi un’autorizzazione esplicita. Sono esclusi denial of service, accesso a dati di terzi, degrado dei servizi e social engineering. Questa policy non autorizza test su infrastrutture di terzi.
+
+## Percorso operativo di segnalazione
+
+1. Consulta [la sezione sicurezza del repository](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/security) e usa la funzione di segnalazione privata se disponibile. La presenza di questo documento non implica che tale funzione sia abilitata.
+2. Se la funzione non è disponibile, usa un canale privato già verificato con la manutentrice. In assenza di un contatto, chiedi soltanto l'attivazione di un canale riservato in una issue, senza dettagli tecnici, nomi di soggetti coinvolti o allegati sensibili. Se le issue sono disabilitate, usa un contatto verificato già disponibile; attendi un canale riservato prima di condividere dettagli.
+3. Nel canale riservato indica versione o commit, componente, impatto, prerequisiti, riproduzione minima con dati sintetici ed eventuale mitigazione.
+4. Concorda la pubblicazione dei dettagli dopo la valutazione e la correzione. Restano valide le eventuali tempistiche specifiche già indicate sopra; questa integrazione non introduce nuove garanzie sui tempi.
+
+I bug ordinari e le richieste di accessibilità possono usare i modelli delle issue. Non allegare credenziali, dati di produzione o dati personali, neppure ai report tecnici quando non necessari.

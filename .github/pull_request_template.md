@@ -16,3 +16,19 @@
 - [ ] Saved progress stays compatible, or a tested migration is included · I progressi salvati restano compatibili, oppure è inclusa una migrazione testata
 - [ ] New interactions work with the keyboard and are labelled in both languages · Le nuove interazioni funzionano da tastiera e hanno etichette in entrambe le lingue
 - [ ] `CHANGELOG.md` updated under *Unreleased*; `ROADMAP.md` updated if an item changed state · `CHANGELOG.md` aggiornato in *Unreleased*; `ROADMAP.md` aggiornato se una voce ha cambiato stato
+
+## Verifica comune
+
+- [ ] Ho descritto il problema, la soluzione e il riferimento alla issue o alla roadmap, se pertinente.
+- [ ] Ho indicato comandi o passi delle verifiche, risultati e controlli non eseguiti con il motivo.
+- [ ] Ho valutato sicurezza, privacy, accessibilità e compatibilità, spiegando gli aspetti non applicabili.
+- [ ] Ho aggiornato la documentazione e le lingue interessate dalla modifica.
+- [ ] I dati di esempio sono sintetici e non includono credenziali o dati personali.
+
+### Evidenze e limiti
+
+<!-- Riporta qui risultati concreti; non dichiarare superate verifiche non eseguite. -->
+
+### Compatibilità e ripristino
+
+<!-- Indica eventuali migrazioni e come annullare la modifica, oppure perché non applicabile. -->

@@ -177,3 +177,13 @@ Per una versione principale la CI verde non basta: Express 5, per esempio, compi
 - Aggiorna [`CHANGELOG.md`](CHANGELOG.md) nella sezione *Unreleased* e, quando una voce cambia stato, [`ROADMAP.md`](ROADMAP.md).
 
 Italian vocabulary / Vocabolario italiano: [policy and scope / politica e perimetro](docs/italian-spelling.md).
+
+## Segnalazioni e verifica dei contributi
+
+Piattaforma bilingue per lo studio di CompTIA Security+ SY0-701.
+
+Usa i [modelli di segnalazione](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/new/choose) per bug, miglioramenti e barriere di accessibilità. Prima di aprire una nuova segnalazione verifica se ne esiste già una equivalente. Contesto utile: Browser, lingua, sezione, identificativo della domanda o del contenuto e versione dell'app.
+
+Per le modifiche, compila il modello di pull request e indica verifiche eseguite, esito e verifiche non eseguite con il motivo. Mantieni le istruzioni specifiche di questo progetto e la parità delle lingue già disponibili. Non allegare dati di produzione, credenziali o dati personali; usa esempi sintetici.
+
+Consulta [il codice di condotta](CODE_OF_CONDUCT.md), [la policy di sicurezza](SECURITY.md) e [le indicazioni di accessibilità](ACCESSIBILITY.md). Le vulnerabilità seguono esclusivamente il percorso descritto nella policy di sicurezza.

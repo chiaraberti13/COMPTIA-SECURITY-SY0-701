@@ -8,6 +8,9 @@ History before 2026-09-24 is reconstructed from the git log and grouped by theme
 
 ## [Unreleased]
 
+- Uniformate le indicazioni della comunità e aggiunti dichiarazione e modulo di segnalazione per l'accessibilità; mantenuti i template didattici e le istruzioni specifiche.
+- Standardized community guidance and added an accessibility statement and reporting form, preserving study templates and project-specific instructions.
+
 - Clarified SQL injection defenses, HTML sanitization and question 310 in IT/EN: bind SQL values, encode plain-text output for its context and keep input validation complementary. Preserved existing identifiers and quiz structure.
 - Chiarite le difese SQL injection, la sanitizzazione HTML e la domanda 310 in IT/EN: valori SQL associati come parametri, codifica contestuale del testo in uscita e validazione complementare. Preservati identificatori e struttura dei quiz.
 

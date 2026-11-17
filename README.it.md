@@ -391,3 +391,12 @@ nuovo apri una issue.
 - [Controllo ortografico IT/EN / IT/EN spelling](docs/italian-spelling.md)
 
 Percorsi Blue Team e Red Team: apri il pannello dei percorsi di studio. [Laboratori e verifica](docs/ethical-team-paths.md#italiano).
+
+## Comunità e collaborazione
+
+- [Come contribuire](CONTRIBUTING.md)
+- [Codice di condotta](CODE_OF_CONDUCT.md)
+- [Segnalazioni di sicurezza](SECURITY.md)
+- [Accessibilità e limiti delle verifiche](ACCESSIBILITY.md)
+- [Segnalare un problema o proporre un miglioramento](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/new/choose)
+- [Licenza del progetto](LICENSE)

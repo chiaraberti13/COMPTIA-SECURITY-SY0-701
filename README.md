@@ -390,3 +390,12 @@ with the commit of each fix. To report a new one, open an issue.
 - [Controllo ortografico IT/EN / IT/EN spelling](docs/italian-spelling.md)
 
 Blue Team and Red Team: open the study paths panel. [Labs and learning checks](docs/ethical-team-paths.md#english).
+
+## Comunità e collaborazione
+
+- [Come contribuire](CONTRIBUTING.md)
+- [Codice di condotta](CODE_OF_CONDUCT.md)
+- [Segnalazioni di sicurezza](SECURITY.md)
+- [Accessibilità e limiti delle verifiche](ACCESSIBILITY.md)
+- [Segnalare un problema o proporre un miglioramento](https://github.com/chiaraberti13/COMPTIA-SECURITY-SY0-701/issues/new/choose)
+- [Licenza del progetto](LICENSE)
