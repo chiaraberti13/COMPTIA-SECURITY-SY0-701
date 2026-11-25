@@ -53,6 +53,38 @@ const foldText = (value: string): string =>
   value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 /**
+ * True when `query` occurs in `text` at the START of a word (after a space,
+ * slash, bracket, hyphen...). A plain substring test made short queries match
+ * almost everything: "rto" is inside "supporto", "report", "importante", so
+ * searching "RTO" kept ~150 of 850 entries. Both arguments must be folded.
+ */
+const hasWordStart = (text: string, query: string): boolean => {
+  let from = 0;
+  for (;;) {
+    const at = text.indexOf(query, from);
+    if (at === -1) return false;
+    if (at === 0 || !/[a-z0-9]/.test(text[at - 1])) return true;
+    from = at + 1;
+  }
+};
+
+/** A term matches when the query starts a word in its name, definition, details, group or exam tip. */
+const matchesQuery = (item: GlossaryTerm, query: string): boolean =>
+  hasWordStart(foldText(item.term), query) ||
+  hasWordStart(foldText(item.definition), query) ||
+  hasWordStart(foldText(item.details), query) ||
+  hasWordStart(foldText(item.groupTitle), query) ||
+  (item.examTip ? hasWordStart(foldText(item.examTip), query) : false);
+
+/** Lower is better: 0 exact term, 1 term starts with query, 2 query starts a word in the term, 3 elsewhere. */
+const relevance = (item: GlossaryTerm, query: string): number => {
+  const name = foldText(item.term);
+  if (name === query) return 0;
+  if (name.startsWith(query)) return 1;
+  return hasWordStart(name, query) ? 2 : 3;
+};
+
+/**
  * Per-domain accent colours for badges and filter pills.
  * Domain names are not stored here: they come from the i18n dictionary
  * (`glossDom.<id>.title` / `.short`) so they follow the active language.
@@ -333,8 +365,9 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
   }, [allTerms]);
 
   // Filtered dataset
+  const query = useMemo(() => foldText(searchTerm.trim()), [searchTerm]);
   const filteredTerms = useMemo(() => {
-    return allTerms.filter((item) => {
+    const filtered = allTerms.filter((item) => {
       // Domain filter
       if (selectedDomain !== "ALL" && !inDomain(item, selectedDomain)) return false;
 
@@ -349,21 +382,17 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
       if (onlyAcronyms && !item.isAcronym) return false;
       if (onlyBookmarks && !bookmarkedIds.includes(item.id)) return false;
 
-      // Search term (accent-insensitive: see foldText)
-      if (searchTerm.trim() !== "") {
-        const query = foldText(searchTerm.trim());
-        const matchName = foldText(item.term).includes(query);
-        const matchDef = foldText(item.definition).includes(query);
-        const matchDet = foldText(item.details).includes(query);
-        const matchGroup = foldText(item.groupTitle).includes(query);
-        const matchTip = item.examTip ? foldText(item.examTip).includes(query) : false;
-
-        return matchName || matchDef || matchDet || matchGroup || matchTip;
-      }
+      // Search term (accent-insensitive, word-start match: see matchesQuery)
+      if (query && !matchesQuery(item, query)) return false;
 
       return true;
     });
-  }, [allTerms, selectedDomain, selectedCategory, selectedLetter, onlyExamTips, onlyAcronyms, onlyBookmarks, bookmarkedIds, searchTerm]);
+
+    // With a query, the most relevant entries come first (exact term, then
+    // term starting with it, then term containing it, then the rest). Array
+    // sort is stable, so the alphabetical order is kept within each rank.
+    return query ? [...filtered].sort((a, b) => relevance(a, query) - relevance(b, query)) : filtered;
+  }, [allTerms, selectedDomain, selectedCategory, selectedLetter, onlyExamTips, onlyAcronyms, onlyBookmarks, bookmarkedIds, query]);
 
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-950 overflow-y-auto custom-scrollbar p-4 md:p-6" id="glossary_root">
