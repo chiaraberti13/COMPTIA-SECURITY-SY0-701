@@ -78,6 +78,23 @@ describe("glossary search", () => {
     expect(countCards()).toBe(filtered);
   });
 
+  it("a short query matches word starts only and lists the exact term first", async () => {
+    const input = await renderGlossary();
+    const total = countCards();
+
+    search(input, "RTO");
+    const cards = [...document.querySelectorAll('[id^="glossary_card_"]')];
+    // "rto" used to match inside "supporto", "report", "importante"...: ~150 of 850.
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.length).toBeLessThan(total / 5);
+    // The RTO entry itself comes first.
+    expect(cards[0].querySelector("h3")?.textContent?.toUpperCase()).toContain("RTO");
+
+    // Partial words still work from their start: "integr" finds "Integrità".
+    search(input, "integr");
+    expect(countCards()).toBeGreaterThan(0);
+  });
+
   it("still matches plain terms and returns nothing for a non-existent one", async () => {
     const input = await renderGlossary();
 
