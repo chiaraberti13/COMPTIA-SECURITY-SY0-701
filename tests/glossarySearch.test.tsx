@@ -58,6 +58,26 @@ describe("glossary search", () => {
     expect(countCards()).toBe(withAccent);
   });
 
+  it("Enter in the search box scrolls to the results and leaves the filter intact", async () => {
+    const input = await renderGlossary();
+    // jsdom has no layout engine: stub scrollIntoView to observe the call.
+    const scrolled: Element[] = [];
+    Element.prototype.scrollIntoView = function (this: Element) {
+      scrolled.push(this);
+    };
+
+    search(input, "backup");
+    const filtered = countCards();
+    expect(filtered).toBeGreaterThan(0);
+
+    input.focus();
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(scrolled.map((el) => el.id)).toEqual(["glossary_results"]);
+    expect(document.activeElement).not.toBe(input);
+    expect(countCards()).toBe(filtered);
+  });
+
   it("still matches plain terms and returns nothing for a non-existent one", async () => {
     const input = await renderGlossary();
 
