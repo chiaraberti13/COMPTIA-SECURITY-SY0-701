@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { 
   Search, 
   X, 
@@ -303,6 +303,18 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
     }
   };
 
+  // The results sit below the hero and the filter panel, often off-screen.
+  // Enter in the search box brings them into view and, on touch devices,
+  // dismisses the on-screen keyboard that would otherwise cover them.
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    e.currentTarget.blur();
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    resultsRef.current?.scrollIntoView?.({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
+
   const resetFilters = () => {
     setSearchTerm("");
     setSelectedDomain("ALL");
@@ -434,6 +446,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                enterKeyHint="search"
                 placeholder={t("gloss.searchPlaceholder")}
                 className="w-full bg-slate-950/80 border border-slate-700/80 focus:border-cyan-500 text-slate-100 placeholder-slate-500 text-sm pl-11 pr-10 py-3.5 rounded-lg shadow-inner focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
                 id="glossary_search_input"
@@ -617,6 +631,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
         </div>
 
         {/* GLOSSARY CARDS GRID */}
+        <div ref={resultsRef} id="glossary_results" className="scroll-mt-4">
         {filteredTerms.length === 0 ? (
           <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-12 text-center my-8">
             <div className="w-12 h-12 bg-slate-800/80 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-3">
@@ -788,6 +803,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ onAskAI, flash
             })}
           </div>
         )}
+        </div>
         </>)}
 
       </div>
