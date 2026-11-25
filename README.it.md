@@ -21,6 +21,7 @@
 
 ## Navigazione rapida
 
+- [Diagramma dell’architettura](#-diagramma-dellarchitettura)
 - **Dataset di evidenze sintetiche** — log, PCAP, alert, timeline e IOC fittizi con esercizi bilingui e licenza esplicita: [catalogo](datasets/README.md).
 - **[Cos'è](#cosè)** — L'idea dietro il trainer e come è strutturato.
 - **[Funzionalità](#funzionalità)** — Checklist, glossario, simulatore d'esame, trainer AI.
@@ -269,6 +270,27 @@ mai dentro l'immagine.
 | `npm run lab:verify` | Richiede l’immagine `comptia-labs` e Docker: verifica isolamento, limiti, ripristino e scadenza reali. |
 | `npm run e2e:offline` | Dopo `npm run build`: verifica ricaricamento senza rete, entrambe le lingue, progressi dei quiz salvati e aggiornamenti espliciti in Chromium su desktop e telefono. Incluso nella suite end-to-end completa della CI. |
 | `npm run clean` | Rimuove gli artefatti di build (`dist`, `server.js`). |
+
+## 🗺️ Diagramma dell’architettura
+
+```mermaid
+flowchart TD
+    accTitle: Architettura di COMPTIA-SECURITY-SY0-701
+    accDescr: Guide, esercitazioni e monitoraggio dei progressi funzionano nel browser. Le richieste al tutor e quelle per il ripasso personalizzato passano da Express, che le convalida e custodisce la chiave API Gemini sul server.
+    content["Contenuti bilingui SY0-701"] --> study["Studio e simulatore d’esame · React"]
+    study --> progress["Progressi e storico del ripasso · localStorage"]
+    cache["Cache per lo studio offline"] --> study
+    ui["Tutor IA e ripasso personalizzato · React"] --> api["Express API"]
+    api --> guard["Validazione e limiti di utilizzo"]
+    guard --> provider["API Gemini"]
+
+    classDef core fill:#23313a,stroke:#7193a7,color:#f4f7f8;
+    classDef output fill:#2b3035,stroke:#8b959e,color:#f4f7f8;
+    class study,ui,api,guard core;
+    class progress,cache,provider output;
+```
+
+Guide, esercitazioni e monitoraggio dei progressi funzionano nel browser. Le richieste al tutor e quelle per il ripasso personalizzato passano da Express, che le convalida e custodisce la chiave API Gemini sul server.
 
 ## Architettura
 

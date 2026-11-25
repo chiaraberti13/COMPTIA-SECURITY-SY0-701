@@ -21,6 +21,7 @@
 
 ## Quick Navigation
 
+- [Architecture Diagram](#-architecture-diagram)
 - **Synthetic evidence datasets** — logs, PCAP, alerts, timelines and fictional IOCs with bilingual exercises and an explicit license: [catalog](datasets/README.md).
 - **[What this is](#what-this-is)** — The idea behind the trainer and how it's put together.
 - **[Features](#features)** — Checklists, glossary, exam simulator, AI trainer.
@@ -269,6 +270,27 @@ never bake them into the image.
 | `npm run lab:verify` | Requires Docker and the `comptia-labs` image: verifies real isolation, limits, reset and expiry. |
 | `npm run e2e:offline` | After `npm run build`: checks offline reloads, both languages, saved quiz progress and explicit updates in Chromium at desktop and phone width. Included in the full CI end-to-end suite. |
 | `npm run clean` | Removes build artifacts (`dist`, `server.js`). |
+
+## 🗺️ Architecture Diagram
+
+```mermaid
+flowchart TD
+    accTitle: Architecture of COMPTIA-SECURITY-SY0-701
+    accDescr: Guides, practice and progress tracking run in the browser. Trainer and remediation requests go through Express, which validates them and keeps the Gemini API key on the server.
+    content["Bilingual SY0-701 content"] --> study["Study and exam views · React"]
+    study --> progress["Progress and review history · localStorage"]
+    cache["Offline study cache"] --> study
+    ui["AI trainer and remediation · React"] --> api["Express API"]
+    api --> guard["Validation and usage limits"]
+    guard --> provider["Gemini API"]
+
+    classDef core fill:#23313a,stroke:#7193a7,color:#f4f7f8;
+    classDef output fill:#2b3035,stroke:#8b959e,color:#f4f7f8;
+    class study,ui,api,guard core;
+    class progress,cache,provider output;
+```
+
+Guides, practice and progress tracking run in the browser. Trainer and remediation requests go through Express, which validates them and keeps the Gemini API key on the server.
 
 ## Architecture
 
